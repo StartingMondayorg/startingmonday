@@ -104,6 +104,9 @@ jobs:
       - name: Documentation command check
         run: npm run docs:check-commands
 
+      - name: Signal-engine master-plan pin guard
+        run: npm run guard:signal-engine-plan
+
       - name: Landing page change approval guard
         env:
           ALLOW_LANDING_PAGE_CHANGE: >-

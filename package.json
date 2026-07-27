@@ -19,6 +19,7 @@
         "typecheck": "tsc --noEmit",
         "lint:check-baseline": "node scripts/check-lint-baseline.mjs",
         "docs:check-commands": "node scripts/check-docs-commands.mjs",
+        "guard:signal-engine-plan": "node scripts/check-signal-engine-plan-pin.mjs",
         "release:ux:checklist:check": "node scripts/check-release-ux-checklist.mjs",
         "monitor:smoke": "node scripts/production-smoke-check.mjs",
         "monitor:smoke:json": "node scripts/production-smoke-check.mjs --json",

@@ -10,6 +10,27 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - All sitewide UX/style gates and migration work should use that file as source of truth.
 - Route compliance claims must be backed by inventory-driven audit output (no partial-scan claims).
 
+## Signal Engine Program Governance
+
+- Canonical plan: `docs/signal-engine-cross-product-master-plan-2026-07-26.md`.
+- This plan governs work that touches the intelligence scanner, canonical events, outcome labels, backtests, claims, snapshots, coverage, role state, assignment beliefs, opportunity ledgers, origin-seat transitions, hazard/calibration models, signal recipes, or cross-product learning with MandateSignal.
+- Historical scanner plans and completion summaries are evidence inputs only where the canonical plan says so. They must not silently override its boundaries, gates, story dependencies, or definitions of done.
+
+### Signal-engine preflight
+
+Before changing code, schema, configuration, prompts, jobs, tests, product surfaces, or documentation in that scope:
+
+1. Read the canonical plan sections relevant to the task.
+2. Name the governing `WS#-##` story or explicitly record that a new story/re-plan is required.
+3. Identify the applicable decision (`DG-*`), control, prerequisite, acceptance evidence, rollback/kill behavior, and product-local repository.
+4. Re-check repository and runtime evidence required by the story; do not promote provisional audit claims to deployed or measured facts.
+5. Stop on a conflict with a locked architecture boundary, failed gate, held artifact, product launch control, or source-rights decision.
+
+Do not begin implementation until the preflight is complete. At handoff, report the story ID, evidence produced, checks run, remaining gate state, and whether the canonical plan or evidence index requires an update.
+
+- Run `npm run guard:signal-engine-plan` when changing the plan, these instructions, or signal-engine governance tooling.
+- Do not copy the canonical plan into MandateSignal. MandateSignal must reference this source and retain separate data, deployment, and release controls.
+
 ## Truthfulness And Verification Contract
 
 1. Verification-first
