@@ -81,11 +81,11 @@ export default async function ForIndividualsPage() {
 
             <figure className="order-last mx-auto w-[70%] max-w-[360px] rounded-[18px] border border-white/12 bg-slate-900/55 p-1.5 shadow-[0_24px_52px_rgba(2,6,23,0.4)] lg:order-none lg:mr-0 lg:ml-auto lg:w-full lg:max-w-[420px]">
               <Image
-                src="/woman-at-two-doors.png"
-                alt="Professional woman standing between two open doors"
-                className="block max-h-[440px] w-full rounded-[14px] object-cover object-center"
-                width={840}
-                height={880}
+                src="/individuals-doorway.webp"
+                alt="Professional woman in a dark suit opening an office door and glancing back over her shoulder"
+                className="block max-h-[440px] w-full rounded-[14px] object-cover [object-position:center_75%]"
+                width={1024}
+                height={1536}
                 priority
               />
             </figure>

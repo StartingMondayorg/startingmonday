@@ -81,11 +81,11 @@ export default async function ForLeadersPage() {
 
             <figure className="mx-auto w-[58%] max-w-[340px] rounded-[18px] border border-white/12 bg-slate-900/55 p-1.5 shadow-[0_24px_52px_rgba(2,6,23,0.4)] lg:mr-0 lg:ml-auto lg:w-[58%] lg:max-w-[380px]">
               <Image
-                src="/young-male-at-laptop.png"
+                src="/leaders-laptop.webp"
                 alt="Professional man working at a laptop in a refined office"
                 className="block w-full rounded-[14px]"
-                width={1024}
-                height={1280}
+                width={1122}
+                height={1402}
                 priority
               />
             </figure>
