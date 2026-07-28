@@ -52,7 +52,7 @@ jobs:
         if: always()
         run: |
           if [ -f emi-weekly-validation.json ]; then
-            node -e "const fs = require('fs'); const data = JSON.parse(fs.readFileSync('emi-weekly-validation.json','utf8')); const lines = ['## EMI Weekly Validation','','| Metric | Value |','|---|---|', `| Passed | ${data.passed} |`, `| Weekly run id | ${data.weeklyRunId ?? 'n/a'} |`, `| Validation run id | ${data.validationRunId ?? 'n/a'} |`, `| Proof publisher run id | ${data.proofPublisherRunId ?? 'n/a'} |`, `| Claim audit run id | ${data.claimAuditRunId ?? 'n/a'} |`, `| Sprint 5 exit run id | ${data.sprint5ExitRunId ?? 'n/a'} |`, `| GTM proof run id | ${data.gtmProofSequenceRunId ?? 'n/a'} |`, `| Q4 cadence run id | ${data.q4CadenceRunId ?? 'n/a'} |`, `| Capstone run id | ${data.capstoneReportRunId ?? 'n/a'} |`, `| Success criteria audit run id | ${data.successCriteriaAuditRunId ?? 'n/a'} |`, `| Objection dashboard run id | ${data.objectionDashboardRunId ?? 'n/a'} |`, `| SLO monitoring run id | ${data.sloMonitoringRunId ?? 'n/a'} |`, `| Validation status | ${data.validationStatus ?? 'n/a'} |`, `| mismatchCount | ${String(data.mismatchCount ?? 'n/a')} |`, `| nullStreakCount | ${String(data.nullStreakCount ?? 'n/a')} |`]; fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\\n') + '\\n');"
+            node scripts/emi-summary-markdown.mjs emi-weekly-validation.json "EMI Weekly Validation" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "No validation artifact produced" >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -82,7 +82,7 @@ jobs:
                 \"type\": \"section\",
                 \"text\": {
                   \"type\": \"mrkdwn\",
-                  \"text\": \"Mismatch or null-streak regression detected. <${RUN_URL}|View workflow run>.\"
+                  \"text\": \"EMI KPI pipeline health check failed (job error, missing snapshots, or a KPI query failure). Business-metric shortfalls are advisory and do not trigger this alert. <${RUN_URL}|View workflow run>.\"
                 }
               }
             ]
