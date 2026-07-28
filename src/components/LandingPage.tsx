@@ -278,7 +278,7 @@ export function LandingPage({
                     sizes="(max-width: 640px) 92vw, 390px"
                     preload
                     fetchPriority="high"
-                    quality={82}
+                    quality={75}
                     className="object-cover object-center"
                   />
                 </div>
