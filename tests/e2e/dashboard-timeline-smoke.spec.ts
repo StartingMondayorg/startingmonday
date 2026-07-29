@@ -79,6 +79,7 @@ test('timeline sort and paging render safely on production', async ({ page }) =>
     test.skip(true, 'Authenticated session unavailable for production dashboard smoke.')
   }
 
+  await page.getByRole('button', { name: /Pipeline health and decision timeline/i }).click()
   const timelineHeading = page.getByRole('heading', { name: 'Required next-decision markers', exact: true }).filter({ visible: true })
   await expect(timelineHeading).toBeVisible()
   const section = timelineHeading.locator('xpath=ancestor::section[1]')
