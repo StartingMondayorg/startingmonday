@@ -16,6 +16,80 @@ vi.mock('@/lib/admin-automation-route', () => ({
 
 import { POST } from './route'
 
+type SnapshotFixture = {
+  metric_name: string
+  metric_value: number | null
+  metric_status: 'ok' | 'no_data' | 'query_error'
+  week_start: string
+  week_end: string
+  generated_at: string
+  source_table: string
+  source_notes: string
+}
+
+function snapshot(
+  metricName: string,
+  metricValue: number | null,
+  metricStatus: SnapshotFixture['metric_status'] = 'ok',
+  weekEnd = '2026-05-25',
+): SnapshotFixture {
+  return {
+    metric_name: metricName,
+    metric_value: metricValue,
+    metric_status: metricStatus,
+    week_start: '2026-05-19',
+    week_end: weekEnd,
+    generated_at: `${weekEnd}T01:00:00.000Z`,
+    source_table: 'user_events',
+    source_notes: '',
+  }
+}
+
+const HEALTHY_SNAPSHOTS: SnapshotFixture[] = [
+  snapshot('emi_language_adoption_percent', 33.33),
+  snapshot('assessment_completion_percent', 100),
+  snapshot('day7_return_percent', 8.33),
+  snapshot('proof_assets_published_count', 3),
+  snapshot('b2b_pilot_conversion_percent', 28.57),
+  snapshot('tier1_claim_compliance_percent', 100),
+]
+
+function mockTables(rows: SnapshotFixture[], runId: string) {
+  state.from.mockImplementation((table: string) => {
+    if (table === 'emi_kpi_snapshots') {
+      const chain = {
+        select: vi.fn(() => chain),
+        gte: vi.fn(() => chain),
+        order: vi.fn(() => chain),
+        limit: vi.fn(async () => ({ data: rows, error: null })),
+      }
+      return chain
+    }
+
+    if (table === 'scheduled_job_observability_runs') {
+      const chain = {
+        insert: vi.fn((payload: Record<string, unknown>) => {
+          state.insertedRow = payload
+          return chain
+        }),
+        select: vi.fn(() => chain),
+        single: vi.fn(async () => ({ data: { id: runId }, error: null })),
+      }
+      return chain
+    }
+
+    throw new Error(`Unexpected table: ${table}`)
+  })
+}
+
+function postRequest() {
+  return POST(new NextRequest('https://startingmonday.app/api/admin/automation/reporting/emi-validation-reruns', {
+    method: 'POST',
+    body: JSON.stringify({}),
+    headers: { 'Content-Type': 'application/json' },
+  }))
+}
+
 describe('emi validation reruns reporting route', () => {
   beforeEach(() => {
     vi.resetAllMocks()
@@ -29,51 +103,14 @@ describe('emi validation reruns reporting route', () => {
 
     state.parseAutomationBody.mockResolvedValue({
       ok: true,
-      body: { tolerancePoints: 0 },
+      body: {},
     })
 
-    state.from.mockImplementation((table: string) => {
-      if (table === 'emi_kpi_snapshots') {
-        const rows = [
-          { metric_name: 'emi_language_adoption_percent', metric_value: 33.33, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'user_events', source_notes: '' },
-          { metric_name: 'assessment_completion_percent', metric_value: 100, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'onboarding_qa_weekly_scorecards', source_notes: '' },
-          { metric_name: 'day7_return_percent', metric_value: 8.33, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'user_events', source_notes: '' },
-          { metric_name: 'proof_assets_published_count', metric_value: 3, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'proof_assets', source_notes: '' },
-          { metric_name: 'b2b_pilot_conversion_percent', metric_value: 28.57, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'b2b_prospects', source_notes: '' },
-          { metric_name: 'tier1_claim_compliance_percent', metric_value: 100, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'tier1_claims', source_notes: '' },
-        ]
-
-        const chain = {
-          select: vi.fn(() => chain),
-          gte: vi.fn(() => chain),
-          order: vi.fn(() => chain),
-          limit: vi.fn(async () => ({ data: rows, error: null })),
-        }
-        return chain
-      }
-
-      if (table === 'scheduled_job_observability_runs') {
-        const chain = {
-          insert: vi.fn((payload: Record<string, unknown>) => {
-            state.insertedRow = payload
-            return chain
-          }),
-          select: vi.fn(() => chain),
-          single: vi.fn(async () => ({ data: { id: 'run_2' }, error: null })),
-        }
-        return chain
-      }
-
-      throw new Error(`Unexpected table: ${table}`)
-    })
+    mockTables(HEALTHY_SNAPSHOTS, 'run_2')
   })
 
-  it('returns ok when snapshots match published KPI baselines', async () => {
-    const response = await POST(new NextRequest('https://startingmonday.app/api/admin/automation/reporting/emi-validation-reruns', {
-      method: 'POST',
-      body: JSON.stringify({ tolerancePoints: 0 }),
-      headers: { 'Content-Type': 'application/json' },
-    }))
+  it('returns ok when every tracked metric reported this week', async () => {
+    const response = await postRequest()
 
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toMatchObject({
@@ -81,8 +118,8 @@ describe('emi validation reruns reporting route', () => {
       runId: 'run_2',
       jobName: 'emi-production-validation-rerun',
       status: 'ok',
-      mismatchCount: 0,
       nullStreakCount: 0,
+      staleMetrics: [],
     })
 
     expect(state.insertedRow).toMatchObject({
@@ -92,55 +129,88 @@ describe('emi validation reruns reporting route', () => {
     })
   })
 
-  it('does not fail when a metric is null for only one week', async () => {
-    state.from.mockImplementation((table: string) => {
-      if (table === 'emi_kpi_snapshots') {
-        const rows = [
-          { metric_name: 'emi_language_adoption_percent', metric_value: 33.33, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'user_events', source_notes: '' },
-          { metric_name: 'assessment_completion_percent', metric_value: null, metric_status: 'no_data', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'onboarding_qa_weekly_scorecards', source_notes: '' },
-          { metric_name: 'day7_return_percent', metric_value: 8.33, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'user_events', source_notes: '' },
-          { metric_name: 'proof_assets_published_count', metric_value: 3, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'proof_assets', source_notes: '' },
-          { metric_name: 'b2b_pilot_conversion_percent', metric_value: 28.57, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'b2b_prospects', source_notes: '' },
-          { metric_name: 'tier1_claim_compliance_percent', metric_value: 100, metric_status: 'ok', week_start: '2026-05-19', week_end: '2026-05-25', generated_at: '2026-05-25T01:00:00.000Z', source_table: 'tier1_claims', source_notes: '' },
-        ]
+  it('does not flag a metric that is null for only one week', async () => {
+    mockTables([
+      snapshot('emi_language_adoption_percent', 33.33),
+      snapshot('assessment_completion_percent', null, 'no_data'),
+      snapshot('day7_return_percent', 8.33),
+      snapshot('proof_assets_published_count', 3),
+      snapshot('b2b_pilot_conversion_percent', 28.57),
+      snapshot('tier1_claim_compliance_percent', 100),
+    ], 'run_3')
 
-        const chain = {
-          select: vi.fn(() => chain),
-          gte: vi.fn(() => chain),
-          order: vi.fn(() => chain),
-          limit: vi.fn(async () => ({ data: rows, error: null })),
-        }
-        return chain
-      }
-
-      if (table === 'scheduled_job_observability_runs') {
-        const chain = {
-          insert: vi.fn((payload: Record<string, unknown>) => {
-            state.insertedRow = payload
-            return chain
-          }),
-          select: vi.fn(() => chain),
-          single: vi.fn(async () => ({ data: { id: 'run_3' }, error: null })),
-        }
-        return chain
-      }
-
-      throw new Error(`Unexpected table: ${table}`)
-    })
-
-    const response = await POST(new NextRequest('https://startingmonday.app/api/admin/automation/reporting/emi-validation-reruns', {
-      method: 'POST',
-      body: JSON.stringify({ tolerancePoints: 0 }),
-      headers: { 'Content-Type': 'application/json' },
-    }))
+    const response = await postRequest()
 
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toMatchObject({
       ok: true,
       runId: 'run_3',
       status: 'ok',
-      mismatchCount: 0,
       nullStreakCount: 0,
+      staleMetrics: [],
+    })
+  })
+
+  it('flags a metric that has been null for two consecutive weeks', async () => {
+    mockTables([
+      ...HEALTHY_SNAPSHOTS.filter((row) => row.metric_name !== 'assessment_completion_percent'),
+      snapshot('assessment_completion_percent', null, 'no_data', '2026-05-25'),
+      snapshot('assessment_completion_percent', null, 'no_data', '2026-05-18'),
+    ], 'run_4')
+
+    const response = await postRequest()
+
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      runId: 'run_4',
+      status: 'failed',
+      nullStreakCount: 1,
+      staleMetrics: ['assessment_completion_percent'],
+    })
+
+    expect(state.insertedRow).toMatchObject({
+      job_name: 'emi-production-validation-rerun',
+      status: 'failed',
+    })
+  })
+
+  it('does not compare values against a hardcoded baseline', async () => {
+    // A metric moving far from its historical value is not a failure on its own.
+    // Value-level regression detection was retired in SMK-444.
+    mockTables([
+      snapshot('emi_language_adoption_percent', 99.9),
+      snapshot('assessment_completion_percent', 12),
+      snapshot('day7_return_percent', 91.4),
+      snapshot('proof_assets_published_count', 41),
+      snapshot('b2b_pilot_conversion_percent', 0.5),
+      snapshot('tier1_claim_compliance_percent', 3),
+    ], 'run_5')
+
+    const response = await postRequest()
+
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      status: 'ok',
+      nullStreakCount: 0,
+    })
+  })
+
+  it('flags a metric missing from the snapshot table entirely', async () => {
+    mockTables(
+      HEALTHY_SNAPSHOTS.filter((row) => row.metric_name !== 'day7_return_percent'),
+      'run_6',
+    )
+
+    const response = await postRequest()
+
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      status: 'failed',
+      nullStreakCount: 1,
+      staleMetrics: ['day7_return_percent'],
     })
   })
 })

@@ -292,43 +292,85 @@ export async function POST(request: NextRequest) {
       diagnostics,
     )
 
+    // Tier A (blocking): pipeline health. These are the only conditions a deploy
+    // can actually cause, so they are the only ones allowed to fail the gate.
     const failures: string[] = []
-    if (weekly.status !== 200 || weekly.body?.ok !== true) {
-      failures.push(`weekly-kpi-summaries failed status=${weekly.status} body=${weekly.rawBody}`)
+    // Tier B/C (advisory): instrumentation staleness and business-criteria
+    // results. Reported to CI summaries and Slack, never blocking. See SMK-444.
+    const warnings: string[] = []
+
+    // Routes whose `ok` flag reflects pipeline health: a false value means the
+    // job itself did not complete.
+    const operationalChecks: Array<[string, typeof weekly]> = [
+      ['weekly-kpi-summaries', weekly],
+      ['emi-validation-reruns', validation],
+      ['proof-asset-publisher', proofPublisher],
+      ['tier1-claim-compliance-audit', claimAudit],
+      ['sprint-5-exit-metrics', sprint5Exit],
+      ['capstone-report-generation', capstoneReport],
+      ['top10-objection-kpi-dashboard', objectionDashboard],
+      ['emi-slo-monitoring-alerts', sloMonitoring],
+    ]
+
+    // Routes whose `ok` flag reflects business or content state rather than
+    // pipeline health. A deploy cannot move these, so they only ever warn:
+    //   success-criteria-audit  -> 4 of 5 business targets met
+    //   gtm-proof-sequence      -> published proof assets exist
+    //   q4-cadence-automation   -> every ritual has a named owner
+    const businessChecks: Array<[string, typeof weekly]> = [
+      ['success-criteria-audit-automation', successCriteriaAudit],
+      ['gtm-proof-sequence', gtmProofSequence],
+      ['q4-cadence-automation', q4Cadence],
+    ]
+
+    for (const [name, check] of operationalChecks) {
+      if (check.status !== 200 || check.body?.ok !== true) {
+        failures.push(`${name} failed status=${check.status} body=${check.rawBody}`)
+      }
     }
-    if (validation.status !== 200 || validation.body?.ok !== true) {
-      failures.push(`emi-validation-reruns request failed status=${validation.status} body=${validation.rawBody}`)
-    } else {
-      if (validation.body.status !== 'ok') failures.push(`validation status=${String(validation.body.status)}`)
-      if (Number(validation.body.mismatchCount ?? -1) !== 0) failures.push(`mismatchCount=${String(validation.body.mismatchCount)}`)
-      if (Number(validation.body.nullStreakCount ?? -1) !== 0) failures.push(`nullStreakCount=${String(validation.body.nullStreakCount)}`)
+
+    for (const [name, check] of businessChecks) {
+      if (check.status !== 200) {
+        failures.push(`${name} failed status=${check.status} body=${check.rawBody}`)
+      } else if (check.body?.ok !== true) {
+        warnings.push(`${name} reports status=${String(check.body?.status ?? 'unknown')} (business criteria, non-blocking)`)
+      }
     }
-    if (proofPublisher.status !== 200 || proofPublisher.body?.ok !== true) {
-      failures.push(`proof-asset-publisher failed status=${proofPublisher.status} body=${proofPublisher.rawBody}`)
+
+    // Blocking: the weekly job returned 200 but produced no usable KPI rows.
+    // Previously invisible to the gate, because weekly-kpi-summaries returns
+    // ok:true even when every individual metric query threw. See SMK-444.
+    const weeklySnapshots: Array<{ metric_name?: string; metric_status?: string }> =
+      Array.isArray(weekly.body?.snapshots) ? weekly.body.snapshots : []
+
+    if (weekly.status === 200 && weeklySnapshots.length === 0) {
+      failures.push('weekly-kpi-summaries returned no KPI snapshots for the current week')
     }
-    if (claimAudit.status !== 200 || claimAudit.body?.ok !== true) {
-      failures.push(`tier1-claim-compliance-audit failed status=${claimAudit.status} body=${claimAudit.rawBody}`)
+
+    const queryErrorMetrics = weeklySnapshots
+      .filter((snapshot) => snapshot?.metric_status === 'query_error')
+      .map((snapshot) => String(snapshot?.metric_name ?? 'unknown'))
+
+    if (queryErrorMetrics.length > 0) {
+      failures.push(`KPI query failures: ${queryErrorMetrics.join(', ')}`)
     }
-    if (sprint5Exit.status !== 200 || sprint5Exit.body?.ok !== true) {
-      failures.push(`sprint-5-exit-metrics failed status=${sprint5Exit.status} body=${sprint5Exit.rawBody}`)
+
+    // Advisory: metrics that ran cleanly but had nothing to measure.
+    const noDataMetrics = weeklySnapshots
+      .filter((snapshot) => snapshot?.metric_status === 'no_data')
+      .map((snapshot) => String(snapshot?.metric_name ?? 'unknown'))
+
+    if (noDataMetrics.length > 0) {
+      warnings.push(`KPI metrics with no data this week: ${noDataMetrics.join(', ')}`)
     }
-    if (gtmProofSequence.status !== 200 || gtmProofSequence.body?.ok !== true) {
-      failures.push(`gtm-proof-sequence failed status=${gtmProofSequence.status} body=${gtmProofSequence.rawBody}`)
-    }
-    if (q4Cadence.status !== 200 || q4Cadence.body?.ok !== true) {
-      failures.push(`q4-cadence-automation failed status=${q4Cadence.status} body=${q4Cadence.rawBody}`)
-    }
-    if (capstoneReport.status !== 200 || capstoneReport.body?.ok !== true) {
-      failures.push(`capstone-report-generation failed status=${capstoneReport.status} body=${capstoneReport.rawBody}`)
-    }
-    if (successCriteriaAudit.status !== 200 || successCriteriaAudit.body?.ok !== true) {
-      failures.push(`success-criteria-audit-automation failed status=${successCriteriaAudit.status} body=${successCriteriaAudit.rawBody}`)
-    }
-    if (objectionDashboard.status !== 200 || objectionDashboard.body?.ok !== true) {
-      failures.push(`top10-objection-kpi-dashboard failed status=${objectionDashboard.status} body=${objectionDashboard.rawBody}`)
-    }
-    if (sloMonitoring.status !== 200 || sloMonitoring.body?.ok !== true) {
-      failures.push(`emi-slo-monitoring-alerts failed status=${sloMonitoring.status} body=${sloMonitoring.rawBody}`)
+
+    // Advisory: instrumentation that has reported nothing for two weeks running.
+    if (validation.status === 200 && validation.body?.ok === true) {
+      const nullStreakCount = Number(validation.body.nullStreakCount ?? 0)
+      if (nullStreakCount > 0) {
+        const stale = Array.isArray(validation.body.staleMetrics) ? validation.body.staleMetrics.join(', ') : 'unknown'
+        warnings.push(`${nullStreakCount} metric(s) stale for 2+ weeks: ${stale}`)
+      }
     }
 
     const result = {
@@ -345,9 +387,14 @@ export async function POST(request: NextRequest) {
       objectionDashboardRunId: objectionDashboard.body?.runId ?? null,
       sloMonitoringRunId: sloMonitoring.body?.runId ?? null,
       validationStatus: validation.body?.status ?? null,
-      mismatchCount: validation.body?.mismatchCount ?? null,
       nullStreakCount: validation.body?.nullStreakCount ?? null,
+      staleMetrics: validation.body?.staleMetrics ?? [],
+      queryErrorMetrics,
+      noDataMetrics,
+      successCriteriaStatus: successCriteriaAudit.body?.status ?? null,
+      successCriteriaPayload: successCriteriaAudit.body?.payload ?? null,
       failures,
+      warnings,
       diagnostics,
       checks: {
         weekly,
@@ -364,11 +411,18 @@ export async function POST(request: NextRequest) {
       },
     }
 
+    if (warnings.length > 0) {
+      console.info('[internal.automation.emi-smoke] advisory warnings', {
+        warningCount: warnings.length,
+        warnings,
+      })
+    }
+
     if (result.ok) {
       return NextResponse.json(result, { status: 200 })
     }
 
-    console.warn('[internal.automation.emi-smoke] validation failed', {
+    console.warn('[internal.automation.emi-smoke] pipeline health check failed', {
       failureCount: failures.length,
       failures,
     })

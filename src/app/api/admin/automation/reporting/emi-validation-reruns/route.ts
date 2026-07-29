@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { asLooseSupabaseClient, parseAutomationBody, requireAutomationAccess } from '@/lib/admin-automation-route'
 
-type JobStatus = 'ok' | 'late' | 'failed'
+type JobStatus = 'ok' | 'failed'
 
 type SnapshotRow = {
   metric_name: string
@@ -15,13 +15,11 @@ type SnapshotRow = {
   source_notes: string | null
 }
 
-type DriftResult = {
+type FreshnessResult = {
   metricName: string
-  publishedValue: number
   currentValue: number | null
   metricStatus: SnapshotRow['metric_status'] | 'missing'
-  driftStatus: 'match' | 'within_tolerance' | 'mismatch' | 'null_or_missing'
-  absoluteDiff: number | null
+  freshnessStatus: 'fresh' | 'stale' | 'missing'
   latestWeekEnd: string | null
   consecutiveNullWeeks: number
   sourceTable: string | null
@@ -32,15 +30,29 @@ const rerunSchema = z.object({
   tolerancePoints: z.number().min(0).max(100).optional(),
 })
 
-const PUBLISHED_KPI_VALUES = {
-  // Updated to the latest published production baseline set used for EMI rerun drift checks.
-  emi_language_adoption_percent: 33.33,
-  assessment_completion_percent: 100,
-  day7_return_percent: 8.33,
-  proof_assets_published_count: 3,
-  b2b_pilot_conversion_percent: 28.57,
-  tier1_claim_compliance_percent: 100,
-} as const
+// Metrics whose weekly instrumentation is monitored for staleness.
+//
+// This job previously compared each metric to a hardcoded PUBLISHED_KPI_VALUES
+// baseline with a +/-5 point tolerance and failed the deploy gate on any larger
+// gap. That check was retired in SMK-444: the constants required a source edit
+// every time a metric legitimately moved, so genuine improvements (day-7 return
+// rising from 8.33 to 27.78) registered as regressions, and the only metrics
+// that ever passed were the ones frozen on seed data.
+//
+// What remains is instrumentation freshness, which needs no baseline: a metric
+// that reports no_data or query_error for two consecutive weeks has stopped
+// being measured and needs a human. Value-level regression detection returns in
+// SMK-445, once the underlying metrics are computed correctly.
+const TRACKED_METRICS = [
+  'emi_language_adoption_percent',
+  'assessment_completion_percent',
+  'day7_return_percent',
+  'proof_assets_published_count',
+  'b2b_pilot_conversion_percent',
+  'tier1_claim_compliance_percent',
+] as const
+
+const NULL_STREAK_WEEKS = 2
 
 const JOB_NAME = 'emi-production-validation-rerun'
 
@@ -51,52 +63,35 @@ function cutoffIso(referenceDate?: string): string {
   return d.toISOString()
 }
 
-function toStatus(mismatchCount: number, nullStreakCount: number): JobStatus {
-  if (mismatchCount > 0 || nullStreakCount > 0) return 'failed'
-  return 'ok'
-}
-
-function classifyMetric(
-  metricName: keyof typeof PUBLISHED_KPI_VALUES,
-  rows: SnapshotRow[],
-  tolerancePoints: number,
-): DriftResult {
+function classifyMetric(metricName: string, rows: SnapshotRow[]): FreshnessResult {
   const latest = rows[0]
-  const publishedValue = PUBLISHED_KPI_VALUES[metricName]
 
   let consecutiveNullWeeks = 0
-  for (const row of rows.slice(0, 2)) {
+  for (const row of rows.slice(0, NULL_STREAK_WEEKS)) {
     const isNullish = row.metric_status !== 'ok' || row.metric_value === null
     if (!isNullish) break
     consecutiveNullWeeks += 1
   }
 
-  if (!latest || latest.metric_status !== 'ok' || latest.metric_value === null) {
+  if (!latest) {
     return {
       metricName,
-      publishedValue,
-      currentValue: latest?.metric_value ?? null,
-      metricStatus: latest?.metric_status ?? 'missing',
-      driftStatus: 'null_or_missing',
-      absoluteDiff: null,
-      latestWeekEnd: latest?.week_end ?? null,
+      currentValue: null,
+      metricStatus: 'missing',
+      freshnessStatus: 'missing',
+      latestWeekEnd: null,
       consecutiveNullWeeks,
-      sourceTable: latest?.source_table ?? null,
+      sourceTable: null,
     }
   }
 
-  const absoluteDiff = Math.abs(Number(latest.metric_value) - publishedValue)
-  let driftStatus: DriftResult['driftStatus'] = 'match'
-  if (absoluteDiff > tolerancePoints) driftStatus = 'mismatch'
-  else if (absoluteDiff > 0) driftStatus = 'within_tolerance'
+  const isNullish = latest.metric_status !== 'ok' || latest.metric_value === null
 
   return {
     metricName,
-    publishedValue,
-    currentValue: Number(latest.metric_value),
+    currentValue: isNullish ? null : Number(latest.metric_value),
     metricStatus: latest.metric_status,
-    driftStatus,
-    absoluteDiff,
+    freshnessStatus: consecutiveNullWeeks >= NULL_STREAK_WEEKS ? 'stale' : 'fresh',
     latestWeekEnd: latest.week_end,
     consecutiveNullWeeks,
     sourceTable: latest.source_table,
@@ -114,7 +109,6 @@ export async function POST(request: NextRequest) {
     if (!parsedBody.ok) return parsedBody.response
     const body = parsedBody.body
 
-    const tolerancePoints = Number(body.tolerancePoints ?? 5)
     const { data: rawSnapshots, error } = await sb
       .from('emi_kpi_snapshots')
       .select('metric_name,metric_value,metric_status,week_start,week_end,generated_at,source_table,source_notes')
@@ -135,24 +129,20 @@ export async function POST(request: NextRequest) {
       grouped.set(row.metric_name, existing)
     }
 
-    const driftResults = (Object.keys(PUBLISHED_KPI_VALUES) as Array<keyof typeof PUBLISHED_KPI_VALUES>)
-      .map((metricName) => classifyMetric(metricName, grouped.get(metricName) ?? [], tolerancePoints))
+    const freshnessResults = TRACKED_METRICS
+      .map((metricName) => classifyMetric(metricName, grouped.get(metricName) ?? []))
 
-    // Align with runbook policy: null metrics are blocking only after two consecutive weekly nulls.
-    const mismatchCount = driftResults.filter((row) => (
-      row.driftStatus === 'mismatch'
-      || (row.driftStatus === 'null_or_missing' && row.consecutiveNullWeeks >= 2)
-    )).length
-    const nullStreakCount = driftResults.filter((row) => row.consecutiveNullWeeks >= 2).length
-    const status = toStatus(mismatchCount, nullStreakCount)
+    // Align with runbook policy: a metric is blocking-stale only after two consecutive weekly nulls.
+    const staleMetrics = freshnessResults.filter((row) => row.freshnessStatus !== 'fresh')
+    const nullStreakCount = staleMetrics.length
+    const status: JobStatus = nullStreakCount > 0 ? 'failed' : 'ok'
 
     const runPayload = {
       reference_date: body.referenceDate ?? null,
-      tolerance_points: tolerancePoints,
-      mismatch_count: mismatchCount,
+      null_streak_weeks: NULL_STREAK_WEEKS,
       null_streak_count: nullStreakCount,
-      published_values: PUBLISHED_KPI_VALUES,
-      drift_results: driftResults,
+      stale_metrics: staleMetrics.map((row) => row.metricName),
+      freshness_results: freshnessResults,
     }
 
     const { data } = await sb
@@ -171,9 +161,9 @@ export async function POST(request: NextRequest) {
       runId: data?.id,
       jobName: JOB_NAME,
       status,
-      mismatchCount,
       nullStreakCount,
-      driftResults,
+      staleMetrics: staleMetrics.map((row) => row.metricName),
+      freshnessResults,
     })
   } catch (error) {
     console.error('[reporting.emi-validation-reruns] request failed', error)

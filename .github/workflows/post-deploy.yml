@@ -307,6 +307,11 @@ jobs:
             echo "EMI smoke failures: ${EMI_FAILURES}" >> "$GITHUB_STEP_SUMMARY"
           fi
 
+          if [ -f emi-postdeploy-smoke.json ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            node scripts/emi-summary-markdown.mjs emi-postdeploy-smoke.json "EMI Post-Deploy Detail" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Alert on post-deploy synthetic failure
         if: steps.synthetics.outputs.failed > 0
         env:
