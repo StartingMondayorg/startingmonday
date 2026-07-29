@@ -43,9 +43,11 @@ export default async function DashboardResultsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const since14d = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
-  const since42dIso = new Date(Date.now() - 42 * 24 * 60 * 60 * 1000).toISOString()
-  const todayIso = new Date().toISOString().slice(0, 10)
+  const now = new Date()
+  const nowMs = now.getTime()
+  const since14d = new Date(nowMs - 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  const since42dIso = new Date(nowMs - 42 * 24 * 60 * 60 * 1000).toISOString()
+  const todayIso = now.toISOString().slice(0, 10)
 
   const [
     { data: profileRaw },
@@ -124,7 +126,7 @@ export default async function DashboardResultsPage() {
 
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
   const daysInMarket = profile?.search_started_at
-    ? Math.max(0, Math.floor((Date.now() - new Date(profile.search_started_at).getTime()) / 86400000))
+    ? Math.max(0, Math.floor((nowMs - new Date(profile.search_started_at).getTime()) / 86400000))
     : null
 
   const weeklyRows = Array.from({ length: 6 }, (_, offset) => {
