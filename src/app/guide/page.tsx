@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { readGuideRuntimeFile } from '@/lib/guide-runtime-files'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 import { GuideClient } from './guide-client'
 
 type GuideSection = {

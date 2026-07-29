@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { retrieveGuide, type GuideIntent } from '@/lib/guide-retrieval'
-import { readGuideRuntimeFile } from '@/lib/guide-runtime-files'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 
 type InternalEntry = {
   id: string

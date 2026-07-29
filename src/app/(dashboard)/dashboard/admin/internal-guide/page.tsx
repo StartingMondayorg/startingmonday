@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { readGuideRuntimeFile } from '@/lib/guide-runtime-files'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
 import { InternalGuideClient } from './internal-guide-client'
 

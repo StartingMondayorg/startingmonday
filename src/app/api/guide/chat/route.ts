@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { retrieveGuide, type GuideEntry, type GuideIntent } from '@/lib/guide-retrieval'
-import { readGuideRuntimeFile } from '@/lib/guide-runtime-files'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 
 type GuideIndex = {
   generatedAt: string
