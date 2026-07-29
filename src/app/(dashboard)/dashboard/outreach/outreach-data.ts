@@ -129,9 +129,18 @@ type ExecutiveRoleArchetype =
   | 'c_suite_other'
 
 export async function readOutreachCsv(fileName: string): Promise<CsvSummary> {
-  const fullPath = path.join(process.cwd(), 'docs', 'outreach', fileName)
-  const content = await readFile(fullPath, 'utf8')
-  return parseCsv(content)
+  const sourcePath = path.join(process.cwd(), 'docs', 'outreach', fileName)
+  const packagedPath = path.join(process.cwd(), '.next', 'server', 'outreach-data', fileName)
+
+  try {
+    return parseCsv(await readFile(sourcePath, 'utf8'))
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error
+    }
+  }
+
+  return parseCsv(await readFile(packagedPath, 'utf8'))
 }
 
 export function prioritizeCuratedRows(base: CsvSummary, curated: CsvSummary, limit = 100): CsvSummary {

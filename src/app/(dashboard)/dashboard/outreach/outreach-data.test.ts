@@ -1,5 +1,66 @@
-import { describe, expect, it } from 'vitest'
-import { buildStandardizedDraft, dedupeOutreachRows, followUpSentByEmail, mapTriggerInputs, type CsvRow, type ClientRow } from './outreach-data'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { readFile } from 'node:fs/promises'
+import { buildStandardizedDraft, dedupeOutreachRows, followUpSentByEmail, mapTriggerInputs, prioritizeCuratedRows, readOutreachCsv, type CsvRow, type ClientRow } from './outreach-data'
+
+vi.mock('node:fs/promises', async (importOriginal) => ({
+  ...await importOriginal<typeof import('node:fs/promises')>(),
+  readFile: vi.fn(),
+}))
+
+const readFileMock = vi.mocked(readFile)
+
+function fileError(code: string): NodeJS.ErrnoException {
+  return Object.assign(new Error(code), { code })
+}
+
+describe('outreach-data CSV loading', () => {
+  beforeEach(() => {
+    readFileMock.mockReset()
+  })
+
+  it('loads and parses CSV data from the source tree', async () => {
+    readFileMock.mockResolvedValue('full_name,email\nAda Lovelace,ada@example.com\n')
+
+    await expect(readOutreachCsv('prospects.csv')).resolves.toEqual({
+      rowCount: 1,
+      rows: [{ full_name: 'Ada Lovelace', email: 'ada@example.com' }],
+    })
+    expect(readFileMock).toHaveBeenCalledOnce()
+    expect(readFileMock.mock.calls[0][0]).toMatch(/docs[\\/]outreach[\\/]prospects\.csv$/)
+  })
+
+  it('loads packaged CSV data when the source tree is unavailable', async () => {
+    readFileMock
+      .mockRejectedValueOnce(fileError('ENOENT'))
+      .mockResolvedValueOnce('full_name,email\nGrace Hopper,grace@example.com\n')
+
+    await expect(readOutreachCsv('prospects.csv')).resolves.toMatchObject({ rowCount: 1 })
+    expect(readFileMock).toHaveBeenCalledTimes(2)
+    expect(readFileMock.mock.calls[1][0]).toMatch(/\.next[\\/]server[\\/]outreach-data[\\/]prospects\.csv$/)
+  })
+
+  it('rethrows non-missing-file errors without trying the packaged path', async () => {
+    const error = fileError('EACCES')
+    readFileMock.mockRejectedValue(error)
+
+    await expect(readOutreachCsv('prospects.csv')).rejects.toBe(error)
+    expect(readFileMock).toHaveBeenCalledOnce()
+  })
+
+  it('rethrows when neither source nor packaged CSV data exists', async () => {
+    readFileMock.mockRejectedValue(fileError('ENOENT'))
+
+    await expect(readOutreachCsv('prospects.csv')).rejects.toMatchObject({ code: 'ENOENT' })
+    expect(readFileMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('prioritizes curated rows before the base list', () => {
+    const base = { rowCount: 1, rows: [{ email: 'base@example.com' }] }
+    const curated = { rowCount: 1, rows: [{ email: 'curated@example.com' }] }
+
+    expect(prioritizeCuratedRows(base, curated, 1).rows).toEqual(curated.rows)
+  })
+})
 
 describe('outreach-data trigger mapping', () => {
   it('maps CRM and scraping fields into trigger inputs', () => {

@@ -60,6 +60,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['pdf-parse', 'mammoth'],
+  outputFileTracingIncludes: {
+    '/dashboard/outreach': ['./docs/outreach/**/*.csv'],
+    '/mauricio-kickoff-execution/apollo-read-access': ['./docs/outreach/**/*.csv'],
+  },
   experimental: {
     cpus: RAILWAY_BUILD_CPUS,
     inlineCss: true,

@@ -1,9 +1,14 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { NextRequest, NextResponse } from 'next/server'
 
+type SendEmailResult = {
+  data: { id: string } | null
+  error: { message: string } | null
+}
+
 const state = vi.hoisted(() => ({
   requireAuth: vi.fn(),
-  sendEmail: vi.fn(async () => ({ data: { id: 'msg_1' }, error: null } as any)),
+  sendEmail: vi.fn(async (): Promise<SendEmailResult> => ({ data: { id: 'msg_1' }, error: null })),
 }))
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
@@ -77,7 +82,7 @@ describe('team invite route', () => {
   })
 
   it('surfaces email delivery failures', async () => {
-    state.sendEmail.mockResolvedValueOnce({ data: null, error: { message: 'smtp unavailable' } } as any)
+    state.sendEmail.mockResolvedValueOnce({ data: null, error: { message: 'smtp unavailable' } })
 
     const req = new NextRequest('https://startingmonday.app/api/team/invite', {
       method: 'POST',
