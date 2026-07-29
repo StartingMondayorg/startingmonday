@@ -119,6 +119,12 @@ export default function CoachesChannelPage() {
               >
                 View sample transition brief
               </TrackLink>
+              <Link
+                href="/coaches/federal-it-transition-demo"
+                className="rounded-full border border-white/18 px-6 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+              >
+                Send federal IT demo
+              </Link>
             </div>
 
             <p className="mt-6 text-[12px] tracking-[0.14em] text-slate-400">
