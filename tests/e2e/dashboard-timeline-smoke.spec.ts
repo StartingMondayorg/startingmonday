@@ -73,13 +73,12 @@ test('timeline sort, paging, and owner assignment work on staging', async ({ pag
 
 test('timeline sort and paging render safely on production', async ({ page }) => {
   const allowWrite = process.env.PLAYWRIGHT_PROD_WRITE === '1'
-  await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
+  await page.goto('/dashboard?focus=health', { waitUntil: 'domcontentloaded' })
 
   if (/\/login(?:$|[/?#])/.test(page.url())) {
     test.skip(true, 'Authenticated session unavailable for production dashboard smoke.')
   }
 
-  await page.getByRole('button', { name: /Pipeline health and decision timeline/i }).click()
   const timelineHeading = page.getByRole('heading', { name: 'Required next-decision markers', exact: true }).filter({ visible: true })
   await expect(timelineHeading).toBeVisible()
   const section = timelineHeading.locator('xpath=ancestor::section[1]')
