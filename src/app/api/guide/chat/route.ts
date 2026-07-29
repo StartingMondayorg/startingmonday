@@ -1,11 +1,10 @@
-﻿import { readFile } from 'fs/promises'
-import path from 'path'
-import { type NextRequest, NextResponse } from 'next/server'
+﻿import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { retrieveGuide, type GuideEntry, type GuideIntent } from '@/lib/guide-retrieval'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 
 type GuideIndex = {
   generatedAt: string
@@ -63,8 +62,7 @@ function isCustomerVisibleEntry(entry: GuideEntry): boolean {
 }
 
 async function loadGuideIndex(): Promise<GuideIndex | null> {
-  const guideIndexPath = path.join(process.cwd(), 'docs', 'user-guide.index.json')
-  const raw = await readFile(guideIndexPath, 'utf8').catch(() => '')
+  const raw = await readGuideRuntimeFile('user-guide.index.json')
   if (!raw) return null
 
   try {

@@ -1,8 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { readFile } from 'fs/promises'
-import path from 'path'
 import { createClient } from '@/lib/supabase/server'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 import { GuideClient } from './guide-client'
 
 type GuideSection = {
@@ -152,8 +151,7 @@ export default async function GuidePage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const diskIndexPath = path.join(process.cwd(), 'docs', 'user-guide.index.json')
-  const diskIndexRaw = await readFile(diskIndexPath, 'utf8').catch(() => '')
+  const diskIndexRaw = await readGuideRuntimeFile('user-guide.index.json')
   let diskIndexEntries: UserGuideIndexEntry[] = []
   let guideGeneratedAt = ''
   if (diskIndexRaw) {
@@ -168,8 +166,7 @@ export default async function GuidePage({
 
   const indexSections = sectionsFromIndex(diskIndexEntries)
 
-  const guidePath = path.join(process.cwd(), 'docs', 'user-guide.md')
-  const markdown = await readFile(guidePath, 'utf8').catch(() => '')
+  const markdown = await readGuideRuntimeFile('user-guide.md')
   const markdownSections = parseGuide(markdown)
   const sections = indexSections.length > 0 ? indexSections : markdownSections
 
