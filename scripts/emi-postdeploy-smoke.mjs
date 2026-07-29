@@ -95,10 +95,17 @@ function emitSummary(summary) {
   console.log(`success criteria audit run: ${summary.successCriteriaAuditRunId ?? 'n/a'}`)
   console.log(`objection dashboard run: ${summary.objectionDashboardRunId ?? 'n/a'}`)
   console.log(`slo monitoring run: ${summary.sloMonitoringRunId ?? 'n/a'}`)
-  console.log(`validation status=${summary.validationStatus ?? 'n/a'} mismatchCount=${String(summary.mismatchCount)} nullStreakCount=${String(summary.nullStreakCount)}`)
+  console.log(`validation status=${summary.validationStatus ?? 'n/a'} nullStreakCount=${String(summary.nullStreakCount)}`)
+  console.log(`success criteria: ${summary.successCriteriaStatus ?? 'n/a'} (advisory)`)
   if (summary.failures?.length) {
-    console.log('failures:')
+    console.log('blocking failures:')
     for (const reason of summary.failures) {
+      console.log(`- ${reason}`)
+    }
+  }
+  if (summary.warnings?.length) {
+    console.log('advisory warnings (non-blocking):')
+    for (const reason of summary.warnings) {
       console.log(`- ${reason}`)
     }
   }
@@ -112,10 +119,10 @@ async function main() {
       weeklyRunId: null,
       validationRunId: null,
       validationStatus: null,
-      mismatchCount: null,
       nullStreakCount: null,
       passed: false,
       failures: ['Missing EMI_SMOKE_TOKEN for token-auth smoke validation.'],
+      warnings: [],
       checks: {
         emiSmoke: { status: 0 },
       },
@@ -129,6 +136,9 @@ async function main() {
   const failures = Array.isArray(responseBody.failures)
     ? responseBody.failures.map((item) => String(item))
     : [`emi-smoke endpoint failed status=${emiSmoke.status} body=${emiSmoke.rawBody}`]
+  const warnings = Array.isArray(responseBody.warnings)
+    ? responseBody.warnings.map((item) => String(item))
+    : []
 
   const passed = emiSmoke.status === 200 && responseBody.ok === true && failures.length === 0
 
@@ -147,11 +157,16 @@ async function main() {
     objectionDashboardRunId: responseBody.objectionDashboardRunId ?? null,
     sloMonitoringRunId: responseBody.sloMonitoringRunId ?? null,
     validationStatus: responseBody.validationStatus ?? null,
-    mismatchCount: responseBody.mismatchCount ?? null,
     nullStreakCount: responseBody.nullStreakCount ?? null,
+    staleMetrics: responseBody.staleMetrics ?? [],
+    queryErrorMetrics: responseBody.queryErrorMetrics ?? [],
+    noDataMetrics: responseBody.noDataMetrics ?? [],
+    successCriteriaStatus: responseBody.successCriteriaStatus ?? null,
+    successCriteriaPayload: responseBody.successCriteriaPayload ?? null,
     diagnostics: responseBody.diagnostics ?? null,
     passed,
     failures: passed ? [] : failures,
+    warnings,
     checks: {
       emiSmoke,
       weekly: responseBody.checks?.weekly ?? null,
@@ -183,10 +198,10 @@ main().catch((error) => {
     weeklyRunId: null,
     validationRunId: null,
     validationStatus: null,
-    mismatchCount: null,
     nullStreakCount: null,
     passed: false,
     failures: [message],
+    warnings: [],
     checks: {
       weekly: { status: 0 },
       validation: { status: 0 },

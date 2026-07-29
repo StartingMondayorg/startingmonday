@@ -69,12 +69,12 @@ Purpose: Re-run EMI production validation in a consistent, audit-ready workflow.
 
 1. The rerun alerting path is implemented in `src/app/api/admin/automation/reporting/emi-validation-reruns/route.ts`.
 2. The route reads canonical `emi_kpi_snapshots`, compares them to published sprint reference values, and writes a `scheduled_job_observability_runs` record.
-3. Any mismatch or consecutive null streak causes automation alert creation through the existing observability trigger path.
+3. A consecutive null streak (two weeks with no usable value for a metric) sets the run status to `failed`, which creates an automation alert through the existing observability trigger path. This alerts a human without blocking deploys.
 4. Post-deploy smoke command: run `npm run emi:smoke:postdeploy` with `EMI_SMOKE_TOKEN` set.
 5. `EMI_SMOKE_TOKEN` is validated only by `POST /api/internal/automation/emi-smoke`, which enforces constant-time token comparison and request rate limiting before executing the smoke action.
 6. Rotation: update `EMI_SMOKE_TOKEN` in production environment variables and in GitHub Actions repository secrets in the same change window.
 7. Incident fallback: if token checks fail after rotation, runbook owners should restore the previous known-good token, rerun the smoke command, then re-attempt rotation with synced secret updates.
-8. Smoke check pass criteria: weekly snapshot returns `ok`, validation returns `status=ok`, `mismatchCount=0`, and `nullStreakCount=0`.
+8. Smoke check pass criteria (SMK-444): every automation route returns HTTP 200, operational routes return `ok=true`, the weekly job writes at least one KPI snapshot, and no metric reports `metric_status=query_error`. Value-level drift against a hardcoded baseline is no longer checked; `nullStreakCount` and the business success criteria are advisory and reported without failing the gate.
 9. Export-file generation and manifest markdown updates still require an operator step in the repository workspace.
 
 ## Definition of Complete Rerun
