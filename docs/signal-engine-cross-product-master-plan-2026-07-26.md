@@ -827,6 +827,7 @@ automation story blocked.
 | WS10-06 Publication gate | AO + LEGAL + DATA | WS10-04/05 | Review checklist and approval record | Rights, privacy, uncertainty, support, freshness and claim wording pass |
 | WS10-07 Operating review automation | OPS | Scorecards | Weekly ops and monthly business review package | Missing/stale inputs fail visibly; owner and actions recorded |
 | WS10-08 Scale decision | AO | Measured product and model outcomes | Continue, narrow, pause or expand decision | Decision references kill criteria and opportunity cost |
+| WS10-09 Prospect context, lane contract, and one-company proof | AO + ENG-MS | WS1-08; DG-03; DG-10; MandateSignal launch controls | MandateSignal-local prospect context policy and evidence-bounded L1/L2/L3 sample contracts; no shared tables or synchronous Starting Monday dependency | Source-policy guard, contract fixtures, deterministic QA, renderer tests, and no-send inventory prove lane metering, evidence lineage, no autonomous delivery, and no cross-product data access |
 
 ## 17. Existing-System Dependency Inventory
 
