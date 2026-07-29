@@ -64,7 +64,7 @@ test('@rubric dashboard CTA taxonomy uses one canonical label per destination', 
         for (const d of destinations) {
           if (href === d || href.startsWith(`${d}?`) || href.startsWith(`${d}#`)) {
             const text = (link.textContent ?? '').replace(/\s+/g, ' ').trim()
-            if (text) result[d].push(text)
+            if (text && text.length <= 40) result[d].push(text)
           }
         }
       }

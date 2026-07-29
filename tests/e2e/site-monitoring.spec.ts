@@ -5,7 +5,7 @@ const publicJourneys = [
   { path: '/', heading: /You don't compete for the posting|You are behind on timing, narrative, and prep|Be ready.*(Be early|search opens)|Starting Monday|Operating System|Run your transition/i },
   { path: '/login', heading: /Sign in/i },
   { path: '/signup', heading: /Get started|Create your account|Sign up/i },
-  { path: '/pricing', heading: /Pricing/i },
+  { path: '/pricing', heading: /The terms of engagement/i },
 ]
 
 async function skipIfAuthUnavailable(page: Page) {
@@ -52,9 +52,8 @@ test.describe('authenticated monitoring journeys', () => {
     if (await emptyState.isVisible()) {
       await expect(page.getByText(/No new job matches, overdue follow-ups, or company signals/i)).toBeVisible()
     } else {
-      await expect(page.getByRole('heading', { name: 'Accountability' })).toBeVisible()
-      await expect(page.getByRole('heading', { name: /Overnight Changes|People To Reach|Today, Do This/ }).first()).toBeVisible()
-      await expect(page.getByText(/Here is what changed overnight and what to act on first today\./i)).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Find Roles First' })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Talk to the Right People' })).toBeVisible()
     }
   })
 
