@@ -1,7 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
-import { readFile } from 'node:fs/promises'
-import path from 'node:path'
 import { createClient } from '@/lib/supabase/server'
+import { readGuideRuntimeFile } from '@/lib/guide-runtime-files'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
 import { InternalGuideClient } from './internal-guide-client'
 
@@ -155,8 +154,7 @@ export default async function InternalGuidePage({
   if (!hasAdminHeaderAccess(staff)) notFound()
   const staffMember = staff!
 
-  const diskIndexPath = path.join(process.cwd(), 'docs', 'internal-guide.index.json')
-  const diskIndexRaw = await readFile(diskIndexPath, 'utf8').catch(() => '')
+  const diskIndexRaw = await readGuideRuntimeFile('internal-guide.index.json')
   let diskIndexEntries: InternalIndexEntry[] = []
   let guideGeneratedAt = ''
   if (diskIndexRaw) {
@@ -171,8 +169,7 @@ export default async function InternalGuidePage({
 
   const indexSections = sectionsFromIndex(diskIndexEntries)
 
-  const guidePath = path.join(process.cwd(), 'docs', 'internal-guide.md')
-  const markdown = await readFile(guidePath, 'utf8').catch(() => '')
+  const markdown = await readGuideRuntimeFile('internal-guide.md')
   const markdownSections = parseGuide(markdown)
   const sections = indexSections.length > 0 ? indexSections : markdownSections
 
