@@ -35,6 +35,7 @@ export function DashboardDecisionTimelineSection({
 
   function withParams(nextPage: number, nextSort?: string) {
     const qp = new URLSearchParams()
+    qp.set('focus', 'health')
     qp.set('timelinePage', String(nextPage))
     qp.set('timelineSort', nextSort ?? currentSort)
     return `/dashboard?${qp.toString()}`
