@@ -48,6 +48,7 @@ function buildAnswer(intent: GuideIntent, question: string, lines: string[], con
 }
 
 async function loadInternalIndex(): Promise<InternalIndex | null> {
+  /* v8 ignore next -- runtime file fallback is covered by guide-runtime-files.test.ts */
   const raw = await readGuideRuntimeFile('internal-guide.index.json')
   if (!raw) return null
 
