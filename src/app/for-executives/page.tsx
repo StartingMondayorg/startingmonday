@@ -53,7 +53,7 @@ export default async function ForExecutivesPage() {
       <main className="min-h-screen bg-slate-950 text-slate-100">
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
         <section className="border-b border-white/10 px-6 py-18 sm:px-10 sm:py-24">
-          <div className="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div className="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-200">For executives</p>
               <h1 className="mt-4 max-w-2xl text-[34px] font-semibold leading-[1.08] sm:text-[48px]">
@@ -79,11 +79,11 @@ export default async function ForExecutivesPage() {
               <p className="mt-4 text-[12px] tracking-[0.01em] text-slate-300">Confidential by design. No employer visibility. No outbound exposure.</p>
             </div>
 
-            <figure className="mx-auto w-[58%] max-w-[340px] rounded-[18px] border border-white/12 bg-slate-900/55 p-1.5 shadow-[0_24px_52px_rgba(2,6,23,0.4)] lg:mr-0 lg:ml-auto lg:w-[58%] lg:max-w-[380px]">
+            <figure className="mx-auto w-[70%] max-w-[360px] rounded-[18px] border border-white/12 bg-slate-900/55 p-1.5 shadow-[0_24px_52px_rgba(2,6,23,0.4)] lg:mr-0 lg:ml-auto lg:w-full lg:max-w-[420px]">
               <Image
                 src="/executives-desk.webp"
                 alt="Executive seated at a desk reviewing documents in a refined home office"
-                className="block w-full rounded-[14px]"
+                className="block max-h-[440px] w-full rounded-[14px] object-cover object-center"
                 width={1122}
                 height={1402}
                 priority

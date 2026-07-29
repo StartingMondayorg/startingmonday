@@ -270,7 +270,7 @@ export function LandingPage({
                     </div>
                   )}
                 </div>
-                <div className="relative mx-auto h-[480px] w-full max-w-[390px] overflow-hidden rounded-[1.6rem] border border-white/12 shadow-[0_30px_72px_rgba(2,6,23,0.42)] lg:mx-0 lg:justify-self-end">
+                <div className="relative mx-auto h-[480px] w-full max-w-[390px] overflow-hidden rounded-[1.6rem] border border-white/12 shadow-[0_30px_72px_rgba(2,6,23,0.42)] lg:mx-0 lg:mt-10 lg:justify-self-end">
                   <Image
                     src="/hero-offer-letter.webp"
                     alt="Executive reading her employment offer, hand to heart, with a city skyline behind her"
@@ -278,7 +278,7 @@ export function LandingPage({
                     sizes="(max-width: 640px) 92vw, 390px"
                     preload
                     fetchPriority="high"
-                    quality={82}
+                    quality={75}
                     className="object-cover object-center"
                   />
                 </div>
