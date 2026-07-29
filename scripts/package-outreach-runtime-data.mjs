@@ -3,11 +3,27 @@ import { copyFile, mkdir, readdir, rm } from 'node:fs/promises'
 import path from 'node:path'
 
 const root = process.cwd()
-const sourceDir = path.join(root, 'docs', 'outreach')
 const targetDir = path.join(root, '.next', 'server', 'outreach-data')
-const files = (await readdir(sourceDir)).filter((fileName) => fileName.endsWith('.csv'))
+const sourceCandidates = [
+  path.join(root, 'docs', 'outreach'),
+  path.join(root, 'outreach'),
+]
 
-if (files.length === 0) {
+let sourceDir
+let files = []
+for (const candidate of sourceCandidates) {
+  try {
+    files = (await readdir(candidate)).filter((fileName) => fileName.endsWith('.csv'))
+    if (files.length > 0) {
+      sourceDir = candidate
+      break
+    }
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error
+  }
+}
+
+if (!sourceDir) {
   throw new Error('No outreach CSV files found for runtime packaging')
 }
 
