@@ -1,10 +1,6 @@
 docs/**
 !docs/outreach/
 !docs/outreach/**
-!docs/user-guide.index.json
-!docs/internal-guide.index.json
-!docs/user-guide.md
-!docs/internal-guide.md
 test-results/
 playwright-report/
 coverage/

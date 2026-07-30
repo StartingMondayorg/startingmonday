@@ -36,8 +36,9 @@ test('timeline sort, paging, and owner assignment work on staging', async ({ pag
 
   await ensureTimelineData(page)
 
-  const section = page.locator('section').filter({ hasText: 'Required next-decision markers' }).first()
-  await expect(section.getByText('Decision timeline engine')).toBeVisible()
+  const timelineHeading = page.getByRole('heading', { name: 'Required next-decision markers', exact: true }).filter({ visible: true })
+  await expect(timelineHeading).toBeVisible()
+  const section = timelineHeading.locator('xpath=ancestor::section[1]')
 
   await section.getByRole('link', { name: 'Name A-Z' }).click()
   await page.waitForURL(/timelineSort=name_asc/, { timeout: 10_000 })
@@ -72,14 +73,15 @@ test('timeline sort, paging, and owner assignment work on staging', async ({ pag
 
 test('timeline sort and paging render safely on production', async ({ page }) => {
   const allowWrite = process.env.PLAYWRIGHT_PROD_WRITE === '1'
-  await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
+  await page.goto('/dashboard?focus=health', { waitUntil: 'domcontentloaded' })
 
   if (/\/login(?:$|[/?#])/.test(page.url())) {
     test.skip(true, 'Authenticated session unavailable for production dashboard smoke.')
   }
 
-  const section = page.locator('section').filter({ hasText: 'Required next-decision markers' }).first()
-  await expect(section.getByText('Decision timeline engine')).toBeVisible()
+  const timelineHeading = page.getByRole('heading', { name: 'Required next-decision markers', exact: true }).filter({ visible: true })
+  await expect(timelineHeading).toBeVisible()
+  const section = timelineHeading.locator('xpath=ancestor::section[1]')
 
   const emptyState = section.getByText('No campaigns yet. Add your first target to initialize timeline markers.')
   if (await emptyState.isVisible().catch(() => false)) {

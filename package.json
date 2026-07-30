@@ -9,7 +9,7 @@
         "dev": "next dev",
         "dev:doppler": "doppler run -- npm run dev",
         "deps:check": "node scripts/check-dependency-policy.mjs",
-        "build": "npm run prebuild:guard && next build && node scripts/package-outreach-runtime-data.mjs",
+        "build": "npm run guide:user:sync && npm run guide:internal:sync && npm run prebuild:guard && next build && node scripts/package-outreach-runtime-data.mjs && node scripts/package-guide-runtime-data.mjs",
         "report:pdfs": "node scripts/export-report-pdfs.mjs",
         "railway:preflight": "npm run build",
         "prebuild:guard": "node scripts/prebuild-guard.mjs",

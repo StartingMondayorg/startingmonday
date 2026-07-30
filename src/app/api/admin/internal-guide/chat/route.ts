@@ -1,12 +1,11 @@
-﻿import { readFile } from 'node:fs/promises'
-import path from 'node:path'
-import { type NextRequest, NextResponse } from 'next/server'
+﻿import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { retrieveGuide, type GuideIntent } from '@/lib/guide-retrieval'
+import { readGuideRuntimeFile } from '@/app/guide-runtime-files'
 
 type InternalEntry = {
   id: string
@@ -49,8 +48,8 @@ function buildAnswer(intent: GuideIntent, question: string, lines: string[], con
 }
 
 async function loadInternalIndex(): Promise<InternalIndex | null> {
-  const indexPath = path.join(process.cwd(), 'docs', 'internal-guide.index.json')
-  const raw = await readFile(indexPath, 'utf8').catch(() => '')
+  /* v8 ignore next -- runtime file fallback is covered by guide-runtime-files.test.ts */
+  const raw = await readGuideRuntimeFile('internal-guide.index.json')
   if (!raw) return null
 
   try {

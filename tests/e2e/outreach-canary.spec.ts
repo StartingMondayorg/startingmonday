@@ -8,6 +8,7 @@ async function requireAuthSessionOrSkip(page: Page) {
 test('Outreach Canary: server template draft + dry-run gate pass', async ({ page }) => {
   await requireAuthSessionOrSkip(page)
   await page.goto('/dashboard/outreach')
+  test.skip(!/\/dashboard\/outreach(?:$|[/?#])/.test(page.url()), 'Skipping outreach canary: staff access unavailable')
   await expect(page.getByRole('heading', { name: 'Outreach Hub' })).toBeVisible()
 
   const rows = page.locator('button').filter({ hasText: 'Review and send on right' })
