@@ -53,7 +53,7 @@ test('timeline sort, paging, and owner assignment work on staging', async ({ pag
   await expect(pageLabel).toBeVisible()
 
   const beforePage = (await pageLabel.textContent())?.trim() ?? ''
-  await section.getByRole('link', { name: 'Next' }).click()
+  await section.getByRole('link', { name: 'Next', exact: true }).click()
   await page.waitForURL(/timelinePage=1/, { timeout: 10_000 })
   const afterPage = (await pageLabel.textContent())?.trim() ?? ''
   expect(afterPage).not.toBe(beforePage)
@@ -101,7 +101,7 @@ test('timeline sort and paging render safely on production', async ({ page }) =>
   const pageLabel = section.getByText(/^Page \d+ of \d+$/).first()
   if (await pageLabel.isVisible().catch(() => false)) {
     const beforePage = (await pageLabel.textContent())?.trim() ?? ''
-    await section.getByRole('link', { name: 'Next' }).click()
+    await section.getByRole('link', { name: 'Next', exact: true }).click()
     await page.waitForURL(/timelinePage=1/, { timeout: 10_000 })
     const afterPage = (await pageLabel.textContent())?.trim() ?? ''
     expect(afterPage).not.toBe(beforePage)

@@ -23,6 +23,7 @@ export async function GET() {
       uptime: Math.floor((Date.now() - START_TIME) / 1000),
       timestamp: new Date().toISOString(),
       version: process.env.npm_package_version ?? 'unknown',
+      commit: process.env.RAILWAY_GIT_COMMIT_SHA ?? null,
       checks: required,
       missing,
     },
