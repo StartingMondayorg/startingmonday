@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { headers } from 'next/headers'
 import { AssistWidget } from "@/components/AssistWidget";
 import { getBrandContextFromHosts } from '@/lib/brand'
+import { buildBrandMetadata } from './brand-metadata'
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,51 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
     requestHeaders.get('x-forwarded-host'),
   ])
 
-  const description = brand.isMandateSignal
-    ? 'MandateSignal helps retained search and recruiting teams detect likely-to-open mandates early, prioritize target accounts, and act before broad posting.'
-    : 'Pipeline tracking, company intelligence, and AI-powered interview prep for senior executives in active search.'
-
-  return {
-    title: {
-      default: `${brand.name} - The Operating System for Senior Executives`,
-      template: `%s - ${brand.name}`,
-    },
-    description,
-    keywords: [
-      'executive job search',
-      'CIO job search',
-      'CTO job search',
-      'AI career platform',
-      'executive search tools',
-      'technology executive career',
-      'job search tracker executives',
-      'VP CIO transition',
-      'executive interview prep',
-      'senior technology executive',
-    ],
-    metadataBase: new URL(brand.origin),
-    alternates: {
-      canonical: './',
-    },
-    icons: {
-      icon: '/icon',
-      shortcut: '/icon',
-      apple: '/apple-icon',
-    },
-    openGraph: {
-      siteName: brand.name,
-      type: 'website',
-      locale: 'en_US',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      site: brand.isMandateSignal ? undefined : '@startingmonday',
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-  }
+  return buildBrandMetadata(brand)
 }
 
 export default function RootLayout({

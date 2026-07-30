@@ -1,0 +1,41 @@
+{
+  "description": "Canonical first-week spine copy (CLR-1/2/3 single source). Surfaces must import from this file; hard-coding any block elsewhere fails guard:first-week-spine. Word budgets enforced by scripts/check-first-week-spine.mjs. Variant A (trial = Active tier) per D-A ruling 2026-07-30.",
+  "heading": "Here's your first week with Starting Monday",
+  "steps": [
+    {
+      "label": "Today, in 10 minutes",
+      "body": "Create your free account and tell us your target roles and companies. No credit card. Employers never see you."
+    },
+    {
+      "label": "Tomorrow morning",
+      "body": "Your first briefing arrives: roles likely to open, the signals behind them, and one priority action."
+    },
+    {
+      "label": "Within your first week",
+      "body": "Every company you named is under watch. Your briefing shows what we scanned, what we ruled out, and what passed."
+    },
+    {
+      "label": "Every Monday",
+      "body": "A weekly review keeps your search moving. Cancel anytime and keep everything you've built."
+    },
+    {
+      "label": "When your search intensifies",
+      "body": "Upgrade for daily execution and deeper prep, or invite a coach to work alongside you."
+    }
+  ],
+  "trustLine": "Cancel anytime. Keep your data. Never visible to employers.",
+  "guaranteeLine": "Free for 30 days. No credit card. Delete everything anytime.",
+  "confirmationLine": "After you confirm, setup takes about 10 minutes and your first briefing arrives tomorrow morning.",
+  "condensed": [
+    "Today: tell us your targets. Ten minutes, no credit card.",
+    "Tomorrow morning: your first briefing arrives.",
+    "Within your first week: everything you named is under watch."
+  ],
+  "budgets": {
+    "spineTotalWords": 110,
+    "trustLineWords": 15,
+    "guaranteeLineWords": 15,
+    "confirmationLineWords": 25,
+    "condensedTotalWords": 45
+  }
+}

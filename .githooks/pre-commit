@@ -13,6 +13,12 @@ node scripts/prebuild-guard.mjs
 echo "untracked test guard..."
 npm run guard:untracked-tests
 
+echo "plain-language lexicon gate..."
+npm run guard:plain-language
+
+echo "first-week spine gate..."
+npm run guard:first-week-spine
+
 echo "outreach template drift..."
 ./node_modules/.bin/vitest run src/lib/outreach/template-engine.test.ts
 

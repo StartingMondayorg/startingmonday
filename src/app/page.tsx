@@ -288,6 +288,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         situations={isMandateSignal ? MANDATE_SITUATIONS : SITUATIONS}
         faqs={isMandateSignal ? MANDATE_FAQS : FAQS}
         showPersonaSelector
+        showFirstWeekSpine={!isMandateSignal}
         experimentVariant={experimentVariant}
         brandWordmark={{
           primary: brand.wordmarkPrimary,

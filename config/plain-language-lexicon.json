@@ -1,0 +1,61 @@
+{
+  "description": "Plain-language lexicon gate (CLR-8 Layer 1). Candidate-facing pre-signup Starting Monday surfaces may not add jargon terms; retired tier phrases may not render at all. Ratchet: existing counts are baselined in plain-language-baseline.json and may only go down. Update baseline with: npm run guard:plain-language:baseline",
+  "scope": [
+    "src/app/page.tsx",
+    "src/components/LandingPage.tsx",
+    "src/components/HomepageBriefTeaser.tsx",
+    "src/app/(auth)/signup/",
+    "src/app/pricing/",
+    "src/app/learn-more/",
+    "src/app/for-*"
+  ],
+  "excludeSuffixes": [".test.ts", ".test.tsx", ".spec.ts", ".spec.tsx"],
+  "terms": [
+    {
+      "id": "mandate",
+      "pattern": "\\bmandates?\\b",
+      "plainSubstitute": "the role / the decision to hire",
+      "note": "Word boundary intentionally excludes the MandateSignal brand name."
+    },
+    {
+      "id": "cadence",
+      "pattern": "\\bcadence\\b",
+      "plainSubstitute": "rhythm / weekly schedule"
+    },
+    {
+      "id": "problem-level-context",
+      "pattern": "problem-level context",
+      "plainSubstitute": "the business problem behind the role"
+    },
+    {
+      "id": "process-formalizes",
+      "pattern": "process formalizes",
+      "plainSubstitute": "the hiring process becomes official"
+    },
+    {
+      "id": "sharpen-narrative",
+      "pattern": "sharpen narrative",
+      "plainSubstitute": "improve your story"
+    },
+    {
+      "id": "decision-grade",
+      "pattern": "decision-grade",
+      "plainSubstitute": "ready to act on"
+    },
+    {
+      "id": "shaping-power",
+      "pattern": "shaping power",
+      "plainSubstitute": "influence over the decision"
+    }
+  ],
+  "retiredPhrases": [
+    "Quiet monitor mode",
+    "Active campaign mode",
+    "High-intensity mandate mode",
+    "monitor mode",
+    "campaign mode",
+    "mandate mode",
+    "buyer mode",
+    "buyer-mode"
+  ]
+}

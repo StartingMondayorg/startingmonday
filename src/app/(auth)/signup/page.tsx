@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { usePostHog } from 'posthog-js/react'
 import TurnstileWidget from '@/components/turnstile-widget'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
+import firstWeekSpine from '@/content/first-week-spine.json'
 
 const TURNSTILE_ENABLED = process.env.NEXT_PUBLIC_TURNSTILE_ENABLED === '1'
 
@@ -52,7 +53,7 @@ const SITUATION_COPY: Record<string, SituationContent> = {
     title: 'Not ready to commit. That\'s fine.',
     sub: 'Monitor your targets in the background. You\'ll know the moment something changes.',
     firstStep: 'Begin in low-visibility mode and track target companies without active outreach.',
-    cta: 'start in monitor mode',
+    cta: 'start with Monitor',
   },
   'vp-up': {
     title: 'You have the record. Now run the campaign.',
@@ -425,6 +426,7 @@ export default function SignupPage() {
                 <h2 className="text-[24px] font-bold text-white leading-tight">Check your email</h2>
                 <p className="text-[13px] text-slate-100 mt-1.5">Confirmation link sent to <span className="font-semibold text-white">{email}</span>.</p>
                 <p className="text-[13px] text-slate-100 mt-1">Most emails arrive in under 2 minutes.</p>
+                <p className="text-[13px] text-slate-100 mt-1">{firstWeekSpine.confirmationLine}</p>
               </section>
               <div className="rounded border border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
                 <p className="text-[14px] text-slate-100 leading-relaxed">
@@ -457,7 +459,8 @@ export default function SignupPage() {
                       <ol className="space-y-1.5 text-[13px] text-slate-100 leading-relaxed">
                         <li>1. Create your account</li>
                         <li>2. {SITUATION_COPY[situation].firstStep}</li>
-                        <li>3. Morning rhythm starts: one priority action each day</li>
+                        <li>3. {firstWeekSpine.condensed[1]}</li>
+                        <li>4. {firstWeekSpine.condensed[2]}</li>
                       </ol>
                     </div>
                   </>
@@ -646,6 +649,7 @@ export default function SignupPage() {
                     Private by default. We do not share your data with recruiters, employers, or third parties.{' '}
                     <Link href="/privacy" className="inline-flex items-center min-h-[44px] underline hover:text-slate-100">Privacy policy &rarr;</Link>
                   </p>
+                  <p className="text-center text-[13px] font-semibold text-slate-100">{firstWeekSpine.guaranteeLine}</p>
 
                 </form>
               </div>

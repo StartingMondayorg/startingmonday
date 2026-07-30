@@ -134,11 +134,11 @@ export default function FederalItTransitionDemoPage() {
             <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.16em] text-orange-200">Scanner read</p>
             <div className="mb-5 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/10 bg-slate-950/55 p-4">
-                <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Leads found</p>
+                <p className="text-[12px] font-medium text-slate-300">Leads found</p>
                 <p className="mt-2 text-3xl font-bold text-white">3</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-slate-950/55 p-4">
-                <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Confidence</p>
+                <p className="text-[12px] font-medium text-slate-300">Confidence</p>
                 <p className="mt-2 text-3xl font-bold text-white">88%</p>
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function FederalItTransitionDemoPage() {
           </p>
           <div className="grid gap-4 lg:grid-cols-2">
             <div>
-              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">What was evaluated</p>
+              <p className="mb-3 text-[13px] font-semibold text-slate-300">What was evaluated</p>
               <ul className="space-y-3 text-[14px] leading-relaxed text-slate-200">
                 {SELECTION_CRITERIA.map((item) => (
                   <li key={item} className="rounded-2xl border border-white/8 bg-slate-950/35 px-4 py-3">{item}</li>
@@ -188,7 +188,7 @@ export default function FederalItTransitionDemoPage() {
               </ul>
             </div>
             <div>
-              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">What we evaluated but did not include</p>
+              <p className="mb-3 text-[13px] font-semibold text-slate-300">What we evaluated but did not include</p>
               <div className="space-y-3">
                 {EXCLUDED_EVALUATION.map((item) => (
                   <article key={item.firm} className="rounded-2xl border border-white/8 bg-slate-950/35 px-4 py-3">
@@ -226,6 +226,9 @@ export default function FederalItTransitionDemoPage() {
               Back to coaches
             </Link>
           </div>
+          <p className="mt-5 text-[12px] leading-relaxed text-slate-400">
+            Private by default. This shared page shows market movement only. It never exposes a candidate&apos;s account or activity.
+          </p>
         </section>
       </main>
     </div>

@@ -41,7 +41,7 @@ export function DashboardWelcomeNudgeSection({
       {showCampaignWelcome && (
         <DashboardPathWelcomeCard
           id="campaign-welcome"
-          eyebrow="Campaign mode"
+          eyebrow="Active search"
           title="Your target list is the campaign."
           body="Most executive roles are filled through relationships before posting. Start tracking target companies early."
           prompt="Start here: add the companies you already have a relationship or contact at."

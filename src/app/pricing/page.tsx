@@ -3,6 +3,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { EmiMarketingTelemetry } from '@/components/EmiMarketingTelemetry'
 import { isEnabledFlag } from '@/lib/feature-flags'
+import { PRICING } from '@/lib/pricing'
 
 const PricingCards = dynamic(() => import('./pricing-cards').then((mod) => mod.PricingCards), {
   loading: () => (
@@ -73,13 +74,13 @@ export default function PricingPage() {
         <PricingCards />
 
         <section className={`mt-10 rounded-2xl p-6 sm:p-7 ${premiumEnabled ? 'border border-white/12 bg-slate-950/64 shadow-[0_22px_66px_rgba(15,23,42,0.2)] backdrop-blur-md' : 'border border-slate-200 bg-white'}`}>
-          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-3 ${premiumEnabled ? 'text-orange-200' : 'text-slate-500'}`}>First-week outcomes by buyer mode</p>
+          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-3 ${premiumEnabled ? 'text-orange-200' : 'text-slate-500'}`}>First-week outcomes by plan</p>
           <p className={`text-[13px] leading-relaxed mb-4 ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
-            Pick the mode that matches urgency this week. Each path defines what &quot;good&quot; looks like in seven days.
+            Pick the plan that matches urgency this week. Each path defines what &quot;good&quot; looks like in seven days.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-white/12 bg-white/[0.07] shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200 bg-slate-50'}`}>
-              <p className={`text-[12px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>Quiet monitor mode</p>
+              <p className={`text-[12px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>{PRICING.passive.name}</p>
               <p className={`text-[12px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>Build signal coverage and a clean watchlist so timing windows stop surprising you.</p>
               <ul className={`mt-3 space-y-1.5 text-[12px] ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
                 <li>- 20-30 target companies tracked with fresh signal visibility</li>
@@ -88,7 +89,7 @@ export default function PricingPage() {
               </ul>
             </article>
             <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-white/12 bg-white/[0.07] shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200 bg-slate-50'}`}>
-              <p className={`text-[12px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>Active campaign mode</p>
+              <p className={`text-[12px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>{PRICING.active.name}</p>
               <p className={`text-[12px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>Establish daily execution rhythm with prep briefs, follow-ups, and conversion tracking.</p>
               <ul className={`mt-3 space-y-1.5 text-[12px] ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
                 <li>- Daily queue active with owner-assigned next actions</li>
@@ -97,7 +98,7 @@ export default function PricingPage() {
               </ul>
             </article>
             <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-white/12 bg-white/[0.07] shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200 bg-slate-50'}`}>
-              <p className={`text-[12px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>High-intensity mandate mode</p>
+              <p className={`text-[12px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>{PRICING.executive.name}</p>
               <p className={`text-[12px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>Launch high-depth scanning and decision-grade prep across your highest-priority targets.</p>
               <ul className={`mt-3 space-y-1.5 text-[12px] ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
                 <li>- Priority list narrowed to top 5-8 high-value targets</li>
@@ -111,7 +112,7 @@ export default function PricingPage() {
         <section className={`mt-8 rounded-2xl p-5 ${premiumEnabled ? 'border border-white/12 bg-white/[0.07] shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200 bg-slate-50'}`}>
           <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-orange-200' : 'text-slate-500'}`}>Source note</p>
           <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
-            Buyer-mode examples are illustrative and directional, not audited outcome claims. Privacy commitments and account confidentiality controls apply to all plans.
+            Plan examples are illustrative and directional, not audited outcome claims. Privacy commitments and account confidentiality controls apply to all plans.
           </p>
         </section>
 
