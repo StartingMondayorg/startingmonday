@@ -40,7 +40,12 @@ test('@rubric dashboard top chrome contract is consistent across primary routes'
     await page.goto(route, { waitUntil: 'domcontentloaded' })
 
     const header = page.locator('header').first()
-    await expect(header.getByRole('link', { name: 'Dashboard', exact: true })).toBeVisible()
+    if (route === '/dashboard') {
+      // The current page never links to itself: /dashboard omits the Dashboard link.
+      await expect(header.getByRole('link', { name: 'Dashboard', exact: true })).toHaveCount(0)
+    } else {
+      await expect(header.getByRole('link', { name: 'Dashboard', exact: true })).toBeVisible()
+    }
     await expect(header.getByRole('button', { name: 'Sign out', exact: true })).toBeVisible()
 
     await expect(header.getByRole('link', { name: 'Contacts', exact: true })).toHaveCount(0)

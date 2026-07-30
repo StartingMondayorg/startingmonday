@@ -334,12 +334,6 @@ export function LandingPage({
             )}
 
             {isHomePage && (
-              <p className="mt-6 mb-10 max-w-3xl text-[18px] font-semibold leading-relaxed text-slate-300 [text-wrap:pretty] sm:text-[20px]">
-                The posting is public. The decision is usually not. Move earlier, with the right relationships already in motion.
-              </p>
-            )}
-
-            {isHomePage && (
               <section className="mb-12" aria-labelledby="homepage-trust-title">
                 <h2 id="homepage-trust-title" className="sr-only">Trust assurance</h2>
                 <p className="max-w-3xl text-[13px] font-semibold uppercase tracking-[0.12em] text-orange-200/90">

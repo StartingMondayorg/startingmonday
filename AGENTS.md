@@ -76,7 +76,7 @@ Do not begin implementation until the preflight is complete. At handoff, report 
   - Do not allow stale free-text duration phrases (for example, "has been X days") in follow-up or alert copy.
   - Prefer deterministic date anchors and single-source recency labels.
   3. Chrome and metadata contract:
-  - Top chrome must remain structurally consistent across all five routes.
+  - Top chrome must remain structurally consistent across all five routes, with one deliberate exception: the current page never links to itself. /dashboard omits the Dashboard link (or renders it as a non-link current-page indicator); sub-routes keep the Dashboard link as the way back.
   - Browser titles must follow route label + " - Starting Monday" pattern.
   4. Landmark contract:
   - Exactly one main landmark per route in desktop and mobile hidden/loading states.
