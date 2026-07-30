@@ -329,6 +329,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
+      - name: Wait for deployment of this commit
+        run: bash scripts/wait-for-deployed-commit.sh
+        env:
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
+
       - name: Run E2E tests
         run: npm run test:e2e
         env:
@@ -652,6 +658,13 @@ jobs:
           tail -n 200 /tmp/next-start.log || true
           exit 1
 
+      - name: Wait for deployment of this commit
+        if: github.event_name != 'pull_request'
+        run: bash scripts/wait-for-deployed-commit.sh
+        env:
+          BASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || 'https://starting-monday-staging.up.railway.app' }}
+          EXPECTED_SHA: ${{ github.sha }}
+
       - name: Run mobile visual smoke snapshots
         run: npm run test:e2e:mobile-visual:smoke
         env:
@@ -726,6 +739,13 @@ jobs:
           echo "App did not become ready in time"
           tail -n 200 /tmp/next-start.log || true
           exit 1
+
+      - name: Wait for deployment of this commit
+        if: github.event_name != 'pull_request'
+        run: bash scripts/wait-for-deployed-commit.sh
+        env:
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
 
       - name: Run auth UX guard suite
         run: npm run test:e2e:auth-ux
@@ -1165,15 +1185,30 @@ jobs:
             }
 
             const branch = context.ref.replace('refs/heads/', '')
-            const runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'ci.yml',
-              branch,
-              status: 'completed',
-              per_page: 100,
-              exclude_pull_requests: true,
-            })
+            // Single page is sufficient: the streak loop stops at the first
+            // non-failure run. A transient GitHub API error must not fail CI,
+            // so fall back to a conservative streak of 1 (email suppressed
+            // unless threshold is 1).
+            let runs = []
+            try {
+              const response = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'ci.yml',
+                branch,
+                status: 'completed',
+                per_page: 50,
+                exclude_pull_requests: true,
+              })
+              runs = response.data.workflow_runs
+            } catch (error) {
+              core.warning(`Failed to list workflow runs for streak policy: ${error.message}`)
+              core.setOutput('send_email', 'false')
+              core.setOutput('failure_streak', '1')
+              core.setOutput('threshold', String(threshold))
+              core.setOutput('reason', 'GitHub API error while computing failure streak; suppressing email')
+              return
+            }
 
             let priorFailures = 0
             for (const run of runs) {
