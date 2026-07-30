@@ -222,6 +222,9 @@ export default function FederalItTransitionDemoPage() {
               Start a trial
             </Link>
           </div>
+          <p className="mt-5 text-[12px] leading-relaxed text-slate-400">
+            Private by default. This working page shows market movement only &mdash; it never exposes a candidate&apos;s account or activity.
+          </p>
         </section>
       </main>
     </div>
