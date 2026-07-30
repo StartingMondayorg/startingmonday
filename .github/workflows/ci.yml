@@ -613,7 +613,9 @@ jobs:
   mobile-visual-smoke:
     name: Mobile visual smoke
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Push runs may wait up to 15 minutes for the Railway deploy of this
+    # commit before screenshotting, so the budget covers wait + tests.
+    timeout-minutes: 30
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
 
     steps:
@@ -696,7 +698,9 @@ jobs:
   auth-ux-guard:
     name: Auth UX guard
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Push runs may wait up to 15 minutes for the Railway deploy of this
+    # commit before screenshotting, so the budget covers wait + tests.
+    timeout-minutes: 30
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
 
     steps:
