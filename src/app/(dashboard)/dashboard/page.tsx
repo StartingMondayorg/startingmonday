@@ -1105,12 +1105,6 @@ export default async function DashboardPage({
             <span className="text-orange-500">Monday</span>
           </span>
           <div className="ml-auto flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-slate-700 px-3 text-[13px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
-            >
-              Dashboard
-            </Link>
             <LogoutButton label="Sign out" />
           </div>
         </div>

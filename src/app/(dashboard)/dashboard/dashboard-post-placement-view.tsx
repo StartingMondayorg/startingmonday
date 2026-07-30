@@ -48,7 +48,7 @@ export function DashboardPostPlacementView({
               <Link href="/dashboard/outreach" className="text-[12px] font-semibold text-slate-300 hover:text-white transition-colors">Outreach</Link>
             )}
             <div className="ml-auto flex items-center gap-4 shrink-0">
-              <Link href="/dashboard" className="text-[12px] font-semibold text-orange-300 hover:text-white transition-colors whitespace-nowrap border border-orange-500/40 bg-orange-500/10 px-3 py-1.5 rounded-full">Dashboard</Link>
+              <span aria-current="page" className="text-[12px] font-semibold text-orange-300 whitespace-nowrap border border-orange-500/40 bg-orange-500/10 px-3 py-1.5 rounded-full">Dashboard</span>
               <Link href="/dashboard/profile" className="text-[12px] text-slate-300 hover:text-white transition-colors">{profileNameOrEmail}</Link>
               <Link href="/settings/billing" className="text-[12px] text-slate-300 hover:text-white transition-colors">Billing</Link>
               {isRothschildAdmin && (
@@ -58,12 +58,12 @@ export function DashboardPostPlacementView({
             </div>
           </div>
           <div className="flex sm:hidden items-center gap-2 ml-auto">
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-orange-500/40 bg-orange-500/10 px-3 text-[12px] font-semibold text-orange-300 hover:text-white"
+            <span
+              aria-current="page"
+              className="inline-flex min-h-[44px] items-center rounded-md border border-orange-500/40 bg-orange-500/10 px-3 text-[12px] font-semibold text-orange-300"
             >
               Dashboard
-            </Link>
+            </span>
             <LogoutButton label="Sign out" />
           </div>
         </div>
