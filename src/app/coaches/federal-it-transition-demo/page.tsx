@@ -227,7 +227,7 @@ export default function FederalItTransitionDemoPage() {
             </Link>
           </div>
           <p className="mt-5 text-[12px] leading-relaxed text-slate-400">
-            Private by default. This shared page shows market movement only — it never exposes a candidate&apos;s account or activity.
+            Private by default. This shared page shows market movement only. It never exposes a candidate&apos;s account or activity.
           </p>
         </section>
       </main>
