@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { TrackLink } from '@/components/TrackLink'
 import { FirstMileTelemetry } from '@/components/FirstMileTelemetry'
 import { HomepageBriefTeaser } from '@/components/HomepageBriefTeaser'
+import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/components/FirstWeekSpine'
 import { CHANNEL_ROUTE_SPECS } from '@/lib/channel-ia'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { OpportunityTimingGapChart, OpportunityTimingGapChartMobile } from '@/components/home/OpportunityCharts'
@@ -48,6 +49,7 @@ export interface LandingPageProps {
   situations: SituationCard[]
   faqs?: FAQ[]
   showPersonaSelector?: boolean
+  showFirstWeekSpine?: boolean
   proofHighlights?: ProofHighlight[]
   sourcePage?: string
   experimentVariant?: 'control' | 'proof_first'
@@ -160,9 +162,11 @@ export function LandingPage({
   sourcePage = '/',
   experimentVariant = 'control',
   brandWordmark,
+  showFirstWeekSpine = false,
 }: LandingPageProps) {
   const isManagerToolsPage = sourcePage === '/managertools'
   const isHomePage = sourcePage === '/' || isManagerToolsPage
+  const isPersonaRoute = sourcePage.startsWith('/for-')
   const isExecutivesPage = sourcePage === '/for-executives' || sourcePage.startsWith('/for-executives/')
   const isRisingLeadersPage = sourcePage === '/for-vp-technology' || sourcePage === '/for-leaders'
   const useCenteredFooter = isManagerToolsPage || isExecutivesPage
@@ -436,7 +440,61 @@ export function LandingPage({
           </div>
         </section>
 
-        {isHomePage && (
+        {isHomePage && showFirstWeekSpine && (
+          <>
+            <section className="border-b border-white/10 bg-slate-950/80 px-4 py-16 sm:px-6 sm:py-24 [content-visibility:auto] [contain-intrinsic-size:1px_900px]" data-first-mile-section="homepage_how_it_works">
+              <div className="mx-auto max-w-5xl">
+                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">How it works</p>
+                <h2 className="font-display mb-8 text-[28px] font-semibold leading-[1.06] text-white sm:text-[36px]">
+                  How The Monday Engine Works
+                </h2>
+                {hero.steps && hero.steps.length > 0 && (
+                  <ol className="mb-8 space-y-4">
+                    {hero.steps.map((step, i) => (
+                      <li key={step} className="flex gap-4">
+                        <span className="font-display shrink-0 text-[20px] font-semibold leading-none text-orange-300">{i + 1}</span>
+                        <p className="max-w-3xl text-[15px] leading-relaxed text-slate-200/95">{step}</p>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                  <TrackLink
+                    href="/evidence-hub#early-signals"
+                    event="homepage_cta_clicked"
+                    logToUserEvents
+                    properties={{
+                      channel: 'executives',
+                      cta_label: 'homepage_evidence_explore',
+                      source_page: sourcePage,
+                    }}
+                    className="inline-flex items-center rounded-full bg-orange-500 px-6 py-3 text-[14px] font-semibold text-slate-950 transition-colors hover:bg-orange-600"
+                  >
+                    Explore the evidence →
+                  </TrackLink>
+                  <Link
+                    href="/learn-more"
+                    className="text-[14px] font-semibold text-orange-200 underline underline-offset-4 transition-colors hover:text-white"
+                  >
+                    Read the full method
+                  </Link>
+                </div>
+                <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
+                  <OpportunityTimingGapChart className="hidden h-auto w-full sm:block" />
+                  <OpportunityTimingGapChartMobile className="h-auto w-full sm:hidden" />
+                </div>
+              </div>
+            </section>
+
+            <FirstWeekSpine />
+
+            <HomepageBriefTeaser ctaAsTextLink={false} />
+
+            <TrustLineCta ctaHref="/signup" ctaLabel="Get access" />
+          </>
+        )}
+
+        {isHomePage && !showFirstWeekSpine && (
           <>
             <section className="border-b border-white/10 bg-slate-950/80 px-4 py-16 sm:px-6 sm:py-24 [content-visibility:auto] [contain-intrinsic-size:1px_1100px]" data-first-mile-section="homepage_how_it_works">
               <div className="mx-auto max-w-5xl">
@@ -497,6 +555,8 @@ export function LandingPage({
             <HomepageBriefTeaser ctaAsTextLink={isManagerToolsPage} />
           </>
         )}
+
+        {isPersonaRoute && <FirstWeekSpineCondensed />}
 
         {(!isHomePage || isManagerToolsPage) && (
           <section id="next-step" data-emi-section="next_step_block" data-first-mile-section="homepage_next_step" className="border-b border-white/10 bg-slate-950/80 px-4 py-14 sm:px-6 sm:py-20">

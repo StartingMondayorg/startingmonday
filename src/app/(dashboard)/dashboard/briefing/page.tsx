@@ -19,6 +19,7 @@ import { LogoutButton } from '../logout-button'
 import { HelpQuickButton } from '@/components/HelpQuickButton'
 import { BriefingPulseSupport } from './BriefingPulseSupport'
 import { BriefingHeader } from './BriefingHeader'
+import { parseBriefingJson } from './briefing-json'
 
 export const metadata = {
   title: 'Daily Briefing',
@@ -230,7 +231,7 @@ async function assembleBriefing(supabase: Awaited<ReturnType<typeof createClient
   const since30d  = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
   const todayStr  = new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(now)
 
-  const [profileResult, companiesResult, recentScansResult, followUpsResult, companySignalsResult, patternSignalsResult, signalHealthResult, briefsResult, pipelineEventsResult] = await Promise.all([
+  const [profileResult, companiesResult, recentScansResult, followUpsResult, companySignalsResult, patternSignalsResult, signalHealthResult, briefsResult, pipelineEventsResult, scanCoverageResult] = await Promise.all([
     supabase
       .from('user_profiles')
       .select('full_name, target_titles')
@@ -294,6 +295,12 @@ async function assembleBriefing(supabase: Awaited<ReturnType<typeof createClient
       .eq('user_id', userId)
       .gte('created_at', since7d.toISOString())
       .in('event_name', ['company_added', 'pipeline_stage_changed']),
+    supabase
+      .from('scan_results')
+      .select('company_id')
+      .eq('user_id', userId)
+      .eq('status', 'success')
+      .gte('scanned_at', since24h.toISOString()),
   ])
 
   const profile     = profileResult.data
@@ -305,6 +312,7 @@ async function assembleBriefing(supabase: Awaited<ReturnType<typeof createClient
   const signalHealthRows = (signalHealthResult.data ?? []) as Array<{ signal_date: string }>
   const briefs = (briefsResult.data ?? []) as Array<{ created_at: string; reviewed_at: string | null; used_at: string | null; lifecycle_state: string | null }>
   const pipelineEvents = (pipelineEventsResult.data ?? []) as Array<{ event_name: string; created_at: string }>
+  const scanCoverageRows = (scanCoverageResult.data ?? []) as Array<{ company_id: string }>
 
   const companyById = Object.fromEntries(companies.map(c => [c.id, c]))
 
@@ -320,6 +328,18 @@ async function assembleBriefing(supabase: Awaited<ReturnType<typeof createClient
     })
     .filter(m => m.matchingRoles.length > 0)
     .slice(0, BRIEFING_MATCH_LIMIT)
+
+  const scannedCompanyCount = new Set(scanCoverageRows.map(r => r.company_id)).size
+  const passedCompanyCount = new Set(
+    recentScans
+      .filter(scan => ((scan.raw_hits ?? []) as { is_match: boolean }[]).some(h => h.is_match))
+      .map(scan => scan.company_id),
+  ).size
+  const scanCoverage = {
+    scanned: scannedCompanyCount,
+    ruledOut: Math.max(0, scannedCompanyCount - passedCompanyCount),
+    passed: passedCompanyCount,
+  }
 
   const followUps = rawFollowUps.map(f => ({
     id: f.id,
@@ -400,6 +420,7 @@ async function assembleBriefing(supabase: Awaited<ReturnType<typeof createClient
     signals,
     todayStr,
     stalledLanes,
+    scanCoverage,
     hasContent: newMatches.length > 0 || followUps.length > 0 || signals.length > 0 || stalledLanes.length > 0,
   }
 }
@@ -533,28 +554,31 @@ Output valid JSON only, no markdown fences.`
   }
 
   const raw = (message.content[0] as { type: string; text?: string })?.text?.trim() ?? '{}'
-  const cleaned = raw.replace(/^```json\n?/, '').replace(/^```\n?/, '').replace(/\n?```$/, '').trim()
-  try {
+  const parsed = parseBriefingJson(raw)
+  if (parsed) {
     return {
-      briefing: JSON.parse(cleaned) as BriefingJson,
+      briefing: parsed as BriefingJson,
       usedFallback: false,
       modelTier,
       fallbackReason: null,
     }
-  } catch (err) {
-    Sentry.captureException(err, { extra: { model, rawLength: raw.length } })
-    return {
-      briefing: {
-        intro: `Here is your search update for ${todayStr}.`,
-        signalAlerts: signals.map(s => ({ company: s.companyName, signalType: s.signalType, summary: s.summary, angle: s.outreachAngle ?? undefined })),
-        matchInsights: newMatches.map(m => ({ company: m.companyName, roles: m.matchingRoles.map(r => r.title), insight: m.aiSummary ?? '' })),
-        followUpSuggestions: followUps.map(f => ({ person: f.contact?.name ?? 'Contact', action: f.action ?? 'Follow up', suggestion: 'Reach out today.' })),
-        closing: `${totalCompanies} companies in your pipeline.`,
-      },
-      usedFallback: true,
-      modelTier,
-      fallbackReason: 'json_parse_error',
-    }
+  }
+
+  Sentry.captureMessage('Briefing model returned invalid JSON; using fallback briefing.', {
+    level: 'warning',
+    extra: { errorType: 'briefing_json_parse_error', model, rawLength: raw.length },
+  })
+  return {
+    briefing: {
+      intro: `Here is your search update for ${todayStr}.`,
+      signalAlerts: signals.map(s => ({ company: s.companyName, signalType: s.signalType, summary: s.summary, angle: s.outreachAngle ?? undefined })),
+      matchInsights: newMatches.map(m => ({ company: m.companyName, roles: m.matchingRoles.map(r => r.title), insight: m.aiSummary ?? '' })),
+      followUpSuggestions: followUps.map(f => ({ person: f.contact?.name ?? 'Contact', action: f.action ?? 'Follow up', suggestion: 'Reach out today.' })),
+      closing: `${totalCompanies} companies in your pipeline.`,
+    },
+    usedFallback: true,
+    modelTier,
+    fallbackReason: 'json_parse_error',
   }
 }
 
@@ -1051,6 +1075,17 @@ export default async function BriefingPage({
           matchCount={context.newMatches.length}
           movesReadyCount={context.followUps.length}
         />
+
+        {context.scanCoverage.scanned > 0 && (
+          <p className="mb-5 text-[13px] text-slate-300">
+            In the last 24 hours we scanned{' '}
+            <span className="font-semibold text-white">{context.scanCoverage.scanned}</span>{' '}
+            {context.scanCoverage.scanned === 1 ? 'company' : 'companies'},{' '}
+            ruled out <span className="font-semibold text-white">{context.scanCoverage.ruledOut}</span> with no
+            matching roles, and flagged{' '}
+            <span className="font-semibold text-white">{context.scanCoverage.passed}</span> for you below.
+          </p>
+        )}
 
         <section id="weekly-pulse" className="rounded-2xl border border-white/15 bg-white/5 px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
           <div className="rounded-2xl border border-slate-200/80 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.08),_transparent_34%),linear-gradient(180deg,_rgba(15,23,42,0.98)_0%,_rgba(15,23,42,0.94)_100%)] p-6 sm:p-8 shadow-[0_20px_48px_rgba(15,23,42,0.16)]">

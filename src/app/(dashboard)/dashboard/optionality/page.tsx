@@ -137,7 +137,7 @@ export default async function OptionalityModePage() {
         <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 flex items-center justify-between gap-4">
           <div>
             <p className="text-[13px] font-semibold text-slate-800">Ready to go active?</p>
-            <p className="text-[12px] text-slate-500 mt-0.5">Switch to full campaign mode when urgency increases.</p>
+            <p className="text-[12px] text-slate-500 mt-0.5">Switch to Active when urgency increases.</p>
           </div>
           <Link
             href="/dashboard"

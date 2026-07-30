@@ -6,7 +6,7 @@ import { PRICING } from '@/lib/pricing'
 const PLANS = [
   {
     ...PRICING.passive,
-    buyerMode: 'Quiet monitor mode',
+    buyerMode: 'Watch the market quietly',
     firstWeekOutcome: 'Build a target watchlist and receive your first weekly signal digest.',
     description: 'Stay ahead of the search. Know what is changing at your target companies before the role ever posts.',
     featured: false,
@@ -20,7 +20,7 @@ const PLANS = [
   },
   {
     ...PRICING.active,
-    buyerMode: 'Active campaign mode',
+    buyerMode: 'Run your search every day',
     firstWeekOutcome: 'Run your first prep brief, log outreach, and establish a daily execution loop.',
     description: 'Stop running a reactive search. Prep briefs, pipeline tracking, intelligence, outreach, and a daily briefing. From one place.',
     featured: true,
@@ -36,7 +36,7 @@ const PLANS = [
   },
   {
     ...PRICING.executive,
-    buyerMode: 'High-intensity mandate mode',
+    buyerMode: 'Full depth for urgent searches',
     firstWeekOutcome: 'Launch full-depth scanning and complete a board-level readiness brief with outreach priorities.',
     description: 'For executives who want the analysis done, the brief written, and the intelligence running at full depth. Not data to work from.',
     featured: false,

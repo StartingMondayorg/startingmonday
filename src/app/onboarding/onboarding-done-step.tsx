@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import firstWeekSpine from '@/content/first-week-spine.json'
 import {
   decisionRoleTargetsForCompany,
   firstNoteDraftForCompany,
@@ -177,6 +178,9 @@ export function OnboardingDoneStep({
         <Link href="/dashboard/start" className="text-[13px] font-semibold text-orange-300 underline hover:text-orange-200 transition-colors">
           Complete profile from dashboard start page
         </Link>
+        <p className="text-[12px] text-slate-400 mt-3">
+          <span className="font-semibold text-slate-300">{firstWeekSpine.steps[4].label}:</span> {firstWeekSpine.steps[4].body}
+        </p>
       </div>
     </div>
   )

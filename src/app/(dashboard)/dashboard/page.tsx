@@ -854,6 +854,29 @@ export default async function DashboardPage({
           86400000,
       )
     : null;
+  const showWeekOneBanner = daysSinceOnboard !== null && daysSinceOnboard <= 6;
+  const weekOneNextScanDay = (() => {
+    const scanDays = [1, 3, 5]; // Mon, Wed, Fri
+    const d = new Date();
+    for (let i = 1; i <= 7; i++) {
+      const candidate = new Date(d.getTime() + i * 86400000);
+      if (scanDays.includes(candidate.getUTCDay())) {
+        return candidate.toLocaleDateString("en-US", {
+          weekday: "long",
+          timeZone: "UTC",
+        });
+      }
+    }
+    return "Monday";
+  })();
+  const weekOneBriefingTime = (() => {
+    const raw = profile?.briefing_time;
+    if (!raw) return "7:00 AM";
+    const [h, m] = raw.split(":").map((n) => parseInt(n, 10));
+    if (Number.isNaN(h)) return "7:00 AM";
+    const hour12 = h % 12 === 0 ? 12 : h % 12;
+    return `${hour12}:${String(Number.isNaN(m) ? 0 : m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+  })();
   const showWeek3Prompt =
     daysSinceOnboard !== null &&
     daysSinceOnboard >= 18 &&
@@ -1119,6 +1142,20 @@ export default async function DashboardPage({
           executivePrimaryRisk={executivePrimaryRisk}
           executiveDecisionBrief={executiveDecisionBrief}
         />
+
+        {showWeekOneBanner && (
+          <div className="mb-6 rounded border border-orange-300/30 bg-orange-500/10 px-5 py-3 text-[13px] text-slate-100">
+            <span className="font-semibold text-orange-200">
+              Day {(daysSinceOnboard ?? 0) + 1} of your first week.
+            </span>{" "}
+            Next briefing: tomorrow at {weekOneBriefingTime}. Next career-page
+            scan: {weekOneNextScanDay}. Today&apos;s action:{" "}
+            <a href="#to-do-now" className="font-semibold underline">
+              one step in To do now
+            </a>
+            .
+          </div>
+        )}
 
         <DashboardCampaignFoundationSection
           targetTitles={(profile?.target_titles as string[] | null) ?? []}
