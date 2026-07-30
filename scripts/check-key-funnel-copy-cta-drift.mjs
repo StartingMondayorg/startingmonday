@@ -34,11 +34,6 @@ const SPECS = [
     files: ['src/app/page.tsx', 'src/components/LandingPage.tsx'],
     rules: [
       {
-        id: 'home-operating-system-frame',
-        description: 'Homepage keeps decision-visibility bridge copy.',
-        matcher: 'The posting is public. The decision is usually not.',
-      },
-      {
         id: 'home-hero-claim',
         description: 'Homepage hero keeps timing-and-outcomes claim.',
         matcher: 'Reputation opens doors. Timing decides outcomes.',

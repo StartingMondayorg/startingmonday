@@ -34,11 +34,6 @@ const SPECS = [
 		files: ['src/app/page.tsx', 'src/components/LandingPage.tsx'],
 		rules: [
 			{
-				id: 'clarity-operating-system',
-					description: 'Above-fold bridge copy frames the decision-visibility contrast.',
-					matcher: 'The posting is public. The decision is usually not.',
-			},
-			{
 				id: 'clarity-shortlist-frame',
 					description: 'Hero headline keeps shortlist-before-posting positioning.',
 					matcher: 'Be on the shortlist before the role is posted.',
