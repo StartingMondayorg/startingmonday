@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import type { BrandContext } from './brand'
+import type { BrandContext } from '@/lib/brand'
 
 export function buildBrandMetadata(brand: BrandContext): Metadata {
   const title = brand.isMandateSignal

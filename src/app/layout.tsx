@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { headers } from 'next/headers'
 import { AssistWidget } from "@/components/AssistWidget";
 import { getBrandContextFromHosts } from '@/lib/brand'
-import { buildBrandMetadata } from '@/lib/brand-metadata'
+import { buildBrandMetadata } from './brand-metadata'
 import "./globals.css";
 
 const geistSans = Geist({

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildBrandMetadata } from '@/lib/brand-metadata'
+import { buildBrandMetadata } from './brand-metadata'
 import { getBrandContextFromHost } from '@/lib/brand'
 
 describe('root brand metadata', () => {
