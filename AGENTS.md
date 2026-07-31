@@ -4,6 +4,10 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Document Intake Contract
+
+- Any document Rich hands over is committed verbatim to docs/strategy/ (or docs/inbox/) before review; feedback references the committed version.
+
 ## Sitewide Design Standard
 
 - Canonical design and editorial standard: docs/landing-page-standard.md
