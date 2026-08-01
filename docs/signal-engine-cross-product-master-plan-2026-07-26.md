@@ -131,6 +131,22 @@ index their commit-pinned paths and hashes when the evidence repository is
 established. Static baseline findings remain static evidence; they do not
 establish deployed or measured behavior.
 
+#### WS0-07 scanner-assurance evidence entry
+
+MandateSignal PR 77 merged to product-local `main` at
+`a23b892240bb2018bd1e9df8972513237f4404b9` on 2026-08-01. The final protected
+run `30711049692` passed all seven jobs. This entry indexes repository evidence;
+it does not establish deployed or measured scanner behavior.
+
+| Artifact | MandateSignal path | SHA-256 at `a23b8922` |
+| --- | --- | --- |
+| Adopted v0.2 proposal | `docs/strategy/scanner-assurance-control-plane-plan-2026-08-01.md` | `1DFBE67A82E9859668845527AC823770EAB1F389960234C8E15265E3D47385AF` |
+| Verbatim independent review | `docs/strategy/scanner-assurance-control-plane-plan-review-2026-08-01.md` | `E69B728C0893A8C8FF90CF5E0339C69248FBC9087345203002C0865DFD286573` |
+| Focused confirmation | `docs/strategy/scanner-assurance-control-plane-plan-focused-confirmation-2026-08-01.md` | `450A4D1B055BBF6E90EA573267BBDA704781BBA6F33A0CFF28FE99AD69612890` |
+| Execution ledger | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `E1512E88116DB56E7F96198D8884F1CE600DC1CD7344CC69FF950B1026D54F43` |
+| Gate 0 baseline | `docs/assurance/scanner-assurance-gate-0-baseline-2026-08-01.md` | `1436E5CB7B7D39D51763D27C310EBDB7AC93C2D4FCBBE2EB34C4A3855EBC5164` |
+| Risk and core-case evidence | `docs/assurance/scanner-assurance-gate-0-risk-cases-2026-08-01.md` | `63590F0430E6CD90BCF830E86B9ADE7D7228BCC35D9A5F76C58F6F43FF081758` |
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
@@ -1120,7 +1136,7 @@ The following artifacts are created as their stories begin, not speculatively:
 | --- | --- |
 | Corrected kit archive and correction log | WS0-01 |
 | Commit/deployment evidence index | WS0-02, WS0-07 |
-| Scanner-assurance adoption record, reviews, baseline, and execution ledger | WS2-10; indexed by WS0-07 |
+| Scanner-assurance adoption record, reviews, baseline, and execution ledger | WS2-10; indexed by WS0-07 in section 3.5 |
 | Repository object inventory | WS0-03 |
 | Engine divergence report | WS0-05 |
 | Predecessor-plan disposition matrix | WS0-06 |
