@@ -1,10 +1,15 @@
 # Signal Engine Cross-Product Master Plan
 
-**Version:** 1.0 execution baseline
+**Version:** 1.1 execution baseline
 **Date:** 2026-07-26
 **Owner:** Richard Rothschild
 **Status:** Complete planning baseline; execution gated by WS0 and named decisions
 **Products:** Starting Monday and MandateSignal
+
+**Amended:** 2026-08-01 to adopt MandateSignal scanner assurance as
+WS2-10 through WS2-14. Adoption authorizes story-governed planning and Gate 0
+evidence only; it does not waive prerequisites, MandateSignal GA P0 controls,
+product-local release authority, or the Definition of Ready.
 
 ## 1. Purpose
 
@@ -110,6 +115,21 @@ with evidence and an explicit owner/re-entry trigger.
 | Spec 10 - Mandate Deal Process | `MERGE`: stage reconstruction and observability measurement into WS1-04/WS1-10; versioned stage/taxonomy contracts into WS3-06; customer rendering only through WS7/WS8 after evidence gates. Unmeasured durations remain assumptions, not product claims. |
 | Spec 11 - Person Track | `MERGE/DEFER`: seat covariates into WS5/WS6, follow-the-leader evidence into WS4, and guarantee-window suppressions into WS3-07 plus product-local WS7/WS8 projections. Person-level sourcing remains blocked by WS1-08, privacy controls, and the spec's no-hidden-profile rule. |
 | Spec 12 - Signal Source Atlas | `RETAIN AS CANDIDATE INVENTORY`: classify every source under WS0-03 and WS1-08; use WS1-05/WS1-13 for coverage/build order and WS2-04/WS2-06 for source-family and rights enforcement. No atlas entry is an implemented or approved source without repository, runtime, rights, and quality evidence. |
+
+### 3.5 Scanner-assurance amendment record
+
+AO approved MandateSignal scanner-assurance plan v0.2 on 2026-08-01 after an
+independent focused confirmation returned `CONFIRMED`, C1-C6 `PASS`, no
+blocking deltas, and canonical-adoption readiness `READY`. The confirmation
+artifact SHA-256 is
+`84DF8E2125F1190B6ECCEE28460F4B28C73147F5895A54F8D621C7C73B08E18A`.
+
+The controlling product-local proposal, execution ledger, verbatim reviews,
+and Gate 0 baseline remain in the MandateSignal repository. They are evidence
+inputs, not copies of this plan and not implementation authority. WS0-07 must
+index their commit-pinned paths and hashes when the evidence repository is
+established. Static baseline findings remain static evidence; they do not
+establish deployed or measured behavior.
 
 ## 4. Locked Architecture Boundaries
 
@@ -241,6 +261,10 @@ flowchart TD
   A --> D[DG-01 export boundary decision]
   A --> M[WS1 measurement gates]
   A --> I[WS2 scanner integrity]
+  I --> AR[WS2-10/11 runtime and deterministic assurance]
+  AR --> AM[WS2-12 minimal production assurance]
+  AM --> AS[WS2-12 scaled orchestration when triggered]
+  AM --> AI[WS2-13/14 economics, debt, and improvement when triggered]
   A --> C[WS3 contracts and local ledgers]
   M --> CH[WS4 manual chain gate]
   C --> CH
@@ -527,6 +551,11 @@ Calendar estimates begin only after WS0 establishes the current baseline.
 | INT-01 | P0 | One scan-cadence contract | ENG-SM | `NOT_STARTED` | GOV-02 | Code, schedule, suppression, and copy agree |
 | INT-02 | P0 | Independent corroboration semantics | ENG-SM + DATA | `NOT_STARTED` | Source-family taxonomy | Syndication fixtures and production metric |
 | INT-03 | P0 | Event-level license policy and clean view | ENG-SM + LEGAL | `NOT_STARTED` | EVD-03 | Enforcement tests and publication query audit |
+| ASR-01 | P0 | MandateSignal bounded runtime and failure isolation | ENG-MS + OPS | `BLOCKED` | WS2-10 ready; applicable GA P0 no-displacement | Parent deadlines, cancellation, provider budgets, circuits, write integrity, and independent kill controls pass in the product-local repository |
+| ASR-02 | P0 | Enabled-source and label deterministic assurance | ENG-MS + DATA + LEGAL | `BLOCKED` | ASR-01, WS2-11 ready | Every enabled source is complete or quarantined; exact claims/labels replay idempotently; planted corruption turns required controls red |
+| ASR-03 | P0 | Minimal production assurance | ENG-MS + OPS + independent reviewer | `BLOCKED` | ASR-01, ASR-02, WS2-12 ready | Daily claims/label reconciliation, heartbeat, deliberate red, planted gate weakening, evidence fallback, and synthetic hold-flood response pass |
+| ASR-04 | P1 | Trigger-gated scaled assurance orchestration | ENG-MS + OPS | `BLOCKED` | ASR-03 measured; WS2-12 scale trigger | Recorded paying SLA or measured manual coordination above declared capacity; direct controls remain fallback until parity evidence passes |
+| ASR-05 | P1 | Assurance economics, debt, and governed improvement | AO + ENG-MS + OPS + DATA | `BLOCKED` | ASR-03 measured; WS2-13/14 trigger | Raw cost/debt ledgers reconcile, no self-approval occurs, preventive controls cannot retire by silence, and independent reconstruction passes |
 | CON-01 | P0 | Versioned logical contract suite | ENG-SM + ENG-MS | `NOT_STARTED` | GOV-01 | Same fixtures pass in both repositories |
 | CON-02 | P0 | Product-local immutable opportunity ledgers | ENG-SM + ENG-MS | `NOT_STARTED` | CON-01 | UPDATE denied; corrections/events append; funnel view reproducible |
 | CON-03 | P0 | Tenant isolation and retention | Product engineer + LEGAL | `NOT_STARTED` | Product-local migrations | RLS/authorization and compliance deletion tests |
@@ -715,6 +744,25 @@ automation story blocked.
 | WS2-07 Label-quality audit | DATA + ENG-SM | WS0-04 | Sample of each label source | Entity, role family, opening date precision, duplicate and privacy-exclusion error rates reported |
 | WS2-08 Backtest-rail audit | DATA + ENG-SM | WS1-09 | Cohort, control and replay defect list | Size matching, control reuse, historical availability, deterministic pattern version and look-ahead checked |
 | WS2-09 Integrity operations scorecard | OPS | WS2-02 through WS2-08 | Admin and machine-readable metrics | Alert test proves owner, severity, evidence link and recovery state |
+| WS2-10 MandateSignal runtime reliability envelope | ENG-MS + OPS | WS0-03/07, SA-02 baseline, GA P0 no-displacement, story Ready | Product-local versioned run context, propagated deadlines/cancellation, lite concurrency/request/retry budgets, source circuits, DB/write validation, and verified independent collection/inference/delivery kill controls | Permanent-hang and provider-failure injections terminate or isolate within declared budgets; unrelated sources complete; schema/RLS/race/partial-write checks pass; no failure reports silent success |
+| WS2-11 MandateSignal deterministic source and label assurance | ENG-MS + DATA + LEGAL | WS2-10 carrier, enabled catalog snapshot, rights decisions applicable to each source | Versioned contract bundle per enabled source; golden claims-and-label replay; negative/property/fuzz/mutation and isolated Supabase fault suites | Every enabled source is complete or quarantined; two exact runs are idempotent; label type/window/version/zero-label checks pass; planted label corruption and policy mutations turn required controls red |
+| WS2-12 MandateSignal production assurance and trigger-gated orchestration | ENG-MS + OPS + independent reviewer | WS2-10/11, section 23 inventory, applicable GA controls | Minimal direct assurance first: daily end-to-end claims/label reconciliation, heartbeat, deliberate-red canary, planted gate-weakening detector, evidence fallback, hold/DLQ operations, and synthetic hold-flood narrowing/alert drill. Planner, dispatcher, immutable evidence index, expanded workflows/canaries/SLOs/dashboard remain trigger-deferred | Minimal controls detect missed runs, omitted labels, weakened gates, evidence outage, wrong independent coding, and hold flood with newest-first narrowing plus omitted-scope denominator. Scaled orchestration starts only for a paying SLA or measured manual coordination above declared operator capacity and cannot replace direct controls before parity evidence |
+| WS2-13 MandateSignal assurance economics and debt | AO + ENG-MS + OPS | WS2-12 minimal assurance measured; two months at at least three control-hours/week, engineer count above one, or at least three escaped defects/quarter | Raw control-cost, operator-burden, alert-budget, exception, and debt ledgers; classification and lifecycle review. Scoring formulas and complexity ceilings require separate adoption | Costs reconcile to declared denominators; P0 controls remain non-deferrable; preventive controls cannot retire from quiet history; expired exceptions fail closed |
+| WS2-14 MandateSignal governed improvement and independent reconstruction | AO + ENG-MS + DATA + independent reviewer | WS2-12 minimal assurance measured; WS2-13 trigger or accepted critical defect | Two advisory agents initially, registered blinded quality sets, proposal/shadow/promotion workflow, control-correlation review, and quarterly clean-room reconstruction. Four additional agents and long soak remain trigger-deferred | No implementer self-approves evidence or promotion; independent reviewer reconstructs one signal; recommendations are bounded and reversible; long soak begins only with representative measured load and an accepted capacity question |
+
+WS2-10 through WS2-14 are implemented only in the MandateSignal repository.
+They do not create a Starting Monday runtime, data, deployment, or release
+dependency. Before each story starts, its issue must name the applicable
+decision, control, product-local anchor, acceptance evidence, and rollback or
+kill behavior and must satisfy section 26.1.
+
+| Story | Rollback / kill behavior |
+| --- | --- |
+| WS2-10 | Retain the prior sequential path behind a feature flag; use conservative concurrency and per-source pause; the existing global engine kill remains fallback. Deadline policy may be disabled only for a proven false abort and never by converting failure to success. |
+| WS2-11 | Quarantine any source without a current contract; roll back fixture versions without suppressing results; fault/fuzz harnesses run only in isolated environments with explicit abort controls. |
+| WS2-12 | Direct required-control execution remains the fallback; disable any planner/scheduler on selection uncertainty; required evidence writes fail closed; replay is capped, audited, and independently killable. |
+| WS2-13 | Disable optimization while retaining required schedules; never erase debt or exception history; restore a retired control during its rollback window. |
+| WS2-14 | Disable advisory agents without affecting deterministic controls; revert promoted control versions while preserving proposal and review evidence; failed reconstruction opens the severity required by the affected claim. |
 
 ### 16.4 WS3 stories - contracts and local ledgers
 
@@ -1072,6 +1120,7 @@ The following artifacts are created as their stories begin, not speculatively:
 | --- | --- |
 | Corrected kit archive and correction log | WS0-01 |
 | Commit/deployment evidence index | WS0-02, WS0-07 |
+| Scanner-assurance adoption record, reviews, baseline, and execution ledger | WS2-10; indexed by WS0-07 |
 | Repository object inventory | WS0-03 |
 | Engine divergence report | WS0-05 |
 | Predecessor-plan disposition matrix | WS0-06 |

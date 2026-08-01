@@ -8,7 +8,7 @@ const planPath = path.join(root, planRelativePath)
 const agentsPath = path.join(root, 'AGENTS.md')
 
 const requiredPlanMarkers = [
-  '**Version:** 1.0 execution baseline',
+  '**Version:** 1.1 execution baseline',
   '**Status:** Complete planning baseline; execution gated by WS0 and named decisions',
   '## 4. Locked Architecture Boundaries',
   '### 3.3 DG-02 single-lineage correction register',
@@ -19,6 +19,8 @@ const requiredPlanMarkers = [
   '## 16. Execution Backlog',
   '## 26. Story Definition of Ready and Done',
   'WS0-00 Engineer/repository readiness',
+  'WS2-10 MandateSignal runtime reliability envelope',
+  'WS2-14 MandateSignal governed improvement and independent reconstruction',
   'WS9-02 Aggregate schema v1',
 ]
 
