@@ -147,6 +147,29 @@ it does not establish deployed or measured scanner behavior.
 | Gate 0 baseline | `docs/assurance/scanner-assurance-gate-0-baseline-2026-08-01.md` | `1436E5CB7B7D39D51763D27C310EBDB7AC93C2D4FCBBE2EB34C4A3855EBC5164` |
 | Risk and core-case evidence | `docs/assurance/scanner-assurance-gate-0-risk-cases-2026-08-01.md` | `63590F0430E6CD90BCF830E86B9ADE7D7228BCC35D9A5F76C58F6F43FF081758` |
 
+#### SA-11 implementation evidence entry
+
+MandateSignal PR 83 merged the default-off SA-11 deadline and cancellation
+implementation at `ffe359b0080e4012d7597ffccd041b729f03205d` on 2026-08-01.
+The product-local closeout records focused fault injection, the full repository
+gate, build, independent review, deliberate red, and review remediation for
+reviewed head `533368b8811fd8d6872a5518d229c6bc8f891b89`. Separately, all
+required protected jobs passed in run `30716370596`.
+MandateSignal PR 84 merged the product-local closeout at
+`5f283681e43342cfbc7566d69e5ca6b057abd232`.
+
+| Artifact | MandateSignal path | SHA-256 at `5f283681` |
+| --- | --- | --- |
+| SA-11 verified readiness and closeout | `docs/assurance/scanner-assurance-sa-11-readiness-2026-08-01.md` | `78098DC10B89062A4DCC2984F0264909E64824C4680C2C73589983FFBA74F91B` |
+| Execution ledger v0.4 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `20D1B11164F053170323252626CD255F9025A3A708CFF71D5A1476C2CF06565F` |
+
+This is grade-D repository evidence. No production enablement was authorized or
+included; hosted flag state and representative runtime behavior remain
+`UNVERIFIED`, and no GA control or production SLO closes. The merged
+product-local execution ledger records SA-12-lite's SA-10/11 dependency as
+satisfied. SA-12-lite remains `NOT_STARTED`, ASR-01 remains `BLOCKED`, and
+their existing prerequisites remain unchanged.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
