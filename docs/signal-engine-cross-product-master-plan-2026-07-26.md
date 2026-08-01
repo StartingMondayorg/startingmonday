@@ -163,12 +163,30 @@ MandateSignal PR 84 merged the product-local closeout at
 | SA-11 verified readiness and closeout | `docs/assurance/scanner-assurance-sa-11-readiness-2026-08-01.md` | `78098DC10B89062A4DCC2984F0264909E64824C4680C2C73589983FFBA74F91B` |
 | Execution ledger v0.4 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `20D1B11164F053170323252626CD255F9025A3A708CFF71D5A1476C2CF06565F` |
 
-This is grade-D repository evidence. No production enablement was authorized or
-included; hosted flag state and representative runtime behavior remain
-`UNVERIFIED`, and no GA control or production SLO closes. The merged
-product-local execution ledger records SA-12-lite's SA-10/11 dependency as
-satisfied. SA-12-lite remains `NOT_STARTED`, ASR-01 remains `BLOCKED`, and
-their existing prerequisites remain unchanged.
+#### SA-12-lite implementation evidence entry
+
+MandateSignal PR 85 merged the default-off shared resource-policy runtime at
+`008826312fa54ed258a6178f727291e6597bb9a1` on 2026-08-01. The
+product-local closeout records 31 focused tests, the 567-test repository gate,
+build, independent review, deliberate red, and recursive cancelled-queue
+review remediation for reviewed head
+`bb6f326105953d4ad33e0e894e4d940dee058934`. All required protected jobs
+passed in implementation run `30719030382`. MandateSignal PR 86 merged the
+product-local closeout at `b0f91a3c53975ee0da17b23aa3b8c5232e755bf5`;
+its protected run `30720701650` also passed all required jobs.
+
+| Artifact | MandateSignal path | SHA-256 at `b0f91a3c` |
+| --- | --- | --- |
+| SA-12-lite verified readiness and closeout | `docs/assurance/scanner-assurance-sa-12-lite-readiness-2026-08-01.md` | `BD9C01040E1A7E056F189821E1EC59DF859414119F805A6891CF14185B2D68C4` |
+| Execution ledger v0.5 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `EB05D4B0ED6AD5EDB2C323123FC1349940328DB30E793BAB4999E426AC8933A3` |
+
+This index entry is grade-D repository evidence; the product-local closeout
+also records grade-C deterministic and fault-injection evidence. No production
+enablement was authorized or included; hosted flag state, hosted source-pause
+operations, and representative runtime behavior remain `UNVERIFIED`, and no
+GA control or production SLO closes. SA-12-lite is `VERIFIED` in the merged
+product-local ledger. SA-13 remains `BLOCKED` pending an independently reviewed
+persistence/RLS design and OPS/AO circuit-budget decisions.
 
 ## 4. Locked Architecture Boundaries
 
