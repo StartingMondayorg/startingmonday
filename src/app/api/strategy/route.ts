@@ -11,6 +11,55 @@ import { recordTraceError } from '@/lib/trace'
 import { encodeUserId } from '@/lib/watermark'
 import { type SupabaseClient } from '@supabase/supabase-js'
 
+type SearchIntake = {
+  search_stage?: string | null
+  transition_type?: string | null
+  urgency?: string | null
+  target_companies?: string[] | null
+  company_size_stage?: string | null
+  geography?: string | null
+  remote_travel?: string | null
+  comp_guardrails?: string | null
+  search_hypothesis?: string | null
+  roles_to_avoid?: string[] | null
+  culture_criteria?: string | null
+  red_flags?: string[] | null
+  decision_criteria?: string[] | null
+  board_visibility?: string | null
+  stakeholder_complexity?: string | null
+  relationship_targets?: string[] | null
+  partner_notes?: string | null
+  coach_name?: string | null
+}
+
+function buildSearchIntakeSection(roleContext: unknown): string {
+  const intake = (roleContext as Record<string, unknown> | null | undefined)?.search_intake as SearchIntake | undefined
+  if (!intake) return ''
+  const line = (label: string, value?: string | null) => (value ? `\n${label}: ${value}` : '')
+  const list = (label: string, values?: string[] | null) => (values?.length ? `\n${label}: ${values.join(', ')}` : '')
+  const body =
+    line('Transition type', intake.transition_type) +
+    line('Search stage', intake.search_stage) +
+    line('Urgency / timing', intake.urgency) +
+    line('Search hypothesis', intake.search_hypothesis) +
+    list('Named target companies', intake.target_companies) +
+    line('Company size / stage preference', intake.company_size_stage) +
+    line('Geography', intake.geography) +
+    line('Remote / travel constraints', intake.remote_travel) +
+    line('Compensation guardrails', intake.comp_guardrails) +
+    list('Roles to avoid', intake.roles_to_avoid) +
+    line('Culture criteria', intake.culture_criteria) +
+    list('Red flags', intake.red_flags) +
+    list('Decision criteria', intake.decision_criteria) +
+    line('Board visibility preference', intake.board_visibility) +
+    line('Stakeholder complexity', intake.stakeholder_complexity) +
+    list('Relationships to activate', intake.relationship_targets) +
+    line('Coach / partner', intake.coach_name) +
+    line('Coach notes', intake.partner_notes)
+  if (!body) return ''
+  return `\n\nSEARCH INTAKE (the candidate's stated decision rules. Honor roles to avoid, decision criteria, and red flags when assessing fit and recommending targets.)${body}`
+}
+
 function makeStream(prompt: string, supabase: SupabaseClient, userId: string) {
   const encoder = new TextEncoder()
   return new ReadableStream({
@@ -51,7 +100,7 @@ export async function GET(request: NextRequest) {
   const [{ data: profile }, { data: companies }] = await Promise.all([
     supabase
       .from('user_profiles')
-      .select('full_name, current_title, current_company, target_titles, target_sectors, target_locations, positioning_summary, resume_text, beyond_resume, search_status, search_persona')
+      .select('full_name, current_title, current_company, target_titles, target_sectors, target_locations, positioning_summary, resume_text, beyond_resume, search_status, search_persona, role_context')
       .eq('user_id', userId)
       .single(),
     supabase
@@ -78,7 +127,7 @@ CANDIDATE
 Name: ${name}${profile?.current_title ? `\nCurrent/recent title: ${profile.current_title}` : ''}${profile?.current_company ? `\nCurrent/recent company: ${profile.current_company}` : ''}${personaContext(profile?.search_persona)}
 Target roles: ${targetTitles}
 Target sectors: ${targetSectors}
-Target locations: ${targetLocations}${profile?.search_status ? `\nSearch status: ${profile.search_status}` : ''}${profile?.positioning_summary ? `\nSelf-positioning: ${profile.positioning_summary}` : ''}${profile?.resume_text ? `\nResume / career history:\n${profile.resume_text.slice(0, RESUME_CHARS)}` : ''}${profile?.beyond_resume ? `\nBeyond the resume: ${profile.beyond_resume}` : ''}
+Target locations: ${targetLocations}${profile?.search_status ? `\nSearch status: ${profile.search_status}` : ''}${profile?.positioning_summary ? `\nSelf-positioning: ${profile.positioning_summary}` : ''}${profile?.resume_text ? `\nResume / career history:\n${profile.resume_text.slice(0, RESUME_CHARS)}` : ''}${profile?.beyond_resume ? `\nBeyond the resume: ${profile.beyond_resume}` : ''}${buildSearchIntakeSection(profile?.role_context)}
 
 CURRENT PIPELINE (${(companies ?? []).length} companies)
 ${pipelineSection}

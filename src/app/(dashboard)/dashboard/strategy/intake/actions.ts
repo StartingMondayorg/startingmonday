@@ -80,19 +80,21 @@ export async function saveStrategyIntake(formData: FormData) {
     search_intake: nextIntake,
   }
 
+  // Optional profile fields must not clobber existing profile data when left blank:
+  // this form prefills from user_profiles, so an empty submission means "unchanged", not "clear".
   const { error } = await supabase
     .from('user_profiles')
     .upsert(
       {
         user_id: user.id,
-        full_name: fullName,
-        current_title: currentTitle,
-        current_company: currentCompany,
-        target_titles: targetTitles.length > 0 ? targetTitles : null,
-        target_sectors: targetSectors.length > 0 ? targetSectors : null,
-        target_locations: targetLocations.length > 0 ? targetLocations : null,
+        target_titles: targetTitles,
+        target_sectors: targetSectors,
         positioning_summary: positioningSummary,
         role_context: updatedRoleContext,
+        ...(fullName ? { full_name: fullName } : {}),
+        ...(currentTitle ? { current_title: currentTitle } : {}),
+        ...(currentCompany ? { current_company: currentCompany } : {}),
+        ...(targetLocations.length > 0 ? { target_locations: targetLocations } : {}),
       },
       { onConflict: 'user_id' }
     )
