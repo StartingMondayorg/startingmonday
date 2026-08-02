@@ -185,8 +185,46 @@ also records grade-C deterministic and fault-injection evidence. No production
 enablement was authorized or included; hosted flag state, hosted source-pause
 operations, and representative runtime behavior remain `UNVERIFIED`, and no
 GA control or production SLO closes. SA-12-lite is `VERIFIED` in the merged
-product-local ledger. SA-13 remains `BLOCKED` pending an independently reviewed
-persistence/RLS design and OPS/AO circuit-budget decisions.
+product-local ledger.
+
+#### SA-13A persistence and operator-control evidence entry
+
+MandateSignal PR 88 merged the additive, runtime-inert source-circuit
+persistence and guarded operator-control implementation at
+`5cd1e3611cd39a56bb9a1b04d8c95c2a038dc155` on 2026-08-02. Reviewed head
+`25d2c848c1ca8a9b697d41eab7430381c4f75fa6` passed 11 focused tests, 8
+local-concurrency tests, 114 authorization pgTAP assertions, 37
+circuit/operator pgTAP assertions, the migration guard, the 567-test
+repository gate, build, deliberate red, and independent review. All required
+protected jobs passed in implementation run `30724551702`; that run also
+automatically applied the additive migration to isolated Supabase Preview
+project `lvcxuscfvsswjllcenpr`. The implementation merge carried execution
+ledger v0.6; the closeout below advanced it to v0.7.
+
+MandateSignal PR 89 merged the product-local closeout at
+`78af788b3f4017b6adabadb4dbd53ea0101d07ef`; protected run `30725074455`
+passed all applicable required jobs. PR 90 then merged the omitted closeout
+consistency correction at `74100aea37ec2affffaec64706c94a2176815d85`;
+protected run `30725940660` passed all applicable required jobs. The hashes
+below pin the final corrected MandateSignal `main` state at `74100aea`.
+
+| Artifact | MandateSignal path | SHA-256 at `74100aea` |
+| --- | --- | --- |
+| SA-13A verified readiness and closeout | `docs/assurance/scanner-assurance-sa-13-readiness-2026-08-01.md` | `9C7B34003C2302F72A550C9F7F52A870D349A66BB87E255B20BF90527F337CEE` |
+| Execution ledger v0.7 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `430AA3B0727FA7A28E01D3F813468FF4EA9C15A2224AEC4C524ADA02EA5FED07` |
+
+This entry is grade-D repository evidence; the product-local closeout also
+records grade-C deterministic/fault-injection evidence and grade-B isolated
+local-Supabase evidence for the SA-13A repository scope. The automatic hosted
+preview application is a recorded control variance, not production evidence.
+No scanner runtime wiring, feature activation, source activation, manual
+hosted operator action, or production configuration change was authorized.
+Hosted registry completeness, operator authority, runtime circuit behavior,
+production feature state, retention automation, and operational enablement
+remain `UNVERIFIED`; ENG-03, ENG-04, every production SLO, and every GA control
+remain open. The merged product-local ledger records SA-13A as
+`VERIFIED_WITH_PREVIEW_VARIANCE`; SA-13B remains `BLOCKED` pending its focused
+runtime-isolation readiness decision.
 
 ## 4. Locked Architecture Boundaries
 
