@@ -226,6 +226,43 @@ remain open. The merged product-local ledger records SA-13A as
 `VERIFIED_WITH_PREVIEW_VARIANCE`; SA-13B remains `BLOCKED` pending its focused
 runtime-isolation readiness decision.
 
+#### SA-13B1 bounded runtime-isolation evidence entry
+
+MandateSignal PR 92 merged the default-off three-source circuit runtime at
+`ab560bbc48634393dbc7042e8269dcd2e4c329cc` on 2026-08-02. Reviewed head
+`890da1f949b7e7c1a74999c760d84bf89a3d59d3` passed 36 focused tests,
+37 circuit/operator pgTAP assertions, 8 process-concurrency tests, the final
+103-file/601-test repository gate, production build, deliberate threshold
+red, independent review, and query-precedence review remediation. All
+applicable required protected jobs passed in implementation run
+`30729394492`.
+
+MandateSignal PR 93 merged the product-local closeout at
+`ba894e173dec1ccd46d41228f05b2bac353718dc`; its final documentation head
+`3340bb1b2c233451b2f3a9b6496f45a6440413a1` passed all applicable required
+protected jobs in run `30731299512` after review-attribution remediation.
+
+| Artifact | MandateSignal path | SHA-256 at `ba894e17` |
+| --- | --- | --- |
+| SA-13 readiness and B1 closeout | `docs/assurance/scanner-assurance-sa-13-readiness-2026-08-01.md` | `8AACF01BF28EC249B0DB5977705EEDAEF1E873AFCB067A8D5A79E5166720F4D6` |
+| Execution ledger v1.1 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `3409BDAA5914964560BD7811B14D946588B2A697B3832DCEA2CCDD6856A9943D` |
+
+This entry is grade-D repository evidence; the product-local closeout also
+records grade-C deterministic/fault-injection evidence and grade-B isolated
+local-Supabase evidence for the bounded B1 repository scope. The runtime
+allowlist covers only `pr_wire`, `business_journals`, and `trade_press`, and
+the production feature flag remains default off. Local dependency evidence
+does not verify hosted registry completeness, hosted feature state, operator
+execution, production circuit behavior, or production SLOs.
+
+SA-13B1 is `VERIFIED` only for that bounded scope. SA-13B and SA-13B2 remain
+`BLOCKED`: 15 remaining per-company boundaries and 3 run-wide prefetch
+boundaries still require explicit outcome normalization or an owned
+quarantine/defer decision, and code/catalog source identities require
+reconciliation. B1 closes neither SCN-CASE-05, ENG-03/04, a GA control, nor a
+production SLO. No runtime activation, source activation, customer exposure,
+hosted mutation, or production configuration change was authorized.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
