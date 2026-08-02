@@ -263,6 +263,61 @@ reconciliation. B1 closes neither SCN-CASE-05, ENG-03/04, a GA control, nor a
 production SLO. No runtime activation, source activation, customer exposure,
 hosted mutation, or production configuration change was authorized.
 
+#### SA-13B2A SEC normalization and circuit-integration evidence entry
+
+MandateSignal PR 95 merged the SA-13B2A1 strict SEC outcome normalization at
+`f25e4398ac515515a0c8278dfcd3b3941d6dee0f` on 2026-08-02. Reviewed head
+`2cfe34cd2907339c91903e7ba3b9448b5e6356cc` passed 41 focused tests, the
+104-file/616-test repository gate, production build, deliberate red,
+independent review, and protected run `30733853737`. B2A1 added no circuit,
+allowlist, schema, hosted mutation, source activation, customer exposure, or
+production configuration change.
+
+MandateSignal PR 97 merged the SA-13B2A2 default-off SEC circuit integration
+and executable 21-boundary manifest at
+`f157aee4f25432f36b5b52ce1a1ef6e25f86c9b3` on 2026-08-02. Exact reviewed
+head `c9d623c9df46c2493bdbb003ea972b280cbb38bd` passed 57 assertions across
+the full focused files, including pre-existing B1/B2A1 contracts; this is not
+a count of newly added B2A2 assertions. It also passed 5 boundary mutation
+groups, the 104-file/623-assertion repository gate, production build, 37
+circuit/operator pgTAP assertions, 8 process-concurrency checks, deliberate
+red, and independent review. Protected run `30735925383` passed on attempt 2
+at the unchanged head after one
+out-of-scope authenticated-E2E variance; base-`main` run `30735065188` passed
+the same job. The final manifest records 21 fetch boundaries: 4
+`circuit_covered`, 13 `planned_circuit`, 3 `deferred`, and 1 `quarantined`.
+That is the current inventory state, not the final 17-covered plus 4-owned-
+non-circuit completion claim.
+
+MandateSignal PR 98 merged the product-local B2A2 closeout at
+`660c328e7245260748f9f809761a1dc1b75c6493` on 2026-08-02. Its final
+documentation head `9e46806a2bd801b1c056901dbe9566b97df25013` passed all applicable
+protected checks in run `30737211340`; public/authenticated E2E and Supabase
+Preview were neutral skips for the documentation-only scope.
+
+| Artifact | MandateSignal path | SHA-256 at `660c328e` |
+| --- | --- | --- |
+| SA-13 readiness and B2A2 closeout v1.4 | `docs/assurance/scanner-assurance-sa-13-readiness-2026-08-01.md` | `C98C7A68C17E586D9B35A8CCDD6FED374D38986CD367081A6F53B6E4A3C6348E` |
+| Execution ledger v1.8 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `421A996E6BE9B913B6BBF28C453C6FFF631A692F5FC21102E8284626E0D9CE34` |
+
+This entry is grade-D repository evidence; the product-local closeout also
+records grade-C deterministic/fault-injection evidence and grade-B shared
+local-Supabase persistence evidence. It does not provide an SEC-specific
+real-Supabase end-to-end run, hosted registry completeness, hosted feature
+state, operator execution, production circuit behavior, or a production SLO.
+The evidence expires at `2026-08-09T06:41:30Z` or immediately on a scoped
+SEC, circuit, or boundary-manifest contract change, whichever occurs first.
+
+SA-13B2A1 and SA-13B2A2 are `VERIFIED` only for their bounded product-local
+scopes. This canonical entry satisfies B2B's evidence-index dependency, so B2B
+is the sole next product-local `READY` slice under the existing one-slice WIP
+and exact-head evidence gates. B2C-D remain dependency-blocked; SA-13B2 and
+aggregate SA-13B remain `BLOCKED`; SCN-CASE-05, ENG-03/04, every GA control,
+hosted runtime evidence, and every production SLO remain open or `UNVERIFIED`.
+`SCANNER_SOURCE_CIRCUIT_V1` remains default off. No source activation,
+customer exposure, hosted mutation, or production configuration change is
+authorized by this index entry.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
