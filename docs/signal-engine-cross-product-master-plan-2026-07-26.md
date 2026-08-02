@@ -282,18 +282,19 @@ a count of newly added B2A2 assertions. It also passed 5 boundary mutation
 groups, the 104-file/623-assertion repository gate, production build, 37
 circuit/operator pgTAP assertions, 8 process-concurrency checks, deliberate
 red, and independent review. Protected run `30735925383` passed on attempt 2
-at the unchanged head after one
-out-of-scope authenticated-E2E variance; base-`main` run `30735065188` passed
-the same job. The final manifest records 21 fetch boundaries: 4
+at the unchanged head after one out-of-scope authenticated E2E variance.
+Base-`main` run `30735065188` passed the same job. The final manifest records
+21 fetch boundaries: 4
 `circuit_covered`, 13 `planned_circuit`, 3 `deferred`, and 1 `quarantined`.
 That is the current inventory state, not the final 17-covered plus 4-owned-
 non-circuit completion claim.
 
 MandateSignal PR 98 merged the product-local B2A2 closeout at
 `660c328e7245260748f9f809761a1dc1b75c6493` on 2026-08-02. Its final
-documentation head `9e46806a2bd801b1c056901dbe9566b97df25013` passed all applicable
-protected checks in run `30737211340`; public/authenticated E2E and Supabase
-Preview were neutral skips for the documentation-only scope.
+documentation head `9e46806a2bd801b1c056901dbe9566b97df25013`
+passed all applicable protected checks in run `30737211340`. Public and
+authenticated E2E plus Supabase Preview were neutral skips for the
+documentation-only scope.
 
 | Artifact | MandateSignal path | SHA-256 at `660c328e` |
 | --- | --- | --- |
