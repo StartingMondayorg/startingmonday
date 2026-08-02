@@ -417,6 +417,56 @@ remain open or `UNVERIFIED`. `SCANNER_SOURCE_CIRCUIT_V1` remains default off.
 No source activation, customer exposure, hosted mutation, or production
 configuration change is authorized by this index entry.
 
+#### SA-13B2D run-wide source-outcome evidence entry
+
+MandateSignal PR 107 merged the SA-13B2D default-off run-wide source-outcome
+increment at `1868adc30c397b01ee20326ff42d4e20e94908df` on 2026-08-02. Exact
+integrated head `015e1a693a85897f538da28a4a7dbbf710f68e8e` passed 110
+assertions across the 5-file B2D-scoped focused matrix, 5 boundary mutation
+groups, the 116-file/767-assertion repository gate, production build with
+73/73 static pages, 37 circuit/operator pgTAP assertions, 8
+process-concurrency checks, deliberate red, and independent review. Protected
+run `30765758676` passed on attempt 1 after review remediation and with zero
+unresolved threads. B2D added strict run-wide outcomes and one-claim-per-run
+enforcement for SAM.gov, WARN, and 13F. The executable manifest now records
+exactly 21 fetch boundaries: 17 `circuit_covered`, 0 `planned_circuit`, 3
+`deferred`, and 1 `quarantined`. All 4 non-circuit boundaries have owned
+dispositions, and derived outputs do not count as fetch boundaries.
+
+MandateSignal PR 108 merged the product-local B2D closeout at
+`e07ab027580708645bee7fa2b276cfe90247aef0` on 2026-08-02. Its final
+documentation head `3cc419ae8441119d51ea2629dd5ff9c9c446ce59` passed all
+applicable protected checks in run `30766494177`. Core CI, gitleaks, E2E
+scope, Lighthouse, and aggregate E2E passed; public and authenticated E2E plus
+Supabase Preview were neutral skips for the documentation-only scope. The one
+documentation review finding was remediated and resolved; zero review threads
+remained at merge.
+
+| Artifact | MandateSignal path | SHA-256 at `e07ab027` |
+| --- | --- | --- |
+| SA-13 readiness and B2D closeout v1.7 | `docs/assurance/scanner-assurance-sa-13-readiness-2026-08-01.md` | `1AECCF4689ACF4091A85D5F183A437DB9EA9B63DB82CFCD011F311849FB990E5` |
+| Execution ledger v2.1 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `01F5C76401A0D019FB00888B4A571FFDB3C4A9FABADFDA6689179A4BE5A21AA8` |
+
+This entry is grade-D repository evidence; the product-local closeout also
+records grade-C deterministic/fault-injection evidence at the exact integrated
+head and grade-B shared local-Supabase persistence evidence at substantive
+reviewed head `fea88b5d9587d3c1d615d3520217b1630a08be34`. It does not provide
+a source-specific real-Supabase end-to-end run, hosted registry completeness,
+hosted feature state, operator execution, production circuit behavior, or a
+production SLO. The evidence expires at `2026-08-09T20:38:20Z` or immediately
+on a scoped circuit, source-outcome, run-wide-claim, manifest, or catalog
+contract change, whichever occurs first.
+
+SA-13B2D is `VERIFIED` only for its bounded product-local scope. After this
+entry merges, the canonical-index dependency for aggregate SA-13B2 is
+satisfied; the product-local ledger may then transition SA-13B2 and, after it,
+aggregate SA-13B through accountable acceptance. This entry does not itself
+record those transitions or Sprint M1 exit. SCN-CASE-05, ENG-03/04, every GA
+control, hosted runtime evidence, and every production SLO remain open or
+`UNVERIFIED`. `SCANNER_SOURCE_CIRCUIT_V1` remains default off. No source
+activation, customer exposure, hosted mutation, or production configuration
+change is authorized by this index entry.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
