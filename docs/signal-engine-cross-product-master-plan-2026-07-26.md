@@ -319,6 +319,54 @@ hosted runtime evidence, and every production SLO remain open or `UNVERIFIED`.
 customer exposure, hosted mutation, or production configuration change is
 authorized by this index entry.
 
+#### SA-13B2B six-source strict-outcome evidence entry
+
+MandateSignal PR 99 merged the SA-13B2B default-off strict-outcome increment
+at `009dec0805f175c99a70ccf342a1d85ae0498838` on 2026-08-02. Exact reviewed
+head `b168c60a2160b88c5e948d2331b75e976ef0e819` passed 109 assertions across
+the 11-file cumulative focused matrix, 5 boundary mutation groups, the
+109-file/663-assertion repository gate, production build with 71/71 static
+pages, 37 circuit/operator pgTAP assertions, 8 process-concurrency checks,
+deliberate red, and independent review. Protected run `30751352741` passed on
+attempt 2. B2B added strict outcomes for Google News, company press rooms,
+PredictLeads, SBIR, Form D, and CourtListener. The executable manifest now
+records 21 fetch boundaries: 10 `circuit_covered`, 7 `planned_circuit`, 3
+`deferred`, and 1 `quarantined`. That is the current inventory state, not the
+final 17-covered plus 4-owned-non-circuit completion claim.
+
+MandateSignal PR 100 merged the product-local B2B closeout at
+`e0179aef4a51e467231c07f902403a821cc7c9b5` on 2026-08-02. Its final
+documentation head `caa58a73ce9b14d45fcb7a52647acef89c64e7e0` passed all
+applicable protected checks in run `30753427137`. Core CI, gitleaks, E2E
+scope, Lighthouse, and aggregate E2E passed; public and authenticated E2E plus
+Supabase Preview were neutral skips for the documentation-only scope. The
+sole review finding was remediated, its thread was resolved, and exact-head
+confirmation returned `PASS` with no P0/P1/P2.
+
+| Artifact | MandateSignal path | SHA-256 at `e0179aef` |
+| --- | --- | --- |
+| SA-13 readiness and B2B closeout v1.5 | `docs/assurance/scanner-assurance-sa-13-readiness-2026-08-01.md` | `262727826F08BB3CEE7ED8A99FA70AE8662F253B3BECF524B3D73BB2DE050CB5` |
+| Execution ledger v1.9 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `62700BCC53C1302863965443A2FE0E7A36E028F32FFCABC42D0FF489A3180F60` |
+
+This entry is grade-D repository evidence; the product-local closeout also
+records grade-C deterministic/fault-injection evidence and grade-B shared
+local-Supabase persistence evidence. It does not provide a source-specific
+real-Supabase end-to-end run, hosted registry completeness, hosted feature
+state, operator execution, production circuit behavior, or a production SLO.
+The evidence expires at `2026-08-09T14:21:10Z` or immediately on a scoped
+circuit, source-outcome, or boundary-manifest contract change, whichever
+occurs first.
+
+SA-13B2B is `VERIFIED` only for its bounded product-local scope. This canonical
+entry satisfies B2C's evidence-index dependency, so B2C is the sole next
+product-local `READY` slice under the existing one-slice WIP and exact-head
+evidence gates. B2D remains dependency-blocked; SA-13B2 and aggregate SA-13B
+remain `BLOCKED`; SCN-CASE-05, ENG-03/04, every GA control, hosted runtime
+evidence, and every production SLO remain open or `UNVERIFIED`.
+`SCANNER_SOURCE_CIRCUIT_V1` remains default off. No source activation,
+customer exposure, hosted mutation, or production configuration change is
+authorized by this index entry.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
