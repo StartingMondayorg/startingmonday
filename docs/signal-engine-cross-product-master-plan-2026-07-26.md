@@ -480,7 +480,8 @@ passed all eight contexts. PR 116 merged additive function hardening at
 `47c9ed21258d1b321bfaf9a16a86e304b04207d4`; protected run `30775611009`
 passed all eight contexts, including Supabase Preview.
 
-Migration-first production rollout deployed exact SHA `c6811bb0`. Controlled
+Migration-first production rollout deployed exact SHA
+`c6811bb0cac3aecd6eb6e73aae809db8d8c45b52`. Controlled
 run `905dc820-b068-46a7-ba61-062f23c7257c` then proved interruption inside a
 five-firm lease, stale-lease detection, recovery without manual row edits, and
 terminal reconciliation at `2026-08-03T02:03:13.382Z`: 84/84 firms completed,
@@ -521,7 +522,8 @@ not synchronously execute the scanner. MandateSignal PR 118 merged at
 `0cc91db6128887cbc7a9ff1a125465cc67591552` from reviewed head
 `a357021692b3743ce0a43cb58d29f2fcf54ad155`; all eight protected contexts
 passed in run `30780414680`. Production applied additive migrations
-`20260803030000` and `20260803040000`, deployed exact SHA `0cc91db`, and
+`20260803030000` and `20260803040000`, deployed exact SHA
+`0cc91db6128887cbc7a9ff1a125465cc67591552`, and
 remained healthy. A count-only preflight classified the 98 terminal-linked
 prospects as 1 signal-ready, 91 relationship-context eligible, and 6 held for
 missing firm context. The bounded batch created 91 `pending_review` drafts;
