@@ -19,9 +19,6 @@ export async function saveStrategyIntake(formData: FormData) {
   if (!user) redirect('/login')
 
   const audience = (formData.get('audience') as string ?? 'individual') === 'partner' ? 'partner' : 'individual'
-  const fullName = toNullableString(formData.get('full_name'))
-  const currentTitle = toNullableString(formData.get('current_title'))
-  const currentCompany = toNullableString(formData.get('current_company'))
   const positioningSummary = toNullableString(formData.get('positioning_summary'))
 
   const targetTitles = parseCsv((formData.get('target_titles') as string ?? ''))
@@ -80,8 +77,9 @@ export async function saveStrategyIntake(formData: FormData) {
     search_intake: nextIntake,
   }
 
-  // Optional profile fields must not clobber existing profile data when left blank:
+  // Optional fields must not clobber existing profile data when left blank:
   // this form prefills from user_profiles, so an empty submission means "unchanged", not "clear".
+  // Identity fields (name, title, company) are owned by the profile page and never written here.
   const { error } = await supabase
     .from('user_profiles')
     .upsert(
@@ -91,9 +89,6 @@ export async function saveStrategyIntake(formData: FormData) {
         target_sectors: targetSectors,
         positioning_summary: positioningSummary,
         role_context: updatedRoleContext,
-        ...(fullName ? { full_name: fullName } : {}),
-        ...(currentTitle ? { current_title: currentTitle } : {}),
-        ...(currentCompany ? { current_company: currentCompany } : {}),
         ...(targetLocations.length > 0 ? { target_locations: targetLocations } : {}),
       },
       { onConflict: 'user_id' }

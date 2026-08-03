@@ -4,28 +4,16 @@ import { createClient } from '@/lib/supabase/server'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { TagInput } from '@/components/TagInput'
 import { saveStrategyIntake } from './actions'
+import {
+  type SearchIntake,
+  TRANSITION_TYPE_OPTIONS,
+  SEARCH_STAGE_OPTIONS,
+  URGENCY_OPTIONS,
+  transitionTypeFromEmploymentStatus,
+  urgencyFromSearchTimeline,
+} from '@/lib/search-intake'
 
-type SearchIntake = {
-  audience?: 'individual' | 'partner'
-  search_stage?: string | null
-  transition_type?: string | null
-  urgency?: string | null
-  target_companies?: string[] | null
-  company_size_stage?: string | null
-  geography?: string | null
-  remote_travel?: string | null
-  comp_guardrails?: string | null
-  search_hypothesis?: string | null
-  roles_to_avoid?: string[] | null
-  culture_criteria?: string | null
-  red_flags?: string[] | null
-  decision_criteria?: string[] | null
-  board_visibility?: string | null
-  stakeholder_complexity?: string | null
-  relationship_targets?: string[] | null
-  partner_notes?: string | null
-  coach_name?: string | null
-}
+const selectClass = 'w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white focus:border-orange-400/40 focus:outline-none'
 
 function joinTags(values?: string[] | null) {
   return (values ?? []).join(', ')
@@ -47,15 +35,29 @@ export default async function StrategyIntakePage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name, current_title, current_company, target_titles, target_sectors, target_locations, positioning_summary, role_context')
-    .eq('user_id', user.id)
-    .single()
+  const [{ data: profile }, { data: pipelineCompanies }] = await Promise.all([
+    supabase
+      .from('user_profiles')
+      .select('full_name, current_title, current_company, target_titles, target_sectors, target_locations, positioning_summary, role_context, employment_status, search_timeline')
+      .eq('user_id', user.id)
+      .single(),
+    supabase
+      .from('companies')
+      .select('name')
+      .eq('user_id', user.id)
+      .is('archived_at', null)
+      .order('created_at', { ascending: true })
+      .limit(8),
+  ])
 
-  const searchIntake = ((profile?.role_context as Record<string, unknown> | null)?.search_intake as SearchIntake | undefined) ?? {}
+  const intake = ((profile?.role_context as Record<string, unknown> | null)?.search_intake as SearchIntake | undefined) ?? {}
 
-  const intake = searchIntake ?? {}
+  // Option A journey: onboarding answers seed the intake so nothing is asked twice.
+  const transitionDefault = intake.transition_type ?? transitionTypeFromEmploymentStatus(profile?.employment_status) ?? ''
+  const urgencyDefault = intake.urgency ?? urgencyFromSearchTimeline(profile?.search_timeline) ?? ''
+  const targetCompaniesDefault = intake.target_companies?.length
+    ? intake.target_companies
+    : (pipelineCompanies ?? []).map(c => c.name)
 
   return (
     <div className="relative min-h-screen bg-slate-950 text-slate-100">
@@ -121,7 +123,7 @@ export default async function StrategyIntakePage({
 
             {saved && (
               <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-[13px] text-emerald-100">
-                Intake saved. The dashboard and profile data are now aligned with this search frame.
+                Intake saved. Your strategy brief, prep briefs, and outreach drafts now use these decision rules.
               </div>
             )}
 
@@ -150,15 +152,30 @@ export default async function StrategyIntakePage({
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="transition_type">Transition type <span className="text-orange-200">required</span></label>
-                    <input id="transition_type" name="transition_type" required defaultValue={intake.transition_type ?? ''} placeholder="Confidential search, active search, post-transition..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <select id="transition_type" name="transition_type" required defaultValue={transitionDefault} className={selectClass}>
+                      <option value="" disabled>Select one</option>
+                      {TRANSITION_TYPE_OPTIONS.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="search_stage">Search stage <span className="text-orange-200">required</span></label>
-                    <input id="search_stage" name="search_stage" required defaultValue={intake.search_stage ?? ''} placeholder="Discovery, target list, active interviews, offer" className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <select id="search_stage" name="search_stage" required defaultValue={intake.search_stage ?? ''} className={selectClass}>
+                      <option value="" disabled>Select one</option>
+                      {SEARCH_STAGE_OPTIONS.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="urgency">Urgency / timing <span className="text-slate-500">optional</span></label>
-                    <input id="urgency" name="urgency" defaultValue={intake.urgency ?? ''} placeholder="Immediate, 30 days, before fall planning..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <select id="urgency" name="urgency" defaultValue={urgencyDefault} className={selectClass}>
+                      <option value="">Select one</option>
+                      {URGENCY_OPTIONS.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="search_hypothesis">Search hypothesis <span className="text-slate-500">optional</span></label>
@@ -183,7 +200,7 @@ export default async function StrategyIntakePage({
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="target_companies">Target companies <span className="text-slate-500">optional</span></label>
-                    <TagInput id="target_companies" name="target_companies" defaultValue={joinTags(intake.target_companies)} placeholder="Arcadia, Cotiviti, Kyruus..." />
+                    <TagInput id="target_companies" name="target_companies" defaultValue={joinTags(targetCompaniesDefault)} placeholder="Arcadia, Cotiviti, Kyruus..." />
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="company_size_stage">Company size / stage <span className="text-slate-500">optional</span></label>
@@ -209,19 +226,10 @@ export default async function StrategyIntakePage({
                   <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-orange-200">Positioning</p>
                   <h2 className="mt-1 text-[20px] font-bold text-white">What the search should say about the candidate</h2>
                 </div>
+                <p className="text-[13px] leading-relaxed text-slate-400">
+                  Name, title, and company come from your <Link href="/dashboard/profile" className="text-slate-200 underline decoration-slate-500 underline-offset-4 hover:text-white">profile</Link>; edit them there.
+                </p>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="full_name">Full name <span className="text-slate-500">optional</span></label>
-                    <input id="full_name" name="full_name" defaultValue={profile?.full_name ?? ''} placeholder="Richard Rothschild" className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
-                  </div>
-                  <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="current_title">Current title <span className="text-slate-500">optional</span></label>
-                    <input id="current_title" name="current_title" defaultValue={profile?.current_title ?? ''} placeholder="Chief Information Officer" className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
-                  </div>
-                  <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="current_company">Current company <span className="text-slate-500">optional</span></label>
-                    <input id="current_company" name="current_company" defaultValue={profile?.current_company ?? ''} placeholder="Acme Corp" className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
-                  </div>
                   <div className="sm:col-span-2">
                     <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="positioning_summary">Positioning summary <span className="text-orange-200">required</span></label>
                     <textarea id="positioning_summary" name="positioning_summary" required defaultValue={profile?.positioning_summary ?? ''} placeholder="Operator for infrastructure modernization and executive transformation roles." className="min-h-28 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
@@ -306,7 +314,7 @@ export default async function StrategyIntakePage({
               {[
                 'Required: target roles, transition type, search stage, target industries, positioning summary, decision criteria.',
                 'Optional: target companies, geography, comp guardrails, red flags, board visibility, stakeholder complexity, partner notes.',
-                'Save writes into user_profiles and role_context.search_intake.',
+                'Answers from onboarding are pre-filled where they overlap; adjust anything that has changed.',
               ].map(item => (
                 <div key={item} className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[13px] leading-relaxed text-slate-200">
                   {item}

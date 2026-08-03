@@ -72,7 +72,7 @@ export default function SearchStrategyIntakePreviewPage() {
           <Link href="/demo" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-200">
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </Link>
-          <span className="text-[11px] tracking-[0.14em] uppercase text-slate-400">Phase 4 preview</span>
+          <span className="text-[11px] tracking-[0.14em] uppercase text-slate-400">Intake preview</span>
         </div>
       </header>
 
@@ -173,23 +173,23 @@ export default function SearchStrategyIntakePreviewPage() {
               <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-orange-200">Downstream use</p>
               <div className="mt-3 space-y-2 text-[13px] leading-relaxed text-slate-200">
                 <p>Search Strategy Brief uses the intake as primary context.</p>
-                <p>Campaign Foundation summarizes the search in plain language.</p>
-                <p>Prep and signals reuse the same target-role context.</p>
+                <p>Interview prep briefs honor your decision rules and red flags.</p>
+                <p>Outreach drafts match your transition type and timing.</p>
               </div>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
+                href="/signup"
+                className="inline-flex items-center rounded-full bg-orange-500 px-4 py-2 text-[13px] font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+              >
+                Start free
+              </Link>
+              <Link
                 href="/dashboard/strategy/intake"
                 className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
               >
-                Open real workflow
-              </Link>
-              <Link
-                href="/coaches-guide"
-                className="inline-flex items-center rounded-full bg-orange-500 px-4 py-2 text-[13px] font-semibold text-slate-950 transition-colors hover:bg-orange-400"
-              >
-                Coach guide
+                Already a member? Open your intake
               </Link>
             </div>
           </aside>
