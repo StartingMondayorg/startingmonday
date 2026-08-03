@@ -125,6 +125,12 @@ export default function CoachesChannelPage() {
               >
                 Send federal IT demo
               </Link>
+              <Link
+                href="/demo/search-strategy-intake"
+                className="rounded-full border border-white/18 px-6 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+              >
+                See the intake preview
+              </Link>
             </div>
 
             <p className="mt-6 text-[12px] tracking-[0.14em] text-slate-400">

@@ -20,6 +20,7 @@ import { anthropic, MODELS, getModelForTier } from '@/lib/anthropic'
 import { PrepRefineBodySchema, PrepRouteParamsSchema, PrepGenerateQuerySchema, firstZodError } from '@/lib/schemas'
 import { recordTrace, recordTraceError } from '@/lib/trace'
 import { apiError } from '@/lib/api-error'
+import { buildSearchIntakeSection } from '@/lib/search-intake'
 
 type TraceOpts = { feature: string; inputSnapshot?: Record<string, unknown> }
 
@@ -306,7 +307,7 @@ function buildContext(company: CompanyRow, profile: ProfileRow | null, scanResul
 CANDIDATE
 Name: ${name}${profile?.current_title ? `\nCurrent/recent title: ${profile.current_title}` : ''}${profile?.current_company ? `\nCurrent/recent company: ${profile.current_company}` : ''}${personaContext(profile?.search_persona)}${roleTypeContext(profile?.role_type)}${transitionModeContext(profile?.search_persona, profile?.target_titles, profile?.role_type)}
 Target roles: ${targetTitles}
-Target sectors: ${targetSectors}${profile?.positioning_summary ? `\nPositioning: ${profile.positioning_summary}` : ''}${careerSection(profile)}${buildRoleSpecificContext(profile)}${profile?.beyond_resume ? `\nBeyond the resume: ${profile.beyond_resume}` : ''}${buildStarStoriesSection(profile)}
+Target sectors: ${targetSectors}${profile?.positioning_summary ? `\nPositioning: ${profile.positioning_summary}` : ''}${careerSection(profile)}${buildRoleSpecificContext(profile)}${profile?.beyond_resume ? `\nBeyond the resume: ${profile.beyond_resume}` : ''}${buildStarStoriesSection(profile)}${buildSearchIntakeSection(profile?.role_context)}
 
 COMPANY
 Name: ${company.name}${company.sector ? `\nSector: ${company.sector}` : ''}${company.company_size ? `\nCompany size: ${companySizeLabel[company.company_size] ?? company.company_size}` : ''}
