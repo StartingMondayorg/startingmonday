@@ -467,6 +467,75 @@ control, hosted runtime evidence, and every production SLO remain open or
 activation, customer exposure, hosted mutation, or production configuration
 change is authorized by this index entry.
 
+#### SA-14C durable DM state-integrity evidence entry
+
+Rich (AO) approved the emergency SA-14C durable-state reordering ahead of
+SA-14A and confirmed no GA P0 displacement on 2026-08-03. MandateSignal PR 115
+merged the durable five-firm work queue, leases, bounded retries, recovery
+dispatcher, and operator state at
+`d124c1c2c2c9f74f94b91c2269e7a7fd80af5cd5` from reviewed head
+`2a2d57be195f958085f9199d308f3d0d81e9ca5c`; protected run `30774078554`
+passed all eight contexts. PR 116 merged additive function hardening at
+`c6811bb0cac3aecd6eb6e73aae809db8d8c45b52` from reviewed head
+`47c9ed21258d1b321bfaf9a16a86e304b04207d4`; protected run `30775611009`
+passed all eight contexts, including Supabase Preview.
+
+Migration-first production rollout deployed exact SHA `c6811bb0`. Controlled
+run `905dc820-b068-46a7-ba61-062f23c7257c` then proved interruption inside a
+five-firm lease, stale-lease detection, recovery without manual row edits, and
+terminal reconciliation at `2026-08-03T02:03:13.382Z`: 84/84 firms completed,
+0 failed/running/queued, 10 signals written, 1 prospect ready, 97 unmatched,
+0 duplicate signal assignments, 0 worker errors, attempt count 18, and recovery
+count 5. Production synthetics turned red on the expired lease and all seven
+checks returned green after recovery. Current-SHA recovery workflow run
+`30777117190` dispatched successfully.
+
+MandateSignal PR 119 merged the product-local closeout at
+`5d15c85e18ceddd0cabed4bba887afa648a97f0d` from exact reviewed head
+`fcac1702f81e87e94c7e4ac6e0bc2f680deffd4c`. Protected run `30781036209`
+passed core CI, gitleaks, E2E scope, Lighthouse, and aggregate E2E; public and
+authenticated E2E plus Supabase Preview were neutral skips for the
+documentation-only scope. Zero review findings remained at merge.
+
+| Artifact | MandateSignal path | SHA-256 at `5d15c85e` |
+| --- | --- | --- |
+| SA-14C verified readiness and production closeout v0.8 | `docs/assurance/scanner-assurance-sa-14-readiness-2026-08-02.md` | `04C3821BEE46E4046BB1BF80D5DB07ED66A1CEA7D236BE83E8244B59F55A6C48` |
+| Execution ledger v3.2 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `2D57FCF7D53F7C53F90A381016FAE653B38CB27E80E8D3FE1BFD3B71B491CC0B` |
+| DM scanner operations evidence | `docs/readiness/dm-context-scanner-operations.md` | `866F4AD6C5A0A45FF5AE838FD9A9D1916DD2DE7BD209D17D77D625B723BD441F` |
+| Reviewable DM handoff and rollout evidence | `docs/readiness/reviewable-dm-drafts-handoff-2026-08-02.md` | `FC00C93C40F25E1742532CAAD6DEF1046C6DD70920070015EF7BC2D4A6765B0C` |
+| Scan-result message contract | `docs/readiness/dm-scan-result-message-contract.md` | `4CDC44F5960F31592AFAD35F424EB311E650D4FF4B13A4708DC16EB8750E66A3` |
+
+This entry is grade-D commit-pinned repository evidence, grade-C deterministic
+and interruption/recovery evidence, and grade-B hosted production runtime
+evidence for the bounded SA-14C state-integrity scope. It expires at
+`2026-08-10T02:03:13.382Z` or immediately on a scoped queue, lease, retry,
+assignment, terminal-state schema/computation, scheduler, worker-auth,
+migration, or recovery contract change, whichever occurs first.
+
+The later product-local message workflow is indexed as a separate acceptance
+claim from scanner reliability. It consumes the product-local terminal
+prospect/run state produced by the scanner workflow, but relationship drafts
+do not count as reliability evidence or validated signals. If that state is
+missing or nonterminal, generation fails closed and creates no draft; it does
+not synchronously execute the scanner. MandateSignal PR 118 merged at
+`0cc91db6128887cbc7a9ff1a125465cc67591552` from reviewed head
+`a357021692b3743ce0a43cb58d29f2fcf54ad155`; all eight protected contexts
+passed in run `30780414680`. Production applied additive migrations
+`20260803030000` and `20260803040000`, deployed exact SHA `0cc91db`, and
+remained healthy. A count-only preflight classified the 98 terminal-linked
+prospects as 1 signal-ready, 91 relationship-context eligible, and 6 held for
+missing firm context. The bounded batch created 91 `pending_review` drafts;
+an idempotency rerun created 0, and no draft was approved or sent.
+
+SA-14C is `VERIFIED` only for durable DM scanner state integrity. SA-14A
+remains `EVIDENCE_REQUIRED`, SA-14B remains `BLOCKED`, and aggregate SA-14
+remains `DOR_REVIEW`. The 1/98 validated-signal yield and relationship-context
+drafts do not close ENG-03, ENG-04, AUTHZ-04, REL-04, SCN-CASE-05, any GA
+control, or a production quality SLO. Existing engine, outreach, worker, and
+workflow kill controls remain authoritative; recovery and rollback use
+forward fixes without erasing immutable evidence. This canonical index adds
+no Starting Monday runtime, data, deployment, or release dependency.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
