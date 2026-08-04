@@ -29,8 +29,9 @@ inputs: Mo Month-2 report (2026-06-03..07-31) · Curtis/Revit call · 16-intervi
 ~100 customers at $1,000/mandate/month = $100K MRR target. A few hundred
 boutiques per niche; niches don't refill when burned. This motion is
 precision, not volume: trigger-gated N1 messages (the lead IS the message),
-Rich sends, Rich closes, $750 tailored sample converts to per-mandate
-subscription (ratified ladder, 2026-08-03).
+Rich sends, Rich closes, $250 pilot converts to per-mandate
+subscription (ratified ladder, 2026-08-03; amended same day: $250 pilot
+supersedes the $750 sample, one-time credit on conversion).
 Agencies and SDRs are structurally wrong here: they can't carry Rich's
 credibility, can't hold a research-frame conversation with a search
 professional, and can't fake possession of a real lead.
@@ -143,7 +144,7 @@ automation tooling.
 
 | Metric | 30 days | 90 days |
 |---|---|---|
-| Paying MandateSignal customers ($750 sample counts) | 3 | 10 |
+| Paying MandateSignal customers ($250 pilot counts) | 3 | 10 |
 | Sample→per-mandate subscription conversion | first 1 | ≥40% of samples |
 | True-cold qualified conversations (Mo tracks) | ≥8 | ≥30 |
 | DMQ sends (trigger-gated, from queue) | ≥40 | ≥150 |

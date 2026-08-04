@@ -254,19 +254,20 @@ how often anyone starts at step 1 cold at all. Weekly quota suggestion:
 10 substantive comments (M9), 2 referral asks (M8), 1 published hit
 (M15), and N1/N6 sends capped by live triggers, not by ambition.
 
-## Part 3b — The price ladder (RATIFIED 2026-08-03, single source of truth)
+## Part 3b — The price ladder (RATIFIED 2026-08-03, amended same day, single source of truth)
 
 Free metered sample (lane rules apply: one contact shown, two named and
-withheld) → **$750 tailored three-company sample brief** (the L2 offer,
-MSPS-002; founder-reviewed, dated public evidence) → **$1,000/month per
-mandate** (one active search per mandate; buy more mandates for more
-searches; the $750 credits toward the first mandate month if they
-continue). Conversation answer to "how much?":
+withheld) → **$250 pilot: tailored three-company sample brief** (the L2
+offer, MSPS-002 as amended 2026-08-03; founder-reviewed, dated public
+evidence) → **$1,000/month per mandate** (one active search per mandate;
+buy more mandates for more searches). If they convert to a monthly or
+annual subscription, the $250 is credited against the monthly/annual fee
+as a one-time credit. Conversation answer to "how much?":
 
-> The tailored sample is $750: three companies in your niche, named
+> The pilot is $250: three companies in your niche, named
 > decision-makers, dated evidence, built for you. If it earns it, the
-> subscription is $1,000 a month per mandate, and the $750 credits to
-> your first month.
+> subscription is $1,000 a month per mandate, and the $250 credits to
+> your first invoice, monthly or annual.
 >
 > Before price though: what would one placement sourced two months early
 > be worth to you?
