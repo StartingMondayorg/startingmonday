@@ -20,26 +20,28 @@ export type SearchIntake = {
   coach_name?: string | null
 }
 
-export type IntakeOption = { value: string; label: string }
+// `label` renders inside a half-width <select> and must stay short enough not to
+// truncate; `promptLabel` carries the fuller wording serialized into AI prompts.
+export type IntakeOption = { value: string; label: string; promptLabel?: string }
 
 export const TRANSITION_TYPE_OPTIONS: IntakeOption[] = [
-  { value: 'confidential_search', label: 'Confidential search (employed, searching quietly)' },
+  { value: 'confidential_search', label: 'Confidential search', promptLabel: 'Confidential search (employed, searching quietly)' },
   { value: 'active_search', label: 'Active search' },
-  { value: 'post_transition', label: 'Post-transition (recently exited or between roles)' },
-  { value: 'consulting_interim', label: 'Consulting or interim, seeking a permanent role' },
-  { value: 'exploring', label: 'Exploring, no committed search yet' },
+  { value: 'post_transition', label: 'Between roles / exited', promptLabel: 'Post-transition (recently exited or between roles)' },
+  { value: 'consulting_interim', label: 'Consulting / interim', promptLabel: 'Consulting or interim, seeking a permanent role' },
+  { value: 'exploring', label: 'Exploring, not committed', promptLabel: 'Exploring, no committed search yet' },
 ]
 
 export const SEARCH_STAGE_OPTIONS: IntakeOption[] = [
-  { value: 'discovery', label: 'Discovery (defining the search)' },
+  { value: 'discovery', label: 'Discovery', promptLabel: 'Discovery (defining the search)' },
   { value: 'target_list', label: 'Building the target list' },
-  { value: 'active_outreach', label: 'Active outreach and networking' },
+  { value: 'active_outreach', label: 'Active outreach', promptLabel: 'Active outreach and networking' },
   { value: 'interviewing', label: 'Active interviews' },
   { value: 'offer_stage', label: 'Offer stage' },
 ]
 
 export const URGENCY_OPTIONS: IntakeOption[] = [
-  { value: 'immediate', label: 'Immediate (need something now)' },
+  { value: 'immediate', label: 'Immediate', promptLabel: 'Immediate (need something now)' },
   { value: 'within_3_months', label: 'Within 3 months' },
   { value: 'within_6_months', label: 'Within 6 months' },
   { value: 'right_opportunity', label: 'Right opportunity only' },
@@ -72,7 +74,8 @@ export function urgencyFromSearchTimeline(timeline?: string | null): string | nu
 // Legacy rows saved these as free text before the form used selects; fall back to the raw value.
 export function intakeOptionLabel(options: IntakeOption[], value?: string | null): string | null {
   if (!value) return null
-  return options.find(o => o.value === value)?.label ?? value
+  const option = options.find(o => o.value === value)
+  return option ? option.promptLabel ?? option.label : value
 }
 
 export function getSearchIntake(roleContext: unknown): SearchIntake | null {
