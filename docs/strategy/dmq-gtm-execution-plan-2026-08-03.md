@@ -65,6 +65,11 @@ ticket gets cut, not the budget raised.
 - E1-T0 Governance registration. Register DMQ stories in the signal-engine
   canonical plan (outreach/opportunity-ledger scope); record decision refs
   and rollback behavior. AC: story IDs exist; preflight passes for E1/E5.
+  DONE 2026-08-04: WS10-10 (DMQ ledger/queue, governs E1), WS10-11
+  (measurement/quota/pre-registration, governs E7), WS10-12 (scanner-first
+  briefs, governs E5) registered in
+  docs/signal-engine-cross-product-master-plan-2026-07-26.md §16.11.
+  Decision refs: DG-03, DG-10, DG-13, MSPS-003; rollback per story rows.
 - E1-T1 Prospect state promotion. Promote thread_state, last_touch_at,
   next_touch_at from source_metadata jsonb to columns on outreach_prospects;
   add funnel-state enum (invited, connected, dm_sent, replied_positive,
