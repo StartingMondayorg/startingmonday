@@ -589,6 +589,8 @@ export type Database = {
           briefing_frequency: string | null
           last_briefing_sent_at: string | null
           search_driver: string | null
+          employment_status: string | null
+          search_timeline: string | null
           is_concierge: boolean
           invite_code: string | null
           referred_by: string | null

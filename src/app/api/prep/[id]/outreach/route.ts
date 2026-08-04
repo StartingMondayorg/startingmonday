@@ -7,6 +7,7 @@ import { encodeUserId } from '@/lib/watermark'
 import { trackApiUsage } from '@/lib/api-usage'
 import { apiError } from '@/lib/api-error'
 import { PrepRouteParamsSchema, firstZodError } from '@/lib/schemas'
+import { getSearchIntake, intakeOptionLabel, TRANSITION_TYPE_OPTIONS, URGENCY_OPTIONS } from '@/lib/search-intake'
 
 const STYLE_GUIDELINES = `- Maximum 3 sentences. Do not exceed this.
 - Do not use em dashes anywhere
@@ -45,7 +46,7 @@ export async function POST(
       .single(),
     supabase
       .from('user_profiles')
-      .select('full_name, positioning_summary, target_titles, role_type')
+      .select('full_name, positioning_summary, target_titles, role_type, role_context')
       .eq('user_id', userId)
       .single(),
     supabase
@@ -90,12 +91,19 @@ export async function POST(
     ? lastBrief.output_text.slice(0, 1200)
     : null
 
+  const intake = getSearchIntake(profile?.role_context)
+  const transitionType = intakeOptionLabel(TRANSITION_TYPE_OPTIONS, intake?.transition_type)
+  const urgency = intakeOptionLabel(URGENCY_OPTIONS, intake?.urgency)
+
   const prompt = `You are drafting a 3-sentence outreach message from a senior executive to a target company.
 
 SENDER:
 ${profile?.full_name ? `Name: ${profile.full_name}` : ''}
 ${profile?.positioning_summary ? `Background: ${profile.positioning_summary}` : ''}
 ${profile?.target_titles ? `Target roles: ${profile.target_titles}` : ''}
+${transitionType ? `Transition type: ${transitionType} (match the message's discretion and tone to this)` : ''}
+${urgency ? `Search timing: ${urgency}` : ''}
+${intake?.search_hypothesis ? `Search hypothesis: ${intake.search_hypothesis}` : ''}
 
 TARGET COMPANY: ${company.name}
 ${company.notes ? `Company notes: ${company.notes}` : ''}

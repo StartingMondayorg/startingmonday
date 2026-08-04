@@ -9,56 +9,8 @@ import { isDemoUser, streamDemoText, DEMO_STRATEGY_BRIEF } from '@/lib/demo'
 import { streamErrorMessage } from '@/lib/stream-error'
 import { recordTraceError } from '@/lib/trace'
 import { encodeUserId } from '@/lib/watermark'
+import { buildSearchIntakeSection } from '@/lib/search-intake'
 import { type SupabaseClient } from '@supabase/supabase-js'
-
-type SearchIntake = {
-  search_stage?: string | null
-  transition_type?: string | null
-  urgency?: string | null
-  target_companies?: string[] | null
-  company_size_stage?: string | null
-  geography?: string | null
-  remote_travel?: string | null
-  comp_guardrails?: string | null
-  search_hypothesis?: string | null
-  roles_to_avoid?: string[] | null
-  culture_criteria?: string | null
-  red_flags?: string[] | null
-  decision_criteria?: string[] | null
-  board_visibility?: string | null
-  stakeholder_complexity?: string | null
-  relationship_targets?: string[] | null
-  partner_notes?: string | null
-  coach_name?: string | null
-}
-
-function buildSearchIntakeSection(roleContext: unknown): string {
-  const intake = (roleContext as Record<string, unknown> | null | undefined)?.search_intake as SearchIntake | undefined
-  if (!intake) return ''
-  const line = (label: string, value?: string | null) => (value ? `\n${label}: ${value}` : '')
-  const list = (label: string, values?: string[] | null) => (values?.length ? `\n${label}: ${values.join(', ')}` : '')
-  const body =
-    line('Transition type', intake.transition_type) +
-    line('Search stage', intake.search_stage) +
-    line('Urgency / timing', intake.urgency) +
-    line('Search hypothesis', intake.search_hypothesis) +
-    list('Named target companies', intake.target_companies) +
-    line('Company size / stage preference', intake.company_size_stage) +
-    line('Geography', intake.geography) +
-    line('Remote / travel constraints', intake.remote_travel) +
-    line('Compensation guardrails', intake.comp_guardrails) +
-    list('Roles to avoid', intake.roles_to_avoid) +
-    line('Culture criteria', intake.culture_criteria) +
-    list('Red flags', intake.red_flags) +
-    list('Decision criteria', intake.decision_criteria) +
-    line('Board visibility preference', intake.board_visibility) +
-    line('Stakeholder complexity', intake.stakeholder_complexity) +
-    list('Relationships to activate', intake.relationship_targets) +
-    line('Coach / partner', intake.coach_name) +
-    line('Coach notes', intake.partner_notes)
-  if (!body) return ''
-  return `\n\nSEARCH INTAKE (the candidate's stated decision rules. Honor roles to avoid, decision criteria, and red flags when assessing fit and recommending targets.)${body}`
-}
 
 function makeStream(prompt: string, supabase: SupabaseClient, userId: string) {
   const encoder = new TextEncoder()
