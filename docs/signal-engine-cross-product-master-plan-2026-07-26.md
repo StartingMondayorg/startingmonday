@@ -538,6 +538,75 @@ workflow kill controls remain authoritative; recovery and rollback use
 forward fixes without erasing immutable evidence. This canonical index adds
 no Starting Monday runtime, data, deployment, or release dependency.
 
+#### SA-14 aggregate database write-integrity evidence entry
+
+Aggregate SA-14 is `VERIFIED` in the product-local ledger: all three slices
+(SA-14A admission preflight, SA-14B core writer integrity, SA-14C durable DM
+state) closed under WS2-10 per readiness record v0.12.
+
+SA-14A: MandateSignal PR 158 merged the database-contract admission preflight
+at `d6eb4286d5c8e7d2787e001ab10b82761e246d26` (106-object executable manifest,
+service-role-only `admission_preflight_v1()`, exact-target denominator harness
+with 9/9 deliberate red, 13/13 non-skipping pgTAP, fail-closed wiring in the
+engine and both scanner routes). Hosted migration `20260804060000` was applied
+migration-first and a read-only production probe returned 106/106 pass.
+
+SA-14B: the identity-contract confirmation packet (PR 160, merged at
+`16cb4a9cd67e251f4671621aa806154812f217a5`) returned
+`CONFIRMED_WITH_REQUIRED_CHANGES` with zero P0 and five P1 design decisions;
+Rich (AO) approved dispositions D1–D5 at `2026-08-04T21:32:36Z` (PR 161,
+merged at `d3d5716636ea1976c07eabe6bfad7f8985e85a30`). PR 162 merged the
+implementation at `60bc6981dfedea1e99fbdf00720aa6fdf76e4c7c` from reviewed
+head `aca1353a8c7ca71565c65e032f82ab3ce79c1b44` with all protected checks
+green: D1 dual-key signal identity with fail-loud duplicate guard and `23505`
+convergence, D2 transactional service-role-only `record_role_opening_v1()`
+with advisory-lock windowed dedup, D3 atomic opening+label writes with
+convergent replay, D4 typed lead partial-failure telemetry, D5 checked
+signal→event link plus backlink zero-row telemetry, and
+`admission_preflight_v2` over a 113-object manifest that adds fingerprinted
+unique indexes while v1 remains frozen rollback evidence. Deterministic
+evidence: 22/22 writer-integrity pgTAP, 13/13 frozen v1 pgTAP, 3/3
+discriminating process-concurrency races (duplicate convergence, injected
+partial-failure heal, concurrent identity admission), and 10/10 deliberate-red
+denominator mutations.
+
+Hosted verification on 2026-08-04 (all probes read-only against project
+`txnhfbgwhkwcapkwspkr`): migrations `20260804070000`–`20260804090000` present
+in hosted history; the pre-apply duplicate gate re-ran clean post-merge (137
+signal rows, 0 duplicate groups on both keys) and the fail-loud in-migration
+guard passed during the hosted apply; the application deployed exact merge SHA
+`60bc6981` at `2026-08-04T22:13:59Z`; hosted `admission_preflight_v2` returned
+113/113 pass and `admission_preflight_v1` returned 106/106 pass.
+
+Closeouts: PR 163 merged readiness v0.12 (SA-14B `VERIFIED`, aggregate SA-14
+`VERIFIED`) at `d3f252ada6560f6bdb90a1d4db07ab47733b14fd`; PR 164 merged
+execution ledger v3.3 at `81f0c81c54d7b44cc3fe4e971cd6a87d2ec16a85`.
+
+| Artifact | MandateSignal path | SHA-256 at `81f0c81c` |
+| --- | --- | --- |
+| SA-14 verified readiness record v0.12 | `docs/assurance/scanner-assurance-sa-14-readiness-2026-08-02.md` | `E279941FD9B0534F6DB8C86FCF66A9D157116AB497F63F95D0C3ACA9911A2148` |
+| Execution ledger v3.3 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `54DB4AEEDB500592E276AE71738D1EFAECC83B9FDF0D08B1A8E9ED7297219428` |
+| SA-14A admission implementation record | `docs/assurance/scanner-assurance-sa-14a-admission-2026-08-04.md` | `D585091758C1CCB819B6FCBF8958C3F52D0568814F05F75B22D06E5B5044A239` |
+| SA-14B identity-contract confirmation and AO disposition | `docs/assurance/scanner-assurance-sa-14b-identity-confirmation-2026-08-04.md` | `E5560238C393134D3C8F7029E549102183BB630E05C5F5C997E341EEF57165C6` |
+| SA-14B writer-integrity evidence with hosted verification | `docs/assurance/scanner-assurance-sa-14b-writer-integrity-2026-08-04.md` | `4F92F8699E4D36870027BA14B43B3B8BD7275B1B8D17C6D96F0BC46E88E91AA2` |
+
+This entry is grade-D commit-pinned repository evidence, grade-C deterministic
+and concurrency evidence, and grade-B hosted runtime evidence for the bounded
+SA-14 write-integrity scope. It expires immediately on any scoped signal
+identity, opening-writer, label, or admission-manifest contract change; the
+fail-closed admission preflight re-verifies the pinned 113-object contract on
+every scanner run, so hosted drift is detected operationally rather than by
+this static entry.
+
+Aggregate SA-14 closes only the database write-integrity scope of WS2-10.
+Whether WS2-10 as a story is fully satisfied remains an AO acceptance decision
+recorded in the product-local ledger, and ASR-01 remains `BLOCKED` on its own
+gates. The 1/98 validated-signal yield stands; ENG-03, ENG-04, SCN-CASE-05,
+every GA control, and every production SLO remain open or `UNVERIFIED`. No
+source activation, customer exposure, additional hosted mutation, or
+production configuration change is authorized by this index entry, and it adds
+no Starting Monday runtime, data, deployment, or release dependency.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
