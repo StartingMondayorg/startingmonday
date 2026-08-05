@@ -607,6 +607,89 @@ source activation, customer exposure, additional hosted mutation, or
 production configuration change is authorized by this index entry, and it adds
 no Starting Monday runtime, data, deployment, or release dependency.
 
+#### WS2-11 deterministic source and label assurance evidence entry
+
+The WS2-11 gated set (SA-20 source-contract bundles and SA-21 golden
+claim-and-label replay) is `VERIFIED` in the product-local ledger, and Sprint
+M2 exit is `VERIFIED` per the AO statement recorded at
+`2026-08-05T01:23:00.2678446Z`: "I approve Sprint M2 exit and confirm no GA P0
+displacement".
+
+SA-20: the catalog preflight (MandateSignal PR 165, merged at
+`6f7fac986836bc2f08d65777a77b4235def646bf`) pinned run-time catalog derivation
+and the current 19-active + 6-pilot of 62 denominator, superseding the stale
+16-active SA-02 hypothesis. Rich (AO) approved the rights dispositions (PR
+166, merged at `f8a72939a984eac43fb2772d13b99821a1bd0758`): D-SA20-R1 affirms
+`people_moves_parser` as internal-use-only derived scope, and D-SA20-R2 places
+`predictleads_events` in terms-pending with quarantine default and review by
+2027-08-04. PR 167 merged the implementation at
+`f046aec201edf1d402aa912ea6a2dd65b92f74fd` from reviewed head
+`36bbe1ccd10942ebe4f54a9b51b37fad954457a1` (protected run `30962432227`):
+additive versioned contract bundles on all 19 active catalog entries and a
+`guard:source-contracts` gate reporting 18 complete plus 1
+incomplete-by-declaration (`predictleads_events` under D-SA20-R2), with pilots
+unenforced until activation and a pilot activated without a complete bundle
+failing the guard (the quarantine rollback). All six acceptance cases
+(malformed, renamed, wrong-type, timeout, rate, rights) reject in the focused
+suite wired into the repository gate; the 21-boundary manifest and guard are
+unchanged. The scope is static catalog/guard/test only.
+
+SA-21: the preflight (PR 169, merged at
+`fb04ec9dc03daf8326306c05a05424862bc20110`) passed all seven section 26.1
+readiness conditions, confirmed the failing baseline (the reconciliation stage
+had zero label/opening coverage, so a planted label omission or corruption was
+undetectable), and defined label version as pinned fixture-manifest parameters
+with no schema change. PR 170 merged the implementation at
+`c138800037f86ff7545fef0c06c51d03b4d3c1f5` from reviewed head
+`57991a4696336bc93215ea6472df7bf171ed0c77`: a pure label-reconciliation
+analyzer closing that gap, an 8-test analyzer suite in the repository gate, a
+versioned golden fixture (fixtureVersion 1.0.0, pinned lookback 180 and dedup
+window 14, parameter drift from code constants fails red), and a
+hostname-guarded local-Supabase golden replay harness. The harness proves
+exact second-run snapshot equality across all four written tables (label
+identity is the unique `(event_id, opening_id)` pair), replay idempotency of
+the real claim and label writers, day-0/day-180 window boundaries, an explicit
+zero-label opening, planted omission red then healed by convergent replay, and
+planted `days_to_opening` corruption red then restored green with the final
+snapshot equal to the golden snapshot.
+
+PR 171 merged execution ledger v3.5 at
+`e0081663cefb1dededb2eb0e3cd78306bdbd1e01`, recording SA-21 `VERIFIED` and
+Sprint M2 exit `VERIFIED` after exit-gate checks: remote and local main both
+matched the SA-21 merge, no post-merge commit existed, the worktree was clean,
+and evidence was unexpired.
+
+| Artifact | MandateSignal path | SHA-256 at `e0081663` |
+| --- | --- | --- |
+| Execution ledger v3.5 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `0601EAB0F81380E5E17708E8E483EC04C2A6E6F0803EBF1FB139EBB97D65D417` |
+| SA-20 catalog preflight | `docs/assurance/scanner-assurance-sa-20-preflight-2026-08-04.md` | `9D7AF714AB53AC56692309B6A26643DFBA668DE8EC3A5C9D3F5B6F46E818CAAB` |
+| SA-20 AO rights dispositions | `docs/assurance/scanner-assurance-sa-20-rights-dispositions-2026-08-04.md` | `49EEBAF28E107342E4ECAAB9EFB2142E7EE98A05E678866CEBDC3F9B90BB63E1` |
+| SA-20 contract-bundle evidence | `docs/assurance/scanner-assurance-sa-20-contract-bundles-2026-08-04.md` | `D14E3D80C58EAB6029817F5F8D5BAEDC4BF74C3E7E94A93BF6BA31EB65595510` |
+| SA-21 preflight | `docs/assurance/scanner-assurance-sa-21-preflight-2026-08-04.md` | `8BD7C7B92977F8A5FFC893EA54AD324F117F1AAA0A90EA0C91E4BB6025F8FC1C` |
+| SA-21 golden-replay evidence | `docs/assurance/scanner-assurance-sa-21-golden-replay-2026-08-04.md` | `0278638268AE47E668EE7F7DD0BC5E83CC1C6F8D02805FEA0D2098AEB1562221` |
+
+This entry is grade-D commit-pinned repository evidence, grade-C deterministic
+guard/analyzer/mutation evidence, and grade-B shared local-Supabase replay
+evidence for the bounded WS2-11 scope. Neither issue shipped a runtime,
+schema, hosted, source-activation, or customer-exposure change. The entry
+expires immediately on any scoped catalog, contract-bundle, label-writer,
+fixture-version, or reconciliation contract change; the source-contract guard
+and analyzer suite run in the repository gate, so drift is detected by CI
+rather than by this static entry.
+
+This entry closes only the deterministic source-contract and label-replay
+scope of WS2-11 and records Sprint M2 exit. Whether WS2-11 as a story is fully
+satisfied remains an AO acceptance decision recorded in the product-local
+ledger, and ASR-02 remains `BLOCKED` on its own gates. The
+`predictleads_events` bundle upgrades to complete only when AO records license
+identity and permitted uses. The 1/98 validated-signal yield stands; ENG-03,
+ENG-04, SCN-CASE-05, every GA control, and every production SLO remain open or
+`UNVERIFIED`. Rollback remains per WS2-11: quarantine any source without a
+current contract and roll back fixture versions without suppressing results.
+No source activation, customer exposure, hosted mutation, or production
+configuration change is authorized by this index entry, and it adds no
+Starting Monday runtime, data, deployment, or release dependency.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
