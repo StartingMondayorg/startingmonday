@@ -18,6 +18,7 @@ import { ScanProgressPanel, type ScanStatusPayload } from './scan-progress-panel
 import { RelationshipProgressPanel, type RelationshipStatusPayload } from './relationship-progress-panel'
 import { OnboardingContextStep } from './onboarding-context-step'
 import { OnboardingDoneStep } from './onboarding-done-step'
+import { LinkedinImportProgress, type LinkedinImportPhase } from './linkedin-import-progress'
 
 type ImportResult = {
   full_name?: string | null
@@ -142,6 +143,8 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
   const [importError, setImportError] = useState('')
   const [extracting, setExtracting]   = useState(false)
   const [manualMode, setManualMode]   = useState(false)
+  const [pdfPhase, setPdfPhase]       = useState<LinkedinImportPhase>('idle')
+  const [pdfFileName, setPdfFileName] = useState('')
 
   const linkedinPdfRef = useRef<HTMLInputElement>(null)
   const nameRef = useRef<HTMLInputElement>(null)
@@ -564,16 +567,20 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
     if (!file) return
     setExtracting(true)
     setImportError('')
+    setPdfFileName(file.name)
+    setPdfPhase('uploading')
     try {
       const fd = new FormData()
       fd.append('file', file)
       const extractRes = await fetch('/api/linkedin-import/extract', { method: 'POST', body: fd })
       const extractData = await extractRes.json().catch(() => ({}))
       if (!extractRes.ok || !extractData.text) {
+        setPdfPhase('idle')
         setImportError('Could not read the PDF. Try pasting your profile text instead.')
         return
       }
       setImporting(true)
+      setPdfPhase('analyzing')
       try {
         const importRes = await fetch('/api/linkedin-import', {
           method: 'POST',
@@ -581,13 +588,19 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
           body: JSON.stringify({ text: extractData.text }),
         })
         const data = importRes.ok ? await importRes.json() : {}
+        // Hold the finished bar and checkmark briefly so completion is seen, not just inferred.
+        setPdfPhase('complete')
+        await new Promise(resolve => window.setTimeout(resolve, 900))
         applyImport(data)
         if (!data.resume_text) setResumeText(extractData.text.slice(0, 20000))
       } catch {
+        setPdfPhase('complete')
+        await new Promise(resolve => window.setTimeout(resolve, 900))
         setResumeText(extractData.text.slice(0, 20000))
         setImportDone(true)
       } finally {
         setImporting(false)
+        setPdfPhase('idle')
       }
     } finally {
       setExtracting(false)
@@ -664,6 +677,8 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
               importThin={importThin}
               importing={importing}
               extracting={extracting}
+              pdfPhase={pdfPhase}
+              pdfFileName={pdfFileName}
               importError={importError}
               manualMode={manualMode}
               pasteText={pasteText}
@@ -833,11 +848,12 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
                 <button
                   type="button"
                   onClick={advance}
-                  className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
+                  disabled={pdfPhase !== 'idle'}
+                  className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Continue
                 </button>
-                {!importDone && (
+                {!importDone && pdfPhase === 'idle' && (
                   <button
                     type="button"
                     onClick={advance}
@@ -1457,6 +1473,8 @@ function StepImport({
   importThin,
   importing,
   extracting,
+  pdfPhase,
+  pdfFileName,
   importError,
   manualMode,
   pasteText,
@@ -1475,6 +1493,8 @@ function StepImport({
   importThin: boolean
   importing: boolean
   extracting: boolean
+  pdfPhase: LinkedinImportPhase
+  pdfFileName: string
   importError: string
   manualMode: boolean
   pasteText: string
@@ -1620,6 +1640,22 @@ function StepImport({
             />
           </div>
         </div>
+      </div>
+    )
+  }
+
+  if (pdfPhase !== 'idle') {
+    return (
+      <div className="flex flex-col gap-6">
+        <div>
+          <h1 className="text-[28px] font-serif font-bold text-white leading-tight mb-2">
+            Reading your LinkedIn profile.
+          </h1>
+          <p className="text-[15px] text-slate-300">
+            Hang tight while we pull out your background. You will not need to retype any of it.
+          </p>
+        </div>
+        <LinkedinImportProgress phase={pdfPhase} fileName={pdfFileName} />
       </div>
     )
   }
