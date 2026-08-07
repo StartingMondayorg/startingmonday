@@ -1,4 +1,5 @@
 import signalSourceCatalog from '../../config/signal-source-catalog.json'
+import { scorePharmaSignal, type PharmaSignalInput } from '@/lib/pharma-signal-scoring'
 
 export type SignalSourceStatus = 'active' | 'pilot' | 'planned' | 'deprecated'
 export type SignalSourceRoleFamily = 'leadership' | 'technical_leadership' | 'delivery_leadership'
@@ -63,4 +64,8 @@ export function getCatalogGovernanceSummary(now = new Date()): {
     deprecatedCount: catalog.sources.filter((source) => source.status === 'deprecated').length,
     dueForReview,
   }
+}
+
+export function scoreSignalForPharmaPilot(input: PharmaSignalInput) {
+  return scorePharmaSignal(input)
 }

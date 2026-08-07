@@ -10,6 +10,7 @@ import { captureServerEvent } from '@/lib/posthog-server'
 import { logEvent } from '@/lib/events'
 import { rankSignals } from '@/lib/intelligence-quality'
 import { buildSignalTranslation } from '../signal-orientation'
+import { buildPharmaSignalInputFromSignal, shouldSurfacePharmaSignal } from '@/lib/pharma-signal-scoring'
 import {
   applyDashboardSignalContract,
   DASHBOARD_COMPANY_SIGNAL_LIMIT,
@@ -153,10 +154,35 @@ export default async function SignalsPage({
     ? rankedSignals
     : contractFilteredSignals.map((signal) => ({ signal, score: 0, confidence: signal.confidence ?? 0, relevance: signal.relevance_score ?? 0 }))
 
+  const pharmaAnnotatedSignals = rankedOrFallback.map((entry) => {
+    const pharmaInput = buildPharmaSignalInputFromSignal({
+      signalType: entry.signal.signal_type,
+      companyName: entry.signal.companies && !Array.isArray(entry.signal.companies) ? entry.signal.companies.name : undefined,
+      description: entry.signal.signal_summary,
+      sourceKind: entry.signal.source_kind,
+      signalDate: entry.signal.signal_date,
+    })
+    const pharmaScore = shouldSurfacePharmaSignal(pharmaInput)
+    return {
+      ...entry,
+      _pharmaRelevant: pharmaScore,
+      _pharmaInput: pharmaInput,
+    }
+  })
+
   // Warm signals (companies with a known contact) float to the top after ranking.
-  const sortedSignals = rankedOrFallback
-    .map((entry) => ({ ...entry.signal, _score: entry.score, _confidence: entry.confidence, _relevance: entry.relevance }))
+  const sortedSignals = pharmaAnnotatedSignals
+    .map((entry) => ({
+      ...entry.signal,
+      _score: entry.score,
+      _confidence: entry.confidence,
+      _relevance: entry.relevance,
+      _pharmaRelevant: entry._pharmaRelevant,
+      _pharmaInput: entry._pharmaInput,
+    }))
     .sort((a, b) => {
+      const pharmaDelta = Number(b._pharmaRelevant) - Number(a._pharmaRelevant)
+      if (pharmaDelta !== 0) return pharmaDelta
       const warmDelta = (contactByCompany.has(a.company_id) ? 0 : 1) - (contactByCompany.has(b.company_id) ? 0 : 1)
       if (warmDelta !== 0) return warmDelta
       return b._score - a._score
@@ -385,6 +411,11 @@ export default async function SignalsPage({
                       {sig.source_kind && (
                         <span className="inline-block px-2 py-0.5 rounded-full text-[13px] font-bold bg-emerald-500/20 text-emerald-100 border border-emerald-300/35">
                           {sig.source_kind}
+                        </span>
+                      )}
+                      {sig._pharmaRelevant && (
+                        <span className="inline-block px-2 py-0.5 rounded-full text-[13px] font-bold bg-violet-500/20 text-violet-100 border border-violet-300/35">
+                          Pharma-relevant
                         </span>
                       )}
                     </div>
