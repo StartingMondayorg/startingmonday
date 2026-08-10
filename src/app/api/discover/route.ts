@@ -156,7 +156,7 @@ function normalizePeople(value: unknown, targetTitles: string): SuggestedPerson[
       if (!item || typeof item !== 'object') return null
       const candidate = item as { name?: unknown; title?: unknown; reason?: unknown; source?: unknown; confidence?: unknown }
       if (typeof candidate.name !== 'string' || typeof candidate.title !== 'string') return null
-      const source = candidate.source === 'apollo' || candidate.source === 'fallback' ? candidate.source : 'anthropic'
+      const source = candidate.source === 'fallback' ? 'fallback' : 'anthropic'
       const confidence = typeof candidate.confidence === 'number'
         ? Math.max(0.2, Math.min(0.99, candidate.confidence))
         : 0.68
@@ -477,7 +477,7 @@ Rules:
             key_signals: item.keySignals ?? [],
             key_attributes: item.keyAttributes ?? [],
             suggested_people: item.suggestedPeople ?? [],
-            source: (item.suggestedPeople?.some((p) => p.source === 'apollo') ?? false) ? 'mixed' : runSource,
+            source: runSource,
             confidence: Math.max(0.2, Math.min(0.99, item.fit / 10)),
             metadata: {
               ranking: {
@@ -520,11 +520,11 @@ Rules:
     })
 
     if (persistedRows) {
-      const apolloRows = persistedRows.filter((row) => row.suggested_people.some((person) => person.source === 'apollo')).length
+      const sourcedRows = persistedRows.filter((row) => row.suggested_people.some((person) => person.source !== 'fallback')).length
       const generatedProps = {
         source: runSource,
         recommendation_count: persistedRows.length,
-        apollo_people_coverage_rate: Number((apolloRows / Math.max(1, persistedRows.length)).toFixed(3)),
+        non_fallback_people_coverage_rate: Number((sourcedRows / Math.max(1, persistedRows.length)).toFixed(3)),
         seed_count: seeds.length,
         mode: 'dashboard_discover',
         confidence_band: 'medium',
@@ -555,11 +555,11 @@ Rules:
     const fallbackProps = {
       source: runSource,
       recommendation_count: Math.min(RESPONSE_COUNT, sorted.length),
-      apollo_people_coverage_rate: Number(
+      non_fallback_people_coverage_rate: Number(
         (
           sorted
             .slice(0, RESPONSE_COUNT)
-            .filter((item) => item.suggestedPeople?.some((person) => person.source === 'apollo'))
+            .filter((item) => item.suggestedPeople?.some((person) => person.source !== 'fallback'))
             .length / Math.max(1, Math.min(RESPONSE_COUNT, sorted.length))
         ).toFixed(3),
       ),

@@ -9,6 +9,7 @@
 - Verified: fail-closed behavior now covers remaining LinkedIn relationship entrypoints (`/api/linkedin-import/consent`, `/api/linkedin-import/audit`) and the contacts UI import surface when matching is disabled.
 - Verified: dedicated route tests assert 403 behavior for disabled flag in consent, audit, and match handlers.
 - Verified: schema hardening migration added at `supabase/migrations/166_rem01_remove_apollo_relationship_sources.sql` to remove Apollo from allowed source enums/defaults in relationship-layer tables.
+- Verified: discover, onboarding enrichment progress, and enrichment-retention cron runtime paths now normalize to supported sources (`anthropic`, `fallback`) with Apollo-specific branching removed.
 
 ## Scope
 

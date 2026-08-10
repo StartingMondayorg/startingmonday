@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
   const primaryQuery = await admin
     .from('contacts')
     .select('id, user_id, name, enrichment_source, enrichment_retention_expires_at, status')
-    .in('enrichment_source', ['apollo', 'anthropic'])
+    .in('enrichment_source', ['anthropic', 'fallback'])
     .lte('enrichment_retention_expires_at', nowIso)
     .eq('status', 'active')
     .limit(500)
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     const retryQuery = await admin
       .from('contacts')
       .select('id, user_id, name, enrichment_source, enrichment_retention_expires_at')
-      .in('enrichment_source', ['apollo', 'anthropic'])
+      .in('enrichment_source', ['anthropic', 'fallback'])
       .lte('enrichment_retention_expires_at', nowIso)
       .limit(500)
     rows = retryQuery.data
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
     text: [
       '*Enrichment retention cleanup complete*',
       `- Archived contacts: ${ids.length}`,
-      '- Sources: apollo, anthropic',
+      '- Sources: anthropic, fallback',
       `- Timestamp: ${nowIso}`,
     ].join('\n'),
   })
