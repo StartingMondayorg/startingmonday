@@ -538,157 +538,33 @@ workflow kill controls remain authoritative; recovery and rollback use
 forward fixes without erasing immutable evidence. This canonical index adds
 no Starting Monday runtime, data, deployment, or release dependency.
 
-#### SA-14 aggregate database write-integrity evidence entry
+### 3.6 Relationship and outreach execution-order evidence entry
 
-Aggregate SA-14 is `VERIFIED` in the product-local ledger: all three slices
-(SA-14A admission preflight, SA-14B core writer integrity, SA-14C durable DM
-state) closed under WS2-10 per readiness record v0.12.
+Rich (AO) approved the global work order on 2026-08-10: REM-01 first; then
+ORD-01 and ORD-02 as one build slice; then ORD-03, with ORD-04 complete before
+ORD-06. The v17.3 package review may continue as a documentation lane without
+consuming the one active build slice. Relationship Phase A queues behind
+ORD-01/02 and the v17.3 disposition; G5 continues to block Phase C.
 
-SA-14A: MandateSignal PR 158 merged the database-contract admission preflight
-at `d6eb4286d5c8e7d2787e001ab10b82761e246d26` (106-object executable manifest,
-service-role-only `admission_preflight_v1()`, exact-target denominator harness
-with 9/9 deliberate red, 13/13 non-skipping pgTAP, fail-closed wiring in the
-engine and both scanner routes). Hosted migration `20260804060000` was applied
-migration-first and a read-only production probe returned 106/106 pass.
+The controlling MandateSignal intake branch is
+`docs/relationship-feature-review-2026-08-10` at
+`4295b5232287623ec65b733fa50b841674099513`. This is commit-pinned branch
+evidence, not a merged-main or deployed claim. REM-01 may not start until the
+intake and this canonical entry merge, the WS0-03/WS1-08 preflight is current,
+and the product-local default-OFF quarantine is the declared rollback/kill
+control.
 
-SA-14B: the identity-contract confirmation packet (PR 160, merged at
-`16cb4a9cd67e251f4671621aa806154812f217a5`) returned
-`CONFIRMED_WITH_REQUIRED_CHANGES` with zero P0 and five P1 design decisions;
-Rich (AO) approved dispositions D1–D5 at `2026-08-04T21:32:36Z` (PR 161,
-merged at `d3d5716636ea1976c07eabe6bfad7f8985e85a30`). PR 162 merged the
-implementation at `60bc6981dfedea1e99fbdf00720aa6fdf76e4c7c` from reviewed
-head `aca1353a8c7ca71565c65e032f82ab3ce79c1b44` with all protected checks
-green: D1 dual-key signal identity with fail-loud duplicate guard and `23505`
-convergence, D2 transactional service-role-only `record_role_opening_v1()`
-with advisory-lock windowed dedup, D3 atomic opening+label writes with
-convergent replay, D4 typed lead partial-failure telemetry, D5 checked
-signal→event link plus backlink zero-row telemetry, and
-`admission_preflight_v2` over a 113-object manifest that adds fingerprinted
-unique indexes while v1 remains frozen rollback evidence. Deterministic
-evidence: 22/22 writer-integrity pgTAP, 13/13 frozen v1 pgTAP, 3/3
-discriminating process-concurrency races (duplicate convergence, injected
-partial-failure heal, concurrent identity admission), and 10/10 deliberate-red
-denominator mutations.
-
-Hosted verification on 2026-08-04 (all probes read-only against project
-`txnhfbgwhkwcapkwspkr`): migrations `20260804070000`–`20260804090000` present
-in hosted history; the pre-apply duplicate gate re-ran clean post-merge (137
-signal rows, 0 duplicate groups on both keys) and the fail-loud in-migration
-guard passed during the hosted apply; the application deployed exact merge SHA
-`60bc6981` at `2026-08-04T22:13:59Z`; hosted `admission_preflight_v2` returned
-113/113 pass and `admission_preflight_v1` returned 106/106 pass.
-
-Closeouts: PR 163 merged readiness v0.12 (SA-14B `VERIFIED`, aggregate SA-14
-`VERIFIED`) at `d3f252ada6560f6bdb90a1d4db07ab47733b14fd`; PR 164 merged
-execution ledger v3.3 at `81f0c81c54d7b44cc3fe4e971cd6a87d2ec16a85`.
-
-| Artifact | MandateSignal path | SHA-256 at `81f0c81c` |
+| Artifact | MandateSignal path | SHA-256 at `4295b523` |
 | --- | --- | --- |
-| SA-14 verified readiness record v0.12 | `docs/assurance/scanner-assurance-sa-14-readiness-2026-08-02.md` | `E279941FD9B0534F6DB8C86FCF66A9D157116AB497F63F95D0C3ACA9911A2148` |
-| Execution ledger v3.3 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `54DB4AEEDB500592E276AE71738D1EFAECC83B9FDF0D08B1A8E9ED7297219428` |
-| SA-14A admission implementation record | `docs/assurance/scanner-assurance-sa-14a-admission-2026-08-04.md` | `D585091758C1CCB819B6FCBF8958C3F52D0568814F05F75B22D06E5B5044A239` |
-| SA-14B identity-contract confirmation and AO disposition | `docs/assurance/scanner-assurance-sa-14b-identity-confirmation-2026-08-04.md` | `E5560238C393134D3C8F7029E549102183BB630E05C5F5C997E341EEF57165C6` |
-| SA-14B writer-integrity evidence with hosted verification | `docs/assurance/scanner-assurance-sa-14b-writer-integrity-2026-08-04.md` | `4F92F8699E4D36870027BA14B43B3B8BD7275B1B8D17C6D96F0BC46E88E91AA2` |
+| Global execution order v1.0 | `docs/strategy/execution-order-2026-08-10.md` | `CEF920B56D8233724C67EA1B1EC96B968FE6F2212F42B6C655A7049E986490D0` |
+| Relationship feature spec v1.2 | `docs/strategy/sol-relationship-feature-spec.md` | `F553FF37E6C6B9EC7E365AFEBDD0831A78036109EEC2F62685D79BF7A653683D` |
+| Relationship and ORD execution plan v1.0 | `docs/strategy/relationship-ord-execution-plan-2026-08-10.md` | `2F99257F25821B12767C7595767A5EE22E6A690544622ADEF13D6D0C5E2A5646` |
 
-This entry is grade-D commit-pinned repository evidence, grade-C deterministic
-and concurrency evidence, and grade-B hosted runtime evidence for the bounded
-SA-14 write-integrity scope. It expires immediately on any scoped signal
-identity, opening-writer, label, or admission-manifest contract change; the
-fail-closed admission preflight re-verifies the pinned 113-object contract on
-every scanner run, so hosted drift is detected operationally rather than by
-this static entry.
-
-Aggregate SA-14 closes only the database write-integrity scope of WS2-10.
-Whether WS2-10 as a story is fully satisfied remains an AO acceptance decision
-recorded in the product-local ledger, and ASR-01 remains `BLOCKED` on its own
-gates. The 1/98 validated-signal yield stands; ENG-03, ENG-04, SCN-CASE-05,
-every GA control, and every production SLO remain open or `UNVERIFIED`. No
-source activation, customer exposure, additional hosted mutation, or
-production configuration change is authorized by this index entry, and it adds
-no Starting Monday runtime, data, deployment, or release dependency.
-
-#### WS2-11 deterministic source and label assurance evidence entry
-
-The WS2-11 gated set (SA-20 source-contract bundles and SA-21 golden
-claim-and-label replay) is `VERIFIED` in the product-local ledger, and Sprint
-M2 exit is `VERIFIED` per the AO statement recorded at
-`2026-08-05T01:23:00.2678446Z`: "I approve Sprint M2 exit and confirm no GA P0
-displacement".
-
-SA-20: the catalog preflight (MandateSignal PR 165, merged at
-`6f7fac986836bc2f08d65777a77b4235def646bf`) pinned run-time catalog derivation
-and the current 19-active + 6-pilot of 62 denominator, superseding the stale
-16-active SA-02 hypothesis. Rich (AO) approved the rights dispositions (PR
-166, merged at `f8a72939a984eac43fb2772d13b99821a1bd0758`): D-SA20-R1 affirms
-`people_moves_parser` as internal-use-only derived scope, and D-SA20-R2 places
-`predictleads_events` in terms-pending with quarantine default and review by
-2027-08-04. PR 167 merged the implementation at
-`f046aec201edf1d402aa912ea6a2dd65b92f74fd` from reviewed head
-`36bbe1ccd10942ebe4f54a9b51b37fad954457a1` (protected run `30962432227`):
-additive versioned contract bundles on all 19 active catalog entries and a
-`guard:source-contracts` gate reporting 18 complete plus 1
-incomplete-by-declaration (`predictleads_events` under D-SA20-R2), with pilots
-unenforced until activation and a pilot activated without a complete bundle
-failing the guard (the quarantine rollback). All six acceptance cases
-(malformed, renamed, wrong-type, timeout, rate, rights) reject in the focused
-suite wired into the repository gate; the 21-boundary manifest and guard are
-unchanged. The scope is static catalog/guard/test only.
-
-SA-21: the preflight (PR 169, merged at
-`fb04ec9dc03daf8326306c05a05424862bc20110`) passed all seven section 26.1
-readiness conditions, confirmed the failing baseline (the reconciliation stage
-had zero label/opening coverage, so a planted label omission or corruption was
-undetectable), and defined label version as pinned fixture-manifest parameters
-with no schema change. PR 170 merged the implementation at
-`c138800037f86ff7545fef0c06c51d03b4d3c1f5` from reviewed head
-`57991a4696336bc93215ea6472df7bf171ed0c77`: a pure label-reconciliation
-analyzer closing that gap, an 8-test analyzer suite in the repository gate, a
-versioned golden fixture (fixtureVersion 1.0.0, pinned lookback 180 and dedup
-window 14, parameter drift from code constants fails red), and a
-hostname-guarded local-Supabase golden replay harness. The harness proves
-exact second-run snapshot equality across all four written tables (label
-identity is the unique `(event_id, opening_id)` pair), replay idempotency of
-the real claim and label writers, day-0/day-180 window boundaries, an explicit
-zero-label opening, planted omission red then healed by convergent replay, and
-planted `days_to_opening` corruption red then restored green with the final
-snapshot equal to the golden snapshot.
-
-PR 171 merged execution ledger v3.5 at
-`e0081663cefb1dededb2eb0e3cd78306bdbd1e01`, recording SA-21 `VERIFIED` and
-Sprint M2 exit `VERIFIED` after exit-gate checks: remote and local main both
-matched the SA-21 merge, no post-merge commit existed, the worktree was clean,
-and evidence was unexpired.
-
-| Artifact | MandateSignal path | SHA-256 at `e0081663` |
-| --- | --- | --- |
-| Execution ledger v3.5 | `docs/strategy/scanner-assurance-execution-plan-2026-08-01.md` | `0601EAB0F81380E5E17708E8E483EC04C2A6E6F0803EBF1FB139EBB97D65D417` |
-| SA-20 catalog preflight | `docs/assurance/scanner-assurance-sa-20-preflight-2026-08-04.md` | `9D7AF714AB53AC56692309B6A26643DFBA668DE8EC3A5C9D3F5B6F46E818CAAB` |
-| SA-20 AO rights dispositions | `docs/assurance/scanner-assurance-sa-20-rights-dispositions-2026-08-04.md` | `49EEBAF28E107342E4ECAAB9EFB2142E7EE98A05E678866CEBDC3F9B90BB63E1` |
-| SA-20 contract-bundle evidence | `docs/assurance/scanner-assurance-sa-20-contract-bundles-2026-08-04.md` | `D14E3D80C58EAB6029817F5F8D5BAEDC4BF74C3E7E94A93BF6BA31EB65595510` |
-| SA-21 preflight | `docs/assurance/scanner-assurance-sa-21-preflight-2026-08-04.md` | `8BD7C7B92977F8A5FFC893EA54AD324F117F1AAA0A90EA0C91E4BB6025F8FC1C` |
-| SA-21 golden-replay evidence | `docs/assurance/scanner-assurance-sa-21-golden-replay-2026-08-04.md` | `0278638268AE47E668EE7F7DD0BC5E83CC1C6F8D02805FEA0D2098AEB1562221` |
-
-This entry is grade-D commit-pinned repository evidence, grade-C deterministic
-guard/analyzer/mutation evidence, and grade-B shared local-Supabase replay
-evidence for the bounded WS2-11 scope. Neither issue shipped a runtime,
-schema, hosted, source-activation, or customer-exposure change. The entry
-expires immediately on any scoped catalog, contract-bundle, label-writer,
-fixture-version, or reconciliation contract change; the source-contract guard
-and analyzer suite run in the repository gate, so drift is detected by CI
-rather than by this static entry.
-
-This entry closes only the deterministic source-contract and label-replay
-scope of WS2-11 and records Sprint M2 exit. Whether WS2-11 as a story is fully
-satisfied remains an AO acceptance decision recorded in the product-local
-ledger, and ASR-02 remains `BLOCKED` on its own gates. The
-`predictleads_events` bundle upgrades to complete only when AO records license
-identity and permitted uses. The 1/98 validated-signal yield stands; ENG-03,
-ENG-04, SCN-CASE-05, every GA control, and every production SLO remain open or
-`UNVERIFIED`. Rollback remains per WS2-11: quarantine any source without a
-current contract and roll back fixture versions without suppressing results.
-No source activation, customer exposure, hosted mutation, or production
-configuration change is authorized by this index entry, and it adds no
-Starting Monday runtime, data, deployment, or release dependency.
+This entry is a partial WS0-06 scope/order disposition and a WS0-07 evidence
+index input. It changes sequence only. It does not close G5, G4, WS1-08,
+MandateSignal launch controls, hosted inventory, migration readiness, or any
+story acceptance criterion. Product-local implementation and release evidence
+remain required.
 
 ## 4. Locked Architecture Boundaries
 
@@ -791,6 +667,12 @@ row and must re-plan affected stories rather than preserving this assessment.
   must not stage, modify, publish, or delete them.
 - The two 2026-07-05 vendor-rights audits require agreement-level
   reconciliation before publication or cross-product export.
+
+### 5.4 Known exception register
+
+| ID | Feature | Classification and provenance | Current disposition | Owning controls / decision |
+| --- | --- | --- | --- | --- |
+| KEX-01 | Starting Monday Contacts / LinkedIn-import / Apollo matching | `KNOWN_EXCEPTION` - founder-authorized pre-guardrail feature. Initial consent, match, audit, and schema implementation committed 2026-05-19 (`2c94eccb`); hybrid LinkedIn-export / Apollo matching foundation committed 2026-06-22 (`bbe4b3f9`). Both predate D15 / Spec 11 section 1 ratification on 2026-07-27 and MSPS-003 application to this scope; this is not classified as a retroactive guardrail violation. | Founder disposition `NARROW` recorded 2026-08-10. REM-01 permanently removes Apollo candidate seeding, provider-derived person rows in scope, and numeric person-score computation/storage/rendering. User-brought export storage and categorical matching survive only as a quarantined, product-local, hard-deletable implementation base behind independent default-OFF `relationship_network_matching_enabled`. No expansion or Phase C use is authorized. WS0-03 inventories code/data/usage; WS0-04 verifies hosted state; WS1-08 governs license, retention, backup, and destruction mechanics. Runtime quarantine and purge completion remain `UNVERIFIED` until evidence is recorded. | WS0-03, WS0-04, WS0-06, WS1-08; AO owns REM-01. G5 verdict (c) decides whether the retained user-export capability may re-enable in its narrowed shape; flag OFF and no provider path are the default/kill behavior. |
 
 ## 6. Target Logical Contracts
 
@@ -1435,6 +1317,9 @@ kill behavior and must satisfy section 26.1.
 | WS10-07 Operating review automation | OPS | Scorecards | Weekly ops and monthly business review package | Missing/stale inputs fail visibly; owner and actions recorded |
 | WS10-08 Scale decision | AO | Measured product and model outcomes | Continue, narrow, pause or expand decision | Decision references kill criteria and opportunity cost |
 | WS10-09 Prospect context, lane contract, and one-company proof | AO + ENG-MS | WS1-08; DG-03; DG-10; MandateSignal launch controls | MandateSignal-local prospect context policy and evidence-bounded L1/L2/L3 sample contracts; no shared tables or synchronous Starting Monday dependency | Source-policy guard, contract fixtures, deterministic QA, renderer tests, and no-send inventory prove lane metering, evidence lineage, no autonomous delivery, and no cross-product data access |
+| WS10-10 Founder DM queue and outreach event ledger | AO + ENG-MS | WS10-09; MSPS-003 source policy; DG-03 product-local schemas | MandateSignal-local append-only outreach prospect-event and commitment tables, funnel-state promotion, manual reply logging with deterministic next-action routing, a today-queue surface, and a generated tracking-workbook export; no send automation and no cross-product table access | Append-only and RLS tests pass; grep/API inventory proves no automated send path and copy actions never write send state; export is byte-stable for identical inputs; rollback is flag-off plus additive-migration revert |
+| WS10-11 Outreach measurement, quota derivation, and experiment registration | AO + DATA | WS10-10 events; measured context-scan yield | Send quota derived from measured trigger yield before any send-volume gate opens; opener experiments pre-registered (arms, exclusions, reply taxonomy) following the MSPS-DEC-002/003 patterns; attribution and funnel review computed from ledger events | Quota record cites measured yield with denominators; pre-registration commit precedes the first send; kill rules evaluate complete denominators only |
+| WS10-12 Scanner-first sample-brief evidence path | ENG-MS + AO | WS10-09 lane contracts; DG-10 | Feature-flagged engine-first candidate surfacing for sample runs, bounded schema-validated prose generation from verified signal rows only, and coverage-gap records feeding WS1-13 source build-order | Agent-research fallback retained behind the flag; deterministic QA plus founder review on all output (MandateSignal ENG-04); every fallback run produces a gap record; flag-off restores the current path |
 
 ## 17. Existing-System Dependency Inventory
 
