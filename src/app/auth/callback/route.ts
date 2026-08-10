@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import type { EmailOtpType } from '@supabase/supabase-js'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
 import { logEvent } from '@/lib/events'
+import { reportAttributionFailure } from '@/lib/attribution-failure'
 
 function getSafeNextPath(nextParam: string | null): string {
   if (!nextParam) return '/dashboard/briefing'
@@ -140,7 +141,7 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      await Promise.all([
+      const [, attributionResult] = await Promise.all([
         supabase.from('user_profiles').upsert(
           {
             user_id: userId,
@@ -200,6 +201,14 @@ export async function GET(request: NextRequest) {
           new_user_window: isNewUser,
         }),
       ])
+
+      // Attribution, campaign trial length, and the consent record all ride on
+      // one UPDATE. Swallowing its error hid a seven-week outage (SMK-456).
+      reportAttributionFailure(
+        (attributionResult as { error?: { message?: string; code?: string; details?: string } } | undefined)?.error,
+        { path: 'auth_callback', signup_source: source, manager_tools: managerToolsSource },
+      )
+
       return response
     }
   }
