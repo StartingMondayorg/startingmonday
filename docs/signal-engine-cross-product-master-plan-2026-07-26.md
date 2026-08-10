@@ -640,6 +640,12 @@ row and must re-plan affected stories rather than preserving this assessment.
 - The two 2026-07-05 vendor-rights audits require agreement-level
   reconciliation before publication or cross-product export.
 
+### 5.4 Known exception register
+
+| ID | Feature | Classification and provenance | Current disposition | Owning controls / decision |
+| --- | --- | --- | --- | --- |
+| KEX-01 | Starting Monday Contacts / LinkedIn-import / Apollo matching | `KNOWN_EXCEPTION` - founder-authorized pre-guardrail feature. Initial consent, match, audit, and schema implementation committed 2026-05-19 (`2c94eccb`); hybrid LinkedIn-export / Apollo matching foundation committed 2026-06-22 (`bbe4b3f9`). Both predate D15 / Spec 11 section 1 ratification on 2026-07-27 and MSPS-003 application to this scope; this is not classified as a retroactive guardrail violation. | Governance status `QUARANTINED` effective 2026-08-10: no expansion or Phase C reliance pending reconciliation. WS0-03 inventories tables, writers, readers, routes, flags, tests, and product owner; WS0-04 verifies deployed and hosted state. Runtime enforcement remains `UNVERIFIED` until that evidence is recorded. Preserve history and existing data subject to applicable retention and deletion duties. | WS0-03, WS0-04, WS1-08; G5 owes the final retain / narrow / migrate / retire disposition. AO owns the decision; product-local kill and rollback behavior must be recorded with the G5 disposition. |
+
 ## 6. Target Logical Contracts
 
 The contract baseline consists of independently versioned schemas and tests:
