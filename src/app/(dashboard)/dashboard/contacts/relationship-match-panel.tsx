@@ -28,7 +28,7 @@ type MatchItem = {
 type MatchResponse = {
   upload_id: string | null
   likely_known: MatchItem[]
-  suggested_by_apollo: MatchItem[]
+  suggested_matches: MatchItem[]
   confirmed_relationships: MatchItem[]
 }
 
@@ -104,7 +104,6 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
       'Matched Connection',
       'Provenance',
       'Confidence Tier',
-      'Overall Score',
     ]
 
     const rows = data.confirmed_relationships.map((item) => {
@@ -117,9 +116,8 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
         item.candidate_title ?? '',
         item.connection_company ?? '',
         item.connection_name,
-        item.candidate_source ?? 'apollo+linkedin_export',
+        item.candidate_source ?? 'candidate+linkedin_export',
         item.confidence_tier,
-        `${(item.overall_score * 100).toFixed(1)}%`,
       ]
     })
 
@@ -201,7 +199,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div>
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Relationship matching</p>
-          <p className="mt-1 text-[13px] text-slate-200">Find likely connections from uploaded LinkedIn contacts + Apollo suggestions.</p>
+          <p className="mt-1 text-[13px] text-slate-200">Find likely connections from uploaded LinkedIn contacts and candidate records.</p>
         </div>
       </div>
 
@@ -297,7 +295,6 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
                     </label>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       <span className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[11px] uppercase tracking-[0.08em] text-slate-200">{item.confidence_tier}</span>
-                      <span className="text-[11px] text-slate-400">score {(item.overall_score * 100).toFixed(1)}%</span>
                       <button
                         type="button"
                         onClick={() => confirmMatch(item.match_id)}
@@ -322,12 +319,12 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
           </div>
 
           <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Suggested by Apollo</p>
-            {data.suggested_by_apollo.length === 0 ? (
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Needs review</p>
+            {data.suggested_matches.length === 0 ? (
               <p className="mt-2 text-[13px] text-slate-300">No low-confidence suggestions yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
-                {data.suggested_by_apollo.map((item) => (
+                {data.suggested_matches.map((item) => (
                   <li key={item.match_id} className="rounded-lg border border-white/10 bg-slate-950/60 px-3 py-2">
                     <p className="text-[13px] font-semibold text-white">{item.candidate_name}</p>
                     <p className="mt-1 text-[12px] text-slate-300">Potential overlap with {item.connection_name}</p>
@@ -351,7 +348,6 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
                     </label>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       <span className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[11px] uppercase tracking-[0.08em] text-slate-200">{item.confidence_tier}</span>
-                      <span className="text-[11px] text-slate-400">score {(item.overall_score * 100).toFixed(1)}%</span>
                       <button
                         type="button"
                         onClick={() => confirmMatch(item.match_id)}

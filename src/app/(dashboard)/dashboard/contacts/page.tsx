@@ -8,6 +8,7 @@ import { summarizeRelationshipNetwork, CONTACT_TYPE_LABELS } from '@/lib/relatio
 import { RelationshipMatchPanel } from './relationship-match-panel'
 import { LinkedInImportManager } from './linkedin-import-manager'
 import { LogoutButton } from '../logout-button'
+import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
 
 export const metadata = { title: 'Contacts' }
 
@@ -90,6 +91,7 @@ export default async function ContactsPage({
   const uploads = (rawUploads ?? []) as unknown as UploadRow[]
   const consents = (rawConsents ?? []) as unknown as ConsentRow[]
   const isExecutive = canAccessFeature(sub, 'recruiter_enhancements')
+  const relationshipMatchingEnabled = isRelationshipNetworkMatchingEnabled()
   const relationshipSummary = summarizeRelationshipNetwork(contacts)
 
   const consentsById = new Map(consents.map((consent) => [consent.id, consent]))
@@ -191,7 +193,7 @@ export default async function ContactsPage({
 
         <LinkedInImportManager sessions={importSessions} />
 
-        {companyList.length > 0 && (
+        {relationshipMatchingEnabled && companyList.length > 0 && (
           <RelationshipMatchPanel companies={companyList} uploads={processedUploads} />
         )}
 
