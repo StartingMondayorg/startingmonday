@@ -19,6 +19,7 @@
 import { type NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
+import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
 import { createHash } from 'crypto'
 import { parseLinkedInExportCsv } from '@/lib/enrichment/linkedin-export-parser'
 
@@ -75,6 +76,10 @@ type ConsentRecord = {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isRelationshipNetworkMatchingEnabled()) {
+    return Response.json({ error: 'Relationship network matching is currently disabled.' }, { status: 403 })
+  }
+
   const auth = await requireAuth(request)
   if (!auth.ok) return auth.response
   const { userId } = auth
@@ -281,6 +286,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  if (!isRelationshipNetworkMatchingEnabled()) {
+    return Response.json({ error: 'Relationship network matching is currently disabled.' }, { status: 403 })
+  }
+
   const auth = await requireAuth(request)
   if (!auth.ok) return auth.response
   const { userId } = auth

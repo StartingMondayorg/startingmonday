@@ -191,7 +191,13 @@ export default async function ContactsPage({
           </div>
         </div>
 
-        <LinkedInImportManager sessions={importSessions} />
+        {relationshipMatchingEnabled ? (
+          <LinkedInImportManager sessions={importSessions} />
+        ) : (
+          <div className="mb-6 rounded-2xl border border-amber-300/30 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-200">
+            Relationship matching and LinkedIn import are currently limited to enabled pilot access.
+          </div>
+        )}
 
         {relationshipMatchingEnabled && companyList.length > 0 && (
           <RelationshipMatchPanel companies={companyList} uploads={processedUploads} />

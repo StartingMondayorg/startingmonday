@@ -5,6 +5,8 @@
 - Verified: script was executed in this session in both dry-run and apply modes.
 - Verified: environment variables were loaded from `startingmonday/.env.local` into the active shell and execution completed.
 - Verified: both runs returned clean results across canonical tables (all before/after counts 0; deleted 0).
+- Verified: fail-closed behavior now covers remaining LinkedIn relationship entrypoints (`/api/linkedin-import/consent`, `/api/linkedin-import/audit`) and the contacts UI import surface when matching is disabled.
+- Verified: dedicated route tests assert 403 behavior for disabled flag in consent, audit, and match handlers.
 
 ## Scope
 This inventory tracks Apollo-sourced rows in:
