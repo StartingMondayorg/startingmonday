@@ -68,14 +68,14 @@ describe('src/app/api/onboarding/enrich/route.ts', () => {
       error: null,
     })
     state.listContacts.mockResolvedValue({
-      data: [{ company_id: 'c1', name: 'Existing Contact', enrichment_source: 'apollo' }],
+      data: [{ company_id: 'c1', name: 'Existing Contact', enrichment_source: 'anthropic' }],
       error: null,
     })
     state.provider.enrichPeople.mockImplementation(async ({ companyName }: { companyName: string }) => {
       if (companyName === 'Acme') {
-        return [{ name: 'New Person', title: 'CIO', reason: 'Match', source: 'apollo', confidence: 0.8 }]
+        return [{ name: 'New Person', title: 'CIO', reason: 'Match', source: 'anthropic', confidence: 0.8 }]
       }
-      return [{ name: 'Globex Person', title: 'COO', reason: 'Match', source: 'apollo', confidence: 0.75 }]
+      return [{ name: 'Globex Person', title: 'COO', reason: 'Match', source: 'anthropic', confidence: 0.75 }]
     })
     state.insertContacts.mockResolvedValue({ error: null })
     state.logEvent.mockResolvedValue(undefined)
@@ -127,7 +127,7 @@ describe('src/app/api/onboarding/enrich/route.ts', () => {
   it('returns per-company relationship progress', async () => {
     state.listContacts.mockResolvedValue({
       data: [
-        { company_id: 'c1', name: 'A Contact', enrichment_source: 'apollo' },
+        { company_id: 'c1', name: 'A Contact', enrichment_source: 'anthropic' },
         { company_id: 'c1', name: 'Manual Contact', enrichment_source: 'manual' },
       ],
       error: null,
