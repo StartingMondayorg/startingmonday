@@ -14,10 +14,10 @@ type ApolloFileSummary = {
 }
 
 export const metadata: Metadata = {
-  title: 'Mauricio Apollo Read Access - Starting Monday',
-  description: 'Read-only view of Apollo-related outreach files for Mauricio.',
+  title: 'Mauricio Provider Read Access - Starting Monday',
+  description: 'Read-only view of legacy provider outreach files for Mauricio.',
   robots: { index: false, follow: false },
-  alternates: { canonical: 'https://startingmonday.app/mauricio-kickoff-execution/apollo-read-access' },
+  alternates: { canonical: 'https://startingmonday.app/mauricio-kickoff-execution/provider-read-access' },
 }
 
 async function readApolloFile(fileName: string, label: string): Promise<ApolloFileSummary> {
@@ -58,8 +58,8 @@ export default async function MauricioApolloReadAccessPage() {
   if (!staff) notFound()
 
   const [sendReady, followups, targetSlate] = await Promise.all([
-    readApolloFile('apollo_priority_send_ready.csv', 'Apollo send-ready priority file'),
-    readApolloFile('apollo_priority_followups.csv', 'Apollo follow-ups priority file'),
+    readApolloFile('apollo_priority_send_ready.csv', 'Legacy provider send-ready priority file'),
+    readApolloFile('apollo_priority_followups.csv', 'Legacy provider follow-ups priority file'),
     readApolloFile('us-senior-executive-target-slate.csv', 'US senior executive target slate'),
   ])
 
@@ -81,9 +81,9 @@ export default async function MauricioApolloReadAccessPage() {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-6">
         <header className="bg-white border border-slate-200 rounded-xl p-5">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-orange-700 mb-2">Read-only data view</p>
-          <h1 className="text-[24px] font-bold text-slate-900 mb-2">Apollo files access and contents</h1>
+          <h1 className="text-[24px] font-bold text-slate-900 mb-2">Provider files access and contents</h1>
           <p className="text-[13px] text-slate-600 max-w-4xl">
-            This page shows what Apollo-related files are currently available, how many rows each file contains,
+            This page shows what legacy provider files are currently available, how many rows each file contains,
             and a quick preview Mauricio can use for QA.
           </p>
           <p className="mt-3 text-[13px] text-slate-600">

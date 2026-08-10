@@ -352,14 +352,14 @@ export default async function MauricioKickoffExecutionPage() {
         <section className="bg-white border border-orange-200 rounded-xl p-5 mb-8">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-orange-700 mb-2">Requested data viewers</p>
           <p className="text-[13px] text-slate-600 mb-4">
-            Open the two pages below to review Apollo read-access files and weekly customer email outcomes by channel.
+            Open the two pages below to review legacy provider read-access files and weekly customer email outcomes by channel.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Link
-              href="/mauricio-kickoff-execution/apollo-read-access"
+              href="/mauricio-kickoff-execution/provider-read-access"
               className="inline-flex items-center justify-between rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 text-[13px] font-semibold text-slate-800 hover:bg-slate-100"
             >
-              Apollo read-access viewer
+              Provider read-access viewer
               <span aria-hidden>→</span>
             </Link>
             <Link
