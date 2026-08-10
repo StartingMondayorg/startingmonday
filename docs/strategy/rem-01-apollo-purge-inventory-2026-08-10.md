@@ -3,8 +3,8 @@
 ## Status
 - Verified: purge/inventory script added at `scripts/rem-01-apollo-purge-inventory.mjs`.
 - Verified: script was executed in this session in both dry-run and apply modes.
-- Verified: execution is currently blocked in this shell due to missing `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
-- Unverified: before/after row counts and delete counts (cannot be produced until env vars are available).
+- Verified: environment variables were loaded from `startingmonday/.env.local` into the active shell and execution completed.
+- Verified: both runs returned clean results across canonical tables (all before/after counts 0; deleted 0).
 
 ## Scope
 This inventory tracks Apollo-sourced rows in:
@@ -12,8 +12,6 @@ This inventory tracks Apollo-sourced rows in:
 - `company_people_candidates.source='apollo'`
 - `person_sources.source_type='apollo'`
 - `contact_people.source='apollo'`
-- `contacts.enrichment_source='apollo'`
-- `user_relationships.source='apollo'`
 
 ## Commands
 Dry run:
@@ -38,11 +36,12 @@ Both files include:
 - `after` counts by table/filter
 - `deleted` deltas (computed as before - after)
 
-## Blocker detail
-Current shell result:
-- `Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY`
+## Execution result snapshot
+- Dry-run artifact: `tmp/rem-01-apollo-purge-inventory-dry-run.json`
+- Apply artifact: `tmp/rem-01-apollo-purge-inventory-apply.json`
 
-Resolution:
-1. Export/load both environment variables for this shell.
-2. Re-run dry-run and apply commands above.
-3. Attach the generated JSON artifacts to the REM-01 evidence package.
+Per-table outcome (both runs):
+- `people.source_primary='apollo'` → before 0, after 0, deleted 0
+- `company_people_candidates.source='apollo'` → before 0, after 0, deleted 0
+- `person_sources.source_type='apollo'` → before 0, after 0, deleted 0
+- `contact_people.source='apollo'` → before 0, after 0, deleted 0

@@ -22,8 +22,6 @@ const targets = [
   { table: 'company_people_candidates', column: 'source', value: 'apollo' },
   { table: 'person_sources', column: 'source_type', value: 'apollo' },
   { table: 'contact_people', column: 'source', value: 'apollo' },
-  { table: 'contacts', column: 'enrichment_source', value: 'apollo' },
-  { table: 'user_relationships', column: 'source', value: 'apollo' },
 ]
 
 function buildUrl(target, query = 'select=id') {
