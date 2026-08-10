@@ -538,6 +538,34 @@ workflow kill controls remain authoritative; recovery and rollback use
 forward fixes without erasing immutable evidence. This canonical index adds
 no Starting Monday runtime, data, deployment, or release dependency.
 
+### 3.6 Relationship and outreach execution-order evidence entry
+
+Rich (AO) approved the global work order on 2026-08-10: REM-01 first; then
+ORD-01 and ORD-02 as one build slice; then ORD-03, with ORD-04 complete before
+ORD-06. The v17.3 package review may continue as a documentation lane without
+consuming the one active build slice. Relationship Phase A queues behind
+ORD-01/02 and the v17.3 disposition; G5 continues to block Phase C.
+
+The controlling MandateSignal intake branch is
+`docs/relationship-feature-review-2026-08-10` at
+`4295b5232287623ec65b733fa50b841674099513`. This is commit-pinned branch
+evidence, not a merged-main or deployed claim. REM-01 may not start until the
+intake and this canonical entry merge, the WS0-03/WS1-08 preflight is current,
+and the product-local default-OFF quarantine is the declared rollback/kill
+control.
+
+| Artifact | MandateSignal path | SHA-256 at `4295b523` |
+| --- | --- | --- |
+| Global execution order v1.0 | `docs/strategy/execution-order-2026-08-10.md` | `CEF920B56D8233724C67EA1B1EC96B968FE6F2212F42B6C655A7049E986490D0` |
+| Relationship feature spec v1.2 | `docs/strategy/sol-relationship-feature-spec.md` | `F553FF37E6C6B9EC7E365AFEBDD0831A78036109EEC2F62685D79BF7A653683D` |
+| Relationship and ORD execution plan v1.0 | `docs/strategy/relationship-ord-execution-plan-2026-08-10.md` | `2F99257F25821B12767C7595767A5EE22E6A690544622ADEF13D6D0C5E2A5646` |
+
+This entry is a partial WS0-06 scope/order disposition and a WS0-07 evidence
+index input. It changes sequence only. It does not close G5, G4, WS1-08,
+MandateSignal launch controls, hosted inventory, migration readiness, or any
+story acceptance criterion. Product-local implementation and release evidence
+remain required.
+
 ## 4. Locked Architecture Boundaries
 
 1. Starting Monday and MandateSignal keep separate repositories, databases,
@@ -639,6 +667,12 @@ row and must re-plan affected stories rather than preserving this assessment.
   must not stage, modify, publish, or delete them.
 - The two 2026-07-05 vendor-rights audits require agreement-level
   reconciliation before publication or cross-product export.
+
+### 5.4 Known exception register
+
+| ID | Feature | Classification and provenance | Current disposition | Owning controls / decision |
+| --- | --- | --- | --- | --- |
+| KEX-01 | Starting Monday Contacts / LinkedIn-import / Apollo matching | `KNOWN_EXCEPTION` - founder-authorized pre-guardrail feature. Initial consent, match, audit, and schema implementation committed 2026-05-19 (`2c94eccb`); hybrid LinkedIn-export / Apollo matching foundation committed 2026-06-22 (`bbe4b3f9`). Both predate D15 / Spec 11 section 1 ratification on 2026-07-27 and MSPS-003 application to this scope; this is not classified as a retroactive guardrail violation. | Founder disposition `NARROW` recorded 2026-08-10. REM-01 permanently removes Apollo candidate seeding, provider-derived person rows in scope, and numeric person-score computation/storage/rendering. User-brought export storage and categorical matching survive only as a quarantined, product-local, hard-deletable implementation base behind independent default-OFF `relationship_network_matching_enabled`. No expansion or Phase C use is authorized. WS0-03 inventories code/data/usage; WS0-04 verifies hosted state; WS1-08 governs license, retention, backup, and destruction mechanics. Runtime quarantine and purge completion remain `UNVERIFIED` until evidence is recorded. | WS0-03, WS0-04, WS0-06, WS1-08; AO owns REM-01. G5 verdict (c) decides whether the retained user-export capability may re-enable in its narrowed shape; flag OFF and no provider path are the default/kill behavior. |
 
 ## 6. Target Logical Contracts
 
