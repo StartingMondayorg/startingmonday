@@ -73,7 +73,7 @@ const FOUNDER_NEEDS: FounderNeedRow[] = [
     due: 'This week',
   },
   {
-    request: 'Grant read-only Apollo workspace/file access for list QA and enrichment checks',
+    request: 'Grant read-only provider workspace/file access for list QA and enrichment checks',
     owner: 'Founder/Admin',
     due: 'This week',
   },

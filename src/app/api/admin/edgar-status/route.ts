@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     { data: freshnessRun },
     { data: signalRun },
     { data: watchdogState },
-    { data: apolloState },
+    { data: legacyProviderState },
   ] = await Promise.all([
     sb
       .from('sec_freshness_audit_state')
@@ -82,7 +82,8 @@ export async function GET(request: NextRequest) {
     status: {
       freshnessAudit: freshnessState?.last_status ?? 'unknown',
       heartbeatWatchdog: watchdogState?.last_status ?? 'unknown',
-      apolloQualityAudit: apolloState?.last_status ?? 'unknown',
+      providerQualityAudit: legacyProviderState?.last_status ?? 'unknown',
+      apolloQualityAudit: legacyProviderState?.last_status ?? 'unknown',
     },
     schedule: {
       expectedIntervalHours,
@@ -98,7 +99,8 @@ export async function GET(request: NextRequest) {
     alertState: {
       freshnessAudit: freshnessState ?? null,
       heartbeatWatchdog: watchdogState ?? null,
-      apolloQualityAudit: apolloState ?? null,
+      providerQualityAudit: legacyProviderState ?? null,
+      apolloQualityAudit: legacyProviderState ?? null,
     },
   })
 }

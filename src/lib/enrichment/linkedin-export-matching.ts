@@ -13,7 +13,7 @@ export type LinkedInExportConnection = {
   email?: string | null
 }
 
-export type ApolloCandidate = {
+export type RelationshipCandidate = {
   fullName: string
   company: string | null
   profileUrl?: string | null
@@ -166,7 +166,7 @@ function normalizeEmail(email: string | null | undefined): string {
   return (email ?? '').trim().toLowerCase()
 }
 
-function pickMethod(connection: LinkedInExportConnection, candidate: ApolloCandidate, nameScore: number): MatchMethod {
+function pickMethod(connection: LinkedInExportConnection, candidate: RelationshipCandidate, nameScore: number): MatchMethod {
   const exportProfile = normalizeUrl(connection.profileUrl)
   const candidateProfile = normalizeUrl(candidate.profileUrl)
   if (exportProfile && candidateProfile && exportProfile === candidateProfile) {
@@ -206,7 +206,7 @@ export function classifyMatchTier(method: MatchMethod, nameSimilarity: number, c
   return 'rejected'
 }
 
-export function buildMatchDecision(connection: LinkedInExportConnection, candidate: ApolloCandidate): MatchDecision {
+export function buildMatchDecision(connection: LinkedInExportConnection, candidate: RelationshipCandidate): MatchDecision {
   const nameSimilarity = scoreNameSimilarity(connection.fullName, candidate.fullName)
   const companySimilarity = scoreCompanySimilarity(connection.company, candidate.company)
   const method = pickMethod(connection, candidate, nameSimilarity)
