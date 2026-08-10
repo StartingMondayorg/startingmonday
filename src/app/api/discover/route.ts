@@ -436,7 +436,7 @@ Rules:
     const ranked = withEnrichment.map(scoreCandidate)
     const sorted = applyDiversityGuardrails(ranked, REQUESTED_COUNT)
 
-    const runSource = provider.providerName === 'apollo' ? 'mixed' : 'anthropic'
+    const runSource = 'anthropic'
     let persistedRows: Array<{
       id: string
       rank: number

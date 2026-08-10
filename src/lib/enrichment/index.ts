@@ -1,4 +1,3 @@
-import { ApolloEnrichmentProvider } from './apollo-provider'
 import type { EnrichmentContext, EnrichmentProvider, SuggestedPerson } from './types'
 
 class NoopEnrichmentProvider implements EnrichmentProvider {
@@ -10,8 +9,6 @@ class NoopEnrichmentProvider implements EnrichmentProvider {
 }
 
 export function getEnrichmentProvider(): EnrichmentProvider {
-  const enabled = process.env.APOLLO_ENRICHMENT_ENABLED === 'true'
-  if (enabled) return new ApolloEnrichmentProvider()
   return new NoopEnrichmentProvider()
 }
 

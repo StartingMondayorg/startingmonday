@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server'
 import * as Sentry from '@sentry/nextjs'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { ApolloEnrichmentProvider } from '@/lib/enrichment/apollo-provider'
+import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
 import {
   buildMatchDecision,
   type ApolloCandidate,
@@ -55,69 +55,11 @@ type MatchRow = {
   user_rejected: boolean
 }
 
-type IdRow = { id: string }
-
-async function seedApolloCandidates(params: {
-  supabase: Awaited<ReturnType<typeof createClient>>
-  userId: string
-  companyId: string
-  companyName: string
-  sector: string
-}) {
-  const { supabase, userId, companyId, companyName, sector } = params
-  const provider = new ApolloEnrichmentProvider()
-  const people = await provider.enrichPeople({ companyName, sector })
-
-  for (const suggested of people) {
-    let personId: string | null = null
-
-    const { data: existing } = await supabase
-      .from('people')
-      .select('id')
-      .eq('full_name', suggested.name)
-      .eq('current_company', companyName)
-      .maybeSingle()
-
-    const existingId = (existing as unknown as IdRow | null)?.id ?? null
-    if (existingId) {
-      personId = existingId
-    } else {
-      const { data: created } = await supabase
-        .from('people')
-        .insert({
-          full_name: suggested.name,
-          current_title: suggested.title,
-          current_company: companyName,
-          source_primary: 'apollo',
-          confidence: suggested.confidence,
-          last_enriched_at: new Date().toISOString(),
-        } as never)
-        .select('id')
-        .single()
-
-      personId = (created as unknown as IdRow | null)?.id ?? null
-    }
-
-    await supabase
-      .from('company_people_candidates' as never)
-      .insert({
-        user_id: userId,
-        company_id: companyId,
-        person_id: personId,
-        source: 'apollo',
-        role_cluster: 'sponsor',
-        score: suggested.confidence,
-        rationale: suggested.reason,
-        status: 'suggested',
-        metadata: {
-          suggested_title: suggested.title,
-          source_provider: 'apollo',
-        },
-      } as never)
-  }
-}
-
 export async function GET(request: NextRequest) {
+  if (!isRelationshipNetworkMatchingEnabled()) {
+    return Response.json({ error: 'Relationship network matching is currently disabled.' }, { status: 403 })
+  }
+
   const auth = await requireAuth(request)
   if (!auth.ok) return auth.response
 
@@ -163,7 +105,7 @@ export async function GET(request: NextRequest) {
       upload_id: null,
       match_count: 0,
       likely_known: [],
-      suggested_by_apollo: [],
+      suggested_matches: [],
       confirmed_relationships: [],
       matches: [],
       message: 'No LinkedIn export upload found. Upload a LinkedIn connections CSV first.',
@@ -188,25 +130,6 @@ export async function GET(request: NextRequest) {
     .eq('user_id', userId)
     .eq('company_id', companyId)
     .in('status', ['suggested', 'saved'])
-
-  if (!candidateRows || candidateRows.length === 0) {
-    await seedApolloCandidates({
-      supabase,
-      userId,
-      companyId,
-      companyName: (company as unknown as CompanyRow).name,
-      sector: (company as unknown as CompanyRow).sector ?? 'technology',
-    })
-
-    const { data: reseeded } = await supabase
-      .from('company_people_candidates' as never)
-      .select('id, person_id, score, rationale, metadata')
-      .eq('user_id', userId)
-      .eq('company_id', companyId)
-      .in('status', ['suggested', 'saved'])
-
-    candidateRows = reseeded
-  }
 
   const candidates = (candidateRows ?? []) as unknown as CandidateSeed[]
 
@@ -293,7 +216,7 @@ export async function GET(request: NextRequest) {
       id: candidate.id,
       name: person?.full_name ?? 'Unknown',
       title: person?.current_title ?? titleFromMeta,
-      source: 'apollo',
+      source: typeof candidate.metadata?.source_provider === 'string' ? candidate.metadata.source_provider : 'candidate',
     })
   }
 
@@ -308,7 +231,7 @@ export async function GET(request: NextRequest) {
         candidate_id: row.candidate_id,
         candidate_name: candidate?.name ?? 'Unknown',
         candidate_title: candidate?.title ?? null,
-        candidate_source: candidate?.source ?? 'apollo',
+        candidate_source: candidate?.source ?? 'candidate',
         connection_name: connection?.full_name ?? 'Unknown',
         connection_company: connection?.company ?? null,
         connection_email: connection?.email ?? null,
@@ -328,13 +251,17 @@ export async function GET(request: NextRequest) {
     upload_id: activeUploadId,
     match_count: normalized.length,
     likely_known: likelyKnown,
-    suggested_by_apollo: suggested,
+    suggested_matches: suggested,
     confirmed_relationships: confirmed,
     matches: normalized,
   })
 }
 
 export async function POST(request: NextRequest) {
+  if (!isRelationshipNetworkMatchingEnabled()) {
+    return Response.json({ error: 'Relationship network matching is currently disabled.' }, { status: 403 })
+  }
+
   const auth = await requireAuth(request)
   if (!auth.ok) return auth.response
   const { userId } = auth
@@ -486,6 +413,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  if (!isRelationshipNetworkMatchingEnabled()) {
+    return Response.json({ error: 'Relationship network matching is currently disabled.' }, { status: 403 })
+  }
+
   const auth = await requireAuth(request)
   if (!auth.ok) return auth.response
   const { userId } = auth
