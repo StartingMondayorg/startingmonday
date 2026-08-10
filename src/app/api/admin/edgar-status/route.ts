@@ -18,7 +18,6 @@ function hoursSince(value: string | null): number | null {
 }
 
 const PROVIDER_QUALITY_ALERT_KEY = 'provider-quality-audit'
-const LEGACY_QUALITY_ALERT_KEY = 'apollo-quality-audit'
 
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
@@ -38,7 +37,6 @@ export async function GET(request: NextRequest) {
     { data: signalRun },
     { data: watchdogState },
     { data: providerQualityState },
-    { data: legacyProviderState },
   ] = await Promise.all([
     sb
       .from('sec_freshness_audit_state')
@@ -69,14 +67,7 @@ export async function GET(request: NextRequest) {
       .select('alert_key, last_status, last_checked_at, last_stale_alert_at, last_recovery_alert_at, last_details, updated_at')
       .eq('alert_key', PROVIDER_QUALITY_ALERT_KEY)
       .maybeSingle(),
-    sb
-      .from('monitoring_alert_state')
-      .select('alert_key, last_status, last_checked_at, last_stale_alert_at, last_recovery_alert_at, last_details, updated_at')
-      .eq('alert_key', LEGACY_QUALITY_ALERT_KEY)
-      .maybeSingle(),
   ])
-
-  const qualityAuditState = providerQualityState ?? legacyProviderState
 
   const freshnessRunAt = freshnessRun?.finished_at ?? freshnessRun?.started_at ?? null
   const freshnessRunAgeHours = hoursSince(freshnessRunAt)
@@ -93,8 +84,7 @@ export async function GET(request: NextRequest) {
     status: {
       freshnessAudit: freshnessState?.last_status ?? 'unknown',
       heartbeatWatchdog: watchdogState?.last_status ?? 'unknown',
-      providerQualityAudit: qualityAuditState?.last_status ?? 'unknown',
-      apolloQualityAudit: qualityAuditState?.last_status ?? 'unknown',
+      providerQualityAudit: providerQualityState?.last_status ?? 'unknown',
     },
     schedule: {
       expectedIntervalHours,
@@ -110,8 +100,7 @@ export async function GET(request: NextRequest) {
     alertState: {
       freshnessAudit: freshnessState ?? null,
       heartbeatWatchdog: watchdogState ?? null,
-      providerQualityAudit: qualityAuditState ?? null,
-      apolloQualityAudit: qualityAuditState ?? null,
+      providerQualityAudit: providerQualityState ?? null,
     },
   })
 }
