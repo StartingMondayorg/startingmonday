@@ -102,6 +102,22 @@ function resolveInactivityWindowRemainingHours(input: {
   return Math.max(0, input.hitWindowHours - input.lastSeenAgeHours)
 }
 
+function resolveInactivityWindowEndsAt(input: {
+  hitWindowHours: number
+  lastSeenAt: string | null
+}): string | null {
+  if (!input.lastSeenAt) {
+    return null
+  }
+
+  const t = Date.parse(input.lastSeenAt)
+  if (Number.isNaN(t)) {
+    return null
+  }
+
+  return new Date(t + input.hitWindowHours * 3_600_000).toISOString()
+}
+
 function resolveCompatibilityBlockingReasons(input: {
   recommendation: SunsetRecommendation
   hitCount: number
@@ -213,6 +229,10 @@ export async function GET(request: NextRequest) {
     hitWindowHours: compatHitWindowHours,
     lastSeenAgeHours: compatLastSeenAgeHours,
   })
+  const compatInactivityWindowEndsAt = resolveInactivityWindowEndsAt({
+    hitWindowHours: compatHitWindowHours,
+    lastSeenAt: compatLastSeenAt,
+  })
   const compatRecommendationContext = resolveSunsetRecommendation({
     hitCount: compatHitCount,
     hitBudget: compatHitBudget,
@@ -262,6 +282,7 @@ export async function GET(request: NextRequest) {
       blockingReasons: compatBlockingReasons,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
+      inactivityWindowEndsAt: compatInactivityWindowEndsAt,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,
     },
