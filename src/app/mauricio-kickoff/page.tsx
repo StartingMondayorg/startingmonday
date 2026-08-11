@@ -132,7 +132,7 @@ const QUALIFIED_MEETING_STANDARD = [
 
 const ACCESS_CHECKLIST = [
   'Email sending stack and domain/inbox access for outbound execution.',
-  'Apollo and/or Sales Navigator workspace access.',
+  'Provider workspace and/or Sales Navigator access.',
   'CRM/source-of-truth destination for all touches and outcomes.',
   'Slack or equivalent channel for daily updates and blockers.',
   'Founder calendar constraints and preferred meeting windows.',
@@ -150,7 +150,7 @@ const CURRENT_ASSUMPTIONS = [
   'Primary ICP wedge (first 2 weeks): executive coaches.',
   'Page remains public but noindex during trial setup.',
   'Founder response SLA for warm replies: within 24 hours.',
-  'Recommended source of truth: Airtable pipeline (Apollo remains lead source only).',
+  'Recommended source of truth: Airtable pipeline (provider list remains invite-source only).',
 ]
 
 const COMMERCIAL_TERMS = [
@@ -162,7 +162,7 @@ const COMMERCIAL_TERMS = [
 ]
 
 const CRM_RECOMMENDATION = [
-  'Lead source and enrichment: Apollo.',
+  'Lead source and enrichment: provider data.',
   'Single source of truth: Airtable base for all touches, meeting outcomes, and qualification notes.',
   'Weekly export backup: CSV snapshot of Airtable table to avoid data drift.',
   'Minimum fields: account, contact, channel, touch date, status, qualification score, next step, owner.',

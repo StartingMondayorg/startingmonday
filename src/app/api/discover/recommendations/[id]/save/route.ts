@@ -40,7 +40,7 @@ function parseSuggestedPeople(value: unknown): SuggestedPerson[] {
         name: person.name,
         title: person.title,
         reason: typeof person.reason === 'string' ? person.reason : 'Recommended stakeholder for this company.',
-        source: person.source === 'apollo' || person.source === 'fallback' ? person.source : 'anthropic',
+        source: person.source === 'fallback' ? 'fallback' : 'anthropic',
         confidence: typeof person.confidence === 'number' ? Math.max(0.2, Math.min(0.99, person.confidence)) : 0.68,
       } satisfies SuggestedPerson
     })
@@ -135,9 +135,7 @@ export async function POST(
         follow_up_at: nextTouchIso,
         enrichment_source: selectedPerson.source,
         enrichment_confidence: selectedPerson.confidence,
-        enrichment_retention_expires_at: selectedPerson.source === 'apollo'
-          ? new Date(Date.now() + 90 * 86400_000).toISOString()
-          : new Date(Date.now() + 30 * 86400_000).toISOString(),
+        enrichment_retention_expires_at: new Date(Date.now() + 30 * 86400_000).toISOString(),
       })
       .select('id')
       .single()

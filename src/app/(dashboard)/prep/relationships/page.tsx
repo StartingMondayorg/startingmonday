@@ -10,7 +10,7 @@ interface Person {
   last_name: string
   title?: string
   company?: string
-  source: 'scanner' | 'user_added' | 'linkedin' | 'apollo'
+  source: 'scanner' | 'user_added' | 'linkedin' | 'other'
   linkedin_url?: string
   notes?: string
 }

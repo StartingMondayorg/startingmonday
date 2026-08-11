@@ -188,7 +188,7 @@ export async function GET() {
       if (!contact.company_id) continue
       const current = countsByCompany.get(contact.company_id) ?? { total: 0, enriched: 0 }
       current.total += 1
-      if (contact.enrichment_source === 'apollo' || contact.enrichment_source === 'anthropic') {
+      if (contact.enrichment_source === 'anthropic' || contact.enrichment_source === 'fallback') {
         current.enriched += 1
       }
       countsByCompany.set(contact.company_id, current)

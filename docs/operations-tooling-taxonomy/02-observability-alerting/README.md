@@ -24,7 +24,7 @@
 - worker/jobs/briefing-watchdog-job.js
 - worker/jobs/edgar-freshness-audit-job.js
 - worker/jobs/edgar-watchdog-job.js
-- worker/jobs/apollo-quality-audit-job.js
+- worker/jobs/provider-quality-audit-job.js
 - worker/jobs/usage-monitor-job.js
 
 ## Documentation

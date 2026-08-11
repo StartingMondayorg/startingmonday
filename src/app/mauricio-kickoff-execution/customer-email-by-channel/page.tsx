@@ -123,10 +123,10 @@ export default async function MauricioCustomerEmailByChannelPage() {
               Open Mauricio workspace
             </Link>
             <Link
-              href="/mauricio-kickoff-execution/apollo-read-access"
+              href="/mauricio-kickoff-execution/provider-read-access"
               className="inline-flex items-center rounded border border-slate-300 bg-white px-3 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50"
             >
-              Open Apollo read-access viewer
+              Open provider read-access viewer
             </Link>
           </div>
         </header>

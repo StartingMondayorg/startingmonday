@@ -12,7 +12,7 @@ Owner Group: Growth + Product + Engineering
 - [x] Quality audit and watchdog routes available for operational monitoring.
 - [x] Discover conversion telemetry includes run-created, recommendation-opened, recommendation-added, and outreach-started events.
 - [x] Admin intelligence page exposes conversion and quality KPI status cards.
-- [x] Compliance runbook documented in docs/apollo-enrichment-compliance-runbook.md.
+- [x] Compliance runbook documented in docs/provider-enrichment-compliance-runbook.md.
 
 ## Signoff
 - Growth: Approved (2026-06-07)

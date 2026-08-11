@@ -2,7 +2,7 @@ export type SuggestedPerson = {
   name: string
   title: string
   reason: string
-  source: 'anthropic' | 'apollo' | 'fallback'
+  source: 'anthropic' | 'fallback'
   confidence: number
 }
 

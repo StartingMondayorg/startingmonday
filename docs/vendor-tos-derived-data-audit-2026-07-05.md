@@ -26,7 +26,7 @@ direct review. Unverified = preliminary assessment pending review.
 | Crunchbase | crunchbase | Licensed API | Crunchbase terms historically restrict redistribution of their *data*; internal derived aggregates are typically permitted but resale or republication of Crunchbase-derived datasets may be restricted. Do not expose funding rows in any external dataset or API. | Unverified — REVIEW BEFORE Ring 3 licensing |
 | PredictLeads | predictleads | Licensed API | Event feeds licensed for internal use; check clauses on data retention after termination and on derived-model outputs. | Unverified — REVIEW REQUIRED |
 | People Data Labs (exec snapshots) | pdl | Licensed API | PDL terms include person-data retention/refresh obligations and restrictions on building derivative databases of person records. Our exec-departure *events* (facts we infer) are likely fine; retained person snapshots must follow retention rules already implemented in enrichment-contact-retention-job. | Unverified — REVIEW REQUIRED before person-events (E6) |
-| Apollo (enrichment; future org-diff source) | apollo | Licensed seat/API | Governed by existing apollo-enrichment-compliance-runbook.md. Org-level headcount diffs for internal signals: verify "no derivative works" scope before Phase 5 T5.8 ships. | Unverified — REVIEW REQUIRED before T5.8 |
+| Apollo (enrichment; future org-diff source) | apollo | Licensed seat/API | Governed by existing provider-enrichment-compliance-runbook.md. Org-level headcount diffs for internal signals: verify "no derivative works" scope before Phase 5 T5.8 ships. | Unverified — REVIEW REQUIRED before T5.8 |
 
 ## Decisions
 

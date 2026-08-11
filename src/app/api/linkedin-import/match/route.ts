@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
 import {
   buildMatchDecision,
-  type ApolloCandidate,
+  type RelationshipCandidate,
   type LinkedInExportConnection,
 } from '@/lib/enrichment/linkedin-export-matching'
 
@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
           company: person.current_company,
           email: person.work_email,
           profileUrl: person.linkedin_url,
-        } as ApolloCandidate,
+        } as RelationshipCandidate,
       )
 
       if (decision.tier === 'rejected') continue

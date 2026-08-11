@@ -557,8 +557,8 @@ export default async function DashboardPage({
 
   const enrichedContactRows = enrichmentStatRows.filter(
     (row) =>
-      row.enrichment_source === "apollo" ||
-      row.enrichment_source === "anthropic",
+      row.enrichment_source === "anthropic" ||
+      row.enrichment_source === "fallback",
   );
   const enrichedCompanyIds = new Set(
     enrichedContactRows

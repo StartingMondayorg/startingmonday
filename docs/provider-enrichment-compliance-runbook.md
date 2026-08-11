@@ -1,4 +1,4 @@
-# Apollo Enrichment Compliance Runbook
+# Provider Enrichment Compliance Runbook
 
 Updated: 2026-06-07
 Owner: Growth + Product + Engineering
@@ -32,14 +32,14 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 - contact_added with discover recommendation source attribution
 
 ## Operational checks (weekly)
-1. Verify Apollo quality audit status is fresh.
+1. Verify provider quality audit status is fresh.
 2. Verify enrichment retention cleanup archived count is non-error.
 3. Spot check recommendation detail cards for source/confidence visibility.
 4. Confirm admin EDGAR/intelligence status endpoint returns expected summary.
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
-2. Run /api/cron/apollo-quality-audit?health=1 and inspect stale reasons.
+2. Run /api/cron/provider-quality-audit?health=1 and inspect stale reasons.
 3. If retention cleanup fails, run /api/cron/enrichment-contact-retention?dry_run=1 and inspect dueCount.
 4. Escalate in Slack with route payloads and timestamps.
 
