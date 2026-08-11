@@ -134,6 +134,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       route: '/api/cron/apollo-quality-audit',
       replacementRoute: '/api/cron/provider-quality-audit',
       hitCount: 2,
+      routeStillActive: true,
       lifetimeHitCount: 9,
       hitWindowHours: 24,
       hitWindowSource: 'alert_state',
@@ -184,6 +185,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.status.compatRouteUsage).toBe('none')
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 0,
+      routeStillActive: false,
       hitBudget: 0,
       hitWindowSource: 'alert_state',
       overBudgetBy: 0,
@@ -227,6 +229,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.status.compatRouteUsage).toBe('active')
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 5,
+      routeStillActive: true,
       hitBudget: 2,
       hitWindowSource: 'alert_state',
       overBudgetBy: 3,
@@ -267,6 +270,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.status.compatRouteUsage).toBe('active')
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 2,
+      routeStillActive: true,
       lifetimeHitCount: 11,
       hitWindowHours: 24,
       hitWindowSource: 'alert_state',
@@ -303,6 +307,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(response.status).toBe(200)
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 1,
+      routeStillActive: true,
       hitWindowHours: 24,
       hitWindowSource: 'default_fallback',
       inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
@@ -335,6 +340,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(response.status).toBe(200)
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 1,
+      routeStillActive: true,
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: null,
       inactivityWindowProgressPct: null,
