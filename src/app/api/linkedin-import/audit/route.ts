@@ -15,11 +15,16 @@
 import { type NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
+import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
 
 const MAX_LIMIT = 200
 const DEFAULT_LIMIT = 50
 
 export async function GET(request: NextRequest) {
+  if (!isRelationshipNetworkMatchingEnabled()) {
+    return Response.json({ error: 'Relationship network matching is currently disabled.' }, { status: 403 })
+  }
+
   const auth = await requireAuth(request)
   if (!auth.ok) return auth.response
   const { userId } = auth

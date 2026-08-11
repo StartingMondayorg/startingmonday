@@ -10,7 +10,7 @@ interface Person {
   last_name: string
   title?: string
   company?: string
-  source: 'scanner' | 'user_added' | 'linkedin' | 'apollo'
+  source: 'scanner' | 'user_added' | 'linkedin' | 'other'
   linkedin_url?: string
   notes?: string
 }
@@ -19,7 +19,6 @@ export default function RelationshipsPage() {
   const supabase = createClient()
   const [relationships, setRelationships] = useState<Person[]>([])
   const [loading, setLoading] = useState(true)
-  const [enriching, setEnriching] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [newPerson, setNewPerson] = useState({
     firstName: '',
@@ -47,8 +46,6 @@ export default function RelationshipsPage() {
 
         setRelationships(relData || [])
 
-        // Enrich with Apollo suggestions (non-blocking)
-        enrichFromApollo()
       } catch (error) {
         console.error('Error loading relationships:', error)
       } finally {
@@ -56,42 +53,11 @@ export default function RelationshipsPage() {
       }
     }
 
-    async function enrichFromApollo() {
-      try {
-        setEnriching(true)
-        const response = await fetch('/api/prep/relationships/enrich', {
-          method: 'POST',
-        })
-        if (response.ok) {
-          const result = await response.json()
-          if (result.newCount > 0) {
-            // Reload relationships to show newly added Apollo suggestions
-            const {
-              data: { user },
-            } = await supabase.auth.getUser()
-            if (user) {
-              const { data: relData } = await supabase
-                .from('user_relationships')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false })
-              setRelationships(relData || [])
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error enriching from Apollo:', error)
-      } finally {
-        setEnriching(false)
-      }
-    }
-
     loadData()
   }, [supabase])
 
-  const apolloSuggestions = relationships.filter((r) => r.source === 'apollo')
   const scannerSuggestions = relationships.filter((r) => r.source === 'scanner')
-  const customAdded = relationships.filter((r) => r.source !== 'scanner' && r.source !== 'apollo')
+  const customAdded = relationships.filter((r) => r.source !== 'scanner')
 
   return (
     <div className="space-y-8">
@@ -101,7 +67,7 @@ export default function RelationshipsPage() {
           Key Relationships
         </h1>
         <p className="text-[16px] leading-relaxed text-slate-300 max-w-2xl">
-          Build your target list of people to connect with. Discover them from signals, Apollo, or LinkedIn.
+          Build your target list of people to connect with. Discover them from signals and LinkedIn.
         </p>
       </div>
 
@@ -114,48 +80,6 @@ export default function RelationshipsPage() {
           "The fastest path to an offer is usually through someone already inside. Relationships matter more than cold outreach. Build a list of 8-12 people at each target company - people who can advocate for you, introduce you to hiring managers, or move you through their process faster."
         </p>
       </div>
-
-      {/* Suggested people from Apollo */}
-      {apolloSuggestions.length > 0 && (
-        <div className="rounded-2xl border border-purple-400/30 bg-purple-500/5 p-6 sm:p-8">
-          <h2 className="text-[13px] font-semibold uppercase tracking-[0.1em] text-purple-300 mb-4">
-            Suggested from Apollo ({apolloSuggestions.length})
-          </h2>
-          <p className="text-[13px] text-slate-300 mb-4">
-            Decision-makers and executives discovered at your featured companies.
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {apolloSuggestions.map((person) => (
-              <div
-                key={person.id}
-                className="rounded-lg px-4 py-3 border border-purple-400/30 bg-purple-950/40"
-              >
-                <p className="font-semibold text-[14px] text-purple-100">
-                  {person.first_name} {person.last_name}
-                </p>
-                {person.title && <p className="text-[12px] text-purple-300">{person.title}</p>}
-                {person.company && <p className="text-[12px] text-purple-300">{person.company}</p>}
-                <p className="text-[11px] text-slate-400 mt-1">via Apollo</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Suggested people from scanner */}
-      {enriching && apolloSuggestions.length === 0 && (
-        <div className="rounded-2xl border border-purple-400/30 bg-purple-500/5 p-6 sm:p-8">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-purple-300 mb-2">
-            Discovering from Apollo...
-          </p>
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 bg-purple-400 rounded-full animate-pulse" />
-            <p className="text-[12px] text-slate-300">
-              Finding decision-makers at your featured companies
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Suggested people from scanner */}
       {scannerSuggestions.length > 0 && (
@@ -309,18 +233,11 @@ export default function RelationshipsPage() {
       {/* Research tools */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6">
-          <p className="text-[13px] font-semibold text-slate-200 mb-2">🔍 Search Apollo</p>
+          <p className="text-[13px] font-semibold text-slate-200 mb-2">🔍 Research Company Leaders</p>
           <p className="text-[12px] text-slate-400 mb-4">
-            Find decision-makers at your target companies by role and department.
+            Use trusted sources to identify decision-makers at your target companies by role and department.
           </p>
-          <a
-            href="https://apollo.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[12px] text-blue-400 hover:text-blue-300 underline"
-          >
-            Open Apollo →
-          </a>
+          <span className="text-[12px] text-slate-300">Use company websites, press releases, and LinkedIn to validate current roles.</span>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6">

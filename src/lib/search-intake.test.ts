@@ -41,6 +41,17 @@ describe('intakeOptionLabel', () => {
   it('returns null for empty values', () => {
     expect(intakeOptionLabel(TRANSITION_TYPE_OPTIONS, null)).toBeNull()
   })
+
+  it('prefers promptLabel over the short UI label in prompt serialization', () => {
+    expect(intakeOptionLabel(TRANSITION_TYPE_OPTIONS, 'confidential_search')).toBe('Confidential search (employed, searching quietly)')
+    const confidential = TRANSITION_TYPE_OPTIONS.find(o => o.value === 'confidential_search')
+    expect(confidential?.label).toBe('Confidential search')
+  })
+
+  it('keeps every select label short enough for the half-width select', () => {
+    const all = [...TRANSITION_TYPE_OPTIONS]
+    expect(all.every(o => o.label.length <= 24)).toBe(true)
+  })
 })
 
 describe('buildSearchIntakeSection', () => {

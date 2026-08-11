@@ -24,4 +24,4 @@
 ## Documentation
 - docs/outreach-playbook.md
 - docs/outreach-trigger-field-reference.md
-- docs/apollo-enrichment-compliance-runbook.md
+- docs/provider-enrichment-compliance-runbook.md

@@ -17,6 +17,8 @@ function hoursSince(value: string | null): number | null {
   return (Date.now() - t) / 3_600_000
 }
 
+const PROVIDER_QUALITY_ALERT_KEY = 'provider-quality-audit'
+
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
   if (!authCheck.ok) return authCheck.response
@@ -34,7 +36,7 @@ export async function GET(request: NextRequest) {
     { data: freshnessRun },
     { data: signalRun },
     { data: watchdogState },
-    { data: apolloState },
+    { data: providerQualityState },
   ] = await Promise.all([
     sb
       .from('sec_freshness_audit_state')
@@ -63,7 +65,7 @@ export async function GET(request: NextRequest) {
     sb
       .from('monitoring_alert_state')
       .select('alert_key, last_status, last_checked_at, last_stale_alert_at, last_recovery_alert_at, last_details, updated_at')
-      .eq('alert_key', 'apollo-quality-audit')
+      .eq('alert_key', PROVIDER_QUALITY_ALERT_KEY)
       .maybeSingle(),
   ])
 
@@ -82,7 +84,7 @@ export async function GET(request: NextRequest) {
     status: {
       freshnessAudit: freshnessState?.last_status ?? 'unknown',
       heartbeatWatchdog: watchdogState?.last_status ?? 'unknown',
-      apolloQualityAudit: apolloState?.last_status ?? 'unknown',
+      providerQualityAudit: providerQualityState?.last_status ?? 'unknown',
     },
     schedule: {
       expectedIntervalHours,
@@ -98,7 +100,7 @@ export async function GET(request: NextRequest) {
     alertState: {
       freshnessAudit: freshnessState ?? null,
       heartbeatWatchdog: watchdogState ?? null,
-      apolloQualityAudit: apolloState ?? null,
+      providerQualityAudit: providerQualityState ?? null,
     },
   })
 }

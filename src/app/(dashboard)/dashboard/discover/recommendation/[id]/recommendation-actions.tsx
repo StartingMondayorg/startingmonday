@@ -35,7 +35,7 @@ export function RecommendationActions({ companyName, sector, suggestedPeople }: 
           source: mode === 'outreach' ? 'discover_recommendation_outreach' : 'discover_recommendation_contact',
           enrichment_source: selectedPerson.source,
           enrichment_confidence: selectedPerson.confidence,
-          enrichment_retention_days: selectedPerson.source === 'apollo' ? 90 : 30,
+          enrichment_retention_days: 30,
         }),
       })
 

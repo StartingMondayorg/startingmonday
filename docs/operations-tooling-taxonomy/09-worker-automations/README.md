@@ -16,7 +16,7 @@
 - Reliability and watchdogs:
   - worker/jobs/edgar-freshness-audit-job.js
   - worker/jobs/edgar-watchdog-job.js
-  - worker/jobs/apollo-quality-audit-job.js
+  - worker/jobs/provider-quality-audit-job.js
 - Growth and reporting:
   - worker/jobs/pulse-job.js
   - worker/jobs/weekly-report-job.js
