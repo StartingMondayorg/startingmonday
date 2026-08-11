@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { LandingPage } from '@/components/LandingPage'
 import type { FAQ, SituationCard } from '@/components/LandingPage'
-import { PHProvider } from '@/components/PosthogProvider'
 
 export const metadata: Metadata = {
   title: 'Starting Monday - Be on the shortlist before the role is posted',
@@ -36,21 +35,17 @@ const MANAGER_TOOLS_FAQS: FAQ[] = [
 
 export default function ManagerToolsPage() {
   return (
-    <>
-      <PHProvider>
-        <LandingPage
-          sourcePage="/managertools"
-          hero={{
-            eyebrow: 'Find roles before they are posted. Meet the decision-makers. Start Monday.',
-            h1Lines: ['Be on the shortlist before the role is posted.'],
-            body: 'Starting Monday shows you which senior leader roles are likely to open, who influences each hiring decision, and what to do so you can enter before the public posting window is crowded.',
-            trialNote: 'Private by default: visible only to you and explicitly invited collaborators. Free for 60 days. No credit card. No employer visibility.',
-          }}
-          situations={MANAGER_TOOLS_SITUATIONS}
-          faqs={MANAGER_TOOLS_FAQS}
-          proofHighlights={[{ metric: 'Manager Tools cohort', detail: 'Warm onboarding, private-by-default execution, and feedback-driven iteration.' }]}
-        />
-      </PHProvider>
-    </>
+    <LandingPage
+      sourcePage="/managertools"
+      hero={{
+        eyebrow: 'Find roles before they are posted. Meet the decision-makers. Start Monday.',
+        h1Lines: ['Be on the shortlist before the role is posted.'],
+        body: 'Starting Monday shows you which senior leader roles are likely to open, who influences each hiring decision, and what to do so you can enter before the public posting window is crowded.',
+        trialNote: 'Private by default: visible only to you and explicitly invited collaborators. Free for 60 days. No credit card. No employer visibility.',
+      }}
+      situations={MANAGER_TOOLS_SITUATIONS}
+      faqs={MANAGER_TOOLS_FAQS}
+      proofHighlights={[{ metric: 'Manager Tools cohort', detail: 'Warm onboarding, private-by-default execution, and feedback-driven iteration.' }]}
+    />
   )
 }
