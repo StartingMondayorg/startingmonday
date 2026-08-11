@@ -158,6 +158,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
       blockingReasonCount: 2,
       blockingSummary: 'multiple',
+      blockingPrimaryReason: 'compat_route_still_active',
       blockingFlags: {
         any: true,
         overBudget: false,
@@ -214,6 +215,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: [],
       blockingReasonCount: 0,
       blockingSummary: 'none',
+      blockingPrimaryReason: 'none',
       blockingFlags: {
         any: false,
         overBudget: false,
@@ -266,6 +268,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: ['compat_hits_over_budget'],
       blockingReasonCount: 1,
       blockingSummary: 'over_budget_only',
+      blockingPrimaryReason: 'compat_hits_over_budget',
       blockingFlags: {
         any: true,
         overBudget: true,
@@ -347,6 +350,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: true,
       blockingReasonCount: 2,
       blockingSummary: 'multiple',
+      blockingPrimaryReason: 'compat_route_still_active',
       blockingFlags: {
         any: true,
         overBudget: false,
@@ -391,6 +395,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: ['compat_route_still_active'],
       blockingReasonCount: 1,
       blockingSummary: 'active_traffic',
+      blockingPrimaryReason: 'compat_route_still_active',
       blockingFlags: {
         any: true,
         overBudget: false,
