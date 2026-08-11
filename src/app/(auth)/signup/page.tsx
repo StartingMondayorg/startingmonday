@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { usePostHog } from 'posthog-js/react'
 import TurnstileWidget from '@/components/turnstile-widget'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
+import { reportAttributionFailure } from '@/lib/attribution-failure'
 import firstWeekSpine from '@/content/first-week-spine.json'
 
 const TURNSTILE_ENABLED = process.env.NEXT_PUBLIC_TURNSTILE_ENABLED === '1'
@@ -352,7 +353,7 @@ export default function SignupPage() {
         const signupSource = selfReportedSource ?? utmSource ?? ref ?? (fromSituation ? `situation:${fromSituation}` : null)
         const managerToolsSource = isManagerToolsSource(signupSource)
         const acceptedAt = new Date().toISOString()
-        await Promise.all([
+        const [, attributionResult] = await Promise.all([
           supabase.from('user_profiles').upsert(
             {
               user_id: data.user.id,
@@ -380,6 +381,15 @@ export default function SignupPage() {
               }).catch(() => {})
             : Promise.resolve(),
         ])
+
+        // This write carries attribution, the campaign trial length, and the
+        // consent record. It failed silently for seven weeks when a column in
+        // it did not exist in the database (SMK-456) -- never swallow it again.
+        reportAttributionFailure(attributionResult?.error, {
+          path: 'password_signup',
+          signup_source: signupSource,
+          manager_tools: managerToolsSource,
+        })
       }
 
       try {
