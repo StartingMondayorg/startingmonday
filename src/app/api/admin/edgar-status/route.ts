@@ -156,6 +156,8 @@ export async function GET(request: NextRequest) {
     hitWindowHours: compatHitWindowHours,
     lastSeenAgeHours: compatLastSeenAgeHours,
   })
+  const compatEligibleForRouteRemoval = compatRecommendationContext.recommendation === 'remove_compat_route'
+  const compatRequiresCallerMigration = compatRecommendationContext.recommendation === 'migrate_callers'
 
   return NextResponse.json({
     ok: true,
@@ -186,6 +188,8 @@ export async function GET(request: NextRequest) {
       sunsetReady: compatSunsetReady,
       recommendation: compatRecommendationContext.recommendation,
       recommendationReason: compatRecommendationContext.reason,
+      eligibleForRouteRemoval: compatEligibleForRouteRemoval,
+      requiresCallerMigration: compatRequiresCallerMigration,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,

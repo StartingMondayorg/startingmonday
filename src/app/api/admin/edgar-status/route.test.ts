@@ -143,6 +143,8 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       sunsetReady: true,
       recommendation: 'monitor',
       recommendationReason: 'within_budget',
+      eligibleForRouteRemoval: false,
+      requiresCallerMigration: false,
       inactivityWindowElapsed: false,
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
@@ -181,6 +183,8 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       sunsetReady: true,
       recommendation: 'remove_compat_route',
       recommendationReason: 'no_hits_and_inactive',
+      eligibleForRouteRemoval: true,
+      requiresCallerMigration: false,
       inactivityWindowElapsed: true,
     })
   })
@@ -215,6 +219,8 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       sunsetReady: false,
       recommendation: 'migrate_callers',
       recommendationReason: 'over_budget',
+      eligibleForRouteRemoval: false,
+      requiresCallerMigration: true,
       inactivityWindowElapsed: false,
     })
   })
