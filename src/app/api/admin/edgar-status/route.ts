@@ -237,6 +237,7 @@ export async function GET(request: NextRequest) {
     : Math.max(0, freshnessRunAgeHours - maxDelayHours)
 
   const compatHitCount = readCompatibilityHitCount(compatHitState?.last_details?.hitCount)
+  const compatRouteStillActive = compatHitCount > 0
   const compatLifetimeHitCount = readCompatibilityHitCount(
     compatHitState?.last_details?.lifetimeHitCount ?? compatHitCount,
   )
@@ -290,7 +291,7 @@ export async function GET(request: NextRequest) {
       freshnessAudit: freshnessState?.last_status ?? 'unknown',
       heartbeatWatchdog: watchdogState?.last_status ?? 'unknown',
       providerQualityAudit: providerQualityState?.last_status ?? 'unknown',
-      compatRouteUsage: compatHitCount > 0 ? 'active' : 'none',
+      compatRouteUsage: compatRouteStillActive ? 'active' : 'none',
     },
     schedule: {
       expectedIntervalHours,
@@ -303,6 +304,7 @@ export async function GET(request: NextRequest) {
       route: '/api/cron/apollo-quality-audit',
       replacementRoute: '/api/cron/provider-quality-audit',
       hitCount: compatHitCount,
+      routeStillActive: compatRouteStillActive,
       lifetimeHitCount: compatLifetimeHitCount,
       hitWindowHours: compatHitWindowHours,
       hitWindowSource: compatHitWindow.hitWindowSource,
