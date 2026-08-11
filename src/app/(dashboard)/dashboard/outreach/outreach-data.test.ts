@@ -60,7 +60,7 @@ describe('outreach-data CSV loading', () => {
   })
 
   it('falls back to a suffix-compatible legacy file when provider-prefixed file is missing', async () => {
-    const legacyDirent = { name: 'apollo_priority_send_ready.csv', isFile: () => true }
+    const legacyDirent = { name: 'legacy_priority_send_ready.csv', isFile: () => true }
     readdirMock.mockResolvedValue([legacyDirent] as any)
     readFileMock
       .mockRejectedValueOnce(fileError('ENOENT'))
@@ -73,7 +73,7 @@ describe('outreach-data CSV loading', () => {
 
     expect(readdirMock).toHaveBeenCalledTimes(1)
     expect(readFileMock).toHaveBeenCalledTimes(2)
-    expect(readFileMock.mock.calls[1][0]).toMatch(/docs[\\/]outreach[\\/]apollo_priority_send_ready\.csv$/)
+    expect(readFileMock.mock.calls[1][0]).toMatch(/docs[\\/]outreach[\\/]legacy_priority_send_ready\.csv$/)
   })
 
   it('prioritizes curated rows before the base list', () => {
