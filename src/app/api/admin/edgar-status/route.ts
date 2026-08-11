@@ -65,6 +65,29 @@ function resolveInactivityWindowElapsed(input: {
   return input.lastSeenAgeHours === null || input.lastSeenAgeHours >= input.hitWindowHours
 }
 
+function resolveCompatibilityBlockingReasons(input: {
+  recommendation: SunsetRecommendation
+  hitCount: number
+  inactivityWindowElapsed: boolean
+}): SunsetBlockingReason[] {
+  if (input.recommendation === 'remove_compat_route') {
+    return []
+  }
+
+  if (input.recommendation === 'migrate_callers') {
+    return ['compat_hits_over_budget']
+  }
+
+  const reasons: SunsetBlockingReason[] = []
+  if (input.hitCount > 0) {
+    reasons.push('compat_route_still_active')
+  }
+  if (!input.inactivityWindowElapsed) {
+    reasons.push('inactivity_window_not_elapsed')
+  }
+  return reasons
+}
+
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
   if (!authCheck.ok) return authCheck.response
