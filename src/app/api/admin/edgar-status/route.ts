@@ -26,8 +26,14 @@ type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'ov
 type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
 
 function readCompatibilityHitCount(value: unknown): number {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return 0
-  return Math.max(0, Math.floor(value))
+  const parsed = typeof value === 'number'
+    ? value
+    : typeof value === 'string'
+      ? Number(value)
+      : Number.NaN
+
+  if (!Number.isFinite(parsed)) return 0
+  return Math.max(0, Math.floor(parsed))
 }
 
 function resolveSunsetRecommendation(input: {
