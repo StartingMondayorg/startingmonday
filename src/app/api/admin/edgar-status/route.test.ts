@@ -138,9 +138,11 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       hitWindowHours: 24,
       windowStartAt: '2026-08-10T08:00:00.000Z',
       hitBudget: 2,
+      overBudgetBy: 0,
       budgetRemaining: 0,
       sunsetReady: true,
       recommendation: 'monitor',
+      inactivityWindowElapsed: false,
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
     expect(payload.alertState.compatRouteUsage.alert_key).toBe('apollo-quality-audit-compat-hit')
@@ -173,9 +175,44 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 0,
       hitBudget: 0,
+      overBudgetBy: 0,
       budgetRemaining: 0,
       sunsetReady: true,
       recommendation: 'remove_compat_route',
+      inactivityWindowElapsed: true,
+    })
+  })
+
+  it('recommends caller migration when compatibility hit budget is exceeded', async () => {
+    process.env.APOLLO_COMPAT_HIT_BUDGET = '2'
+    state.compatHitState.mockResolvedValue({
+      data: {
+        alert_key: 'apollo-quality-audit-compat-hit',
+        last_status: 'deprecated-route-hit',
+        last_details: {
+          hitCount: 5,
+          lifetimeHitCount: 14,
+          hitCountWindowHours: 24,
+          windowStartAt: '2026-08-10T00:00:00.000Z',
+          lastSeenAt: '2026-08-10T23:30:00.000Z',
+        },
+      },
+    })
+
+    const request = new NextRequest('https://startingmonday.app/api/admin/edgar-status')
+    const response = await GET(request)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.status.compatRouteUsage).toBe('active')
+    expect(payload.compatibilitySunset).toMatchObject({
+      hitCount: 5,
+      hitBudget: 2,
+      overBudgetBy: 3,
+      budgetRemaining: 0,
+      sunsetReady: false,
+      recommendation: 'migrate_callers',
+      inactivityWindowElapsed: false,
     })
   })
 })

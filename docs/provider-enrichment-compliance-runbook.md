@@ -41,6 +41,9 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 	- `remove_compat_route` means no recent compatibility traffic in the active window.
 	- `monitor` means within budget but still active.
 	- `migrate_callers` means over budget and caller migration should be prioritized.
+7. Use decision context fields to justify action in weekly updates:
+	- `compatibilitySunset.overBudgetBy` quantifies current overage beyond budget.
+	- `compatibilitySunset.inactivityWindowElapsed` confirms whether the inactivity threshold has elapsed.
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
