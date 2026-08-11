@@ -134,6 +134,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       route: '/api/cron/apollo-quality-audit',
       replacementRoute: '/api/cron/provider-quality-audit',
       hitCount: 2,
+      routeStillActive: true,
       lifetimeHitCount: 9,
       hitWindowHours: 24,
       hitWindowSource: 'alert_state',
@@ -148,6 +149,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: true,
       requiresCallerMigration: false,
       blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
+      blockingReasonCount: 2,
       inactivityWindowElapsed: false,
       inactivityWindowPhase: 'in_progress',
       inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
@@ -184,6 +186,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.status.compatRouteUsage).toBe('none')
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 0,
+      routeStillActive: false,
       hitBudget: 0,
       hitWindowSource: 'alert_state',
       overBudgetBy: 0,
@@ -195,6 +198,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: false,
       requiresCallerMigration: false,
       blockingReasons: [],
+      blockingReasonCount: 0,
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
       inactivityWindowProgressPct: 100,
@@ -227,6 +231,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.status.compatRouteUsage).toBe('active')
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 5,
+      routeStillActive: true,
       hitBudget: 2,
       hitWindowSource: 'alert_state',
       overBudgetBy: 3,
@@ -238,6 +243,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: false,
       requiresCallerMigration: true,
       blockingReasons: ['compat_hits_over_budget'],
+      blockingReasonCount: 1,
       inactivityWindowElapsed: false,
       inactivityWindowEndsAt: '2026-08-11T23:30:00.000Z',
     })
@@ -267,6 +273,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.status.compatRouteUsage).toBe('active')
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 2,
+      routeStillActive: true,
       lifetimeHitCount: 11,
       hitWindowHours: 24,
       hitWindowSource: 'alert_state',
@@ -303,12 +310,14 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(response.status).toBe(200)
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 1,
+      routeStillActive: true,
       hitWindowHours: 24,
       hitWindowSource: 'default_fallback',
       inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
       recommendation: 'monitor',
       recommendationReason: 'within_budget',
       requiresObservationOnly: true,
+      blockingReasonCount: 2,
     })
   })
 
@@ -335,6 +344,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(response.status).toBe(200)
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 1,
+      routeStillActive: true,
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: null,
       inactivityWindowProgressPct: null,
@@ -344,6 +354,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendationReason: 'within_budget',
       requiresObservationOnly: true,
       blockingReasons: ['compat_route_still_active'],
+      blockingReasonCount: 1,
     })
   })
 })
