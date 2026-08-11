@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { PHProvider } from '@/components/PosthogProvider'
 
 export const metadata: Metadata = {
   title: 'Free Executive Resume Optimizer - Starting Monday',
@@ -29,6 +28,7 @@ export const metadata: Metadata = {
   },
 }
 
+// Kept for the route metadata above; PostHog is provided by the root layout.
 export default function OptimizeLayout({ children }: { children: React.ReactNode }) {
-  return <PHProvider>{children}</PHProvider>
+  return <>{children}</>
 }

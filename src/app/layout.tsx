@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { headers } from 'next/headers'
 import { AssistWidget } from "@/components/AssistWidget";
+import { PHProvider } from "@/components/PosthogProvider";
 import { getBrandContextFromHosts } from '@/lib/brand'
 import { buildBrandMetadata } from './brand-metadata'
 import "./globals.css";
@@ -50,8 +51,18 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
-        {children}
-        <AssistWidget />
+        {/*
+          Mounted at the root so every route can capture anonymous visitors.
+          user_events cannot: its user_id is NOT NULL and the channel-funnel
+          route no-ops when logged out, so PostHog is the only channel that
+          sees someone before they sign up. While this lived on a handful of
+          layouts, TrackLink's posthog?.capture() silently did nothing on the
+          homepage and every persona page (SMK-458).
+        */}
+        <PHProvider>
+          {children}
+          <AssistWidget />
+        </PHProvider>
       </body>
     </html>
   );
