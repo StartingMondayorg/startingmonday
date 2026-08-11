@@ -36,6 +36,7 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 2. Verify enrichment retention cleanup archived count is non-error.
 3. Spot check recommendation detail cards for source/confidence visibility.
 4. Confirm admin EDGAR/intelligence status endpoint returns expected summary.
+5. Confirm `/api/admin/edgar-status` `compatibilitySunset` reports `hitCount` at or below `hitBudget` before removing `/api/cron/apollo-quality-audit` compatibility route.
 5. Review `monitoring_alert_state` key `apollo-quality-audit-compat-hit` and confirm compatibility-route hit count is trending to zero before removal.
 
 ## Incident response

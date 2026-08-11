@@ -18,6 +18,12 @@ function hoursSince(value: string | null): number | null {
 }
 
 const PROVIDER_QUALITY_ALERT_KEY = 'provider-quality-audit'
+const COMPAT_HIT_ALERT_KEY = 'apollo-quality-audit-compat-hit'
+
+function readCompatibilityHitCount(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 0
+  return Math.max(0, Math.floor(value))
+}
 
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
@@ -28,6 +34,7 @@ export async function GET(request: NextRequest) {
 
   const expectedIntervalHours = readNumberEnv('EDGAR_FRESHNESS_EXPECTED_INTERVAL_HOURS', 6)
   const maxDelayHours = readNumberEnv('EDGAR_HEARTBEAT_MAX_DELAY_HOURS', 8)
+  const compatHitBudget = readNumberEnv('APOLLO_COMPAT_HIT_BUDGET', 0)
 
   const sb = auth.supabase as any
 
@@ -37,6 +44,7 @@ export async function GET(request: NextRequest) {
     { data: signalRun },
     { data: watchdogState },
     { data: providerQualityState },
+    { data: compatHitState },
   ] = await Promise.all([
     sb
       .from('sec_freshness_audit_state')
@@ -67,6 +75,11 @@ export async function GET(request: NextRequest) {
       .select('alert_key, last_status, last_checked_at, last_stale_alert_at, last_recovery_alert_at, last_details, updated_at')
       .eq('alert_key', PROVIDER_QUALITY_ALERT_KEY)
       .maybeSingle(),
+    sb
+      .from('monitoring_alert_state')
+      .select('alert_key, last_status, last_checked_at, last_stale_alert_at, last_recovery_alert_at, last_details, updated_at')
+      .eq('alert_key', COMPAT_HIT_ALERT_KEY)
+      .maybeSingle(),
   ])
 
   const freshnessRunAt = freshnessRun?.finished_at ?? freshnessRun?.started_at ?? null
@@ -79,12 +92,18 @@ export async function GET(request: NextRequest) {
     ? null
     : Math.max(0, freshnessRunAgeHours - maxDelayHours)
 
+  const compatHitCount = readCompatibilityHitCount(compatHitState?.last_details?.hitCount)
+  const compatLastSeenAt = compatHitState?.last_details?.lastSeenAt ?? null
+  const compatLastSeenAgeHours = hoursSince(compatLastSeenAt)
+  const compatSunsetReady = compatHitCount <= compatHitBudget
+
   return NextResponse.json({
     ok: true,
     status: {
       freshnessAudit: freshnessState?.last_status ?? 'unknown',
       heartbeatWatchdog: watchdogState?.last_status ?? 'unknown',
       providerQualityAudit: providerQualityState?.last_status ?? 'unknown',
+      compatRouteUsage: compatHitCount > 0 ? 'active' : 'none',
     },
     schedule: {
       expectedIntervalHours,
@@ -92,6 +111,15 @@ export async function GET(request: NextRequest) {
       nextExpectedCheckAt,
       freshnessRunAgeHours,
       overdueByHours,
+    },
+    compatibilitySunset: {
+      route: '/api/cron/apollo-quality-audit',
+      replacementRoute: '/api/cron/provider-quality-audit',
+      hitCount: compatHitCount,
+      hitBudget: compatHitBudget,
+      sunsetReady: compatSunsetReady,
+      lastSeenAt: compatLastSeenAt,
+      lastSeenAgeHours: compatLastSeenAgeHours,
     },
     lastRuns: {
       freshnessAudit: freshnessRun ?? null,
@@ -101,6 +129,7 @@ export async function GET(request: NextRequest) {
       freshnessAudit: freshnessState ?? null,
       heartbeatWatchdog: watchdogState ?? null,
       providerQualityAudit: providerQualityState ?? null,
+      compatRouteUsage: compatHitState ?? null,
     },
   })
 }
