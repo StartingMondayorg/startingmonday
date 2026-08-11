@@ -65,13 +65,6 @@ function resolveInactivityWindowElapsed(input: {
   return input.lastSeenAgeHours === null || input.lastSeenAgeHours >= input.hitWindowHours
 }
 
-function resolveInactivityWindowElapsed(input: {
-  hitWindowHours: number
-  lastSeenAgeHours: number | null
-}): boolean {
-  return input.lastSeenAgeHours === null || input.lastSeenAgeHours >= input.hitWindowHours
-}
-
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
   if (!authCheck.ok) return authCheck.response
