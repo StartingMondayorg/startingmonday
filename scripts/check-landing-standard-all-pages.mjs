@@ -109,7 +109,7 @@ function resolveImportPath(fromFilePath, specifier) {
 function collectImportedContent(entryFilePath, sourceContent, depth = 0, seen = new Set()) {
   if (depth > 3) return []
 
-  const importRegex = /import\s+[^'"\n]+\s+from\s+['"]((?:\.|@\/)[^'"]+)['"]/g
+  const importRegex = /(?:import\s+[^'"\n]+|export\s+\{[^}]+\})\s+from\s+['"]((?:\.|@\/)[^'"]+)['"]/g
   const chunks = []
 
   for (const match of sourceContent.matchAll(importRegex)) {
