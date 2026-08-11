@@ -11,6 +11,7 @@
 - Verified: schema hardening migration added at `supabase/migrations/166_rem01_remove_apollo_relationship_sources.sql` to remove Apollo from allowed source enums/defaults in relationship-layer tables.
 - Verified: discover, onboarding enrichment progress, and enrichment-retention cron runtime paths now normalize to supported sources (`anthropic`, `fallback`) with Apollo-specific branching removed.
 - Verified: EDGAR admin status route now reads provider quality alert state only (`provider-quality-audit`); legacy Apollo response alias/fallback removed.
+- Verified: worker quality audit scheduling/runtime contract now targets provider-only surfaces (`worker/jobs/provider-quality-audit-job.js` -> `/api/cron/provider-quality-audit`) and Apollo-named worker module/path references were removed from scheduler and ops taxonomy docs.
 - Verified: application source text search for `apollo`/`Apollo` under `src/` now returns no matches.
 
 ## Scope
