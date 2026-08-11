@@ -167,7 +167,8 @@ export async function readOutreachCsv(fileName: string): Promise<CsvSummary> {
   const packagedResult = await readCsvFromDirectory(packagedDir, fileName)
   if (packagedResult) return packagedResult
 
-  throw new Error(`Outreach CSV not found: ${fileName}`)
+  console.warn(`[outreach] CSV unavailable: ${fileName}`)
+  return { rowCount: 0, rows: [] }
 }
 
 export function prioritizeCuratedRows(base: CsvSummary, curated: CsvSummary, limit = 100): CsvSummary {

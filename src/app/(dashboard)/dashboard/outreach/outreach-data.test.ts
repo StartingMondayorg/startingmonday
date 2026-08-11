@@ -1,13 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { readFile } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import { buildStandardizedDraft, dedupeOutreachRows, followUpSentByEmail, mapTriggerInputs, prioritizeCuratedRows, readOutreachCsv, type CsvRow, type ClientRow } from './outreach-data'
 
 vi.mock('node:fs/promises', async (importOriginal) => ({
   ...await importOriginal<typeof import('node:fs/promises')>(),
   readFile: vi.fn(),
+  readdir: vi.fn(),
 }))
 
 const readFileMock = vi.mocked(readFile)
+const readdirMock = vi.mocked(readdir)
 
 function fileError(code: string): NodeJS.ErrnoException {
   return Object.assign(new Error(code), { code })
@@ -16,6 +18,7 @@ function fileError(code: string): NodeJS.ErrnoException {
 describe('outreach-data CSV loading', () => {
   beforeEach(() => {
     readFileMock.mockReset()
+    readdirMock.mockReset()
   })
 
   it('loads and parses CSV data from the source tree', async () => {
@@ -30,6 +33,7 @@ describe('outreach-data CSV loading', () => {
   })
 
   it('loads packaged CSV data when the source tree is unavailable', async () => {
+    readdirMock.mockResolvedValue([] as any)
     readFileMock
       .mockRejectedValueOnce(fileError('ENOENT'))
       .mockResolvedValueOnce('full_name,email\nGrace Hopper,grace@example.com\n')
@@ -47,11 +51,29 @@ describe('outreach-data CSV loading', () => {
     expect(readFileMock).toHaveBeenCalledOnce()
   })
 
-  it('rethrows when neither source nor packaged CSV data exists', async () => {
+  it('returns an empty source when neither source nor packaged CSV data exists', async () => {
+    readdirMock.mockResolvedValue([] as any)
     readFileMock.mockRejectedValue(fileError('ENOENT'))
 
-    await expect(readOutreachCsv('prospects.csv')).rejects.toMatchObject({ code: 'ENOENT' })
+    await expect(readOutreachCsv('prospects.csv')).resolves.toEqual({ rowCount: 0, rows: [] })
     expect(readFileMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('falls back to a suffix-compatible legacy file when provider-prefixed file is missing', async () => {
+    const legacyDirent = { name: 'apollo_priority_send_ready.csv', isFile: () => true }
+    readdirMock.mockResolvedValue([legacyDirent] as any)
+    readFileMock
+      .mockRejectedValueOnce(fileError('ENOENT'))
+      .mockResolvedValueOnce('full_name,email\nLegacy Person,legacy@example.com\n')
+
+    await expect(readOutreachCsv('provider_priority_send_ready.csv')).resolves.toEqual({
+      rowCount: 1,
+      rows: [{ full_name: 'Legacy Person', email: 'legacy@example.com' }],
+    })
+
+    expect(readdirMock).toHaveBeenCalledTimes(1)
+    expect(readFileMock).toHaveBeenCalledTimes(2)
+    expect(readFileMock.mock.calls[1][0]).toMatch(/docs[\\/]outreach[\\/]apollo_priority_send_ready\.csv$/)
   })
 
   it('prioritizes curated rows before the base list', () => {
