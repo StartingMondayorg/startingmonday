@@ -276,6 +276,7 @@ export async function GET(request: NextRequest) {
     lastSeenAgeHours: compatLastSeenAgeHours,
   })
   const compatEligibleForRouteRemoval = compatRecommendationContext.recommendation === 'remove_compat_route'
+  const compatRequiresObservationOnly = compatRecommendationContext.recommendation === 'monitor'
   const compatRequiresCallerMigration = compatRecommendationContext.recommendation === 'migrate_callers'
   const compatBlockingReasons = resolveCompatibilityBlockingReasons({
     recommendation: compatRecommendationContext.recommendation,
@@ -314,6 +315,7 @@ export async function GET(request: NextRequest) {
       recommendation: compatRecommendationContext.recommendation,
       recommendationReason: compatRecommendationContext.reason,
       eligibleForRouteRemoval: compatEligibleForRouteRemoval,
+      requiresObservationOnly: compatRequiresObservationOnly,
       requiresCallerMigration: compatRequiresCallerMigration,
       blockingReasons: compatBlockingReasons,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
