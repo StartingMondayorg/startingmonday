@@ -148,12 +148,14 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresCallerMigration: false,
       blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
       inactivityWindowElapsed: false,
+      inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
     expect(payload.alertState.compatRouteUsage.alert_key).toBe('apollo-quality-audit-compat-hit')
     expect(typeof payload.compatibilitySunset.lastSeenAgeHours === 'number' || payload.compatibilitySunset.lastSeenAgeHours === null).toBe(true)
     expect(typeof payload.compatibilitySunset.windowAgeHours === 'number' || payload.compatibilitySunset.windowAgeHours === null).toBe(true)
     expect(typeof payload.compatibilitySunset.inactivityWindowRemainingHours === 'number' || payload.compatibilitySunset.inactivityWindowRemainingHours === null).toBe(true)
+    expect(typeof payload.compatibilitySunset.inactivityWindowProgressPct === 'number' || payload.compatibilitySunset.inactivityWindowProgressPct === null).toBe(true)
   })
 
   it('marks compatibility route as removable after inactivity window and zero hits', async () => {
@@ -192,6 +194,8 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: [],
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
+      inactivityWindowProgressPct: 100,
+      inactivityWindowEndsAt: '2026-08-02T00:00:00.000Z',
     })
   })
 
@@ -230,6 +234,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresCallerMigration: true,
       blockingReasons: ['compat_hits_over_budget'],
       inactivityWindowElapsed: false,
+      inactivityWindowEndsAt: '2026-08-11T23:30:00.000Z',
     })
   })
 
@@ -294,6 +299,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       hitCount: 1,
       hitWindowHours: 24,
       hitWindowSource: 'default_fallback',
+      inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
       recommendation: 'monitor',
       recommendationReason: 'within_budget',
     })
@@ -324,6 +330,8 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       hitCount: 1,
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: null,
+      inactivityWindowProgressPct: null,
+      inactivityWindowEndsAt: null,
       recommendation: 'monitor',
       recommendationReason: 'within_budget',
       blockingReasons: ['compat_route_still_active'],
