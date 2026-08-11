@@ -385,7 +385,7 @@
       "area": "testability",
       "points": 4,
       "path": "src/app/api/cron/apollo-quality-audit/route.ts",
-      "issue": "No obvious colocated or mirrored test file found"
+      "issue": "Compatibility route is covered by src/app/api/cron/apollo-quality-audit/route.test.ts"
     },
     {
       "severity": "medium",
