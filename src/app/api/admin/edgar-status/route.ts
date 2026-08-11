@@ -21,6 +21,9 @@ const PROVIDER_QUALITY_ALERT_KEY = 'provider-quality-audit'
 const COMPAT_HIT_ALERT_KEY = 'apollo-quality-audit-compat-hit'
 const DEFAULT_COMPAT_HIT_WINDOW_HOURS = 24
 
+type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers'
+type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
+
 function readCompatibilityHitCount(value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0
   return Math.max(0, Math.floor(value))
@@ -31,19 +34,28 @@ function resolveSunsetRecommendation(input: {
   hitBudget: number
   hitWindowHours: number
   lastSeenAgeHours: number | null
-}): 'remove_compat_route' | 'monitor' | 'migrate_callers' {
+}): { recommendation: SunsetRecommendation, reason: SunsetRecommendationReason } {
   const inactivityWindowElapsed = input.lastSeenAgeHours === null
     || input.lastSeenAgeHours >= input.hitWindowHours
 
   if (input.hitCount === 0 && inactivityWindowElapsed) {
-    return 'remove_compat_route'
+    return {
+      recommendation: 'remove_compat_route',
+      reason: 'no_hits_and_inactive',
+    }
   }
 
   if (input.hitCount <= input.hitBudget) {
-    return 'monitor'
+    return {
+      recommendation: 'monitor',
+      reason: 'within_budget',
+    }
   }
 
-  return 'migrate_callers'
+  return {
+    recommendation: 'migrate_callers',
+    reason: 'over_budget',
+  }
 }
 
 function resolveInactivityWindowElapsed(input: {
@@ -138,7 +150,7 @@ export async function GET(request: NextRequest) {
     hitWindowHours: compatHitWindowHours,
     lastSeenAgeHours: compatLastSeenAgeHours,
   })
-  const compatRecommendation = resolveSunsetRecommendation({
+  const compatRecommendationContext = resolveSunsetRecommendation({
     hitCount: compatHitCount,
     hitBudget: compatHitBudget,
     hitWindowHours: compatHitWindowHours,
@@ -172,7 +184,8 @@ export async function GET(request: NextRequest) {
       overBudgetBy: compatOverBudgetBy,
       budgetRemaining: compatBudgetRemaining,
       sunsetReady: compatSunsetReady,
-      recommendation: compatRecommendation,
+      recommendation: compatRecommendationContext.recommendation,
+      recommendationReason: compatRecommendationContext.reason,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,
