@@ -49,6 +49,7 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 	- `compatibilitySunset.blockingReasons` enumerates explicit blockers to route removal (`compat_hits_over_budget`, `compat_route_still_active`, `inactivity_window_not_elapsed`).
 	- `compatibilitySunset.hitWindowSource` clarifies whether `hitWindowHours` came from live alert telemetry (`alert_state`) or local default fallback (`default_fallback`).
 	- `compatibilitySunset.inactivityWindowRemainingHours` quantifies remaining time before inactivity criteria is met (or `null` when `lastSeenAt` is unavailable).
+	- `compatibilitySunset.inactivityWindowEndsAt` provides the exact projected inactivity-window completion timestamp when `lastSeenAt` is available.
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
