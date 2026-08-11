@@ -82,7 +82,7 @@ export default async function OutreachHubPage() {
   const recruiterToolkit = getRecruiterToolkit(roleFamily, roleTitle)
   const recruiterMessagePacks = getRecruiterMessagePacks(roleFamily, roleTitle)
 
-  const [executiveRaw, executiveStrict100, executiveStrict50, executiveStrict31, executiveStrict21, executiveBatch1, executiveBatch1Strict, executiveBatch2Strict, executiveBatch3Personalized, executiveBatch4Personalized, apolloSendReady, apolloFollowups, executiveTargetSlate, firstTouch, searchFirmRaw, coachRaw, outplacementRaw, searchFirmCurated, coachCurated, day1CoachTargetList, rawContactStatuses, rawLiveSentLogs] = await Promise.all([
+  const [executiveRaw, executiveStrict100, executiveStrict50, executiveStrict31, executiveStrict21, executiveBatch1, executiveBatch1Strict, executiveBatch2Strict, executiveBatch3Personalized, executiveBatch4Personalized, providerSendReady, providerFollowups, executiveTargetSlate, firstTouch, searchFirmRaw, coachRaw, outplacementRaw, searchFirmCurated, coachCurated, day1CoachTargetList, rawContactStatuses, rawLiveSentLogs] = await Promise.all([
     readOutreachCsv('executives_prospecting_midmarket_strong_medium.csv'),
     readOutreachCsv('prospecting_combined_strict_100.csv'),
     readOutreachCsv('prospecting_combined_strict_50_personalized.csv'),
@@ -93,8 +93,8 @@ export default async function OutreachHubPage() {
     readOutreachCsv('prospecting_batch_002_strict_roles.csv'),
     readOutreachCsv('prospecting_batch_003_personalized_real_10.csv'),
     readOutreachCsv('prospecting_batch_004_personalized_real_19.csv'),
-    readOutreachCsv('apollo_priority_send_ready.csv'),
-    readOutreachCsv('apollo_priority_followups.csv'),
+    readOutreachCsv('provider_priority_send_ready.csv'),
+    readOutreachCsv('provider_priority_followups.csv'),
     readOutreachCsv('us-senior-executive-target-slate.csv'),
     readOutreachCsv('send_ready_emails_first_10.csv'),
     readOutreachCsv('search_firms_prospecting_100.csv'),
@@ -127,8 +127,8 @@ export default async function OutreachHubPage() {
     executiveBatch2Strict,
     executiveBatch3Personalized,
     executiveBatch4Personalized,
-    apolloSendReady,
-    apolloFollowups,
+    providerSendReady,
+    providerFollowups,
   ])
   const executives = mergeFirstTouch(executiveUniverse, firstTouch)
   const executiveFitLookup = buildExecutiveFitLookup(executiveTargetSlate.rows)

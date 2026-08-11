@@ -58,8 +58,8 @@ export default async function MauricioProviderReadAccessPage() {
 	if (!staff) notFound()
 
 	const [sendReady, followups, targetSlate] = await Promise.all([
-		readProviderFile('apollo_priority_send_ready.csv', 'Legacy provider send-ready priority file'),
-		readProviderFile('apollo_priority_followups.csv', 'Legacy provider follow-ups priority file'),
+		readProviderFile('provider_priority_send_ready.csv', 'Provider send-ready priority file'),
+		readProviderFile('provider_priority_followups.csv', 'Provider follow-ups priority file'),
 		readProviderFile('us-senior-executive-target-slate.csv', 'US senior executive target slate'),
 	])
 

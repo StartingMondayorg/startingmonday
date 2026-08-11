@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { buildOutreachTemplateDraft } from '@/lib/outreach/template-draft'
 
@@ -28,6 +28,35 @@ export type ClientRow = {
   fitTier: 'strong' | 'medium'
   personaFocus: string
   campaignTag?: 'coach_day1_60'
+}
+
+async function findSuffixCompatibleFile(baseDir: string, requestedName: string): Promise<string | null> {
+  const firstUnderscore = requestedName.indexOf('_')
+  if (firstUnderscore < 0) return null
+
+  const suffix = requestedName.slice(firstUnderscore + 1)
+  try {
+    const entries = await readdir(baseDir, { withFileTypes: true })
+    const match = entries.find((entry) => entry.isFile() && entry.name.endsWith(suffix))
+    return match?.name ?? null
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
+    throw error
+  }
+}
+
+async function readCsvFromDirectory(baseDir: string, fileName: string): Promise<CsvSummary | null> {
+  const directPath = path.join(baseDir, fileName)
+  try {
+    return parseCsv(await readFile(directPath, 'utf8'))
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+  }
+
+  const fallbackName = await findSuffixCompatibleFile(baseDir, fileName)
+  if (!fallbackName) return null
+
+  return parseCsv(await readFile(path.join(baseDir, fallbackName), 'utf8'))
 }
 
 function normalizeKeyToken(value: string | undefined): string {
@@ -129,18 +158,16 @@ type ExecutiveRoleArchetype =
   | 'c_suite_other'
 
 export async function readOutreachCsv(fileName: string): Promise<CsvSummary> {
-  const sourcePath = path.join(process.cwd(), 'docs', 'outreach', fileName)
-  const packagedPath = path.join(process.cwd(), '.next', 'server', 'outreach-data', fileName)
+  const sourceDir = path.join(process.cwd(), 'docs', 'outreach')
+  const packagedDir = path.join(process.cwd(), '.next', 'server', 'outreach-data')
 
-  try {
-    return parseCsv(await readFile(sourcePath, 'utf8'))
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-      throw error
-    }
-  }
+  const sourceResult = await readCsvFromDirectory(sourceDir, fileName)
+  if (sourceResult) return sourceResult
 
-  return parseCsv(await readFile(packagedPath, 'utf8'))
+  const packagedResult = await readCsvFromDirectory(packagedDir, fileName)
+  if (packagedResult) return packagedResult
+
+  throw new Error(`Outreach CSV not found: ${fileName}`)
 }
 
 export function prioritizeCuratedRows(base: CsvSummary, curated: CsvSummary, limit = 100): CsvSummary {

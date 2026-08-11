@@ -1,4 +1,4 @@
-# Apollo Enrichment Compliance Runbook
+# Provider Enrichment Compliance Runbook
 
 Updated: 2026-06-07
 Owner: Growth + Product + Engineering
