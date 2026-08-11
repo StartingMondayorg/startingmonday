@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { NextRequest, NextResponse } from 'next/server'
 
 const state = vi.hoisted(() => ({
@@ -19,21 +19,24 @@ vi.mock('@/lib/supabase/admin', () => ({
 import { GET, runtime } from './route'
 
 describe('apollo-quality-audit compatibility route', () => {
-  state.createAdminClient.mockImplementation(() => ({
-    from: (table: string) => {
-      if (table === 'monitoring_alert_state') {
-        return {
-          select: () => ({
-            eq: () => ({
-              maybeSingle: state.maybeSingle,
+  beforeEach(() => {
+    vi.clearAllMocks()
+    state.createAdminClient.mockImplementation(() => ({
+      from: (table: string) => {
+        if (table === 'monitoring_alert_state') {
+          return {
+            select: () => ({
+              eq: () => ({
+                maybeSingle: state.maybeSingle,
+              }),
             }),
-          }),
-          upsert: state.upsert,
+            upsert: state.upsert,
+          }
         }
-      }
-      throw new Error(`Unexpected table: ${table}`)
-    },
-  }))
+        throw new Error(`Unexpected table: ${table}`)
+      },
+    }))
+  })
 
   it('exports a static nodejs runtime', () => {
     expect(runtime).toBe('nodejs')
@@ -66,5 +69,23 @@ describe('apollo-quality-audit compatibility route', () => {
     expect(upsertPayload.last_status).toBe('deprecated-route-hit')
     expect(upsertPayload.last_details.hitCount).toBe(3)
     expect(upsertPayload.last_details.replacementRoute).toBe('/api/cron/provider-quality-audit')
+  })
+
+  it('continues to delegate when observability persistence fails', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    state.maybeSingle.mockRejectedValueOnce(new Error('db unavailable'))
+    const response = NextResponse.json({ ok: true, delegated: true })
+    state.providerGet.mockResolvedValueOnce(response)
+
+    const request = new NextRequest('https://startingmonday.app/api/cron/apollo-quality-audit')
+    const result = await GET(request)
+    const body = await result.json()
+
+    expect(result.status).toBe(200)
+    expect(body).toEqual({ ok: true, delegated: true })
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      '[cron.apollo-quality-audit] compat hit observability write failed',
+      expect.any(Error),
+    )
   })
 })

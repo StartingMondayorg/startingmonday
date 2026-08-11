@@ -36,12 +36,14 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 2. Verify enrichment retention cleanup archived count is non-error.
 3. Spot check recommendation detail cards for source/confidence visibility.
 4. Confirm admin EDGAR/intelligence status endpoint returns expected summary.
+5. Review `monitoring_alert_state` key `apollo-quality-audit-compat-hit` and confirm compatibility-route hit count is trending to zero before removal.
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
 2. Run /api/cron/provider-quality-audit?health=1 and inspect stale reasons.
 3. If retention cleanup fails, run /api/cron/enrichment-contact-retention?dry_run=1 and inspect dueCount.
-4. Escalate in Slack with route payloads and timestamps.
+4. If compatibility route traffic spikes, investigate callers still using /api/cron/apollo-quality-audit and schedule migration to /api/cron/provider-quality-audit.
+5. Escalate in Slack with route payloads and timestamps.
 
 ## Required environment variables
 - APOLLO_ENRICHMENT_ENABLED

@@ -17,6 +17,7 @@
 - Verified: runtime/provider migration is complete; remaining `apollo` literal usage in `src/` is intentionally scoped to the compatibility alias route (`/api/cron/apollo-quality-audit`) and its test coverage.
 - Verified: provider cron route now has explicit auth-gate regression coverage (`src/app/api/cron/provider-quality-audit/route.test.ts`) asserting static `runtime='nodejs'` and fail-closed `403` behavior for invalid cron auth.
 - Verified: compatibility alias responses now include explicit migration headers (`x-startingmonday-compat-route`, `x-startingmonday-replacement-route`) so legacy usage can be audited and sunset safely.
+- Verified: compatibility alias now records non-blocking hit telemetry in `monitoring_alert_state` (`alert_key='apollo-quality-audit-compat-hit'`) with cumulative `hitCount`, last path/query, user-agent, and replacement route metadata for deprecation-readiness tracking.
 
 ## Scope
 
