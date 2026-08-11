@@ -26,6 +26,26 @@ function readCompatibilityHitCount(value: unknown): number {
   return Math.max(0, Math.floor(value))
 }
 
+function resolveSunsetRecommendation(input: {
+  hitCount: number
+  hitBudget: number
+  hitWindowHours: number
+  lastSeenAgeHours: number | null
+}): 'remove_compat_route' | 'monitor' | 'migrate_callers' {
+  const inactivityWindowElapsed = input.lastSeenAgeHours === null
+    || input.lastSeenAgeHours >= input.hitWindowHours
+
+  if (input.hitCount === 0 && inactivityWindowElapsed) {
+    return 'remove_compat_route'
+  }
+
+  if (input.hitCount <= input.hitBudget) {
+    return 'monitor'
+  }
+
+  return 'migrate_callers'
+}
+
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
   if (!authCheck.ok) return authCheck.response
@@ -105,6 +125,13 @@ export async function GET(request: NextRequest) {
   const compatLastSeenAt = compatHitState?.last_details?.lastSeenAt ?? null
   const compatLastSeenAgeHours = hoursSince(compatLastSeenAt)
   const compatSunsetReady = compatHitCount <= compatHitBudget
+  const compatBudgetRemaining = Math.max(0, compatHitBudget - compatHitCount)
+  const compatRecommendation = resolveSunsetRecommendation({
+    hitCount: compatHitCount,
+    hitBudget: compatHitBudget,
+    hitWindowHours: compatHitWindowHours,
+    lastSeenAgeHours: compatLastSeenAgeHours,
+  })
 
   return NextResponse.json({
     ok: true,
@@ -130,7 +157,9 @@ export async function GET(request: NextRequest) {
       windowStartAt: compatWindowStartAt,
       windowAgeHours: compatWindowAgeHours,
       hitBudget: compatHitBudget,
+      budgetRemaining: compatBudgetRemaining,
       sunsetReady: compatSunsetReady,
+      recommendation: compatRecommendation,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,
     },
