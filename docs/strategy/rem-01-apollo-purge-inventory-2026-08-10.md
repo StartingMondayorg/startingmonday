@@ -14,7 +14,8 @@
 - Verified: worker quality audit scheduling/runtime contract now targets provider-only surfaces (`worker/jobs/provider-quality-audit-job.js` -> `/api/cron/provider-quality-audit`) and Apollo-named worker module/path references were removed from scheduler and ops taxonomy docs.
 - Verified: outreach provider priority datasets now use provider-prefixed identifiers in active pages, with suffix-based compatibility lookup in `readOutreachCsv` so legacy file names remain readable without Apollo literals in runtime code.
 - Verified: compliance runbook path/title migrated to provider naming (`docs/provider-enrichment-compliance-runbook.md`) and downstream documentation references were updated.
-- Verified: application source text search for `apollo`/`Apollo` under `src/` now returns no matches.
+- Verified: runtime/provider migration is complete; remaining `apollo` literal usage in `src/` is intentionally scoped to the compatibility alias route (`/api/cron/apollo-quality-audit`) and its test coverage.
+- Verified: compatibility alias responses now include explicit migration headers (`x-startingmonday-compat-route`, `x-startingmonday-replacement-route`) so legacy usage can be audited and sunset safely.
 
 ## Scope
 
