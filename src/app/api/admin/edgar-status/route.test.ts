@@ -155,6 +155,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(typeof payload.compatibilitySunset.lastSeenAgeHours === 'number' || payload.compatibilitySunset.lastSeenAgeHours === null).toBe(true)
     expect(typeof payload.compatibilitySunset.windowAgeHours === 'number' || payload.compatibilitySunset.windowAgeHours === null).toBe(true)
     expect(typeof payload.compatibilitySunset.inactivityWindowRemainingHours === 'number' || payload.compatibilitySunset.inactivityWindowRemainingHours === null).toBe(true)
+    expect(typeof payload.compatibilitySunset.inactivityWindowProgressPct === 'number' || payload.compatibilitySunset.inactivityWindowProgressPct === null).toBe(true)
   })
 
   it('marks compatibility route as removable after inactivity window and zero hits', async () => {
@@ -193,6 +194,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: [],
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
+      inactivityWindowProgressPct: 100,
       inactivityWindowEndsAt: '2026-08-02T00:00:00.000Z',
     })
   })
@@ -328,6 +330,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       hitCount: 1,
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: null,
+      inactivityWindowProgressPct: null,
       inactivityWindowEndsAt: null,
       recommendation: 'monitor',
       recommendationReason: 'within_budget',
