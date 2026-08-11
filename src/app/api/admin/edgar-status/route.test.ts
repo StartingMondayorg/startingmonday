@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { NextRequest, NextResponse } from 'next/server'
 
 const state = vi.hoisted(() => ({
@@ -65,6 +65,9 @@ function buildSupabase() {
 
 describe('src/app/api/admin/edgar-status/route.ts', () => {
   beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-08-11T00:00:00.000Z'))
+
     vi.resetAllMocks()
     state.requireAuth.mockResolvedValue({ ok: true })
     state.freshnessState.mockResolvedValue({ data: { last_status: 'fresh' } })
@@ -105,6 +108,10 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     })
 
     delete process.env.APOLLO_COMPAT_HIT_BUDGET
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('returns requireAuth response when auth fails', async () => {
@@ -151,6 +158,13 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
       blockingReasonCount: 2,
       blockingSummary: 'multiple',
+      blockingPrimaryReason: 'compat_route_still_active',
+      blockingFlags: {
+        any: true,
+        overBudget: false,
+        activeTraffic: true,
+        inactivityWindowPending: true,
+      },
       inactivityWindowElapsed: false,
       inactivityWindowPhase: 'in_progress',
       inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
@@ -201,6 +215,13 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: [],
       blockingReasonCount: 0,
       blockingSummary: 'none',
+      blockingPrimaryReason: 'none',
+      blockingFlags: {
+        any: false,
+        overBudget: false,
+        activeTraffic: false,
+        inactivityWindowPending: false,
+      },
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
       inactivityWindowProgressPct: 100,
@@ -247,6 +268,13 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: ['compat_hits_over_budget'],
       blockingReasonCount: 1,
       blockingSummary: 'over_budget_only',
+      blockingPrimaryReason: 'compat_hits_over_budget',
+      blockingFlags: {
+        any: true,
+        overBudget: true,
+        activeTraffic: false,
+        inactivityWindowPending: false,
+      },
       inactivityWindowElapsed: false,
       inactivityWindowEndsAt: '2026-08-11T23:30:00.000Z',
     })
@@ -322,6 +350,13 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: true,
       blockingReasonCount: 2,
       blockingSummary: 'multiple',
+      blockingPrimaryReason: 'compat_route_still_active',
+      blockingFlags: {
+        any: true,
+        overBudget: false,
+        activeTraffic: true,
+        inactivityWindowPending: true,
+      },
     })
   })
 
@@ -360,6 +395,13 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasons: ['compat_route_still_active'],
       blockingReasonCount: 1,
       blockingSummary: 'active_traffic',
+      blockingPrimaryReason: 'compat_route_still_active',
+      blockingFlags: {
+        any: true,
+        overBudget: false,
+        activeTraffic: true,
+        inactivityWindowPending: false,
+      },
     })
   })
 })
