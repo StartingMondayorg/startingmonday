@@ -136,6 +136,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       hitCount: 2,
       lifetimeHitCount: 9,
       hitWindowHours: 24,
+      hitWindowSource: 'alert_state',
       windowStartAt: '2026-08-10T08:00:00.000Z',
       hitBudget: 2,
       overBudgetBy: 0,
@@ -179,6 +180,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 0,
       hitBudget: 0,
+      hitWindowSource: 'alert_state',
       overBudgetBy: 0,
       budgetRemaining: 0,
       sunsetReady: true,
@@ -216,6 +218,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
     expect(payload.compatibilitySunset).toMatchObject({
       hitCount: 5,
       hitBudget: 2,
+      hitWindowSource: 'alert_state',
       overBudgetBy: 3,
       budgetRemaining: 0,
       sunsetReady: false,
@@ -254,6 +257,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       hitCount: 2,
       lifetimeHitCount: 11,
       hitWindowHours: 24,
+      hitWindowSource: 'alert_state',
       hitBudget: 2,
       overBudgetBy: 0,
       budgetRemaining: 0,
@@ -261,6 +265,35 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendationReason: 'within_budget',
       eligibleForRouteRemoval: false,
       requiresCallerMigration: false,
+    })
+  })
+
+  it('falls back to default hit window when alert-state window is missing', async () => {
+    process.env.APOLLO_COMPAT_HIT_BUDGET = '2'
+    state.compatHitState.mockResolvedValue({
+      data: {
+        alert_key: 'apollo-quality-audit-compat-hit',
+        last_status: 'deprecated-route-hit',
+        last_details: {
+          hitCount: 1,
+          lifetimeHitCount: 7,
+          windowStartAt: '2026-08-10T08:00:00.000Z',
+          lastSeenAt: '2026-08-10T19:00:00.000Z',
+        },
+      },
+    })
+
+    const request = new NextRequest('https://startingmonday.app/api/admin/edgar-status')
+    const response = await GET(request)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.compatibilitySunset).toMatchObject({
+      hitCount: 1,
+      hitWindowHours: 24,
+      hitWindowSource: 'default_fallback',
+      recommendation: 'monitor',
+      recommendationReason: 'within_budget',
     })
   })
 })

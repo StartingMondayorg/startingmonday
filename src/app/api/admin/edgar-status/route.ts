@@ -24,6 +24,7 @@ const DEFAULT_COMPAT_HIT_WINDOW_HOURS = 24
 type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers'
 type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
 type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
+type CompatibilityWindowSource = 'alert_state' | 'default_fallback'
 
 function readCompatibilityHitCount(value: unknown): number {
   const parsed = typeof value === 'number'
@@ -34,6 +35,24 @@ function readCompatibilityHitCount(value: unknown): number {
 
   if (!Number.isFinite(parsed)) return 0
   return Math.max(0, Math.floor(parsed))
+}
+
+function resolveCompatibilityHitWindow(input: unknown): {
+  hitWindowHours: number
+  hitWindowSource: CompatibilityWindowSource
+} {
+  const parsed = readCompatibilityHitCount(input)
+  if (parsed > 0) {
+    return {
+      hitWindowHours: parsed,
+      hitWindowSource: 'alert_state',
+    }
+  }
+
+  return {
+    hitWindowHours: DEFAULT_COMPAT_HIT_WINDOW_HOURS,
+    hitWindowSource: 'default_fallback',
+  }
 }
 
 function resolveSunsetRecommendation(input: {
@@ -166,9 +185,8 @@ export async function GET(request: NextRequest) {
   const compatLifetimeHitCount = readCompatibilityHitCount(
     compatHitState?.last_details?.lifetimeHitCount ?? compatHitCount,
   )
-  const compatHitWindowHours = readCompatibilityHitCount(
-    compatHitState?.last_details?.hitCountWindowHours ?? DEFAULT_COMPAT_HIT_WINDOW_HOURS,
-  )
+  const compatHitWindow = resolveCompatibilityHitWindow(compatHitState?.last_details?.hitCountWindowHours)
+  const compatHitWindowHours = compatHitWindow.hitWindowHours
   const compatWindowStartAt = compatHitState?.last_details?.windowStartAt ?? null
   const compatWindowAgeHours = hoursSince(compatWindowStartAt)
   const compatLastSeenAt = compatHitState?.last_details?.lastSeenAt ?? null
@@ -215,6 +233,7 @@ export async function GET(request: NextRequest) {
       hitCount: compatHitCount,
       lifetimeHitCount: compatLifetimeHitCount,
       hitWindowHours: compatHitWindowHours,
+      hitWindowSource: compatHitWindow.hitWindowSource,
       windowStartAt: compatWindowStartAt,
       windowAgeHours: compatWindowAgeHours,
       hitBudget: compatHitBudget,
