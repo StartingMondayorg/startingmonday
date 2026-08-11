@@ -7,9 +7,14 @@ const COMPAT_ROUTE = 'apollo-quality-audit'
 const REPLACEMENT_ROUTE = 'provider-quality-audit'
 const SUNSET_HTTP_DATE = 'Wed, 30 Sep 2026 00:00:00 GMT'
 const COMPAT_HIT_ALERT_KEY = 'apollo-quality-audit-compat-hit'
+const COMPAT_HIT_WINDOW_HOURS = 24
 
 type MonitoringAlertDetails = {
   hitCount?: unknown
+  windowHitCount?: unknown
+  lifetimeHitCount?: unknown
+  windowStartAt?: unknown
+  hitCountWindowHours?: unknown
 }
 
 type MonitoringAlertRow = {
@@ -36,6 +41,16 @@ type MonitoringAdminClient = {
   from: (table: 'monitoring_alert_state') => MonitoringAlertTableClient
 }
 
+function readNumber(value: unknown, fallback: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback
+  return Math.max(0, Math.floor(value))
+}
+
+function readWindowStartAt(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  return Number.isNaN(Date.parse(value)) ? null : value
+}
+
 async function recordCompatibilityHit(request: NextRequest): Promise<void> {
   try {
     const admin = createAdminClient() as unknown as MonitoringAdminClient
@@ -49,11 +64,26 @@ async function recordCompatibilityHit(request: NextRequest): Promise<void> {
       throw new Error(`compat hit read failed: ${readError.message}`)
     }
 
-    const priorHitCountRaw = priorState?.last_details?.hitCount
-    const priorHitCount = typeof priorHitCountRaw === 'number' && Number.isFinite(priorHitCountRaw)
-      ? priorHitCountRaw
-      : 0
     const nowIso = new Date().toISOString()
+    const priorDetails = priorState?.last_details
+    const priorWindowHitCount = readNumber(
+      priorDetails?.windowHitCount,
+      readNumber(priorDetails?.hitCount, 0),
+    )
+    const priorLifetimeHitCount = readNumber(
+      priorDetails?.lifetimeHitCount,
+      readNumber(priorDetails?.hitCount, 0),
+    )
+    const priorWindowStartAt = readWindowStartAt(priorDetails?.windowStartAt)
+    const windowAgeHours = priorWindowStartAt === null
+      ? null
+      : (Date.now() - Date.parse(priorWindowStartAt)) / 3_600_000
+    const windowExpired = priorWindowStartAt === null
+      || windowAgeHours === null
+      || windowAgeHours >= COMPAT_HIT_WINDOW_HOURS
+    const windowStartAt = windowExpired ? nowIso : priorWindowStartAt
+    const windowHitCount = windowExpired ? 1 : priorWindowHitCount + 1
+    const lifetimeHitCount = priorLifetimeHitCount + 1
 
     const { error: writeError } = await admin
       .from('monitoring_alert_state')
@@ -62,7 +92,12 @@ async function recordCompatibilityHit(request: NextRequest): Promise<void> {
         last_status: 'deprecated-route-hit',
         last_checked_at: nowIso,
         last_details: {
-          hitCount: priorHitCount + 1,
+          // `hitCount` remains the compatibility budget source and now represents the rolling window count.
+          hitCount: windowHitCount,
+          windowHitCount,
+          lifetimeHitCount,
+          hitCountWindowHours: COMPAT_HIT_WINDOW_HOURS,
+          windowStartAt,
           replacementRoute: `/api/cron/${REPLACEMENT_ROUTE}`,
           lastPath: request.nextUrl.pathname,
           lastQuery: request.nextUrl.search,

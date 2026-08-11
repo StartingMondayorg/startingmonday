@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { NextRequest, NextResponse } from 'next/server'
 
 const state = vi.hoisted(() => ({
@@ -19,7 +19,7 @@ vi.mock('@/lib/supabase/admin', () => ({
 import { GET, runtime } from './route'
 
 async function flushTelemetry(): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 0))
+  await Promise.resolve()
 }
 
 describe('apollo-quality-audit compatibility route', () => {
@@ -42,12 +42,27 @@ describe('apollo-quality-audit compatibility route', () => {
     }))
   })
 
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it('exports a static nodejs runtime', () => {
     expect(runtime).toBe('nodejs')
   })
 
   it('delegates GET handling to provider-quality-audit route', async () => {
-    state.maybeSingle.mockResolvedValueOnce({ data: { last_details: { hitCount: 2 } }, error: null })
+    const activeWindowStart = new Date(Date.now() - 3_600_000).toISOString()
+    state.maybeSingle.mockResolvedValueOnce({
+      data: {
+        last_details: {
+          hitCount: 2,
+          windowHitCount: 2,
+          lifetimeHitCount: 2,
+          windowStartAt: activeWindowStart,
+        },
+      },
+      error: null,
+    })
     state.upsert.mockResolvedValueOnce({ data: null, error: null })
     const response = NextResponse.json({ ok: true, delegated: true })
     state.providerGet.mockResolvedValueOnce(response)
@@ -74,7 +89,42 @@ describe('apollo-quality-audit compatibility route', () => {
     expect(upsertPayload.alert_key).toBe('apollo-quality-audit-compat-hit')
     expect(upsertPayload.last_status).toBe('deprecated-route-hit')
     expect(upsertPayload.last_details.hitCount).toBe(3)
+    expect(upsertPayload.last_details.windowHitCount).toBe(3)
+    expect(upsertPayload.last_details.lifetimeHitCount).toBe(3)
+    expect(upsertPayload.last_details.hitCountWindowHours).toBe(24)
+    expect(upsertPayload.last_details.windowStartAt).toBe(activeWindowStart)
     expect(upsertPayload.last_details.replacementRoute).toBe('/api/cron/provider-quality-audit')
+  })
+
+  it('resets rolling window while preserving lifetime count when window expires', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-08-11T12:00:00.000Z'))
+
+    state.maybeSingle.mockResolvedValueOnce({
+      data: {
+        last_details: {
+          hitCount: 9,
+          windowHitCount: 9,
+          lifetimeHitCount: 9,
+          windowStartAt: '2026-08-10T10:00:00.000Z',
+        },
+      },
+      error: null,
+    })
+    state.upsert.mockResolvedValueOnce({ data: null, error: null })
+    state.providerGet.mockResolvedValueOnce(NextResponse.json({ ok: true }))
+
+    const request = new NextRequest('https://startingmonday.app/api/cron/apollo-quality-audit')
+    const result = await GET(request)
+
+    expect(result.status).toBe(200)
+    await flushTelemetry()
+
+    const upsertPayload = state.upsert.mock.calls[0]?.[0]
+    expect(upsertPayload.last_details.hitCount).toBe(1)
+    expect(upsertPayload.last_details.windowHitCount).toBe(1)
+    expect(upsertPayload.last_details.lifetimeHitCount).toBe(10)
+    expect(upsertPayload.last_details.windowStartAt).toBe('2026-08-11T12:00:00.000Z')
   })
 
   it('continues to delegate when observability persistence fails', async () => {

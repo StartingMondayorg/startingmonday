@@ -90,6 +90,9 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
         last_status: 'deprecated-route-hit',
         last_details: {
           hitCount: 2,
+          lifetimeHitCount: 9,
+          hitCountWindowHours: 24,
+          windowStartAt: '2026-08-10T08:00:00.000Z',
           lastSeenAt: '2026-08-10T19:00:00.000Z',
         },
       },
@@ -131,11 +134,15 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       route: '/api/cron/apollo-quality-audit',
       replacementRoute: '/api/cron/provider-quality-audit',
       hitCount: 2,
+      lifetimeHitCount: 9,
+      hitWindowHours: 24,
+      windowStartAt: '2026-08-10T08:00:00.000Z',
       hitBudget: 2,
       sunsetReady: true,
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
     expect(payload.alertState.compatRouteUsage.alert_key).toBe('apollo-quality-audit-compat-hit')
     expect(typeof payload.compatibilitySunset.lastSeenAgeHours === 'number' || payload.compatibilitySunset.lastSeenAgeHours === null).toBe(true)
+    expect(typeof payload.compatibilitySunset.windowAgeHours === 'number' || payload.compatibilitySunset.windowAgeHours === null).toBe(true)
   })
 })

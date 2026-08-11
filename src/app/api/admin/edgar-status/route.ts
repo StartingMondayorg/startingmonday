@@ -19,6 +19,7 @@ function hoursSince(value: string | null): number | null {
 
 const PROVIDER_QUALITY_ALERT_KEY = 'provider-quality-audit'
 const COMPAT_HIT_ALERT_KEY = 'apollo-quality-audit-compat-hit'
+const DEFAULT_COMPAT_HIT_WINDOW_HOURS = 24
 
 function readCompatibilityHitCount(value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0
@@ -93,6 +94,14 @@ export async function GET(request: NextRequest) {
     : Math.max(0, freshnessRunAgeHours - maxDelayHours)
 
   const compatHitCount = readCompatibilityHitCount(compatHitState?.last_details?.hitCount)
+  const compatLifetimeHitCount = readCompatibilityHitCount(
+    compatHitState?.last_details?.lifetimeHitCount ?? compatHitCount,
+  )
+  const compatHitWindowHours = readCompatibilityHitCount(
+    compatHitState?.last_details?.hitCountWindowHours ?? DEFAULT_COMPAT_HIT_WINDOW_HOURS,
+  )
+  const compatWindowStartAt = compatHitState?.last_details?.windowStartAt ?? null
+  const compatWindowAgeHours = hoursSince(compatWindowStartAt)
   const compatLastSeenAt = compatHitState?.last_details?.lastSeenAt ?? null
   const compatLastSeenAgeHours = hoursSince(compatLastSeenAt)
   const compatSunsetReady = compatHitCount <= compatHitBudget
@@ -116,6 +125,10 @@ export async function GET(request: NextRequest) {
       route: '/api/cron/apollo-quality-audit',
       replacementRoute: '/api/cron/provider-quality-audit',
       hitCount: compatHitCount,
+      lifetimeHitCount: compatLifetimeHitCount,
+      hitWindowHours: compatHitWindowHours,
+      windowStartAt: compatWindowStartAt,
+      windowAgeHours: compatWindowAgeHours,
       hitBudget: compatHitBudget,
       sunsetReady: compatSunsetReady,
       lastSeenAt: compatLastSeenAt,
