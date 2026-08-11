@@ -37,7 +37,10 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 3. Spot check recommendation detail cards for source/confidence visibility.
 4. Confirm admin EDGAR/intelligence status endpoint returns expected summary.
 5. Confirm `/api/admin/edgar-status` `compatibilitySunset` reports `hitCount` at or below `hitBudget` before removing `/api/cron/apollo-quality-audit` compatibility route.
-5. Review `monitoring_alert_state` key `apollo-quality-audit-compat-hit` and confirm compatibility-route hit count is trending to zero before removal.
+6. Use `compatibilitySunset.recommendation` as the default action signal:
+	- `remove_compat_route` means no recent compatibility traffic in the active window.
+	- `monitor` means within budget but still active.
+	- `migrate_callers` means over budget and caller migration should be prioritized.
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
