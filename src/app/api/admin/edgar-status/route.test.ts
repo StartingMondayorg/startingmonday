@@ -149,6 +149,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: true,
       requiresCallerMigration: false,
       blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
+      blockingReasonCount: 2,
       inactivityWindowElapsed: false,
       inactivityWindowPhase: 'in_progress',
       inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
@@ -197,6 +198,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: false,
       requiresCallerMigration: false,
       blockingReasons: [],
+      blockingReasonCount: 0,
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
       inactivityWindowProgressPct: 100,
@@ -241,6 +243,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresObservationOnly: false,
       requiresCallerMigration: true,
       blockingReasons: ['compat_hits_over_budget'],
+      blockingReasonCount: 1,
       inactivityWindowElapsed: false,
       inactivityWindowEndsAt: '2026-08-11T23:30:00.000Z',
     })
@@ -314,6 +317,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendation: 'monitor',
       recommendationReason: 'within_budget',
       requiresObservationOnly: true,
+      blockingReasonCount: 2,
     })
   })
 
@@ -350,6 +354,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendationReason: 'within_budget',
       requiresObservationOnly: true,
       blockingReasons: ['compat_route_still_active'],
+      blockingReasonCount: 1,
     })
   })
 })
