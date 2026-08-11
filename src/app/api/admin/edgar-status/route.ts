@@ -284,6 +284,7 @@ export async function GET(request: NextRequest) {
     hitCount: compatHitCount,
     inactivityWindowElapsed: compatInactivityWindowElapsed,
   })
+  const compatBlockingReasonCount = compatBlockingReasons.length
 
   return NextResponse.json({
     ok: true,
@@ -320,6 +321,7 @@ export async function GET(request: NextRequest) {
       requiresObservationOnly: compatRequiresObservationOnly,
       requiresCallerMigration: compatRequiresCallerMigration,
       blockingReasons: compatBlockingReasons,
+      blockingReasonCount: compatBlockingReasonCount,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
       inactivityWindowProgressPct: compatInactivityWindowProgressPct,
