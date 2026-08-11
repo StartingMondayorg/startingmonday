@@ -145,6 +145,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendationReason: 'within_budget',
       eligibleForRouteRemoval: false,
       requiresCallerMigration: false,
+      blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
       inactivityWindowElapsed: false,
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
@@ -185,6 +186,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendationReason: 'no_hits_and_inactive',
       eligibleForRouteRemoval: true,
       requiresCallerMigration: false,
+      blockingReasons: [],
       inactivityWindowElapsed: true,
     })
   })
@@ -221,6 +223,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       recommendationReason: 'over_budget',
       eligibleForRouteRemoval: false,
       requiresCallerMigration: true,
+      blockingReasons: ['compat_hits_over_budget'],
       inactivityWindowElapsed: false,
     })
   })
