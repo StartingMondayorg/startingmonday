@@ -102,6 +102,22 @@ function resolveInactivityWindowRemainingHours(input: {
   return Math.max(0, input.hitWindowHours - input.lastSeenAgeHours)
 }
 
+function resolveInactivityWindowProgressPct(input: {
+  hitWindowHours: number
+  lastSeenAgeHours: number | null
+}): number | null {
+  if (input.lastSeenAgeHours === null) {
+    return null
+  }
+
+  if (input.hitWindowHours <= 0) {
+    return null
+  }
+
+  const progress = (input.lastSeenAgeHours / input.hitWindowHours) * 100
+  return Math.max(0, Math.min(100, progress))
+}
+
 function resolveInactivityWindowEndsAt(input: {
   hitWindowHours: number
   lastSeenAt: string | null
@@ -229,6 +245,10 @@ export async function GET(request: NextRequest) {
     hitWindowHours: compatHitWindowHours,
     lastSeenAgeHours: compatLastSeenAgeHours,
   })
+  const compatInactivityWindowProgressPct = resolveInactivityWindowProgressPct({
+    hitWindowHours: compatHitWindowHours,
+    lastSeenAgeHours: compatLastSeenAgeHours,
+  })
   const compatInactivityWindowEndsAt = resolveInactivityWindowEndsAt({
     hitWindowHours: compatHitWindowHours,
     lastSeenAt: compatLastSeenAt,
@@ -282,6 +302,7 @@ export async function GET(request: NextRequest) {
       blockingReasons: compatBlockingReasons,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
+      inactivityWindowProgressPct: compatInactivityWindowProgressPct,
       inactivityWindowEndsAt: compatInactivityWindowEndsAt,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,
