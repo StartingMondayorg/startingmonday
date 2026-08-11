@@ -142,6 +142,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       budgetRemaining: 0,
       sunsetReady: true,
       recommendation: 'monitor',
+      recommendationReason: 'within_budget',
       inactivityWindowElapsed: false,
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
@@ -179,6 +180,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       budgetRemaining: 0,
       sunsetReady: true,
       recommendation: 'remove_compat_route',
+      recommendationReason: 'no_hits_and_inactive',
       inactivityWindowElapsed: true,
     })
   })
@@ -212,6 +214,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       budgetRemaining: 0,
       sunsetReady: false,
       recommendation: 'migrate_callers',
+      recommendationReason: 'over_budget',
       inactivityWindowElapsed: false,
     })
   })

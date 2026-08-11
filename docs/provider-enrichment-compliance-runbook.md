@@ -44,6 +44,7 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 7. Use decision context fields to justify action in weekly updates:
 	- `compatibilitySunset.overBudgetBy` quantifies current overage beyond budget.
 	- `compatibilitySunset.inactivityWindowElapsed` confirms whether the inactivity threshold has elapsed.
+	- `compatibilitySunset.recommendationReason` provides a machine-readable reason code for automation (`no_hits_and_inactive`, `within_budget`, `over_budget`).
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
