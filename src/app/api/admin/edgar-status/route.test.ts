@@ -227,4 +227,40 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       inactivityWindowElapsed: false,
     })
   })
+
+  it('parses numeric compatibility counters even when alert-state details are strings', async () => {
+    process.env.APOLLO_COMPAT_HIT_BUDGET = '2'
+    state.compatHitState.mockResolvedValue({
+      data: {
+        alert_key: 'apollo-quality-audit-compat-hit',
+        last_status: 'deprecated-route-hit',
+        last_details: {
+          hitCount: '2',
+          lifetimeHitCount: '11',
+          hitCountWindowHours: '24',
+          windowStartAt: '2026-08-10T08:00:00.000Z',
+          lastSeenAt: '2026-08-10T19:00:00.000Z',
+        },
+      },
+    })
+
+    const request = new NextRequest('https://startingmonday.app/api/admin/edgar-status')
+    const response = await GET(request)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.status.compatRouteUsage).toBe('active')
+    expect(payload.compatibilitySunset).toMatchObject({
+      hitCount: 2,
+      lifetimeHitCount: 11,
+      hitWindowHours: 24,
+      hitBudget: 2,
+      overBudgetBy: 0,
+      budgetRemaining: 0,
+      recommendation: 'monitor',
+      recommendationReason: 'within_budget',
+      eligibleForRouteRemoval: false,
+      requiresCallerMigration: false,
+    })
+  })
 })
