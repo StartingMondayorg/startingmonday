@@ -24,6 +24,7 @@ const DEFAULT_COMPAT_HIT_WINDOW_HOURS = 24
 type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers'
 type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
 type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
+type SunsetBlockingSummary = 'none' | 'over_budget_only' | 'active_traffic' | 'inactivity_window_pending' | 'multiple'
 type CompatibilityWindowSource = 'alert_state' | 'default_fallback'
 type InactivityWindowPhase = 'elapsed' | 'in_progress' | 'unknown_last_seen'
 
@@ -169,6 +170,29 @@ function resolveCompatibilityBlockingReasons(input: {
   return reasons
 }
 
+function resolveCompatibilityBlockingSummary(input: {
+  blockingReasons: SunsetBlockingReason[]
+}): SunsetBlockingSummary {
+  if (input.blockingReasons.length === 0) {
+    return 'none'
+  }
+
+  if (input.blockingReasons.length > 1) {
+    return 'multiple'
+  }
+
+  const [reason] = input.blockingReasons
+  if (reason === 'compat_hits_over_budget') {
+    return 'over_budget_only'
+  }
+
+  if (reason === 'compat_route_still_active') {
+    return 'active_traffic'
+  }
+
+  return 'inactivity_window_pending'
+}
+
 export async function GET(request: NextRequest) {
   const authCheck = await requireAuth(request)
   if (!authCheck.ok) return authCheck.response
@@ -285,6 +309,9 @@ export async function GET(request: NextRequest) {
     inactivityWindowElapsed: compatInactivityWindowElapsed,
   })
   const compatBlockingReasonCount = compatBlockingReasons.length
+  const compatBlockingSummary = resolveCompatibilityBlockingSummary({
+    blockingReasons: compatBlockingReasons,
+  })
 
   return NextResponse.json({
     ok: true,
@@ -322,6 +349,7 @@ export async function GET(request: NextRequest) {
       requiresCallerMigration: compatRequiresCallerMigration,
       blockingReasons: compatBlockingReasons,
       blockingReasonCount: compatBlockingReasonCount,
+      blockingSummary: compatBlockingSummary,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
       inactivityWindowProgressPct: compatInactivityWindowProgressPct,
