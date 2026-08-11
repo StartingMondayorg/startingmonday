@@ -128,6 +128,7 @@ Notes:
 3. Lane 3 and Lane 4 are now closed as Verified Live after explicit route checks on production and latest deployment success recording.
 4. Live-route verification evidence captured for Lane 3 routes (`/for-vp`, `/for-cio`, `/for-ciso`, `/for-pe-partners`, `/search-firms`) and Lane 4 trust/governance surfaces (`/security`, `/for-coaches/trust-pack`, `/for-outplacement/trust-pack`).
 5. Weekly operating-cadence guardrail cycle rerun on 2026-06-18 passed for `growth:council:strict`, `growth:metrics:strict`, `growth:weekly-outputs:strict`, `release:sitewide-note:strict`, and `marketing:trust-proof:gate`.
+6. Current sitewide release note artifact: `docs/content/release-note-2026-08-10-sitewide-execution-epic.md`.
 
 ## Weekly Operating Rhythm For This Epic
 1. Monday: pick top two WBS items by impact and meeting urgency.
