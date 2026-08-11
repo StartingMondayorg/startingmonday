@@ -25,6 +25,7 @@ type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers
 type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
 type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
 type SunsetBlockingSummary = 'none' | 'over_budget_only' | 'active_traffic' | 'inactivity_window_pending' | 'multiple'
+type SunsetPrimaryBlockingReason = 'none' | 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
 type SunsetBlockingFlags = {
   any: boolean
   overBudget: boolean
@@ -199,6 +200,22 @@ function resolveCompatibilityBlockingSummary(input: {
   return 'inactivity_window_pending'
 }
 
+function resolveCompatibilityPrimaryBlockingReason(input: {
+  blockingReasons: SunsetBlockingReason[]
+}): SunsetPrimaryBlockingReason {
+  const set = new Set(input.blockingReasons)
+  if (set.has('compat_hits_over_budget')) {
+    return 'compat_hits_over_budget'
+  }
+  if (set.has('compat_route_still_active')) {
+    return 'compat_route_still_active'
+  }
+  if (set.has('inactivity_window_not_elapsed')) {
+    return 'inactivity_window_not_elapsed'
+  }
+  return 'none'
+}
+
 function resolveCompatibilityBlockingFlags(input: {
   blockingReasons: SunsetBlockingReason[]
 }): SunsetBlockingFlags {
@@ -330,6 +347,9 @@ export async function GET(request: NextRequest) {
   const compatBlockingSummary = resolveCompatibilityBlockingSummary({
     blockingReasons: compatBlockingReasons,
   })
+  const compatBlockingPrimaryReason = resolveCompatibilityPrimaryBlockingReason({
+    blockingReasons: compatBlockingReasons,
+  })
   const compatBlockingFlags = resolveCompatibilityBlockingFlags({
     blockingReasons: compatBlockingReasons,
   })
@@ -371,6 +391,7 @@ export async function GET(request: NextRequest) {
       blockingReasons: compatBlockingReasons,
       blockingReasonCount: compatBlockingReasonCount,
       blockingSummary: compatBlockingSummary,
+      blockingPrimaryReason: compatBlockingPrimaryReason,
       blockingFlags: compatBlockingFlags,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
