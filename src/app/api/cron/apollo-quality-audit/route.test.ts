@@ -22,9 +22,13 @@ describe('apollo-quality-audit compatibility route', () => {
 
     const request = new NextRequest('https://startingmonday.app/api/cron/apollo-quality-audit?health=1')
     const result = await GET(request)
+    const body = await result.json()
 
     expect(state.providerGet).toHaveBeenCalledTimes(1)
     expect(state.providerGet).toHaveBeenCalledWith(request)
-    expect(result).toBe(response)
+    expect(result.status).toBe(200)
+    expect(body).toEqual({ ok: true, delegated: true })
+    expect(result.headers.get('x-startingmonday-compat-route')).toBe('apollo-quality-audit')
+    expect(result.headers.get('x-startingmonday-replacement-route')).toBe('provider-quality-audit')
   })
 })
