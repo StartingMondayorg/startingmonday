@@ -25,6 +25,7 @@ type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers
 type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
 type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
 type CompatibilityWindowSource = 'alert_state' | 'default_fallback'
+type InactivityWindowPhase = 'elapsed' | 'in_progress' | 'unknown_last_seen'
 
 function readCompatibilityHitCount(value: unknown): number {
   const parsed = typeof value === 'number'
@@ -116,6 +117,17 @@ function resolveInactivityWindowProgressPct(input: {
 
   const progress = (input.lastSeenAgeHours / input.hitWindowHours) * 100
   return Math.max(0, Math.min(100, progress))
+}
+
+function resolveInactivityWindowPhase(input: {
+  inactivityWindowElapsed: boolean
+  lastSeenAgeHours: number | null
+}): InactivityWindowPhase {
+  if (input.lastSeenAgeHours === null) {
+    return 'unknown_last_seen'
+  }
+
+  return input.inactivityWindowElapsed ? 'elapsed' : 'in_progress'
 }
 
 function resolveInactivityWindowEndsAt(input: {
@@ -249,6 +261,10 @@ export async function GET(request: NextRequest) {
     hitWindowHours: compatHitWindowHours,
     lastSeenAgeHours: compatLastSeenAgeHours,
   })
+  const compatInactivityWindowPhase = resolveInactivityWindowPhase({
+    inactivityWindowElapsed: compatInactivityWindowElapsed,
+    lastSeenAgeHours: compatLastSeenAgeHours,
+  })
   const compatInactivityWindowEndsAt = resolveInactivityWindowEndsAt({
     hitWindowHours: compatHitWindowHours,
     lastSeenAt: compatLastSeenAt,
@@ -303,6 +319,7 @@ export async function GET(request: NextRequest) {
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
       inactivityWindowProgressPct: compatInactivityWindowProgressPct,
+      inactivityWindowPhase: compatInactivityWindowPhase,
       inactivityWindowEndsAt: compatInactivityWindowEndsAt,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,

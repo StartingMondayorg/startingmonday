@@ -148,6 +148,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       requiresCallerMigration: false,
       blockingReasons: ['compat_route_still_active', 'inactivity_window_not_elapsed'],
       inactivityWindowElapsed: false,
+      inactivityWindowPhase: 'in_progress',
       inactivityWindowEndsAt: '2026-08-11T19:00:00.000Z',
       lastSeenAt: '2026-08-10T19:00:00.000Z',
     })
@@ -195,6 +196,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
       inactivityWindowProgressPct: 100,
+      inactivityWindowPhase: 'elapsed',
       inactivityWindowEndsAt: '2026-08-02T00:00:00.000Z',
     })
   })
@@ -331,6 +333,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: null,
       inactivityWindowProgressPct: null,
+      inactivityWindowPhase: 'unknown_last_seen',
       inactivityWindowEndsAt: null,
       recommendation: 'monitor',
       recommendationReason: 'within_budget',

@@ -50,6 +50,7 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 	- `compatibilitySunset.hitWindowSource` clarifies whether `hitWindowHours` came from live alert telemetry (`alert_state`) or local default fallback (`default_fallback`).
 	- `compatibilitySunset.inactivityWindowRemainingHours` quantifies remaining time before inactivity criteria is met (or `null` when `lastSeenAt` is unavailable).
 	- `compatibilitySunset.inactivityWindowProgressPct` provides normalized inactivity-window progress from 0 to 100 when `lastSeenAt` is available.
+	- `compatibilitySunset.inactivityWindowPhase` provides a normalized state (`in_progress`, `elapsed`, `unknown_last_seen`) for simpler automation branching.
 	- `compatibilitySunset.inactivityWindowEndsAt` provides the exact projected inactivity-window completion timestamp when `lastSeenAt` is available.
 
 ## Incident response
