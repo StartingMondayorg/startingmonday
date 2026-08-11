@@ -306,7 +306,7 @@ export default function MarkReviewAppendixPage() {
             <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-4">Relevant links</p>
             <div className="space-y-3 text-[14px]">
               <TrackedCtaLink
-                href="/guide"
+                href="/learn-more"
                 eventName="mark_review_navigation_click"
                 eventProps={{ placement: 'appendix_links', target: 'guide' }}
                 className="block text-slate-800 hover:text-slate-900 underline underline-offset-2"

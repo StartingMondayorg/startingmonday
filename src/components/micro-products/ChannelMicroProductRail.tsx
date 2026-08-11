@@ -19,6 +19,7 @@ export function ChannelMicroProductRail({ channel, sourceRoute }: Props) {
           <TrackLink
             key={product.slug}
             href={product.ctaHref}
+            rel={product.ctaHref.startsWith('/settings/') ? 'nofollow' : undefined}
             event={EVENT_NAMES.microProductBoundaryViewed}
             logToUserEvents
             properties={{

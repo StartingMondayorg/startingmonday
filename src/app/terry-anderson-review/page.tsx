@@ -323,7 +323,7 @@ export default function TerryAndersonReviewPage() {
                 answerMode
                 showResultLinks={false}
                 showGuideCta
-                guideCtaHref="/guide"
+                guideCtaHref="/learn-more"
                 guideCtaLabel="Open guide"
               />
             </div>

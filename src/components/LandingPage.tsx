@@ -423,7 +423,7 @@ export function LandingPage({
                       Source: documented methods with source notes and confidence context.{' '}
                       <Link href="/method-and-evidence" className="underline underline-offset-2 hover:text-white">Method and evidence</Link>
                       {' · '}
-                      <Link href="/evidence-room" className="underline underline-offset-2 hover:text-white">Evidence room</Link>
+                      <Link href="/evidence-hub" className="underline underline-offset-2 hover:text-white">Evidence hub</Link>
                     </p>
                   </div>
                 )}

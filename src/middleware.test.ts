@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 import { proxy } from './proxy'
 
 // Mock Supabase
@@ -193,6 +194,26 @@ describe('src/proxy.ts middleware', () => {
 
       const response = await proxy(request)
       expect(response.status).not.toBe(307)
+      expect(response.headers.get('X-Request-Id')).toBeTruthy()
+    })
+  })
+
+  describe('protected route indexing', () => {
+    it.each(['/dashboard', '/settings/billing'])('redirects anonymous %s requests with noindex headers', async (pathname) => {
+      vi.mocked(createServerClient).mockReturnValue({
+        auth: {
+          getUser: vi.fn().mockResolvedValue({ data: { user: null } }),
+        },
+      } as never)
+
+      const request = new NextRequest(new URL(`https://startingmonday.app${pathname}`), {
+        headers: { 'user-agent': 'Googlebot' },
+      })
+
+      const response = await proxy(request)
+      expect(response.status).toBe(307)
+      expect(response.headers.get('location')).toBe('https://startingmonday.app/login')
+      expect(response.headers.get('X-Robots-Tag')).toBe('noindex, nofollow')
       expect(response.headers.get('X-Request-Id')).toBeTruthy()
     })
   })
