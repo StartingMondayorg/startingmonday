@@ -23,6 +23,7 @@ const DEFAULT_COMPAT_HIT_WINDOW_HOURS = 24
 
 type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers'
 type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
+type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
 
 function readCompatibilityHitCount(value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0
@@ -63,6 +64,29 @@ function resolveInactivityWindowElapsed(input: {
   lastSeenAgeHours: number | null
 }): boolean {
   return input.lastSeenAgeHours === null || input.lastSeenAgeHours >= input.hitWindowHours
+}
+
+function resolveCompatibilityBlockingReasons(input: {
+  recommendation: SunsetRecommendation
+  hitCount: number
+  inactivityWindowElapsed: boolean
+}): SunsetBlockingReason[] {
+  if (input.recommendation === 'remove_compat_route') {
+    return []
+  }
+
+  if (input.recommendation === 'migrate_callers') {
+    return ['compat_hits_over_budget']
+  }
+
+  const reasons: SunsetBlockingReason[] = []
+  if (input.hitCount > 0) {
+    reasons.push('compat_route_still_active')
+  }
+  if (!input.inactivityWindowElapsed) {
+    reasons.push('inactivity_window_not_elapsed')
+  }
+  return reasons
 }
 
 export async function GET(request: NextRequest) {
@@ -158,6 +182,11 @@ export async function GET(request: NextRequest) {
   })
   const compatEligibleForRouteRemoval = compatRecommendationContext.recommendation === 'remove_compat_route'
   const compatRequiresCallerMigration = compatRecommendationContext.recommendation === 'migrate_callers'
+  const compatBlockingReasons = resolveCompatibilityBlockingReasons({
+    recommendation: compatRecommendationContext.recommendation,
+    hitCount: compatHitCount,
+    inactivityWindowElapsed: compatInactivityWindowElapsed,
+  })
 
   return NextResponse.json({
     ok: true,
@@ -190,6 +219,7 @@ export async function GET(request: NextRequest) {
       recommendationReason: compatRecommendationContext.reason,
       eligibleForRouteRemoval: compatEligibleForRouteRemoval,
       requiresCallerMigration: compatRequiresCallerMigration,
+      blockingReasons: compatBlockingReasons,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       lastSeenAt: compatLastSeenAt,
       lastSeenAgeHours: compatLastSeenAgeHours,

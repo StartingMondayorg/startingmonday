@@ -46,6 +46,7 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 	- `compatibilitySunset.inactivityWindowElapsed` confirms whether the inactivity threshold has elapsed.
 	- `compatibilitySunset.recommendationReason` provides a machine-readable reason code for automation (`no_hits_and_inactive`, `within_budget`, `over_budget`).
 	- `compatibilitySunset.eligibleForRouteRemoval` and `compatibilitySunset.requiresCallerMigration` provide direct boolean guards for automation workflows.
+	- `compatibilitySunset.blockingReasons` enumerates explicit blockers to route removal (`compat_hits_over_budget`, `compat_route_still_active`, `inactivity_window_not_elapsed`).
 
 ## Incident response
 1. If enrichment quality degrades, disable APOLLO_ENRICHMENT_ENABLED.
