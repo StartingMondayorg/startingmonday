@@ -26,8 +26,10 @@ describe('monitoring alert state migration contract', () => {
   it('keeps the production workflow fixed to the reviewed migrations and main', () => {
     expect(deploymentWorkflow).toContain("github.ref == 'refs/heads/main'")
     expect(deploymentWorkflow).toContain('132_monitoring_alert_state.sql')
+    expect(deploymentWorkflow).toContain('134_contact_enrichment_governance.sql')
     expect(deploymentWorkflow).toContain('167_monitoring_alert_state_compat_rls.sql')
     expect(deploymentWorkflow).toContain('mytnhoxcgvnzxhgcumkf')
     expect(deploymentWorkflow).toContain("alert_key = 'apollo-quality-audit-compat-hit'")
+    expect(deploymentWorkflow).toContain('contact_governance_columns_available')
   })
 })
