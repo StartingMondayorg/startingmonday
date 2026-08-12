@@ -6,11 +6,11 @@ import {
   MATCHING_POLICY_VERSION,
   assertExactControlCount,
   assertReplayBuildSupport,
+  assertVersionPrefix,
 } from '../lib/backtest-matching-dimensions.js'
 
 const PATTERN_BACKTEST_LOCK_KEY = 2498317501n
 const COHORT_LIMIT = Number(process.env.BACKTEST_COHORT_LIMIT ?? 300)
-const CONTROLS_PER_COHORT = Number(process.env.BACKTEST_CONTROLS_PER_COHORT ?? 3)
 const COHORT_VERSION_PREFIX = process.env.BACKTEST_COHORT_VERSION ?? 'v2'
 
 function uniqueByName(patterns) {
@@ -59,6 +59,7 @@ function groupByCompany(events) {
 }
 
 export async function runPatternBacktestJob() {
+  assertVersionPrefix(COHORT_VERSION_PREFIX)
   const supabase = getSupabase()
 
   const { data: locked } = await supabase.rpc('try_advisory_lock', { p_key: PATTERN_BACKTEST_LOCK_KEY })
@@ -120,7 +121,7 @@ export async function runPatternBacktestJob() {
         .eq('cohort_id', cohort.id)
 
       const controlIds = (controlRows ?? []).map((row) => row.canonical_company_id)
-      assertExactControlCount(cohort.id, controlIds.length, CONTROLS_PER_COHORT)
+      assertExactControlCount(cohort.id, controlIds.length, buildRun.controls_per_cohort)
       controlCount += controlIds.length
 
       let controlTimelines = new Map()

@@ -48,6 +48,8 @@ Control policy `sector-size-v2`:
 9. Replay binds to the latest completed build ledger's exact cohort version.
 10. Replay fails if fewer than 300 supported cohorts exist or any included cohort has other than three controls.
 
+Control companies may be reused across different cohorts. Uniqueness remains mandatory within each cohort. This is a deliberate accepted repair: with 577 canonical companies, a globally non-overlapping 900-control pool is impossible. Replay metrics count each cohort-control comparison, while every reused company is still independently checked against that cohort's opening window.
+
 ## Dimension Reconciliation
 
 Broad sector and size are derived deterministically from existing canonical and linked user-company fields.
@@ -119,6 +121,19 @@ The expanded machine artifact uses schema version `intelligence-production-evide
 - Any build below 300 supported cohorts fails replay before metrics are written.
 - v1 remains immutable and available for comparison.
 - No calibrated product or historical E3 work proceeds from a failed v2 replay.
+
+## Deployment Sequence
+
+Migration 169 changes the cohort conflict target from `opening_id` to `(opening_id, cohort_version)`. Use one controlled maintenance sequence:
+
+1. Deploy the v2-capable worker and verify its exact SHA.
+2. Do not run cohort-builder or pattern-backtest before migration verification; both fail closed if v2 schema is absent.
+3. Dispatch the default-off `apply_backtest_matching_migration` workflow immediately after worker verification and outside the Sunday cohort/replay schedule.
+4. Require the hosted workflow to verify columns, constraints, RLS, and migration history.
+5. Run the cohort builder once, then replay once.
+6. Recapture production evidence.
+
+Do not apply migration 169 while an old cohort-builder process is running. The workflow is manual so the operator can enforce this ordering.
 
 ## Known Validation Limitation
 

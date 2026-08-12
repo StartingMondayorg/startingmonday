@@ -93,6 +93,8 @@ where table_schema = 'public'
   );
 
 -- After rollback: non_v1_cohorts = 0 and the column query returns zero rows.
+
+select to_regclass('public.backtest_cohort_build_runs') is null as build_run_table_removed;
 ```
 
 Forward-fix plan:

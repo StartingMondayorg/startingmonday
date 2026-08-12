@@ -3,6 +3,7 @@ import { logger } from './logger.js'
 import {
   MATCHING_DIMENSION_VERSION,
   MATCHING_POLICY_VERSION,
+  assertVersionPrefix,
   buildCanonicalDimensionUpdates,
   selectControlCandidates,
 } from './backtest-matching-dimensions.js'
@@ -140,18 +141,19 @@ export async function findControlCandidates(supabase, cohort, excludedIds = new 
     return { selected: [], exclusionReason: 'missing_broad_sector' }
   }
 
-  const { data: candidates, error } = await supabase
-    .from('canonical_companies')
-    .select('id, sector, broad_sector_slug, size_band')
-    .eq('broad_sector_slug', cohort.broad_sector_slug)
-    .neq('id', cohort.canonical_company_id)
-    .order('id', { ascending: true })
-    .limit(500)
-  if (error) throw new Error(`control candidate fetch failed: ${error.message}`)
+  const candidates = await fetchAllRows(
+    supabase,
+    'canonical_companies',
+    'id, sector, broad_sector_slug, size_band',
+    (query) => query
+      .eq('broad_sector_slug', cohort.broad_sector_slug)
+      .neq('id', cohort.canonical_company_id)
+      .order('id', { ascending: true }),
+  )
 
   const nearbyOpeningIds = await findCandidatesWithNearbyOpenings(
     supabase,
-    (candidates ?? []).map((candidate) => candidate.id),
+    candidates.map((candidate) => candidate.id),
     cohort.opened_on,
   )
   if (!nearbyOpeningIds) {
@@ -160,7 +162,7 @@ export async function findControlCandidates(supabase, cohort, excludedIds = new 
 
   const selected = selectControlCandidates(
     cohort,
-    (candidates ?? []).filter((candidate) => !excludedIds.has(candidate.id)),
+    candidates.filter((candidate) => !excludedIds.has(candidate.id)),
     nearbyOpeningIds,
     CONTROLS_PER_COHORT,
   )
@@ -273,8 +275,33 @@ export async function pickControlsForCohort(supabase, cohort) {
   return inserted
 }
 
+export async function replaceControlsForCohort(supabase, cohort, selected) {
+  const { error: deleteError } = await supabase
+    .from('backtest_controls')
+    .delete()
+    .eq('cohort_id', cohort.id)
+  if (deleteError) throw new Error(`control replacement delete failed: ${deleteError.message}`)
+
+  const controlRows = selected.map((candidate, index) => ({
+    cohort_id: cohort.id,
+    canonical_company_id: candidate.id,
+    control_rank: index + 1,
+    sector: candidate.sector ?? null,
+    broad_sector_slug: candidate.broad_sector_slug,
+    size_band: candidate.size_band,
+    match_tier: candidate.match_tier,
+    matching_policy_version: MATCHING_POLICY_VERSION,
+  }))
+  const { error: insertError } = await supabase
+    .from('backtest_controls')
+    .insert(controlRows)
+  if (insertError) throw new Error(`control replacement insert failed: ${insertError.message}`)
+  return controlRows.length
+}
+
 export async function buildBacktestCohortsAndControls(supabase) {
   const startedAt = Date.now()
+  assertVersionPrefix(COHORT_VERSION_PREFIX)
   const dimensions = await reconcileCanonicalMatchingDimensions(supabase)
   const cohortVersion = `${COHORT_VERSION_PREFIX}-${crypto.randomUUID()}`
 
@@ -343,33 +370,17 @@ export async function buildBacktestCohortsAndControls(supabase) {
       continue
     }
 
-    const { error: deleteError } = await supabase
-      .from('backtest_controls')
-      .delete()
-      .eq('cohort_id', cohort.id)
-    if (deleteError) throw new Error(`control replacement delete failed: ${deleteError.message}`)
-
-    const controlRows = selected.map((candidate, index) => ({
-      cohort_id: cohort.id,
-      canonical_company_id: candidate.id,
-      control_rank: index + 1,
-      sector: candidate.sector ?? null,
-      broad_sector_slug: candidate.broad_sector_slug,
-      size_band: candidate.size_band,
-      match_tier: candidate.match_tier,
-      matching_policy_version: MATCHING_POLICY_VERSION,
-    }))
-    const { error: controlWriteError } = await supabase
-      .from('backtest_controls')
-      .insert(controlRows)
-    if (controlWriteError) {
+    let writtenControls = 0
+    try {
+      writtenControls = await replaceControlsForCohort(supabase, cohort, selected)
+    } catch {
       await supabase.from('backtest_cohorts').delete().eq('id', cohort.id)
       exclusionReasons.control_write_failed = (exclusionReasons.control_write_failed ?? 0) + 1
       continue
     }
 
     cohortsBuilt += 1
-    controlsAdded += controlRows.length
+    controlsAdded += writtenControls
   }
 
   const excludedCohorts = scannedOpenings - cohortsBuilt

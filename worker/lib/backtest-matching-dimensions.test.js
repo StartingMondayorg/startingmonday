@@ -4,6 +4,7 @@ import {
   MATCHING_POLICY_VERSION,
   assertExactControlCount,
   assertReplayBuildSupport,
+  assertVersionPrefix,
   buildCanonicalDimensionUpdates,
   controlMatchTier,
   normalizeBroadSector,
@@ -141,9 +142,17 @@ describe('backtest matching dimensions', () => {
     expect(() => assertReplayBuildSupport({ included_cohort_count: 299 }, 300))
       .toThrow('cohort_support_below_target:299/300')
     expect(() => assertReplayBuildSupport({ included_cohort_count: 300 }, 300)).not.toThrow()
+    expect(() => assertReplayBuildSupport({ included_cohort_count: 301 }, 300))
+      .toThrow('cohort_support_below_target:301/300')
 
     expect(() => assertExactControlCount('cohort-a', 2, 3))
       .toThrow('incomplete_controls:cohort-a:2/3')
     expect(() => assertExactControlCount('cohort-a', 3, 3)).not.toThrow()
+  })
+
+  it('reserves v1 for immutable historical cohorts', () => {
+    expect(() => assertVersionPrefix('v1')).toThrow('must be a non-v1 prefix')
+    expect(() => assertVersionPrefix('')).toThrow('must be a non-v1 prefix')
+    expect(() => assertVersionPrefix('v2')).not.toThrow()
   })
 })

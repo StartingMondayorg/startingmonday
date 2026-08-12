@@ -86,6 +86,10 @@ create table if not exists public.backtest_cohort_build_runs (
     and excluded_cohort_count >= 0
     and controls_per_cohort > 0
     and included_cohort_count + excluded_cohort_count <= scanned_opening_count
+    and (
+      status <> 'complete'
+      or included_cohort_count + excluded_cohort_count = scanned_opening_count
+    )
   )
 );
 
@@ -113,7 +117,10 @@ alter table public.backtest_replay_runs
       and cohort_count + excluded_cohort_count <= candidate_cohort_count
       and (
         status <> 'complete'
-        or control_count = cohort_count * controls_per_cohort
+        or (
+          cohort_count + excluded_cohort_count = candidate_cohort_count
+          and control_count = cohort_count * controls_per_cohort
+        )
       )
     )
   );

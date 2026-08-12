@@ -103,7 +103,7 @@ export function selectControlCandidates(cohort, candidates, nearbyOpeningIds, de
 
 export function assertReplayBuildSupport(buildRun, cohortTarget) {
   if (!buildRun) throw new Error('cohort_build_run_missing')
-  if (buildRun.included_cohort_count < cohortTarget) {
+  if (buildRun.included_cohort_count !== cohortTarget) {
     throw new Error(`cohort_support_below_target:${buildRun.included_cohort_count}/${cohortTarget}`)
   }
 }
@@ -111,5 +111,11 @@ export function assertReplayBuildSupport(buildRun, cohortTarget) {
 export function assertExactControlCount(cohortId, actual, expected) {
   if (actual !== expected) {
     throw new Error(`incomplete_controls:${cohortId}:${actual}/${expected}`)
+  }
+}
+
+export function assertVersionPrefix(prefix) {
+  if (!prefix || prefix === 'v1') {
+    throw new Error('BACKTEST_COHORT_VERSION must be a non-v1 prefix')
   }
 }
