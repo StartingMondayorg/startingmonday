@@ -21,19 +21,21 @@ const PROVIDER_QUALITY_ALERT_KEY = 'provider-quality-audit'
 const COMPAT_HIT_ALERT_KEY = 'apollo-quality-audit-compat-hit'
 const DEFAULT_COMPAT_HIT_WINDOW_HOURS = 24
 
-type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers'
-type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget'
-type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
-type SunsetBlockingSummary = 'none' | 'over_budget_only' | 'active_traffic' | 'inactivity_window_pending' | 'multiple'
-type SunsetPrimaryBlockingReason = 'none' | 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
-type SunsetActionState = 'ready_for_removal' | 'caller_migration_required' | 'monitoring_active_traffic' | 'monitoring_inactivity_window'
+type SunsetRecommendation = 'remove_compat_route' | 'monitor' | 'migrate_callers' | 'restore_telemetry'
+type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'over_budget' | 'telemetry_unavailable'
+type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed' | 'compat_telemetry_unavailable'
+type SunsetBlockingSummary = 'none' | 'over_budget_only' | 'active_traffic' | 'inactivity_window_pending' | 'telemetry_unavailable' | 'multiple'
+type SunsetPrimaryBlockingReason = 'none' | 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed' | 'compat_telemetry_unavailable'
+type SunsetActionState = 'ready_for_removal' | 'caller_migration_required' | 'monitoring_active_traffic' | 'monitoring_inactivity_window' | 'telemetry_unavailable'
 type SunsetBlockingFlags = {
   any: boolean
   overBudget: boolean
   activeTraffic: boolean
   inactivityWindowPending: boolean
+  telemetryUnavailable: boolean
 }
 type CompatibilityWindowSource = 'alert_state' | 'default_fallback'
+type CompatibilityTelemetryStatus = 'available' | 'missing' | 'query_error'
 type InactivityWindowPhase = 'elapsed' | 'in_progress' | 'unknown_last_seen'
 
 function readCompatibilityHitCount(value: unknown): number {
@@ -66,11 +68,19 @@ function resolveCompatibilityHitWindow(input: unknown): {
 }
 
 function resolveSunsetRecommendation(input: {
+  telemetryAvailable: boolean
   hitCount: number
   hitBudget: number
   hitWindowHours: number
   lastSeenAgeHours: number | null
 }): { recommendation: SunsetRecommendation, reason: SunsetRecommendationReason } {
+  if (!input.telemetryAvailable) {
+    return {
+      recommendation: 'restore_telemetry',
+      reason: 'telemetry_unavailable',
+    }
+  }
+
   const inactivityWindowElapsed = input.lastSeenAgeHours === null
     || input.lastSeenAgeHours >= input.hitWindowHours
 
@@ -160,6 +170,10 @@ function resolveCompatibilityBlockingReasons(input: {
   hitCount: number
   inactivityWindowElapsed: boolean
 }): SunsetBlockingReason[] {
+  if (input.recommendation === 'restore_telemetry') {
+    return ['compat_telemetry_unavailable']
+  }
+
   if (input.recommendation === 'remove_compat_route') {
     return []
   }
@@ -198,6 +212,10 @@ function resolveCompatibilityBlockingSummary(input: {
     return 'active_traffic'
   }
 
+  if (reason === 'compat_telemetry_unavailable') {
+    return 'telemetry_unavailable'
+  }
+
   return 'inactivity_window_pending'
 }
 
@@ -205,6 +223,9 @@ function resolveCompatibilityPrimaryBlockingReason(input: {
   blockingReasons: SunsetBlockingReason[]
 }): SunsetPrimaryBlockingReason {
   const set = new Set(input.blockingReasons)
+  if (set.has('compat_telemetry_unavailable')) {
+    return 'compat_telemetry_unavailable'
+  }
   if (set.has('compat_hits_over_budget')) {
     return 'compat_hits_over_budget'
   }
@@ -221,6 +242,9 @@ function resolveCompatibilityActionState(input: {
   recommendation: SunsetRecommendation
   primaryBlockingReason: SunsetPrimaryBlockingReason
 }): SunsetActionState {
+  if (input.recommendation === 'restore_telemetry') {
+    return 'telemetry_unavailable'
+  }
   if (input.recommendation === 'remove_compat_route') {
     return 'ready_for_removal'
   }
@@ -242,6 +266,7 @@ function resolveCompatibilityBlockingFlags(input: {
     overBudget: set.has('compat_hits_over_budget'),
     activeTraffic: set.has('compat_route_still_active'),
     inactivityWindowPending: set.has('inactivity_window_not_elapsed'),
+    telemetryUnavailable: set.has('compat_telemetry_unavailable'),
   }
 }
 
@@ -264,7 +289,7 @@ export async function GET(request: NextRequest) {
     { data: signalRun },
     { data: watchdogState },
     { data: providerQualityState },
-    { data: compatHitState },
+    { data: compatHitState, error: compatHitError },
   ] = await Promise.all([
     sb
       .from('sec_freshness_audit_state')
@@ -313,6 +338,12 @@ export async function GET(request: NextRequest) {
     : Math.max(0, freshnessRunAgeHours - maxDelayHours)
 
   const compatHitCount = readCompatibilityHitCount(compatHitState?.last_details?.hitCount)
+  const compatTelemetryStatus: CompatibilityTelemetryStatus = compatHitError
+    ? 'query_error'
+    : compatHitState
+      ? 'available'
+      : 'missing'
+  const compatTelemetryAvailable = compatTelemetryStatus === 'available'
   const compatRouteStillActive = compatHitCount > 0
   const compatLifetimeHitCount = readCompatibilityHitCount(
     compatHitState?.last_details?.lifetimeHitCount ?? compatHitCount,
@@ -347,6 +378,7 @@ export async function GET(request: NextRequest) {
     lastSeenAt: compatLastSeenAt,
   })
   const compatRecommendationContext = resolveSunsetRecommendation({
+    telemetryAvailable: compatTelemetryAvailable,
     hitCount: compatHitCount,
     hitBudget: compatHitBudget,
     hitWindowHours: compatHitWindowHours,
@@ -381,7 +413,9 @@ export async function GET(request: NextRequest) {
       freshnessAudit: freshnessState?.last_status ?? 'unknown',
       heartbeatWatchdog: watchdogState?.last_status ?? 'unknown',
       providerQualityAudit: providerQualityState?.last_status ?? 'unknown',
-      compatRouteUsage: compatRouteStillActive ? 'active' : 'none',
+      compatRouteUsage: compatTelemetryAvailable
+        ? compatRouteStillActive ? 'active' : 'none'
+        : 'unknown',
     },
     schedule: {
       expectedIntervalHours,
@@ -393,6 +427,8 @@ export async function GET(request: NextRequest) {
     compatibilitySunset: {
       route: '/api/cron/apollo-quality-audit',
       replacementRoute: '/api/cron/provider-quality-audit',
+      telemetryAvailable: compatTelemetryAvailable,
+      telemetryStatus: compatTelemetryStatus,
       hitCount: compatHitCount,
       routeStillActive: compatRouteStillActive,
       lifetimeHitCount: compatLifetimeHitCount,
