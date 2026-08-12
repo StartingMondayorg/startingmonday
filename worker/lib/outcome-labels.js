@@ -57,6 +57,101 @@ function isoDateOffset(dateStr, days) {
   return date.toISOString().slice(0, 10)
 }
 
+export async function reconcileOpeningLabels(supabase, {
+  openingId,
+  canonicalCompanyId,
+  openedOn,
+  excludeEventId = null,
+  excludeEventIds = [],
+  excludeDeduplicatedExecHires = false,
+}) {
+  const { data: events, error: eventsError } = await supabase
+    .from('company_events')
+    .select('id, event_date, event_type')
+    .eq('canonical_company_id', canonicalCompanyId)
+    .gte('event_date', isoDateOffset(openedOn, -LABEL_LOOKBACK_DAYS))
+    .lte('event_date', openedOn)
+    .limit(500)
+
+  if (eventsError) {
+    logger.warn('outcome-labels: precursor fetch failed', { openingId, error: eventsError.message })
+    return 0
+  }
+
+  const openedMs = new Date(`${openedOn}T00:00:00Z`).getTime()
+  const excludedEventIds = new Set([excludeEventId, ...excludeEventIds].filter(Boolean))
+  const labelRows = (events ?? [])
+    .filter((event) => !excludedEventIds.has(event.id))
+    .filter((event) => {
+      if (!excludeDeduplicatedExecHires || event.event_type !== 'exec_hire') return true
+      const eventMs = new Date(`${event.event_date}T00:00:00Z`).getTime()
+      const distanceDays = Math.abs(openedMs - eventMs) / 86400000
+      return distanceDays > OPENING_DEDUP_WINDOW_DAYS
+    })
+    .map((event) => ({
+      event_id: event.id,
+      opening_id: openingId,
+      days_to_opening: Math.round(
+        (openedMs - new Date(`${event.event_date}T00:00:00Z`).getTime()) / 86400000,
+      ),
+    }))
+
+  if (labelRows.length === 0) return 0
+
+  const eventIds = labelRows.map((row) => row.event_id)
+  const { data: existingLabels, error: existingError } = await supabase
+    .from('event_outcome_labels')
+    .select('event_id')
+    .eq('opening_id', openingId)
+    .in('event_id', eventIds)
+
+  if (existingError) {
+    logger.warn('outcome-labels: existing-label fetch failed', { openingId, error: existingError.message })
+    return 0
+  }
+
+  const existingEventIds = new Set((existingLabels ?? []).map((row) => row.event_id))
+  const missingRows = labelRows.filter((row) => !existingEventIds.has(row.event_id))
+  if (missingRows.length === 0) return 0
+
+  const { error: labelError } = await supabase
+    .from('event_outcome_labels')
+    .upsert(missingRows, { onConflict: 'event_id,opening_id', ignoreDuplicates: true })
+
+  if (labelError) {
+    logger.warn('outcome-labels: back-label failed', { openingId, error: labelError.message })
+    return 0
+  }
+
+  return missingRows.length
+}
+
+export async function reconcileExistingOpeningLabels(supabase, { limit = 1000 } = {}) {
+  const { data: openings, error } = await supabase
+    .from('role_openings')
+    .select('id, canonical_company_id, opened_on, label_source, source_ref')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    logger.warn('outcome-labels: opening reconciliation fetch failed', { error: error.message })
+    return { openingsChecked: 0, labeledEvents: 0 }
+  }
+
+  let labeledEvents = 0
+  for (const opening of openings ?? []) {
+    labeledEvents += await reconcileOpeningLabels(supabase, {
+      openingId: opening.id,
+      canonicalCompanyId: opening.canonical_company_id,
+      openedOn: opening.opened_on,
+      excludeEventId: opening.label_source === 'exec_hire' ? opening.source_ref : null,
+      excludeDeduplicatedExecHires: opening.label_source === 'exec_hire',
+    })
+  }
+
+  return { openingsChecked: openings?.length ?? 0, labeledEvents }
+}
+
 // Records a verified role opening (get-or-create with a dedup window) and
 // back-labels every canonical event in the preceding LABEL_LOOKBACK_DAYS.
 // Never throws; returns { openingId, labeledEvents, existing } or nulls.
@@ -78,7 +173,7 @@ export async function recordRoleOpening(supabase, {
     // Dedup: same company + family + source within the window is one opening.
     const { data: existing } = await supabase
       .from('role_openings')
-      .select('id')
+      .select('id, opened_on, label_source, source_ref')
       .eq('canonical_company_id', canonicalCompanyId)
       .eq('role_family', roleFamily)
       .eq('label_source', labelSource)
@@ -87,7 +182,17 @@ export async function recordRoleOpening(supabase, {
       .limit(1)
       .maybeSingle()
 
-    if (existing) return { openingId: existing.id, labeledEvents: 0, existing: true }
+    if (existing) {
+      const labeledEvents = await reconcileOpeningLabels(supabase, {
+        openingId: existing.id,
+        canonicalCompanyId,
+        openedOn: existing.opened_on,
+        excludeEventId: existing.label_source === 'exec_hire' ? existing.source_ref : null,
+        excludeEventIds: [excludeEventId],
+        excludeDeduplicatedExecHires: existing.label_source === 'exec_hire',
+      })
+      return { openingId: existing.id, labeledEvents, existing: true }
+    }
 
     const { data: opening, error: insertError } = await supabase
       .from('role_openings')
@@ -108,35 +213,12 @@ export async function recordRoleOpening(supabase, {
       return { openingId: null, labeledEvents: 0, existing: false }
     }
 
-    // Back-label the preceding event window.
-    const { data: events } = await supabase
-      .from('company_events')
-      .select('id, event_date')
-      .eq('canonical_company_id', canonicalCompanyId)
-      .gte('event_date', isoDateOffset(openedOn, -LABEL_LOOKBACK_DAYS))
-      .lte('event_date', openedOn)
-      .limit(500)
-
-    const openedMs = new Date(`${openedOn}T00:00:00Z`).getTime()
-    const labelRows = (events ?? [])
-      .filter(e => e.id !== excludeEventId)
-      .map(e => ({
-        event_id: e.id,
-        opening_id: opening.id,
-        days_to_opening: Math.round((openedMs - new Date(`${e.event_date}T00:00:00Z`).getTime()) / 86400000),
-      }))
-
-    let labeledEvents = 0
-    if (labelRows.length) {
-      const { error: labelError } = await supabase
-        .from('event_outcome_labels')
-        .upsert(labelRows, { onConflict: 'event_id,opening_id', ignoreDuplicates: true })
-      if (labelError) {
-        logger.warn('outcome-labels: back-label failed', { openingId: opening.id, error: labelError.message })
-      } else {
-        labeledEvents = labelRows.length
-      }
-    }
+    const labeledEvents = await reconcileOpeningLabels(supabase, {
+      openingId: opening.id,
+      canonicalCompanyId,
+      openedOn,
+      excludeEventId,
+    })
 
     logger.info('outcome-labels: opening recorded', {
       canonicalCompanyId,

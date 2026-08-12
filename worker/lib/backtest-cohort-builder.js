@@ -51,16 +51,19 @@ async function fetchGdeltEventCount(companyName, startDate, endDate) {
   return payload.articles.length
 }
 
-async function hasOpeningInWindow(supabase, canonicalCompanyId, centerDate) {
-  const { count, error } = await supabase
+async function findCandidatesWithNearbyOpenings(supabase, candidateIds, centerDate) {
+  if (candidateIds.length === 0) return null
+
+  const { data, error } = await supabase
     .from('role_openings')
-    .select('id', { count: 'exact', head: true })
-    .eq('canonical_company_id', canonicalCompanyId)
+    .select('canonical_company_id')
+    .in('canonical_company_id', candidateIds)
     .gte('opened_on', isoDateOffset(centerDate, -CONTROL_LOOKAROUND_DAYS))
     .lte('opened_on', isoDateOffset(centerDate, CONTROL_LOOKAROUND_DAYS))
+    .limit(5000)
 
-  if (error) return true
-  return (count ?? 0) > 0
+  if (error) return null
+  return new Set((data ?? []).map((row) => row.canonical_company_id))
 }
 
 async function upsertCohort(supabase, opening) {
@@ -121,7 +124,7 @@ async function upsertCohort(supabase, opening) {
   return row
 }
 
-async function pickControlsForCohort(supabase, cohort, usedControlIds) {
+export async function pickControlsForCohort(supabase, cohort) {
   const desired = CONTROLS_PER_COHORT
 
   const { data: existing } = await supabase
@@ -130,7 +133,6 @@ async function pickControlsForCohort(supabase, cohort, usedControlIds) {
     .eq('cohort_id', cohort.id)
 
   const existingIds = new Set((existing ?? []).map((row) => row.canonical_company_id))
-  for (const id of existingIds) usedControlIds.add(id)
 
   let rank = (existing ?? []).length + 1
   if (rank > desired) return 0
@@ -146,14 +148,19 @@ async function pickControlsForCohort(supabase, cohort, usedControlIds) {
   const { data: candidates, error } = await candidatesQuery
   if (error || !candidates?.length) return 0
 
+  const nearbyOpeningIds = await findCandidatesWithNearbyOpenings(
+    supabase,
+    candidates.map((candidate) => candidate.id),
+    cohort.opened_on,
+  )
+  if (!nearbyOpeningIds) return 0
+
   let inserted = 0
   for (const candidate of candidates) {
     if (rank > desired) break
     if (existingIds.has(candidate.id)) continue
-    if (usedControlIds.has(candidate.id)) continue
 
-    const hasNearbyOpening = await hasOpeningInWindow(supabase, candidate.id, cohort.opened_on)
-    if (hasNearbyOpening) continue
+    if (nearbyOpeningIds.has(candidate.id)) continue
 
     const { error: insertError } = await supabase
       .from('backtest_controls')
@@ -165,7 +172,7 @@ async function pickControlsForCohort(supabase, cohort, usedControlIds) {
       })
 
     if (insertError) continue
-    usedControlIds.add(candidate.id)
+    existingIds.add(candidate.id)
     rank += 1
     inserted += 1
   }
@@ -188,13 +195,6 @@ export async function buildBacktestCohortsAndControls(supabase) {
     return { cohortsBuilt: 0, controlsAdded: 0, elapsedMs: Date.now() - startedAt }
   }
 
-  const usedControlIds = new Set()
-  const existingControlRows = await supabase
-    .from('backtest_controls')
-    .select('canonical_company_id')
-    .limit(5000)
-  for (const row of existingControlRows.data ?? []) usedControlIds.add(row.canonical_company_id)
-
   let cohortsBuilt = 0
   let controlsAdded = 0
 
@@ -215,7 +215,6 @@ export async function buildBacktestCohortsAndControls(supabase) {
         opened_on: opening.opened_on,
         sector: canonical.sector ?? null,
       },
-      usedControlIds,
     )
   }
 

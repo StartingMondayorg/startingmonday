@@ -9,7 +9,8 @@ describe('intelligence label and backtest gates', () => {
       labelSourceCount: 0,
       precursorStatCount: 0,
       cohortCount: 0,
-      controlCount: 0,
+      replayCohortCount: 0,
+      replayControlCount: 0,
       patternCount: 0,
       latestReplayStatus: null,
     })
@@ -27,11 +28,29 @@ describe('intelligence label and backtest gates', () => {
       labelSourceCount: 4,
       precursorStatCount: 8,
       cohortCount: 300,
-      controlCount: 900,
+      replayCohortCount: 300,
+      replayControlCount: 900,
       patternCount: 12,
       latestReplayStatus: 'complete',
     })
 
     expect(Object.values(gates).every((gate) => gate.status === 'pass')).toBe(true)
+  })
+
+  it('uses the latest replay denominator instead of the historical cohort inventory', () => {
+    const gates = buildLabelAndBacktestGates({
+      openingCount: 500,
+      labelCount: 1000,
+      labelSourceCount: 4,
+      precursorStatCount: 8,
+      cohortCount: 650,
+      replayCohortCount: 300,
+      replayControlCount: 900,
+      patternCount: 12,
+      latestReplayStatus: 'complete',
+    })
+
+    expect(gates.backtestCohorts).toMatchObject({ current: 650, target: 300, status: 'pass' })
+    expect(gates.matchedControls).toMatchObject({ current: 900, target: 900, status: 'pass' })
   })
 })

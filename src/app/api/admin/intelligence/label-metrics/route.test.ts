@@ -3,15 +3,15 @@ import { NextRequest } from 'next/server'
 
 const state = vi.hoisted(() => ({
   createAdminClient: vi.fn(),
-  requireAuth: vi.fn(),
+  requireStaffAutomationAccess: vi.fn(),
 }))
 
 vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: state.createAdminClient,
 }))
 
-vi.mock('@/lib/require-auth', () => ({
-  requireAuth: state.requireAuth,
+vi.mock('@/lib/admin-automation-auth', () => ({
+  requireStaffAutomationAccess: state.requireStaffAutomationAccess,
 }))
 
 import { GET } from './route'
@@ -39,7 +39,7 @@ function createQuery(result: unknown) {
 describe('admin intelligence label metrics route', () => {
   beforeEach(() => {
     vi.resetAllMocks()
-    state.requireAuth.mockResolvedValue({ ok: true })
+    state.requireStaffAutomationAccess.mockResolvedValue({ ok: true })
   })
 
   it('returns paginated label and backtest evidence with fail-closed gates', async () => {
@@ -57,7 +57,7 @@ describe('admin intelligence label metrics route', () => {
         data: [{ event_type: 'career_scan', n_events: 4, n_preceded: 2, median_days_to_opening: '15' }],
         error: null,
       }]],
-      ['backtest_replay_runs', [{ data: { id: 'run-1', status: 'complete' }, error: null }]],
+      ['backtest_replay_runs', [{ data: { id: 'run-1', status: 'complete', cohort_count: 1, control_count: 3 }, error: null }]],
       ['pattern_backtests', [{ data: [{ pattern_name: 'leadership_exit', role_family: 'cio' }], error: null }]],
       ['backtest_cohorts', [{ count: 1, data: null, error: null }]],
       ['backtest_controls', [{ count: 3, data: null, error: null }]],
@@ -90,6 +90,18 @@ describe('admin intelligence label metrics route', () => {
     expect(body.backtests).toMatchObject({ cohortCount: 1, controlCount: 3, patternCount: 1 })
     expect(body.gates.labeledOpenings.status).toBe('in_progress')
     expect(body.gates.patternBacktests.status).toBe('pass')
+  })
+
+  it('rejects authenticated users without staff automation access', async () => {
+    state.requireStaffAutomationAccess.mockResolvedValue({
+      ok: false,
+      response: new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 }),
+    })
+
+    const response = await GET(new NextRequest('https://startingmonday.app/api/admin/intelligence/label-metrics'))
+
+    expect(response.status).toBe(403)
+    expect(state.createAdminClient).not.toHaveBeenCalled()
   })
 
   it('returns 500 when a paginated evidence query fails', async () => {
