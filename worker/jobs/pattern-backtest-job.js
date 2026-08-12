@@ -2,9 +2,16 @@ import { logger } from '../lib/logger.js'
 import { getSupabase } from '../lib/supabase.js'
 import { evaluatePatternTimeline, summarizePatternMetrics } from '../lib/pattern-replay-core.js'
 import { PATTERN_LIBRARY, GENERIC_PATTERNS } from '../signals/correlate-signals.js'
+import {
+  MATCHING_POLICY_VERSION,
+  assertExactControlCount,
+  assertReplayBuildSupport,
+  assertVersionPrefix,
+} from '../lib/backtest-matching-dimensions.js'
 
 const PATTERN_BACKTEST_LOCK_KEY = 2498317501n
 const COHORT_LIMIT = Number(process.env.BACKTEST_COHORT_LIMIT ?? 300)
+const COHORT_VERSION_PREFIX = process.env.BACKTEST_COHORT_VERSION ?? 'v2'
 
 function uniqueByName(patterns) {
   const map = new Map()
@@ -52,6 +59,7 @@ function groupByCompany(events) {
 }
 
 export async function runPatternBacktestJob() {
+  assertVersionPrefix(COHORT_VERSION_PREFIX)
   const supabase = getSupabase()
 
   const { data: locked } = await supabase.rpc('try_advisory_lock', { p_key: PATTERN_BACKTEST_LOCK_KEY })
@@ -63,9 +71,30 @@ export async function runPatternBacktestJob() {
   let runId = null
 
   try {
+    const { data: buildRun, error: buildRunError } = await supabase
+      .from('backtest_cohort_build_runs')
+      .select('id, cohort_version, scanned_opening_count, included_cohort_count, excluded_cohort_count, exclusion_reasons, controls_per_cohort, matching_policy_version')
+      .like('cohort_version', `${COHORT_VERSION_PREFIX}-%`)
+      .eq('status', 'complete')
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (buildRunError) throw new Error(`cohort_build_run_fetch_failed:${buildRunError.message}`)
+    assertReplayBuildSupport(buildRun, COHORT_LIMIT)
+    const cohortVersion = buildRun.cohort_version
+
     const { data: run } = await supabase
       .from('backtest_replay_runs')
-      .insert({ cohort_version: 'v1', status: 'running' })
+      .insert({
+        cohort_version: cohortVersion,
+        cohort_build_run_id: buildRun.id,
+        candidate_cohort_count: buildRun.scanned_opening_count,
+        excluded_cohort_count: buildRun.excluded_cohort_count,
+        exclusion_reasons: buildRun.exclusion_reasons,
+        controls_per_cohort: buildRun.controls_per_cohort,
+        matching_policy_version: buildRun.matching_policy_version ?? MATCHING_POLICY_VERSION,
+        status: 'running',
+      })
       .select('id')
       .single()
     runId = run?.id ?? null
@@ -73,7 +102,7 @@ export async function runPatternBacktestJob() {
     const { data: cohorts, error: cohortError } = await supabase
       .from('backtest_cohorts')
       .select('id, canonical_company_id, role_family, opened_on, timeline_start, timeline_end, timeline, cohort_version')
-      .eq('cohort_version', 'v1')
+      .eq('cohort_version', cohortVersion)
       .order('opened_on', { ascending: false })
       .limit(COHORT_LIMIT)
 
@@ -92,6 +121,7 @@ export async function runPatternBacktestJob() {
         .eq('cohort_id', cohort.id)
 
       const controlIds = (controlRows ?? []).map((row) => row.canonical_company_id)
+      assertExactControlCount(cohort.id, controlIds.length, buildRun.controls_per_cohort)
       controlCount += controlIds.length
 
       let controlTimelines = new Map()
@@ -136,7 +166,7 @@ export async function runPatternBacktestJob() {
       await supabase.from('pattern_backtests').upsert(
         {
           run_id: runId,
-          cohort_version: 'v1',
+          cohort_version: cohortVersion,
           pattern_name: patternName,
           role_family: roleFamily,
           support_n: metrics.support,
@@ -179,6 +209,7 @@ export async function runPatternBacktestJob() {
         .eq('id', runId)
     }
     logger.error('pattern-backtest-job: failed', { error: err.message })
+    throw err
   } finally {
     await supabase.rpc('advisory_unlock', { p_key: PATTERN_BACKTEST_LOCK_KEY })
   }
