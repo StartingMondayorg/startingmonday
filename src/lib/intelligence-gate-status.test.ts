@@ -20,4 +20,9 @@ describe('intelligence gate status', () => {
       status: 'no_data',
     })
   })
+
+  it('evaluates coverage thresholds when events exist', () => {
+    expect(coverageGate({ covered: 10, total: 10, targetPercent: 100 }).status).toBe('pass')
+    expect(coverageGate({ covered: 9, total: 10, targetPercent: 100 }).status).toBe('warn')
+  })
 })
