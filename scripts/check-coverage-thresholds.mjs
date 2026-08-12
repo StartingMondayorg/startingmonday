@@ -271,22 +271,35 @@ function main() {
   }
 
   for (const folderRule of config.folders) {
+    let matched
+    let label = folderRule.prefix
+
     if (effectiveBaseRef) {
-      const folderTouched = changedFiles.some((filePath) => filePath.startsWith(folderRule.prefix))
-      if (!folderTouched) {
+      const changedInFolder = changedFiles.filter((filePath) => filePath.startsWith(folderRule.prefix))
+      if (changedInFolder.length === 0) {
         console.log(`- ${folderRule.prefix} skipped (no changed files in diff scope)`)
         continue
       }
+
+      const changedFileSet = new Set(changedInFolder)
+      matched = files.filter((file) => changedFileSet.has(file.filePath))
+      const matchedFileSet = new Set(matched.map((file) => file.filePath))
+      const missingCoverageFiles = changedInFolder.filter((filePath) => !matchedFileSet.has(filePath))
+      if (missingCoverageFiles.length > 0) {
+        failures.push(`${folderRule.prefix}: missing coverage records for ${missingCoverageFiles.join(', ')}`)
+      }
+      label = `${folderRule.prefix} (changed files)`
+    } else {
+      matched = files.filter((file) => file.filePath.startsWith(folderRule.prefix))
     }
 
-    const matched = files.filter((f) => f.filePath.startsWith(folderRule.prefix))
     const totals = aggregate(matched)
-    const result = evaluateThresholds(folderRule.prefix, totals, folderRule.thresholds)
+    const result = evaluateThresholds(label, totals, folderRule.thresholds)
 
-    console.log(`- ${folderRule.prefix} lines: ${result.metrics.lines}%`) 
-    console.log(`- ${folderRule.prefix} functions: ${result.metrics.functions}%`) 
-    console.log(`- ${folderRule.prefix} statements: ${result.metrics.statements}%`) 
-    console.log(`- ${folderRule.prefix} branches: ${result.metrics.branches}%`) 
+    console.log(`- ${label} lines: ${result.metrics.lines}%`)
+    console.log(`- ${label} functions: ${result.metrics.functions}%`)
+    console.log(`- ${label} statements: ${result.metrics.statements}%`)
+    console.log(`- ${label} branches: ${result.metrics.branches}%`)
 
     failures.push(...result.failures)
   }
