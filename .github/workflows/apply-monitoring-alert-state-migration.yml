@@ -31,7 +31,7 @@ jobs:
             exit 1
           fi
 
-          sql="$(cat supabase/migrations/132_monitoring_alert_state.sql)"$'\n'"$(cat supabase/migrations/167_monitoring_alert_state_compat_rls.sql)"
+          sql="$(cat supabase/migrations/132_monitoring_alert_state.sql)"$'\n'"$(cat supabase/migrations/134_contact_enrichment_governance.sql)"$'\n'"$(cat supabase/migrations/167_monitoring_alert_state_compat_rls.sql)"
           jq -n --arg query "$sql" '{query: $query}' > migration-request.json
 
           http_status="$(curl --silent --show-error \
@@ -59,8 +59,21 @@ jobs:
           select
             to_regclass('public.monitoring_alert_state')::text as table_name,
             to_regclass('public.monitoring_alert_state_updated_idx')::text as index_name,
+            to_regclass('public.idx_contacts_enrichment_retention')::text as contact_index_name,
             c.relrowsecurity as rls_enabled,
-            pg_get_constraintdef(con.oid) like '%deprecated-route-hit%' as compat_status_allowed
+            pg_get_constraintdef(con.oid) like '%deprecated-route-hit%' as compat_status_allowed,
+            (
+              select count(*) = 4
+              from information_schema.columns
+              where table_schema = 'public'
+                and table_name = 'contacts'
+                and column_name in (
+                  'enrichment_source',
+                  'enrichment_confidence',
+                  'enrichment_retention_expires_at',
+                  'enrichment_deleted_at'
+                )
+            ) as contact_governance_columns_available
           from pg_class c
           join pg_namespace n on n.oid = c.relnamespace
           join pg_constraint con
@@ -90,11 +103,13 @@ jobs:
             length == 1
             and .[0].table_name == "monitoring_alert_state"
             and .[0].index_name == "monitoring_alert_state_updated_idx"
+            and .[0].contact_index_name == "idx_contacts_enrichment_retention"
             and .[0].rls_enabled == true
             and .[0].compat_status_allowed == true
+            and .[0].contact_governance_columns_available == true
           ' verify-response.json >/dev/null
 
-          echo "Migration 132 schema, index, compatibility status, and RLS verified."
+          echo "Monitoring and contact enrichment schema prerequisites verified."
 
       - name: Verify production health routes
         env:
