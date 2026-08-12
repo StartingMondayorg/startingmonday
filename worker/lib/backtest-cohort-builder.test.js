@@ -9,6 +9,7 @@ class Query {
 
   select() { return this }
   limit() { return this }
+  order() { return this }
   eq(column, value) { this.filters.push(['eq', column, value]); return this }
   neq(column, value) { this.filters.push(['neq', column, value]); return this }
   in(column, value) { this.filters.push(['in', column, value]); return this }
@@ -19,9 +20,9 @@ class Query {
 
 function createSupabase() {
   const candidates = [
-    { id: 'control-1', sector: 'technology' },
-    { id: 'control-2', sector: 'technology' },
-    { id: 'control-3', sector: 'technology' },
+    { id: 'control-1', sector: 'Cloud Security', broad_sector_slug: 'technology', size_band: 'enterprise' },
+    { id: 'control-2', sector: 'SaaS', broad_sector_slug: 'technology', size_band: 'enterprise' },
+    { id: 'control-3', sector: 'Data Platform', broad_sector_slug: 'technology', size_band: 'enterprise' },
   ]
   const controls = []
 
@@ -50,10 +51,11 @@ function createSupabase() {
       if (table === 'canonical_companies') {
         return new Query((filters) => {
           const excludedId = filters.find(([operator, column]) => operator === 'neq' && column === 'id')?.[2]
-          const sector = filters.find(([operator, column]) => operator === 'eq' && column === 'sector')?.[2]
+          const broadSector = filters.find(([operator, column]) => operator === 'eq' && column === 'broad_sector_slug')?.[2]
           return {
             data: candidates.filter((candidate) => (
-              candidate.id !== excludedId && (!sector || candidate.sector === sector)
+              candidate.id !== excludedId
+              && (!broadSector || candidate.broad_sector_slug === broadSector)
             )),
             error: null,
           }
@@ -77,13 +79,15 @@ describe('pickControlsForCohort', () => {
       id: 'cohort-1',
       canonical_company_id: 'opening-company-1',
       opened_on: '2026-08-01',
-      sector: 'technology',
+      broad_sector_slug: 'technology',
+      size_band: 'enterprise',
     })
     const secondAdded = await pickControlsForCohort(supabase, {
       id: 'cohort-2',
       canonical_company_id: 'opening-company-2',
       opened_on: '2026-08-02',
-      sector: 'technology',
+      broad_sector_slug: 'technology',
+      size_band: 'enterprise',
     })
 
     expect(firstAdded).toBe(3)
@@ -97,5 +101,28 @@ describe('pickControlsForCohort', () => {
       expect(new Set(cohortControls.map((row) => row.control_rank))).toEqual(new Set([1, 2, 3]))
       expect(new Set(cohortControls.map((row) => row.canonical_company_id))).toHaveLength(3)
     }
+  })
+
+  it('fills a partially populated cohort without reselecting its existing control', async () => {
+    const supabase = createSupabase()
+    supabase.controls.push({
+      cohort_id: 'cohort-1',
+      canonical_company_id: 'control-1',
+      control_rank: 1,
+    })
+
+    const added = await pickControlsForCohort(supabase, {
+      id: 'cohort-1',
+      canonical_company_id: 'opening-company-1',
+      opened_on: '2026-08-01',
+      broad_sector_slug: 'technology',
+      size_band: 'enterprise',
+    })
+
+    expect(added).toBe(2)
+    const controls = supabase.controls.filter((row) => row.cohort_id === 'cohort-1')
+    expect(controls).toHaveLength(3)
+    expect(new Set(controls.map((row) => row.canonical_company_id))).toHaveLength(3)
+    expect(new Set(controls.map((row) => row.control_rank))).toEqual(new Set([1, 2, 3]))
   })
 })

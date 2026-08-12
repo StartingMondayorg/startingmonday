@@ -11,6 +11,11 @@ on:
         required: false
         type: boolean
         default: false
+      apply_backtest_matching_migration:
+        description: Apply and verify production backtest matching migration 169
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -98,6 +103,92 @@ jobs:
           ' verify-response.json >/dev/null
 
           echo "Migration 168 columns, constraints, and history verified."
+
+  apply-backtest-matching-migration:
+    name: Apply backtest matching migration 169
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_backtest_matching_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+            echo "SUPABASE_ACCESS_TOKEN is not configured."
+            exit 1
+          fi
+
+          sql="$(cat supabase/migrations/169_backtest_matching_dimensions.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('169', array[]::text[], 'backtest_matching_dimensions') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+
+          http_status="$(curl --silent --show-error \
+            --output migration-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @migration-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Migration API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' migration-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+      - name: Verify backtest matching schema
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'canonical_companies' and column_name in ('broad_sector_slug', 'size_band', 'matching_dimension_version')) as canonical_columns,
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'backtest_cohorts' and column_name in ('broad_sector_slug', 'size_band', 'matching_policy_version')) as cohort_columns,
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'backtest_controls' and column_name in ('broad_sector_slug', 'match_tier', 'matching_policy_version')) as control_columns,
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'backtest_replay_runs' and column_name in ('cohort_build_run_id', 'candidate_cohort_count', 'excluded_cohort_count', 'exclusion_reasons', 'controls_per_cohort', 'matching_policy_version')) as replay_columns,
+            (select count(*)::int from information_schema.tables where table_schema = 'public' and table_name = 'backtest_cohort_build_runs') as build_tables,
+            (select count(*)::int from pg_class where relname = 'backtest_cohort_build_runs' and relrowsecurity = true) as build_rls,
+            (select count(*)::int from pg_constraint where conname in ('backtest_cohorts_opening_version_key', 'backtest_cohorts_matching_dimensions_check', 'backtest_controls_matching_evidence_check', 'backtest_replay_runs_matching_counts_check')) as matching_constraints,
+            (select count(*)::int from supabase_migrations.schema_migrations where version = '169') as migration_rows;
+          SQL
+
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          http_status="$(curl --silent --show-error \
+            --output verify-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @verify-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Verification API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' verify-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+          jq -e '
+            length == 1
+            and .[0].canonical_columns == 3
+            and .[0].cohort_columns == 3
+            and .[0].control_columns == 3
+            and .[0].replay_columns == 6
+            and .[0].build_tables == 1
+            and .[0].build_rls == 1
+            and .[0].matching_constraints == 4
+            and .[0].migration_rows == 1
+          ' verify-response.json >/dev/null
+
+          echo "Migration 169 columns, constraints, RLS, and history verified."
 
   rls-check:
     name: Supabase RLS coverage
