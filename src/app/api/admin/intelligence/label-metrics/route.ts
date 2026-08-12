@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { buildLabelAndBacktestGates } from '@/lib/intelligence-label-gates'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { requireAuth } from '@/lib/require-auth'
+import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 
 const PAGE_SIZE = 1000
 
@@ -46,12 +46,13 @@ async function fetchAllRows<Row>(
 }
 
 export async function GET(request: NextRequest) {
-  const sessionAuth = await requireAuth(request)
-  if (!sessionAuth.ok) return sessionAuth.response
+  const staffAuth = await requireStaffAutomationAccess(request)
+  if (!staffAuth.ok) return staffAuth.response
 
   const admin = createAdminClient() as any
 
   try {
+    const queriedAt = new Date().toISOString()
     const [companyCountResult, openingRows, labeledEvents, sourceStatsResult, latestReplayResult, patternRows, cohortCountResult, controlCountResult] = await Promise.all([
       admin.from('canonical_companies').select('id', { count: 'exact', head: true }),
       fetchAllRows<OpeningRow>((from, to) => admin
@@ -139,13 +140,14 @@ export async function GET(request: NextRequest) {
       labelSourceCount: sourceMap.size,
       precursorStatCount: sourceStats.length,
       cohortCount,
-      controlCount,
+      replayCohortCount: latestReplay?.cohort_count ?? 0,
+      replayControlCount: latestReplay?.control_count ?? 0,
       patternCount: patternRows.length,
       latestReplayStatus: latestReplay?.status ?? null,
     })
 
     return NextResponse.json({
-      timestamp: new Date().toISOString(),
+      timestamp: queriedAt,
       stats: {
         totalCompanies,
         companiesWithLabels: uniqueCompanies,
@@ -155,7 +157,7 @@ export async function GET(request: NextRequest) {
         openingsBySource,
         openingsByFamily,
         openingsBySector,
-        lastUpdated: new Date().toISOString(),
+        queriedAt,
       },
       sourceBreakdown,
       backtests: {

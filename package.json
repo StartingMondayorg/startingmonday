@@ -37,6 +37,7 @@
         "workstream:report:weekly": "node scripts/workstream-reporter.mjs --type weekly",
         "integrity:check": "node scripts/check-data-integrity.mjs",
         "integrity:check:json": "node scripts/check-data-integrity.mjs --json",
+        "intelligence:evidence": "node --env-file=.env.local scripts/capture-intelligence-production-evidence.mjs",
         "billing:readiness": "node scripts/check-billing-readiness.mjs",
         "billing:readiness:json": "node scripts/check-billing-readiness.mjs --json",
         "billing:readiness:strict": "node scripts/check-billing-readiness.mjs --strict",

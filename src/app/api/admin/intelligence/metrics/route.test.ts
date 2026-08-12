@@ -3,15 +3,15 @@ import { NextRequest } from 'next/server'
 
 const state = vi.hoisted(() => ({
   createAdminClient: vi.fn(),
-  requireAuth: vi.fn(),
+  requireStaffAutomationAccess: vi.fn(),
 }))
 
 vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: state.createAdminClient,
 }))
 
-vi.mock('@/lib/require-auth', () => ({
-  requireAuth: state.requireAuth,
+vi.mock('@/lib/admin-automation-auth', () => ({
+  requireStaffAutomationAccess: state.requireStaffAutomationAccess,
 }))
 
 import { GET } from './route'
@@ -47,7 +47,7 @@ function mockAdmin(results: Map<string, unknown[]>) {
 describe('admin intelligence metrics route', () => {
   beforeEach(() => {
     vi.resetAllMocks()
-    state.requireAuth.mockResolvedValue({ ok: true })
+    state.requireStaffAutomationAccess.mockResolvedValue({ ok: true })
   })
 
   it('reports measured classification, merge, and provenance gate states', async () => {
@@ -94,5 +94,17 @@ describe('admin intelligence metrics route', () => {
     expect(body.phase0.classification).toMatchObject({ failureRatePercent: null, status: 'no_data' })
     expect(body.phase1.eventMerge).toMatchObject({ mergeRatePercent: null, duplicateRatePercent: null, status: 'no_data' })
     expect(body.phase1.provenance).toMatchObject({ coveragePercent: null, status: 'no_data' })
+  })
+
+  it('rejects authenticated users without staff automation access', async () => {
+    state.requireStaffAutomationAccess.mockResolvedValue({
+      ok: false,
+      response: new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 }),
+    })
+
+    const response = await GET(new NextRequest('https://startingmonday.app/api/admin/intelligence/metrics'))
+
+    expect(response.status).toBe(403)
+    expect(state.createAdminClient).not.toHaveBeenCalled()
   })
 })
