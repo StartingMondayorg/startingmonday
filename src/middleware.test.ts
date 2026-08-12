@@ -199,7 +199,7 @@ describe('src/proxy.ts middleware', () => {
   })
 
   describe('protected route indexing', () => {
-    it.each(['/dashboard', '/settings/billing'])('redirects anonymous %s requests with noindex headers', async (pathname) => {
+    it.each(['/dashboard', '/settings', '/settings/billing'])('redirects anonymous %s requests with noindex headers', async (pathname) => {
       vi.mocked(createServerClient).mockReturnValue({
         auth: {
           getUser: vi.fn().mockResolvedValue({ data: { user: null } }),
@@ -213,6 +213,24 @@ describe('src/proxy.ts middleware', () => {
       const response = await proxy(request)
       expect(response.status).toBe(307)
       expect(response.headers.get('location')).toBe('https://startingmonday.app/login')
+      expect(response.headers.get('X-Robots-Tag')).toBe('noindex, nofollow')
+      expect(response.headers.get('X-Request-Id')).toBeTruthy()
+    })
+
+    it('serves authenticated settings requests with noindex headers', async () => {
+      vi.mocked(createServerClient).mockReturnValue({
+        auth: {
+          getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'user-1' } } }),
+        },
+      } as never)
+
+      const request = new NextRequest(new URL('https://startingmonday.app/settings'), {
+        headers: { 'user-agent': 'Mozilla/5.0' },
+      })
+
+      const response = await proxy(request)
+      expect(response.status).toBe(200)
+      expect(response.headers.get('location')).toBeNull()
       expect(response.headers.get('X-Robots-Tag')).toBe('noindex, nofollow')
       expect(response.headers.get('X-Request-Id')).toBeTruthy()
     })
