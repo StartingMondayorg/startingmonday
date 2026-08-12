@@ -18,7 +18,7 @@ const matrix = JSON.parse(fs.readFileSync(matrixPath, 'utf8'))
 
 const ROUTE_SKIP_PATTERNS = [
   {
-    pattern: /^\/dashboard\/admin\//,
+    pattern: /^\/dashboard\/admin(?:\/|$)/,
     reason: 'Admin-only route requires elevated staff role not guaranteed in synthetic auth context',
   },
   {
