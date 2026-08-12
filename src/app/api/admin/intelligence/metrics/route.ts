@@ -1,6 +1,6 @@
 // Intelligence Scanner Observability Metrics (Epic E0 + E1)
 // Exposes: DLQ stats (depth, age), source_run_metrics (classification rate, event merge rate),
-// canonical layer performance (duplicate rate, provenance coverage).
+// and canonical-layer provenance coverage. Escaped duplicates require a row-level audit.
 import { type NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { coverageGate, rateGate } from '@/lib/intelligence-gate-status'
@@ -54,11 +54,10 @@ export async function GET(request: NextRequest) {
       denominator: classifyTotals.calls,
       maximumExclusive: 3,
     })
-    const eventMergeGate = rateGate({
-      numerator: classifyTotals.eventsMerged,
-      denominator: classifyTotals.eventsCreated + classifyTotals.eventsMerged,
-      maximumExclusive: 5,
-    })
+    const eventVolume = classifyTotals.eventsCreated + classifyTotals.eventsMerged
+    const eventMergeRatePercent = eventVolume > 0
+      ? (classifyTotals.eventsMerged / eventVolume) * 100
+      : null
 
     // Provenance audit: % of events with all required fields
     const { count: provenanceCheck } = await admin
@@ -104,14 +103,10 @@ export async function GET(request: NextRequest) {
         eventMerge: {
           created: classifyTotals.eventsCreated,
           merged: classifyTotals.eventsMerged,
-          mergeRatePercent: eventMergeGate.ratePercent === null
+          mergeRatePercent: eventMergeRatePercent === null
             ? null
-            : Math.round(eventMergeGate.ratePercent * 100) / 100,
-          duplicateRatePercent: eventMergeGate.ratePercent === null
-            ? null
-            : Math.round(eventMergeGate.ratePercent * 100) / 100,
-          gateTarget: 5,
-          status: eventMergeGate.status,
+            : Math.round(eventMergeRatePercent * 100) / 100,
+          status: eventMergeRatePercent === null ? 'no_data' : 'informational',
         },
         provenance: {
           coveredEvents: provenanceCheck ?? 0,
