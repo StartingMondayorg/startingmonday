@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
   headers.set('link', '</api/cron/provider-quality-audit>; rel="successor-version"')
   headers.set('warning', '299 - "Deprecated cron route; migrate to /api/cron/provider-quality-audit"')
 
-  void recordCompatibilityHit(request)
+  await recordCompatibilityHit(request)
 
   return new Response(response.body, {
     status: response.status,
