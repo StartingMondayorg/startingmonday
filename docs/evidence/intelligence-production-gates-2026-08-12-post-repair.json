@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "intelligence-production-evidence/v1",
+  "environment": "production",
+  "queriedAt": "2026-08-12T22:14:14.817Z",
+  "repository": {
+    "commit": "1a7ac4af1d1638d5b48601ac1184ed90fbd1c460",
+    "branch": "docs/intelligence-ws1-10-replan"
+  },
+  "governance": {
+    "stories": [
+      "WS0-02",
+      "WS0-03",
+      "WS0-04",
+      "WS0-07",
+      "WS0-08",
+      "WS1-03",
+      "WS1-09",
+      "WS1-10",
+      "WS2-07",
+      "WS2-08",
+      "WS2-09"
+    ],
+    "controls": [
+      "GOV-02",
+      "GOV-03",
+      "EVD-01",
+      "INT-02",
+      "INT-03"
+    ],
+    "mutation": "none"
+  },
+  "counts": {
+    "canonicalCompanies": 577,
+    "roleOpenings": 939,
+    "eventOutcomeLabels": 1331,
+    "precursorStatsFresh24h": 342,
+    "backtestCohortInventory": 654,
+    "backtestControlInventory": 946,
+    "patternBacktests": 50,
+    "sourceRunMetrics24h": 6,
+    "classificationCalls24h": 1978,
+    "classificationFailures24h": 253,
+    "eventsCreated24h": 123,
+    "eventsMerged24h": 320,
+    "provenanceCoveredEvents24h": 131,
+    "provenanceTotalEvents24h": 131,
+    "duplicateAuditedEvents24h": 131,
+    "escapedDuplicateEvents24h": 0
+  },
+  "rates": {
+    "classificationFailurePercent24h": 12.79,
+    "canonicalMergePercent24h": 72.23,
+    "duplicatePercent24h": 0,
+    "provenanceCoveragePercent24h": 100
+  },
+  "labelSources": [
+    "ats_json",
+    "career_scan",
+    "exec_hire",
+    "proxy_diff",
+    "user_pipeline"
+  ],
+  "latestReplay": {
+    "id": "bb2eef03-0789-463e-8f4b-e0648dff9fdf",
+    "status": "complete",
+    "cohort_count": 300,
+    "control_count": 620,
+    "started_at": "2026-08-12T22:02:22.993774+00:00",
+    "finished_at": "2026-08-12T22:03:13.677+00:00",
+    "error": null
+  },
+  "gates": {
+    "labeledOpenings": {
+      "current": 939,
+      "target": 500,
+      "status": "pass"
+    },
+    "eventOutcomeLabels": {
+      "current": 1331,
+      "target": 1000,
+      "status": "pass"
+    },
+    "labelSources": {
+      "current": 5,
+      "target": 4,
+      "status": "pass"
+    },
+    "precursorStats": {
+      "current": 342,
+      "target": 1,
+      "status": "pass"
+    },
+    "backtestCohorts": {
+      "current": 654,
+      "target": 300,
+      "status": "pass"
+    },
+    "matchedControls": {
+      "current": 620,
+      "target": 900,
+      "status": "in_progress"
+    },
+    "patternBacktests": {
+      "current": 50,
+      "target": 1,
+      "latestReplayStatus": "complete",
+      "status": "pass"
+    },
+    "classificationFailure": {
+      "currentPercent": 12.79,
+      "targetPercent": 3,
+      "comparison": "less_than",
+      "status": "fail"
+    },
+    "duplicateRate": {
+      "currentPercent": 0,
+      "targetPercent": 5,
+      "comparison": "less_than",
+      "status": "pass"
+    },
+    "provenanceCoverage": {
+      "currentPercent": 100,
+      "targetPercent": 100,
+      "comparison": "at_least",
+      "status": "pass"
+    }
+  },
+  "disposition": {
+    "status": "blocked",
+    "blockedGates": [
+      "matchedControls",
+      "classificationFailure"
+    ],
+    "permitsDownstreamImplementation": false,
+    "reason": "One or more production evidence gates are below target; gate review and re-plan are required."
+  }
+}
