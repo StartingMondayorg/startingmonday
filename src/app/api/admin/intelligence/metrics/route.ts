@@ -1,15 +1,14 @@
 // Intelligence Scanner Observability Metrics (Epic E0 + E1)
 // Exposes: DLQ stats (depth, age), source_run_metrics (classification rate, event merge rate),
 // canonical layer performance (duplicate rate, provenance coverage).
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { type NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { coverageGate, rateGate } from '@/lib/intelligence-gate-status'
-import { requireAuth } from '@/lib/require-auth'
+import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 
 export async function GET(request: NextRequest) {
-  const sessionAuth = await requireAuth(request)
-  if (!sessionAuth.ok) return sessionAuth.response
+  const staffAuth = await requireStaffAutomationAccess(request)
+  if (!staffAuth.ok) return staffAuth.response
 
   const admin = createAdminClient() as any
 
