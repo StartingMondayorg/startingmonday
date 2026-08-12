@@ -6,8 +6,36 @@ import { requireAuth } from '@/lib/require-auth'
 
 const PAGE_SIZE = 1000
 
-async function fetchAllRows(loadPage: (from: number, to: number) => PromiseLike<any>) {
-  const rows: any[] = []
+type QueryError = { message: string }
+type PageResult<Row> = { data: Row[] | null; error: QueryError | null }
+type OpeningRow = {
+  canonical_company_id: string
+  label_source: string
+  role_family: string
+  canonical_companies: { sector: string | null } | null
+}
+type LabeledEventRow = { days_to_opening: number }
+type SourceStatRow = {
+  event_type: string
+  n_events: number
+  n_preceded: number
+  median_days_to_opening: number | string | null
+}
+type PatternRow = {
+  pattern_name: string
+  role_family: string | null
+  support_n: number
+  precision: number
+  recall: number
+  fp_rate: number
+  median_lead_time_days: number | null
+  computed_at: string
+}
+
+async function fetchAllRows<Row>(
+  loadPage: (from: number, to: number) => PromiseLike<PageResult<Row>>,
+): Promise<Row[]> {
+  const rows: Row[] = []
   for (let from = 0; ; from += PAGE_SIZE) {
     const { data, error } = await loadPage(from, from + PAGE_SIZE - 1)
     if (error) throw new Error(error.message)
@@ -26,12 +54,12 @@ export async function GET(request: NextRequest) {
   try {
     const [companyCountResult, openingRows, labeledEvents, sourceStatsResult, latestReplayResult, patternRows, cohortCountResult, controlCountResult] = await Promise.all([
       admin.from('canonical_companies').select('id', { count: 'exact', head: true }),
-      fetchAllRows((from, to) => admin
+      fetchAllRows<OpeningRow>((from, to) => admin
         .from('role_openings')
         .select('canonical_company_id, label_source, role_family, canonical_companies(sector)')
         .order('created_at', { ascending: true })
         .range(from, to)),
-      fetchAllRows((from, to) => admin
+      fetchAllRows<LabeledEventRow>((from, to) => admin
         .from('event_outcome_labels')
         .select('days_to_opening')
         .order('days_to_opening', { ascending: true })
@@ -46,7 +74,7 @@ export async function GET(request: NextRequest) {
         .order('started_at', { ascending: false })
         .limit(1)
         .maybeSingle(),
-      fetchAllRows((from, to) => admin
+      fetchAllRows<PatternRow>((from, to) => admin
         .from('pattern_backtests')
         .select('pattern_name, role_family, support_n, precision, recall, fp_rate, median_lead_time_days, computed_at')
         .order('computed_at', { ascending: false })
@@ -56,17 +84,17 @@ export async function GET(request: NextRequest) {
     ])
 
     const totalCompanies = companyCountResult.count ?? 0
-    const sourceStats = sourceStatsResult.data ?? []
+    const sourceStats = (sourceStatsResult.data ?? []) as SourceStatRow[]
     const latestReplay = latestReplayResult.data ?? null
     const cohortCount = cohortCountResult.count ?? 0
     const controlCount = controlCountResult.count ?? 0
 
     // Coverage calculation
-    const uniqueCompanies = new Set(openingRows.map((row: any) => row.canonical_company_id)).size
+    const uniqueCompanies = new Set(openingRows.map((row) => row.canonical_company_id)).size
     const coveragePercent = totalCompanies ? (uniqueCompanies / totalCompanies) * 100 : 0
 
     // Median days to opening across all labeled events
-    const medianDaysToOpening = calculateMedian(labeledEvents.map((event: any) => event.days_to_opening))
+    const medianDaysToOpening = calculateMedian(labeledEvents.map((event) => event.days_to_opening))
 
     // Openings by source
     const sourceMap = new Map<string, number>()
@@ -91,14 +119,14 @@ export async function GET(request: NextRequest) {
     // Openings by sector (requires join to canonical_companies)
     const sectorMap = new Map<string, number>()
     for (const row of openingRows) {
-      const sector = (row.canonical_companies as any)?.sector ?? 'Unknown'
+      const sector = row.canonical_companies?.sector ?? 'Unknown'
       sectorMap.set(sector, (sectorMap.get(sector) ?? 0) + 1)
     }
     const openingsBySector = [...sectorMap.entries()]
       .map(([sector, count]) => ({ sector, count }))
       .sort((a, b) => b.count - a.count)
 
-    const sourceBreakdown = sourceStats.map((row: any) => ({
+    const sourceBreakdown = sourceStats.map((row) => ({
       source_key: row.event_type,
       total_openings: row.n_preceded,
       median_days_to_opening: row.median_days_to_opening ? Number(row.median_days_to_opening) : null,
