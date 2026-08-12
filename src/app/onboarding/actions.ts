@@ -107,7 +107,7 @@ export async function completeOnboarding(formData: FormData) {
     positioning_style: positioningStyle.length > 0 ? positioningStyle : null,
   }
 
-  await supabase.from('user_profiles').upsert(
+  const { error: profileWriteError } = await supabase.from('user_profiles').upsert(
     {
       user_id:                  user.id,
       search_persona:           resolvedRole.searchPersonaLegacy,
@@ -141,6 +141,27 @@ export async function completeOnboarding(formData: FormData) {
     },
     { onConflict: 'user_id' }
   )
+
+  // A failed write here must never be silent: without onboarding_completed_at every
+  // dashboard route bounces the user back to /onboarding (see SMK-460).
+  if (profileWriteError) {
+    captureServerEvent(user.id, 'onboarding_completion_write_failed', {
+      message: profileWriteError.message,
+      code: profileWriteError.code ?? null,
+    })
+    await logEvent(user.id, 'onboarding_completion_write_failed', {
+      message: profileWriteError.message,
+      code: profileWriteError.code ?? null,
+    })
+    console.error(JSON.stringify({
+      ts: new Date().toISOString(),
+      event: 'onboarding_completion_write_failed',
+      user_id: user.id,
+      message: profileWriteError.message,
+      code: profileWriteError.code ?? null,
+    }))
+    redirect('/onboarding?error=' + encodeURIComponent('We could not save your setup. Please try again, and contact support@startingmonday.app if it keeps happening.'))
+  }
 
   // Create basic company records from wizard. No career page URL yet; user adds those from the dashboard.
   if (companyNamesList.length > 0) {
@@ -263,10 +284,23 @@ export async function skipOnboarding() {
 
   const now = new Date().toISOString()
 
-  await supabase.from('user_profiles').upsert(
+  const { error: skipWriteError } = await supabase.from('user_profiles').upsert(
     { user_id: user.id, onboarding_completed_at: now },
     { onConflict: 'user_id' }
   )
+  if (skipWriteError) {
+    captureServerEvent(user.id, 'onboarding_completion_write_failed', {
+      message: skipWriteError.message,
+      code: skipWriteError.code ?? null,
+      path: 'skip',
+    })
+    await logEvent(user.id, 'onboarding_completion_write_failed', {
+      message: skipWriteError.message,
+      code: skipWriteError.code ?? null,
+      path: 'skip',
+    })
+    redirect('/onboarding?error=' + encodeURIComponent('We could not save your setup. Please try again, and contact support@startingmonday.app if it keeps happening.'))
+  }
 
   await supabase
     .from('user_profiles')

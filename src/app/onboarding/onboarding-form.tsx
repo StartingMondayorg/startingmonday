@@ -71,7 +71,7 @@ function Dots({ current, total = STEP_COUNT }: { current: number; total?: number
   )
 }
 
-export function OnboardingForm({ profile }: { profile: { full_name?: string | null; current_title?: string | null; current_company?: string | null } | null }) {
+export function OnboardingForm({ profile, serverError = null }: { profile: { full_name?: string | null; current_title?: string | null; current_company?: string | null } | null; serverError?: string | null }) {
   const onboardingParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
   const channelParam = onboardingParams?.get('channel')
   const lowEnergyParam = onboardingParams?.get('mode') === 'low_energy' || onboardingParams?.get('from') === 'low-energy'
@@ -660,6 +660,11 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
       </form>
 
       <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 shadow-[0_20px_60px_rgba(2,6,23,0.45)] sm:p-6">
+        {serverError && (
+          <div role="alert" className="mb-6 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-[13px] text-red-200">
+            {serverError}
+          </div>
+        )}
         {/* Wordmark */}
         <div className="text-center mb-10">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>

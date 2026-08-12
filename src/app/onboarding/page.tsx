@@ -3,7 +3,11 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { OnboardingForm } from './onboarding-form'
 
-export default async function OnboardingPage() {
+export default async function OnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -16,6 +20,8 @@ export default async function OnboardingPage() {
 
   if (profile?.onboarding_completed_at) redirect('/dashboard')
 
+  const { error: serverError } = await searchParams
+
   return (
     <>
       <section className="sr-only" aria-label="Onboarding summary">
@@ -25,7 +31,7 @@ export default async function OnboardingPage() {
         <p>Outcome: completing onboarding personalizes your briefings and prep briefs to your role and target companies.</p>
         <Link href="/dashboard">Get started in your dashboard</Link>
       </section>
-      <OnboardingForm profile={profile} />
+      <OnboardingForm profile={profile} serverError={serverError ?? null} />
     </>
   )
 }
