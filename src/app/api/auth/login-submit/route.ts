@@ -15,8 +15,8 @@ function getPublicOrigin(request: NextRequest): string {
 
 function getSafeNext(nextParam: FormDataEntryValue | null): string {
   const value = (nextParam?.toString() ?? '').trim()
-  if (!value) return '/dashboard/briefing'
-  return value.startsWith('/') ? value : '/dashboard/briefing'
+  if (!value) return '/dashboard'
+  return value.startsWith('/') ? value : '/dashboard'
 }
 
 function buildLoginRedirect(publicOrigin: string, nextPath: string, params: Record<string, string>) {
@@ -31,7 +31,7 @@ function buildLoginRedirect(publicOrigin: string, nextPath: string, params: Reco
 function resolvePostLoginPath(nextPath: string, hasCoachDashboard: boolean): string {
   // Respect explicit redirects. Only change the default onboarding path.
   if (!hasCoachDashboard) return nextPath
-  if (nextPath !== '/dashboard/briefing') return nextPath
+  if (nextPath !== '/dashboard') return nextPath
   return '/dashboard/coach'
 }
 

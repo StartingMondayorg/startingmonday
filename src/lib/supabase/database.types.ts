@@ -569,6 +569,8 @@ export type Database = {
           linkedin_raw_text: string | null
           beyond_resume: string | null
           onboarding_completed_at: string | null
+          onboarding_current_step: number
+          onboarding_draft: Json
           momentum_score: number | null
           momentum_computed_at: string | null
           briefing_email: string | null

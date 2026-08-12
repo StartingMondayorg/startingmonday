@@ -6,6 +6,7 @@ import type { EmailOtpType } from '@supabase/supabase-js'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
 import { logEvent } from '@/lib/events'
 import { reportAttributionFailure } from '@/lib/attribution-failure'
+import { resolveOnboardingDestination } from '@/lib/onboarding-state'
 
 function getSafeNextPath(nextParam: string | null): string {
   if (!nextParam) return '/dashboard/briefing'
@@ -134,9 +135,15 @@ export async function GET(request: NextRequest) {
             auth_method: code ? 'oauth_code' : 'otp_magic_link',
           })
         }
-        if (!onboardingProfile?.onboarding_completed_at) {
+        if (
+          !onboardingProfileError
+          && resolveOnboardingDestination({ completedAt: onboardingProfile?.onboarding_completed_at }) === '/onboarding'
+        ) {
           resolvedNextPath = '/onboarding'
           firstLoginNeedsOnboarding = true
+          response = createClientRedirectResponse(resolvedNextPath)
+        } else {
+          resolvedNextPath = '/dashboard'
           response = createClientRedirectResponse(resolvedNextPath)
         }
       }

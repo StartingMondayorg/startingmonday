@@ -54,7 +54,7 @@ describe('auth login submit route', () => {
     }))
 
     expect(response.status).toBe(307)
-    expect(response.headers.get('location')).toContain('/login?next=%2Fdashboard%2Fbriefing&error=rate_limited')
+    expect(response.headers.get('location')).toContain('/login?next=%2Fdashboard&error=rate_limited')
   })
 
   it('redirects to login when credentials are missing', async () => {
@@ -84,5 +84,19 @@ describe('auth login submit route', () => {
 
     expect(response.status).toBe(307)
     expect(response.headers.get('location')).toBe('https://startingmonday.app/dashboard/coach')
+  })
+
+  it('redirects a standard returning user to the dashboard', async () => {
+    const body = new FormData()
+    body.set('email', 'user@example.com')
+    body.set('password', 'Password123!')
+
+    const response = await POST(new NextRequest('https://startingmonday.app/api/auth/login-submit', {
+      method: 'POST',
+      body,
+    }))
+
+    expect(response.status).toBe(307)
+    expect(response.headers.get('location')).toBe('https://startingmonday.app/dashboard')
   })
 })

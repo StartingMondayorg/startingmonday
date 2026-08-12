@@ -2,6 +2,11 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { OnboardingForm } from './onboarding-form'
+import {
+  normalizeOnboardingDraft,
+  resolveOnboardingDestination,
+  resolveOnboardingStartStep,
+} from '@/lib/onboarding-state'
 
 export default async function OnboardingPage({
   searchParams,
@@ -12,15 +17,23 @@ export default async function OnboardingPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('user_profiles')
-    .select('onboarding_completed_at, full_name, current_title, current_company')
+    .select('onboarding_completed_at, onboarding_current_step, onboarding_draft, full_name, current_title, current_company')
     .eq('user_id', user.id)
-    .single()
+    .maybeSingle()
 
-  if (profile?.onboarding_completed_at) redirect('/dashboard')
+  if (profileError) throw profileError
+  if (resolveOnboardingDestination({ completedAt: profile?.onboarding_completed_at }) === '/dashboard') {
+    redirect('/dashboard')
+  }
 
   const { error: serverError } = await searchParams
+  const initialStep = resolveOnboardingStartStep({
+    completedAt: profile?.onboarding_completed_at,
+    currentStep: profile?.onboarding_current_step,
+  })
+  const initialDraft = normalizeOnboardingDraft(profile)
 
   return (
     <>
@@ -31,7 +44,11 @@ export default async function OnboardingPage({
         <p>Outcome: completing onboarding personalizes your briefings and prep briefs to your role and target companies.</p>
         <Link href="/dashboard">Get started in your dashboard</Link>
       </section>
-      <OnboardingForm profile={profile} serverError={serverError ?? null} />
+      <OnboardingForm
+        initialDraft={initialDraft}
+        initialStep={initialStep}
+    serverError={serverError ?? null}
+      />
     </>
   )
 }
