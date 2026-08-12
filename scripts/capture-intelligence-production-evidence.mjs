@@ -130,7 +130,7 @@ try {
     fetchAllLabelSources(),
     db
       .from('backtest_replay_runs')
-      .select('id, status, cohort_count, control_count, started_at, finished_at, error')
+      .select('id, status, cohort_count, control_count, cohort_version, cohort_build_run_id, candidate_cohort_count, excluded_cohort_count, exclusion_reasons, controls_per_cohort, matching_policy_version, started_at, finished_at, error')
       .order('started_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
@@ -185,7 +185,7 @@ try {
     .map(([name]) => name)
 
   const evidence = {
-    schemaVersion: 'intelligence-production-evidence/v1',
+    schemaVersion: 'intelligence-production-evidence/v2',
     environment,
     queriedAt,
     repository: {
