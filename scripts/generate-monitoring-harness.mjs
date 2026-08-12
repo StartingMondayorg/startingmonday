@@ -9,13 +9,6 @@ const outDir = path.join(root, 'tests', 'e2e', 'generated')
 const routeSpecPath = path.join(outDir, 'page-routes.generated.spec.ts')
 const actionSpecPath = path.join(outDir, 'action-contracts.generated.spec.ts')
 
-if (!fs.existsSync(matrixPath)) {
-  console.error('Missing monitoring matrix. Run: npm run monitor:matrix:generate')
-  process.exit(1)
-}
-
-const matrix = JSON.parse(fs.readFileSync(matrixPath, 'utf8'))
-
 const ROUTE_SKIP_PATTERNS = [
   {
     pattern: /^\/dashboard\/admin(?:\/|$)/,
@@ -26,6 +19,23 @@ const ROUTE_SKIP_PATTERNS = [
     reason: 'Partner route requires partner-scoped access and may return role-based 404 for standard auth sessions',
   },
 ]
+
+function routeSkipReason(route) {
+  return ROUTE_SKIP_PATTERNS.find((entry) => entry.pattern.test(route))?.reason ?? ''
+}
+
+const routeSkipArg = process.argv.find((arg) => arg.startsWith('--route-skip-reason='))
+if (routeSkipArg) {
+  console.log(routeSkipReason(routeSkipArg.slice('--route-skip-reason='.length)))
+  process.exit(0)
+}
+
+if (!fs.existsSync(matrixPath)) {
+  console.error('Missing monitoring matrix. Run: npm run monitor:matrix:generate')
+  process.exit(1)
+}
+
+const matrix = JSON.parse(fs.readFileSync(matrixPath, 'utf8'))
 
 const ACTION_OVERRIDES = {
   '/api/auth/verify-and-magic-link': {
@@ -119,8 +129,8 @@ const routeTargets = matrix.routes
   .filter((r) => r.tier === 'tier0' || r.tier === 'tier1')
   .map((r) => ({
     ...(() => {
-      const hit = ROUTE_SKIP_PATTERNS.find((entry) => entry.pattern.test(r.route))
-      return hit ? { skipReason: hit.reason } : {}
+      const skipReason = routeSkipReason(r.route)
+      return skipReason ? { skipReason } : {}
     })(),
     route: r.route,
     authClass: r.authClass,
