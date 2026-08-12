@@ -1,7 +1,7 @@
 // Pure, testable core for signal classification: prompt construction, response
 // parsing, and normalization. No SDK or network dependencies.
 
-export const CLASSIFY_MAX_TOKENS = 512
+export const CLASSIFY_MAX_TOKENS = 768
 
 const VALID_ENTITY_MATCH = ['high', 'medium', 'low']
 
@@ -63,7 +63,35 @@ export function parseClassifyResponse(raw) {
     .replace(/\n?```$/, '')
     .trim()
   if (!cleaned) throw new Error('empty classification response')
-  return JSON.parse(cleaned)
+
+  try {
+    return JSON.parse(cleaned)
+  } catch (initialError) {
+    const start = cleaned.indexOf('{')
+    if (start < 0) throw initialError
+
+    let depth = 0
+    let inString = false
+    let escaped = false
+    for (let index = start; index < cleaned.length; index += 1) {
+      const character = cleaned[index]
+      if (inString) {
+        if (escaped) escaped = false
+        else if (character === '\\') escaped = true
+        else if (character === '"') inString = false
+        continue
+      }
+
+      if (character === '"') inString = true
+      else if (character === '{') depth += 1
+      else if (character === '}') {
+        depth -= 1
+        if (depth === 0) return JSON.parse(cleaned.slice(start, index + 1))
+      }
+    }
+
+    throw initialError
+  }
 }
 
 // Normalizes a parsed classification: caps arrays, validates entity_match.

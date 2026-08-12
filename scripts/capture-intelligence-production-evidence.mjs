@@ -10,6 +10,10 @@ import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { createClient } from '@supabase/supabase-js'
+import {
+  countEscapedDuplicateEvents,
+  summarizeObservabilityMetrics,
+} from './lib/intelligence-production-evidence-core.mjs'
 
 const PAGE_SIZE = 1000
 const args = new Map(process.argv.slice(2).map((arg) => {
@@ -58,6 +62,37 @@ async function fetchAllLabelSources() {
   }
 }
 
+async function fetchAllSourceMetricsSince(createdSince) {
+  const metrics = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await db
+      .from('source_run_metrics')
+      .select('classify_calls, classify_failures, events_created, events_merged')
+      .gte('created_at', createdSince)
+      .order('created_at', { ascending: true })
+      .range(from, from + PAGE_SIZE - 1)
+    if (error) throw new Error(`source_run_metrics: ${error.message}`)
+    const page = data ?? []
+    metrics.push(...page)
+    if (page.length < PAGE_SIZE) return metrics
+  }
+}
+
+async function fetchAllCanonicalEvents() {
+  const events = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await db
+      .from('company_events')
+      .select('id, canonical_company_id, event_type, event_date, summary, summary_normalized, created_at')
+      .order('created_at', { ascending: true })
+      .range(from, from + PAGE_SIZE - 1)
+    if (error) throw new Error(`company_events duplicate audit: ${error.message}`)
+    const page = data ?? []
+    events.push(...page)
+    if (page.length < PAGE_SIZE) return events
+  }
+}
+
 function thresholdGate(current, target) {
   return { current, target, status: current >= target ? 'pass' : 'in_progress' }
 }
@@ -80,6 +115,10 @@ try {
     patternCount,
     labelSources,
     latestReplayResult,
+    sourceMetrics,
+    provenanceCovered,
+    provenanceTotal,
+    canonicalEvents,
   ] = await Promise.all([
     exactCount('canonical_companies'),
     exactCount('role_openings'),
@@ -95,6 +134,14 @@ try {
       .order('started_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
+    fetchAllSourceMetricsSince(freshSince),
+    exactCount('company_events', (query) => query
+      .gte('created_at', freshSince)
+      .not('raw_fetch_ref', 'is', null)
+      .not('content_hash', 'is', null)
+      .not('model_version', 'is', null)),
+    exactCount('company_events', (query) => query.gte('created_at', freshSince)),
+    fetchAllCanonicalEvents(),
   ])
 
   if (latestReplayResult.error) {
@@ -102,6 +149,12 @@ try {
   }
 
   const latestReplay = latestReplayResult.data ?? null
+  const observability = summarizeObservabilityMetrics(
+    sourceMetrics,
+    provenanceCovered,
+    provenanceTotal,
+    countEscapedDuplicateEvents(canonicalEvents, freshSince),
+  )
   const replayCohortCount = latestReplay?.cohort_count ?? 0
   const replayControlCount = latestReplay?.control_count ?? 0
   const matchedControlTarget = replayCohortCount * 3
@@ -124,6 +177,7 @@ try {
           ? 'no_data'
           : 'in_progress',
     },
+            ...observability.gates,
   }
 
   const blockedGates = Object.entries(gates)
@@ -151,6 +205,21 @@ try {
       backtestCohortInventory: cohortCount,
       backtestControlInventory: controlCount,
       patternBacktests: patternCount,
+      sourceRunMetrics24h: sourceMetrics.length,
+      classificationCalls24h: observability.classificationCalls,
+      classificationFailures24h: observability.classificationFailures,
+      eventsCreated24h: observability.eventsCreated,
+      eventsMerged24h: observability.eventsMerged,
+      provenanceCoveredEvents24h: observability.provenanceCovered,
+      provenanceTotalEvents24h: observability.provenanceTotal,
+      duplicateAuditedEvents24h: observability.duplicateAuditedEvents,
+      escapedDuplicateEvents24h: observability.escapedDuplicateEvents,
+    },
+    rates: {
+      classificationFailurePercent24h: observability.classificationFailureRatePercent,
+      canonicalMergePercent24h: observability.mergeRatePercent,
+      duplicatePercent24h: observability.duplicateRatePercent,
+      provenanceCoveragePercent24h: observability.provenanceCoveragePercent,
     },
     labelSources,
     latestReplay,
