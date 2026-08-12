@@ -71,7 +71,8 @@ describe('admin intelligence metrics route', () => {
 
     expect(response.status).toBe(200)
     expect(body.phase0.classification).toMatchObject({ failureRatePercent: 2, status: 'pass' })
-    expect(body.phase1.eventMerge).toMatchObject({ mergeRatePercent: 2, duplicateRatePercent: 2, status: 'pass' })
+    expect(body.phase1.eventMerge).toMatchObject({ mergeRatePercent: 2, status: 'informational' })
+    expect(body.phase1.eventMerge).not.toHaveProperty('duplicateRatePercent')
     expect(body.phase1.provenance).toMatchObject({ coveragePercent: 100, status: 'pass' })
   })
 
@@ -92,7 +93,8 @@ describe('admin intelligence metrics route', () => {
     const body = await response.json()
 
     expect(body.phase0.classification).toMatchObject({ failureRatePercent: null, status: 'no_data' })
-    expect(body.phase1.eventMerge).toMatchObject({ mergeRatePercent: null, duplicateRatePercent: null, status: 'no_data' })
+    expect(body.phase1.eventMerge).toMatchObject({ mergeRatePercent: null, status: 'no_data' })
+    expect(body.phase1.eventMerge).not.toHaveProperty('duplicateRatePercent')
     expect(body.phase1.provenance).toMatchObject({ coveragePercent: null, status: 'no_data' })
   })
 
