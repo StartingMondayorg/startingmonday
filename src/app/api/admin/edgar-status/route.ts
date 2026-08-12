@@ -26,6 +26,7 @@ type SunsetRecommendationReason = 'no_hits_and_inactive' | 'within_budget' | 'ov
 type SunsetBlockingReason = 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
 type SunsetBlockingSummary = 'none' | 'over_budget_only' | 'active_traffic' | 'inactivity_window_pending' | 'multiple'
 type SunsetPrimaryBlockingReason = 'none' | 'compat_hits_over_budget' | 'compat_route_still_active' | 'inactivity_window_not_elapsed'
+type SunsetActionState = 'ready_for_removal' | 'caller_migration_required' | 'monitoring_active_traffic' | 'monitoring_inactivity_window'
 type SunsetBlockingFlags = {
   any: boolean
   overBudget: boolean
@@ -216,6 +217,22 @@ function resolveCompatibilityPrimaryBlockingReason(input: {
   return 'none'
 }
 
+function resolveCompatibilityActionState(input: {
+  recommendation: SunsetRecommendation
+  primaryBlockingReason: SunsetPrimaryBlockingReason
+}): SunsetActionState {
+  if (input.recommendation === 'remove_compat_route') {
+    return 'ready_for_removal'
+  }
+  if (input.recommendation === 'migrate_callers') {
+    return 'caller_migration_required'
+  }
+  if (input.primaryBlockingReason === 'inactivity_window_not_elapsed') {
+    return 'monitoring_inactivity_window'
+  }
+  return 'monitoring_active_traffic'
+}
+
 function resolveCompatibilityBlockingFlags(input: {
   blockingReasons: SunsetBlockingReason[]
 }): SunsetBlockingFlags {
@@ -350,6 +367,10 @@ export async function GET(request: NextRequest) {
   const compatBlockingPrimaryReason = resolveCompatibilityPrimaryBlockingReason({
     blockingReasons: compatBlockingReasons,
   })
+  const compatActionState = resolveCompatibilityActionState({
+    recommendation: compatRecommendationContext.recommendation,
+    primaryBlockingReason: compatBlockingPrimaryReason,
+  })
   const compatBlockingFlags = resolveCompatibilityBlockingFlags({
     blockingReasons: compatBlockingReasons,
   })
@@ -392,6 +413,7 @@ export async function GET(request: NextRequest) {
       blockingReasonCount: compatBlockingReasonCount,
       blockingSummary: compatBlockingSummary,
       blockingPrimaryReason: compatBlockingPrimaryReason,
+      actionState: compatActionState,
       blockingFlags: compatBlockingFlags,
       inactivityWindowElapsed: compatInactivityWindowElapsed,
       inactivityWindowRemainingHours: compatInactivityWindowRemainingHours,
