@@ -159,6 +159,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasonCount: 2,
       blockingSummary: 'multiple',
       blockingPrimaryReason: 'compat_route_still_active',
+      actionState: 'monitoring_active_traffic',
       blockingFlags: {
         any: true,
         overBudget: false,
@@ -216,6 +217,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasonCount: 0,
       blockingSummary: 'none',
       blockingPrimaryReason: 'none',
+      actionState: 'ready_for_removal',
       blockingFlags: {
         any: false,
         overBudget: false,
@@ -269,6 +271,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasonCount: 1,
       blockingSummary: 'over_budget_only',
       blockingPrimaryReason: 'compat_hits_over_budget',
+      actionState: 'caller_migration_required',
       blockingFlags: {
         any: true,
         overBudget: true,
@@ -351,6 +354,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasonCount: 2,
       blockingSummary: 'multiple',
       blockingPrimaryReason: 'compat_route_still_active',
+      actionState: 'monitoring_active_traffic',
       blockingFlags: {
         any: true,
         overBudget: false,
@@ -396,12 +400,49 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       blockingReasonCount: 1,
       blockingSummary: 'active_traffic',
       blockingPrimaryReason: 'compat_route_still_active',
+      actionState: 'monitoring_active_traffic',
       blockingFlags: {
         any: true,
         overBudget: false,
         activeTraffic: true,
         inactivityWindowPending: false,
       },
+    })
+  })
+
+  it('waits for the inactivity window when recent hits are zero but last seen is recent', async () => {
+    process.env.APOLLO_COMPAT_HIT_BUDGET = '0'
+    state.compatHitState.mockResolvedValue({
+      data: {
+        alert_key: 'apollo-quality-audit-compat-hit',
+        last_status: 'deprecated-route-hit',
+        last_details: {
+          hitCount: 0,
+          lifetimeHitCount: 12,
+          hitCountWindowHours: 24,
+          windowStartAt: '2026-08-10T00:00:00.000Z',
+          lastSeenAt: '2026-08-10T12:00:00.000Z',
+        },
+      },
+    })
+
+    const request = new NextRequest('https://startingmonday.app/api/admin/edgar-status')
+    const response = await GET(request)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.compatibilitySunset).toMatchObject({
+      hitCount: 0,
+      recommendation: 'monitor',
+      recommendationReason: 'within_budget',
+      blockingReasons: ['inactivity_window_not_elapsed'],
+      blockingPrimaryReason: 'inactivity_window_not_elapsed',
+      actionState: 'monitoring_inactivity_window',
+      inactivityWindowElapsed: false,
+      inactivityWindowRemainingHours: 12,
+      inactivityWindowProgressPct: 50,
+      inactivityWindowPhase: 'in_progress',
+      inactivityWindowEndsAt: '2026-08-11T12:00:00.000Z',
     })
   })
 })

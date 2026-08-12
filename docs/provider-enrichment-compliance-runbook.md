@@ -50,6 +50,7 @@ Define compliant handling for Apollo-derived contact enrichment in discovery and
 	- `compatibilitySunset.blockingReasonCount` provides a numeric blocker count for quick thresholding and alert summaries.
 	- `compatibilitySunset.blockingSummary` provides a concise blocker label (`none`, `over_budget_only`, `active_traffic`, `inactivity_window_pending`, `multiple`) for dashboards and weekly status updates.
 	- `compatibilitySunset.blockingPrimaryReason` provides one canonical blocker reason (`none`, `compat_hits_over_budget`, `compat_route_still_active`, `inactivity_window_not_elapsed`) using precedence order for deterministic dashboard sorting.
+	- `compatibilitySunset.actionState` provides one normalized operational state (`ready_for_removal`, `caller_migration_required`, `monitoring_active_traffic`, `monitoring_inactivity_window`) so dashboards and automation do not need to combine recommendation and blocker fields.
 	- `compatibilitySunset.blockingFlags` provides direct boolean gates (`any`, `overBudget`, `activeTraffic`, `inactivityWindowPending`) so automation can branch without parsing reason arrays or summary labels.
 	- `compatibilitySunset.routeStillActive` provides a direct boolean indicator that compatibility traffic is still present in the active hit window.
 	- `compatibilitySunset.hitWindowSource` clarifies whether `hitWindowHours` came from live alert telemetry (`alert_state`) or local default fallback (`default_fallback`).
