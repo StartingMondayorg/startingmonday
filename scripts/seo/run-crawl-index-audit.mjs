@@ -92,16 +92,35 @@ function toCsv(rows) {
   return `${lines.join('\n')}\n`
 }
 
+function normalizeUrl(value) {
+  try {
+    const url = new URL(value)
+    url.hash = ''
+    if (url.pathname !== '/') url.pathname = url.pathname.replace(/\/+$/, '')
+    return url.toString()
+  } catch {
+    return value
+  }
+}
+
 function summarize(rows) {
   const byStatus = {}
   let redirectCount = 0
   let errorCount = 0
+  let noindexCount = 0
+  let missingCanonicalCount = 0
+  let canonicalMismatchCount = 0
 
   for (const row of rows) {
     const key = String(row.status)
     byStatus[key] = (byStatus[key] || 0) + 1
     if (row.status >= 300 && row.status < 400) redirectCount += 1
     if (row.error) errorCount += 1
+    if (/\bnoindex\b/i.test(row.xRobotsTag)) noindexCount += 1
+    if (row.status >= 200 && row.status < 300 && row.contentType.includes('text/html')) {
+      if (!row.canonical) missingCanonicalCount += 1
+      else if (normalizeUrl(row.canonical) !== normalizeUrl(row.url)) canonicalMismatchCount += 1
+    }
   }
 
   return {
@@ -109,6 +128,9 @@ function summarize(rows) {
     byStatus,
     redirectCount,
     errorCount,
+    noindexCount,
+    missingCanonicalCount,
+    canonicalMismatchCount,
   }
 }
 
@@ -234,6 +256,21 @@ async function main() {
   console.log(`  Latest: ${latestJsonPath}`)
   console.log(`  Latest: ${latestCsvPath}`)
   console.log(`  Status summary: ${JSON.stringify(summary.byStatus)}`)
+
+  const blockingIssues = summary.redirectCount
+    + summary.errorCount
+    + summary.noindexCount
+    + summary.missingCanonicalCount
+    + summary.canonicalMismatchCount
+  if (blockingIssues > 0) {
+    throw new Error(`Sitemap indexability gate failed: ${JSON.stringify({
+      redirects: summary.redirectCount,
+      errors: summary.errorCount,
+      noindex: summary.noindexCount,
+      missingCanonical: summary.missingCanonicalCount,
+      canonicalMismatch: summary.canonicalMismatchCount,
+    })}`)
+  }
 }
 
 main().catch((error) => {

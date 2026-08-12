@@ -18,4 +18,14 @@ describe('src/app/sitemap.ts', () => {
     expect(security?.lastModified).toBeInstanceOf(Date)
     expect(originPost?.lastModified).toBeInstanceOf(Date)
   })
+
+  it('excludes redirect-only aliases and protected application routes', () => {
+    const paths = sitemap().map((entry) => new URL(entry.url).pathname)
+
+    expect(paths).not.toContain('/evidence-room')
+    expect(paths).not.toContain('/for-search-firms')
+    expect(paths).not.toContain('/guide')
+    expect(paths.some((path) => path === '/dashboard' || path.startsWith('/dashboard/'))).toBe(false)
+    expect(paths.some((path) => path === '/settings' || path.startsWith('/settings/'))).toBe(false)
+  })
 })

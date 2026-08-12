@@ -62,7 +62,15 @@ function isProtectedRoute(pathname: string): boolean {
     || pathname === '/dashboard'
     || pathname.startsWith('/onboarding/')
     || pathname === '/onboarding'
+    || pathname.startsWith('/settings/')
+    || pathname === '/settings'
   )
+}
+
+function markNoIndex(response: NextResponse, requestId: string): NextResponse {
+  Object.entries(NOINDEX).forEach(([key, value]) => response.headers.set(key, value))
+  response.headers.set('X-Request-Id', requestId)
+  return response
 }
 
 export async function proxy(request: NextRequest) {
@@ -127,10 +135,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (devAuthEnabled && nextRequestHeaders) {
-    const response = NextResponse.next({ request: { headers: nextRequestHeaders } })
-    Object.entries(NOINDEX).forEach(([k, v]) => response.headers.set(k, v))
-    response.headers.set('X-Request-Id', requestId)
-    return response
+    return markNoIndex(NextResponse.next({ request: { headers: nextRequestHeaders } }), requestId)
   }
 
   if (!isProtectedRoute(pathname)) {
@@ -168,12 +173,10 @@ export async function proxy(request: NextRequest) {
   if (!user) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
-    return NextResponse.redirect(loginUrl)
+    return markNoIndex(NextResponse.redirect(loginUrl), requestId)
   }
 
-  Object.entries(NOINDEX).forEach(([k, v]) => supabaseResponse.headers.set(k, v))
-  supabaseResponse.headers.set('X-Request-Id', requestId)
-  return supabaseResponse
+  return markNoIndex(supabaseResponse, requestId)
 }
 
 export const config = {

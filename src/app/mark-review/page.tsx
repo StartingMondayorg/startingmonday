@@ -125,7 +125,7 @@ export default function MarkReviewPage() {
                 Open dashboard (Michael Torres)
               </TrackedCtaLink>
               <TrackedCtaLink
-                href="/guide"
+                href="/learn-more"
                 eventName="mark_review_navigation_click"
                 eventProps={{ placement: 'meeting_flow', target: 'external_guide' }}
                 className="inline-flex items-center justify-center rounded border border-slate-300 text-slate-900 text-[13px] font-semibold px-5 py-2.5 hover:border-slate-500 transition-colors"

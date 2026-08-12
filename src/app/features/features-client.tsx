@@ -104,7 +104,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </Link>
           <div className="flex items-center gap-4 text-[13px]">
-            <Link href="/guide" className="text-slate-300 hover:text-white">Guide</Link>
+            <Link href="/learn-more" className="text-slate-300 hover:text-white">Learn more</Link>
 
           </div>
         </div>
