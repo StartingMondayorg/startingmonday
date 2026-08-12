@@ -1,0 +1,161 @@
+name: Apply monitoring alert state migration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-monitoring-alert-state-migration
+  cancel-in-progress: false
+
+jobs:
+  apply-and-verify:
+    name: Apply and verify migration 132
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Apply monitoring telemetry migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+            echo "SUPABASE_ACCESS_TOKEN is not configured."
+            exit 1
+          fi
+
+          sql="$(cat supabase/migrations/132_monitoring_alert_state.sql)"$'\n'"$(cat supabase/migrations/167_monitoring_alert_state_compat_rls.sql)"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+
+          http_status="$(curl --silent --show-error \
+            --output migration-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @migration-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Migration API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' migration-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+      - name: Verify schema, constraint, and RLS
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            to_regclass('public.monitoring_alert_state')::text as table_name,
+            to_regclass('public.monitoring_alert_state_updated_idx')::text as index_name,
+            c.relrowsecurity as rls_enabled,
+            pg_get_constraintdef(con.oid) like '%deprecated-route-hit%' as compat_status_allowed
+          from pg_class c
+          join pg_namespace n on n.oid = c.relnamespace
+          join pg_constraint con
+            on con.conrelid = c.oid
+           and con.conname = 'monitoring_alert_state_last_status_check'
+          where n.nspname = 'public'
+            and c.relname = 'monitoring_alert_state';
+          SQL
+
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          http_status="$(curl --silent --show-error \
+            --output verify-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @verify-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Verification API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' verify-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+          jq -e '
+            length == 1
+            and .[0].table_name == "monitoring_alert_state"
+            and .[0].index_name == "monitoring_alert_state_updated_idx"
+            and .[0].rls_enabled == true
+            and .[0].compat_status_allowed == true
+          ' verify-response.json >/dev/null
+
+          echo "Migration 132 schema, index, compatibility status, and RLS verified."
+
+      - name: Verify production health routes
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${CRON_SECRET:-}" ]]; then
+            echo "CRON_SECRET is not configured."
+            exit 1
+          fi
+
+          for route in provider-quality-audit apollo-quality-audit; do
+            response_file="${route}-response.json"
+            http_status="$(curl --silent --show-error \
+              --retry 10 \
+              --retry-delay 3 \
+              --retry-all-errors \
+              --output "$response_file" \
+              --write-out '%{http_code}' \
+              --header "Authorization: Bearer ${CRON_SECRET}" \
+              "https://startingmonday.app/api/cron/${route}?health=1")"
+
+            if [[ "$http_status" != '200' ]]; then
+              echo "${route} health returned HTTP ${http_status}."
+              jq -c '{ok, status, error}' "$response_file" 2>/dev/null || true
+              exit 1
+            fi
+
+            jq -e '.ok == true and (.status == "fresh" or .status == "stale")' "$response_file" >/dev/null
+            echo "${route} health verified."
+          done
+
+      - name: Verify compatibility telemetry row
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          verify_sql="select alert_key, last_status, last_details->>'lastSeenAt' as last_seen_at from public.monitoring_alert_state where alert_key = 'apollo-quality-audit-compat-hit';"
+          jq -n --arg query "$verify_sql" '{query: $query}' > telemetry-request.json
+          http_status="$(curl --silent --show-error \
+            --output telemetry-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @telemetry-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Telemetry verification API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' telemetry-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+          jq -e '
+            length == 1
+            and .[0].alert_key == "apollo-quality-audit-compat-hit"
+            and .[0].last_status == "deprecated-route-hit"
+            and (.[0].last_seen_at | type == "string" and length > 0)
+          ' telemetry-response.json >/dev/null
+
+          echo "Compatibility telemetry is available to the admin sunset contract."
