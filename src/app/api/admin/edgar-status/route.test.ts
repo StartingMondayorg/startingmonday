@@ -165,6 +165,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
         overBudget: false,
         activeTraffic: true,
         inactivityWindowPending: true,
+        telemetryUnavailable: false,
       },
       inactivityWindowElapsed: false,
       inactivityWindowPhase: 'in_progress',
@@ -223,6 +224,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
         overBudget: false,
         activeTraffic: false,
         inactivityWindowPending: false,
+        telemetryUnavailable: false,
       },
       inactivityWindowElapsed: true,
       inactivityWindowRemainingHours: 0,
@@ -277,6 +279,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
         overBudget: true,
         activeTraffic: false,
         inactivityWindowPending: false,
+        telemetryUnavailable: false,
       },
       inactivityWindowElapsed: false,
       inactivityWindowEndsAt: '2026-08-11T23:30:00.000Z',
@@ -360,6 +363,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
         overBudget: false,
         activeTraffic: true,
         inactivityWindowPending: true,
+        telemetryUnavailable: false,
       },
     })
   })
@@ -406,6 +410,7 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
         overBudget: false,
         activeTraffic: true,
         inactivityWindowPending: false,
+        telemetryUnavailable: false,
       },
     })
   })
@@ -443,6 +448,56 @@ describe('src/app/api/admin/edgar-status/route.ts', () => {
       inactivityWindowProgressPct: 50,
       inactivityWindowPhase: 'in_progress',
       inactivityWindowEndsAt: '2026-08-11T12:00:00.000Z',
+    })
+  })
+
+  it('fails closed when compatibility telemetry query fails', async () => {
+    state.compatHitState.mockResolvedValue({
+      data: null,
+      error: { code: 'PGRST205', message: 'monitoring state unavailable' },
+    })
+
+    const request = new NextRequest('https://startingmonday.app/api/admin/edgar-status')
+    const response = await GET(request)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.status.compatRouteUsage).toBe('unknown')
+    expect(payload.compatibilitySunset).toMatchObject({
+      telemetryAvailable: false,
+      telemetryStatus: 'query_error',
+      recommendation: 'restore_telemetry',
+      recommendationReason: 'telemetry_unavailable',
+      eligibleForRouteRemoval: false,
+      requiresObservationOnly: false,
+      requiresCallerMigration: false,
+      blockingReasons: ['compat_telemetry_unavailable'],
+      blockingSummary: 'telemetry_unavailable',
+      blockingPrimaryReason: 'compat_telemetry_unavailable',
+      actionState: 'telemetry_unavailable',
+      blockingFlags: {
+        any: true,
+        overBudget: false,
+        activeTraffic: false,
+        inactivityWindowPending: false,
+        telemetryUnavailable: true,
+      },
+    })
+  })
+
+  it('fails closed when compatibility telemetry row is missing', async () => {
+    state.compatHitState.mockResolvedValue({ data: null, error: null })
+
+    const request = new NextRequest('https://startingmonday.app/api/admin/edgar-status')
+    const response = await GET(request)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.compatibilitySunset).toMatchObject({
+      telemetryAvailable: false,
+      telemetryStatus: 'missing',
+      recommendation: 'restore_telemetry',
+      actionState: 'telemetry_unavailable',
     })
   })
 })
