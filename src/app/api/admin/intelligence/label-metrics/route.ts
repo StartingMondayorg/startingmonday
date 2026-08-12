@@ -1,7 +1,49 @@
 // Epic E2 T2.6: Admin API endpoint for label metrics (coverage, latency, breakdowns)
 import { type NextRequest, NextResponse } from 'next/server'
+import { buildLabelAndBacktestGates } from '@/lib/intelligence-label-gates'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireAuth } from '@/lib/require-auth'
+
+const PAGE_SIZE = 1000
+
+type QueryError = { message: string }
+type PageResult<Row> = { data: Row[] | null; error: QueryError | null }
+type OpeningRow = {
+  canonical_company_id: string
+  label_source: string
+  role_family: string
+  canonical_companies: { sector: string | null } | null
+}
+type LabeledEventRow = { days_to_opening: number }
+type SourceStatRow = {
+  event_type: string
+  n_events: number
+  n_preceded: number
+  median_days_to_opening: number | string | null
+}
+type PatternRow = {
+  pattern_name: string
+  role_family: string | null
+  support_n: number
+  precision: number
+  recall: number
+  fp_rate: number
+  median_lead_time_days: number | null
+  computed_at: string
+}
+
+async function fetchAllRows<Row>(
+  loadPage: (from: number, to: number) => PromiseLike<PageResult<Row>>,
+): Promise<Row[]> {
+  const rows: Row[] = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await loadPage(from, from + PAGE_SIZE - 1)
+    if (error) throw new Error(error.message)
+    const page = data ?? []
+    rows.push(...page)
+    if (page.length < PAGE_SIZE) return rows
+  }
+}
 
 export async function GET(request: NextRequest) {
   const sessionAuth = await requireAuth(request)
@@ -10,41 +52,53 @@ export async function GET(request: NextRequest) {
   const admin = createAdminClient() as any
 
   try {
-    // Total companies
-    const { count: totalCompanies } = await admin
-      .from('companies')
-      .select('id', { count: 'exact' })
-      .is('archived_at', null)
+    const [companyCountResult, openingRows, labeledEvents, sourceStatsResult, latestReplayResult, patternRows, cohortCountResult, controlCountResult] = await Promise.all([
+      admin.from('canonical_companies').select('id', { count: 'exact', head: true }),
+      fetchAllRows<OpeningRow>((from, to) => admin
+        .from('role_openings')
+        .select('canonical_company_id, label_source, role_family, canonical_companies(sector)')
+        .order('created_at', { ascending: true })
+        .range(from, to)),
+      fetchAllRows<LabeledEventRow>((from, to) => admin
+        .from('event_outcome_labels')
+        .select('days_to_opening')
+        .order('days_to_opening', { ascending: true })
+        .range(from, to)),
+      admin
+        .from('precursor_stats')
+        .select('event_type, n_events, n_preceded, median_days_to_opening')
+        .gte('computed_at', new Date(Date.now() - 86400000).toISOString()),
+      admin
+        .from('backtest_replay_runs')
+        .select('id, status, cohort_count, control_count, started_at, finished_at, error')
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      fetchAllRows<PatternRow>((from, to) => admin
+        .from('pattern_backtests')
+        .select('pattern_name, role_family, support_n, precision, recall, fp_rate, median_lead_time_days, computed_at')
+        .order('computed_at', { ascending: false })
+        .range(from, to)),
+      admin.from('backtest_cohorts').select('id', { count: 'exact', head: true }),
+      admin.from('backtest_controls').select('id', { count: 'exact', head: true }),
+    ])
 
-    // Companies with at least one labeled outcome
-    const { data: companiesWithLabels } = await admin
-      .from('companies')
-      .select('distinct canonical_company_id', { count: 'exact' })
-      .join('role_openings', 'canonical_company_id', 'canonical_companies.id')
-      .neq('canonical_company_id', null)
-      .is('archived_at', null)
+    const totalCompanies = companyCountResult.count ?? 0
+    const sourceStats = (sourceStatsResult.data ?? []) as SourceStatRow[]
+    const latestReplay = latestReplayResult.data ?? null
+    const cohortCount = cohortCountResult.count ?? 0
+    const controlCount = controlCountResult.count ?? 0
 
     // Coverage calculation
-    const uniqueCompanies = new Set((companiesWithLabels ?? []).map((r: any) => r.canonical_company_id)).size
+    const uniqueCompanies = new Set(openingRows.map((row) => row.canonical_company_id)).size
     const coveragePercent = totalCompanies ? (uniqueCompanies / totalCompanies) * 100 : 0
 
     // Median days to opening across all labeled events
-    const { data: labeledEvents } = await admin
-      .from('event_outcome_labels')
-      .select('days_to_opening')
-      .order('days_to_opening', { ascending: true })
-      .limit(1000)
-
-    const medianDaysToOpening = calculateMedian((labeledEvents ?? []).map((e: any) => e.days_to_opening))
+    const medianDaysToOpening = calculateMedian(labeledEvents.map((event) => event.days_to_opening))
 
     // Openings by source
-    const { data: bySource } = await admin
-      .from('role_openings')
-      .select('label_source')
-      .order('label_source')
-
     const sourceMap = new Map<string, number>()
-    for (const row of bySource ?? []) {
+    for (const row of openingRows) {
       sourceMap.set(row.label_source, (sourceMap.get(row.label_source) ?? 0) + 1)
     }
     const openingsBySource = [...sourceMap.entries()].map(([source, count]) => ({
@@ -53,13 +107,8 @@ export async function GET(request: NextRequest) {
     }))
 
     // Openings by role family
-    const { data: byFamily } = await admin
-      .from('role_openings')
-      .select('role_family')
-      .order('role_family')
-
     const familyMap = new Map<string, number>()
-    for (const row of byFamily ?? []) {
+    for (const row of openingRows) {
       familyMap.set(row.role_family, (familyMap.get(row.role_family) ?? 0) + 1)
     }
     const openingsByFamily = [...familyMap.entries()].map(([family, count]) => ({
@@ -68,51 +117,56 @@ export async function GET(request: NextRequest) {
     }))
 
     // Openings by sector (requires join to canonical_companies)
-    const { data: bySector } = await admin
-      .from('role_openings')
-      .select('canonical_companies(sector)')
-      .order('canonical_companies(sector)', { ascending: true })
-
     const sectorMap = new Map<string, number>()
-    for (const row of bySector ?? []) {
-      const sector = (row.canonical_companies as any)?.sector ?? 'Unknown'
+    for (const row of openingRows) {
+      const sector = row.canonical_companies?.sector ?? 'Unknown'
       sectorMap.set(sector, (sectorMap.get(sector) ?? 0) + 1)
     }
     const openingsBySector = [...sectorMap.entries()]
       .map(([sector, count]) => ({ sector, count }))
       .sort((a, b) => b.count - a.count)
 
-    // Source breakdown with precursor stats (last 24h)
-    const { data: sourceStats } = await admin
-      .from('precursor_stats')
-      .select('event_type, n_events, n_preceded, median_days_to_opening')
-      .gte('computed_at', new Date(Date.now() - 86400000).toISOString())
-
-    const sourceBreakdown = (sourceStats ?? []).map((row: any) => ({
+    const sourceBreakdown = sourceStats.map((row) => ({
       source_key: row.event_type,
       total_openings: row.n_preceded,
       median_days_to_opening: row.median_days_to_opening ? Number(row.median_days_to_opening) : null,
       hit_rate: row.n_events > 0 ? row.n_preceded / row.n_events : 0,
     }))
 
+    const gates = buildLabelAndBacktestGates({
+      openingCount: openingRows.length,
+      labelCount: labeledEvents.length,
+      labelSourceCount: sourceMap.size,
+      precursorStatCount: sourceStats.length,
+      cohortCount,
+      controlCount,
+      patternCount: patternRows.length,
+      latestReplayStatus: latestReplay?.status ?? null,
+    })
+
     return NextResponse.json({
       timestamp: new Date().toISOString(),
       stats: {
-        totalCompanies: totalCompanies ?? 0,
+        totalCompanies,
         companiesWithLabels: uniqueCompanies,
         coveragePercent: Math.round(coveragePercent * 10) / 10,
         medianDaysToOpening,
+        eventOutcomeLabelCount: labeledEvents.length,
         openingsBySource,
         openingsByFamily,
         openingsBySector,
         lastUpdated: new Date().toISOString(),
       },
       sourceBreakdown,
-      gate: {
-        target: '>= 500 labeled openings',
-        current: (sourceMap.size > 0 ? Array.from(sourceMap.values()).reduce((a, b) => a + b, 0) : 0),
-        status: ((sourceMap.size > 0 ? Array.from(sourceMap.values()).reduce((a, b) => a + b, 0) : 0) >= 500) ? 'pass' : 'in_progress',
+      backtests: {
+        cohortCount,
+        controlCount,
+        latestReplay,
+        patternCount: patternRows.length,
+        patterns: patternRows,
       },
+      gates,
+      gate: gates.labeledOpenings,
     })
   } catch (err) {
     console.error('label-metrics: error', err)

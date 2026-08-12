@@ -26,6 +26,7 @@ export type UserEventName =
   | 'activation_reached'
   | 'offer_accepted'
   | 'onboarding_completed'
+  | 'onboarding_completion_write_failed'
   | 'positioning_saved'
   | 'signal_outreach_generated'
   | 'signals_scan_requested_on_demand'
