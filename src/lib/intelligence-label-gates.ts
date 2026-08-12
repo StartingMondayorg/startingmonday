@@ -14,7 +14,8 @@ export function buildLabelAndBacktestGates(input: {
   labelSourceCount: number
   precursorStatCount: number
   cohortCount: number
-  controlCount: number
+  replayCohortCount: number
+  replayControlCount: number
   patternCount: number
   latestReplayStatus: string | null
 }) {
@@ -45,11 +46,11 @@ export function buildLabelAndBacktestGates(input: {
       status: thresholdStatus(input.cohortCount, 300),
     },
     matchedControls: {
-      target: input.cohortCount * 3,
-      current: input.controlCount,
-      status: input.cohortCount === 0
+      target: input.replayCohortCount * 3,
+      current: input.replayControlCount,
+      status: input.replayCohortCount === 0
         ? 'no_data' as const
-        : thresholdStatus(input.controlCount, input.cohortCount * 3),
+        : thresholdStatus(input.replayControlCount, input.replayCohortCount * 3),
     },
     patternBacktests: {
       target: 1,
