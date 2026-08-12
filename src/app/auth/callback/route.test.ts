@@ -198,6 +198,21 @@ describe('auth callback route', () => {
     )
   })
 
+  it('routes a returning user with completed onboarding and zero target companies to the dashboard path', async () => {
+    state.maybeSingle.mockResolvedValueOnce({
+      data: { onboarding_completed_at: '2026-08-12T00:31:29.913Z' },
+    })
+
+    const req = new NextRequest('https://startingmonday.app/auth/callback?code=oauth-code')
+    const res = await GET(req)
+    const html = await res.text()
+
+    expect(res.status).toBe(200)
+    expect(html).toContain('location.replace("/dashboard")')
+    expect(html).not.toContain('location.replace("/onboarding")')
+    expect(state.maybeSingle).toHaveBeenCalledTimes(1)
+  })
+
   it('logs profile lookup failure telemetry and still emits completion telemetry', async () => {
     state.maybeSingle.mockResolvedValueOnce({
       data: null,
@@ -209,7 +224,7 @@ describe('auth callback route', () => {
     const html = await res.text()
 
     expect(res.status).toBe(200)
-    expect(html).toContain('location.replace("/onboarding")')
+    expect(html).toContain('location.replace("/dashboard")')
     expect(state.logEvent).toHaveBeenCalledWith(
       'user_1',
       'auth_path_routed',
@@ -232,8 +247,9 @@ describe('auth callback route', () => {
       'user_1',
       'auth_callback_completed',
       expect.objectContaining({
-        redirect_path: '/onboarding',
+        redirect_path: '/dashboard',
         explicit_next: false,
+        first_login_needs_onboarding: false,
       })
     )
   })

@@ -8,9 +8,46 @@ import { computeElapsedSeconds, isTransitionFirstCohort, normalizeOnboardingChan
 import { sendEmail } from '@/lib/email'
 import { getNotifyEmails } from '@/lib/owner-email'
 import { resolveRoleProfile } from '@/lib/role-taxonomy'
+import { ONBOARDING_FINAL_STEP, type OnboardingDraft } from '@/lib/onboarding-state'
 
 function parseCsv(raw: string) {
   return raw.split(',').map(s => s.trim()).filter(Boolean)
+}
+
+export async function saveOnboardingProgress(currentStep: number, draft: OnboardingDraft) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Your session expired. Sign in again to continue.')
+  if (!Number.isInteger(currentStep) || currentStep < 0 || currentStep > ONBOARDING_FINAL_STEP) {
+    throw new Error('Invalid onboarding step')
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('user_profiles')
+    .select('onboarding_completed_at, onboarding_current_step')
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (profileError) {
+    console.error(JSON.stringify({ event: 'onboarding_progress_read_failed', userId: user.id, code: profileError.code }))
+    throw new Error('We could not save your progress. Please try again.')
+  }
+  if (profile?.onboarding_completed_at) return
+
+  const persistedStep = Math.max(profile?.onboarding_current_step ?? 0, currentStep)
+  const { error } = await supabase.from('user_profiles').upsert(
+    {
+      user_id: user.id,
+      onboarding_current_step: persistedStep,
+      onboarding_draft: draft,
+    },
+    { onConflict: 'user_id' }
+  )
+
+  if (error) {
+    console.error(JSON.stringify({ event: 'onboarding_progress_write_failed', userId: user.id, code: error.code }))
+    throw new Error('We could not save your progress. Please try again.')
+  }
 }
 
 export async function completeOnboarding(formData: FormData) {
@@ -107,7 +144,7 @@ export async function completeOnboarding(formData: FormData) {
     positioning_style: positioningStyle.length > 0 ? positioningStyle : null,
   }
 
-  const { error: profileWriteError } = await supabase.from('user_profiles').upsert(
+  const { error: profileProjectionError } = await supabase.from('user_profiles').upsert(
     {
       user_id:                  user.id,
       search_persona:           resolvedRole.searchPersonaLegacy,
@@ -137,30 +174,56 @@ export async function completeOnboarding(formData: FormData) {
       career_history_json:      careerHistoryJson,
       briefing_time:            briefingTime,
       briefing_frequency:       briefingFrequency,
-      onboarding_completed_at:  now,
     },
     { onConflict: 'user_id' }
   )
 
-  // A failed write here must never be silent: without onboarding_completed_at every
-  // dashboard route bounces the user back to /onboarding (see SMK-460).
-  if (profileWriteError) {
+  if (profileProjectionError) {
     captureServerEvent(user.id, 'onboarding_completion_write_failed', {
-      message: profileWriteError.message,
-      code: profileWriteError.code ?? null,
+      message: profileProjectionError.message,
+      code: profileProjectionError.code ?? null,
+      phase: 'profile_projection',
     })
     await logEvent(user.id, 'onboarding_completion_write_failed', {
-      message: profileWriteError.message,
-      code: profileWriteError.code ?? null,
+      message: profileProjectionError.message,
+      code: profileProjectionError.code ?? null,
+      phase: 'profile_projection',
+    })
+    console.error(JSON.stringify({
+      ts: new Date().toISOString(),
+      event: 'onboarding_profile_projection_failed',
+      user_id: user.id,
+      message: profileProjectionError.message,
+      code: profileProjectionError.code ?? null,
+    }))
+  }
+
+  const { error: completionError } = await supabase
+    .from('user_profiles')
+    .update({
+      onboarding_completed_at: now,
+      onboarding_current_step: ONBOARDING_FINAL_STEP,
+      ...(profileProjectionError ? {} : { onboarding_draft: {} }),
+    })
+    .eq('user_id', user.id)
+
+  if (completionError) {
+    captureServerEvent(user.id, 'onboarding_completion_write_failed', {
+      message: completionError.message,
+      code: completionError.code ?? null,
+    })
+    await logEvent(user.id, 'onboarding_completion_write_failed', {
+      message: completionError.message,
+      code: completionError.code ?? null,
     })
     console.error(JSON.stringify({
       ts: new Date().toISOString(),
       event: 'onboarding_completion_write_failed',
       user_id: user.id,
-      message: profileWriteError.message,
-      code: profileWriteError.code ?? null,
+      message: completionError.message,
+      code: completionError.code ?? null,
     }))
-    redirect('/onboarding?error=' + encodeURIComponent('We could not save your setup. Please try again, and contact support@startingmonday.app if it keeps happening.'))
+    redirect('/onboarding?error=' + encodeURIComponent('We could not save your setup. Your progress is still here. Please try again, and contact support@startingmonday.app if it keeps happening.'))
   }
 
   // Create basic company records from wizard. No career page URL yet; user adds those from the dashboard.
@@ -170,7 +233,10 @@ export async function completeOnboarding(formData: FormData) {
       name: name.trim(),
       stage: 'target',
     }))
-    await supabase.from('companies').upsert(rows, { onConflict: 'user_id,name', ignoreDuplicates: true })
+    const { error: companyError } = await supabase.from('companies').upsert(rows, { onConflict: 'user_id,name', ignoreDuplicates: true })
+    if (companyError) {
+      console.error(JSON.stringify({ event: 'onboarding_company_projection_failed', userId: user.id, code: companyError.code }))
+    }
   }
 
   // Set search_started_at only on first completion; don't overwrite if already set
@@ -285,7 +351,11 @@ export async function skipOnboarding() {
   const now = new Date().toISOString()
 
   const { error: skipWriteError } = await supabase.from('user_profiles').upsert(
-    { user_id: user.id, onboarding_completed_at: now },
+    {
+      user_id: user.id,
+      onboarding_completed_at: now,
+      onboarding_current_step: ONBOARDING_FINAL_STEP,
+    },
     { onConflict: 'user_id' }
   )
   if (skipWriteError) {
