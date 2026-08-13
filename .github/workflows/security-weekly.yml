@@ -26,6 +26,11 @@ on:
         required: false
         type: boolean
         default: false
+      apply_canonical_cik_reconciliation_migration:
+        description: Apply and verify production canonical CIK reconciliation migration 172
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -304,6 +309,46 @@ jobs:
           jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
           curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
           jq -e 'length==1 and .[0].evidence_columns==4 and .[0].support_constraints==2 and .[0].role_tables==1 and .[0].role_rls==1 and .[0].service_execute==true and .[0].authenticated_execute==false and .[0].anon_execute==false and .[0].migration_rows==1' verify-response.json >/dev/null
+
+  apply-canonical-cik-reconciliation-migration:
+    name: Apply canonical CIK reconciliation migration 172
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_canonical_cik_reconciliation_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          sql="$(cat supabase/migrations/172_canonical_cik_reconciliation.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('172', array[]::text[], 'canonical_cik_reconciliation') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          http_status="$(curl --silent --show-error --output migration-response.json --write-out '%{http_code}' --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @migration-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+          test "$http_status" -ge 200 -a "$http_status" -lt 300
+      - name: Verify canonical CIK schema and privileges
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='canonical_cik_reconciliation_ledger' and column_name in ('id','run_id','canonical_company_id','previous_cik_padded','applied_cik_padded','policy_version','applied_at','rolled_back_at','rollback_reason')) as ledger_columns,
+            (select count(*)::int from pg_constraint where conname in ('canonical_cik_reconciliation_cik_check','canonical_cik_reconciliation_run_company_key')) as ledger_constraints,
+            (select count(*)::int from pg_class where relname='canonical_cik_reconciliation_ledger' and relrowsecurity=true) as ledger_rls,
+            (select count(*)::int from pg_indexes where schemaname='public' and indexname='canonical_companies_sec_cik_unique_idx' and indexdef ilike '%unique%' and indexdef ilike '%where (sec_cik_padded is not null)%') as unique_indexes,
+            (select count(*)::int from pg_proc where oid=to_regprocedure('public.reconcile_canonical_company_ciks(uuid,jsonb,text)')) as writer_functions,
+            has_table_privilege('service_role','public.canonical_cik_reconciliation_ledger','SELECT') as service_select,
+            has_table_privilege('authenticated','public.canonical_cik_reconciliation_ledger','SELECT') as authenticated_select,
+            has_table_privilege('anon','public.canonical_cik_reconciliation_ledger','SELECT') as anon_select,
+            has_function_privilege('service_role','public.reconcile_canonical_company_ciks(uuid,jsonb,text)','EXECUTE') as service_execute,
+            has_function_privilege('authenticated','public.reconcile_canonical_company_ciks(uuid,jsonb,text)','EXECUTE') as authenticated_execute,
+            has_function_privilege('anon','public.reconcile_canonical_company_ciks(uuid,jsonb,text)','EXECUTE') as anon_execute,
+            (select count(*)::int from supabase_migrations.schema_migrations where version='172') as migration_rows;
+          SQL
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
+          jq -e 'length==1 and .[0].ledger_columns==9 and .[0].ledger_constraints==2 and .[0].ledger_rls==1 and .[0].unique_indexes==1 and .[0].writer_functions==1 and .[0].service_select==true and .[0].authenticated_select==false and .[0].anon_select==false and .[0].service_execute==true and .[0].authenticated_execute==false and .[0].anon_execute==false and .[0].migration_rows==1' verify-response.json >/dev/null
 
   rls-check:
     name: Supabase RLS coverage
