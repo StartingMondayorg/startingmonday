@@ -200,3 +200,24 @@ export function buildCanonicalCikReconciliationPlan(companies, canonicalCompanie
 export function summarizeCanonicalCikCandidates(companies, canonicalCompanies) {
   return buildCanonicalCikReconciliationPlan(companies, canonicalCompanies).summary
 }
+
+export function selectCanonicalCikApplyPayload(planCandidates, ledgerRows, policyVersion) {
+  if (ledgerRows.length === 0) {
+    return { candidates: planCandidates, idempotentReplay: false }
+  }
+  const invalidRows = ledgerRows.filter((row) => (
+    row.policy_version !== policyVersion
+    || row.rolled_back_at !== null
+    || !row.canonical_company_id
+    || !/^\d{10}$/.test(row.applied_cik_padded ?? '')
+  ))
+  if (invalidRows.length > 0) throw new Error('existing run ledger is not replayable')
+
+  return {
+    candidates: ledgerRows.map((row) => ({
+      canonicalCompanyId: row.canonical_company_id,
+      secCikPadded: row.applied_cik_padded,
+    })),
+    idempotentReplay: true,
+  }
+}
