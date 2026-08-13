@@ -3,6 +3,7 @@ import {
   classifySector,
   buildCanonicalCikReconciliationPlan,
   privacyThresholdCounts,
+  selectCanonicalCikApplyPayload,
   summarizeDistinctSources,
   summarizeCanonicalCikCandidates,
   summarizeFieldCoverage,
@@ -144,5 +145,43 @@ describe('cross-sector coverage core', () => {
       globalHeldRows: 3,
       safeCandidates: 1,
     })
+  })
+
+  it('uses the current planner payload for a first apply', () => {
+    const candidates = [{ canonicalCompanyId: 'c1', secCikPadded: '0000000123' }]
+    expect(selectCanonicalCikApplyPayload(candidates, [], 'policy-v1')).toEqual({
+      candidates,
+      idempotentReplay: false,
+    })
+  })
+
+  it('reconstructs an idempotent replay from the active run ledger', () => {
+    expect(selectCanonicalCikApplyPayload([], [{
+      canonical_company_id: 'c1',
+      applied_cik_padded: '0000000123',
+      policy_version: 'policy-v1',
+      rolled_back_at: null,
+    }], 'policy-v1')).toEqual({
+      candidates: [{ canonicalCompanyId: 'c1', secCikPadded: '0000000123' }],
+      idempotentReplay: true,
+    })
+  })
+
+  it('rejects a rolled-back or policy-mismatched replay ledger', () => {
+    expect(() => selectCanonicalCikApplyPayload([], [{
+      canonical_company_id: 'c1',
+      applied_cik_padded: '0000000123',
+      policy_version: 'other-policy',
+      rolled_back_at: null,
+    }], 'policy-v1')).toThrow('existing run ledger is not replayable')
+  })
+
+  it('rejects malformed CIKs in a replay ledger', () => {
+    expect(() => selectCanonicalCikApplyPayload([], [{
+      canonical_company_id: 'c1',
+      applied_cik_padded: 'not-a-cik',
+      policy_version: 'policy-v1',
+      rolled_back_at: null,
+    }], 'policy-v1')).toThrow('existing run ledger is not replayable')
   })
 })
