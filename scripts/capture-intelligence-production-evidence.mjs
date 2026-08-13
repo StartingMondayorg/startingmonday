@@ -12,6 +12,7 @@ import path from 'node:path'
 import { createClient } from '@supabase/supabase-js'
 import {
   countEscapedDuplicateEvents,
+  summarizeLatestClassificationRun,
   summarizeObservabilityMetrics,
 } from './lib/intelligence-production-evidence-core.mjs'
 
@@ -67,7 +68,7 @@ async function fetchAllSourceMetricsSince(createdSince) {
   for (let from = 0; ; from += PAGE_SIZE) {
     const { data, error } = await db
       .from('source_run_metrics')
-      .select('classify_calls, classify_failures, events_created, events_merged')
+      .select('job, source_key, run_started_at, classify_calls, classify_failures, events_created, events_merged')
       .gte('created_at', createdSince)
       .order('created_at', { ascending: true })
       .range(from, from + PAGE_SIZE - 1)
@@ -155,6 +156,7 @@ try {
     provenanceTotal,
     countEscapedDuplicateEvents(canonicalEvents, freshSince),
   )
+  const latestClassificationRun = summarizeLatestClassificationRun(sourceMetrics)
   const replayCohortCount = latestReplay?.cohort_count ?? 0
   const replayControlCount = latestReplay?.control_count ?? 0
   const matchedControlTarget = replayCohortCount * 3
@@ -177,7 +179,8 @@ try {
           ? 'no_data'
           : 'in_progress',
     },
-            ...observability.gates,
+      ...observability.gates,
+      classificationFailure: latestClassificationRun.gate,
   }
 
   const blockedGates = Object.entries(gates)
@@ -220,6 +223,13 @@ try {
       canonicalMergePercent24h: observability.mergeRatePercent,
       duplicatePercent24h: observability.duplicateRatePercent,
       provenanceCoveragePercent24h: observability.provenanceCoveragePercent,
+    },
+    latestClassificationRun: {
+      job: latestClassificationRun.job,
+      runStartedAt: latestClassificationRun.runStartedAt,
+      calls: latestClassificationRun.calls,
+      failures: latestClassificationRun.failures,
+      failurePercent: latestClassificationRun.failurePercent,
     },
     labelSources,
     latestReplay,

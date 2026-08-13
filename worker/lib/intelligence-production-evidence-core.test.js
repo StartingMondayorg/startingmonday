@@ -1,8 +1,52 @@
 import { describe, expect, it } from 'vitest'
 import {
   countEscapedDuplicateEvents,
+  summarizeLatestClassificationRun,
   summarizeObservabilityMetrics,
 } from '../../scripts/lib/intelligence-production-evidence-core.mjs'
+
+describe('summarizeLatestClassificationRun', () => {
+  it('evaluates the latest completed run without historical failure contamination', () => {
+    const result = summarizeLatestClassificationRun([
+      {
+        job: 'signal-job',
+        run_started_at: '2026-08-12T20:00:00Z',
+        classify_calls: 100,
+        classify_failures: 20,
+      },
+      {
+        job: 'signal-job',
+        run_started_at: '2026-08-13T00:31:55Z',
+        classify_calls: 1974,
+        classify_failures: 1,
+      },
+      {
+        job: 'signal-job',
+        run_started_at: '2026-08-13T00:31:55Z',
+        classify_calls: 0,
+        classify_failures: 0,
+      },
+    ])
+
+    expect(result).toEqual({
+      job: 'signal-job',
+      runStartedAt: '2026-08-13T00:31:55Z',
+      calls: 1974,
+      failures: 1,
+      failurePercent: 0.05,
+      gate: {
+        currentPercent: 0.05,
+        targetPercent: 3,
+        comparison: 'less_than',
+        status: 'pass',
+      },
+    })
+  })
+
+  it('fails closed when no classifier denominator exists', () => {
+    expect(summarizeLatestClassificationRun([]).gate.status).toBe('no_data')
+  })
+})
 
 describe('summarizeObservabilityMetrics', () => {
   it('aggregates production metrics and passes values inside each threshold', () => {
