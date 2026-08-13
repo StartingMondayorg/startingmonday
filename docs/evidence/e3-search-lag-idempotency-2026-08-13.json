@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "e3-search-lag-run/v1",
+  "environment": "production",
+  "queriedAt": "2026-08-13T03:52:56.404Z",
+  "asOfDate": "2026-08-13",
+  "repository": {
+    "commit": "97158ca65f8216dca47db1bae4df2f2ca794fc7f",
+    "branch": ""
+  },
+  "mode": "apply",
+  "matchingPolicyVersion": "cik-role-earliest-v1",
+  "summary": {
+    "positionRows": 5284,
+    "departureCandidates": 2556,
+    "matchedPairs": 267,
+    "heldDepartures": 2289,
+    "holds": {
+      "missing_company_identity": 0,
+      "missing_role_identity": 1056,
+      "missing_departure_executive_identity": 0,
+      "invalid_departure_date": 0,
+      "no_appointment_in_window": 1123,
+      "appointment_after_as_of": 0,
+      "missing_appointment_executive_identity": 0,
+      "same_executive_appointment": 8,
+      "ambiguous_earliest_appointment": 51,
+      "appointment_reused": 51
+    },
+    "lagDays": {
+      "minimum": 1,
+      "p25": 3,
+      "median": 95,
+      "p75": 245,
+      "maximum": 545
+    },
+    "matchingContract": {
+      "companyIdentity": "normalized_nonempty_cik",
+      "roleIdentity": "exact_title_normalized",
+      "appointmentSelection": "unique_earliest_after_departure",
+      "windowMonths": 18,
+      "windowBoundary": "same_day_or_final_day_of_target_month",
+      "asOfDate": "2026-08-13",
+      "executiveIdentityRequired": true,
+      "sameExecutiveExcluded": true,
+      "appointmentReuseAllowed": false,
+      "replacementType": "unknown_until_prior-employer-evidence"
+    }
+  },
+  "writes": {
+    "attempted": 267,
+    "applied": 267,
+    "failed": 0,
+    "retryAttempts": 0,
+    "failureReasons": {},
+    "persistedPolicyRows": 267,
+    "schemaReady": true
+  }
+}
