@@ -5,6 +5,53 @@ function roundedPercent(numerator, denominator) {
   return Math.round((numerator / denominator) * 10_000) / 100
 }
 
+export function summarizeLatestClassificationRun(sourceMetrics) {
+  const classifierRows = sourceMetrics.filter((row) => (row.classify_calls ?? 0) > 0)
+  const latest = classifierRows.reduce((current, row) => {
+    if (!current) return row
+    return String(row.run_started_at) > String(current.run_started_at) ? row : current
+  }, null)
+
+  if (!latest) {
+    return {
+      job: null,
+      runStartedAt: null,
+      calls: 0,
+      failures: 0,
+      failurePercent: null,
+      gate: {
+        currentPercent: null,
+        targetPercent: 3,
+        comparison: 'less_than',
+        status: 'no_data',
+      },
+    }
+  }
+
+  const runRows = classifierRows.filter((row) => (
+    row.job === latest.job && row.run_started_at === latest.run_started_at
+  ))
+  const calls = runRows.reduce((total, row) => total + (row.classify_calls ?? 0), 0)
+  const failures = runRows.reduce((total, row) => total + (row.classify_failures ?? 0), 0)
+  const failurePercent = roundedPercent(failures, calls)
+
+  return {
+    job: latest.job,
+    runStartedAt: latest.run_started_at,
+    calls,
+    failures,
+    failurePercent,
+    gate: {
+      currentPercent: failurePercent,
+      targetPercent: 3,
+      comparison: 'less_than',
+      status: failurePercent === null
+        ? 'no_data'
+        : failurePercent < 3 ? 'pass' : 'fail',
+    },
+  }
+}
+
 export function countEscapedDuplicateEvents(events, cutoffIso) {
   const ordered = [...events].sort((left, right) => {
     const createdOrder = String(left.created_at).localeCompare(String(right.created_at))
