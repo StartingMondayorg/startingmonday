@@ -31,6 +31,11 @@ on:
         required: false
         type: boolean
         default: false
+      apply_person_signal_rights_containment_migration:
+        description: Apply and verify production person-signal rights containment migration 173
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -349,6 +354,56 @@ jobs:
           jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
           curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
           jq -e 'length==1 and .[0].ledger_columns==9 and .[0].ledger_constraints==2 and .[0].ledger_rls==1 and .[0].unique_indexes==1 and .[0].writer_functions==1 and .[0].service_select==true and .[0].authenticated_select==false and .[0].anon_select==false and .[0].service_execute==true and .[0].authenticated_execute==false and .[0].anon_execute==false and .[0].migration_rows==1' verify-response.json >/dev/null
+
+  apply-person-signal-rights-containment-migration:
+    name: Apply person-signal rights containment migration 173
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_person_signal_rights_containment_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' preflight_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='contact_people' and column_name in ('user_id','person_id')) as contact_link_columns,
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='contact_people' and column_name in ('user_id','person_id') and is_nullable='NO') as contact_link_not_null,
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='company_people_candidates' and column_name in ('user_id','person_id')) as candidate_link_columns,
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='company_people_candidates' and column_name='user_id' and is_nullable='NO') as candidate_user_not_null,
+            (select count(*)::int from public.people) as people_rows,
+            (select count(*)::int from public.person_sources) as source_rows,
+            (select count(*)::int from public.person_affiliations) as affiliation_rows,
+            (select count(*)::int from public.person_signals) as signal_rows;
+          SQL
+          jq -n --arg query "$preflight_sql" '{query: $query}' > preflight-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @preflight-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > preflight-response.json
+          jq -e 'length==1 and .[0].contact_link_columns==2 and .[0].contact_link_not_null==2 and .[0].candidate_link_columns==2 and .[0].candidate_user_not_null==1 and .[0].people_rows==0 and .[0].source_rows==0 and .[0].affiliation_rows==0 and .[0].signal_rows==0' preflight-response.json >/dev/null
+
+          sql="$(cat supabase/migrations/173_person_signal_rights_containment.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('173', array[]::text[], 'person_signal_rights_containment') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @migration-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > migration-response.json
+      - name: Verify person-signal containment policies
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from pg_class where relnamespace='public'::regnamespace and relname in ('people','person_sources','person_affiliations','person_signals') and relrowsecurity=true) as rls_tables,
+            (select count(*)::int from pg_policies where schemaname='public' and policyname in ('Authenticated can read people','Authenticated can read person sources','Authenticated can read person affiliations','Authenticated can read person signals')) as global_read_policies,
+            (select count(*)::int from pg_policies where schemaname='public' and policyname in ('Users read linked people','Users read linked person sources','Users read linked person affiliations','Users read linked person signals') and qual ilike '%auth.uid()%') as scoped_read_policies,
+            (select count(*)::int from public.people) as people_rows,
+            (select count(*)::int from public.person_sources) as source_rows,
+            (select count(*)::int from public.person_affiliations) as affiliation_rows,
+            (select count(*)::int from public.person_signals) as signal_rows,
+            (select count(*)::int from supabase_migrations.schema_migrations where version='173') as migration_rows;
+          SQL
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
+          jq -e 'length==1 and .[0].rls_tables==4 and .[0].global_read_policies==0 and .[0].scoped_read_policies==4 and .[0].people_rows==0 and .[0].source_rows==0 and .[0].affiliation_rows==0 and .[0].signal_rows==0 and .[0].migration_rows==1' verify-response.json >/dev/null
 
   rls-check:
     name: Supabase RLS coverage
