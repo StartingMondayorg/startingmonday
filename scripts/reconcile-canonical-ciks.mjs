@@ -3,7 +3,10 @@ import { randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { createClient } from '@supabase/supabase-js'
-import { buildCanonicalCikReconciliationPlan } from './lib/cross-sector-coverage-core.mjs'
+import {
+  buildCanonicalCikReconciliationPlan,
+  selectCanonicalCikApplyPayload,
+} from './lib/cross-sector-coverage-core.mjs'
 
 const POLICY_VERSION = 'linked-company-cik-global-unique-v1'
 const args = new Map(process.argv.slice(2).map((arg) => {
@@ -76,15 +79,16 @@ async function readState() {
   }
 }
 
-async function countLedgerRows(targetRunId) {
+async function readLedgerRows(targetRunId) {
   const result = await db
     .from('canonical_cik_reconciliation_ledger')
-    .select('id, run_id, canonical_company_id, applied_cik_padded, policy_version')
+    .select('id, run_id, canonical_company_id, applied_cik_padded, policy_version, rolled_back_at')
     .eq('run_id', targetRunId)
+    .order('canonical_company_id')
     .limit(500)
-  if (!result.error) return { schemaReady: true, count: result.data?.length ?? 0 }
+  if (!result.error) return { schemaReady: true, rows: result.data ?? [] }
   if (/does not exist|schema cache/i.test(result.error.message ?? '')) {
-    return { schemaReady: false, count: 0 }
+    return { schemaReady: false, rows: [] }
   }
   throw new Error(`canonical_cik_reconciliation_ledger: ${result.error.message}`)
 }
@@ -110,19 +114,31 @@ async function applyPlan(candidates) {
 
 const queriedAt = new Date().toISOString()
 const before = await readState()
-if (expectedSafe !== null && before.plan.summary.safeCandidates !== expectedSafe) {
-  throw new Error(`safe candidate drift: expected ${expectedSafe}, found ${before.plan.summary.safeCandidates}`)
-}
 if (before.duplicateCanonicalCikRows !== 0) throw new Error('pre-existing duplicate canonical CIK rows')
 
+const ledgerBefore = await readLedgerRows(runId)
+const selection = selectCanonicalCikApplyPayload(
+  before.plan.candidates,
+  apply ? ledgerBefore.rows : [],
+  POLICY_VERSION,
+)
+if (expectedSafe !== null) {
+  const observed = selection.idempotentReplay
+    ? selection.candidates.length
+    : before.plan.summary.safeCandidates
+  if (observed !== expectedSafe) {
+    throw new Error(`safe candidate drift: expected ${expectedSafe}, found ${observed}`)
+  }
+}
+
 let rpc = null
-if (apply) rpc = await applyPlan(before.plan.candidates)
+if (apply) rpc = await applyPlan(selection.candidates)
 
 const after = apply ? await readState() : before
-const ledger = await countLedgerRows(runId)
+const ledger = await readLedgerRows(runId)
 const protectedCountsUnchanged = JSON.stringify(before.protectedCounts) === JSON.stringify(after.protectedCounts)
 const appliedDelta = after.canonicalCikRows - before.canonicalCikRows
-const expectedApplied = apply ? before.plan.summary.safeCandidates : 0
+const expectedApplied = apply && !selection.idempotentReplay ? selection.candidates.length : 0
 const reconciled = before.plan.summary.linkedWithAnyCik === 100
   && before.plan.summary.safeCandidates + before.plan.summary.alreadyAligned
     + before.plan.summary.conflictingLinkedCiks + before.plan.summary.canonicalCikConflict
@@ -132,7 +148,7 @@ const reconciled = before.plan.summary.linkedWithAnyCik === 100
   && protectedCountsUnchanged
   && (!apply || (
     ledger.schemaReady
-    && ledger.count === expectedApplied
+    && ledger.rows.length === selection.candidates.length
     && after.plan.summary.safeCandidates === 0
     && after.plan.summary.alreadyAligned === before.plan.summary.alreadyAligned + expectedApplied
   ))
@@ -149,6 +165,7 @@ const evidence = {
   mode: apply ? 'apply' : 'dry-run',
   runId,
   policyVersion: POLICY_VERSION,
+  idempotentReplay: selection.idempotentReplay,
   mutation: apply ? 'bounded-canonical-cik-update' : 'none',
   before: {
     summary: before.plan.summary,
@@ -157,10 +174,10 @@ const evidence = {
     protectedCounts: before.protectedCounts,
   },
   write: {
-    attempted: apply ? before.plan.candidates.length : 0,
+    attempted: apply ? selection.candidates.length : 0,
     rpc,
     appliedDelta,
-    ledgerRows: ledger.count,
+    ledgerRows: ledger.rows.length,
     schemaReady: ledger.schemaReady,
   },
   after: {
