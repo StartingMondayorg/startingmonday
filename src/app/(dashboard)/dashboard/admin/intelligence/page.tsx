@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { IntelligenceAdminClient } from './client'
+import { SearchLagContextPanel } from './SearchLagContextPanel'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://startingmonday.app'
 
@@ -38,7 +39,7 @@ export default async function AdminIntelligencePage() {
   const addRateBaseline = Number(process.env.DISCOVER_ADD_TO_WATCHLIST_BASELINE_RATE ?? '')
   const hasAddRateBaseline = Number.isFinite(addRateBaseline) && addRateBaseline > 0
 
-  const [companiesRes, recommendationRowsRes, generatedEventsRes, runCreatedEventsRes, openedEventsRes, recommendationAddedEventsRes, outreachStartedEventsRes, companyAddedEventsRes, activeCampaignsRes, stalledCampaignsRes, dueFollowUpsRes] = await Promise.all([
+  const [companiesRes, recommendationRowsRes, generatedEventsRes, runCreatedEventsRes, openedEventsRes, recommendationAddedEventsRes, outreachStartedEventsRes, companyAddedEventsRes, activeCampaignsRes, stalledCampaignsRes, dueFollowUpsRes, companyLagStatsRes, industryLagStatsRes, roleLagStatsRes] = await Promise.all([
     admin
       .from('intelligence_companies')
       .select('slug, company_name, sector, website, is_featured, created_at')
@@ -95,6 +96,24 @@ export default async function AdminIntelligencePage() {
       .select('id', { count: 'exact', head: true })
       .eq('status', 'pending')
       .lt('due_date', new Date().toISOString().slice(0, 10)),
+    (admin as any)
+      .from('company_tenure_stats')
+      .select('company_name, title_normalized, median_search_lag_days, sample_size, updated_at')
+      .eq('stats_version', 'search-lag-stats-v1')
+      .order('sample_size', { ascending: false })
+      .limit(5),
+    (admin as any)
+      .from('industry_tenure_stats')
+      .select('sic_code, company_stage, title_normalized, median_search_lag_days, sample_size, updated_at')
+      .eq('stats_version', 'search-lag-stats-v1')
+      .order('sample_size', { ascending: false })
+      .limit(5),
+    (admin as any)
+      .from('search_lag_role_stats')
+      .select('title_normalized, median_search_lag_days, p25_search_lag_days, p75_search_lag_days, sample_size, updated_at')
+      .eq('stats_version', 'search-lag-stats-v1')
+      .order('sample_size', { ascending: false })
+      .limit(8),
   ])
 
   const companies = companiesRes.data ?? []
@@ -145,6 +164,14 @@ export default async function AdminIntelligencePage() {
   const activeCampaigns = activeCampaignsRes.count ?? 0
   const stalledCampaigns = stalledCampaignsRes.count ?? 0
   const dueFollowUps = dueFollowUpsRes.count ?? 0
+  const companyLagStats = companyLagStatsRes.data ?? []
+  const industryLagStats = industryLagStatsRes.data ?? []
+  const roleLagStats = roleLagStatsRes.data ?? []
+  const lagUpdatedAt = [...companyLagStats, ...industryLagStats, ...roleLagStats]
+    .map((row) => row.updated_at as string | null)
+    .filter(Boolean)
+    .sort()
+    .at(-1) ?? null
 
   const discoverSummary: DiscoverSummary = {
     generatedEvents30d,
@@ -308,6 +335,11 @@ export default async function AdminIntelligencePage() {
       </nav>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 mt-6">
+        <SearchLagContextPanel
+          roleStats={roleLagStats}
+          companyCohortCount={companyLagStats.length}
+          lastUpdatedAt={lagUpdatedAt}
+        />
         <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 mb-5">
           <h2 className="text-[15px] font-bold text-slate-900 mb-3">Campaign health monitor</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

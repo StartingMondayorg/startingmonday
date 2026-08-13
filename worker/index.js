@@ -50,6 +50,7 @@ import { runAtsPollerJob } from './jobs/ats-poller-job.js'
 import { runWarnIngestionJob } from './jobs/warn-ingestion-job.js'
 import { runCohortBuilderJob } from './jobs/cohort-builder-job.js'
 import { runPatternBacktestJob } from './jobs/pattern-backtest-job.js'
+import { runSearchLagStatsJob } from './jobs/search-lag-stats-job.js'
 import { notify } from './lib/notify.js'
 
 // ── Sentry ────────────────────────────────────────────────────────────────────
@@ -348,6 +349,9 @@ cron.schedule('10 4 * * *', () => runJob('cohort-builder-job', runCohortBuilderJ
 // cohorts/controls and refreshes pattern_backtests precision metrics.
 cron.schedule('40 4 * * 0', () => runJob('pattern-backtest-job', runPatternBacktestJob))
 
+// Descriptive search-lag refresh: weekly Sunday 05:10, after cohort replay.
+cron.schedule('10 5 * * 0', () => runJob('search-lag-stats-job', runSearchLagStatsJob))
+
 // Precursor stats: nightly at 03:40 - recomputes calibration aggregates from labeled outcomes.
 cron.schedule('40 3 * * *', () => runJob('precursor-stats-job', runPrecursorStatsJob))
 
@@ -450,7 +454,7 @@ cron.schedule('0 9 1 * *', () => runJob('ideas-monthly-job', runIdeasMonthlyJob)
 setTimeout(() => runDemoCheck().catch(err => logger.error('check-demo: failed', { error: err.message })), 10_000)
 
 logger.info('worker: cron schedules registered', {
-  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'followup-job', 'momentum-job', 'momentum-nudge-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'pulse-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'ideas-monthly-job'],
+  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'followup-job', 'momentum-job', 'momentum-nudge-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'pulse-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job'],
 })
 bootPhase = 'ready'
 
