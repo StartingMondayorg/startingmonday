@@ -1,0 +1,965 @@
+{
+  "schemaVersion": "cross-sector-coverage-baseline/v1",
+  "taxonomyProposalVersion": "cross-sector-taxonomy-proposal-v1",
+  "environment": "production",
+  "queriedAt": "2026-08-13T12:19:16.726Z",
+  "repository": {
+    "commit": "8628d87bb6a4f4371aab5ebc3c39abed3a788bca",
+    "branch": "feat/cross-sector-coverage-baseline",
+    "worktreeDirty": true,
+    "auditLogic": {
+      "scriptSha256": "b73edbe3a8e369b655b53f0cd38a45224699c894aa6b7a7a84623dbf5faabd91",
+      "coreSha256": "f7612ac82c67f2f2881abdeb1d7ed75059678f66656b5543980b612d5215723b"
+    }
+  },
+  "governance": {
+    "stories": [
+      "WS0-06",
+      "WS1-04",
+      "WS3-06"
+    ],
+    "supportingEvidence": [
+      "WS1-05",
+      "WS1-13"
+    ],
+    "mutation": "none",
+    "providerSpendUsd": 0,
+    "customerExposure": "none"
+  },
+  "demand": {
+    "activeUsers": 65,
+    "privacyMinimum": 3,
+    "userCounts": {
+      "usersWithTargetSectors": {
+        "count": 20,
+        "suppressed": false,
+        "minimum": 3
+      },
+      "multiTargetSectorUsers": {
+        "count": 19,
+        "suppressed": false,
+        "minimum": 3
+      },
+      "crossSectorUsers": {
+        "count": 15,
+        "suppressed": false,
+        "minimum": 3
+      },
+      "sector:technology": {
+        "count": 13,
+        "suppressed": false,
+        "minimum": 3
+      },
+      "sector:pharmaceuticals_life_sciences": {
+        "count": 3,
+        "suppressed": false,
+        "minimum": 3
+      },
+      "sector:publishing_media": {
+        "count": null,
+        "suppressed": true,
+        "minimum": 3
+      },
+      "sector:nonprofit_ngo": {
+        "count": null,
+        "suppressed": true,
+        "minimum": 3
+      },
+      "sector:other_named": {
+        "count": 20,
+        "suppressed": false,
+        "minimum": 3
+      },
+      "sector:unspecified": {
+        "count": 0,
+        "suppressed": false,
+        "minimum": 3
+      }
+    },
+    "activeWatchedCompanies": {
+      "denominator": 173,
+      "bySector": {
+        "technology": 17,
+        "pharmaceuticals_life_sciences": 0,
+        "publishing_media": 0,
+        "nonprofit_ngo": 0,
+        "other_named": 67,
+        "unspecified": 89
+      },
+      "fieldCoverage": {
+        "namedSector": {
+          "denominator": 173,
+          "populated": 84,
+          "missing": 89,
+          "coveragePercent": 48.6
+        },
+        "secIdentity": {
+          "denominator": 173,
+          "populated": 121,
+          "missing": 52,
+          "coveragePercent": 69.9
+        },
+        "publicStatusProxy": {
+          "denominator": 173,
+          "populated": 157,
+          "missing": 16,
+          "coveragePercent": 90.8
+        },
+        "canonicalIdentity": {
+          "denominator": 173,
+          "populated": 173,
+          "missing": 0,
+          "coveragePercent": 100
+        }
+      }
+    },
+    "requestedCompanyProxy": {
+      "definition": "company_watch_events emitted when a user adds a company; no separate pre-watch request object exists",
+      "denominator": 119,
+      "bySector": {
+        "technology": 21,
+        "pharmaceuticals_life_sciences": 0,
+        "publishing_media": 0,
+        "nonprofit_ngo": 0,
+        "other_named": 23,
+        "unspecified": 75
+      }
+    }
+  },
+  "coverage": {
+    "canonicalCompanyUniverse": {
+      "denominator": 577,
+      "bySector": {
+        "technology": 189,
+        "pharmaceuticals_life_sciences": 9,
+        "publishing_media": 0,
+        "nonprofit_ngo": 0,
+        "other_named": 274,
+        "unspecified": 105
+      },
+      "fields": {
+        "namedSector": {
+          "denominator": 577,
+          "populated": 472,
+          "missing": 105,
+          "coveragePercent": 81.8
+        },
+        "secIdentity": {
+          "denominator": 577,
+          "populated": 20,
+          "missing": 557,
+          "coveragePercent": 3.5
+        },
+        "publicStatusProxy": {
+          "denominator": 577,
+          "populated": 26,
+          "missing": 551,
+          "coveragePercent": 4.5
+        },
+        "industrySicOrNaics": {
+          "denominator": 577,
+          "populated": 0,
+          "missing": 577,
+          "coveragePercent": 0
+        },
+        "organizationType": {
+          "denominator": 577,
+          "populated": 0,
+          "missing": 577,
+          "coveragePercent": 0
+        },
+        "ownership": {
+          "denominator": 577,
+          "populated": 0,
+          "missing": 577,
+          "coveragePercent": 0
+        },
+        "scale": {
+          "denominator": 577,
+          "populated": 0,
+          "missing": 577,
+          "coveragePercent": 0
+        },
+        "historicalLifecycle": {
+          "denominator": 577,
+          "populated": 0,
+          "missing": 577,
+          "coveragePercent": 0
+        }
+      },
+      "linkedCompanyCikCandidates": {
+        "allCompanies": {
+          "canonicalCompanies": 577,
+          "linkedCanonicalCompanies": 185,
+          "linkedWithAnyCik": 100,
+          "conflictingLinkedCiks": 2,
+          "missingCanonicalCikWithUnambiguousCandidate": 80,
+          "alreadyAligned": 16,
+          "canonicalCikConflict": 2,
+          "candidateCikCollisionRows": 42,
+          "candidateCikAlreadyOwnedRows": 30,
+          "globalCollisionOverlapRows": 28,
+          "globalHeldRows": 44,
+          "safeCandidates": 36,
+          "existingDuplicateCikGroups": 0
+        },
+        "activeCompanies": {
+          "canonicalCompanies": 577,
+          "linkedCanonicalCompanies": 149,
+          "linkedWithAnyCik": 100,
+          "conflictingLinkedCiks": 2,
+          "missingCanonicalCikWithUnambiguousCandidate": 80,
+          "alreadyAligned": 16,
+          "canonicalCikConflict": 2,
+          "candidateCikCollisionRows": 42,
+          "candidateCikAlreadyOwnedRows": 30,
+          "globalCollisionOverlapRows": 28,
+          "globalHeldRows": 44,
+          "safeCandidates": 36,
+          "existingDuplicateCikGroups": 0
+        }
+      },
+      "bySectorFields": {
+        "technology": {
+          "rows": 189,
+          "fields": {
+            "namedSector": {
+              "denominator": 189,
+              "populated": 189,
+              "missing": 0,
+              "coveragePercent": 100
+            },
+            "secIdentity": {
+              "denominator": 189,
+              "populated": 2,
+              "missing": 187,
+              "coveragePercent": 1.1
+            },
+            "publicStatusProxy": {
+              "denominator": 189,
+              "populated": 2,
+              "missing": 187,
+              "coveragePercent": 1.1
+            },
+            "industrySicOrNaics": {
+              "denominator": 189,
+              "populated": 0,
+              "missing": 189,
+              "coveragePercent": 0
+            },
+            "organizationType": {
+              "denominator": 189,
+              "populated": 0,
+              "missing": 189,
+              "coveragePercent": 0
+            },
+            "ownership": {
+              "denominator": 189,
+              "populated": 0,
+              "missing": 189,
+              "coveragePercent": 0
+            },
+            "scale": {
+              "denominator": 189,
+              "populated": 0,
+              "missing": 189,
+              "coveragePercent": 0
+            },
+            "historicalLifecycle": {
+              "denominator": 189,
+              "populated": 0,
+              "missing": 189,
+              "coveragePercent": 0
+            }
+          }
+        },
+        "pharmaceuticals_life_sciences": {
+          "rows": 9,
+          "fields": {
+            "namedSector": {
+              "denominator": 9,
+              "populated": 9,
+              "missing": 0,
+              "coveragePercent": 100
+            },
+            "secIdentity": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            },
+            "publicStatusProxy": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            },
+            "industrySicOrNaics": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            },
+            "organizationType": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            },
+            "ownership": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            },
+            "scale": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            },
+            "historicalLifecycle": {
+              "denominator": 9,
+              "populated": 0,
+              "missing": 9,
+              "coveragePercent": 0
+            }
+          }
+        },
+        "publishing_media": {
+          "rows": 0,
+          "fields": {
+            "namedSector": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "secIdentity": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "publicStatusProxy": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "industrySicOrNaics": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "nonprofit_ngo": {
+          "rows": 0,
+          "fields": {
+            "namedSector": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "secIdentity": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "publicStatusProxy": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "industrySicOrNaics": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "other_named": {
+          "rows": 274,
+          "fields": {
+            "namedSector": {
+              "denominator": 274,
+              "populated": 274,
+              "missing": 0,
+              "coveragePercent": 100
+            },
+            "secIdentity": {
+              "denominator": 274,
+              "populated": 11,
+              "missing": 263,
+              "coveragePercent": 4
+            },
+            "publicStatusProxy": {
+              "denominator": 274,
+              "populated": 16,
+              "missing": 258,
+              "coveragePercent": 5.8
+            },
+            "industrySicOrNaics": {
+              "denominator": 274,
+              "populated": 0,
+              "missing": 274,
+              "coveragePercent": 0
+            },
+            "organizationType": {
+              "denominator": 274,
+              "populated": 0,
+              "missing": 274,
+              "coveragePercent": 0
+            },
+            "ownership": {
+              "denominator": 274,
+              "populated": 0,
+              "missing": 274,
+              "coveragePercent": 0
+            },
+            "scale": {
+              "denominator": 274,
+              "populated": 0,
+              "missing": 274,
+              "coveragePercent": 0
+            },
+            "historicalLifecycle": {
+              "denominator": 274,
+              "populated": 0,
+              "missing": 274,
+              "coveragePercent": 0
+            }
+          }
+        },
+        "unspecified": {
+          "rows": 105,
+          "fields": {
+            "namedSector": {
+              "denominator": 105,
+              "populated": 0,
+              "missing": 105,
+              "coveragePercent": 0
+            },
+            "secIdentity": {
+              "denominator": 105,
+              "populated": 7,
+              "missing": 98,
+              "coveragePercent": 6.7
+            },
+            "publicStatusProxy": {
+              "denominator": 105,
+              "populated": 8,
+              "missing": 97,
+              "coveragePercent": 7.6
+            },
+            "industrySicOrNaics": {
+              "denominator": 105,
+              "populated": 0,
+              "missing": 105,
+              "coveragePercent": 0
+            },
+            "organizationType": {
+              "denominator": 105,
+              "populated": 0,
+              "missing": 105,
+              "coveragePercent": 0
+            },
+            "ownership": {
+              "denominator": 105,
+              "populated": 0,
+              "missing": 105,
+              "coveragePercent": 0
+            },
+            "scale": {
+              "denominator": 105,
+              "populated": 0,
+              "missing": 105,
+              "coveragePercent": 0
+            },
+            "historicalLifecycle": {
+              "denominator": 105,
+              "populated": 0,
+              "missing": 105,
+              "coveragePercent": 0
+            }
+          }
+        }
+      }
+    },
+    "verifiedSearchLagPairs": {
+      "denominator": 267,
+      "unmatchedDepartureRows": 0,
+      "bySector": {
+        "technology": 0,
+        "pharmaceuticals_life_sciences": 0,
+        "publishing_media": 0,
+        "nonprofit_ngo": 0,
+        "other_named": 0,
+        "unspecified": 267
+      },
+      "fields": {
+        "industrySic": {
+          "denominator": 267,
+          "populated": 0,
+          "missing": 267,
+          "coveragePercent": 0
+        },
+        "organizationType": {
+          "denominator": 267,
+          "populated": 0,
+          "missing": 267,
+          "coveragePercent": 0
+        },
+        "ownership": {
+          "denominator": 267,
+          "populated": 0,
+          "missing": 267,
+          "coveragePercent": 0
+        },
+        "scale": {
+          "denominator": 267,
+          "populated": 0,
+          "missing": 267,
+          "coveragePercent": 0
+        },
+        "historicalLifecycle": {
+          "denominator": 267,
+          "populated": 0,
+          "missing": 267,
+          "coveragePercent": 0
+        },
+        "legacyMixedCompanyStage": {
+          "denominator": 267,
+          "populated": 0,
+          "missing": 267,
+          "coveragePercent": 0
+        },
+        "sourceProvenance": {
+          "denominator": 267,
+          "populated": 267,
+          "missing": 0,
+          "coveragePercent": 100
+        }
+      },
+      "bySectorFields": {
+        "technology": {
+          "rows": 0,
+          "fields": {
+            "industrySic": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "legacyMixedCompanyStage": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "sourceProvenance": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "pharmaceuticals_life_sciences": {
+          "rows": 0,
+          "fields": {
+            "industrySic": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "legacyMixedCompanyStage": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "sourceProvenance": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "publishing_media": {
+          "rows": 0,
+          "fields": {
+            "industrySic": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "legacyMixedCompanyStage": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "sourceProvenance": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "nonprofit_ngo": {
+          "rows": 0,
+          "fields": {
+            "industrySic": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "legacyMixedCompanyStage": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "sourceProvenance": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "other_named": {
+          "rows": 0,
+          "fields": {
+            "industrySic": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "organizationType": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "ownership": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "scale": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "historicalLifecycle": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "legacyMixedCompanyStage": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            },
+            "sourceProvenance": {
+              "denominator": 0,
+              "populated": 0,
+              "missing": 0,
+              "coveragePercent": null
+            }
+          }
+        },
+        "unspecified": {
+          "rows": 267,
+          "fields": {
+            "industrySic": {
+              "denominator": 267,
+              "populated": 0,
+              "missing": 267,
+              "coveragePercent": 0
+            },
+            "organizationType": {
+              "denominator": 267,
+              "populated": 0,
+              "missing": 267,
+              "coveragePercent": 0
+            },
+            "ownership": {
+              "denominator": 267,
+              "populated": 0,
+              "missing": 267,
+              "coveragePercent": 0
+            },
+            "scale": {
+              "denominator": 267,
+              "populated": 0,
+              "missing": 267,
+              "coveragePercent": 0
+            },
+            "historicalLifecycle": {
+              "denominator": 267,
+              "populated": 0,
+              "missing": 267,
+              "coveragePercent": 0
+            },
+            "legacyMixedCompanyStage": {
+              "denominator": 267,
+              "populated": 0,
+              "missing": 267,
+              "coveragePercent": 0
+            },
+            "sourceProvenance": {
+              "denominator": 267,
+              "populated": 267,
+              "missing": 0,
+              "coveragePercent": 100
+            }
+          }
+        }
+      },
+      "sources": {
+        "denominator": 267,
+        "rowsWithSource": 267,
+        "rowsWithoutSource": 0,
+        "bySource": {
+          "edgar_8k_502": 267
+        }
+      }
+    }
+  },
+  "pilotVerticals": {
+    "pharmaceuticals_life_sciences": {
+      "canonicalCompanies": 9,
+      "activeWatchedCompanies": 0,
+      "executivePositions": 0,
+      "datedDepartures": 0,
+      "datedAppointments": 0,
+      "matchedSearchLags": 0,
+      "positionSourceCoverage": {
+        "denominator": 0,
+        "rowsWithSource": 0,
+        "rowsWithoutSource": 0,
+        "bySource": {}
+      },
+      "reconstructionDisposition": "DEFER_SOURCE_GAP"
+    },
+    "publishing_media": {
+      "canonicalCompanies": 0,
+      "activeWatchedCompanies": 0,
+      "executivePositions": 0,
+      "datedDepartures": 0,
+      "datedAppointments": 0,
+      "matchedSearchLags": 0,
+      "positionSourceCoverage": {
+        "denominator": 0,
+        "rowsWithSource": 0,
+        "rowsWithoutSource": 0,
+        "bySource": {}
+      },
+      "reconstructionDisposition": "DEFER_SOURCE_GAP"
+    },
+    "nonprofit_ngo": {
+      "canonicalCompanies": 0,
+      "activeWatchedCompanies": 0,
+      "executivePositions": 0,
+      "datedDepartures": 0,
+      "datedAppointments": 0,
+      "matchedSearchLags": 0,
+      "positionSourceCoverage": {
+        "denominator": 0,
+        "rowsWithSource": 0,
+        "rowsWithoutSource": 0,
+        "bySource": {}
+      },
+      "reconstructionDisposition": "DEFER_SOURCE_GAP"
+    }
+  },
+  "limitations": [
+    "Free-text sectors are conservatively bucketed and are not taxonomy-grade classifications.",
+    "No dedicated organization-type or ownership fields exist in the audited company or search-lag schemas.",
+    "The legacy company_stage field mixes organization type, ownership, and scale and is not promoted as a canonical dimension.",
+    "Current canonical-company state is not copied into historical executive-position or search-lag rows.",
+    "Company add/watch events are a demand proxy, not a distinct requested-company workflow.",
+    "Sparse user-demand cells below three are suppressed in repository evidence."
+  ],
+  "acceptance": {
+    "expectedSearchLagPairs": 267,
+    "checks": {
+      "activeWatchedSectorDenominator": true,
+      "requestedProxySectorDenominator": true,
+      "canonicalSectorDenominator": true,
+      "searchLagSectorDenominator": true,
+      "canonicalCikCandidateEquation": true,
+      "canonicalCikGlobalSafetyEquation": true,
+      "canonicalCikFinalDispositionEquation": true,
+      "canonicalCikExistingUniqueness": true,
+      "expectedSearchLagPairs": true,
+      "searchLagDepartureJoins": true,
+      "readOnly": true
+    },
+    "reconciled": true,
+    "disposition": "BASELINE_RECONCILED"
+  }
+}
