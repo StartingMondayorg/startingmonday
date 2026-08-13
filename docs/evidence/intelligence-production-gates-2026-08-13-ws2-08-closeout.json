@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "intelligence-production-evidence/v2",
+  "environment": "production",
+  "queriedAt": "2026-08-13T02:06:31.253Z",
+  "repository": {
+    "commit": "cc39fdf35dc9da66e489edf2d8068a0606ba22b5",
+    "branch": "docs/ws2-08-production-closeout"
+  },
+  "governance": {
+    "stories": [
+      "WS0-02",
+      "WS0-03",
+      "WS0-04",
+      "WS0-07",
+      "WS0-08",
+      "WS1-03",
+      "WS1-09",
+      "WS1-10",
+      "WS2-07",
+      "WS2-08",
+      "WS2-09"
+    ],
+    "controls": [
+      "GOV-02",
+      "GOV-03",
+      "EVD-01",
+      "INT-02",
+      "INT-03"
+    ],
+    "mutation": "none"
+  },
+  "counts": {
+    "canonicalCompanies": 577,
+    "roleOpenings": 939,
+    "eventOutcomeLabels": 1331,
+    "precursorStatsFresh24h": 342,
+    "backtestCohortInventory": 954,
+    "backtestControlInventory": 1846,
+    "patternBacktests": 100,
+    "sourceRunMetrics24h": 12,
+    "classificationCalls24h": 3952,
+    "classificationFailures24h": 254,
+    "eventsCreated24h": 183,
+    "eventsMerged24h": 589,
+    "provenanceCoveredEvents24h": 229,
+    "provenanceTotalEvents24h": 229,
+    "duplicateAuditedEvents24h": 229,
+    "escapedDuplicateEvents24h": 0
+  },
+  "rates": {
+    "classificationFailurePercent24h": 6.43,
+    "canonicalMergePercent24h": 76.3,
+    "duplicatePercent24h": 0,
+    "provenanceCoveragePercent24h": 100
+  },
+  "latestClassificationRun": {
+    "job": "signal-job",
+    "runStartedAt": "2026-08-13T00:31:55.674+00:00",
+    "calls": 1974,
+    "failures": 1,
+    "failurePercent": 0.05
+  },
+  "labelSources": [
+    "ats_json",
+    "career_scan",
+    "exec_hire",
+    "proxy_diff",
+    "user_pipeline"
+  ],
+  "latestReplay": {
+    "id": "dcd12b96-40f8-43bf-bf2d-69b8859f208b",
+    "status": "complete",
+    "cohort_count": 300,
+    "control_count": 900,
+    "cohort_version": "v2-c6f1a845-fd04-4b16-9265-a83d53f46df4",
+    "cohort_build_run_id": "ed25bf70-77ed-46bb-9f97-1b155c803023",
+    "candidate_cohort_count": 438,
+    "excluded_cohort_count": 138,
+    "exclusion_reasons": {
+      "missing_broad_sector": 124,
+      "insufficient_eligible_controls": 14
+    },
+    "controls_per_cohort": 3,
+    "matching_policy_version": "sector-size-v2",
+    "started_at": "2026-08-13T00:30:11.056969+00:00",
+    "finished_at": "2026-08-13T00:31:07.147+00:00",
+    "error": null
+  },
+  "gates": {
+    "labeledOpenings": {
+      "current": 939,
+      "target": 500,
+      "status": "pass"
+    },
+    "eventOutcomeLabels": {
+      "current": 1331,
+      "target": 1000,
+      "status": "pass"
+    },
+    "labelSources": {
+      "current": 5,
+      "target": 4,
+      "status": "pass"
+    },
+    "precursorStats": {
+      "current": 342,
+      "target": 1,
+      "status": "pass"
+    },
+    "backtestCohorts": {
+      "current": 954,
+      "target": 300,
+      "status": "pass"
+    },
+    "matchedControls": {
+      "current": 900,
+      "target": 900,
+      "status": "pass"
+    },
+    "patternBacktests": {
+      "current": 100,
+      "target": 1,
+      "latestReplayStatus": "complete",
+      "status": "pass"
+    },
+    "classificationFailure": {
+      "currentPercent": 0.05,
+      "targetPercent": 3,
+      "comparison": "less_than",
+      "status": "pass"
+    },
+    "duplicateRate": {
+      "currentPercent": 0,
+      "targetPercent": 5,
+      "comparison": "less_than",
+      "status": "pass"
+    },
+    "provenanceCoverage": {
+      "currentPercent": 100,
+      "targetPercent": 100,
+      "comparison": "at_least",
+      "status": "pass"
+    }
+  },
+  "disposition": {
+    "status": "pass",
+    "blockedGates": [],
+    "permitsDownstreamImplementation": false,
+    "reason": "Measurement evidence captured; AO gate review is still required."
+  }
+}
