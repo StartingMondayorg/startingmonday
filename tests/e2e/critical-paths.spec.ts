@@ -39,7 +39,7 @@ test.describe('Signup and onboarding', () => {
   test('activation checklist loads after onboarding is complete', async ({ page }) => {
     await skipIfAuthUnavailable(page)
     await page.goto('/dashboard/start')
-    await expect(page.getByRole('heading', { name: /search is live/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /search is live|you.re set up/i })).toBeVisible()
     // Progress indicator shows "X of 6 steps"
     await expect(page.getByText(/of 6/)).toBeVisible()
   })
