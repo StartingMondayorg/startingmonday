@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "e6-search-lag-readiness/v1",
+  "environment": "production",
+  "queriedAt": "2026-08-13T04:24:58.722Z",
+  "repository": {
+    "commit": "e39932a58dc6f62adc6d03dfa51716f2c4612562",
+    "branch": "feat/e6-search-lag-refresh"
+  },
+  "mutation": "none",
+  "summary": {
+    "sourceRows": 267,
+    "eligibleRows": 267,
+    "companyGroupsObserved": 2,
+    "companyGroupsPublished": 0,
+    "companyRowsCovered": 0,
+    "industryGroupsObserved": 0,
+    "industryGroupsPublished": 0,
+    "industryRowsCovered": 0,
+    "roleGroupsObserved": 3,
+    "roleGroupsPublished": 1,
+    "roleRowsCovered": 249,
+    "globalMedianSearchLagDays": 95,
+    "globalP25SearchLagDays": 3,
+    "globalP75SearchLagDays": 245,
+    "companyMinSupport": 3,
+    "industryMinSupport": 10,
+    "roleMinSupport": 20,
+    "statsVersion": "search-lag-stats-v1",
+    "sourcePolicy": "cik-role-earliest-v1"
+  },
+  "disposition": "READY_FOR_INTERNAL_REFRESH"
+}

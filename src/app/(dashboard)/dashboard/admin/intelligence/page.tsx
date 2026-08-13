@@ -38,7 +38,7 @@ export default async function AdminIntelligencePage() {
   const addRateBaseline = Number(process.env.DISCOVER_ADD_TO_WATCHLIST_BASELINE_RATE ?? '')
   const hasAddRateBaseline = Number.isFinite(addRateBaseline) && addRateBaseline > 0
 
-  const [companiesRes, recommendationRowsRes, generatedEventsRes, runCreatedEventsRes, openedEventsRes, recommendationAddedEventsRes, outreachStartedEventsRes, companyAddedEventsRes, activeCampaignsRes, stalledCampaignsRes, dueFollowUpsRes] = await Promise.all([
+  const [companiesRes, recommendationRowsRes, generatedEventsRes, runCreatedEventsRes, openedEventsRes, recommendationAddedEventsRes, outreachStartedEventsRes, companyAddedEventsRes, activeCampaignsRes, stalledCampaignsRes, dueFollowUpsRes, companyLagStatsRes, industryLagStatsRes, roleLagStatsRes] = await Promise.all([
     admin
       .from('intelligence_companies')
       .select('slug, company_name, sector, website, is_featured, created_at')
@@ -95,6 +95,24 @@ export default async function AdminIntelligencePage() {
       .select('id', { count: 'exact', head: true })
       .eq('status', 'pending')
       .lt('due_date', new Date().toISOString().slice(0, 10)),
+    (admin as any)
+      .from('company_tenure_stats')
+      .select('company_name, title_normalized, median_search_lag_days, sample_size, updated_at')
+      .eq('stats_version', 'search-lag-stats-v1')
+      .order('sample_size', { ascending: false })
+      .limit(5),
+    (admin as any)
+      .from('industry_tenure_stats')
+      .select('sic_code, company_stage, title_normalized, median_search_lag_days, sample_size, updated_at')
+      .eq('stats_version', 'search-lag-stats-v1')
+      .order('sample_size', { ascending: false })
+      .limit(5),
+    (admin as any)
+      .from('search_lag_role_stats')
+      .select('title_normalized, median_search_lag_days, p25_search_lag_days, p75_search_lag_days, sample_size, updated_at')
+      .eq('stats_version', 'search-lag-stats-v1')
+      .order('sample_size', { ascending: false })
+      .limit(8),
   ])
 
   const companies = companiesRes.data ?? []
@@ -145,6 +163,15 @@ export default async function AdminIntelligencePage() {
   const activeCampaigns = activeCampaignsRes.count ?? 0
   const stalledCampaigns = stalledCampaignsRes.count ?? 0
   const dueFollowUps = dueFollowUpsRes.count ?? 0
+  const companyLagStats = companyLagStatsRes.data ?? []
+  const industryLagStats = industryLagStatsRes.data ?? []
+  const roleLagStats = roleLagStatsRes.data ?? []
+  const lagUpdatedAt = [...companyLagStats, ...industryLagStats, ...roleLagStats]
+    .map((row) => row.updated_at as string | null)
+    .filter(Boolean)
+    .sort()
+    .at(-1) ?? null
+  const lagStatsReady = roleLagStats.length > 0
 
   const discoverSummary: DiscoverSummary = {
     generatedEvents30d,
@@ -308,6 +335,36 @@ export default async function AdminIntelligencePage() {
       </nav>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 mt-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 mb-5">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <h2 className="text-[15px] font-bold text-slate-900">Search-lag context (internal)</h2>
+            <span className={`text-[11px] font-semibold px-2 py-1 rounded ${lagStatsReady ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+              {lagStatsReady ? 'Ready' : 'Building support'}
+            </span>
+          </div>
+          <p className="text-[12px] text-slate-500 mb-3">
+            Descriptive benchmarks only. Role context requires n ≥ 20; company context requires n ≥ 3; industry context requires n ≥ 10. Unsupported cohorts are withheld.
+            {lagUpdatedAt ? ` Last refreshed ${new Date(lagUpdatedAt).toISOString().slice(0, 10)}.` : ''}
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+              <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Company Cohorts</div>
+              <div className="text-[18px] font-bold text-slate-900">{companyLagStats.length}</div>
+            </div>
+            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+              <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Role Cohorts</div>
+              <div className="text-[18px] font-bold text-slate-900">{roleLagStats.length}</div>
+            </div>
+            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50 col-span-2">
+              <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Highest-Support Role Context</div>
+              <div className="text-[13px] font-semibold text-slate-900 mt-1">
+                {roleLagStats[0]
+                  ? `${roleLagStats[0].title_normalized}: median ${roleLagStats[0].median_search_lag_days} days, middle 50% ${roleLagStats[0].p25_search_lag_days}–${roleLagStats[0].p75_search_lag_days} (n=${roleLagStats[0].sample_size})`
+                  : 'No supported role cohort yet'}
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 mb-5">
           <h2 className="text-[15px] font-bold text-slate-900 mb-3">Campaign health monitor</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
