@@ -74,7 +74,11 @@ begin
 end;
 $$;
 
+-- Only the service role calls this. The explicit grant is belt-and-braces: the
+-- revoke below strips PUBLIC, and we do not want to rely on Supabase default
+-- privileges to have already granted service_role separately.
 revoke execute on function public.prune_bot_signal_events(integer) from public, anon, authenticated;
+grant execute on function public.prune_bot_signal_events(integer) to service_role;
 
 -- Hourly rollup used by both the dashboard chart and the alert baseline, so the
 -- number that fires an alert and the number drawn on screen come from one place.
@@ -101,3 +105,4 @@ as $$
 $$;
 
 revoke execute on function public.bot_signal_hourly_rollup(integer) from public, anon, authenticated;
+grant execute on function public.bot_signal_hourly_rollup(integer) to service_role;
