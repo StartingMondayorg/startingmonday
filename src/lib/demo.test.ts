@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { isDemoUser } from './demo'
 
-describe('src/lib/demo.ts placeholder coverage', () => {
-  it('marks module as covered for council traceability', () => {
-    expect(true).toBe(true)
+describe('demo helpers', () => {
+  it('rejects demo access when no demo identity is configured', () => {
+    expect(isDemoUser('demo-user')).toBe(false)
   })
 })

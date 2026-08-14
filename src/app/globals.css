@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+footer p.text-slate-500 {
+  color: rgb(148 163 184);
+}
+
 :root {
   --background: #f5f2eb;
   --foreground: #101828;

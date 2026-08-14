@@ -1,11 +1,19 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import * as Sentry from '@sentry/nextjs'
 import { mapCoachHandoffToPreview, type CoachHandoffPayload } from '@/lib/coach-handoff-import'
+import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
 
 export const runtime = 'nodejs'
 const MAX_BODY_BYTES = 64 * 1024
 
 export async function POST(request: NextRequest) {
+  const guard = await enforcePublicEndpointGuard({
+    request,
+    rateLimitKey: 'coach-handoff-preview',
+    maxPerMinute: 10,
+  })
+  if (guard) return guard
+
   let body: CoachHandoffPayload
   try {
     const rawBody = await request.text()

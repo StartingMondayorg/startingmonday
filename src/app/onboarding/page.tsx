@@ -47,7 +47,7 @@ export default async function OnboardingPage({
       <OnboardingForm
         initialDraft={initialDraft}
         initialStep={initialStep}
-    serverError={serverError ?? null}
+        serverError={serverError ?? null}
       />
     </>
   )

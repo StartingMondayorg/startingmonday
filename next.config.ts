@@ -21,26 +21,9 @@ function sentryReportUri(): string | null {
 
 const SENTRY_REPORT_URI = sentryReportUri()
 const RAILWAY_BUILD_CPUS = process.env.RAILWAY_ENVIRONMENT_NAME ? 4 : undefined
-
-const CSP = [
-  "default-src 'self'",
-  // Next.js App Router requires unsafe-inline for hydration scripts.
-  // unsafe-eval is required by some Next.js internals and Sentry.
-  // static.cloudflareinsights.com: Cloudflare Web Analytics beacon, injected at the edge by Cloudflare.
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' js.stripe.com https://challenges.cloudflare.com https://us-assets.i.posthog.com https://static.cloudflareinsights.com",
-  "script-src-elem 'self' 'unsafe-inline' https://challenges.cloudflare.com https://us-assets.i.posthog.com https://static.cloudflareinsights.com",
-  "style-src 'self' 'unsafe-inline'",
-  // External services the browser connects to at runtime
-  "connect-src 'self' *.supabase.co wss://*.supabase.co https://api.stripe.com https://us.i.posthog.com https://us-assets.i.posthog.com https://*.sentry.io https://*.ingest.sentry.io https://challenges.cloudflare.com https://cloudflareinsights.com",
-  "img-src 'self' data: blob:",
-  "font-src 'self'",
-  "worker-src 'self' blob:",
-  "frame-src https://challenges.cloudflare.com",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  ...(SENTRY_REPORT_URI ? [`report-uri ${SENTRY_REPORT_URI}`, "report-to csp-endpoint"] : []),
-].join('; ')
+const DEPLOY_RELEASE = process.env.RAILWAY_GIT_COMMIT_SHA
+  ?? process.env.VERCEL_GIT_COMMIT_SHA
+  ?? process.env.GIT_COMMIT_SHA
 
 const securityHeaders = [
   { key: 'X-Frame-Options',           value: 'DENY' },
@@ -49,7 +32,6 @@ const securityHeaders = [
   { key: 'Permissions-Policy',        value: 'camera=(), microphone=(), geolocation=()' },
   { key: 'X-DNS-Prefetch-Control',    value: 'on' },
   { key: 'Strict-Transport-Security',  value: 'max-age=31536000; includeSubDomains' },
-  { key: 'Content-Security-Policy',    value: CSP },
   { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
   { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
   ...(SENTRY_REPORT_URI ? [{
@@ -148,6 +130,7 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(nextConfig, {
   silent: true,
+  release: DEPLOY_RELEASE ? { name: DEPLOY_RELEASE } : undefined,
   // Source map upload requires SENTRY_AUTH_TOKEN — omitting it skips upload gracefully.
   // Set SENTRY_AUTH_TOKEN in Railway to enable source-mapped stack traces.
   widenClientFileUpload: true,

@@ -1,13 +1,5 @@
 export const experienceAgents = [
   {
-    id: 'site-sweep-agent.yml',
-    name: 'Site Sweep Agent',
-    status: 'In Progress',
-    maxAgeMinutes: 60 * 6,
-    sesWired: true,
-    recommendation: 'Run the route-by-route sweep first, then fan out to the route-scoped audits and dashboard trust bundle before claiming sitewide health.',
-  },
-  {
     id: 'route-inventory-agent.yml',
     name: 'Route Inventory Agent',
     status: 'Done',

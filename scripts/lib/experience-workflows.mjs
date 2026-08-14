@@ -1,11 +1,5 @@
 export const experienceWorkflows = [
   {
-    id: 'site-sweep-agent.yml',
-    name: 'Site Sweep Agent',
-    maxAgeMinutes: 60 * 6,
-    recommendation: 'Use the route inventory plus route-scoped audits to produce a fresh sitewide sweep before relying on broad health claims.',
-  },
-  {
     id: 'route-inventory-agent.yml',
     name: 'Route Inventory Agent',
     maxAgeMinutes: 60 * 30,
