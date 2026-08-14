@@ -2,3 +2,7 @@ title = "startingmonday-gitleaks-config"
 
 [extend]
 useDefault = true
+
+[[allowlists]]
+description = "Generated technical-debt report contains source snippets with placeholder client-id labels."
+paths = ['''docs/technical-debt-audit\.latest\.json''']
