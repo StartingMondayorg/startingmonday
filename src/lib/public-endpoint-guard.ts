@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { recordBotSignal } from '@/lib/bot-signal-recorder'
+import type { BotSignalOutcome } from '@/lib/bot-signals'
 
 type GuardOptions = {
   request: NextRequest
@@ -49,8 +51,22 @@ export async function enforcePublicEndpointGuard(
   } = options
   const ip = getClientIp(request)
 
+  // SMK-467: record what happened, whatever happens. Fire-and-forget by design
+  // -- this never blocks the response and never changes what we return.
+  const observe = (outcome: BotSignalOutcome) => {
+    void recordBotSignal({
+      headers: request.headers,
+      method: request.method,
+      route: request.nextUrl.pathname,
+      rateLimitKey,
+      ip,
+      outcome,
+    })
+  }
+
   const { allowed, retryAfter } = await checkRateLimit(`${rateLimitKey}:${ip}`, maxPerMinute)
   if (!allowed) {
+    observe('rate_limited')
     return NextResponse.json(
       { ok: false, error: 'Too many requests' },
       { status: 429, headers: retryAfter ? { 'Retry-After': String(retryAfter) } : {} },
@@ -65,11 +81,13 @@ export async function enforcePublicEndpointGuard(
         ip,
       })
       if (process.env.NODE_ENV === 'production') {
+        observe('captcha_unavailable')
         return NextResponse.json(
           { ok: false, error: 'Captcha is currently unavailable', code: 'CAPTCHA_UNAVAILABLE' },
           { status: 503 },
         )
       }
+      observe('allowed')
       return null
     }
 
@@ -79,6 +97,7 @@ export async function enforcePublicEndpointGuard(
         path: request.nextUrl.pathname,
         ip,
       })
+      observe('captcha_missing')
       return NextResponse.json(
         { ok: false, error: 'Captcha token is required', code: 'CAPTCHA_REQUIRED' },
         { status: 400 },
@@ -125,6 +144,7 @@ export async function enforcePublicEndpointGuard(
     }
 
     if (!verified) {
+      observe('captcha_failed')
       return NextResponse.json(
         { ok: false, error: 'Captcha verification failed', code: 'CAPTCHA_FAILED' },
         { status: 403 },
@@ -132,5 +152,6 @@ export async function enforcePublicEndpointGuard(
     }
   }
 
+  observe('allowed')
   return null
 }
