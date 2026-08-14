@@ -6,7 +6,7 @@ function normalizeIp(ip: string): string {
 }
 
 function getRequestIp(request: NextRequest): string | null {
-  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()
   const ip = request.headers.get('cf-connecting-ip')
     ?? request.headers.get('x-real-ip')
     ?? forwarded
