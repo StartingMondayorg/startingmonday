@@ -198,7 +198,9 @@ export async function completeOnboarding(formData: FormData) {
     }))
   }
 
-  const { error: completionError } = await supabase
+  // .select() makes a zero-row match detectable: an UPDATE that matches no row
+  // returns no error, which would otherwise report completion that never persisted (SMK-461).
+  const { data: completionRows, error: completionUpdateError } = await supabase
     .from('user_profiles')
     .update({
       onboarding_completed_at: now,
@@ -206,6 +208,12 @@ export async function completeOnboarding(formData: FormData) {
       ...(profileProjectionError ? {} : { onboarding_draft: {} }),
     })
     .eq('user_id', user.id)
+    .select('user_id')
+
+  const completionError = completionUpdateError
+    ?? (completionRows && completionRows.length > 0
+      ? null
+      : { message: 'completion update matched no user_profiles row', code: 'no_row_updated' })
 
   if (completionError) {
     captureServerEvent(user.id, 'onboarding_completion_write_failed', {
