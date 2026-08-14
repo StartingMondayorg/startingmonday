@@ -6,9 +6,45 @@ This document gives Chris a concise view of what the intelligence and job-scanni
 
 The short version: Starting Monday watches a user's chosen companies and public signals so an executive can learn about a relevant opportunity before it becomes a generic job-board event. It turns scattered public information into a prioritized next action.
 
+## The Center of Gravity: Relationship Building
+
+The scanner is not the product's end goal. It is the timing and context engine for a relationship-building system.
+
+Starting Monday helps an executive decide **who to contact, why now, what to say, and what to do next**. The core loop is:
+
+1. **Watch the market.** Scan target companies, roles, leadership changes, funding, expansion, and other public signals.
+2. **Choose the right person.** Connect a company or role signal to existing contacts, suggested people to reach, coaches, recruiters, or other relevant relationships.
+3. **Create a credible reason to reach out.** Use the signal, company context, role context, and the user's positioning to make outreach specific rather than generic.
+4. **Take the relationship action.** Draft or send outreach, add the person to the pipeline, schedule a follow-up, or record a conversation.
+5. **Protect follow-through.** Follow-up dates, calendar views, reminders, and the daily briefing keep a promising relationship from going quiet.
+6. **Learn and compound.** Contact history, touchpoints, outcomes, and company intelligence create a stronger context base for the next conversation.
+
+This is the distinction between a job alert and an executive search operating system. A job alert tells someone that a role exists. Starting Monday is meant to help them build the relationships that make them credible before, during, and after that role becomes public.
+
+### Relationship workflows already in the product
+
+- **Contacts and relationship records:** Maintain people, titles, companies, notes, status, and relationship context.
+- **People to Reach:** Surface relationship actions from the daily briefing and connect them to a current company or role signal.
+- **Outreach Hub:** Draft, review, send, suppress, reconcile, and measure outreach with audience and confidence controls.
+- **Follow-Up Manager and Calendar:** Track due dates, overdue actions, contact-linked follow-ups, and completion so momentum survives a busy week.
+- **Company and pipeline context:** Keep the relationship attached to a target company, role, stage, interview, or offer rather than treating outreach as an isolated message.
+- **Briefing and coaching rhythm:** Turn signals and stale follow-ups into one concrete relationship move for the day or the next coaching conversation.
+- **Board and long-horizon relationship cadence:** Support relationship warmth, cadence tiers, and patient relationship development for board-track and executive opportunities.
+
+### Business value of the relationship layer
+
+The value is not simply saving research time. It improves the quality and timing of conversations:
+
+- **More relevant outreach:** A real company event gives the executive a reason to contact someone now.
+- **Higher trust:** Messages can be grounded in the recipient's company situation and the sender's actual experience.
+- **Less relationship leakage:** Follow-up tracking reduces the number of promising contacts that disappear after one conversation.
+- **Compounding advantage:** Each contact, touchpoint, and outcome improves the user's working context instead of disappearing into an inbox.
+- **Coach leverage:** Coaches can review relationship momentum, stalled lanes, and next actions rather than manually reconstructing a client's week.
+- **Retention beyond a single job search:** Relationships, board positioning, and market intelligence remain useful when a user is employed or post-placement.
+
 ## The Product in One Sentence
 
-Starting Monday is an executive search operating system with an intelligence layer that monitors target companies, detects relevant leadership roles and precursor signals, and connects those signals to the candidate's profile, preparation, outreach, and pipeline.
+Starting Monday is a relationship-building operating system for executive search, with an intelligence layer that monitors target companies, detects relevant leadership roles and precursor signals, and turns those signals into specific conversations, follow-ups, and pipeline actions.
 
 ## What It Scans
 
@@ -146,8 +182,11 @@ The closeout work has now added and verified several concrete controls:
 - Tier-0 accessibility gate: `/`, `/login`, and `/signup` pass serious/critical axe checks locally.
 - Lighthouse and performance checks: wired as required checks in the branch-protection manifest.
 - Monitoring closure workflow: added as a scheduled/manual evidence harness for security, debt, agents, and observability.
+- Page Experience Auditor artifact: published successfully and consumed by calibration loop run `31769784492`, which completed successfully.
+- ZAP baseline workflow: added for scheduled/manual staging scans through `.github/workflows/zap-baseline.yml`.
+- Sentry release-health workflow: added for comparing two deploy-SHA releases through `.github/workflows/sentry-release-health.yml`.
 
-The current repository measurements still show that the broader initiative is not fully closed: 218 placeholder test files remain against a target of 200, the deep-dive report lists more than 14 files above 800 lines, monitoring route/action coverage is below its tier-1 targets, and production evidence for ZAP, GitHub push protection, Sentry release health, and the two-week green history is still required.
+The current repository measurements now meet the placeholder-test target at 200 files. The deep-dive report still lists more than 14 files above 800 lines, and monitoring route/action coverage remains below its tier-1 targets. ZAP and Sentry release-health workflows are wired but require their external staging/Sentry secrets and successful hosted runs. GitHub push protection and the two-week green history remain intentionally excluded from this closeout pass.
 
 The roadmap's Codebase Health Remediation initiative is organized into four epics: Security Hardening, Technical Debt Reduction, Agent Fleet Buildout, and Observability/SLOs/Release Gates. The latest repository evidence shows meaningful implementation, but the plan's initiative-level exit gate is stricter than "the workflows exist."
 
@@ -168,14 +207,14 @@ Close only after the remaining security implementation and proof are complete, n
 - Confirm all route/auth gaps are remediated with the strict security audit at zero true gaps.
 - Finish and validate nonce-based CSP in production, including Stripe, PostHog, Turnstile, and Sentry compatibility.
 - Verify dev-auth code is excluded from production output and rate-limit identity cannot be spoofed through forwarded headers.
-- Run the ZAP baseline against staging and triage high findings.
+- Run the ZAP baseline against staging and triage high findings; the workflow is now wired, pending `ZAP_STAGING_URL` or a manual target URL.
 - Confirm GitHub push protection is enabled in repository settings.
 
 ### Epic B - Technical Debt Reduction
 
 Close after the metric targets and decomposition work are demonstrated in CI:
 
-- Replace the remaining placeholder tests in both planned waves.
+- Replace the remaining placeholder tests in both planned waves; the current placeholder target is met at 200 files, but the broader realness and coverage waves remain open.
 - Ratchet coverage thresholds only after real test coverage supports them.
 - Finish the listed god-file decompositions and dashboard data extraction.
 - Complete palette debt waves and repo hygiene cleanup.
@@ -188,7 +227,7 @@ Close after every roster agent has a working schedule, a useful output, an owner
 - Complete Debt Ratchet, Security Sentinel, Dependency Update, Test Realness, God-File, Hygiene Janitor, and synthetic gap agents.
 - Triage the branches surfaced by the Unshipped Code Agent.
 - Add the outreach-draft and contact-follow-up synthetics.
-- Repair the monitoring backlog: the deleted `site-sweep-agent.yml` registry reference was removed and the affected experience reports have been passing, but dashboard baseline and portfolio rollup checks still require final green results.
+- Repair the monitoring backlog: the deleted `site-sweep-agent.yml` registry reference was removed and the affected experience reports, dashboard baseline, and portfolio rollup checks have passed. The strict route/action coverage target remains open at 55/270 routes and 22/308 actions.
 - Hold the full roster green for the initiative's two-week evidence window.
 
 ### Epic D - Observability, SLOs, and Release Gates
@@ -198,7 +237,7 @@ Close after observability is queryable and tested in production:
 - Define the SLO catalog and prove multi-window burn-rate alerts with a staged test.
 - Ship structured JSON logs to a queryable store with retention and documented queries.
 - Enable Sentry traces on the three priority routes.
-- Prove two deploys are tracked as distinct Sentry releases keyed by deploy SHA, including a regression test.
+- Prove two deploys are tracked as distinct Sentry releases keyed by deploy SHA, including a regression test; the workflow is now wired and requires `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT`.
 - Publish and enforce the Sev-1 versus Sev-2 policy across alert workflows.
 - Make the axe-core accessibility gate and Lighthouse/header budgets required checks.
 

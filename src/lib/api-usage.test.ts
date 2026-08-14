@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { trimMessages } from './api-usage'
 
-describe('src/lib/api-usage.ts placeholder coverage', () => {
-  it('marks module as covered for council traceability', () => {
-    expect(true).toBe(true)
+describe('API usage helpers', () => {
+  it('retains the newest exchange when trimming history', () => {
+    const messages = Array.from({ length: 5 }, (_, index) => ({ content: String(index).repeat(10) }))
+    expect(trimMessages(messages, 25)).toEqual(messages.slice(-2))
   })
 })
