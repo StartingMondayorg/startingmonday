@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   type BotTrafficSnapshot,
   evaluateBotTrafficAlerts,
+  getBotTrafficSnapshot,
   median,
   summarisePrefixes,
 } from '@/lib/bot-traffic-report'
@@ -150,5 +151,140 @@ describe('summarisePrefixes', () => {
     ])
 
     expect(summaries).toEqual([])
+  })
+})
+
+describe('getBotTrafficSnapshot', () => {
+  const now = new Date('2026-08-14T10:30:00.000Z')
+
+  /**
+   * Minimal stand-in for the Supabase client. Each query in the snapshot is
+   * identified by the columns it selects, which is enough to route it without
+   * reimplementing the query builder.
+   */
+  function clientOf(options: {
+    rollup?: Array<Record<string, unknown>>
+    lastHour?: Array<Record<string, unknown>>
+    day?: Array<Record<string, unknown>>
+    rejections?: Array<Record<string, unknown>>
+  }) {
+    const chain = (data: Array<Record<string, unknown>>) => {
+      const thenable = {
+        gte: () => thenable,
+        neq: () => thenable,
+        order: () => thenable,
+        limit: () => Promise.resolve({ data }),
+        then: (resolve: (value: { data: Array<Record<string, unknown>> }) => unknown) => resolve({ data }),
+      }
+      return thenable
+    }
+
+    return {
+      rpc: vi.fn(async () => ({ data: options.rollup ?? [] })),
+      from: vi.fn(() => ({
+        select: (columns: string) => {
+          if (columns.includes('rate_limit_key')) return chain(options.lastHour ?? [])
+          if (columns.includes('ip_prefix_hash')) return chain(options.day ?? [])
+          return chain(options.rejections ?? [])
+        },
+      })),
+    }
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(now)
+  })
+
+  it('returns a zeroed snapshot when nothing has been recorded', async () => {
+    const snapshot = await getBotTrafficSnapshot(clientOf({}))
+
+    expect(snapshot.totalRequests24h).toBe(0)
+    expect(snapshot.botRequests24h).toBe(0)
+    expect(snapshot.botShare24h).toBe(0)
+    expect(snapshot.baselineHourlyMedian).toBe(0)
+    expect(evaluateBotTrafficAlerts(snapshot)).toEqual([])
+  })
+
+  it('does not divide by zero when computing bot share', async () => {
+    const snapshot = await getBotTrafficSnapshot(clientOf({}))
+
+    expect(Number.isFinite(snapshot.botShare24h)).toBe(true)
+  })
+
+  it('excludes the in-progress hour from the baseline', async () => {
+    // The 10:00 bucket is partial at 10:30 and would drag the median down.
+    const snapshot = await getBotTrafficSnapshot(clientOf({
+      rollup: [
+        { bucket: '2026-08-14T08:00:00.000Z', total_requests: 100, bot_requests: 10, rate_limited: 1 },
+        { bucket: '2026-08-14T09:00:00.000Z', total_requests: 100, bot_requests: 10, rate_limited: 1 },
+        { bucket: '2026-08-14T10:00:00.000Z', total_requests: 2, bot_requests: 0, rate_limited: 0 },
+      ],
+    }))
+
+    expect(snapshot.hourly).toHaveLength(3)
+    expect(snapshot.baselineHourlyMedian).toBe(10)
+  })
+
+  it('coerces bigint counts returned as strings', async () => {
+    const snapshot = await getBotTrafficSnapshot(clientOf({
+      rollup: [{ bucket: '2026-08-14T08:00:00.000Z', total_requests: '250', bot_requests: '40', rate_limited: '7' }],
+    }))
+
+    expect(snapshot.hourly[0].totalRequests).toBe(250)
+    expect(snapshot.hourly[0].botRequests).toBe(40)
+    expect(snapshot.baselineHourlyMedian).toBe(40)
+  })
+
+  it('counts signup pressure and guard-passing bots separately', async () => {
+    const snapshot = await getBotTrafficSnapshot(clientOf({
+      lastHour: [
+        // High-confidence bot that got through to the signup handler.
+        { occurred_at: '2026-08-14T10:05:00Z', route: '/api/auth/verify-and-signup', rate_limit_key: 'signup', ip_prefix_hash: 'p1', outcome: 'allowed', user_agent: 'curl', ua_class: 'scripted', bot_score: 95, country: 'US' },
+        // Bot the limiter turned away: pressure, but not a breach.
+        { occurred_at: '2026-08-14T10:06:00Z', route: '/api/auth/verify-and-signup', rate_limit_key: 'signup', ip_prefix_hash: 'p1', outcome: 'rate_limited', user_agent: 'curl', ua_class: 'scripted', bot_score: 95, country: 'US' },
+        // Allowed but only moderately suspicious: must not count as passing.
+        { occurred_at: '2026-08-14T10:07:00Z', route: '/api/auth/verify-and-signup', rate_limit_key: 'signup', ip_prefix_hash: 'p2', outcome: 'allowed', user_agent: 'ua', ua_class: 'browser', bot_score: 65, country: 'US' },
+      ],
+    }))
+
+    expect(snapshot.botRequests1h).toBe(3)
+    expect(snapshot.signupRateLimited1h).toBe(1)
+    expect(snapshot.botAllowedOnSignup1h).toBe(1)
+    expect(snapshot.topPrefixes[0].ipPrefixHash).toBe('p1')
+  })
+
+  it('summarises the 24 hour window and counts distinct networks', async () => {
+    const snapshot = await getBotTrafficSnapshot(clientOf({
+      day: [
+        { ip_prefix_hash: 'a', bot_score: 90, outcome: 'allowed' },
+        { ip_prefix_hash: 'a', bot_score: 10, outcome: 'rate_limited' },
+        { ip_prefix_hash: 'b', bot_score: 70, outcome: 'allowed' },
+        { ip_prefix_hash: null, bot_score: 0, outcome: 'allowed' },
+      ],
+    }))
+
+    expect(snapshot.totalRequests24h).toBe(4)
+    expect(snapshot.botRequests24h).toBe(2)
+    expect(snapshot.rateLimited24h).toBe(1)
+    expect(snapshot.distinctPrefixes24h).toBe(2)
+    expect(snapshot.botShare24h).toBe(0.5)
+  })
+
+  it('maps recent rejections for display', async () => {
+    const snapshot = await getBotTrafficSnapshot(clientOf({
+      rejections: [
+        { occurred_at: '2026-08-14T10:20:00Z', route: '/api/auth/verify-and-signup', outcome: 'rate_limited', user_agent: 'curl/8.4.0', bot_score: 90, country: 'DE' },
+      ],
+    }))
+
+    expect(snapshot.recentRejections).toEqual([{
+      occurredAt: '2026-08-14T10:20:00Z',
+      route: '/api/auth/verify-and-signup',
+      outcome: 'rate_limited',
+      userAgent: 'curl/8.4.0',
+      botScore: 90,
+      country: 'DE',
+    }])
   })
 })
