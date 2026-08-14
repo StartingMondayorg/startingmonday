@@ -4,11 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       release_a:
-        description: First deploy SHA/release to compare
-        required: true
+        description: First deploy SHA/release to compare (blank = auto-resolve latest from Sentry)
+        required: false
+        default: ''
       release_b:
-        description: Second deploy SHA/release to compare
-        required: true
+        description: Second deploy SHA/release to compare (blank = auto-resolve latest from Sentry)
+        required: false
+        default: ''
   schedule:
     - cron: '30 8 * * 1'
 
