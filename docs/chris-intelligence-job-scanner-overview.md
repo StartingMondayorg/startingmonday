@@ -186,7 +186,7 @@ The closeout work has now added and verified several concrete controls:
 - ZAP baseline workflow: added for scheduled/manual staging scans through `.github/workflows/zap-baseline.yml`.
 - Sentry release-health workflow: added for comparing two deploy-SHA releases through `.github/workflows/sentry-release-health.yml`.
 
-The current repository measurements still show that the broader initiative is not fully closed: 209 placeholder test files remain against a target of 200, the deep-dive report lists more than 14 files above 800 lines, and monitoring route/action coverage is below its tier-1 targets. ZAP and Sentry release-health workflows are now wired but still require their external staging/Sentry secrets and successful hosted runs. GitHub push protection and the two-week green history remain intentionally excluded from this closeout pass.
+The current repository measurements now meet the placeholder-test target at 200 files. The deep-dive report still lists more than 14 files above 800 lines, and monitoring route/action coverage remains below its tier-1 targets. ZAP and Sentry release-health workflows are wired but require their external staging/Sentry secrets and successful hosted runs. GitHub push protection and the two-week green history remain intentionally excluded from this closeout pass.
 
 The roadmap's Codebase Health Remediation initiative is organized into four epics: Security Hardening, Technical Debt Reduction, Agent Fleet Buildout, and Observability/SLOs/Release Gates. The latest repository evidence shows meaningful implementation, but the plan's initiative-level exit gate is stricter than "the workflows exist."
 
@@ -214,7 +214,7 @@ Close only after the remaining security implementation and proof are complete, n
 
 Close after the metric targets and decomposition work are demonstrated in CI:
 
-- Replace the remaining placeholder tests in both planned waves; the current placeholder count is 209, so 9 more real behavior-test replacements are needed to reach the stated target.
+- Replace the remaining placeholder tests in both planned waves; the current placeholder target is met at 200 files, but the broader realness and coverage waves remain open.
 - Ratchet coverage thresholds only after real test coverage supports them.
 - Finish the listed god-file decompositions and dashboard data extraction.
 - Complete palette debt waves and repo hygiene cleanup.
