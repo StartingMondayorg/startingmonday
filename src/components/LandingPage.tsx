@@ -706,11 +706,11 @@ export function LandingPage({
             </div>
 
             {useCenteredFooter ? (
-              <p className="text-[11px] text-slate-400 mt-5 text-center">
+              <p className="text-[11px] text-slate-500 mt-5 text-center">
                 Privacy-first by design. {' '}|{' '} &copy; {new Date().getFullYear()} Starting Monday. All rights reserved.
               </p>
             ) : (
-              <p className="text-[11px] text-slate-400 mt-5">Privacy-first by design. {' '}|{' '} &copy; {new Date().getFullYear()} Starting Monday. All rights reserved.</p>
+              <p className="text-[11px] text-slate-500 mt-5">Privacy-first by design. {' '}|{' '} &copy; {new Date().getFullYear()} Starting Monday. All rights reserved.</p>
             )}
           </div>
         </footer>
