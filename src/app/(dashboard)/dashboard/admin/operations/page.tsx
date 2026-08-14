@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
+import { BOT_SCORE_THRESHOLD } from '@/lib/bot-signals'
 import {
   ADMIN_DARK_ACTION_CARD,
   ADMIN_DARK_PAGE_BG,
@@ -20,6 +21,7 @@ const OPS_ALERT_SOURCES = [
   'scheduled_job_observability_runs',
   'error_monitoring_runs',
   'wedge_funnel_scorecard_cron_runs',
+  'bot_traffic_runs',
 ]
 
 function roleBadge(role: string): string {
@@ -38,28 +40,34 @@ export default async function AdminOperationsPage() {
 
   const admin = createAdminClient()
 
+  const botWindowStart = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
   const [
     { count: openOpsAlerts },
     { data: recentAlerts },
     { data: latestDeploy },
     { data: latestRuntime },
     { data: latestJobObs },
+    { count: suspectedBotRequests },
   ] = await Promise.all([
     admin.from('automation_alerts').select('id', { count: 'exact', head: true }).in('source_table', OPS_ALERT_SOURCES).eq('status', 'open'),
     admin.from('automation_alerts').select('id, source_table, severity, message, created_at').in('source_table', OPS_ALERT_SOURCES).eq('status', 'open').order('created_at', { ascending: false }).limit(8),
     admin.from('deployment_validation_runs').select('status, created_at').order('created_at', { ascending: false }).limit(1).maybeSingle(),
     admin.from('runtime_health_check_runs').select('status, created_at, details').order('created_at', { ascending: false }).limit(1).maybeSingle(),
     admin.from('scheduled_job_observability_runs').select('job_name, status, created_at').order('created_at', { ascending: false }).limit(1).maybeSingle(),
+    admin.from('bot_signal_events').select('id', { count: 'exact', head: true }).gte('bot_score', BOT_SCORE_THRESHOLD).gte('occurred_at', botWindowStart),
   ])
 
   const quickActions = staff.role === 'viewer'
     ? [
+        { href: '/dashboard/admin/operations/bot-traffic', label: 'Review bot traffic', description: 'Automated traffic against public endpoints while captcha is paused.' },
         { href: '/dashboard/admin/traces', label: 'Inspect trace quality', description: 'Validate AI behavior and output consistency.' },
         { href: '/dashboard/admin/operations/wedge-cron', label: 'Review wedge cron history', description: 'Filter wedge scorecard run logs by status, date, and error code.' },
         { href: '/dashboard/admin/operations/wedge-economics', label: 'Review wedge economics ledgers', description: 'Inspect canonical CAC and partner commercial ledger rows.' },
         { href: '/guide', label: 'Use operations runbook', description: 'Follow incident and response procedures.' },
       ]
     : [
+        { href: '/dashboard/admin/operations/bot-traffic', label: 'Review bot traffic', description: 'Automated traffic against public endpoints while captcha is paused.' },
         { href: '/dashboard/admin/traces', label: 'Audit reliability traces', description: 'Inspect quality and anomaly signatures.' },
         { href: '/dashboard/admin/operations/wedge-cron', label: 'Review wedge cron history', description: 'Drill into wedge cron failures and run-level diagnostics.' },
         { href: '/dashboard/admin/operations/wedge-economics', label: 'Maintain wedge economics ledgers', description: 'Write canonical marketing spend and partner commercial events.' },
@@ -94,12 +102,13 @@ export default async function AdminOperationsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
           {[
             { label: 'Open ops alerts', value: openOpsAlerts ?? 0 },
             { label: 'Latest deploy status', value: latestDeployStatus },
             { label: 'Runtime health', value: latestRuntimeStatus },
             { label: 'Last job status', value: latestJobStatus },
+            { label: 'Suspected bot req (24h)', value: suspectedBotRequests ?? 0 },
           ].map((card) => (
             <div key={card.label} className={ADMIN_DARK_STAT_CARD}>
               <div className="text-[24px] font-bold text-white leading-none capitalize">{card.value}</div>
