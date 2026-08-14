@@ -1,13 +1,13 @@
 # Security Deep-Dive Audit
 
-Generated: 2026-08-14T01:46:27.465Z
+Generated: 2026-06-18T04:29:22.342Z
 
 ## Dependency Vulnerabilities
 
 - npm audit parse ok: true
 - critical: 0
-- high: 8
-- moderate: 3
+- high: 0
+- moderate: 0
 - low: 0
 
 ## API Guard Coverage

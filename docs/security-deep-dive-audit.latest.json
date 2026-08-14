@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-14T01:46:27.465Z",
+  "generatedAt": "2026-06-18T04:29:22.342Z",
   "npmAudit": {
     "parseOk": true,
     "critical": 0,
-    "high": 8,
-    "moderate": 3,
+    "high": 0,
+    "moderate": 0,
     "low": 0,
     "info": 0,
-    "total": 11,
-    "exitCode": 1
+    "total": 0,
+    "exitCode": 0
   },
   "apiGuards": {
     "parseOk": true,
