@@ -2,9 +2,9 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getDevAuthHeaders, isDevAuthBypassEnabled } from '@/lib/dev-auth'
 import { getBrandContextFromHosts } from '@/lib/brand'
-
-// Obvious non-browser clients: blocked on /api/optimize and /intelligence/* routes
-const BOT_UA_RE = /^(curl|python-requests|python-urllib|go-http|java\/|wget|scrapy|httpx|aiohttp|libwww-perl|okhttp|axios\/|node-fetch|python\/|go\/|ruby|perl|php\/|spider|crawler|bot\/|bot$|scraper|HeadlessChrome)/i
+// Obvious non-browser clients: blocked on /api/optimize and /intelligence/* routes.
+// Shared with the bot scoring in @/lib/bot-signals so there is one definition.
+import { isObviousNonBrowser } from '@/lib/bot-user-agents'
 
 const NOINDEX = { 'X-Robots-Tag': 'noindex, nofollow' }
 
@@ -134,8 +134,7 @@ export async function proxy(request: NextRequest) {
 
     // Block automated clients from the public LinkedIn review tool
     if (pathname === '/api/optimize') {
-      const ua = request.headers.get('user-agent') ?? ''
-      if (!ua || BOT_UA_RE.test(ua)) {
+      if (isObviousNonBrowser(request.headers.get('user-agent'))) {
         return applyCsp(new NextResponse('Forbidden', { status: 403 }), nonce)
       }
     }
@@ -149,8 +148,7 @@ export async function proxy(request: NextRequest) {
   // --- Intelligence routes: bot detection only, no auth required ---
   if (pathname.startsWith('/intelligence/')) {
     logRequest(request, requestId)
-    const ua = request.headers.get('user-agent') ?? ''
-    if (!ua || BOT_UA_RE.test(ua)) {
+    if (isObviousNonBrowser(request.headers.get('user-agent'))) {
       return applyCsp(new NextResponse('Forbidden', { status: 403 }), nonce)
     }
     const intelligenceRes = NextResponse.next({ request: { headers: nextRequestHeaders } })
