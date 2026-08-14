@@ -7,6 +7,7 @@ const state = vi.hoisted(() => ({
   profileUpsert: vi.fn(),
   profileUpdate: vi.fn(),
   completionEq: vi.fn(),
+  completionSelect: vi.fn(),
   searchStartedIs: vi.fn(),
   userUpdateEq: vi.fn(),
   companyUpsert: vi.fn(),
@@ -32,7 +33,12 @@ vi.mock('@/lib/supabase/server', () => ({
           update: (payload: Record<string, unknown>) => {
             state.profileUpdate(payload)
             if ('onboarding_completed_at' in payload) {
-              return { eq: state.completionEq }
+              return {
+                eq: (...args: unknown[]) => {
+                  state.completionEq(...args)
+                  return { select: state.completionSelect }
+                },
+              }
             }
             return {
               eq: () => ({ is: state.searchStartedIs }),
@@ -105,7 +111,7 @@ describe('onboarding persistence actions', () => {
       error: null,
     })
     state.profileUpsert.mockResolvedValue({ error: null })
-    state.completionEq.mockResolvedValue({ error: null })
+    state.completionSelect.mockResolvedValue({ data: [{ user_id: 'pilot-user' }], error: null })
     state.searchStartedIs.mockResolvedValue({ error: null })
     state.userUpdateEq.mockResolvedValue({ error: null })
     state.companyUpsert.mockResolvedValue({ error: null })
@@ -140,7 +146,7 @@ describe('onboarding persistence actions', () => {
   })
 
   it('does not emit completion telemetry or leave onboarding when the marker write fails', async () => {
-    state.completionEq.mockResolvedValueOnce({ error: { message: 'marker unavailable', code: 'PGRST500' } })
+    state.completionSelect.mockResolvedValueOnce({ data: null, error: { message: 'marker unavailable', code: 'PGRST500' } })
 
     await expect(completeOnboarding(validFormData())).rejects.toThrow('NEXT_REDIRECT:/onboarding?error=We%20could%20not%20save%20your%20setup.')
 
@@ -154,6 +160,25 @@ describe('onboarding persistence actions', () => {
       'onboarding_completion_write_failed',
       { message: 'marker unavailable', code: 'PGRST500' },
     )
+  })
+
+  it('treats a completion update that matches no row as a failure', async () => {
+    state.completionSelect.mockResolvedValueOnce({ data: [], error: null })
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    await expect(completeOnboarding(validFormData())).rejects.toThrow('NEXT_REDIRECT:/onboarding?error=We%20could%20not%20save%20your%20setup.')
+
+    expect(state.logEvent).not.toHaveBeenCalledWith(
+      'pilot-user',
+      'onboarding_completed',
+      expect.anything(),
+    )
+    expect(state.captureServerEvent).toHaveBeenCalledWith(
+      'pilot-user',
+      'onboarding_completion_write_failed',
+      { message: 'completion update matched no user_profiles row', code: 'no_row_updated' },
+    )
+    errorSpy.mockRestore()
   })
 
   it('records a failed profile projection but completes independently', async () => {
