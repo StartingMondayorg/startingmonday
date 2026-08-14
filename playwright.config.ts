@@ -83,6 +83,13 @@ export default defineConfig({
       },
     },
     {
+      name: 'accessibility-tier0',
+      testMatch: /accessibility-tier0\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+    {
       name: 'luxury-desktop',
       testMatch: /luxury-(ux|public-all-pages)\.spec\.ts/,
       use: {

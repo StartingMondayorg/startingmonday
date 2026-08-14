@@ -117,6 +117,7 @@ async function recordCompatibilityHit(request: NextRequest): Promise<void> {
 }
 
 export async function GET(request: NextRequest) {
+  // validateCronRequest is enforced by the delegated provider-quality-audit route.
   const response = await providerQualityAuditGet(request)
   const headers = new Headers(response.headers)
   headers.set('x-startingmonday-compat-route', COMPAT_ROUTE)

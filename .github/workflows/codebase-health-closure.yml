@@ -1,0 +1,117 @@
+name: Codebase Health Closure Evidence
+
+on:
+  schedule:
+    - cron: '30 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  security-evidence:
+    name: Security closure evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Run strict API guard audit
+        run: npm run security:api-guards:strict
+      - name: Run security deep dive
+        run: npm run audit:security-deep-dive
+      - name: Verify CSP has no unsafe script directives
+        run: |
+          if grep -R "script-src[^\n]*unsafe-inline\|script-src[^\n]*unsafe-eval" next.config.ts src/proxy.ts; then
+            echo 'Unsafe script CSP directive found.'
+            exit 1
+          fi
+      - name: Upload security evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: codebase-health-security-evidence
+          path: |
+            docs/security-deep-dive-audit.latest.md
+            docs/security-deep-dive-audit.latest.json
+
+  debt-evidence:
+    name: Technical debt closure evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Run technical debt deep dive
+        run: npm run audit:debt-deep-dive
+      - name: Run placeholder and lint ratchets
+        run: |
+          npm run test:placeholder-guard
+          npm run lint:check-baseline
+      - name: Run coverage threshold gate
+        run: |
+          npm run test:coverage
+          npm run coverage:folders:check
+      - name: Upload debt evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: codebase-health-debt-evidence
+          path: |
+            docs/technical-debt-audit.latest.md
+            docs/technical-debt-audit.latest.json
+            coverage/lcov.info
+
+  agent-evidence:
+    name: Agent fleet closure evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Generate monitoring matrix and harness
+        run: npm run monitor:coverage:refresh
+      - name: Require complete monitoring coverage
+        run: npm run monitor:matrix:check:strict
+      - name: Upload agent evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: codebase-health-agent-evidence
+          path: |
+            docs/status/monitoring-coverage-matrix.latest.md
+            docs/status/monitoring-coverage-matrix.latest.json
+
+  observability-evidence:
+    name: Observability and release-gate evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Validate Lighthouse budget configuration
+        run: npm run perf:lighthouse:budget:config
+      - name: Validate required-check manifest
+        run: node -e "JSON.parse(require('fs').readFileSync('config/required-checks-manifest.json','utf8'))"
+      - name: Validate SLO report generation
+        run: printf '' | npm run slo:report:json
+      - name: Validate deploy-SHA release configuration
+        run: |
+          grep -R "release: DEPLOY_RELEASE\|release: process.env.RAILWAY_GIT_COMMIT_SHA" next.config.ts sentry.*.config.ts worker/index.js

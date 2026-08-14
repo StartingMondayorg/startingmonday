@@ -135,6 +135,20 @@ Known product risks include career-page redesigns, anti-bot systems, missing sou
 
 ## Epic Closure: What Is Still Needed
 
+### Current implementation status
+
+The closeout work has now added and verified several concrete controls:
+
+- Strict API guard audit: 0 true auth gaps.
+- Forwarded-header rate-limit hardening: rightmost-hop regression test passes.
+- Nonce-based proxy CSP: source and production build pass; production header validation still requires deployment of this change.
+- Sentry release identity: web and worker runtimes now use the deploy SHA when configured.
+- Tier-0 accessibility gate: `/`, `/login`, and `/signup` pass serious/critical axe checks locally.
+- Lighthouse and performance checks: wired as required checks in the branch-protection manifest.
+- Monitoring closure workflow: added as a scheduled/manual evidence harness for security, debt, agents, and observability.
+
+The current repository measurements still show that the broader initiative is not fully closed: 218 placeholder test files remain against a target of 200, the deep-dive report lists more than 14 files above 800 lines, monitoring route/action coverage is below its tier-1 targets, and production evidence for ZAP, GitHub push protection, Sentry release health, and the two-week green history is still required.
+
 The roadmap's Codebase Health Remediation initiative is organized into four epics: Security Hardening, Technical Debt Reduction, Agent Fleet Buildout, and Observability/SLOs/Release Gates. The latest repository evidence shows meaningful implementation, but the plan's initiative-level exit gate is stricter than "the workflows exist."
 
 ### Initiative-level exit evidence
