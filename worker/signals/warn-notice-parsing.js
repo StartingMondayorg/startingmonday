@@ -96,11 +96,12 @@ function stripHtml(value) {
     .replace(/<br\s*\/?>/gi, ' ')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
     .replace(/&lt;/gi, '<')
     .replace(/&gt;/gi, '>')
+    // Decode &amp; last so entities like &amp;lt; are not double-unescaped.
+    .replace(/&amp;/gi, '&')
     .replace(/\s+/g, ' ')
     .trim()
 }
