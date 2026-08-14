@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import { checkBurstLimit } from './burst-limit'
 
-describe('src/lib/burst-limit.ts placeholder coverage', () => {
-  it('marks module as covered for council traceability', () => {
-    expect(true).toBe(true)
+describe('burst limiter', () => {
+  it('allows the first in-memory request', async () => {
+    vi.stubEnv('RATE_LIMIT_FORCE_MEMORY', '1')
+    expect(await checkBurstLimit(`test-${Date.now()}`)).toBe(true)
   })
 })
