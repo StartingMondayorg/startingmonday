@@ -153,8 +153,8 @@ Two separate Railway services in one project:
 
 | Service | Runtime | Build | Port |
 |---|---|---|---|
-| Web (startingmonday) | Node 20 | `next build` | 8080 (Railway proxied) |
-| Worker | Node 20 (ESM) | none (JS, no build step) | 3010 (health only) |
+| Web (startingmonday) | Node 22 | `next build` | 8080 (Railway proxied) |
+| Worker | Node 22 (ESM) | none (JS, no build step) | 3010 (health only) |
 
 Auto-deploy: both services deploy on push to `main` branch of the GitHub repository. Railway watches the repo and triggers a build/restart on every commit.
 
