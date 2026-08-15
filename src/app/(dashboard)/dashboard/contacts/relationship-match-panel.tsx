@@ -20,8 +20,7 @@ type MatchItem = {
   connection_company: string | null
   candidate_source?: string
   connection_profile_url: string | null
-  confidence_tier: 'high' | 'medium' | 'low' | 'rejected'
-  overall_score: number
+  confidence_tier: 'strong_overlap' | 'possible_overlap' | 'rejected'
   user_confirmed: boolean
 }
 
@@ -268,7 +267,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
           <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Likely known to you</p>
             {data.likely_known.length === 0 ? (
-              <p className="mt-2 text-[13px] text-slate-300">No high or medium-confidence matches yet.</p>
+              <p className="mt-2 text-[13px] text-slate-300">No strong-overlap matches yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.likely_known.map((item) => (
@@ -321,7 +320,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
           <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Needs review</p>
             {data.suggested_matches.length === 0 ? (
-              <p className="mt-2 text-[13px] text-slate-300">No low-confidence suggestions yet.</p>
+              <p className="mt-2 text-[13px] text-slate-300">No possible-overlap suggestions yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.suggested_matches.map((item) => (

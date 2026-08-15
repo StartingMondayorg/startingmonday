@@ -16,7 +16,7 @@ describe('api health route', () => {
     vi.spyOn(Date.prototype, 'toISOString').mockReturnValue('2026-01-01T00:00:00.000Z')
   })
 
-  it('returns ok when required env vars are present', async () => {
+  it('returns only public liveness metadata', async () => {
     const response = await GET()
 
     expect(response.status).toBe(200)
@@ -28,19 +28,13 @@ describe('api health route', () => {
       status: 'ok',
       live: true,
       version: '1.2.3',
-      missing: [],
-      checks: {
-        NEXT_PUBLIC_SUPABASE_URL: true,
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: true,
-        RESEND_API_KEY: true,
-        CRON_SECRET: true,
-        OWNER_OR_NOTIFY_EMAIL: true,
-      },
     })
+    expect(payload).not.toHaveProperty('checks')
+    expect(payload).not.toHaveProperty('missing')
     expect(payload.timestamp).toBe('2026-01-01T00:00:00.000Z')
   })
 
-  it('reports degraded when required env vars are missing', async () => {
+  it('does not disclose configuration state when env vars are missing', async () => {
     vi.unstubAllEnvs()
     vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'https://supabase.example.com')
 
@@ -48,12 +42,8 @@ describe('api health route', () => {
     const payload = await response.json()
 
     expect(response.status).toBe(200)
-    expect(payload.status).toBe('degraded')
-    expect(payload.missing).toEqual([
-      'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-      'RESEND_API_KEY',
-      'CRON_SECRET',
-      'OWNER_OR_NOTIFY_EMAIL',
-    ])
+    expect(payload.status).toBe('ok')
+    expect(payload).not.toHaveProperty('checks')
+    expect(payload).not.toHaveProperty('missing')
   })
 })
