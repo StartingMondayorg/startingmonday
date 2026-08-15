@@ -79,7 +79,7 @@
         "security:api-guards": "node scripts/check-api-guards.mjs",
         "security:api-guards:json": "node scripts/check-api-guards.mjs --json",
         "security:api-guards:strict": "node scripts/check-api-guards.mjs --strict",
-        "test:db:rls-acl": "npx supabase test db --local --workdir supabase tests/schema_derived_rls_acl.test.sql",
+        "test:db:rls-acl": "npx supabase test db --local --workdir supabase supabase/tests/schema_derived_rls_acl.test.sql",
         "migration:rollback:check": "node scripts/check-migration-rollback-readiness.mjs",
         "migration:rollback:check:json": "node scripts/check-migration-rollback-readiness.mjs --json",
         "migration:rollback:check:strict": "node scripts/check-migration-rollback-readiness.mjs --strict",
