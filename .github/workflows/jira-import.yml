@@ -52,7 +52,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
 
       # Check that secrets are configured before proceeding.
       # On push events: skip gracefully when secrets are absent (e.g. forks, early branch work).

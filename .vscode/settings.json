@@ -19,5 +19,6 @@
 		"!docs/**/*audit*.md",
 		"!docs/**/*waiver*.md",
 		"!docs/strategy/**"
-	]
+	],
+	"chat.agent.maxRequests": 200
 }

@@ -182,11 +182,8 @@ The closeout work has now added and verified several concrete controls:
 - Tier-0 accessibility gate: `/`, `/login`, and `/signup` pass serious/critical axe checks locally.
 - Lighthouse and performance checks: wired as required checks in the branch-protection manifest.
 - Monitoring closure workflow: added as a scheduled/manual evidence harness for security, debt, agents, and observability.
-- Page Experience Auditor artifact: published successfully and consumed by calibration loop run `31769784492`, which completed successfully.
-- ZAP baseline workflow: added for scheduled/manual staging scans through `.github/workflows/zap-baseline.yml`.
-- Sentry release-health workflow: added for comparing two deploy-SHA releases through `.github/workflows/sentry-release-health.yml`.
 
-The current repository measurements now meet the placeholder-test target at 200 files. The deep-dive report still lists more than 14 files above 800 lines, and monitoring route/action coverage remains below its tier-1 targets. ZAP and Sentry release-health workflows are wired but require their external staging/Sentry secrets and successful hosted runs. GitHub push protection and the two-week green history remain intentionally excluded from this closeout pass.
+The current repository measurements still show that the broader initiative is not fully closed: 218 placeholder test files remain against a target of 200, the deep-dive report lists more than 14 files above 800 lines, monitoring route/action coverage is below its tier-1 targets, and production evidence for ZAP, GitHub push protection, Sentry release health, and the two-week green history is still required.
 
 The roadmap's Codebase Health Remediation initiative is organized into four epics: Security Hardening, Technical Debt Reduction, Agent Fleet Buildout, and Observability/SLOs/Release Gates. The latest repository evidence shows meaningful implementation, but the plan's initiative-level exit gate is stricter than "the workflows exist."
 
@@ -207,14 +204,14 @@ Close only after the remaining security implementation and proof are complete, n
 - Confirm all route/auth gaps are remediated with the strict security audit at zero true gaps.
 - Finish and validate nonce-based CSP in production, including Stripe, PostHog, Turnstile, and Sentry compatibility.
 - Verify dev-auth code is excluded from production output and rate-limit identity cannot be spoofed through forwarded headers.
-- Run the ZAP baseline against staging and triage high findings; the workflow is now wired, pending `ZAP_STAGING_URL` or a manual target URL.
+- Run the ZAP baseline against staging and triage high findings.
 - Confirm GitHub push protection is enabled in repository settings.
 
 ### Epic B - Technical Debt Reduction
 
 Close after the metric targets and decomposition work are demonstrated in CI:
 
-- Replace the remaining placeholder tests in both planned waves; the current placeholder target is met at 200 files, but the broader realness and coverage waves remain open.
+- Replace the remaining placeholder tests in both planned waves.
 - Ratchet coverage thresholds only after real test coverage supports them.
 - Finish the listed god-file decompositions and dashboard data extraction.
 - Complete palette debt waves and repo hygiene cleanup.
@@ -227,7 +224,7 @@ Close after every roster agent has a working schedule, a useful output, an owner
 - Complete Debt Ratchet, Security Sentinel, Dependency Update, Test Realness, God-File, Hygiene Janitor, and synthetic gap agents.
 - Triage the branches surfaced by the Unshipped Code Agent.
 - Add the outreach-draft and contact-follow-up synthetics.
-- Repair the monitoring backlog: the deleted `site-sweep-agent.yml` registry reference was removed and the affected experience reports, dashboard baseline, and portfolio rollup checks have passed. The strict route/action coverage target remains open at 55/270 routes and 22/308 actions.
+- Repair the monitoring backlog: the deleted `site-sweep-agent.yml` registry reference was removed and the affected experience reports have been passing, but dashboard baseline and portfolio rollup checks still require final green results.
 - Hold the full roster green for the initiative's two-week evidence window.
 
 ### Epic D - Observability, SLOs, and Release Gates
@@ -237,7 +234,7 @@ Close after observability is queryable and tested in production:
 - Define the SLO catalog and prove multi-window burn-rate alerts with a staged test.
 - Ship structured JSON logs to a queryable store with retention and documented queries.
 - Enable Sentry traces on the three priority routes.
-- Prove two deploys are tracked as distinct Sentry releases keyed by deploy SHA, including a regression test; the workflow is now wired and requires `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT`.
+- Prove two deploys are tracked as distinct Sentry releases keyed by deploy SHA, including a regression test.
 - Publish and enforce the Sev-1 versus Sev-2 policy across alert workflows.
 - Make the axe-core accessibility gate and Lighthouse/header budgets required checks.
 
