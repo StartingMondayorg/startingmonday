@@ -15,9 +15,34 @@ function getSafeNextPath(nextParam: string | null): string {
   return nextParam
 }
 
-function createClientRedirectResponse(path: string): NextResponse {
+function escapeHtmlAttribute(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+// The path lands in a <script> body. JSON.stringify handles the JS string
+// context; escaping "<" additionally stops a "</script>" in the next param
+// from closing the tag early and injecting markup.
+function escapeScriptString(value: string): string {
+  return JSON.stringify(value).replace(/</g, '\\u003C')
+}
+
+// proxy.ts sets a per-request nonce CSP with no 'unsafe-inline', so this
+// script must carry the nonce or the browser drops it and the user is
+// stranded on a blank /auth/callback page. The meta refresh and the link are
+// script-free fallbacks: CSP cannot block them, so a missing or mismatched
+// nonce degrades to a slower redirect instead of a dead end.
+function createClientRedirectResponse(path: string, nonce: string | null): NextResponse {
+  const nonceAttribute = nonce ? ` nonce="${escapeHtmlAttribute(nonce)}"` : ''
+  const hrefPath = escapeHtmlAttribute(path)
   return new NextResponse(
-    `<!DOCTYPE html><html><head><meta charset="utf-8"><script>location.replace(${JSON.stringify(path)})</script></head><body></body></html>`,
+    `<!DOCTYPE html><html><head><meta charset="utf-8">`
+    + `<meta http-equiv="refresh" content="0;url=${hrefPath}">`
+    + `<script${nonceAttribute}>location.replace(${escapeScriptString(path)})</script>`
+    + `</head><body><a href="${hrefPath}">Continue</a></body></html>`,
     { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
   )
 }
@@ -37,13 +62,16 @@ export async function GET(request: NextRequest) {
   const forwardedProto = request.headers.get('x-forwarded-proto') ?? 'https'
   const publicOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin
 
+  // proxy.ts stamps the CSP nonce onto the forwarded request headers.
+  const nonce = request.headers.get('x-nonce')
+
   if (code || (tokenHash && tokenType)) {
     const cookieStore = await cookies()
 
     // Resolve redirect after session exchange so first-login users with no
     // explicit next path can be sent directly to onboarding in one hop.
     let resolvedNextPath = nextPath
-    let response = createClientRedirectResponse(resolvedNextPath)
+    let response = createClientRedirectResponse(resolvedNextPath, nonce)
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -141,10 +169,10 @@ export async function GET(request: NextRequest) {
         ) {
           resolvedNextPath = '/onboarding'
           firstLoginNeedsOnboarding = true
-          response = createClientRedirectResponse(resolvedNextPath)
+          response = createClientRedirectResponse(resolvedNextPath, nonce)
         } else {
           resolvedNextPath = '/dashboard'
-          response = createClientRedirectResponse(resolvedNextPath)
+          response = createClientRedirectResponse(resolvedNextPath, nonce)
         }
       }
 
@@ -221,5 +249,5 @@ export async function GET(request: NextRequest) {
   }
 
   const loginPath = `/login?error=oauth&next=${encodeURIComponent(nextPath)}`
-  return createClientRedirectResponse(loginPath)
+  return createClientRedirectResponse(loginPath, nonce)
 }

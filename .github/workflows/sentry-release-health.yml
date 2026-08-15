@@ -4,11 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       release_a:
-        description: First deploy SHA/release to compare
-        required: true
+        description: First deploy SHA/release to compare (blank = auto-resolve latest from Sentry)
+        required: false
+        default: ''
       release_b:
-        description: Second deploy SHA/release to compare
-        required: true
+        description: Second deploy SHA/release to compare (blank = auto-resolve latest from Sentry)
+        required: false
+        default: ''
   schedule:
     - cron: '30 8 * * 1'
 
@@ -61,10 +63,13 @@ jobs:
         run: |
           set -euo pipefail
           for release in "$RELEASE_A" "$RELEASE_B"; do
-            curl --fail --silent --show-error \
+            # Release detail with health data (crash-free rates, sessions, adoption)
+            curl --fail --silent --show-error --get \
               --header "Authorization: Bearer $SENTRY_AUTH_TOKEN" \
-              "https://sentry.io/api/0/organizations/$SENTRY_ORG/releases/$release/health/" \
-              | jq --arg release "$release" '{release:$release, health:.}'
+              --data-urlencode "health=1" \
+              --data-urlencode "project=$SENTRY_PROJECT" \
+              "https://sentry.io/api/0/organizations/$SENTRY_ORG/releases/$release/" \
+              | jq --arg release "$release" '{release:$release, health:(.healthData // .projects // .)}'
           done
 
       - name: Publish evidence summary
