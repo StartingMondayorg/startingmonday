@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
 
   const connections = (exportConnections ?? []) as unknown as ExportConnectionRow[]
 
-  let { data: candidateRows } = await supabase
+  const { data: candidateRows } = await supabase
     .from('company_people_candidates' as never)
     .select('id, person_id, score, rationale, metadata')
     .eq('user_id', userId)

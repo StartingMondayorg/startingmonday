@@ -1,5 +1,9 @@
 import * as Sentry from '@sentry/nextjs'
 
+const DEPLOY_RELEASE = process.env.RAILWAY_GIT_COMMIT_SHA
+  ?? process.env.VERCEL_GIT_COMMIT_SHA
+  ?? process.env.GIT_COMMIT_SHA
+
 function isTransientUndiciAbort(event: Sentry.Event): boolean {
   const message = (event.message ?? '').toLowerCase()
   const exceptionText = (event.exception?.values ?? [])
@@ -26,6 +30,7 @@ function isTransientUndiciAbort(event: Sentry.Event): boolean {
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
+  release: DEPLOY_RELEASE,
   environment: process.env.NODE_ENV ?? 'production',
   // Sample P0 routes at 10%, P1 at 2%, everything else at 0.
   // Keeps trace volume low while ensuring P0 coverage for SLO latency signals.

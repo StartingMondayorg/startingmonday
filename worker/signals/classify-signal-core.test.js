@@ -57,7 +57,7 @@ describe('buildClassifyPrompt', () => {
   })
 
   it('uses a token budget large enough to avoid truncation', () => {
-    expect(CLASSIFY_MAX_TOKENS).toBeGreaterThanOrEqual(512)
+    expect(CLASSIFY_MAX_TOKENS).toBeGreaterThanOrEqual(768)
   })
 })
 
@@ -69,6 +69,14 @@ describe('parseClassifyResponse', () => {
   it('strips markdown fences', () => {
     const fenced = '```json\n{"is_signal": false}\n```'
     expect(parseClassifyResponse(fenced)).toEqual({ is_signal: false })
+  })
+
+  it('parses the first balanced JSON object when the model adds trailing prose', () => {
+    const response = '{"is_signal":true,"signal_summary":"Acme {North} hired a CIO"}\nI hope this helps.'
+    expect(parseClassifyResponse(response)).toEqual({
+      is_signal: true,
+      signal_summary: 'Acme {North} hired a CIO',
+    })
   })
 
   it('throws on empty responses instead of failing silently', () => {

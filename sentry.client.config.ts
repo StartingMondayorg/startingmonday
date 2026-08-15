@@ -1,5 +1,9 @@
 import * as Sentry from '@sentry/nextjs'
 
+const DEPLOY_RELEASE = process.env.RAILWAY_GIT_COMMIT_SHA
+  ?? process.env.VERCEL_GIT_COMMIT_SHA
+  ?? process.env.GIT_COMMIT_SHA
+
 function eventContainsBlockedHostNoise(event: Sentry.Event): boolean {
   const message = (event.message ?? '').toLowerCase()
   const exceptionMessages = (event.exception?.values ?? [])
@@ -34,6 +38,7 @@ function eventContainsBlockedHostNoise(event: Sentry.Event): boolean {
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  release: DEPLOY_RELEASE,
   environment: process.env.NODE_ENV ?? 'production',
   tracesSampleRate: 0,
   replaysSessionSampleRate: 0,

@@ -5,8 +5,406 @@ on:
     # Every Monday at 08:00 UTC
     - cron: '0 8 * * 1'
   workflow_dispatch:
+    inputs:
+      apply_onboarding_state_migration:
+        description: Apply and verify production onboarding state migration 168
+        required: false
+        type: boolean
+        default: false
+      apply_backtest_matching_migration:
+        description: Apply and verify production backtest matching migration 169
+        required: false
+        type: boolean
+        default: false
+      apply_exec_search_lag_migration:
+        description: Apply and verify production executive search-lag migration 170
+        required: false
+        type: boolean
+        default: false
+      apply_search_lag_stats_migration:
+        description: Apply and verify production search-lag stats migration 171
+        required: false
+        type: boolean
+        default: false
+      apply_canonical_cik_reconciliation_migration:
+        description: Apply and verify production canonical CIK reconciliation migration 172
+        required: false
+        type: boolean
+        default: false
+      apply_person_signal_rights_containment_migration:
+        description: Apply and verify production person-signal rights containment migration 173
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
 
 jobs:
+  apply-onboarding-state-migration:
+    name: Apply onboarding state migration 168
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_onboarding_state_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+            echo "SUPABASE_ACCESS_TOKEN is not configured."
+            exit 1
+          fi
+
+          sql="$(cat supabase/migrations/168_onboarding_completion_resume_state.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('168', array[]::text[], 'onboarding_completion_resume_state') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+
+          http_status="$(curl --silent --show-error \
+            --output migration-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @migration-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Migration API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' migration-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+      - name: Verify onboarding state schema
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            count(*) filter (where column_name = 'onboarding_current_step')::int as step_columns,
+            count(*) filter (where column_name = 'onboarding_draft')::int as draft_columns,
+            (select count(*)::int from pg_constraint where conname = 'user_profiles_onboarding_current_step_check') as step_constraints,
+            (select count(*)::int from pg_constraint where conname = 'user_profiles_onboarding_draft_object_check') as draft_constraints,
+            (select count(*)::int from supabase_migrations.schema_migrations where version = '168') as migration_rows
+          from information_schema.columns
+          where table_schema = 'public'
+            and table_name = 'user_profiles';
+          SQL
+
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          http_status="$(curl --silent --show-error \
+            --output verify-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @verify-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Verification API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' verify-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+          jq -e '
+            length == 1
+            and .[0].step_columns == 1
+            and .[0].draft_columns == 1
+            and .[0].step_constraints == 1
+            and .[0].draft_constraints == 1
+            and .[0].migration_rows == 1
+          ' verify-response.json >/dev/null
+
+          echo "Migration 168 columns, constraints, and history verified."
+
+  apply-backtest-matching-migration:
+    name: Apply backtest matching migration 169
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_backtest_matching_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+            echo "SUPABASE_ACCESS_TOKEN is not configured."
+            exit 1
+          fi
+
+          sql="$(cat supabase/migrations/169_backtest_matching_dimensions.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('169', array[]::text[], 'backtest_matching_dimensions') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+
+          http_status="$(curl --silent --show-error \
+            --output migration-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @migration-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Migration API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' migration-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+      - name: Verify backtest matching schema
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'canonical_companies' and column_name in ('broad_sector_slug', 'size_band', 'matching_dimension_version')) as canonical_columns,
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'backtest_cohorts' and column_name in ('broad_sector_slug', 'size_band', 'matching_policy_version')) as cohort_columns,
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'backtest_controls' and column_name in ('broad_sector_slug', 'match_tier', 'matching_policy_version')) as control_columns,
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'backtest_replay_runs' and column_name in ('cohort_build_run_id', 'candidate_cohort_count', 'excluded_cohort_count', 'exclusion_reasons', 'controls_per_cohort', 'matching_policy_version')) as replay_columns,
+            (select count(*)::int from information_schema.tables where table_schema = 'public' and table_name = 'backtest_cohort_build_runs') as build_tables,
+            (select count(*)::int from pg_class where relname = 'backtest_cohort_build_runs' and relrowsecurity = true) as build_rls,
+            (select count(*)::int from pg_constraint where conname in ('backtest_cohorts_opening_version_key', 'backtest_cohorts_matching_dimensions_check', 'backtest_controls_matching_evidence_check', 'backtest_replay_runs_matching_counts_check')) as matching_constraints,
+            (select count(*)::int from supabase_migrations.schema_migrations where version = '169') as migration_rows;
+          SQL
+
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          http_status="$(curl --silent --show-error \
+            --output verify-response.json \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data @verify-request.json \
+            'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Verification API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' verify-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+          jq -e '
+            length == 1
+            and .[0].canonical_columns == 3
+            and .[0].cohort_columns == 3
+            and .[0].control_columns == 3
+            and .[0].replay_columns == 6
+            and .[0].build_tables == 1
+            and .[0].build_rls == 1
+            and .[0].matching_constraints == 4
+            and .[0].migration_rows == 1
+          ' verify-response.json >/dev/null
+
+          echo "Migration 169 columns, constraints, RLS, and history verified."
+
+  apply-exec-search-lag-migration:
+    name: Apply executive search-lag migration 170
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_exec_search_lag_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+            echo "SUPABASE_ACCESS_TOKEN is not configured."
+            exit 1
+          fi
+
+          sql="$(cat supabase/migrations/170_exec_search_lag_matching.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('170', array[]::text[], 'exec_search_lag_matching') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          http_status="$(curl --silent --show-error --output migration-response.json --write-out '%{http_code}' --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @migration-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Migration API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' migration-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+      - name: Verify executive search-lag schema and privileges
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'exec_search_lag' and column_name in ('matching_policy_version', 'as_of_date', 'computed_at')) as evidence_columns,
+            (select count(*)::int from pg_constraint where conname in ('exec_search_lag_departure_key', 'exec_search_lag_appointment_key', 'exec_search_lag_positive_lag_check', 'exec_search_lag_matching_evidence_check')) as matching_constraints,
+            (select count(*)::int from pg_proc where oid = to_regprocedure('public.upsert_exec_search_lag_match(uuid,uuid,text,date)')) as writer_functions,
+            has_function_privilege('service_role', 'public.upsert_exec_search_lag_match(uuid,uuid,text,date)', 'EXECUTE') as service_execute,
+            has_function_privilege('authenticated', 'public.upsert_exec_search_lag_match(uuid,uuid,text,date)', 'EXECUTE') as authenticated_execute,
+            has_function_privilege('anon', 'public.upsert_exec_search_lag_match(uuid,uuid,text,date)', 'EXECUTE') as anon_execute,
+            (select count(*)::int from supabase_migrations.schema_migrations where version = '170') as migration_rows;
+          SQL
+
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          http_status="$(curl --silent --show-error --output verify-response.json --write-out '%{http_code}' --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+
+          if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+            echo "Verification API returned HTTP ${http_status}."
+            jq -c '{message, error, code}' verify-response.json 2>/dev/null || true
+            exit 1
+          fi
+
+          jq -e '
+            length == 1
+            and .[0].evidence_columns == 3
+            and .[0].matching_constraints == 4
+            and .[0].writer_functions == 1
+            and .[0].service_execute == true
+            and .[0].authenticated_execute == false
+            and .[0].anon_execute == false
+            and .[0].migration_rows == 1
+          ' verify-response.json >/dev/null
+
+          echo "Migration 170 columns, constraints, writer privileges, and history verified."
+
+  apply-search-lag-stats-migration:
+    name: Apply search-lag stats migration 171
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_search_lag_stats_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          sql="$(cat supabase/migrations/171_search_lag_stats_refresh.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('171', array[]::text[], 'search_lag_stats_refresh') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          http_status="$(curl --silent --show-error --output migration-response.json --write-out '%{http_code}' --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @migration-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+          test "$http_status" -ge 200 -a "$http_status" -lt 300
+      - name: Verify stats schema and privileges
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name in ('company_tenure_stats','industry_tenure_stats') and column_name in ('stats_version','source_policy')) as evidence_columns,
+            (select count(*)::int from pg_constraint where conname in ('company_tenure_stats_search_lag_support_check','industry_tenure_stats_search_lag_support_check')) as support_constraints,
+            (select count(*)::int from information_schema.tables where table_schema='public' and table_name='search_lag_role_stats') as role_tables,
+            (select count(*)::int from pg_class where relname='search_lag_role_stats' and relrowsecurity=true) as role_rls,
+            has_function_privilege('service_role','public.replace_search_lag_stats(jsonb,jsonb,jsonb,text,text)','EXECUTE') as service_execute,
+            has_function_privilege('authenticated','public.replace_search_lag_stats(jsonb,jsonb,jsonb,text,text)','EXECUTE') as authenticated_execute,
+            has_function_privilege('anon','public.replace_search_lag_stats(jsonb,jsonb,jsonb,text,text)','EXECUTE') as anon_execute,
+            (select count(*)::int from supabase_migrations.schema_migrations where version='171') as migration_rows;
+          SQL
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
+          jq -e 'length==1 and .[0].evidence_columns==4 and .[0].support_constraints==2 and .[0].role_tables==1 and .[0].role_rls==1 and .[0].service_execute==true and .[0].authenticated_execute==false and .[0].anon_execute==false and .[0].migration_rows==1' verify-response.json >/dev/null
+
+  apply-canonical-cik-reconciliation-migration:
+    name: Apply canonical CIK reconciliation migration 172
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_canonical_cik_reconciliation_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          sql="$(cat supabase/migrations/172_canonical_cik_reconciliation.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('172', array[]::text[], 'canonical_cik_reconciliation') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          http_status="$(curl --silent --show-error --output migration-response.json --write-out '%{http_code}' --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @migration-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query')"
+          test "$http_status" -ge 200 -a "$http_status" -lt 300
+      - name: Verify canonical CIK schema and privileges
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='canonical_cik_reconciliation_ledger' and column_name in ('id','run_id','canonical_company_id','previous_cik_padded','applied_cik_padded','policy_version','applied_at','rolled_back_at','rollback_reason')) as ledger_columns,
+            (select count(*)::int from pg_constraint where conname in ('canonical_cik_reconciliation_cik_check','canonical_cik_reconciliation_run_company_key')) as ledger_constraints,
+            (select count(*)::int from pg_class where relname='canonical_cik_reconciliation_ledger' and relrowsecurity=true) as ledger_rls,
+            (select count(*)::int from pg_indexes where schemaname='public' and indexname='canonical_companies_sec_cik_unique_idx' and indexdef ilike '%unique%' and indexdef ilike '%where (sec_cik_padded is not null)%') as unique_indexes,
+            (select count(*)::int from pg_proc where oid=to_regprocedure('public.reconcile_canonical_company_ciks(uuid,jsonb,text)')) as writer_functions,
+            has_table_privilege('service_role','public.canonical_cik_reconciliation_ledger','SELECT') as service_select,
+            has_table_privilege('authenticated','public.canonical_cik_reconciliation_ledger','SELECT') as authenticated_select,
+            has_table_privilege('anon','public.canonical_cik_reconciliation_ledger','SELECT') as anon_select,
+            has_function_privilege('service_role','public.reconcile_canonical_company_ciks(uuid,jsonb,text)','EXECUTE') as service_execute,
+            has_function_privilege('authenticated','public.reconcile_canonical_company_ciks(uuid,jsonb,text)','EXECUTE') as authenticated_execute,
+            has_function_privilege('anon','public.reconcile_canonical_company_ciks(uuid,jsonb,text)','EXECUTE') as anon_execute,
+            (select count(*)::int from supabase_migrations.schema_migrations where version='172') as migration_rows;
+          SQL
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
+          jq -e 'length==1 and .[0].ledger_columns==9 and .[0].ledger_constraints==2 and .[0].ledger_rls==1 and .[0].unique_indexes==1 and .[0].writer_functions==1 and .[0].service_select==true and .[0].authenticated_select==false and .[0].anon_select==false and .[0].service_execute==true and .[0].authenticated_execute==false and .[0].anon_execute==false and .[0].migration_rows==1' verify-response.json >/dev/null
+
+  apply-person-signal-rights-containment-migration:
+    name: Apply person-signal rights containment migration 173
+    if: github.event_name == 'workflow_dispatch' && inputs.apply_person_signal_rights_containment_migration == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Apply migration and record history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' preflight_sql <<'SQL' || true
+          select
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='contact_people' and column_name in ('user_id','person_id')) as contact_link_columns,
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='contact_people' and column_name in ('user_id','person_id') and is_nullable='NO') as contact_link_not_null,
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='company_people_candidates' and column_name in ('user_id','person_id')) as candidate_link_columns,
+            (select count(*)::int from information_schema.columns where table_schema='public' and table_name='company_people_candidates' and column_name='user_id' and is_nullable='NO') as candidate_user_not_null,
+            (select count(*)::int from public.people) as people_rows,
+            (select count(*)::int from public.person_sources) as source_rows,
+            (select count(*)::int from public.person_affiliations) as affiliation_rows,
+            (select count(*)::int from public.person_signals) as signal_rows;
+          SQL
+          jq -n --arg query "$preflight_sql" '{query: $query}' > preflight-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @preflight-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > preflight-response.json
+          jq -e 'length==1 and .[0].contact_link_columns==2 and .[0].contact_link_not_null==2 and .[0].candidate_link_columns==2 and .[0].candidate_user_not_null==1 and .[0].people_rows==0 and .[0].source_rows==0 and .[0].affiliation_rows==0 and .[0].signal_rows==0' preflight-response.json >/dev/null
+
+          sql="$(cat supabase/migrations/173_person_signal_rights_containment.sql)"$'\n'"insert into supabase_migrations.schema_migrations (version, statements, name) values ('173', array[]::text[], 'person_signal_rights_containment') on conflict (version) do update set name = excluded.name;"
+          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @migration-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > migration-response.json
+      - name: Verify person-signal containment policies
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          read -r -d '' verify_sql <<'SQL' || true
+          select
+            (select count(*)::int from pg_class where relnamespace='public'::regnamespace and relname in ('people','person_sources','person_affiliations','person_signals') and relrowsecurity=true) as rls_tables,
+            (select count(*)::int from pg_policies where schemaname='public' and policyname in ('Authenticated can read people','Authenticated can read person sources','Authenticated can read person affiliations','Authenticated can read person signals')) as global_read_policies,
+            (select count(*)::int from pg_policies where schemaname='public' and policyname in ('Users read linked people','Users read linked person sources','Users read linked person affiliations','Users read linked person signals') and qual ilike '%auth.uid()%') as scoped_read_policies,
+            (select count(*)::int from public.people) as people_rows,
+            (select count(*)::int from public.person_sources) as source_rows,
+            (select count(*)::int from public.person_affiliations) as affiliation_rows,
+            (select count(*)::int from public.person_signals) as signal_rows,
+            (select count(*)::int from supabase_migrations.schema_migrations where version='173') as migration_rows;
+          SQL
+          jq -n --arg query "$verify_sql" '{query: $query}' > verify-request.json
+          curl --silent --show-error --fail --request POST --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" --header 'Content-Type: application/json' --data @verify-request.json 'https://api.supabase.com/v1/projects/mytnhoxcgvnzxhgcumkf/database/query' > verify-response.json
+          jq -e 'length==1 and .[0].rls_tables==4 and .[0].global_read_policies==0 and .[0].scoped_read_policies==4 and .[0].people_rows==0 and .[0].source_rows==0 and .[0].affiliation_rows==0 and .[0].signal_rows==0 and .[0].migration_rows==1' verify-response.json >/dev/null
+
   rls-check:
     name: Supabase RLS coverage
     runs-on: ubuntu-latest

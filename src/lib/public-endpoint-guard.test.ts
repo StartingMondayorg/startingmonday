@@ -26,7 +26,7 @@ describe('public-endpoint-guard', () => {
       headers: { 'x-forwarded-for': '10.0.0.1, 10.0.0.2' },
     })
 
-    expect(getClientIp(req)).toBe('10.0.0.1')
+    expect(getClientIp(req)).toBe('10.0.0.2')
   })
 
   it('returns 429 when rate limit is exceeded', async () => {

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-08",
+  "updatedAt": "2026-08-12",
   "owner": "engineering",
   "riskyPaths": [
     "src/app/[(]auth[)]/**",
@@ -71,6 +71,20 @@
       "rollbackPath": "Revert PRs #148 and #149 to restore guide artifacts and CI-generated files to git tracking",
       "killSwitch": "Re-add guide artifact generation to .gitignore exclusion list and revert ci.yml Lighthouse job change",
       "startedAt": "2026-06-22"
+    },
+    {
+      "id": "onboarding-completion-resume-p0-2026-08",
+      "description": "P0 fix for returning users re-entering onboarding after completion writes failed; persist explicit completion and resumable progress independently of target-company presence (PR #362)",
+      "paths": [
+        "src/app/auth/callback/**",
+        "src/app/api/auth/login-submit/**",
+        "src/app/onboarding/**",
+        "src/lib/onboarding-state.ts"
+      ],
+      "phase": "full rollout",
+      "rollbackPath": "Revert PR #362 application changes while retaining the additive migration 168 columns; use docs/development/migration-rollbacks/168_onboarding_completion_resume_state.md only if schema rollback is required",
+      "killSwitch": "Revert the PR #362 auth and onboarding application commit to restore the prior login and onboarding flow without dropping persisted resume data",
+      "startedAt": "2026-08-12"
     },
     {
       "id": "landing-page-guard-and-proof-banner-removal-2026-06",

@@ -1,0 +1,85 @@
+name: Sentry Release Health Evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_a:
+        description: First deploy SHA/release to compare (blank = auto-resolve latest from Sentry)
+        required: false
+        default: ''
+      release_b:
+        description: Second deploy SHA/release to compare (blank = auto-resolve latest from Sentry)
+        required: false
+        default: ''
+  schedule:
+    - cron: '30 8 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  release-health:
+    name: Verify Sentry release health by deploy SHA
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Resolve release pair
+        id: releases
+        env:
+          INPUT_A: ${{ inputs.release_a }}
+          INPUT_B: ${{ inputs.release_b }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          if [ -z "${SENTRY_ORG:-}" ] || [ -z "${SENTRY_PROJECT:-}" ]; then
+            echo 'SENTRY_ORG and SENTRY_PROJECT secrets are required.'
+            exit 1
+          fi
+          if [ -n "${INPUT_A:-}" ] && [ -n "${INPUT_B:-}" ]; then
+            echo "a=$INPUT_A" >> "$GITHUB_OUTPUT"
+            echo "b=$INPUT_B" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mapfile -t releases < <(curl --fail --silent --show-error \
+            --header "Authorization: Bearer ${{ secrets.SENTRY_AUTH_TOKEN }}" \
+            "https://sentry.io/api/0/projects/${SENTRY_ORG}/${SENTRY_PROJECT}/releases/?per_page=2" \
+            | jq -r '.[].version')
+          if [ "${#releases[@]}" -lt 2 ]; then
+            echo 'At least two Sentry releases keyed by deploy SHA are required.'
+            exit 1
+          fi
+          echo "a=${releases[1]}" >> "$GITHUB_OUTPUT"
+          echo "b=${releases[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch release health summaries
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          RELEASE_A: ${{ steps.releases.outputs.a }}
+          RELEASE_B: ${{ steps.releases.outputs.b }}
+        run: |
+          set -euo pipefail
+          for release in "$RELEASE_A" "$RELEASE_B"; do
+            # Release detail with health data (crash-free rates, sessions, adoption)
+            curl --fail --silent --show-error --get \
+              --header "Authorization: Bearer $SENTRY_AUTH_TOKEN" \
+              --data-urlencode "health=1" \
+              --data-urlencode "project=$SENTRY_PROJECT" \
+              "https://sentry.io/api/0/organizations/$SENTRY_ORG/releases/$release/" \
+              | jq --arg release "$release" '{release:$release, health:(.healthData // .projects // .)}'
+          done
+
+      - name: Publish evidence summary
+        env:
+          RELEASE_A: ${{ steps.releases.outputs.a }}
+          RELEASE_B: ${{ steps.releases.outputs.b }}
+        run: |
+          {
+            echo '## Sentry Release Health Evidence'
+            echo
+            echo "Compared releases: \\`$RELEASE_A\\` and \\`$RELEASE_B\\`"
+            echo 'Both releases are keyed to deploy SHA and were queried through the Sentry release-health API.'
+          } >> "$GITHUB_STEP_SUMMARY"

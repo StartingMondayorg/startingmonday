@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "xs01-canonical-cik-idempotency/v1",
+  "environment": "production",
+  "recordedAt": "2026-08-13T13:56:03.8879976Z",
+  "repositoryCommit": "c07a301482be9465cb1b0e868892c71770bfdce2",
+  "runId": "e20bbb60-e8f0-4462-ad6b-8f9996194615",
+  "policyVersion": "linked-company-cik-global-unique-v1",
+  "replayPayloadRows": 36,
+  "rpc": {
+    "proposedRows": 36,
+    "appliedRows": 0,
+    "alreadyAlignedRows": 36
+  },
+  "before": {
+    "canonicalCikRows": 56,
+    "duplicateCikRows": 0,
+    "ledgerRows": 36,
+    "protectedCounts": {
+      "execSearchLag": 267,
+      "companyStats": 0,
+      "industryStats": 0,
+      "roleStats": 1
+    }
+  },
+  "after": {
+    "canonicalCikRows": 56,
+    "duplicateCikRows": 0,
+    "ledgerRows": 36,
+    "protectedCounts": {
+      "execSearchLag": 267,
+      "companyStats": 0,
+      "industryStats": 0,
+      "roleStats": 1
+    }
+  },
+  "reconciled": true,
+  "disposition": "IDEMPOTENCY_PROVEN"
+}

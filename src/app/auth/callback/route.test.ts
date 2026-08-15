@@ -125,6 +125,39 @@ describe('auth callback route', () => {
     expect(html).toContain('location.replace("/login?error=oauth&next=%2Fdashboard")')
   })
 
+  it('carries the CSP nonce on the redirect script so the browser does not block it', async () => {
+    const req = new NextRequest('https://startingmonday.app/auth/callback?code=oauth-code&next=/dashboard/briefing', {
+      headers: { 'x-nonce': 'abc123nonce' },
+    })
+
+    const res = await GET(req)
+    const html = await res.text()
+
+    expect(html).toContain('<script nonce="abc123nonce">')
+  })
+
+  it('falls back to a script-free redirect when no nonce is present', async () => {
+    const req = new NextRequest('https://startingmonday.app/auth/callback?code=oauth-code&next=/dashboard/briefing')
+
+    const res = await GET(req)
+    const html = await res.text()
+
+    expect(html).toContain('<script>')
+    expect(html).toContain('<meta http-equiv="refresh" content="0;url=/dashboard/briefing">')
+    expect(html).toContain('<a href="/dashboard/briefing">')
+  })
+
+  it('does not let the next param break out of the script tag', async () => {
+    const req = new NextRequest(
+      `https://startingmonday.app/auth/callback?next=${encodeURIComponent('/x</script><script>alert(1)</script>')}`
+    )
+
+    const res = await GET(req)
+    const html = await res.text()
+
+    expect(html).not.toContain('<script>alert(1)</script>')
+  })
+
   it('uses a path-only redirect after successful OAuth exchange to prevent loop-prone history behavior', async () => {
     const req = new NextRequest('https://startingmonday.app/auth/callback?code=oauth-code&next=/dashboard/briefing', {
       headers: {
@@ -198,6 +231,21 @@ describe('auth callback route', () => {
     )
   })
 
+  it('routes a returning user with completed onboarding and zero target companies to the dashboard path', async () => {
+    state.maybeSingle.mockResolvedValueOnce({
+      data: { onboarding_completed_at: '2026-08-12T00:31:29.913Z' },
+    })
+
+    const req = new NextRequest('https://startingmonday.app/auth/callback?code=oauth-code')
+    const res = await GET(req)
+    const html = await res.text()
+
+    expect(res.status).toBe(200)
+    expect(html).toContain('location.replace("/dashboard")')
+    expect(html).not.toContain('location.replace("/onboarding")')
+    expect(state.maybeSingle).toHaveBeenCalledTimes(1)
+  })
+
   it('logs profile lookup failure telemetry and still emits completion telemetry', async () => {
     state.maybeSingle.mockResolvedValueOnce({
       data: null,
@@ -209,7 +257,7 @@ describe('auth callback route', () => {
     const html = await res.text()
 
     expect(res.status).toBe(200)
-    expect(html).toContain('location.replace("/onboarding")')
+    expect(html).toContain('location.replace("/dashboard")')
     expect(state.logEvent).toHaveBeenCalledWith(
       'user_1',
       'auth_path_routed',
@@ -232,8 +280,9 @@ describe('auth callback route', () => {
       'user_1',
       'auth_callback_completed',
       expect.objectContaining({
-        redirect_path: '/onboarding',
+        redirect_path: '/dashboard',
         explicit_next: false,
+        first_login_needs_onboarding: false,
       })
     )
   })

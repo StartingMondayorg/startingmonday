@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "intelligence-production-evidence/v1",
+  "environment": "production",
+  "queriedAt": "2026-08-12T19:14:03.966Z",
+  "repository": {
+    "commit": "f745920b9a3bfdda341f976e56e5a4cc5f9d993f",
+    "branch": "work/intelligence-production-evidence"
+  },
+  "governance": {
+    "stories": [
+      "WS0-02",
+      "WS0-03",
+      "WS0-04",
+      "WS0-07",
+      "WS0-08",
+      "WS1-03",
+      "WS1-09",
+      "WS1-10",
+      "WS2-07",
+      "WS2-08",
+      "WS2-09"
+    ],
+    "controls": [
+      "GOV-02",
+      "GOV-03",
+      "EVD-01",
+      "INT-02",
+      "INT-03"
+    ],
+    "mutation": "none"
+  },
+  "counts": {
+    "canonicalCompanies": 577,
+    "roleOpenings": 936,
+    "eventOutcomeLabels": 845,
+    "precursorStatsFresh24h": 166,
+    "backtestCohortInventory": 650,
+    "backtestControlInventory": 385,
+    "patternBacktests": 50
+  },
+  "labelSources": [
+    "ats_json",
+    "career_scan",
+    "exec_hire",
+    "proxy_diff",
+    "user_pipeline"
+  ],
+  "latestReplay": {
+    "id": "69c8747b-0952-406a-b4a5-3000ef7d7281",
+    "status": "complete",
+    "cohort_count": 300,
+    "control_count": 74,
+    "started_at": "2026-08-09T04:40:00.398981+00:00",
+    "finished_at": "2026-08-09T04:40:15.608+00:00",
+    "error": null
+  },
+  "gates": {
+    "labeledOpenings": {
+      "current": 936,
+      "target": 500,
+      "status": "pass"
+    },
+    "eventOutcomeLabels": {
+      "current": 845,
+      "target": 1000,
+      "status": "in_progress"
+    },
+    "labelSources": {
+      "current": 5,
+      "target": 4,
+      "status": "pass"
+    },
+    "precursorStats": {
+      "current": 166,
+      "target": 1,
+      "status": "pass"
+    },
+    "backtestCohorts": {
+      "current": 650,
+      "target": 300,
+      "status": "pass"
+    },
+    "matchedControls": {
+      "current": 74,
+      "target": 900,
+      "status": "in_progress"
+    },
+    "patternBacktests": {
+      "current": 50,
+      "target": 1,
+      "latestReplayStatus": "complete",
+      "status": "pass"
+    }
+  },
+  "disposition": {
+    "status": "blocked",
+    "blockedGates": [
+      "eventOutcomeLabels",
+      "matchedControls"
+    ],
+    "permitsDownstreamImplementation": false,
+    "reason": "One or more production evidence gates are below target; gate review and re-plan are required."
+  }
+}

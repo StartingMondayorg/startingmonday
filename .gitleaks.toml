@@ -2,3 +2,14 @@ title = "startingmonday-gitleaks-config"
 
 [extend]
 useDefault = true
+
+[allowlist]
+description = "Generated technical-debt report contains source snippets with placeholder client-id labels."
+paths = ['''docs/technical-debt-audit\.latest\.json''']
+regexTarget = "line"
+regexes = ['''linkedin-client-id''']
+commits = [
+	"4f83a1aa9933dc697dc7d75581fff5e27da52aec",
+	"0dc7b164eb188ebd6e74be0d0b227bfe87f31c55",
+]
+stopwords = ['''linkedin-client-id''']

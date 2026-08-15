@@ -8,13 +8,14 @@
     "First-value synthetic gate",
     "Semgrep security scan",
     "Secret scan (gitleaks)",
-    "Dependency vulnerability audit"
+    "Dependency vulnerability audit",
+    "Tier-0 accessibility gate",
+    "Lighthouse mobile budgets",
+    "performance-release-gate"
   ],
   "advisoryChecks": [
-    "Lighthouse mobile budgets",
     "growth-production-gate (advisory)",
-    "Mobile UX contract and banned patterns",
-    "performance-release-gate"
+    "Mobile UX contract and banned patterns"
   ],
   "policy": {
     "maxFlakeRatePercent": 5,

@@ -1,0 +1,426 @@
+{
+  "schemaVersion": "ws1-08-source-rights-readiness/v1",
+  "environment": "production",
+  "queriedAt": "2026-08-13T15:05:21.252Z",
+  "repository": {
+    "commit": "78f2c9a762f3343c07f0400cd89852a45e0c1b9f",
+    "branch": "docs/ws1-08-rights-refresh",
+    "sourceSnapshot": "HEAD",
+    "worktreeDirty": true
+  },
+  "evidencePhase": "PRE_CONTAINMENT_BASELINE",
+  "governance": {
+    "story": "WS1-08",
+    "mutation": "none",
+    "providerSpendUsd": 0,
+    "customerExposureChange": "none"
+  },
+  "catalog": {
+    "version": 2,
+    "updatedAt": "2026-07-05",
+    "reviewCadenceDays": 30,
+    "totalRows": 16
+  },
+  "prioritySources": [
+    {
+      "sourceId": "sec_filings_8k_10k_10q",
+      "lane": "current",
+      "label": "SEC EDGAR",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "public",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "company_press_releases",
+      "lane": "current",
+      "label": "Company press releases",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "public",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "google_news",
+      "lane": "current",
+      "label": "Google News / GNews",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "public",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "business_journals",
+      "lane": "current",
+      "label": "Business journals",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "public",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "crunchbase_funding",
+      "lane": "current",
+      "label": "Crunchbase",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "licensed",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "predictleads_events",
+      "lane": "current",
+      "label": "PredictLeads",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "licensed",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "pdl_executive_snapshot",
+      "lane": "current",
+      "label": "People Data Labs",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "licensed",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "leadership_changes",
+      "lane": "current",
+      "label": "Apollo / leadership changes",
+      "catalogStatus": "active",
+      "implemented": true,
+      "rightsStatus": "licensed",
+      "reviewedAt": "2026-07-05",
+      "reviewAgeDays": 39,
+      "staleReview": true,
+      "missingFields": [
+        "uses.collection",
+        "uses.internalAnalysis",
+        "uses.customerDisplay",
+        "uses.modelTraining",
+        "uses.aggregateStatistics",
+        "uses.exportPublication",
+        "termsUrl",
+        "termsVersion",
+        "evidenceReviewedAt",
+        "owner",
+        "nextReviewAt",
+        "retentionDeletion",
+        "attribution",
+        "commercialTier"
+      ],
+      "readiness": "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE",
+      "hosted": false
+    },
+    {
+      "sourceId": "census_naics",
+      "lane": "proposed",
+      "label": "Census NAICS",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "propublica_nonprofit_explorer",
+      "lane": "proposed",
+      "label": "ProPublica Nonprofit Explorer",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "wikidata_executive_history",
+      "lane": "proposed",
+      "label": "Wikidata",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "irs_form_990",
+      "lane": "proposed",
+      "label": "IRS Form 990",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "fda",
+      "lane": "proposed",
+      "label": "FDA",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "clinicaltrials_gov",
+      "lane": "proposed",
+      "label": "ClinicalTrials.gov",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "crossref",
+      "lane": "proposed",
+      "label": "Crossref",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    },
+    {
+      "sourceId": "openalex",
+      "lane": "proposed",
+      "label": "OpenAlex",
+      "catalogStatus": "missing",
+      "readiness": "BLOCKED_MISSING_CATALOG_ENTRY",
+      "missingFields": [
+        "catalogEntry"
+      ],
+      "staleReview": true,
+      "hosted": false
+    }
+  ],
+  "readinessCounts": {
+    "READY_FOR_ACCOUNTABLE_REVIEW": 0,
+    "BLOCKED_MISSING_CATALOG_ENTRY": 8,
+    "BLOCKED_INCOMPLETE_RIGHTS_EVIDENCE": 8,
+    "BLOCKED_STALE_RIGHTS_EVIDENCE": 0
+  },
+  "hostedRegistry": {
+    "available": false,
+    "errorCode": "PGRST205",
+    "catalogRows": 16,
+    "hostedRows": 0,
+    "catalogMissingHosted": [
+      "business_journals",
+      "company_press_releases",
+      "crunchbase_funding",
+      "earnings_call_transcripts",
+      "engineering_blog_posts",
+      "google_news",
+      "incident_postmortems",
+      "job_posting_velocity",
+      "leadership_changes",
+      "open_source_activity",
+      "pdl_executive_snapshot",
+      "pr_wire",
+      "predictleads_events",
+      "regulatory_calendar",
+      "sec_filings_8k_10k_10q",
+      "trade_press"
+    ],
+    "hostedMissingCatalog": [],
+    "statusMismatches": [],
+    "parity": false
+  },
+  "enforcement": {
+    "baselineHead": {
+      "sourceSnapshot": "HEAD",
+      "registryReadFailureFailsOpen": false,
+      "registryMissFailsOpen": false,
+      "registryExceptionFailsOpen": false
+    },
+    "proposedWorktree": {
+      "sourceSnapshot": "WORKTREE",
+      "registryReadFailureFailsClosed": true,
+      "registryMissFailsClosed": true,
+      "registryExceptionFailsClosed": true,
+      "explicitApprovalRequired": true
+    },
+    "personSignalJobUsesRegistryDecision": true,
+    "precursorQuarantineDefaultsEmpty": true,
+    "catalogRouteIsReadOnly": true,
+    "catalogToHostedSyncWriterFound": false
+  },
+  "contradictions": [
+    {
+      "findingId": "leadership_changes_identity",
+      "issue": "Catalog compliance metadata names Apollo while implemented module mapping points to PDL snapshot/diff code.",
+      "disposition": "BLOCKED_IDENTITY_RECONCILIATION"
+    }
+  ],
+  "followOnBlockers": [
+    {
+      "findingId": "precursor_stats_rights_policy",
+      "issue": "Precursor aggregation relies on QUARANTINED_SOURCE_KINDS with an empty default and does not evaluate source-registry rights decisions.",
+      "disposition": "BLOCKED_REPLAN_REQUIRED"
+    },
+    {
+      "findingId": "hosted_registry_contract",
+      "issue": "Hosted registry is unavailable and no catalog-to-hosted synchronization writer exists.",
+      "disposition": "BLOCKED_SCHEMA_AND_SYNC_DESIGN"
+    }
+  ],
+  "disposition": "EVIDENCE_REQUIRED_FAIL_CLOSED"
+}

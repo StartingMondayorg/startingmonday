@@ -10,10 +10,12 @@ const GUARD_PATTERNS = [
   'requireFeatureAccess',
   'requirePrepAccess',
   'requireAutomationAccess',
+  'requireStaffAutomationAccess',
   'getStaffMember',
   'validateCronRequest',
   'enforcePublicEndpointGuard',
   'validateInternalRouteRequest',
+  'tokensMatch',
 ]
 
 const DIRECT_AUTH_PATTERNS = [

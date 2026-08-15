@@ -1,6 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-import { completeOnboarding, skipOnboarding } from './actions'
+import { completeOnboarding, saveOnboardingProgress, skipOnboarding } from './actions'
 import { HelpQuickButton } from '@/components/HelpQuickButton'
 import {
   type SearchPersona,
@@ -19,6 +19,8 @@ import { RelationshipProgressPanel, type RelationshipStatusPayload } from './rel
 import { OnboardingContextStep } from './onboarding-context-step'
 import { OnboardingDoneStep } from './onboarding-done-step'
 import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/components/LinkedinImportProgress'
+import type { OnboardingDraft } from '@/lib/onboarding-state'
+import { reportOnboardingStepCompleted, useOnboardingDraftState } from './use-onboarding-draft-state'
 
 type ImportResult = {
   full_name?: string | null
@@ -71,15 +73,24 @@ function Dots({ current, total = STEP_COUNT }: { current: number; total?: number
   )
 }
 
-export function OnboardingForm({ profile }: { profile: { full_name?: string | null; current_title?: string | null; current_company?: string | null } | null }) {
+export function OnboardingForm({
+  initialDraft,
+  initialStep,
+  serverError,
+}: {
+  initialDraft: OnboardingDraft
+  initialStep: number
+  serverError: string | null
+}) {
   const onboardingParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
   const channelParam = onboardingParams?.get('channel')
   const lowEnergyParam = onboardingParams?.get('mode') === 'low_energy' || onboardingParams?.get('from') === 'low-energy'
 
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(initialStep)
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
   const [animating, setAnimating] = useState(false)
-  const [advancedSetup, setAdvancedSetup] = useState(false)
+  const [savingProgress, setSavingProgress] = useState(false)
+  const [progressError, setProgressError] = useState(serverError ?? '')
   const [onboardingChannel] = useState<OnboardingChannel>(() => {
     if (channelParam && ['executives', 'coaches', 'outplacement', 'search_firms'].includes(channelParam)) {
       return channelParam as OnboardingChannel
@@ -90,36 +101,31 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [onboardingStartedAt] = useState(() => new Date().toISOString())
 
-  const [fullName, setFullName]               = useState(profile?.full_name ?? '')
-  const [searchPersona, setSearchPersona]     = useState<SearchPersona | ''>('')
-  const [roleFamily, setRoleFamily]           = useState<RoleFamily | ''>('')
-  const [roleTitle, setRoleTitle]             = useState<RoleTitle | ''>('')
-  const [roleTitles, setRoleTitles]           = useState<RoleTitle[]>([])
-  const [employmentStatus, setEmploymentStatus] = useState('')
-  const [searchTimeline, setSearchTimeline]   = useState('')
-  const [searchDriver, setSearchDriver]       = useState('')
-  const [currentTitle, setCurrentTitle]       = useState(profile?.current_title ?? '')
-  const [currentCompany, setCurrentCompany]   = useState(profile?.current_company ?? '')
-  const [resumeText, setResumeText]           = useState('')
-  const [positioningSummary, setPositioningSummary] = useState('')
-  const [beyondResume, setBeyondResume]       = useState('')
-  const [targetTitles, setTargetTitles]       = useState('')
-  const [linkedinUrl, setLinkedinUrl]         = useState('')
-
-  const [companyNames, setCompanyNames] = useState<string[]>(['', '', ''])
-  const [briefingTime, setBriefingTime] = useState('07:00')
-  const [briefingFrequency, setBriefingFrequency] = useState<'daily' | 'weekly'>('daily')
-  const [emailNudgesOptIn, setEmailNudgesOptIn] = useState(false)
+  const {
+    advancedSetup, setAdvancedSetup, fullName, setFullName,
+    searchPersona, setSearchPersona, roleFamily, setRoleFamily,
+    roleTitle, setRoleTitle, roleTitles, setRoleTitles,
+    employmentStatus, setEmploymentStatus, searchTimeline, setSearchTimeline,
+    searchDriver, setSearchDriver, currentTitle, setCurrentTitle,
+    currentCompany, setCurrentCompany, resumeText, setResumeText,
+    positioningSummary, setPositioningSummary, beyondResume, setBeyondResume,
+    targetTitles, setTargetTitles, linkedinUrl, setLinkedinUrl,
+    companyNames, setCompanyNames, briefingTime, setBriefingTime,
+    briefingFrequency, setBriefingFrequency, emailNudgesOptIn, setEmailNudgesOptIn,
+    targetLocations, setTargetLocations, targetSectors, setTargetSectors,
+    compPreference, setCompPreference, positioningStyle, setPositioningStyle,
+    buildDraft,
+  } = useOnboardingDraftState(initialDraft)
 
   const [intelContent, setIntelContent] = useState('')
   const [intelLoading, setIntelLoading] = useState(false)
 
-  const [scanStarted, setScanStarted] = useState(false)
+  const [scanStarted, setScanStarted] = useState(initialStep >= 6 && initialDraft.companyNames.length > 0)
   const [scanProgress, setScanProgress] = useState<ScanStatusPayload | null>(null)
   const [extraCompany, setExtraCompany] = useState('')
   const [addingCompany, setAddingCompany] = useState(false)
 
-  const [enrichmentStarted, setEnrichmentStarted] = useState(false)
+  const [enrichmentStarted, setEnrichmentStarted] = useState(initialStep >= 6 && initialDraft.companyNames.length > 0)
   const [relationshipProgress, setRelationshipProgress] = useState<RelationshipStatusPayload | null>(null)
   const [contactName, setContactName] = useState('')
   const [contactTitle, setContactTitle] = useState('')
@@ -127,18 +133,13 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
   const [selectedCompanyId, setSelectedCompanyId] = useState('')
   const [addingContact, setAddingContact] = useState(false)
 
-  const [targetLocations, setTargetLocations] = useState<string[]>([])
-  const [targetSectors, setTargetSectors] = useState<string[]>([])
-  const [compPreference, setCompPreference] = useState<string[]>([])
-  const [positioningStyle, setPositioningStyle] = useState<string[]>([])
-
   const firstName = fullName.trim().split(' ')[0] || 'there'
 
   const isPassive = employmentStatus === 'employed_exploring' && searchTimeline === 'opportunistic'
 
   const [pasteText, setPasteText]     = useState('')
   const [importing, setImporting]     = useState(false)
-  const [importDone, setImportDone]   = useState(false)
+  const [importDone, setImportDone]   = useState(Boolean(initialDraft.resumeText || initialDraft.positioningSummary))
   const [importThin, setImportThin]   = useState(false)
   const [importError, setImportError] = useState('')
   const [extracting, setExtracting]   = useState(false)
@@ -256,26 +257,6 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
   }, [step, elapsedSeconds, transitionFirst, lowEnergyMode])
 
   useEffect(() => {
-    const currentElapsedSeconds = computeElapsedSeconds(onboardingStartedAt)
-    fetch('/api/onboarding/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        eventName: 'onboarding_step_completed',
-        properties: {
-          step,
-          elapsed_seconds: currentElapsedSeconds,
-          low_energy_mode: lowEnergyMode,
-          channel: onboardingChannel,
-          mode: lowEnergyMode ? 'low_energy' : 'standard',
-          confidence_band: null,
-          action_context: 'onboarding_step_completed',
-        },
-      }),
-    }).catch(() => {})
-  }, [step, lowEnergyMode, onboardingChannel, onboardingStartedAt])
-
-  useEffect(() => {
     if (step !== 8) return
     const firstCompany = companyNames.find(n => n.trim())
     if (!firstCompany || intelContent || intelLoading || step7FetchStarted.current) return
@@ -299,8 +280,23 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
     }).catch(() => {}).finally(() => setIntelLoading(false))
   }, [step, companyNames, intelContent, intelLoading, searchPersona])
 
-  function goTo(next: number) {
-    if (animating) return
+  async function goTo(next: number, nextAdvancedSetup = advancedSetup) {
+    if (animating || savingProgress) return
+    if (next > step) {
+      setSavingProgress(true)
+      setProgressError('')
+      try {
+        await saveOnboardingProgress(next, buildDraft(nextAdvancedSetup))
+      } catch (error) {
+        setProgressError(error instanceof Error ? error.message : 'We could not save your progress. Please try again.')
+        setSavingProgress(false)
+        return
+      }
+      setSavingProgress(false)
+      reportOnboardingStepCompleted({ step, onboardingStartedAt, lowEnergyMode, onboardingChannel })
+    }
+
+    setAdvancedSetup(nextAdvancedSetup)
     setDirection(next > step ? 'forward' : 'back')
     setAnimating(true)
     setTimeout(() => {
@@ -467,12 +463,12 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
     }, 4000)
     void fetchStatus()
     return () => { cancelled = true; window.clearInterval(id) }
-  }, [step, enrichmentStarted, selectedCompanyId])
+  }, [step, enrichmentStarted, selectedCompanyId, companyNames])
 
   function advance() {
     if (step === 0) { goTo(1); return }
     if (step === 1) { goTo(2); return }
-    if (step === 2) { goTo(3); return }
+    if (step === 2) { goTo(3, false); return }
     if (step === 3) {
       startFirstScan(companyNames)
       startRelationshipEnrichment(companyNames)
@@ -665,6 +661,12 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
         </div>
 
+        {progressError && (
+          <div role="alert" className="mb-5 rounded border border-rose-300/30 bg-rose-500/15 px-4 py-3 text-[13px] text-rose-100">
+            {progressError}
+          </div>
+        )}
+
         {/* Step content */}
         <div
           className={[
@@ -848,7 +850,7 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
             {step === 0 && (
               <button
                 type="button"
-                onClick={() => { setAdvancedSetup(false); goTo(1) }}
+                onClick={() => goTo(1, false)}
                 className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
               >
                 Start setup
@@ -879,7 +881,7 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
               <div className="flex flex-col items-end gap-2">
                 <button
                   type="button"
-                  onClick={() => { setAdvancedSetup(false); advance() }}
+                  onClick={() => goTo(3, false)}
                   disabled={roleTitles.length === 0}
                   className="bg-orange-500 hover:bg-orange-600 disabled:opacity-30 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed"
                 >
@@ -887,7 +889,7 @@ export function OnboardingForm({ profile }: { profile: { full_name?: string | nu
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setAdvancedSetup(true); goTo(3) }}
+                  onClick={() => goTo(3, true)}
                   disabled={lowEnergyMode || roleTitles.length === 0}
                   className="text-[12px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0"
                 >

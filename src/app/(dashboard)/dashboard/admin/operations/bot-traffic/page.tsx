@@ -1,0 +1,210 @@
+import Link from 'next/link'
+import { notFound, redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { getStaffMember } from '@/lib/staff'
+import { evaluateBotTrafficAlerts, getBotTrafficSnapshot } from '@/lib/bot-traffic-report'
+import {
+  ADMIN_DARK_PAGE_BG,
+  ADMIN_DARK_SECTION_CARD,
+  ADMIN_DARK_STAT_CARD,
+  ADMIN_DARK_TABLE_PANEL,
+} from '../../admin-dark-theme'
+import { BotTrafficChart } from './bot-traffic-chart'
+
+export const dynamic = 'force-dynamic'
+
+const SEVERITY_BADGE: Record<string, string> = {
+  high: 'bg-red-500/15 text-red-100 border border-red-300/25',
+  medium: 'bg-amber-500/15 text-amber-100 border border-amber-300/25',
+  low: 'bg-white/10 text-slate-300 border border-white/10',
+}
+
+function percent(value: number): string {
+  return `${Math.round(value * 100)}%`
+}
+
+function shortHash(hash: string): string {
+  return hash.slice(0, 10)
+}
+
+function timeAgo(iso: string): string {
+  const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000)
+  if (minutes < 1) return 'just now'
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.round(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  return `${Math.round(hours / 24)}d ago`
+}
+
+export default async function BotTrafficPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const staff = await getStaffMember(user.email ?? '')
+  if (!staff) notFound()
+
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  const admin = createAdminClient() as any
+  const snapshot = await getBotTrafficSnapshot(admin)
+  const alerts = evaluateBotTrafficAlerts(snapshot)
+
+  const statCards = [
+    { label: 'Requests (24h)', value: snapshot.totalRequests24h.toLocaleString() },
+    { label: 'Suspected bot (24h)', value: `${snapshot.botRequests24h.toLocaleString()} / ${percent(snapshot.botShare24h)}` },
+    { label: 'Rate limited (24h)', value: snapshot.rateLimited24h.toLocaleString() },
+    { label: 'Networks seen (24h)', value: snapshot.distinctPrefixes24h.toLocaleString() },
+  ]
+
+  return (
+    <div className={ADMIN_DARK_PAGE_BG}>
+      <header className="bg-slate-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <Link href="/dashboard/admin/operations" className="text-[13px] text-slate-300 hover:text-white transition-colors">← Operations</Link>
+        </div>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="mb-8">
+          <h1 className="text-[26px] font-bold text-white leading-tight">Bot Traffic</h1>
+          <p className="text-[13px] text-slate-300 mt-1.5">
+            Captcha enforcement is intentionally paused. This page is how we tell whether that stays the right call.
+          </p>
+          <p className="text-[13px] text-slate-400 mt-1">
+            Snapshot generated {new Date(snapshot.generatedAt).toLocaleString()}. IP addresses are never stored -- networks are identified by a salted hash.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          {statCards.map((card) => (
+            <div key={card.label} className={ADMIN_DARK_STAT_CARD}>
+              <div className="text-[24px] font-bold text-white leading-none">{card.value}</div>
+              <div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* The number that actually decides anything. Volume the rate limiter
+            absorbs is noise; requests that reach the signup handler are not. */}
+        <div className={ADMIN_DARK_SECTION_CARD}>
+          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">The number that matters</p>
+          <div className="flex flex-wrap items-baseline gap-3">
+            <span className={`text-[32px] font-bold leading-none ${snapshot.botAllowedOnSignup1h > 0 ? 'text-red-300' : 'text-white'}`}>
+              {snapshot.botAllowedOnSignup1h}
+            </span>
+            <span className="text-[13px] text-slate-300">
+              high-confidence bot requests reached the signup handler in the last hour
+            </span>
+          </div>
+          <p className="text-[13px] text-slate-400 mt-3 leading-relaxed">
+            Raw bot volume that the rate limiter turns away is not a problem worth acting on. Requests that get past it and
+            reach signup are. If this number is regularly above zero, that is the evidence that would justify revisiting
+            captcha as its own piece of work.
+          </p>
+        </div>
+
+        <div className={ADMIN_DARK_SECTION_CARD}>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Hourly volume (7 days)</p>
+            <p className="text-[13px] text-slate-400">
+              Baseline: {snapshot.baselineHourlyMedian} suspected-bot req/hour (median)
+            </p>
+          </div>
+          <BotTrafficChart data={snapshot.hourly} />
+        </div>
+
+        <div className={ADMIN_DARK_SECTION_CARD}>
+          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Alert conditions right now</p>
+          {alerts.length === 0 ? (
+            <p className="text-[13px] text-slate-300">
+              Nothing is firing. Last hour saw {snapshot.botRequests1h} suspected-bot requests against a baseline of {snapshot.baselineHourlyMedian}.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {alerts.map((alert) => (
+                <div key={alert.code} className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[13px] font-semibold text-white">{alert.message}</p>
+                    <p className="text-[13px] text-slate-400 mt-1">{alert.detail}</p>
+                  </div>
+                  <span className={`shrink-0 text-[13px] font-bold px-2 py-0.5 rounded ${SEVERITY_BADGE[alert.severity]}`}>
+                    {alert.severity}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className={ADMIN_DARK_TABLE_PANEL}>
+          <div className="px-5 py-4 border-b border-white/10">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Most active networks (last hour)</p>
+          </div>
+          {snapshot.topPrefixes.length === 0 ? (
+            <p className="px-5 py-4 text-[13px] text-slate-300">No requests in the last hour.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-[13px]">
+                <thead>
+                  <tr className="bg-white/5 text-slate-400">
+                    <th className="text-left px-5 py-2.5 font-bold tracking-[0.07em] uppercase">Network</th>
+                    <th className="text-right px-3 py-2.5 font-bold tracking-[0.07em] uppercase">Requests</th>
+                    <th className="text-right px-3 py-2.5 font-bold tracking-[0.07em] uppercase">Bot</th>
+                    <th className="text-left px-3 py-2.5 font-bold tracking-[0.07em] uppercase">Routes</th>
+                    <th className="text-left px-5 py-2.5 font-bold tracking-[0.07em] uppercase">User agent</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10">
+                  {snapshot.topPrefixes.map((prefix) => (
+                    <tr key={prefix.ipPrefixHash}>
+                      <td className="px-5 py-2.5 font-mono text-slate-300">
+                        {shortHash(prefix.ipPrefixHash)}
+                        {prefix.country ? <span className="ml-2 text-slate-500">{prefix.country}</span> : null}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-white font-semibold">{prefix.requests}</td>
+                      <td className={`px-3 py-2.5 text-right font-semibold ${prefix.botRequests > 0 ? 'text-orange-300' : 'text-slate-400'}`}>
+                        {prefix.botRequests}
+                      </td>
+                      <td className="px-3 py-2.5 text-slate-300">{prefix.routes.join(', ')}</td>
+                      <td className="px-5 py-2.5 text-slate-400 max-w-[280px] truncate" title={prefix.userAgent ?? ''}>
+                        {prefix.userAgent ?? '(none sent)'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className={ADMIN_DARK_TABLE_PANEL}>
+          <div className="px-5 py-4 border-b border-white/10">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent rejections</p>
+          </div>
+          {snapshot.recentRejections.length === 0 ? (
+            <p className="px-5 py-4 text-[13px] text-slate-300">No requests have been turned away recently.</p>
+          ) : (
+            <div className="divide-y divide-white/10">
+              {snapshot.recentRejections.map((rejection, index) => (
+                <div key={`${rejection.occurredAt}-${index}`} className="px-5 py-3 flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-semibold text-white font-mono">{rejection.route}</p>
+                    <p className="text-[13px] text-slate-400 mt-1 truncate" title={rejection.userAgent ?? ''}>
+                      {rejection.userAgent ?? '(no user agent)'}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="text-[13px] text-slate-300">{rejection.outcome}</p>
+                    <p className="text-[13px] text-slate-500 mt-1">score {rejection.botScore} - {timeAgo(rejection.occurredAt)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  )
+}

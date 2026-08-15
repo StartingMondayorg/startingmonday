@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
+import type { Database, Json } from './supabase/database.types'
 
-describe('src/lib/database.types.ts placeholder coverage', () => {
-  it('marks module as covered for council traceability', () => {
-    expect(true).toBe(true)
+describe('database types', () => {
+  it('exposes the public table contract and JSON value type', () => {
+    const company: Database['public']['Tables']['companies']['Row'] = {} as never
+    const json: Json = { enabled: true, count: 1 }
+    expect(company).toBeDefined()
+    expect(json).toEqual({ enabled: true, count: 1 })
   })
 })
