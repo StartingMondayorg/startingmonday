@@ -9,12 +9,6 @@ import {
   type LinkedInExportConnection,
 } from '@/lib/enrichment/linkedin-export-matching'
 
-type CompanyRow = {
-  id: string
-  name: string
-  sector: string | null
-}
-
 type UploadRow = {
   id: string
 }
@@ -49,8 +43,7 @@ type MatchRow = {
   id: string
   candidate_id: string
   export_connection_id: string
-  match_tier: 'high' | 'medium' | 'low' | 'rejected'
-  overall_score: number
+  match_tier: 'strong_overlap' | 'possible_overlap' | 'rejected'
   user_confirmed: boolean
   user_rejected: boolean
 }
@@ -124,9 +117,9 @@ export async function GET(request: NextRequest) {
 
   const connections = (exportConnections ?? []) as unknown as ExportConnectionRow[]
 
-  let { data: candidateRows } = await supabase
+  const { data: candidateRows } = await supabase
     .from('company_people_candidates' as never)
-    .select('id, person_id, score, rationale, metadata')
+    .select('id, person_id, metadata')
     .eq('user_id', userId)
     .eq('company_id', companyId)
     .in('status', ['suggested', 'saved'])
@@ -168,7 +161,8 @@ export async function GET(request: NextRequest) {
 
       if (decision.tier === 'rejected') continue
 
-      if (!bestDecision || decision.overallScore > bestDecision.overallScore) {
+      const tierRank = { strong_overlap: 2, possible_overlap: 1, rejected: 0 } as const
+      if (!bestDecision || tierRank[decision.tier] > tierRank[bestDecision.tier]) {
         bestDecision = decision
         bestConnection = conn
       }
@@ -186,19 +180,16 @@ export async function GET(request: NextRequest) {
         export_connection_id: bestConnection.id,
         match_method: bestDecision.method,
         match_tier: bestDecision.tier,
-        name_similarity: bestDecision.nameSimilarity,
-        company_similarity: bestDecision.companySimilarity,
-        overall_score: bestDecision.overallScore,
         rule_version: 'v1',
       } as never, { onConflict: 'user_id,company_id,export_connection_id,candidate_id' })
   }
 
   const { data: matchRows, error: matchesError } = await supabase
     .from('company_people_connection_matches' as never)
-    .select('id, candidate_id, export_connection_id, match_tier, overall_score, user_confirmed, user_rejected')
+    .select('id, candidate_id, export_connection_id, match_tier, user_confirmed, user_rejected')
     .eq('user_id', userId)
     .eq('company_id', companyId)
-    .order('overall_score', { ascending: false })
+    .order('created_at', { ascending: false })
 
   if (matchesError) {
     return Response.json({ error: 'Failed to build match results.' }, { status: 500 })
@@ -237,14 +228,13 @@ export async function GET(request: NextRequest) {
         connection_email: connection?.email ?? null,
         connection_profile_url: connection?.profile_url ?? null,
         confidence_tier: row.match_tier,
-        overall_score: row.overall_score,
         user_confirmed: row.user_confirmed,
       }
     })
 
-  const likelyKnown = normalized.filter((row) => !row.user_confirmed && (row.confidence_tier === 'high' || row.confidence_tier === 'medium'))
+  const likelyKnown = normalized.filter((row) => !row.user_confirmed && row.confidence_tier === 'strong_overlap')
   const confirmed = normalized.filter((row) => row.user_confirmed)
-  const suggested = normalized.filter((row) => !row.user_confirmed && row.confidence_tier === 'low')
+  const suggested = normalized.filter((row) => !row.user_confirmed && row.confidence_tier === 'possible_overlap')
 
   return Response.json({
     company: { id: company.id, name: company.name },

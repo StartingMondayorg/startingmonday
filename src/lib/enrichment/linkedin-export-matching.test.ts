@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  LINKEDIN_MATCH_THRESHOLDS,
   buildMatchDecision,
-  classifyMatchTier,
   normalizeCompanyName,
   normalizePersonName,
 } from '@/lib/enrichment/linkedin-export-matching'
@@ -33,42 +31,15 @@ describe('linkedin export matching', () => {
     )
 
     expect(result.method).toBe('profile_url_exact')
-    expect(result.tier).toBe('high')
+    expect(result.tier).toBe('strong_overlap')
   })
 
-  it('classifies medium tier at configured boundary values', () => {
-    const tier = classifyMatchTier(
-      'name_company_fuzzy',
-      LINKEDIN_MATCH_THRESHOLDS.medium.name,
-      LINKEDIN_MATCH_THRESHOLDS.medium.company,
-    )
-
-    expect(tier).toBe('medium')
-  })
-
-  it('classifies low tier at configured boundary values', () => {
-    const tier = classifyMatchTier(
-      'name_company_fuzzy',
-      LINKEDIN_MATCH_THRESHOLDS.low.name,
-      LINKEDIN_MATCH_THRESHOLDS.low.company,
-    )
-
-    expect(tier).toBe('low')
-  })
-
-  it('rejects weak matches', () => {
+  it('classifies a name-only match as possible overlap', () => {
     const result = buildMatchDecision(
-      {
-        fullName: 'Alice Johnson',
-        company: 'Redwood Capital',
-      },
-      {
-        fullName: 'Brian Foster',
-        company: 'Blue Harbor Logistics',
-      },
+      { fullName: 'Alice Johnson', company: 'Redwood Capital' },
+      { fullName: 'Alice Johnson', company: 'Blue Harbor Logistics' },
     )
 
-    expect(result.tier).toBe('rejected')
-    expect(result.overallScore).toBeLessThan(0.7)
+    expect(result.tier).toBe('possible_overlap')
   })
 })
