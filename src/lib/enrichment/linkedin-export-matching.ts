@@ -4,7 +4,7 @@ export type MatchMethod =
   | 'name_exact_company_fuzzy'
   | 'name_company_fuzzy'
 
-export type MatchTier = 'high' | 'medium' | 'low' | 'rejected'
+export type MatchTier = 'strong_overlap' | 'possible_overlap' | 'rejected'
 
 export type LinkedInExportConnection = {
   fullName: string
@@ -23,16 +23,7 @@ export type RelationshipCandidate = {
 export type MatchDecision = {
   method: MatchMethod
   tier: MatchTier
-  nameSimilarity: number
-  companySimilarity: number
-  overallScore: number
 }
-
-export const LINKEDIN_MATCH_THRESHOLDS = {
-  high: { name: 0.96, company: 0.92 },
-  medium: { name: 0.9, company: 0.8 },
-  low: { name: 0.84, company: 0.7 },
-} as const
 
 const COMPANY_STOP_WORDS = new Set([
   'inc',
@@ -83,75 +74,6 @@ export function normalizeCompanyName(input: string | null): string {
   return tokens.join(' ')
 }
 
-function bigrams(input: string): string[] {
-  if (input.length < 2) return input ? [input] : []
-  const grams: string[] = []
-  for (let i = 0; i < input.length - 1; i += 1) {
-    grams.push(input.slice(i, i + 2))
-  }
-  return grams
-}
-
-function diceCoefficient(a: string, b: string): number {
-  if (!a || !b) return 0
-  if (a === b) return 1
-
-  const aBigrams = bigrams(a)
-  const bBigrams = bigrams(b)
-  const counts = new Map<string, number>()
-
-  for (const gram of aBigrams) {
-    counts.set(gram, (counts.get(gram) ?? 0) + 1)
-  }
-
-  let overlap = 0
-  for (const gram of bBigrams) {
-    const count = counts.get(gram) ?? 0
-    if (count > 0) {
-      overlap += 1
-      counts.set(gram, count - 1)
-    }
-  }
-
-  return (2 * overlap) / (aBigrams.length + bBigrams.length)
-}
-
-function tokenJaccard(a: string, b: string): number {
-  const aSet = new Set(tokenize(a))
-  const bSet = new Set(tokenize(b))
-  if (aSet.size === 0 || bSet.size === 0) return 0
-
-  let intersection = 0
-  for (const token of aSet) {
-    if (bSet.has(token)) intersection += 1
-  }
-
-  const union = aSet.size + bSet.size - intersection
-  return union === 0 ? 0 : intersection / union
-}
-
-export function scoreNameSimilarity(a: string, b: string): number {
-  const left = normalizePersonName(a)
-  const right = normalizePersonName(b)
-  if (!left || !right) return 0
-  if (left === right) return 1
-
-  const dice = diceCoefficient(left, right)
-  const jaccard = tokenJaccard(left, right)
-  return Number((dice * 0.65 + jaccard * 0.35).toFixed(4))
-}
-
-export function scoreCompanySimilarity(a: string | null, b: string | null): number {
-  const left = normalizeCompanyName(a)
-  const right = normalizeCompanyName(b)
-  if (!left || !right) return 0
-  if (left === right) return 1
-
-  const dice = diceCoefficient(left, right)
-  const jaccard = tokenJaccard(left, right)
-  return Number((dice * 0.6 + jaccard * 0.4).toFixed(4))
-}
-
 function normalizeUrl(url: string | null | undefined): string {
   if (!url) return ''
   return url
@@ -166,7 +88,7 @@ function normalizeEmail(email: string | null | undefined): string {
   return (email ?? '').trim().toLowerCase()
 }
 
-function pickMethod(connection: LinkedInExportConnection, candidate: RelationshipCandidate, nameScore: number): MatchMethod {
+function pickMethod(connection: LinkedInExportConnection, candidate: RelationshipCandidate, namesMatch: boolean): MatchMethod {
   const exportProfile = normalizeUrl(connection.profileUrl)
   const candidateProfile = normalizeUrl(candidate.profileUrl)
   if (exportProfile && candidateProfile && exportProfile === candidateProfile) {
@@ -179,46 +101,51 @@ function pickMethod(connection: LinkedInExportConnection, candidate: Relationshi
     return 'email_exact'
   }
 
-  if (nameScore === 1) {
+  if (namesMatch) {
     return 'name_exact_company_fuzzy'
   }
 
   return 'name_company_fuzzy'
 }
 
-export function classifyMatchTier(method: MatchMethod, nameSimilarity: number, companySimilarity: number): MatchTier {
+function namesMatch(connection: LinkedInExportConnection, candidate: RelationshipCandidate): boolean {
+  const left = normalizePersonName(connection.fullName)
+  const right = normalizePersonName(candidate.fullName)
+  if (!left || !right) return false
+  if (left === right) return true
+
+  const leftTokens = tokenize(left)
+  const rightTokens = tokenize(right)
+  return leftTokens.length >= 2
+    && rightTokens.length >= 2
+    && leftTokens[0] === rightTokens[0]
+    && leftTokens[leftTokens.length - 1] === rightTokens[rightTokens.length - 1]
+}
+
+function companiesMatch(connection: LinkedInExportConnection, candidate: RelationshipCandidate): boolean {
+  const left = normalizeCompanyName(connection.company)
+  const right = normalizeCompanyName(candidate.company)
+  return Boolean(left && right && left === right)
+}
+
+function classifyMatchTier(method: MatchMethod, hasNameMatch: boolean, hasCompanyMatch: boolean): MatchTier {
   if (method === 'profile_url_exact' || method === 'email_exact') {
-    return 'high'
+    return 'strong_overlap'
   }
 
-  if (nameSimilarity >= LINKEDIN_MATCH_THRESHOLDS.high.name && companySimilarity >= LINKEDIN_MATCH_THRESHOLDS.high.company) {
-    return 'high'
-  }
-
-  if (nameSimilarity >= LINKEDIN_MATCH_THRESHOLDS.medium.name && companySimilarity >= LINKEDIN_MATCH_THRESHOLDS.medium.company) {
-    return 'medium'
-  }
-
-  if (nameSimilarity >= LINKEDIN_MATCH_THRESHOLDS.low.name && companySimilarity >= LINKEDIN_MATCH_THRESHOLDS.low.company) {
-    return 'low'
-  }
-
+  if (hasNameMatch && hasCompanyMatch) return 'strong_overlap'
+  if (hasNameMatch || hasCompanyMatch) return 'possible_overlap'
   return 'rejected'
 }
 
 export function buildMatchDecision(connection: LinkedInExportConnection, candidate: RelationshipCandidate): MatchDecision {
-  const nameSimilarity = scoreNameSimilarity(connection.fullName, candidate.fullName)
-  const companySimilarity = scoreCompanySimilarity(connection.company, candidate.company)
-  const method = pickMethod(connection, candidate, nameSimilarity)
-
-  const overallScore = Number((nameSimilarity * 0.72 + companySimilarity * 0.28).toFixed(4))
-  const tier = classifyMatchTier(method, nameSimilarity, companySimilarity)
+  const hasNameMatch = namesMatch(connection, candidate)
+  const hasCompanyMatch = companiesMatch(connection, candidate)
+  const method = pickMethod(connection, candidate, hasNameMatch)
+  const tier = classifyMatchTier(method, hasNameMatch, hasCompanyMatch)
 
   return {
     method,
     tier,
-    nameSimilarity,
-    companySimilarity,
-    overallScore,
   }
 }
