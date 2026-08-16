@@ -1,70 +1,46 @@
-# 166_rem01_remove_apollo_relationship_sources rollback
+# Migration 166 Rollback and Recovery
 
-Goal:
-- Re-open Apollo as an allowed relationship-layer source if REM-01 source
-  tightening blocks critical ingestion flows or invalidates legacy analytics
-  that still depend on `apollo` labels.
+## Scope
 
-Risk triggers:
-- Runtime write paths begin failing due to source-check constraint violations
-  after deploy.
-- Backfill/import jobs require temporary Apollo labeling to complete historical
-  repair work.
-- Product or analytics consumers need a controlled temporary rollback window
-  while provider-only migration callers are remediated.
+Migration `166_rem01_remove_apollo_relationship_sources.sql` normalizes legacy Apollo source markers to `other`, changes relationship-table defaults to `manual`, and tightens source constraints so Apollo is no longer an allowed runtime source.
 
-Pre-rollback safety checks:
-- Confirm why rollback is required and identify affected write surfaces.
-- Export rows currently labeled `other` in impacted tables for later replay if
-  source relabeling needs to be reconstructed.
-- Coordinate with REM-01 owner before reopening `apollo` labels so policy drift
-  is explicit and time-bounded.
+## Preconditions
 
-Rollback SQL:
-```sql
-ALTER TABLE public.people
-  DROP CONSTRAINT IF EXISTS people_source_primary_check;
+- Keep relationship-network matching disabled.
+- Capture reviewed before/after counts for all four declared source columns.
+- Verify the approved provider-retention and backup decision before any hosted apply.
+- Preserve the migration and its evidence as an append-only release artifact.
 
-ALTER TABLE public.people
-  ADD CONSTRAINT people_source_primary_check
-  CHECK (source_primary IN ('manual', 'public_web', 'other', 'apollo'));
+## Rollback posture
 
-ALTER TABLE public.person_sources
-  DROP CONSTRAINT IF EXISTS person_sources_source_type_check;
+Do not reverse the source constraints or restore Apollo as an allowed runtime source. The migration is a compliance remediation, and re-enabling Apollo would violate the REM-01 decision.
 
-ALTER TABLE public.person_sources
-  ADD CONSTRAINT person_sources_source_type_check
-  CHECK (source_type IN ('public_web', 'manual', 'other', 'apollo'));
+If a deployment fails after migration 166:
 
-ALTER TABLE public.contact_people
-  DROP CONSTRAINT IF EXISTS contact_people_source_check;
+1. Keep the relationship matching feature flag disabled.
+2. Leave the tightened constraints in place.
+3. Restore application availability with a forward-fix that uses only `manual`, `public_web`, or `other` sources.
+4. Re-run focused route, RLS, migration, and source-policy tests.
+5. Reconcile any affected rows from approved backups only when required for data integrity; do not recreate Apollo provenance as an active source.
 
-ALTER TABLE public.contact_people
-  ADD CONSTRAINT contact_people_source_check
-  CHECK (source IN ('manual', 'public_web', 'other', 'apollo'));
+## Failure cases
 
-ALTER TABLE public.company_people_candidates
-  DROP CONSTRAINT IF EXISTS company_people_candidates_source_check;
+### Migration fails before commit
 
-ALTER TABLE public.company_people_candidates
-  ADD CONSTRAINT company_people_candidates_source_check
-  CHECK (source IN ('public_web', 'manual', 'other', 'apollo'));
-```
+The transaction should leave the schema unchanged. Inspect the failed statement, correct it in a forward migration, and keep the feature disabled while retrying.
 
-Validation queries:
-```sql
-SELECT conname, pg_get_constraintdef(c.oid)
-FROM pg_constraint c
-JOIN pg_class t ON c.conrelid = t.oid
-JOIN pg_namespace n ON t.relnamespace = n.oid
-WHERE n.nspname = 'public'
-  AND t.relname IN ('people', 'person_sources', 'contact_people', 'company_people_candidates')
-  AND conname LIKE '%source%check';
+### Legacy rows remain after normalization
 
--- Confirm each returned CHECK definition includes 'apollo'.
-```
+Do not relax the constraint. Use the approved count-only inventory and an idempotent forward cleanup for remaining rows, then rerun the zero-row verification.
 
-Forward-fix plan:
-- Restore provider-only constraints after caller remediation is complete.
-- Re-run REM-01 inventory script and verify Apollo rows are zero before
-  re-tightening.
+### An application path still emits Apollo
+
+Stop promotion, keep matching disabled, remove or normalize the emitting path, and add a regression test. No runtime rollback to Apollo is permitted.
+
+## Verification before REM-01 closeout
+
+- All four declared Apollo source counts are zero.
+- No active application source path emits Apollo relationship records.
+- The tightened constraints and defaults are present.
+- Matching remains default-off and independently guarded.
+- The migration, hosted counts, backup/retention decision, and any notice decision are linked in the REM-01 closeout evidence.
