@@ -41,7 +41,7 @@ const DARK_PALETTE_ROUTES = new Set(['/blog'])
 const GLOBAL_FILES = {
   layout: path.join(ROOT, 'src', 'app', 'layout.tsx'),
   globals: path.join(ROOT, 'src', 'app', 'globals.css'),
-  landingPage: path.join(ROOT, 'src', 'components', 'LandingPage.tsx'),
+  landingPage: path.join(ROOT, 'src', 'app', 'components', 'LandingPage.tsx'),
 }
 
 function walk(dirPath) {
