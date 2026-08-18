@@ -19,7 +19,7 @@ vi.mock('@/lib/demo', () => ({
 }))
 vi.mock('@/lib/api-usage', () => ({ trackApiUsage: state.trackApiUsage }))
 vi.mock('@/lib/watermark', () => ({ encodeUserId: (userId: string) => `encoded:${userId}` }))
-vi.mock('@/lib/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { opus: 'opus-test' } }))
+vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { opus: 'opus-test' } }))
 vi.mock('@sentry/nextjs', () => ({ captureException: vi.fn() }))
 
 import { GET } from './route'

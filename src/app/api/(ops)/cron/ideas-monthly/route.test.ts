@@ -21,7 +21,7 @@ vi.mock('@/lib/supabase/admin', () => ({
   })),
 }))
 
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   anthropic: {
     messages: {
       create: vi.fn(),

@@ -5,7 +5,7 @@ import { postSearchDigestFrequency, resolveCareerMode } from '@/lib/career-mode'
 import { buildRelationshipMaintenancePlan } from '@/lib/post-search-relationship-loop'
 import { summarizeRelationshipNetwork } from '@/lib/relationship-infrastructure'
 import { evaluateNarrativeHealth } from '@/lib/narrative-health'
-import { buildAlwaysOnIntelligencePulse } from '@/lib/always-on-intelligence'
+import { buildAlwaysOnIntelligencePulse } from '@/lib/intelligence/always-on-intelligence'
 
 export const metadata = { title: 'Career Intelligence Mode - Starting Monday' }
 

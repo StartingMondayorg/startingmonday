@@ -1,4 +1,4 @@
-import signalSourceCatalog from '../../config/signal-source-catalog.json'
+import signalSourceCatalog from '../../../config/signal-source-catalog.json'
 
 export type SignalSourceStatus = 'active' | 'pilot' | 'planned' | 'deprecated'
 export type SignalSourceRoleFamily = 'leadership' | 'technical_leadership' | 'delivery_leadership'

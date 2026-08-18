@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
 import { updateCompany, archiveCompany, addFollowUp, markFollowUpDone, addContact, archiveContact, addDocument, removeDocument, reportMissedRole } from './actions'
 import { todayInTz } from '@/lib/date'
-import { PREVIEW_CHARS } from '@/lib/ai-limits'
+import { PREVIEW_CHARS } from '@/lib/ai/ai-limits'
 import { LogSignalForm } from '@/app/(dashboard)/dashboard/_components/LogSignalForm'
 import { ScanPoller } from '@/app/(dashboard)/dashboard/_components/ScanPoller'
 import {

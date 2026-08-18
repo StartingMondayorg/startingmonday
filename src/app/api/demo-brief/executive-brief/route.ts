@@ -1,6 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
-import { anthropic, MODELS } from '@/lib/anthropic'
-import { PREP_SYSTEM } from '@/lib/prompts'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
+import { PREP_SYSTEM } from '@/lib/ai/prompts'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
 
 // Fictional demo candidate: senior enterprise IT leader, VP-level, targeting CIO/VP of IT.

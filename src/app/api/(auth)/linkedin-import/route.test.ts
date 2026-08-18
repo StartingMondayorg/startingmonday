@@ -14,7 +14,7 @@ const state = vi.hoisted(() => ({
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/burst-limit', () => ({ checkBurstLimit: state.checkBurstLimit }))
 vi.mock('@/lib/api-usage', () => ({ isRateLimited: state.isRateLimited }))
-vi.mock('@/lib/anthropic', () => ({ anthropic: { messages: { create: state.anthropicCreate } }, MODELS: { sonnet: 'sonnet-test' } }))
+vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { create: state.anthropicCreate } }, MODELS: { sonnet: 'sonnet-test' } }))
 vi.mock('@/lib/events', () => ({ logEvent: state.logEvent }))
 vi.mock('@/lib/posthog-server', () => ({ captureServerEvent: state.captureServerEvent }))
 vi.mock('@/lib/supabase/server', () => ({ createClient: state.createClient }))

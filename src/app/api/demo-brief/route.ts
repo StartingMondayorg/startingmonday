@@ -1,5 +1,5 @@
 ﻿import { NextRequest } from 'next/server'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
 
 const SYSTEM =

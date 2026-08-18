@@ -4,13 +4,13 @@ import { createClient } from '@/lib/supabase/server'
 import { isRateLimited } from '@/lib/api-usage'
 import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
 import { SignalsClassifyBodySchema, firstZodError } from '@/lib/schemas'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { captureServerEvent } from '@/lib/posthog-server'
 import {
   computePersonaRelevance,
   computeSignalConfidence,
   enrichSignalProfileContext,
-} from '@/lib/intelligence-quality'
+} from '@/lib/intelligence/intelligence-quality'
 
 const SIGNAL_TYPES = ['funding', 'exec_departure', 'exec_hire', 'acquisition', 'expansion', 'layoffs', 'ipo', 'new_product', 'award']
 

@@ -22,7 +22,7 @@ vi.mock('@/lib/subscription', () => ({
 }))
 vi.mock('@/lib/burst-limit', () => ({ checkBurstLimit: state.checkBurstLimit }))
 vi.mock('@/lib/api-usage', () => ({ isRateLimited: state.isRateLimited }))
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   anthropic: { messages: { create: state.anthropicCreate } },
   MODELS: { sonnet: 'sonnet-test' },
 }))

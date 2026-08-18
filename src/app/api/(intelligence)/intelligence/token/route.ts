@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { createAccessToken } from '@/lib/intelligence'
+import { createAccessToken } from '@/lib/intelligence/intelligence'
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()

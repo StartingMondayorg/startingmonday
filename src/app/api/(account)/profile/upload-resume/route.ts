@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { isRateLimited } from '@/lib/api-usage'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 
 type AnthropicDocumentBlock = {
   type: 'document'

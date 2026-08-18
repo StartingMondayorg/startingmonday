@@ -3,7 +3,7 @@ import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { checkBurstLimit } from '@/lib/burst-limit'
 import { isRateLimited } from '@/lib/api-usage'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { logEvent } from '@/lib/events'
 import { captureServerEvent } from '@/lib/posthog-server'
 

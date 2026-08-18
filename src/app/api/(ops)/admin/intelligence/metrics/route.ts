@@ -3,7 +3,7 @@
 // and canonical-layer provenance coverage. Escaped duplicates require a row-level audit.
 import { type NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { coverageGate, rateGate } from '@/lib/intelligence-gate-status'
+import { coverageGate, rateGate } from '@/lib/intelligence/intelligence-gate-status'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 
 export async function GET(request: NextRequest) {

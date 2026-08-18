@@ -1,6 +1,6 @@
 ﻿import { type NextRequest } from 'next/server'
 import { requireFeatureAccess } from '@/lib/require-feature-access'
-import { anthropic, MODELS, TEMP } from '@/lib/anthropic'
+import { anthropic, MODELS, TEMP } from '@/lib/ai/anthropic'
 import { streamErrorMessage } from '@/lib/stream-error'
 import { recordTraceError } from '@/lib/trace'
 import type Anthropic from '@anthropic-ai/sdk'

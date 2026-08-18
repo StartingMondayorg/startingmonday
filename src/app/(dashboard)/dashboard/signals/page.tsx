@@ -8,13 +8,13 @@ import { DraftPanel } from '@/app/(dashboard)/dashboard/_components/DraftPanel'
 import { SignalOutreachGate } from '@/app/(dashboard)/dashboard/_components/SignalOutreachGate'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { logEvent } from '@/lib/events'
-import { rankSignals } from '@/lib/intelligence-quality'
+import { rankSignals } from '@/lib/intelligence/intelligence-quality'
 import { buildSignalTranslation } from '../signal-orientation'
 import {
   applyDashboardSignalContract,
   DASHBOARD_COMPANY_SIGNAL_LIMIT,
   DASHBOARD_PATTERN_ALERT_LIMIT,
-} from '@/lib/dashboard-signal-contract'
+} from '@/lib/intelligence/dashboard-signal-contract'
 
 const PAGE_SIZE = 25
 

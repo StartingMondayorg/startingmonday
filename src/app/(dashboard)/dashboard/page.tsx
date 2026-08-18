@@ -55,8 +55,8 @@ import { bumpWeek, getWeekMonday, weekLabel } from "./_utils/week-utils";
 import { canAccessFeature, getUserSubscription } from "@/lib/subscription";
 import { greetingInTz, fullDateInTz } from "@/lib/date";
 import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
-import { applyDashboardSignalContract } from "@/lib/dashboard-signal-contract";
-import { rankSignals } from "@/lib/intelligence-quality";
+import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
+import { rankSignals } from "@/lib/intelligence/intelligence-quality";
 import { stripStaleRelativeTime } from "@/lib/follow-up-copy";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)

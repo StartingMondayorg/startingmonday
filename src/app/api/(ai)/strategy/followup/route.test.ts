@@ -10,8 +10,8 @@ const state = vi.hoisted(() => ({
 
 vi.mock('@/lib/require-feature-access', () => ({ requireFeatureAccess: state.access }))
 vi.mock('@/lib/api-usage', () => ({ trackApiUsage: state.trackApiUsage }))
-vi.mock('@/lib/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { sonnet: 'sonnet-test' } }))
-vi.mock('@/lib/prompts', () => ({ STRATEGY_SYSTEM: 'system' }))
+vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { sonnet: 'sonnet-test' } }))
+vi.mock('@/lib/ai/prompts', () => ({ STRATEGY_SYSTEM: 'system' }))
 vi.mock('@/lib/stream-error', () => ({ streamErrorMessage: () => 'stream error' }))
 vi.mock('@/lib/trace', () => ({ recordTraceError: state.recordTraceError }))
 

@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { slugify } from '@/lib/intelligence'
+import { slugify } from '@/lib/intelligence/intelligence'
 
 export async function GET() {
   const supabase = await createClient()

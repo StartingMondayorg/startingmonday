@@ -1,6 +1,6 @@
 // Epic E2 T2.6: Admin API endpoint for label metrics (coverage, latency, breakdowns)
 import { type NextRequest, NextResponse } from 'next/server'
-import { buildLabelAndBacktestGates } from '@/lib/intelligence-label-gates'
+import { buildLabelAndBacktestGates } from '@/lib/intelligence/intelligence-label-gates'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 

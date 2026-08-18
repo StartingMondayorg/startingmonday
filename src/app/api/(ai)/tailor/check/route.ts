@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { requireFeatureAccess } from '@/lib/require-feature-access'
 import { TailorCheckBodySchema, firstZodError } from '@/lib/schemas'
 import { appendWatermarkToStream } from '@/lib/watermark'

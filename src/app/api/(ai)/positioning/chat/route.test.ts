@@ -8,7 +8,7 @@ const state = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/require-feature-access', () => ({ requireFeatureAccess: state.access }))
-vi.mock('@/lib/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { sonnet: 'sonnet-test' }, TEMP: { balanced: 0.5 } }))
+vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { sonnet: 'sonnet-test' }, TEMP: { balanced: 0.5 } }))
 vi.mock('@/lib/stream-error', () => ({ streamErrorMessage: () => 'stream error' }))
 vi.mock('@/lib/trace', () => ({ recordTraceError: state.recordTraceError }))
 

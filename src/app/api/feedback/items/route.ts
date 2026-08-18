@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withApiTelemetry } from '@/lib/telemetry'
 import { sendEmail } from '@/lib/email/email'
 import { getNotifyEmails } from '@/lib/email/owner-email'
-import { anthropic, MODELS, TEMP } from '@/lib/anthropic'
+import { anthropic, MODELS, TEMP } from '@/lib/ai/anthropic'
 
 type FeedbackListRow = Record<string, unknown> & { id: string }
 type FeedbackVoteRow = { item_id: string }

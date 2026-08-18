@@ -10,7 +10,7 @@ vi.mock('@/lib/require-feature-access', () => ({
   requireFeatureAccess: state.access,
 }))
 
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   anthropic: {
     messages: {
       stream: state.stream,

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { getModelForTier, MODELS } from '@/lib/anthropic'
+import { getModelForTier, MODELS } from '@/lib/ai/anthropic'
 
 describe('getModelForTier', () => {
   const originalFlag = process.env.ANTHROPIC_OPUS_EXECUTIVE_ENABLED

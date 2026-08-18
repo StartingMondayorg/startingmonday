@@ -1,4 +1,4 @@
-import { DOC_CHARS } from '@/lib/ai-limits'
+import { DOC_CHARS } from '@/lib/ai/ai-limits'
 
 export type Signal = {
   signal_type: string

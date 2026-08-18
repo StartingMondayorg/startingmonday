@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
 import { checkBurstLimit } from '@/lib/burst-limit'
 import { isRateLimited } from '@/lib/api-usage'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { recordTrace, recordTraceError } from '@/lib/trace'
 
 type Recruiter = { name: string; focus: string }

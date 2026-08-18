@@ -12,7 +12,7 @@ const state = vi.hoisted(() => ({
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/burst-limit', () => ({ checkBurstLimit: state.checkBurstLimit }))
 vi.mock('@/lib/api-usage', () => ({ isRateLimited: state.isRateLimited }))
-vi.mock('@/lib/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { haiku: 'haiku-test' } }))
+vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { haiku: 'haiku-test' } }))
 vi.mock('@/lib/supabase/server', () => ({ createClient: state.createClient }))
 
 import { POST } from './route'

@@ -7,7 +7,7 @@ const state = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/require-feature-access', () => ({ requireFeatureAccess: state.access }))
-vi.mock('@/lib/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { sonnet: 'sonnet-test' } }))
+vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { stream: state.anthropicStream } }, MODELS: { sonnet: 'sonnet-test' } }))
 vi.mock('@/lib/watermark', () => ({ appendWatermarkToStream: (stream: Response) => stream }))
 
 import { POST } from './route'

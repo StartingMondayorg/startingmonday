@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import * as Sentry from '@sentry/nextjs'
 import { requireAuth } from '@/lib/require-auth'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import {
   EXECUTIVE_FIRST_PRINCIPLES,
   EXECUTIVE_MENTAL_MODELS,

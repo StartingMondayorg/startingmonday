@@ -1,6 +1,6 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requirePrepAccess } from '@/lib/require-prep-access'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { trackApiUsage } from '@/lib/api-usage'
 import { apiError } from '@/lib/api-error'
 import { PrepChatBodySchema, PrepChatHistoryItemSchema, PrepRouteParamsSchema, firstZodError } from '@/lib/schemas'

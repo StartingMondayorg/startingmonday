@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { rankSignals } from '@/lib/intelligence-quality'
+import { rankSignals } from '@/lib/intelligence/intelligence-quality'
 
 export type IntelSignal = {
   id: string

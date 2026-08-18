@@ -1,7 +1,7 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requireFeatureAccess } from '@/lib/require-feature-access'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 
 const SYSTEM =
   'You are a senior executive coach who writes LinkedIn content that sounds like a real person, not a recruiter. ' +

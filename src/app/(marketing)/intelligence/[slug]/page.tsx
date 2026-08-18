@@ -7,7 +7,7 @@ import {
   validateAccessToken,
   signalLabel,
   SIGNAL_COLORS,
-} from '@/lib/intelligence'
+} from '@/lib/intelligence/intelligence'
 
 const FREE_LIMIT = 3
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://startingmonday.app'

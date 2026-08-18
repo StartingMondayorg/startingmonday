@@ -6,7 +6,7 @@ import {
   computePersonaRelevance,
   computeSignalConfidence,
   enrichSignalProfileContext,
-} from '@/lib/intelligence-quality'
+} from '@/lib/intelligence/intelligence-quality'
 
 const VACANCY_WINDOW_DAYS = 365
 const MIN_CONFIDENCE = 55

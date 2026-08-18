@@ -1,7 +1,7 @@
 ﻿import { type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { streamErrorMessage } from '@/lib/stream-error'
 import { recordTraceError } from '@/lib/trace'
 import { fetchProspectNews } from '@/lib/prospect-news'

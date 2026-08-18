@@ -10,7 +10,7 @@ vi.mock('@/lib/public-endpoint-guard', () => ({
   enforcePublicEndpointGuard: state.guard,
 }))
 
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   MODELS: { sonnet: 'sonnet-test' },
   anthropic: {
     messages: {

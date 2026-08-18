@@ -10,7 +10,7 @@ vi.mock('@/lib/require-feature-access', () => ({
   requireFeatureAccess: state.requireFeatureAccess,
 }))
 
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   MODELS: { sonnet: 'sonnet-test' },
   anthropic: {
     messages: {

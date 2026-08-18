@@ -1,4 +1,4 @@
-import { dedupePatternAlerts, isDashboardSignalSuppressed } from '@/lib/dashboard-signal-guard'
+import { dedupePatternAlerts, isDashboardSignalSuppressed } from '@/lib/intelligence/dashboard-signal-guard'
 
 export const DASHBOARD_COMPANY_SIGNAL_LIMIT = 5
 export const DASHBOARD_PATTERN_ALERT_LIMIT = 3

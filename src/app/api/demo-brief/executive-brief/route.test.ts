@@ -11,11 +11,11 @@ vi.mock('@/lib/public-endpoint-guard', () => ({
   enforcePublicEndpointGuard: state.guard,
 }))
 
-vi.mock('@/lib/prompts', () => ({
+vi.mock('@/lib/ai/prompts', () => ({
   PREP_SYSTEM: 'prep-system',
 }))
 
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   MODELS: { sonnet: 'sonnet-test' },
   anthropic: {
     messages: {

@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { rankSignals } from '@/lib/intelligence-quality'
+import { rankSignals } from '@/lib/intelligence/intelligence-quality'
 
 type SignalRow = {
   id: string

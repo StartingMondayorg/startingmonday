@@ -3,7 +3,7 @@ import { validateCronRequest } from '@/lib/cron-auth'
 import { requireAuth, withAuthCookies } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { runLeadScoringPass } from '@/lib/lead-scoring-runner'
+import { runLeadScoringPass } from '@/lib/intelligence/lead-scoring-runner'
 
 type ScoreRequest = {
   limit?: number

@@ -1,4 +1,4 @@
-import type { InterviewStage } from '@/lib/prompts'
+import type { InterviewStage } from '@/lib/ai/prompts'
 
 export function isAllowedJobUrl(raw: string): boolean {
   try {

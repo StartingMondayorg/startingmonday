@@ -1,4 +1,4 @@
-import { RESUME_CHARS } from '@/lib/ai-limits'
+import { RESUME_CHARS } from '@/lib/ai/ai-limits'
 import type { CareerEntry } from '@/app/components/CareerVerificationPanel'
 
 // Shared candidate-context builders for prep brief routes.

@@ -1,6 +1,6 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requirePrepAccess } from '@/lib/require-prep-access'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { streamErrorMessage } from '@/lib/stream-error'
 import { recordTrace, recordTraceError } from '@/lib/trace'
 import { encodeUserId } from '@/lib/watermark'

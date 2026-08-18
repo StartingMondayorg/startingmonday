@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import { routeLead, scoreLead } from '@/lib/lead-scoring'
+import { routeLead, scoreLead } from '@/lib/intelligence/lead-scoring'
 
 export type LeadScoringOptions = {
   limit?: number
