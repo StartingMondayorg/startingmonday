@@ -4,7 +4,6 @@ import { TrackLink } from '@/app/components/TrackLink'
 import { FirstMileTelemetry } from '@/app/components/FirstMileTelemetry'
 import { HomepageBriefTeaser } from '@/app/components/HomepageBriefTeaser'
 import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/app/components/FirstWeekSpine'
-import { CHANNEL_ROUTE_SPECS } from '@/lib/channel-ia'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { OpportunityTimingGapChart, OpportunityTimingGapChartMobile } from '@/app/components/OpportunityCharts'
 
@@ -168,7 +167,6 @@ export function LandingPage({
   const isHomePage = sourcePage === '/' || isManagerToolsPage
   const isPersonaRoute = sourcePage.startsWith('/for-')
   const isExecutivesPage = sourcePage === '/for-executives' || sourcePage.startsWith('/for-executives/')
-  const isRisingLeadersPage = sourcePage === '/for-vp-technology' || sourcePage === '/for-leaders'
   const useCenteredFooter = isManagerToolsPage || isExecutivesPage
   const executiveLaneBrand = executiveLaneFromSource(sourcePage)
   const isLeadershipLanePage = executiveLaneBrand?.key === 'leadership'

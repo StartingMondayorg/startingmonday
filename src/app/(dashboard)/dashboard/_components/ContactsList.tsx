@@ -63,35 +63,6 @@ function exportContactsCsv(contacts: ContactListItem[]) {
   URL.revokeObjectURL(url)
 }
 
-function generateOutreachList(contacts: ContactListItem[], criteria: { channel?: string; isPriority?: boolean }) {
-  const filteredContacts = contacts.filter(ct => {
-    const matchesChannel = criteria.channel ? ct.channel === criteria.channel : true;
-    const matchesPriority = criteria.isPriority !== undefined ? ct.is_priority === criteria.isPriority : true;
-    return matchesChannel && matchesPriority;
-  });
-
-  const headers = ['Name', 'Title', 'Firm', 'Company', 'Channel', 'Status', 'Priority', 'Notes'];
-  const rows = filteredContacts.map(ct => [
-    ct.name,
-    ct.title ?? '',
-    ct.firm ?? '',
-    ct.companies?.name ?? '',
-    ct.channel ?? '',
-    ct.outreach_status ?? 'prospect',
-    ct.is_priority ? 'Yes' : '',
-    ct.notes ?? '',
-  ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
-
-  const csv = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `outreach-list-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 export function ContactsList({ contacts, isLeader = false }: { contacts: ContactListItem[]; isLeader?: boolean }) {
   const router = useRouter()
   const [search, setSearch] = useState('')
