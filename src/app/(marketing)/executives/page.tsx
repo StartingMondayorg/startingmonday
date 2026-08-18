@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { TrackLink } from '@/components/TrackLink'
-import { ChannelMicroProductRail } from '@/components/micro-products/ChannelMicroProductRail'
+import { TrackLink } from '@/app/components/TrackLink'
+import { ChannelMicroProductRail } from '@/app/components/ChannelMicroProductRail'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 
 export const metadata: Metadata = {

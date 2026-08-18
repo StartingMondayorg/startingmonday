@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import TrackedCtaLink from '@/components/TrackedCtaLink'
+import TrackedCtaLink from '@/app/components/TrackedCtaLink'
 import { BLOG_POSTS } from '@/lib/blog-posts'
 import { BlogChat } from '../(marketing)/blog/blog-chat'
 

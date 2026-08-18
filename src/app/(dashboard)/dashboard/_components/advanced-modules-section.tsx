@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { DashboardIntelSetupSections } from './intel-setup-sections'
 import { DashboardPipelinePulse } from './pipeline-pulse'
 import { DashboardWeeklyPerformanceSection } from './weekly-performance-section'
-import type { WeekActivity } from '@/components/ActivityChart'
-import type { VelocityRow } from '@/components/PipelineVelocity'
+import type { WeekActivity } from '@/app/components/ActivityChart'
+import type { VelocityRow } from '@/app/components/PipelineVelocity'
 
 type DashboardAdvancedModulesSectionProps = {
   weeklyGoal: number | null

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { LandingPage } from '@/components/LandingPage'
-import type { FAQ, SituationCard } from '@/components/LandingPage'
-import { SiteFooter } from '@/components/SiteFooter'
+import { LandingPage } from '@/app/components/LandingPage'
+import type { FAQ, SituationCard } from '@/app/components/LandingPage'
+import { SiteFooter } from '@/app/components/SiteFooter'
 
 export const metadata: Metadata = {
   title: 'Partner / Firm | Starting Monday',

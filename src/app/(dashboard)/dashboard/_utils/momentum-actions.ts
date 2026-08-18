@@ -1,4 +1,4 @@
-import type { DailyMomentumAction } from '@/components/DailyMomentumPlan'
+import type { DailyMomentumAction } from '@/app/components/DailyMomentumPlan'
 
 // Daily momentum action builder with the "why chain" (Aleksei 2.5):
 // every recommended action carries why-now (the trigger) and why-you

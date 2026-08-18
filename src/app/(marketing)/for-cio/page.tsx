@@ -1,13 +1,13 @@
 ﻿import type { Metadata } from 'next'
-import { LandingPage } from '@/components/LandingPage'
-import type { SituationCard, FAQ } from '@/components/LandingPage'
-import { JsonLd } from '@/components/JsonLd'
-import { EmiMarketingTelemetry } from '@/components/EmiMarketingTelemetry'
-import { TrackLink } from '@/components/TrackLink'
+import { LandingPage } from '@/app/components/LandingPage'
+import type { SituationCard, FAQ } from '@/app/components/LandingPage'
+import { JsonLd } from '@/app/components/JsonLd'
+import { EmiMarketingTelemetry } from '@/app/components/EmiMarketingTelemetry'
+import { TrackLink } from '@/app/components/TrackLink'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
-import { EvidenceProofCard } from '@/components/EvidenceProofCard'
+import { EvidenceProofCard } from '@/app/components/EvidenceProofCard'
 
-import { ProofStrip } from '@/components/ProofStrip'
+import { ProofStrip } from '@/app/components/ProofStrip'
 
 export const metadata: Metadata = {
   title: 'Starting Monday for C-suite technology searches - Executive Search Campaign Infrastructure',

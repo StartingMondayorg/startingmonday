@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 
 type BriefingFrequency = 'daily' | 'weekly'
 

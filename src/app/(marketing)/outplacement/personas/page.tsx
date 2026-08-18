@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { OUTPLACEMENT_PERSONAS } from '@/lib/persona-routes'
 

@@ -5,9 +5,9 @@ import { DashboardWeeklyPerformanceSection } from '@/app/(dashboard)/dashboard/_
 import { DashboardPipelinePulse } from '@/app/(dashboard)/dashboard/_components/pipeline-pulse'
 import { DashboardProgressFeedSection } from '@/app/(dashboard)/dashboard/_components/progress-feed-section'
 import { DashboardPipelineSection } from '@/app/(dashboard)/dashboard/_components/pipeline-section'
-import { DailyMomentumPlan, type DailyMomentumAction } from '@/components/DailyMomentumPlan'
-import type { VelocityRow } from '@/components/PipelineVelocity'
-import type { WeekActivity } from '@/components/ActivityChart'
+import { DailyMomentumPlan, type DailyMomentumAction } from '@/app/components/DailyMomentumPlan'
+import type { VelocityRow } from '@/app/components/PipelineVelocity'
+import type { WeekActivity } from '@/app/components/ActivityChart'
 
 const STAGE: Record<string, { label: string; cls: string }> = {
   watching: { label: 'Watching', cls: 'bg-slate-100 text-slate-500' },

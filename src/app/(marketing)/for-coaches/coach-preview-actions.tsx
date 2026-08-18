@@ -1,6 +1,6 @@
 'use client'
 
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 
 const EVENT_NAME = 'coach_preview_requested'
 const EVENT_PROPERTIES = {

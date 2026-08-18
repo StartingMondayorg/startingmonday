@@ -1,8 +1,8 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { LandingPage } from '@/components/LandingPage'
-import type { SituationCard, FAQ } from '@/components/LandingPage'
+import { LandingPage } from '@/app/components/LandingPage'
+import type { SituationCard, FAQ } from '@/app/components/LandingPage'
 import { getPublicRoleLaneTutorials, getRoleLaneTutorials, type PublicTutorialAsset } from '@/lib/role-lane-learning'
 import type { RoleFamily } from '@/lib/role-taxonomy'
 

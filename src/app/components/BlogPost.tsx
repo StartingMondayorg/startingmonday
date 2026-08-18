@@ -1,5 +1,5 @@
 ﻿import Link from 'next/link'
-import { JsonLd } from '@/components/JsonLd'
+import { JsonLd } from '@/app/components/JsonLd'
 import { getRelated } from '@/lib/blog-posts'
 import type { BlogPostMeta } from '@/lib/blog-posts'
 

@@ -1,5 +1,5 @@
 import { RESUME_CHARS } from '@/lib/ai-limits'
-import type { CareerEntry } from '@/components/CareerVerificationPanel'
+import type { CareerEntry } from '@/app/components/CareerVerificationPanel'
 
 // Shared candidate-context builders for prep brief routes.
 // Single source of truth so sub-sections (questions, why-here, background)

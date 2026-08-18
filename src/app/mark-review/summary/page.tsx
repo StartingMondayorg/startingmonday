@@ -1,6 +1,6 @@
 ﻿'use client'
 import Link from 'next/link'
-import TrackedCtaLink from '@/components/TrackedCtaLink'
+import TrackedCtaLink from '@/app/components/TrackedCtaLink'
 
 const DECISION_BRIEF = [
   {

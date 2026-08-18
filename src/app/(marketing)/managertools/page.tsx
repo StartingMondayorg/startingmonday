@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { LandingPage } from '@/components/LandingPage'
-import type { FAQ, SituationCard } from '@/components/LandingPage'
+import { LandingPage } from '@/app/components/LandingPage'
+import type { FAQ, SituationCard } from '@/app/components/LandingPage'
 
 export const metadata: Metadata = {
   title: 'Starting Monday - Be on the shortlist before the role is posted',

@@ -1,4 +1,4 @@
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 
 export function NextBestActionPrompt({
   action,

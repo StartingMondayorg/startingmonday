@@ -31,7 +31,7 @@ const SPECS = [
   {
     id: 'homepage-copy-cta',
     route: '/',
-    files: ['src/app/(marketing)/page.tsx', 'src/components/LandingPage.tsx'],
+    files: ['src/app/(marketing)/page.tsx', 'src/app/components/LandingPage.tsx'],
     rules: [
       {
         id: 'home-hero-claim',

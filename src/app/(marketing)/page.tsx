@@ -1,8 +1,8 @@
 ﻿import type { Metadata } from 'next'
 import { headers } from 'next/headers'
-import { LandingPage } from '@/components/LandingPage'
-import type { SituationCard, FAQ } from '@/components/LandingPage'
-import { JsonLd } from '@/components/JsonLd'
+import { LandingPage } from '@/app/components/LandingPage'
+import type { SituationCard, FAQ } from '@/app/components/LandingPage'
+import { JsonLd } from '@/app/components/JsonLd'
 import { getBrandContextFromHosts } from '@/lib/brand'
 
 export const dynamic = 'force-dynamic'

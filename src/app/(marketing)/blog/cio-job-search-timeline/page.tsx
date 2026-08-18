@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BlogPost } from '@/components/BlogPost'
+import { BlogPost } from '@/app/components/BlogPost'
 import { BlogCallout } from '@/app/(marketing)/blog/_components/BlogCallout'
 import { getPost } from '@/lib/blog-posts'
 

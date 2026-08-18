@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { TrackLink } from '@/components/TrackLink'
-import { SiteFooter } from '@/components/SiteFooter'
+import { TrackLink } from '@/app/components/TrackLink'
+import { SiteFooter } from '@/app/components/SiteFooter'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { TransitionCoachDashboardPanel } from './TransitionCoachDashboardPanel'
 

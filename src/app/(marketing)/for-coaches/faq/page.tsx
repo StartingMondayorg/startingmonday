@@ -1,9 +1,9 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CoachPreviewActions } from '../coach-preview-actions'
-import { CoachValueNudge } from '@/components/CoachValueNudge'
-import { BrandIcon } from '@/components/BrandIcon'
-import { CapabilityDisclosure } from '@/components/CapabilityDisclosure'
+import { CoachValueNudge } from '@/app/components/CoachValueNudge'
+import { BrandIcon } from '@/app/components/BrandIcon'
+import { CapabilityDisclosure } from '@/app/components/CapabilityDisclosure'
 
 export const metadata: Metadata = {
   title: 'Coach FAQ & Objection Responses | Starting Monday',

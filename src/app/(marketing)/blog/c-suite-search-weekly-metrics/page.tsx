@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BlogPost } from '@/components/BlogPost'
+import { BlogPost } from '@/app/components/BlogPost'
 import { getPost } from '@/lib/blog-posts'
 
 const post = getPost('c-suite-search-weekly-metrics')!

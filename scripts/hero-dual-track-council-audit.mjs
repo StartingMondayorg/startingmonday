@@ -221,7 +221,7 @@ function main() {
     generatedAt: new Date().toISOString(),
     scope: {
       pageFile: 'src/app/(marketing)/page.tsx',
-      componentFile: 'src/components/LandingPage.tsx',
+      componentFile: 'src/app/components/LandingPage.tsx',
       area: 'hero top fold',
     },
     council: {

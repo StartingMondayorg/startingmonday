@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ProofStoriesModule } from '@/components/channel/ProofStoriesModule'
+import { ProofStoriesModule } from '@/app/components/ProofStoriesModule'
 
 export const metadata: Metadata = {
   title: 'Starting Monday for Relocation Firms - Partner Guide',

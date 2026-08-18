@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 
 type DashboardQuickAccessSectionProps = {
   isExecutiveMode: boolean

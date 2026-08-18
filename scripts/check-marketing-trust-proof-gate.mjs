@@ -6,7 +6,7 @@ const root = process.cwd()
 
 const checks = [
   {
-    file: 'src/components/LandingPage.tsx',
+    file: 'src/app/components/LandingPage.tsx',
     allOf: ['Source:', 'documented methods'],
   },
   {

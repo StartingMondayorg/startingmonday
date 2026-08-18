@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import TrackedCtaLink from '@/components/TrackedCtaLink'
+import TrackedCtaLink from '@/app/components/TrackedCtaLink'
 
 export const metadata: Metadata = {
   title: 'Starting Monday | Mark Horstman Meeting Flow',

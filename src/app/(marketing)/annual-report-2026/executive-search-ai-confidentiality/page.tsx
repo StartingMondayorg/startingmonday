@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BlogPost } from '@/components/BlogPost'
-import { JsonLd } from '@/components/JsonLd'
+import { BlogPost } from '@/app/components/BlogPost'
+import { JsonLd } from '@/app/components/JsonLd'
 
 const REPORT_URL = 'https://startingmonday.app/annual-report-2026/executive-search-ai-confidentiality'
 

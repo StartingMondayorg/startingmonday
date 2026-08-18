@@ -1,6 +1,6 @@
 'use client'
 
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 import { useEffect, useState } from 'react'
 
 export function HelpQuickButton({

@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CoachBundleCheckoutButton } from '@/app/(marketing)/for-coaches/_components/CoachBundleCheckoutButton'
-import { CoachValueNudge } from '@/components/CoachValueNudge'
+import { CoachValueNudge } from '@/app/components/CoachValueNudge'
 import { COACH_MICRO_PRODUCTS } from './product-data'
 
 export const metadata: Metadata = {

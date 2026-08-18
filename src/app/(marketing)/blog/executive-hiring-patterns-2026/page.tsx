@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from 'next'
-import { BlogPost } from '@/components/BlogPost'
-import { JsonLd } from '@/components/JsonLd'
+import { BlogPost } from '@/app/components/BlogPost'
+import { JsonLd } from '@/app/components/JsonLd'
 import { getPost } from '@/lib/blog-posts'
 
 const post = getPost('executive-hiring-patterns-2026')!

@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { completeOnboarding, saveOnboardingProgress, skipOnboarding } from './actions'
-import { HelpQuickButton } from '@/components/HelpQuickButton'
+import { HelpQuickButton } from '@/app/components/HelpQuickButton'
 import {
   type SearchPersona,
   seededCompaniesFor,
@@ -18,7 +18,7 @@ import { ScanProgressPanel, type ScanStatusPayload } from './scan-progress-panel
 import { RelationshipProgressPanel, type RelationshipStatusPayload } from './relationship-progress-panel'
 import { OnboardingContextStep } from './onboarding-context-step'
 import { OnboardingDoneStep } from './onboarding-done-step'
-import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/components/LinkedinImportProgress'
+import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
 import type { OnboardingDraft } from '@/lib/onboarding-state'
 import { reportOnboardingStepCompleted, useOnboardingDraftState } from './use-onboarding-draft-state'
 

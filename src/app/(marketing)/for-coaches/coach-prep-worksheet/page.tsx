@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CoachValueNudge } from '@/components/CoachValueNudge'
+import { CoachValueNudge } from '@/app/components/CoachValueNudge'
 
 export const metadata: Metadata = {
   title: 'Executive Coaching Session Operating Worksheet | Starting Monday',

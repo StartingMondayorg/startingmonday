@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { LandingPage } from '@/components/LandingPage'
-import type { SituationCard, FAQ } from '@/components/LandingPage'
-import { JsonLd } from '@/components/JsonLd'
-import { ProofStrip } from '@/components/ProofStrip'
+import { LandingPage } from '@/app/components/LandingPage'
+import type { SituationCard, FAQ } from '@/app/components/LandingPage'
+import { JsonLd } from '@/app/components/JsonLd'
+import { ProofStrip } from '@/app/components/ProofStrip'
 
 export const metadata: Metadata = {
   title: 'Starting Monday for CPOs - Chief Product Officer Search Campaign Infrastructure',

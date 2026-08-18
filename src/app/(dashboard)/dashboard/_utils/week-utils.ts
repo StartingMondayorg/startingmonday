@@ -1,4 +1,4 @@
-import { type WeekActivity } from '@/components/ActivityChart'
+import { type WeekActivity } from '@/app/components/ActivityChart'
 
 export function getWeekMonday(date: Date): Date {
   const d = new Date(date)

@@ -15,7 +15,7 @@ const dashboardPath = 'src/app/(dashboard)/dashboard/page.tsx'
 const cssPath = 'src/app/globals.css'
 const navPath = 'src/app/(dashboard)/_components/BottomNav.tsx'
 const homePath = 'src/app/(marketing)/page.tsx'
-const landingPath = 'src/components/LandingPage.tsx'
+const landingPath = 'src/app/components/LandingPage.tsx'
 
 const dashboard = read(dashboardPath)
 const css = read(cssPath)

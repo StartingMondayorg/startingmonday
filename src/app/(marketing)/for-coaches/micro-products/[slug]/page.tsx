@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { CoachValueNudge } from '@/components/CoachValueNudge'
+import { CoachValueNudge } from '@/app/components/CoachValueNudge'
 import { CoachDeliverablePreviewTabs } from '@/app/(marketing)/for-coaches/_components/CoachDeliverablePreviewTabs'
 import { MicroProductCheckoutButton } from '@/app/(marketing)/for-coaches/_components/MicroProductCheckoutButton'
 import { COACH_MICRO_PRODUCTS, getCoachMicroProduct } from '../product-data'

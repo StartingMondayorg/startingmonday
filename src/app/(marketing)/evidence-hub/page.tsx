@@ -1,9 +1,9 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import { JsonLd } from '@/components/JsonLd'
+import { JsonLd } from '@/app/components/JsonLd'
 
-import { SiteFooter } from '@/components/SiteFooter'
-import { PublicPageHeader } from '@/components/PublicPageHeader'
+import { SiteFooter } from '@/app/components/SiteFooter'
+import { PublicPageHeader } from '@/app/components/PublicPageHeader'
 
 import {
   EVIDENCE_INTRODUCTION,

@@ -16,7 +16,7 @@ import {
   DASHBOARD_PATTERN_ALERT_LIMIT,
 } from '@/lib/dashboard-signal-contract'
 import { LogoutButton } from '../logout-button'
-import { HelpQuickButton } from '@/components/HelpQuickButton'
+import { HelpQuickButton } from '@/app/components/HelpQuickButton'
 import { BriefingPulseSupport } from './BriefingPulseSupport'
 import { BriefingHeader } from './BriefingHeader'
 import { parseBriefingJson } from './briefing-json'

@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CoachPreviewActions } from '../coach-preview-actions'
-import { CoachValueNudge } from '@/components/CoachValueNudge'
+import { CoachValueNudge } from '@/app/components/CoachValueNudge'
 import { COACH_BUYER_PLANS, PILOT_SCORECARD, PREVIEW_SENTENCE } from '../page-content'
 
 export const metadata: Metadata = {

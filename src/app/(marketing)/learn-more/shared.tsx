@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 
-import { SiteFooter } from '@/components/SiteFooter'
-import { PublicPageHeader } from '@/components/PublicPageHeader'
+import { SiteFooter } from '@/app/components/SiteFooter'
+import { PublicPageHeader } from '@/app/components/PublicPageHeader'
 
 import { LEARN_MORE_CITATIONS } from './content'
 

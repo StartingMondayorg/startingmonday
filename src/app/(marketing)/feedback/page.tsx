@@ -2,7 +2,7 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { SiteFooter } from '@/components/SiteFooter'
+import { SiteFooter } from '@/app/components/SiteFooter'
 
 const PROMPT_STARTERS = [
   'The signal timing helped me prioritize where to spend my outreach time.',

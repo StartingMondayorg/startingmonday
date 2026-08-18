@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { TrackLink } from '@/components/TrackLink'
+import { TrackLink } from '@/app/components/TrackLink'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { EXECUTIVE_PERSONAS } from '@/lib/persona-routes'
 

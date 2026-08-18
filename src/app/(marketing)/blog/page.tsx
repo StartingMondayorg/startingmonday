@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { JsonLd } from '@/components/JsonLd'
+import { JsonLd } from '@/app/components/JsonLd'
 import { BLOG_POSTS } from '@/lib/blog-posts'
 import { BlogChat } from './blog-chat'
 

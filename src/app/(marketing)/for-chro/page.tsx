@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CapabilityDisclosure } from '@/components/CapabilityDisclosure'
+import { CapabilityDisclosure } from '@/app/components/CapabilityDisclosure'
 
 export const metadata: Metadata = {
   title: 'For CHROs and Sponsors | Starting Monday',

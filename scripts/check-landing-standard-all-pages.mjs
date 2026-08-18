@@ -30,7 +30,7 @@ const MARKETING_SHELL_HINTS = [
   'SiteHeader',
   'SiteFooter',
   'BlogPost',
-  '@/components/LandingPage',
+  '@/app/components/LandingPage',
   '<LandingPage',
 ]
 
@@ -166,7 +166,7 @@ function shellPaletteAlignment(shell, content, route) {
 function inferShell(relativePath, content) {
   if (relativePath.includes('src/app/(dashboard)/')) return 'dashboard-shell'
   if (relativePath.includes('src/app/(auth)/')) return 'auth-shell'
-  if (content.includes('@/components/LandingPage') || content.includes('<LandingPage')) return 'landing-shell'
+  if (content.includes('@/app/components/LandingPage') || content.includes('<LandingPage')) return 'landing-shell'
   if (MARKETING_SHELL_HINTS.some((hint) => content.includes(hint))) return 'marketing-shell'
   const hasNav = /<nav\b|<header\b/.test(content)
   const hasFooter = /<footer\b|all rights reserved|privacy-first by design/i.test(content)

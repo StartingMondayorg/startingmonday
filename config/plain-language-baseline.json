@@ -4,7 +4,7 @@
     "src/app/(marketing)/page.tsx": {
       "mandate": 16
     },
-    "src/components/LandingPage.tsx": {
+    "src/app/components/LandingPage.tsx": {
       "mandate": 4,
       "cadence": 6,
       "problem-level-context": 1,

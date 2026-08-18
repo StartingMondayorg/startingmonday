@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { isEnabledFlag } from '@/lib/feature-flags'
-import { JsonLd } from '@/components/JsonLd'
+import { JsonLd } from '@/app/components/JsonLd'
 
 export const metadata: Metadata = {
   title: 'Method and Evidence - Starting Monday',

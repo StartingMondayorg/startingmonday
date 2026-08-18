@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { DashboardTopShellSection } from '@/app/(dashboard)/dashboard/_components/top-shell-section'
-import { DailyMomentumPlan, type DailyMomentumAction } from '@/components/DailyMomentumPlan'
+import { DailyMomentumPlan, type DailyMomentumAction } from '@/app/components/DailyMomentumPlan'
 import { markPlaced } from '@/app/(dashboard)/dashboard/placed/actions'
 
 const previewActions: DailyMomentumAction[] = [

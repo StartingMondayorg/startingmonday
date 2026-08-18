@@ -6,7 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getActivationStatus } from "@/lib/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
 import { LogoutButton } from "./logout-button";
-import { HelpQuickButton } from "@/components/HelpQuickButton";
+import { HelpQuickButton } from "@/app/components/HelpQuickButton";
 import {
   saveQuickProfile,
   saveWeeklyGoal,
@@ -14,15 +14,15 @@ import {
 } from "./profile/actions";
 import { markPlaced } from "./placed/actions";
 import { OpportunityRadar } from "./opportunity-radar";
-import { ActivityChart, type WeekActivity } from "@/components/ActivityChart";
+import { ActivityChart, type WeekActivity } from "@/app/components/ActivityChart";
 import {
   PipelineVelocity,
   type VelocityRow,
-} from "@/components/PipelineVelocity";
+} from "@/app/components/PipelineVelocity";
 import {
   DailyMomentumPlan,
   type DailyMomentumAction,
-} from "@/components/DailyMomentumPlan";
+} from "@/app/components/DailyMomentumPlan";
 import { getStaffMember, hasAdminHeaderAccess } from "@/lib/staff";
 import { DashboardPipelineSection } from "./_components/pipeline-section";
 import { DashboardDisclosureSection } from "./_components/disclosure-section";
@@ -54,7 +54,7 @@ import {
 import { bumpWeek, getWeekMonday, weekLabel } from "./_utils/week-utils";
 import { canAccessFeature, getUserSubscription } from "@/lib/subscription";
 import { greetingInTz, fullDateInTz } from "@/lib/date";
-import { FirstMileTelemetry } from "@/components/FirstMileTelemetry";
+import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
 import { applyDashboardSignalContract } from "@/lib/dashboard-signal-contract";
 import { rankSignals } from "@/lib/intelligence-quality";
 import { stripStaleRelativeTime } from "@/lib/follow-up-copy";

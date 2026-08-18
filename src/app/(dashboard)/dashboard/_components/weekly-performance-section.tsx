@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { ActivityChart, type WeekActivity } from '@/components/ActivityChart'
-import { PipelineVelocity, type VelocityRow } from '@/components/PipelineVelocity'
+import { ActivityChart, type WeekActivity } from '@/app/components/ActivityChart'
+import { PipelineVelocity, type VelocityRow } from '@/app/components/PipelineVelocity'
 
 type MomentumData = {
   momentum_score: number | null

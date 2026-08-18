@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/components/LinkedinImportProgress'
+import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
 
 export default function ProfileLinkedinUpload() {
   const router = useRouter()

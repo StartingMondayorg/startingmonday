@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { TrackLink } from '@/components/TrackLink'
-import { CoachValueNudge } from '@/components/CoachValueNudge'
+import { TrackLink } from '@/app/components/TrackLink'
+import { CoachValueNudge } from '@/app/components/CoachValueNudge'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { COACH_PERSONAS } from '@/lib/persona-routes'
 

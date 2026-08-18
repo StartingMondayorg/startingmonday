@@ -2,8 +2,8 @@
 import Link from 'next/link'
 
 import { CoachPreviewActions } from './coach-preview-actions'
-import { EmiMarketingTelemetry } from '@/components/EmiMarketingTelemetry'
-import { TrackLink } from '@/components/TrackLink'
+import { EmiMarketingTelemetry } from '@/app/components/EmiMarketingTelemetry'
+import { TrackLink } from '@/app/components/TrackLink'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { PILOT_SCORECARD } from './page-content'
 

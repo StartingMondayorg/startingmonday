@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { JsonLd } from '@/components/JsonLd'
-import { SiteHeader } from '@/components/SiteHeader'
-import { SiteFooter } from '@/components/SiteFooter'
+import { JsonLd } from '@/app/components/JsonLd'
+import { SiteHeader } from '@/app/components/SiteHeader'
+import { SiteFooter } from '@/app/components/SiteFooter'
 
 export const metadata: Metadata = {
   title: 'Starting Monday for Executives - Be on the shortlist before the role is posted',

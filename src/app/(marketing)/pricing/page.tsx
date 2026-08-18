@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { EmiMarketingTelemetry } from '@/components/EmiMarketingTelemetry'
+import { EmiMarketingTelemetry } from '@/app/components/EmiMarketingTelemetry'
 import { isEnabledFlag } from '@/lib/feature-flags'
 import { PRICING } from '@/lib/pricing'
 

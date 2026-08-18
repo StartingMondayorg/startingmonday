@@ -1,12 +1,12 @@
 ﻿import Link from 'next/link'
 import Image from 'next/image'
-import { TrackLink } from '@/components/TrackLink'
-import { FirstMileTelemetry } from '@/components/FirstMileTelemetry'
-import { HomepageBriefTeaser } from '@/components/HomepageBriefTeaser'
-import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/components/FirstWeekSpine'
+import { TrackLink } from '@/app/components/TrackLink'
+import { FirstMileTelemetry } from '@/app/components/FirstMileTelemetry'
+import { HomepageBriefTeaser } from '@/app/components/HomepageBriefTeaser'
+import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/app/components/FirstWeekSpine'
 import { CHANNEL_ROUTE_SPECS } from '@/lib/channel-ia'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
-import { OpportunityTimingGapChart, OpportunityTimingGapChartMobile } from '@/components/home/OpportunityCharts'
+import { OpportunityTimingGapChart, OpportunityTimingGapChartMobile } from '@/app/components/OpportunityCharts'
 
 export interface SituationCard {
   id: string

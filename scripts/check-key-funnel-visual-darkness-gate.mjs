@@ -13,7 +13,7 @@ const visualDiscipline = ses?.visualDiscipline ?? {}
 
 /** @type {RouteSpec[]} */
 const SPECS = [
-  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/(marketing)/page.tsx', 'src/components/LandingPage.tsx'] },
+  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/(marketing)/page.tsx', 'src/app/components/LandingPage.tsx'] },
   { id: 'pricing-visual-darkness', route: '/pricing', files: ['src/app/(marketing)/pricing/page.tsx', 'src/app/(marketing)/pricing/pricing-cards.tsx'] },
   { id: 'demo-visual-darkness', route: '/demo', files: ['src/app/(marketing)/demo/page.tsx'] },
   { id: 'blog-visual-darkness', route: '/blog', files: ['src/app/(marketing)/blog/page.tsx'] },
