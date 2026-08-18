@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-07-30",
   "fileTermCounts": {
-    "src/app/page.tsx": {
+    "src/app/(marketing)/page.tsx": {
       "mandate": 16
     },
     "src/components/LandingPage.tsx": {
@@ -14,96 +14,96 @@
     "src/app/(auth)/signup/page.tsx": {
       "cadence": 1
     },
-    "src/app/pricing/page.tsx": {
+    "src/app/(marketing)/pricing/page.tsx": {
       "decision-grade": 1
     },
-    "src/app/learn-more/content.ts": {
+    "src/app/(marketing)/learn-more/content.ts": {
       "cadence": 2
     },
-    "src/app/for-cdo/opengraph-image.tsx": {
+    "src/app/(marketing)/for-cdo/opengraph-image.tsx": {
       "mandate": 2
     },
-    "src/app/for-cdo/page.tsx": {
+    "src/app/(marketing)/for-cdo/page.tsx": {
       "mandate": 25
     },
-    "src/app/for-cio/opengraph-image.tsx": {
+    "src/app/(marketing)/for-cio/opengraph-image.tsx": {
       "mandate": 1
     },
-    "src/app/for-cio/page.tsx": {
+    "src/app/(marketing)/for-cio/page.tsx": {
       "mandate": 8
     },
-    "src/app/for-ciso/opengraph-image.tsx": {
+    "src/app/(marketing)/for-ciso/opengraph-image.tsx": {
       "mandate": 1
     },
-    "src/app/for-ciso/page.tsx": {
+    "src/app/(marketing)/for-ciso/page.tsx": {
       "mandate": 10
     },
-    "src/app/for-coaches/coach-prep-worksheet/page.tsx": {
+    "src/app/(marketing)/for-coaches/coach-prep-worksheet/page.tsx": {
       "mandate": 6
     },
-    "src/app/for-coaches/micro-products/product-data.ts": {
+    "src/app/(marketing)/for-coaches/micro-products/product-data.ts": {
       "cadence": 2
     },
-    "src/app/for-coaches/page-content.ts": {
+    "src/app/(marketing)/for-coaches/page-content.ts": {
       "cadence": 2
     },
-    "src/app/for-coaches/search-affiliate/page.tsx": {
+    "src/app/(marketing)/for-coaches/search-affiliate/page.tsx": {
       "mandate": 1
     },
-    "src/app/for-coo/page.tsx": {
+    "src/app/(marketing)/for-coo/page.tsx": {
       "mandate": 8
     },
-    "src/app/for-cpo/opengraph-image.tsx": {
+    "src/app/(marketing)/for-cpo/opengraph-image.tsx": {
       "mandate": 1
     },
-    "src/app/for-cpo/page.tsx": {
+    "src/app/(marketing)/for-cpo/page.tsx": {
       "mandate": 7
     },
-    "src/app/for-data-officer/opengraph-image.tsx": {
+    "src/app/(marketing)/for-data-officer/opengraph-image.tsx": {
       "mandate": 1
     },
-    "src/app/for-data-officer/page.tsx": {
+    "src/app/(marketing)/for-data-officer/page.tsx": {
       "mandate": 19
     },
-    "src/app/for-executives/page.tsx": {
+    "src/app/(marketing)/for-executives/page.tsx": {
       "mandate": 1
     },
-    "src/app/for-executives/[lane]/page.tsx": {
+    "src/app/(marketing)/for-executives/[lane]/page.tsx": {
       "mandate": 6,
       "cadence": 5
     },
-    "src/app/for-fractional-executives/page.tsx": {
+    "src/app/(marketing)/for-fractional-executives/page.tsx": {
       "mandate": 1
     },
-    "src/app/for-leaders/page.tsx": {
+    "src/app/(marketing)/for-leaders/page.tsx": {
       "mandate": 1
     },
-    "src/app/for-media-partners/page.tsx": {
+    "src/app/(marketing)/for-media-partners/page.tsx": {
       "cadence": 1
     },
-    "src/app/for-outplacement/economics/page.tsx": {
+    "src/app/(marketing)/for-outplacement/economics/page.tsx": {
       "cadence": 3
     },
-    "src/app/for-outplacement/faq/page.tsx": {
+    "src/app/(marketing)/for-outplacement/faq/page.tsx": {
       "cadence": 1
     },
-    "src/app/for-outplacement/page.tsx": {
+    "src/app/(marketing)/for-outplacement/page.tsx": {
       "cadence": 5
     },
-    "src/app/for-outplacement/trust-pack/page.tsx": {
+    "src/app/(marketing)/for-outplacement/trust-pack/page.tsx": {
       "cadence": 7,
       "decision-grade": 1
     },
-    "src/app/for-pe-partners/page.tsx": {
+    "src/app/(marketing)/for-pe-partners/page.tsx": {
       "mandate": 9
     },
-    "src/app/for-pe-teams/page.tsx": {
+    "src/app/(marketing)/for-pe-teams/page.tsx": {
       "mandate": 3
     },
-    "src/app/for-relocation/page.tsx": {
+    "src/app/(marketing)/for-relocation/page.tsx": {
       "cadence": 1
     },
-    "src/app/for-vp-technology/opengraph-image.tsx": {
+    "src/app/(marketing)/for-vp-technology/opengraph-image.tsx": {
       "mandate": 3
     }
   }

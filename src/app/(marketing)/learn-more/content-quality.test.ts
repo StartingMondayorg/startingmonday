@@ -16,13 +16,13 @@ import {
 const ROOT = process.cwd()
 
 const PAGE_FILES = [
-  'src/app/learn-more/page.tsx',
-  'src/app/learn-more/inside-the-system/page.tsx',
-  'src/app/learn-more/objections/page.tsx',
-  'src/app/learn-more/common-questions/page.tsx',
+  'src/app/(marketing)/learn-more/page.tsx',
+  'src/app/(marketing)/learn-more/inside-the-system/page.tsx',
+  'src/app/(marketing)/learn-more/objections/page.tsx',
+  'src/app/(marketing)/learn-more/common-questions/page.tsx',
 ]
 
-const SHELL_FILE = 'src/app/learn-more/shared.tsx'
+const SHELL_FILE = 'src/app/(marketing)/learn-more/shared.tsx'
 
 const BANNED_COPY_PATTERNS = [
   /lorem ipsum/i,

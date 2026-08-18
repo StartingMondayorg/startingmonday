@@ -10,35 +10,35 @@ const checks = [
     allOf: ['Source:', 'documented methods'],
   },
   {
-    file: 'src/app/pricing/page.tsx',
+    file: 'src/app/(marketing)/pricing/page.tsx',
     allOf: ['Source note', 'Privacy commitments'],
   },
   {
-    file: 'src/app/method-and-evidence/page.tsx',
+    file: 'src/app/(marketing)/method-and-evidence/page.tsx',
     allOf: ['Source note', 'Source citations'],
   },
   {
-    file: 'src/app/evidence-hub/page.tsx',
+    file: 'src/app/(marketing)/evidence-hub/page.tsx',
     allOf: ['Complete source index', 'Key finding:'],
   },
   {
-    file: 'src/app/concierge/concierge-waitlist.tsx',
+    file: 'src/app/(marketing)/concierge/concierge-waitlist.tsx',
     allOf: ['Trust and source note', 'Confidential intake details'],
   },
   {
-    file: 'src/app/demo/page.tsx',
+    file: 'src/app/(marketing)/demo/page.tsx',
     allOf: ['Source note', 'pilot cohorts'],
   },
   {
-    file: 'src/app/security/page.tsx',
+    file: 'src/app/(marketing)/security/page.tsx',
     allOf: ['AI governance and regulatory compliance', 'Incident response'],
   },
   {
-    file: 'src/app/for-coaches/trust-pack/page.tsx',
+    file: 'src/app/(marketing)/for-coaches/trust-pack/page.tsx',
     allOf: ['Trust and confidentiality:', 'Governance path:', '/security'],
   },
   {
-    file: 'src/app/for-outplacement/trust-pack/page.tsx',
+    file: 'src/app/(marketing)/for-outplacement/trust-pack/page.tsx',
     allOf: ['Board-safe claims policy', 'Governance path:', '/security'],
   },
 ]

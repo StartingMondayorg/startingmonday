@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import TrackedCtaLink from '@/components/TrackedCtaLink'
 import { BLOG_POSTS } from '@/lib/blog-posts'
-import { BlogChat } from '../blog/blog-chat'
+import { BlogChat } from '../(marketing)/blog/blog-chat'
 
 export const metadata: Metadata = {
   title: 'Starting Monday | Stuart, Coach Overview',

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useState } from 'react'
-import type { CoachMicroProductDeliverable } from '@/app/for-coaches/micro-products/product-data'
+import type { CoachMicroProductDeliverable } from '@/app/(marketing)/for-coaches/micro-products/product-data'
 
 type Props = {
   deliverables: CoachMicroProductDeliverable[]

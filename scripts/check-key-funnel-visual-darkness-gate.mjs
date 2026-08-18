@@ -13,11 +13,11 @@ const visualDiscipline = ses?.visualDiscipline ?? {}
 
 /** @type {RouteSpec[]} */
 const SPECS = [
-  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/page.tsx', 'src/components/LandingPage.tsx'] },
-  { id: 'pricing-visual-darkness', route: '/pricing', files: ['src/app/pricing/page.tsx', 'src/app/pricing/pricing-cards.tsx'] },
-  { id: 'demo-visual-darkness', route: '/demo', files: ['src/app/demo/page.tsx'] },
-  { id: 'blog-visual-darkness', route: '/blog', files: ['src/app/blog/page.tsx'] },
-  { id: 'method-evidence-visual-darkness', route: '/method-and-evidence', files: ['src/app/method-and-evidence/page.tsx'] },
+  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/(marketing)/page.tsx', 'src/components/LandingPage.tsx'] },
+  { id: 'pricing-visual-darkness', route: '/pricing', files: ['src/app/(marketing)/pricing/page.tsx', 'src/app/(marketing)/pricing/pricing-cards.tsx'] },
+  { id: 'demo-visual-darkness', route: '/demo', files: ['src/app/(marketing)/demo/page.tsx'] },
+  { id: 'blog-visual-darkness', route: '/blog', files: ['src/app/(marketing)/blog/page.tsx'] },
+  { id: 'method-evidence-visual-darkness', route: '/method-and-evidence', files: ['src/app/(marketing)/method-and-evidence/page.tsx'] },
   { id: 'signup-visual-darkness', route: '/signup', files: ['src/app/(auth)/signup/page.tsx'] },
 ]
 

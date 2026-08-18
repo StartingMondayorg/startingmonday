@@ -5,9 +5,9 @@
   "riskyPaths": [
     "src/app/[(]auth[)]/**",
     "src/app/auth/**",
-    "src/app/for-coaches/**",
-    "src/app/pricing/**",
-    "src/app/demo/**",
+    "src/app/(marketing)/for-coaches/**",
+    "src/app/(marketing)/pricing/**",
+    "src/app/(marketing)/demo/**",
     ".github/workflows/ci.yml"
   ],
   "requiredPrLabel": "feature-flagged",
@@ -42,8 +42,8 @@
       "id": "pricing-plan-names-2026-06",
       "description": "Pricing and for-coaches page updates: plan naming, pricing card layout, and economics page revisions",
       "paths": [
-        "src/app/pricing/**",
-        "src/app/for-coaches/**"
+        "src/app/(marketing)/pricing/**",
+        "src/app/(marketing)/for-coaches/**"
       ],
       "phase": "full rollout",
       "rollbackPath": "Revert PR #128 to restore previous pricing and for-coaches pages",
@@ -91,7 +91,7 @@
       "description": "Add landing-page change approval guard to predeploy-gates; remove homepage proof banner (PR #157)",
       "paths": [
         ".github/workflows/ci.yml",
-        "src/app/page.tsx",
+        "src/app/(marketing)/page.tsx",
         "scripts/check-landing-page-change-approval.mjs"
       ],
       "phase": "full rollout",

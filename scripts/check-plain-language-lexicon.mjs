@@ -28,7 +28,7 @@ function collectScopedFiles() {
   const files = new Set()
   for (const entry of lexicon.scope) {
     if (entry.endsWith('*')) {
-      // Prefix glob like "src/app/for-*": match directories by prefix.
+      // Prefix glob like "src/app/(marketing)/for-*": match directories by prefix.
       const prefix = entry.slice(0, -1)
       const parentDir = path.join(root, path.dirname(prefix))
       const basePrefix = path.basename(prefix)

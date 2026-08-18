@@ -1,5 +1,5 @@
 ---
-applyTo: "src/app/{coaches,partners,for-coaches,executives,for-executives,search-firms,for-outplacement,outplacement}/**"
+applyTo: "src/app/(marketing)/{coaches,partners,for-coaches,executives,for-executives,search-firms,for-outplacement,outplacement}/**"
 ---
 
 # Narrative Page Standard
