@@ -1,7 +1,7 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/billing/stripe'
 import { APP_URL } from '@/lib/config'
 
 function getSeatPriceId(plan: string): string {

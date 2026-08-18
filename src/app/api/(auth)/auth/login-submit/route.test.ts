@@ -17,7 +17,7 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: state.createClient,
 }))
 
-vi.mock('@/lib/subscription', () => ({
+vi.mock('@/lib/billing/subscription', () => ({
   getUserSubscription: state.getUserSubscription,
   canAccessFeature: state.canAccessFeature,
 }))

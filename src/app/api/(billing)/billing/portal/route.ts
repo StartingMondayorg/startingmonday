@@ -1,7 +1,7 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
-import { getStripe } from '@/lib/stripe'
-import { getOrRecoverStripeCustomerId } from '@/lib/stripe-customer'
+import { getStripe } from '@/lib/billing/stripe'
+import { getOrRecoverStripeCustomerId } from '@/lib/billing/stripe-customer'
 
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(request)

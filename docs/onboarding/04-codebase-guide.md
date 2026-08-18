@@ -126,7 +126,7 @@ import { requireFeatureAccess } from '@/lib/require-feature-access'
 await requireFeatureAccess(user, 'prep_brief')  // throws if user can't access
 ```
 
-Feature to plan mapping is in `src/lib/plans.ts`. When adding a new feature, add it here first.
+Feature to plan mapping is in `src/lib/billing/plans.ts`. When adding a new feature, add it here first.
 
 ---
 

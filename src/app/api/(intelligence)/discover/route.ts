@@ -2,7 +2,7 @@
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { isRateLimited } from '@/lib/api-usage'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { recordTrace, recordTraceError } from '@/lib/trace'
 import { getEnrichmentProvider, type SuggestedPerson } from '@/lib/enrichment'

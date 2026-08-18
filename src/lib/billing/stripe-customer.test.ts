@@ -6,7 +6,7 @@ const state = vi.hoisted(() => ({
   updateCalls: [] as Array<{ stripe_customer_id: string }>,
 }))
 
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({
     customers: {
       list: vi.fn(async () => ({ data: state.stripeListData })),

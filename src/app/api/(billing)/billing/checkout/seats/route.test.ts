@@ -12,7 +12,7 @@ const state = vi.hoisted(() => ({
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: () => ({ from: state.from }) }))
 vi.mock('@/lib/config', () => ({ APP_URL: 'https://startingmonday.app' }))
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({
     customers: { create: state.stripeCustomerCreate },
     checkout: { sessions: { create: state.stripeSessionCreate } },

@@ -24,7 +24,7 @@ vi.mock('@supabase/supabase-js', () => ({
   createClient: state.opsCreateClient,
 }))
 
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: state.getStripe,
 }))
 

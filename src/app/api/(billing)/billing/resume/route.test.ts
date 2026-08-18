@@ -10,9 +10,9 @@ const state = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
-vi.mock('@/lib/stripe-customer', () => ({ getOrRecoverStripeCustomerId: state.getCustomerId }))
+vi.mock('@/lib/billing/stripe-customer', () => ({ getOrRecoverStripeCustomerId: state.getCustomerId }))
 vi.mock('@/lib/events', () => ({ logEvent: state.logEvent }))
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({
     subscriptions: {
       list: state.listSubscriptions,

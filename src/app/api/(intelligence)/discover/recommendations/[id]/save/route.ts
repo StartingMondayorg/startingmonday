@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { SuggestedPerson } from '@/lib/enrichment'
 import { logEvent } from '@/lib/events'
 import { captureServerEvent } from '@/lib/posthog-server'
-import { recommendOutreachRhythm, type OutreachStage } from '@/lib/outreach-rhythm'
+import { recommendOutreachRhythm, type OutreachStage } from '@/lib/outreach/outreach-rhythm'
 
 type RecommendationRow = {
   id: string

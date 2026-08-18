@@ -2,7 +2,7 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/billing/stripe'
 import { APP_URL } from '@/lib/config'
 
 function createOpsClient() {

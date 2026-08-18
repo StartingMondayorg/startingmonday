@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(request)

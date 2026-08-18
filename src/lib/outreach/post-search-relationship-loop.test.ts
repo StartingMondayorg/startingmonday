@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildRelationshipMaintenancePlan } from '@/lib/post-search-relationship-loop'
+import { buildRelationshipMaintenancePlan } from '@/lib/outreach/post-search-relationship-loop'
 
 describe('buildRelationshipMaintenancePlan', () => {
   it('returns zero targets when there are no active contacts', () => {

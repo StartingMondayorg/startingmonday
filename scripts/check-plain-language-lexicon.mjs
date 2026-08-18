@@ -89,7 +89,7 @@ for (const fullPath of collectScopedFiles()) {
         file: relPath,
         phrase,
         count,
-        message: `Retired phrase "${phrase}" must not render on candidate-facing surfaces. Use the canonical tier names from src/lib/pricing.ts.`,
+        message: `Retired phrase "${phrase}" must not render on candidate-facing surfaces. Use the canonical tier names from src/lib/billing/pricing.ts.`,
       })
     }
   }

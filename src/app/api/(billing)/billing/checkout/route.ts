@@ -1,8 +1,8 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { getStripe, getPriceId } from '@/lib/stripe'
-import { PLANS, type PlanKey } from '@/lib/plans'
+import { getStripe, getPriceId } from '@/lib/billing/stripe'
+import { PLANS, type PlanKey } from '@/lib/billing/plans'
 import { APP_URL } from '@/lib/config'
 
 export async function POST(request: NextRequest) {

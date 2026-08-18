@@ -8,8 +8,8 @@ const state = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
-vi.mock('@/lib/stripe-customer', () => ({ getOrRecoverStripeCustomerId: state.recoverCustomer }))
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe-customer', () => ({ getOrRecoverStripeCustomerId: state.recoverCustomer }))
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({ billingPortal: { sessions: { create: state.portalCreate } } }),
 }))
 

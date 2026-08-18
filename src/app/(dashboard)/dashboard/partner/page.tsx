@@ -3,7 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { inferPartnerProgramFromTier, toPercent, type PartnerProgram } from '@/lib/partner-kpi-schema'
-import { TIER_DISPLAY_NAMES } from '@/lib/pricing'
+import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
 
 import { SeatPurchase } from './seat-purchase'
 import { ExportCsvButton } from './ExportCsvButton'

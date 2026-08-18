@@ -47,7 +47,7 @@
       ],
       "phase": "full rollout",
       "rollbackPath": "Revert PR #128 to restore previous pricing and for-coaches pages",
-      "killSwitch": "Revert src/lib/pricing.ts to previous plan names and values",
+      "killSwitch": "Revert src/lib/billing/pricing.ts to previous plan names and values",
       "startedAt": "2026-06-18"
     },
     {

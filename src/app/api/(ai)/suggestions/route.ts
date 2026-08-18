@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { checkBurstLimit } from '@/lib/burst-limit'
 import { isRateLimited } from '@/lib/api-usage'
 import { anthropic, MODELS } from '@/lib/ai/anthropic'

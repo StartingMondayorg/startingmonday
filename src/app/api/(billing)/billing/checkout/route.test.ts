@@ -10,7 +10,7 @@ const state = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({
     customers: { create: state.customerCreate, update: state.customerUpdate },
     checkout: { sessions: { create: state.checkoutCreate } },

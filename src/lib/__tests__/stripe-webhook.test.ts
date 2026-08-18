@@ -12,7 +12,7 @@ const state = vi.hoisted(() => ({
 }))
 
 // ── Module mocks ───────────────────────────────────────────────────────────
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({ webhooks: { constructEvent: state.constructEvent } }),
 }))
 

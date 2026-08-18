@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { canAccessFeature, getUserSubscription } from '@/lib/subscription'
+import { canAccessFeature, getUserSubscription } from '@/lib/billing/subscription'
 
 type UrgencyBand = 'high' | 'medium' | 'low'
 

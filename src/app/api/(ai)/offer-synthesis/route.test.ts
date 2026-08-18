@@ -12,7 +12,7 @@ const state = vi.hoisted(() => ({
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/supabase/server', () => ({ createClient: state.createClient }))
-vi.mock('@/lib/subscription', () => ({ getUserSubscription: state.getUserSubscription, canAccessFeature: state.canAccessFeature }))
+vi.mock('@/lib/billing/subscription', () => ({ getUserSubscription: state.getUserSubscription, canAccessFeature: state.canAccessFeature }))
 vi.mock('@/lib/api-usage', () => ({ isRateLimited: state.isRateLimited }))
 vi.mock('@/lib/ai/anthropic', () => ({ anthropic: { messages: { create: state.anthropicCreate } }, MODELS: { sonnet: 'sonnet-test' } }))
 

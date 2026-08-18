@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { asLooseSupabaseClient, parseAutomationBody, requireAutomationAccess } from '@/lib/admin-automation-route'
-import { buildBillingPayload, hasEntitlement, VALUE_LANE_PLANS } from '@/lib/value-lane-pricing'
+import { buildBillingPayload, hasEntitlement, VALUE_LANE_PLANS } from '@/lib/billing/value-lane-pricing'
 
 const pricingSchema = z.object({
   partner_id: z.string(),

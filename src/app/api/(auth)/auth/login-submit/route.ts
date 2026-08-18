@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { enforcePublicEndpointGuard, getClientIp } from '@/lib/public-endpoint-guard'
-import { canAccessFeature, getUserSubscription } from '@/lib/subscription'
+import { canAccessFeature, getUserSubscription } from '@/lib/billing/subscription'
 
 export const runtime = 'nodejs'
 

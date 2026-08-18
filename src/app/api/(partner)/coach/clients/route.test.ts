@@ -25,7 +25,7 @@ vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: state.createAdminClient,
 }))
 
-vi.mock('@/lib/subscription', () => ({
+vi.mock('@/lib/billing/subscription', () => ({
   getUserSubscription: state.getUserSubscription,
   canAccessFeature: state.canAccessFeature,
 }))

@@ -1,4 +1,4 @@
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/billing/stripe'
 import { createClient } from '@/lib/supabase/server'
 
 /**

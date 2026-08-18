@@ -1,6 +1,6 @@
 import { TrackLink } from '@/app/components/TrackLink'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
-import { formatMicroProductPrice, getMicroProductsForChannel, type MicroProductChannel } from '@/lib/micro-products'
+import { formatMicroProductPrice, getMicroProductsForChannel, type MicroProductChannel } from '@/lib/billing/micro-products'
 
 type Props = {
   channel: MicroProductChannel

@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { markFollowUpDone } from '@/app/(dashboard)/dashboard/actions'
-import { stripStaleRelativeTime } from '@/lib/follow-up-copy'
+import { stripStaleRelativeTime } from '@/lib/outreach/follow-up-copy'
 
 type Props = {
   id: string

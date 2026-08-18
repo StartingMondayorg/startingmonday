@@ -2,11 +2,11 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import type { UserSubscription } from '@/lib/subscription'
-import { PLANS, WAITLIST_PLANS } from '@/lib/plans'
-import type { BillingInterval } from '@/lib/plans'
-import { TIER_DISPLAY_NAMES } from '@/lib/pricing'
-import { MICRO_PRODUCT_DEFINITIONS, formatMicroProductPrice } from '@/lib/micro-products'
+import type { UserSubscription } from '@/lib/billing/subscription'
+import { PLANS, WAITLIST_PLANS } from '@/lib/billing/plans'
+import type { BillingInterval } from '@/lib/billing/plans'
+import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
+import { MICRO_PRODUCT_DEFINITIONS, formatMicroProductPrice } from '@/lib/billing/micro-products'
 
 function fmtDate(d: Date | null) {
   if (!d) return null

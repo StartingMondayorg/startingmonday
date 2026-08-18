@@ -16,7 +16,7 @@ const state = vi.hoisted(() => ({
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/supabase/server', () => ({ createClient: state.createClient }))
-vi.mock('@/lib/subscription', () => ({
+vi.mock('@/lib/billing/subscription', () => ({
   getUserSubscription: state.getUserSubscription,
   canAccessFeature: state.canAccessFeature,
 }))

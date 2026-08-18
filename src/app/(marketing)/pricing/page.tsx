@@ -3,7 +3,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { EmiMarketingTelemetry } from '@/app/components/EmiMarketingTelemetry'
 import { isEnabledFlag } from '@/lib/feature-flags'
-import { PRICING } from '@/lib/pricing'
+import { PRICING } from '@/lib/billing/pricing'
 
 const PricingCards = dynamic(() => import('./pricing-cards').then((mod) => mod.PricingCards), {
   loading: () => (

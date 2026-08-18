@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type NextRequest, NextResponse } from 'next/server'
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/billing/stripe'
 import { requireAuth } from '@/lib/require-auth'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 

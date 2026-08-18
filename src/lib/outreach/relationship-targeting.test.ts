@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { scoreRelationshipTarget } from '@/lib/relationship-targeting'
+import { scoreRelationshipTarget } from '@/lib/outreach/relationship-targeting'
 
 describe('scoreRelationshipTarget', () => {
   it('prioritizes recruiter contacts with active context', () => {

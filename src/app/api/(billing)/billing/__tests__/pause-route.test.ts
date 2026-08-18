@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest, NextResponse } from 'next/server'
 
 vi.mock('@/lib/require-auth')
-vi.mock('@/lib/stripe')
-vi.mock('@/lib/stripe-customer')
+vi.mock('@/lib/billing/stripe')
+vi.mock('@/lib/billing/stripe-customer')
 vi.mock('@/lib/events')
 
 import { POST } from '../pause/route'
 import { requireAuth } from '@/lib/require-auth'
-import { getStripe } from '@/lib/stripe'
-import { getOrRecoverStripeCustomerId } from '@/lib/stripe-customer'
+import { getStripe } from '@/lib/billing/stripe'
+import { getOrRecoverStripeCustomerId } from '@/lib/billing/stripe-customer'
 import { logEvent } from '@/lib/events'
 
 const mockRequireAuth = vi.mocked(requireAuth)

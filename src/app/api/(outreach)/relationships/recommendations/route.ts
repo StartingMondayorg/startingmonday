@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { scoreRelationshipTarget } from '@/lib/relationship-targeting'
+import { scoreRelationshipTarget } from '@/lib/outreach/relationship-targeting'
 import { logEvent } from '@/lib/events'
 import { captureServerEvent } from '@/lib/posthog-server'
 

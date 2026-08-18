@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { inferContactType, summarizeRelationshipNetwork } from '@/lib/relationship-infrastructure'
+import { inferContactType, summarizeRelationshipNetwork } from '@/lib/outreach/relationship-infrastructure'
 
 describe('inferContactType', () => {
   it('respects explicit contact type first', () => {

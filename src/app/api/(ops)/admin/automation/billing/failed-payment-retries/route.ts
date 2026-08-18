@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { type SupabaseClient } from '@supabase/supabase-js'
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/billing/stripe'
 import { requireAuth } from '@/lib/require-auth'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 
