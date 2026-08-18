@@ -4,19 +4,19 @@ import { redirect } from 'next/navigation'
 import * as Sentry from '@sentry/nextjs'
 import { classifyGraphStalls } from '@/lib/action-scores'
 import { createClient } from '@/lib/supabase/server'
-import { anthropic, MODELS, TEMP } from '@/lib/anthropic'
+import { anthropic, MODELS, TEMP } from '@/lib/ai/anthropic'
 import { logEvent } from '@/lib/events'
 import { isEnabledFlag } from '@/lib/feature-flags'
 import { greetingInTz } from '@/lib/date'
-import { shouldShowFirstSessionGuidedBriefing } from '@/lib/briefing-first-session'
+import { shouldShowFirstSessionGuidedBriefing } from '@/lib/onboarding/briefing-first-session'
 import { logBriefingAction, saveBriefingDailyNote } from './actions'
 import {
   applyDashboardSignalContract,
   DASHBOARD_COMPANY_SIGNAL_LIMIT,
   DASHBOARD_PATTERN_ALERT_LIMIT,
-} from '@/lib/dashboard-signal-contract'
+} from '@/lib/intelligence/dashboard-signal-contract'
 import { LogoutButton } from '../logout-button'
-import { HelpQuickButton } from '@/components/HelpQuickButton'
+import { HelpQuickButton } from '@/app/components/HelpQuickButton'
 import { BriefingPulseSupport } from './BriefingPulseSupport'
 import { BriefingHeader } from './BriefingHeader'
 import { parseBriefingJson } from './briefing-json'

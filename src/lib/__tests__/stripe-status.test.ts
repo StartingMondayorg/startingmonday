@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mapStripeStatus } from '@/lib/stripe-status'
+import { mapStripeStatus } from '@/lib/billing/stripe-status'
 
 describe('mapStripeStatus', () => {
   it('maps known Stripe statuses to internal statuses', () => {

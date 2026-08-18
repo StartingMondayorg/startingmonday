@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { canAccessFeature, type UserSubscription } from '@/lib/subscription'
+import { canAccessFeature, type UserSubscription } from '@/lib/billing/subscription'
 
 function makeSub(overrides: Partial<UserSubscription> = {}): UserSubscription {
   return {

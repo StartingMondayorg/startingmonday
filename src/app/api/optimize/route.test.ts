@@ -21,7 +21,7 @@ vi.mock('@/lib/supabase/server', () => ({
   })),
 }))
 
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/ai/anthropic', () => ({
   anthropic: {
     messages: {
       stream: state.stream,

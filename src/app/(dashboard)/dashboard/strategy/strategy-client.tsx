@@ -1,7 +1,7 @@
 ﻿'use client'
 import Link from 'next/link'
 import { useState, useRef } from 'react'
-import { BriefRating } from '@/components/BriefRating'
+import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
 
 function BoldText({ text }: { text: string }) {
   const parts = text.split(/\*\*(.+?)\*\*/g)

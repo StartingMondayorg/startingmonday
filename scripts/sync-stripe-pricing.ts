@@ -1,5 +1,5 @@
 /**
- * Fetches live prices from Stripe and updates src/lib/pricing.ts + src/lib/plans.ts
+ * Fetches live prices from Stripe and updates src/lib/billing/pricing.ts + src/lib/billing/plans.ts
  * if any values have changed. Exits 0 in both cases; the caller checks git diff.
  *
  * Usage: doppler run -- npx tsx scripts/sync-stripe-pricing.ts
@@ -60,7 +60,7 @@ function updateFile(filePath: string, updater: (lines: string[]) => string[]): b
 }
 
 function updatePricingTs(prices: PriceResult[]): boolean {
-  return updateFile(path.join(process.cwd(), 'src/lib/pricing.ts'), lines => {
+  return updateFile(path.join(process.cwd(), 'src/lib/billing/pricing.ts'), lines => {
     let currentPlan: Plan | null = null
     return lines.map(line => {
       for (const plan of ['passive', 'active', 'executive'] as Plan[]) {
@@ -91,7 +91,7 @@ function updatePricingTs(prices: PriceResult[]): boolean {
 }
 
 function updatePlansTs(prices: PriceResult[]): boolean {
-  return updateFile(path.join(process.cwd(), 'src/lib/plans.ts'), lines => {
+  return updateFile(path.join(process.cwd(), 'src/lib/billing/plans.ts'), lines => {
     let currentPlan: Plan | null = null
     return lines.map(line => {
       for (const plan of ['passive', 'active', 'executive'] as Plan[]) {

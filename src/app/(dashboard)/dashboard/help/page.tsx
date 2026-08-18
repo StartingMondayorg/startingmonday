@@ -2,7 +2,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from '../logout-button'
-import { FaqAccordion } from '@/components/FaqAccordion'
+import { FaqAccordion } from '@/app/(dashboard)/dashboard/_components/FaqAccordion'
 
 export default async function HelpPage() {
   const supabase = await createClient()

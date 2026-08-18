@@ -1,8 +1,8 @@
 ﻿import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
-import { ResumeTailor } from '@/components/ResumeTailor'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
+import { ResumeTailor } from '@/app/(dashboard)/dashboard/_components/ResumeTailor'
 import { LogoutButton } from '../../logout-button'
 
 export default async function TailorPage({

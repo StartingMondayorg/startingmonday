@@ -1,5 +1,5 @@
 "use client"
-import { exportToCsv } from '@/components/export-csv'
+import { exportToCsv } from '@/app/(dashboard)/dashboard/_utils/export-csv'
 export function ExportCsvButton({ rows }: { rows: Record<string, unknown>[] }) {
   return (
     <div className="mb-4">

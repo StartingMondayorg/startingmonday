@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getActivationStatus } from "@/lib/activation";
+import { getActivationStatus } from "@/lib/onboarding/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
 import { LogoutButton } from "./logout-button";
-import { HelpQuickButton } from "@/components/HelpQuickButton";
+import { HelpQuickButton } from "@/app/components/HelpQuickButton";
 import {
   saveQuickProfile,
   saveWeeklyGoal,
@@ -14,50 +14,50 @@ import {
 } from "./profile/actions";
 import { markPlaced } from "./placed/actions";
 import { OpportunityRadar } from "./opportunity-radar";
-import { ActivityChart, type WeekActivity } from "@/components/ActivityChart";
+import { ActivityChart, type WeekActivity } from "@/app/components/ActivityChart";
 import {
   PipelineVelocity,
   type VelocityRow,
-} from "@/components/PipelineVelocity";
+} from "@/app/components/PipelineVelocity";
 import {
   DailyMomentumPlan,
   type DailyMomentumAction,
-} from "@/components/DailyMomentumPlan";
+} from "@/app/components/DailyMomentumPlan";
 import { getStaffMember, hasAdminHeaderAccess } from "@/lib/staff";
-import { DashboardPipelineSection } from "./dashboard-pipeline-section";
-import { DashboardDisclosureSection } from "./dashboard-disclosure-section";
-import { DashboardStatusBanners } from "./dashboard-status-banners";
-import { DashboardProfileIntelligenceSection } from "./dashboard-profile-intelligence-section";
-import { DashboardWelcomeNudgeSection } from "./dashboard-welcome-nudge-section";
-import { DashboardAdvancedModulesSection } from "./dashboard-advanced-modules-section";
-import { DashboardTopShellSection } from "./dashboard-top-shell-section";
-import { DashboardCampaignFoundationSection } from "./dashboard-campaign-foundation-section";
-import { DashboardProgressFeedSection } from "./dashboard-progress-feed-section";
-import { buildExecutiveRiskModel } from "./dashboard-executive-risk-utils";
-import { buildDailyMomentumActions } from "./dashboard-momentum-actions";
+import { DashboardPipelineSection } from "./_components/pipeline-section";
+import { DashboardDisclosureSection } from "./_components/disclosure-section";
+import { DashboardStatusBanners } from "./_components/status-banners";
+import { DashboardProfileIntelligenceSection } from "./_components/profile-intelligence-section";
+import { DashboardWelcomeNudgeSection } from "./_components/welcome-nudge-section";
+import { DashboardAdvancedModulesSection } from "./_components/advanced-modules-section";
+import { DashboardTopShellSection } from "./_components/top-shell-section";
+import { DashboardCampaignFoundationSection } from "./_components/campaign-foundation-section";
+import { DashboardProgressFeedSection } from "./_components/progress-feed-section";
+import { buildExecutiveRiskModel } from "./_utils/executive-risk-utils";
+import { buildDailyMomentumActions } from "./_utils/momentum-actions";
 import {
   WarmPathsSection,
   PatternAlertsSection,
   CompanySignalsSection,
-} from "./dashboard-signal-sections";
-import { DashboardPostPlacementView } from "./dashboard-post-placement-view";
-import { DashboardDecisionTimelineSection } from "./dashboard-decision-timeline-section";
+} from "./_components/signal-sections";
+import { DashboardPostPlacementView } from "./_components/post-placement-view";
+import { DashboardDecisionTimelineSection } from "./_components/decision-timeline-section";
 import {
   OnDemandScanButton,
   OnDemandEnrichButton,
-} from "./dashboard-on-demand-actions";
+} from "./_components/on-demand-actions";
 import { updateDecisionOwner } from "./actions";
 import {
   decisionMarkerForStage,
   extractDecisionOwnerFromNotes,
-} from "./dashboard-decision-timeline-utils";
-import { bumpWeek, getWeekMonday, weekLabel } from "./dashboard-week-utils";
-import { canAccessFeature, getUserSubscription } from "@/lib/subscription";
+} from "./_utils/decision-timeline-utils";
+import { bumpWeek, getWeekMonday, weekLabel } from "./_utils/week-utils";
+import { canAccessFeature, getUserSubscription } from "@/lib/billing/subscription";
 import { greetingInTz, fullDateInTz } from "@/lib/date";
-import { FirstMileTelemetry } from "@/components/FirstMileTelemetry";
-import { applyDashboardSignalContract } from "@/lib/dashboard-signal-contract";
-import { rankSignals } from "@/lib/intelligence-quality";
-import { stripStaleRelativeTime } from "@/lib/follow-up-copy";
+import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
+import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
+import { rankSignals } from "@/lib/intelligence/intelligence-quality";
+import { stripStaleRelativeTime } from "@/lib/outreach/follow-up-copy";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {

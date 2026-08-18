@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { FeedbackItem } from '@/lib/database.types'
-import { BrandIcon } from '@/components/BrandIcon'
+import { BrandIcon } from '@/app/components/BrandIcon'
 
 type FeedbackCategory = 'bug' | 'feature_request' | 'ui_ux' | 'performance' | 'other'
 type FeedbackStatus = 'new' | 'under_review' | 'planned' | 'in_progress' | 'shipped' | 'declined'

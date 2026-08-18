@@ -36,7 +36,7 @@ vi.mock('./team-settings', () => ({
   TeamSettings: () => null,
 }))
 
-vi.mock('@/components/client/coach-access-manager', () => ({
+vi.mock('@/app/(dashboard)/settings/_components/coach-access-manager', () => ({
   ClientCoachAccessManager: () => null,
 }))
 

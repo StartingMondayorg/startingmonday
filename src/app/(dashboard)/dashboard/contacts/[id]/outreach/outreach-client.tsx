@@ -1,7 +1,7 @@
 ﻿'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-import { BriefRating } from '@/components/BriefRating'
+import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
 import { markContactSent, remindLater } from '../../actions'
 
 const GOALS = [

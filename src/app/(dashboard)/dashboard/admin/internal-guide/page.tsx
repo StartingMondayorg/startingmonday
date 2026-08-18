@@ -46,9 +46,9 @@ const CORE_INTERNAL_SECTIONS: GuideSection[] = [
     id: 'core-api',
     title: 'API Surface (Core)',
     body: [
-      '- Internal guide chat | src/app/api/admin/internal-guide/chat/route.ts | Internal retrieval and source-linked answers.',
-      '- External guide chat | src/app/api/guide/chat/route.ts | Customer-facing guide retrieval and response endpoint.',
-      '- Auth start fallback | src/app/api/auth/oauth-start/route.ts | Server fallback for OAuth flow start.',
+      '- Internal guide chat | src/app/api/(ops)/admin/internal-guide/chat/route.ts | Internal retrieval and source-linked answers.',
+      '- External guide chat | src/app/api/(ai)/guide/chat/route.ts | Customer-facing guide retrieval and response endpoint.',
+      '- Auth start fallback | src/app/api/(auth)/auth/oauth-start/route.ts | Server fallback for OAuth flow start.',
     ].join('\n'),
   },
   {

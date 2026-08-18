@@ -224,7 +224,7 @@ async function buildGuidePayload() {
     type: 'article',
     url: `/blog/${post.slug}`,
     tags: ['article', ...post.keywords.slice(0, 5)],
-    lastModifiedAt: await lastModifiedAt(path.join(ROOT, 'src', 'app', 'blog', post.slug, 'page.tsx')),
+    lastModifiedAt: await lastModifiedAt(path.join(ROOT, 'src', 'app', '(marketing)', 'blog', post.slug, 'page.tsx')),
   })))
 
   const getStartedEntries: GuideEntry[] = await Promise.all([

@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { checkRateLimit } from '@/lib/rate-limit'
-import { recordBotSignal } from '@/lib/bot-signal-recorder'
-import type { BotSignalOutcome } from '@/lib/bot-signals'
+import { recordBotSignal } from '@/lib/bot-detection/bot-signal-recorder'
+import type { BotSignalOutcome } from '@/lib/bot-detection/bot-signals'
 
 type GuardOptions = {
   request: NextRequest

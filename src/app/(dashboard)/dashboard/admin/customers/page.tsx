@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { sendWelcomeEmail } from './actions'
-import { TIER_DISPLAY_NAMES } from '@/lib/pricing'
+import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
 
 type Filter = 'all' | 'trialing' | 'intelligence' | 'search' | 'executive'
 

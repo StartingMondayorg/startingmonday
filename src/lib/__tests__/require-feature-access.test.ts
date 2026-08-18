@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from 'next/server'
 
 vi.mock('@/lib/require-auth')
 vi.mock('@/lib/supabase/server')
-vi.mock('@/lib/subscription')
+vi.mock('@/lib/billing/subscription')
 vi.mock('@/lib/api-usage')
 
 import { requireFeatureAccess } from '@/lib/require-feature-access'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { isRateLimited } from '@/lib/api-usage'
 
 const mockRequireAuth = vi.mocked(requireAuth)

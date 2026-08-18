@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { CultureFitRetentionSignalsCard } from '@/components/CultureFitRetentionSignalsCard'
-import { MeetingDebriefPersistencePanel } from '@/components/MeetingDebriefPersistencePanel'
+import { CultureFitRetentionSignalsCard } from '@/app/(dashboard)/prep/_components/CultureFitRetentionSignalsCard'
+import { MeetingDebriefPersistencePanel } from '@/app/(dashboard)/prep/_components/MeetingDebriefPersistencePanel'
 
 export const metadata = {
   title: 'Meetings Strategy - Starting Monday',

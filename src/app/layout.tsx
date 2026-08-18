@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { headers } from 'next/headers'
-import { AssistWidget } from "@/components/AssistWidget";
-import { PHProvider } from "@/components/PosthogProvider";
+import { AssistWidget } from "@/app/components/AssistWidget";
+import { PHProvider } from "@/app/components/PosthogProvider";
 import { getBrandContextFromHosts } from '@/lib/brand'
 import { buildBrandMetadata } from './brand-metadata'
 import "./globals.css";

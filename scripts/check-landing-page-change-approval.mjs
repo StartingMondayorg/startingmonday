@@ -39,8 +39,8 @@ function getChangedFiles() {
 }
 
 const guardedFiles = new Set([
-  'src/app/page.tsx',
-  'src/components/LandingPage.tsx',
+  'src/app/(marketing)/page.tsx',
+  'src/app/components/LandingPage.tsx',
 ])
 
 const changedFiles = getChangedFiles()

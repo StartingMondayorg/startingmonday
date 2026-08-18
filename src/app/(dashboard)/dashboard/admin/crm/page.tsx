@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { ROUTING_THRESHOLDS } from '@/lib/lead-scoring'
+import { ROUTING_THRESHOLDS } from '@/lib/intelligence/lead-scoring'
 import { runLeadScoringNow } from './actions'
 
 type LeadRow = {

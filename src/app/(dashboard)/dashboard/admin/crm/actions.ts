@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { runLeadScoringPass } from '@/lib/lead-scoring-runner'
+import { runLeadScoringPass } from '@/lib/intelligence/lead-scoring-runner'
 
 export async function runLeadScoringNow(): Promise<void> {
   const supabase = await createClient()

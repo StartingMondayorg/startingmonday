@@ -1,9 +1,9 @@
 'use server'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
-import { getOwnerEmail } from '@/lib/owner-email'
+import { getOwnerEmail } from '@/lib/email/owner-email'
 
 const OWNER_EMAIL = getOwnerEmail()
 

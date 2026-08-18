@@ -105,7 +105,7 @@ Errors: return `NextResponse.json({ error: 'message' }, { status: 400 })`.
 
 ## AI Calls
 
-All Claude calls go through `@anthropic-ai/sdk`. Prompts live in `src/lib/prompts.ts`. Models:
+All Claude calls go through `@anthropic-ai/sdk`. Prompts live in `src/lib/ai/prompts.ts`. Models:
 
 - `claude-opus-4-7` — Search Strategy Brief and Executive tier prep briefs (expensive, slow)
 - `claude-sonnet-4-6` — Prep briefs (non-executive), resume tailoring, outreach, chat (default)
@@ -113,7 +113,7 @@ All Claude calls go through `@anthropic-ai/sdk`. Prompts live in `src/lib/prompt
 
 Streaming responses: use `createStreamableText()` from `ai` and return a `StreamingTextResponse`. See `src/app/api/briefing/route.ts` for the canonical streaming pattern.
 
-Rate limiting: `src/lib/ai-limits.ts` and `src/lib/burst-limit.ts` handle per-user limits. Always apply limits to AI routes.
+Rate limiting: `src/lib/ai/ai-limits.ts` and `src/lib/burst-limit.ts` handle per-user limits. Always apply limits to AI routes.
 
 ---
 
@@ -126,7 +126,7 @@ import { requireFeatureAccess } from '@/lib/require-feature-access'
 await requireFeatureAccess(user, 'prep_brief')  // throws if user can't access
 ```
 
-Feature to plan mapping is in `src/lib/plans.ts`. When adding a new feature, add it here first.
+Feature to plan mapping is in `src/lib/billing/plans.ts`. When adding a new feature, add it here first.
 
 ---
 

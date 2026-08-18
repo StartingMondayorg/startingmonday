@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
-import { TIER_DISPLAY_NAMES } from '@/lib/pricing'
+import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
 
 const TIER_NAMES = TIER_DISPLAY_NAMES
 
