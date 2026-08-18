@@ -8,7 +8,7 @@ const state = vi.hoisted(() => ({
   upsert: vi.fn(),
 }))
 
-vi.mock('@/app/api/cron/provider-quality-audit/route', () => ({
+vi.mock('@/app/api/(ops)/cron/provider-quality-audit/route', () => ({
   GET: state.providerGet,
 }))
 

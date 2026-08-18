@@ -50,7 +50,7 @@ vi.mock('@supabase/supabase-js', () => ({
   }),
 }))
 
-import { POST } from '@/app/api/webhooks/stripe/route'
+import { POST } from '@/app/api/(ops)/webhooks/stripe/route'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function makeRequest(body = '{}', sig: string | null = 'valid-sig') {

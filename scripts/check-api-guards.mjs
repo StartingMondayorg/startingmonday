@@ -24,10 +24,10 @@ const DIRECT_AUTH_PATTERNS = [
 ]
 
 const EXPECTED_PUBLIC_ROUTES = {
-  'src/app/api/briefing/send/route.ts': 'retired endpoint (410)',
-  'src/app/api/drip/unsubscribe/route.ts': 'signed unsubscribe link endpoint',
-  'src/app/api/health/route.ts': 'public liveness endpoint',
-  'src/app/api/partners/report/route.ts': 'retired endpoint (410)',
+  'src/app/api/(prep)/briefing/send/route.ts': 'retired endpoint (410)',
+  'src/app/api/(outreach)/drip/unsubscribe/route.ts': 'signed unsubscribe link endpoint',
+  'src/app/api/(ops)/health/route.ts': 'public liveness endpoint',
+  'src/app/api/(partner)/partners/report/route.ts': 'retired endpoint (410)',
   'src/app/api/track/open/route.ts': 'email tracking pixel endpoint',
 }
 

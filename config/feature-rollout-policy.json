@@ -77,7 +77,7 @@
       "description": "P0 fix for returning users re-entering onboarding after completion writes failed; persist explicit completion and resumable progress independently of target-company presence (PR #362)",
       "paths": [
         "src/app/auth/callback/**",
-        "src/app/api/auth/login-submit/**",
+        "src/app/api/(auth)/auth/login-submit/**",
         "src/app/onboarding/**",
         "src/lib/onboarding-state.ts"
       ],

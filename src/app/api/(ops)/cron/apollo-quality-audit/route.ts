@@ -1,5 +1,5 @@
 import { type NextRequest } from 'next/server'
-import { GET as providerQualityAuditGet } from '@/app/api/cron/provider-quality-audit/route'
+import { GET as providerQualityAuditGet } from '@/app/api/(ops)/cron/provider-quality-audit/route'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const runtime = 'nodejs'

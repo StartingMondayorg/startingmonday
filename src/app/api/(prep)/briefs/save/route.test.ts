@@ -39,7 +39,7 @@ describe('src/app/api/briefs/save/route.ts', () => {
   })
 
   it('rejects prep writes without claim provenance', async () => {
-    const { POST } = await import('@/app/api/briefs/save/route')
+    const { POST } = await import('@/app/api/(prep)/briefs/save/route')
     const req = new Request('http://localhost/api/briefs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -52,7 +52,7 @@ describe('src/app/api/briefs/save/route.ts', () => {
   })
 
   it('persists provenance payload for prep writes', async () => {
-    const { POST } = await import('@/app/api/briefs/save/route')
+    const { POST } = await import('@/app/api/(prep)/briefs/save/route')
     const req = new Request('http://localhost/api/briefs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -81,7 +81,7 @@ describe('src/app/api/briefs/save/route.ts', () => {
   })
 
   it('rewrites unsupported proper-noun claims before prep persistence', async () => {
-    const { POST } = await import('@/app/api/briefs/save/route')
+    const { POST } = await import('@/app/api/(prep)/briefs/save/route')
     const req = new Request('http://localhost/api/briefs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -114,7 +114,7 @@ describe('src/app/api/briefs/save/route.ts', () => {
   })
 
   it('keeps specific claims when source evidence exists', async () => {
-    const { POST } = await import('@/app/api/briefs/save/route')
+    const { POST } = await import('@/app/api/(prep)/briefs/save/route')
     const req = new Request('http://localhost/api/briefs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -145,7 +145,7 @@ describe('src/app/api/briefs/save/route.ts', () => {
   })
 
   it('downgrades unmatched attribution v2 claims to inferred during save', async () => {
-    const { POST } = await import('@/app/api/briefs/save/route')
+    const { POST } = await import('@/app/api/(prep)/briefs/save/route')
     const req = new Request('http://localhost/api/briefs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -178,7 +178,7 @@ describe('src/app/api/briefs/save/route.ts', () => {
   })
 
   it('rejects malformed company_id via schema validation', async () => {
-    const { POST } = await import('@/app/api/briefs/save/route')
+    const { POST } = await import('@/app/api/(prep)/briefs/save/route')
     const req = new Request('http://localhost/api/briefs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

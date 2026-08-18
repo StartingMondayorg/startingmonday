@@ -74,10 +74,10 @@ function reviewerLabelFromInternalRef(title: string, ref?: string): string {
   if (normalizedRef.startsWith('/dashboard/') || normalizedRef.startsWith('/')) {
     return 'User workflow surfaces'
   }
-  if (normalizedRef.startsWith('src/app/api/admin/')) {
+  if (normalizedRef.startsWith('src/app/api/(ops)/admin/')) {
     return 'Admin automation and control endpoints'
   }
-  if (normalizedRef.startsWith('src/app/api/auth/') || normalizedRef.includes('/auth/')) {
+  if (normalizedRef.startsWith('src/app/api/(auth)/auth/') || normalizedRef.includes('/auth/')) {
     return 'Authentication and session endpoints'
   }
   if (normalizedRef.startsWith('src/app/api/')) {

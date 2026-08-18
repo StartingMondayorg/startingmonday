@@ -48,9 +48,9 @@ jobs:
           - src/lib/watermark.ts
           - worker/lib/watermark.js
           - src/components/WatermarkOverlay.tsx
-          - src/app/api/strategy/route.ts
-          - src/app/api/outreach/draft/route.ts
-          - src/app/api/briefs/save/route.ts
+          - src/app/api/(ai)/strategy/route.ts
+          - src/app/api/(outreach)/outreach/draft/route.ts
+          - src/app/api/(prep)/briefs/save/route.ts
           - src/app/(dashboard)/layout.tsx
           - worker/jobs/briefing-job.js
 

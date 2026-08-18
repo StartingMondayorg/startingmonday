@@ -68,17 +68,17 @@ type AutomationRouteModule = {
 }
 
 const routeImporters: Record<string, () => Promise<AutomationRouteModule>> = {
-  '/api/admin/automation/reporting/weekly-kpi-summaries': () => import('@/app/api/admin/automation/reporting/weekly-kpi-summaries/route'),
-  '/api/admin/automation/reporting/emi-validation-reruns': () => import('@/app/api/admin/automation/reporting/emi-validation-reruns/route'),
-  '/api/admin/automation/reporting/proof-asset-publisher': () => import('@/app/api/admin/automation/reporting/proof-asset-publisher/route'),
-  '/api/admin/automation/reporting/tier1-claim-compliance-audit': () => import('@/app/api/admin/automation/reporting/tier1-claim-compliance-audit/route'),
-  '/api/admin/automation/reporting/sprint-5-exit-metrics': () => import('@/app/api/admin/automation/reporting/sprint-5-exit-metrics/route'),
-  '/api/admin/automation/reporting/gtm-proof-sequence': () => import('@/app/api/admin/automation/reporting/gtm-proof-sequence/route'),
-  '/api/admin/automation/reporting/q4-cadence-automation': () => import('@/app/api/admin/automation/reporting/q4-cadence-automation/route'),
-  '/api/admin/automation/reporting/capstone-report-generation': () => import('@/app/api/admin/automation/reporting/capstone-report-generation/route'),
-  '/api/admin/automation/reporting/success-criteria-audit-automation': () => import('@/app/api/admin/automation/reporting/success-criteria-audit-automation/route'),
-  '/api/admin/automation/reporting/top10-objection-kpi-dashboard': () => import('@/app/api/admin/automation/reporting/top10-objection-kpi-dashboard/route'),
-  '/api/admin/automation/reporting/emi-slo-monitoring-alerts': () => import('@/app/api/admin/automation/reporting/emi-slo-monitoring-alerts/route'),
+  '/api/admin/automation/reporting/weekly-kpi-summaries': () => import('@/app/api/(ops)/admin/automation/reporting/weekly-kpi-summaries/route'),
+  '/api/admin/automation/reporting/emi-validation-reruns': () => import('@/app/api/(ops)/admin/automation/reporting/emi-validation-reruns/route'),
+  '/api/admin/automation/reporting/proof-asset-publisher': () => import('@/app/api/(ops)/admin/automation/reporting/proof-asset-publisher/route'),
+  '/api/admin/automation/reporting/tier1-claim-compliance-audit': () => import('@/app/api/(ops)/admin/automation/reporting/tier1-claim-compliance-audit/route'),
+  '/api/admin/automation/reporting/sprint-5-exit-metrics': () => import('@/app/api/(ops)/admin/automation/reporting/sprint-5-exit-metrics/route'),
+  '/api/admin/automation/reporting/gtm-proof-sequence': () => import('@/app/api/(ops)/admin/automation/reporting/gtm-proof-sequence/route'),
+  '/api/admin/automation/reporting/q4-cadence-automation': () => import('@/app/api/(ops)/admin/automation/reporting/q4-cadence-automation/route'),
+  '/api/admin/automation/reporting/capstone-report-generation': () => import('@/app/api/(ops)/admin/automation/reporting/capstone-report-generation/route'),
+  '/api/admin/automation/reporting/success-criteria-audit-automation': () => import('@/app/api/(ops)/admin/automation/reporting/success-criteria-audit-automation/route'),
+  '/api/admin/automation/reporting/top10-objection-kpi-dashboard': () => import('@/app/api/(ops)/admin/automation/reporting/top10-objection-kpi-dashboard/route'),
+  '/api/admin/automation/reporting/emi-slo-monitoring-alerts': () => import('@/app/api/(ops)/admin/automation/reporting/emi-slo-monitoring-alerts/route'),
 }
 
 function buildAutomationHeaders(automationToken: string, automationUserId: string): HeadersInit {
