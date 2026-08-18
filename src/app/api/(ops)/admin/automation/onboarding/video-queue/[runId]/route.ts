@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { asLooseSupabaseClient, requireAutomationAccess } from '@/lib/admin-automation-route'
-import { fetchOnboardingVideoRunDetails } from '@/lib/onboarding-video-queue'
+import { fetchOnboardingVideoRunDetails } from '@/lib/onboarding/onboarding-video-queue'
 
 const runIdSchema = z.string().uuid()
 

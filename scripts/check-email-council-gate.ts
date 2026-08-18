@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
-import { evaluateEmailCouncilQuality } from '../src/lib/email-council'
+import { evaluateEmailCouncilQuality } from '../src/lib/email/email-council'
 
 function getArg(flag: string): string {
   const idx = process.argv.indexOf(flag)

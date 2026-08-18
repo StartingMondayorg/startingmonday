@@ -4,7 +4,7 @@ import {
   ONBOARDING_EVENT_CONTRACTS,
   ONBOARDING_EVENT_NAMES,
   validateOnboardingEventProperties,
-} from '@/lib/onboarding-agent-contracts'
+} from '@/lib/onboarding/onboarding-agent-contracts'
 
 describe('onboarding agent contracts', () => {
   it('exposes the expected event names and contract version', () => {

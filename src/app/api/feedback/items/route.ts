@@ -4,8 +4,8 @@ import { requireAuth } from '@/lib/require-auth'
 import { FeedbackSubmitSchema, firstZodError } from '@/lib/schemas'
 import { NextRequest, NextResponse } from 'next/server'
 import { withApiTelemetry } from '@/lib/telemetry'
-import { sendEmail } from '@/lib/email'
-import { getNotifyEmails } from '@/lib/owner-email'
+import { sendEmail } from '@/lib/email/email'
+import { getNotifyEmails } from '@/lib/email/owner-email'
 import { anthropic, MODELS, TEMP } from '@/lib/anthropic'
 
 type FeedbackListRow = Record<string, unknown> & { id: string }

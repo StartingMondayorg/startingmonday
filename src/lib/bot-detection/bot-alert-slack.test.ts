@@ -4,8 +4,8 @@ const { sendSlackMessage } = vi.hoisted(() => ({ sendSlackMessage: vi.fn() }))
 
 vi.mock('@/lib/slack', () => ({ sendSlackMessage }))
 
-import { buildAlertMessage, deliverBotAlert, getSlackTargets } from '@/lib/bot-alert-slack'
-import type { BotTrafficAlert, BotTrafficSnapshot } from '@/lib/bot-traffic-report'
+import { buildAlertMessage, deliverBotAlert, getSlackTargets } from '@/lib/bot-detection/bot-alert-slack'
+import type { BotTrafficAlert, BotTrafficSnapshot } from '@/lib/bot-detection/bot-traffic-report'
 
 const snapshot: BotTrafficSnapshot = {
   generatedAt: '2026-08-14T10:00:00.000Z',

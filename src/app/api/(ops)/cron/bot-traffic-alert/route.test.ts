@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { BotTrafficSnapshot } from '@/lib/bot-traffic-report'
+import type { BotTrafficSnapshot } from '@/lib/bot-detection/bot-traffic-report'
 
 const {
   validateCronRequest,
@@ -35,9 +35,9 @@ vi.mock('@/lib/supabase/admin', () => ({
   })),
 }))
 
-vi.mock('@/lib/bot-traffic-report', () => ({ getBotTrafficSnapshot, evaluateBotTrafficAlerts }))
+vi.mock('@/lib/bot-detection/bot-traffic-report', () => ({ getBotTrafficSnapshot, evaluateBotTrafficAlerts }))
 
-vi.mock('@/lib/bot-alert-slack', () => ({
+vi.mock('@/lib/bot-detection/bot-alert-slack', () => ({
   deliverBotAlert,
   buildAlertMessage: vi.fn(() => 'alert message'),
 }))

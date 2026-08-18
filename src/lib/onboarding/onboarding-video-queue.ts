@@ -4,14 +4,14 @@ import { logQueueWorkerRun } from '@/lib/telemetry'
 import {
   dispatchOnboardingVideoProvider,
   isProviderTerminalError,
-} from '@/lib/onboarding-video-provider'
+} from '@/lib/onboarding/onboarding-video-provider'
 import {
   clampLimit,
   computeRetryDelayMs,
   mapMilestoneToFlow,
   normalizeMaxRetries,
   type MilestoneEventName,
-} from '@/lib/onboarding-video-queue.utils'
+} from '@/lib/onboarding/onboarding-video-queue.utils'
 
 type DbError = { message: string }
 type DbResponse<T = unknown> = Promise<{ data: T | null; error: DbError | null }>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { scorePrepBriefConfidence } from '@/lib/prep-confidence'
+import { scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
 
 describe('prep confidence scoring', () => {
   it('returns high/medium confidence for well-structured briefs', () => {

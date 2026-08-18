@@ -4,7 +4,7 @@ import { trackApiUsage } from '@/lib/api-usage'
 import { isDemoUser } from '@/lib/demo'
 import { anthropic, getModelForTier } from '@/lib/anthropic'
 import { personaContext } from '@/lib/prompts'
-import { buildCareerHistorySection, buildStarStoriesSection } from '@/lib/prep-profile-context'
+import { buildCareerHistorySection, buildStarStoriesSection } from '@/lib/prep/prep-profile-context'
 import { apiError } from '@/lib/api-error'
 import { PrepRouteParamsSchema, firstZodError } from '@/lib/schemas'
 

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { verifyUnsubscribeToken } from '@/lib/unsubscribe-token'
+import { verifyUnsubscribeToken } from '@/lib/email/unsubscribe-token'
 
 export async function GET(request: NextRequest) {
   const uid = request.nextUrl.searchParams.get('uid')

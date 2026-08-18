@@ -1,4 +1,4 @@
-import type { PrepClaimProvenance } from '@/lib/prep-provenance'
+import type { PrepClaimProvenance } from '@/lib/prep/prep-provenance'
 
 type SpecificityGuardResult = {
   text: string

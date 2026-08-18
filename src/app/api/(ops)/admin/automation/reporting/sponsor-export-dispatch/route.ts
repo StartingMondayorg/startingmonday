@@ -1,7 +1,7 @@
  
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { asLooseSupabaseClient, parseAutomationBody, requireAutomationAccess } from '@/lib/admin-automation-route'
 
 type PartnerRow = {

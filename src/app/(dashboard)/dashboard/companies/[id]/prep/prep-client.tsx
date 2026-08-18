@@ -7,10 +7,10 @@ import {
   PREP_PROVENANCE_VERSION,
   buildPrepClaimProvenance,
   type ClaimOriginClass,
-} from '@/lib/prep-provenance'
-import { scorePrepBriefConfidence } from '@/lib/prep-confidence'
+} from '@/lib/prep/prep-provenance'
+import { scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
 import { PMF_EVENTS } from '@/lib/pmf-event-taxonomy'
-import { type PrepRoleMode } from '@/lib/prep-role-modes'
+import { type PrepRoleMode } from '@/lib/prep/prep-role-modes'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
 import type { InterviewStage } from '@/lib/prompts'
 import {

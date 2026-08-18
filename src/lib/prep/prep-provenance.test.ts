@@ -4,7 +4,7 @@ import {
   buildPrepClaimProvenance,
   validatePrepClaimProvenance,
   type PrepClaimProvenance,
-} from '@/lib/prep-provenance'
+} from '@/lib/prep/prep-provenance'
 
 describe('prep provenance', () => {
   it('builds provenance records with origin classes', () => {

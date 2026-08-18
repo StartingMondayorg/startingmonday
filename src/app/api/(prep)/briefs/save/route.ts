@@ -13,8 +13,8 @@ import {
   buildPrepClaimProvenance,
   type PrepClaimProvenance,
   validatePrepClaimProvenance,
-} from '@/lib/prep-provenance'
-import { enforcePrepSpecificityGuard } from '@/lib/prep-specificity-guard'
+} from '@/lib/prep/prep-provenance'
+import { enforcePrepSpecificityGuard } from '@/lib/prep/prep-specificity-guard'
 
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(request)

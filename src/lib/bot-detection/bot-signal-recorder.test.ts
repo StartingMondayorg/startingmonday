@@ -10,7 +10,7 @@ const { insert, createAdminClient } = vi.hoisted(() => {
 
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient }))
 
-import { buildBotSignalRow, recordBotSignal } from '@/lib/bot-signal-recorder'
+import { buildBotSignalRow, recordBotSignal } from '@/lib/bot-detection/bot-signal-recorder'
 
 const CHROME_UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'

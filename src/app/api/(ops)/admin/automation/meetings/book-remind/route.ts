@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 
 type MeetingInput = {
   contact_id?: string

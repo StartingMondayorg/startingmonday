@@ -1,4 +1,4 @@
-import { PREP_ROLE_MODES, type PrepRoleMode } from '@/lib/prep-role-modes'
+import { PREP_ROLE_MODES, type PrepRoleMode } from '@/lib/prep/prep-role-modes'
 import type { InterviewStage } from '@/lib/prompts'
 
 export const STAGE_OPTIONS: { value: InterviewStage; label: string }[] = [

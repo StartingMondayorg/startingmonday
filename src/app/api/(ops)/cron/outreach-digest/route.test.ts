@@ -8,8 +8,8 @@ const state = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/cron-auth', () => ({ validateCronRequest: state.validateCronRequest }))
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
-vi.mock('@/lib/owner-email', () => ({ getOwnerEmail: () => 'richard@startingmonday.app' }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/owner-email', () => ({ getOwnerEmail: () => 'richard@startingmonday.app' }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: () => ({ from: state.from }) }))
 
 import { GET } from './route'

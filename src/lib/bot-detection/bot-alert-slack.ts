@@ -1,5 +1,5 @@
 import { sendSlackMessage } from '@/lib/slack'
-import type { BotTrafficAlert, BotTrafficSnapshot } from '@/lib/bot-traffic-report'
+import type { BotTrafficAlert, BotTrafficSnapshot } from '@/lib/bot-detection/bot-traffic-report'
 
 // SMK-467: Slack delivery for bot traffic alerts.
 //

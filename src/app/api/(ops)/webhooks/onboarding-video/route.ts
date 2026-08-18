@@ -1,7 +1,7 @@
 ﻿import { createHash, timingSafeEqual } from 'crypto'
 import { type NextRequest, NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import { updateOnboardingVideoRunFromWebhook } from '@/lib/onboarding-video-queue'
+import { updateOnboardingVideoRunFromWebhook } from '@/lib/onboarding/onboarding-video-queue'
 
 type OnboardingVideoWebhookPayload = {
   id?: string

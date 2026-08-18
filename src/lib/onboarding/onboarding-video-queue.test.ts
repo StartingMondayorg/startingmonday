@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mapOnboardingVideoProviderEventToStatus } from '@/lib/onboarding-video-queue'
+import { mapOnboardingVideoProviderEventToStatus } from '@/lib/onboarding/onboarding-video-queue'
 
 describe('mapOnboardingVideoProviderEventToStatus', () => {
   it('maps known provider events to onboarding run statuses', () => {

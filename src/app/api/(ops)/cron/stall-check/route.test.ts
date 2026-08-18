@@ -9,9 +9,9 @@ const state = vi.hoisted(() => ({
 
 vi.mock('@/lib/cron-auth', () => ({ validateCronRequest: state.validateCronRequest }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: () => ({ from: state.from }) }))
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
 vi.mock('@/lib/config', () => ({ APP_URL: 'https://startingmonday.app' }))
-vi.mock('@/lib/unsubscribe-token', () => ({ unsubscribeUrl: (userId: string) => `https://example.com/unsubscribe/${userId}` }))
+vi.mock('@/lib/email/unsubscribe-token', () => ({ unsubscribeUrl: (userId: string) => `https://example.com/unsubscribe/${userId}` }))
 
 import { GET } from './route'
 

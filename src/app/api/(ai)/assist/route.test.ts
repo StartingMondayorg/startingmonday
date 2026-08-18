@@ -31,11 +31,11 @@ vi.mock('@/lib/supabase/admin', () => ({
   }),
 }))
 
-vi.mock('@/lib/owner-email', () => ({
+vi.mock('@/lib/email/owner-email', () => ({
   getNotifyEmails: () => ['richard@startingmonday.app'],
 }))
 
-vi.mock('@/lib/email', () => ({
+vi.mock('@/lib/email/email', () => ({
   sendEmail: state.sendEmail,
 }))
 

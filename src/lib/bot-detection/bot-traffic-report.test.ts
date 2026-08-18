@@ -5,7 +5,7 @@ import {
   getBotTrafficSnapshot,
   median,
   summarisePrefixes,
-} from '@/lib/bot-traffic-report'
+} from '@/lib/bot-detection/bot-traffic-report'
 
 function snapshotOf(overrides: Partial<BotTrafficSnapshot> = {}): BotTrafficSnapshot {
   return {

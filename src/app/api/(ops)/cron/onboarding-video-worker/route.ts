@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { validateCronRequest } from '@/lib/cron-auth'
-import { processOnboardingVideoRuns } from '@/lib/onboarding-video-queue'
+import { processOnboardingVideoRuns } from '@/lib/onboarding/onboarding-video-queue'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const runtime = 'nodejs'

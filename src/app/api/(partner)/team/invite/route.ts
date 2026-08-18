@@ -2,7 +2,7 @@
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
 
 function normalizeEmail(value: unknown): string {

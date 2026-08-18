@@ -2,10 +2,10 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import {
   ONBOARDING_EVENT_NAMES,
   type OnboardingEventRow,
-} from '@/lib/onboarding-agent-contracts'
-import { analyzeOnboardingEventIntegrity } from '@/lib/onboarding-event-integrity-agent'
-import { analyzeOnboardingJourneyHealth } from '@/lib/onboarding-journey-health-agent'
-import { summarizeOnboardingWeeklyMetrics } from '@/lib/onboarding-agent-metrics'
+} from '@/lib/onboarding/onboarding-agent-contracts'
+import { analyzeOnboardingEventIntegrity } from '@/lib/onboarding/onboarding-event-integrity-agent'
+import { analyzeOnboardingJourneyHealth } from '@/lib/onboarding/onboarding-journey-health-agent'
+import { summarizeOnboardingWeeklyMetrics } from '@/lib/onboarding/onboarding-agent-metrics'
 
 const AUTH_PATH_ROUTED_EVENT_NAME = 'auth_path_routed'
 

@@ -1,8 +1,8 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
-import { getOwnerEmail } from '@/lib/owner-email'
+import { getOwnerEmail } from '@/lib/email/owner-email'
 
 function escHtml(s: string): string {
   return s

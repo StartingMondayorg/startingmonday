@@ -1,4 +1,4 @@
-import { buildPrepClaimProvenance } from '@/lib/prep-provenance'
+import { buildPrepClaimProvenance } from '@/lib/prep/prep-provenance'
 
 export type PrepConfidenceResult = {
   score: number

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { buildOnboardingQaScorecard } from '@/lib/onboarding-agent-scorecard'
-import type { OnboardingEventRow } from '@/lib/onboarding-agent-contracts'
+import { buildOnboardingQaScorecard } from '@/lib/onboarding/onboarding-agent-scorecard'
+import type { OnboardingEventRow } from '@/lib/onboarding/onboarding-agent-contracts'
 
 function event(overrides: Partial<OnboardingEventRow> & Pick<OnboardingEventRow, 'user_id' | 'event_name' | 'created_at'>): OnboardingEventRow {
   return {

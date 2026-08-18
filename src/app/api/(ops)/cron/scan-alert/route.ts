@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { validateCronRequest } from '@/lib/cron-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendEmail } from '@/lib/email'
-import { getOwnerEmail } from '@/lib/owner-email'
+import { sendEmail } from '@/lib/email/email'
+import { getOwnerEmail } from '@/lib/email/owner-email'
 
 const OWNER_EMAIL = getOwnerEmail()
 const CONSECUTIVE_THRESHOLD = 3

@@ -10,7 +10,7 @@ vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: vi.fn(() => ({ from: fromMock })),
 }))
 
-vi.mock('@/lib/email', () => ({
+vi.mock('@/lib/email/email', () => ({
   sendEmail,
 }))
 
@@ -18,7 +18,7 @@ vi.mock('@/lib/config', () => ({
   APP_URL: 'https://example.com',
 }))
 
-vi.mock('@/lib/owner-email', () => ({
+vi.mock('@/lib/email/owner-email', () => ({
   getOwnerEmail: () => 'owner@example.com',
 }))
 

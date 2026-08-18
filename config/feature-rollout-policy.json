@@ -79,7 +79,7 @@
         "src/app/auth/callback/**",
         "src/app/api/(auth)/auth/login-submit/**",
         "src/app/onboarding/**",
-        "src/lib/onboarding-state.ts"
+        "src/lib/onboarding/onboarding-state.ts"
       ],
       "phase": "full rollout",
       "rollbackPath": "Revert PR #362 application changes while retaining the additive migration 168 columns; use docs/development/migration-rollbacks/168_onboarding_completion_resume_state.md only if schema rollback is required",
@@ -104,7 +104,7 @@
       "description": "Phase 3 guided first-session briefing state for new users (<=1 tracked company and account age under 48 hours), with deterministic 50/50 rollout by user id hash.",
       "paths": [
         "src/app/(dashboard)/dashboard/briefing/**",
-        "src/lib/briefing-first-session.ts"
+        "src/lib/onboarding/briefing-first-session.ts"
       ],
       "phase": "percentage rollout",
       "rollbackPath": "Set FF_BRIEFING_FIRST_SESSION_GUIDED_BRIEFING=off to return all users to the full briefing layout.",

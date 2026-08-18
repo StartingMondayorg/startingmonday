@@ -8,9 +8,9 @@ const state = vi.hoisted(() => ({
 vi.mock('@/lib/stripe', () => ({
   getStripe: () => ({ webhooks: { constructEvent: state.constructEvent } }),
 }))
-vi.mock('@/lib/email', () => ({ sendEmail: vi.fn(async () => ({ data: { id: 'msg_1' } })) }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: vi.fn(async () => ({ data: { id: 'msg_1' } })) }))
 vi.mock('@/lib/config', () => ({ APP_URL: 'https://startingmonday.app' }))
-vi.mock('@/lib/owner-email', () => ({ getOwnerEmail: () => 'owner@example.com' }))
+vi.mock('@/lib/email/owner-email', () => ({ getOwnerEmail: () => 'owner@example.com' }))
 vi.mock('@/lib/stripe-status', () => ({ mapStripeStatus: () => 'active' }))
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({

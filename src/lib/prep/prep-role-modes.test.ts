@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getRoleModePromptPack, isPrepRoleMode } from '@/lib/prep-role-modes'
+import { getRoleModePromptPack, isPrepRoleMode } from '@/lib/prep/prep-role-modes'
 
 describe('prep role modes', () => {
   it('accepts known role modes', () => {

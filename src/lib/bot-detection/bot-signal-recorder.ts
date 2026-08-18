@@ -3,7 +3,7 @@ import {
   classifyRequest,
   hashIp,
   hashIpPrefix,
-} from '@/lib/bot-signals'
+} from '@/lib/bot-detection/bot-signals'
 
 // SMK-467: persistence for bot traffic observations.
 //

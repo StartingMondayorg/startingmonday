@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 
 export async function POST(request: NextRequest) {
   try {

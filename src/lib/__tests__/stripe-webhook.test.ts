@@ -16,7 +16,7 @@ vi.mock('@/lib/stripe', () => ({
   getStripe: () => ({ webhooks: { constructEvent: state.constructEvent } }),
 }))
 
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
 vi.mock('@/lib/config', () => ({ APP_URL: 'https://startingmonday.app' }))
 
 vi.mock('@supabase/supabase-js', () => ({

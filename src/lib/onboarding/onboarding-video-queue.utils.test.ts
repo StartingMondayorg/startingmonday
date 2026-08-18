@@ -4,7 +4,7 @@ import {
   computeRetryDelayMs,
   mapMilestoneToFlow,
   normalizeMaxRetries,
-} from '@/lib/onboarding-video-queue.utils'
+} from '@/lib/onboarding/onboarding-video-queue.utils'
 
 describe('onboarding-video-queue utils', () => {
   it('clampLimit bounds values to range', () => {

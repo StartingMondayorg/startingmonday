@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { asLooseSupabaseClient, parseAutomationBody, requireAutomationAccess } from '@/lib/admin-automation-route'
-import { enqueueOnboardingVideoRun, fetchOnboardingVideoRunSnapshot } from '@/lib/onboarding-video-queue'
+import { enqueueOnboardingVideoRun, fetchOnboardingVideoRunSnapshot } from '@/lib/onboarding/onboarding-video-queue'
 
 const enqueueSchema = z.object({
   workflow_id: z.string().uuid().optional(),

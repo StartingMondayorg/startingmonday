@@ -6,7 +6,7 @@ import {
   normalizeOnboardingDraft,
   resolveOnboardingDestination,
   resolveOnboardingStartStep,
-} from '@/lib/onboarding-state'
+} from '@/lib/onboarding/onboarding-state'
 
 export default async function OnboardingPage({
   searchParams,

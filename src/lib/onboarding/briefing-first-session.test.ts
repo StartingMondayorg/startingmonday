@@ -3,7 +3,7 @@ import {
   chooseDeterministicRolloutBucket,
   isInDeterministicRollout,
   shouldShowFirstSessionGuidedBriefing,
-} from '@/lib/briefing-first-session'
+} from '@/lib/onboarding/briefing-first-session'
 
 describe('briefing first-session rollout', () => {
   it('returns stable deterministic buckets for the same seed', () => {

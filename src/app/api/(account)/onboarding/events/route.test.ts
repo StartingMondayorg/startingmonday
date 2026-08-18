@@ -23,7 +23,7 @@ vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: state.createAdminClient,
 }))
 
-vi.mock('@/lib/onboarding-video-queue', () => ({
+vi.mock('@/lib/onboarding/onboarding-video-queue', () => ({
   enqueueOnboardingVideoRunForMilestoneEvent: state.enqueueOnboardingVideoRunForMilestoneEvent,
 }))
 

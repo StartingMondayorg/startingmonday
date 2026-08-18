@@ -1,8 +1,8 @@
 ﻿import { type NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { buildPrepClaimProvenance, type PrepClaimProvenance } from '@/lib/prep-provenance'
-import { scorePrepBriefConfidence } from '@/lib/prep-confidence'
+import { buildPrepClaimProvenance, type PrepClaimProvenance } from '@/lib/prep/prep-provenance'
+import { scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
 import {
   Document, Packer, Paragraph, TextRun, HeadingLevel,
   AlignmentType, convertInchesToTwip,

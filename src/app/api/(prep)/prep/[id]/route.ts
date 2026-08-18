@@ -9,12 +9,12 @@ import { RESUME_CHARS } from '@/lib/ai-limits'
 import { isDemoUser, streamDemoText, DEMO_PREP_BRIEFS } from '@/lib/demo'
 import { encodeUserId } from '@/lib/watermark'
 import { streamErrorMessage } from '@/lib/stream-error'
-import { getRoleModePromptPack, isPrepRoleMode, type PrepRoleMode } from '@/lib/prep-role-modes'
-import { extractTextFromHtml, isAllowedJobUrl, normalizeInterviewStage } from '@/lib/prep-route-utils'
+import { getRoleModePromptPack, isPrepRoleMode, type PrepRoleMode } from '@/lib/prep/prep-role-modes'
+import { extractTextFromHtml, isAllowedJobUrl, normalizeInterviewStage } from '@/lib/prep/prep-route-utils'
 import {
   buildScanSection, buildSignalSection, buildContactSection, buildDocSection, buildCompanyFocusBrief,
   type Signal, type ScanRow, type ContactRow, type DocRow,
-} from '@/lib/prep-context'
+} from '@/lib/prep/prep-context'
 import Anthropic from '@anthropic-ai/sdk'
 import { anthropic, MODELS, getModelForTier } from '@/lib/anthropic'
 import { PrepRefineBodySchema, PrepRouteParamsSchema, PrepGenerateQuerySchema, firstZodError } from '@/lib/schemas'

@@ -9,8 +9,8 @@ const state = vi.hoisted(() => ({
 
 vi.mock('@/lib/public-endpoint-guard', () => ({ enforcePublicEndpointGuard: state.guard }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: () => ({ from: () => ({ insert: state.insert }) }) }))
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
-vi.mock('@/lib/owner-email', () => ({ getOwnerEmail: () => 'owner@example.com' }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/owner-email', () => ({ getOwnerEmail: () => 'owner@example.com' }))
 
 import { POST } from './route'
 

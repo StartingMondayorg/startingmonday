@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getActivationStatus } from "@/lib/activation";
+import { getActivationStatus } from "@/lib/onboarding/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
 import { LogoutButton } from "./logout-button";
 import { HelpQuickButton } from "@/app/components/HelpQuickButton";

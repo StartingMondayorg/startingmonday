@@ -4,7 +4,7 @@ import {
   ONBOARDING_FINAL_STEP,
   resolveOnboardingDestination,
   resolveOnboardingStartStep,
-} from '@/lib/onboarding-state'
+} from '@/lib/onboarding/onboarding-state'
 
 describe('explicit onboarding state', () => {
   it('routes a completed user with zero target companies to the dashboard', () => {

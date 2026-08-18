@@ -2,8 +2,8 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { validateCronRequest } from '@/lib/cron-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { evaluateBotTrafficAlerts, getBotTrafficSnapshot } from '@/lib/bot-traffic-report'
-import { buildAlertMessage, deliverBotAlert } from '@/lib/bot-alert-slack'
+import { evaluateBotTrafficAlerts, getBotTrafficSnapshot } from '@/lib/bot-detection/bot-traffic-report'
+import { buildAlertMessage, deliverBotAlert } from '@/lib/bot-detection/bot-alert-slack'
 
 // SMK-467: hourly bot traffic check.
 //

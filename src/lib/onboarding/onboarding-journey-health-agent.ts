@@ -1,13 +1,13 @@
 import {
   type OnboardingEventRow,
   ONBOARDING_CONTRACT_VERSION,
-} from '@/lib/onboarding-agent-contracts'
+} from '@/lib/onboarding/onboarding-agent-contracts'
 import {
   calculateOnboardingJourneySnapshot,
   compareRatioDropPct,
   compareRatioLiftPct,
   type OnboardingJourneySnapshot,
-} from '@/lib/onboarding-agent-metrics'
+} from '@/lib/onboarding/onboarding-agent-metrics'
 
 export type OnboardingJourneyHealthFinding = {
   finding_id: string

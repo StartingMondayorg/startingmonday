@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
-import { getNotifyEmails } from '@/lib/owner-email'
+import { getNotifyEmails } from '@/lib/email/owner-email'
 
 const TIER_LABELS: Record<string, string> = {
   trialing:  'Free trial',

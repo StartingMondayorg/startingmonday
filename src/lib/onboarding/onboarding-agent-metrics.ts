@@ -1,4 +1,4 @@
-import type { OnboardingEventName, OnboardingEventRow, OnboardingEventProperties } from '@/lib/onboarding-agent-contracts'
+import type { OnboardingEventName, OnboardingEventRow, OnboardingEventProperties } from '@/lib/onboarding/onboarding-agent-contracts'
 
 export type OnboardingJourneyStepCoverage = {
   step: number

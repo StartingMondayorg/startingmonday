@@ -10,7 +10,7 @@ const state = vi.hoisted(() => ({
 
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/staff', () => ({ getStaffMember: state.getStaffMember }))
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
 vi.mock('@/lib/supabase/server', () => ({
   createClient: async () => ({
     auth: { getUser: vi.fn(async () => ({ data: { user: { email: 'owner@startingmonday.app' } } })) },

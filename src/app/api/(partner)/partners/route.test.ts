@@ -15,11 +15,11 @@ vi.mock('@/lib/public-endpoint-guard', () => ({
   enforcePublicEndpointGuard: state.guard,
 }))
 
-vi.mock('@/lib/owner-email', () => ({
+vi.mock('@/lib/email/owner-email', () => ({
   getOwnerEmail: () => 'owner@example.com',
 }))
 
-vi.mock('@/lib/email', () => ({
+vi.mock('@/lib/email/email', () => ({
   sendEmail: state.sendEmail,
 }))
 

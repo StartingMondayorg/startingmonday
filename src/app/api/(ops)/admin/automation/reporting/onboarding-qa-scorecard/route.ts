@@ -3,7 +3,7 @@ import { requireAuth } from '@/lib/require-auth'
 import { requireStaffAutomationAccess } from '@/lib/admin-automation-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { validateCronRequest } from '@/lib/cron-auth'
-import { loadOnboardingQaScorecard } from '@/lib/onboarding-agent-scorecard'
+import { loadOnboardingQaScorecard } from '@/lib/onboarding/onboarding-agent-scorecard'
 
 export async function POST(request: NextRequest) {
   const isCronRequest = validateCronRequest(request)

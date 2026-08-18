@@ -12,14 +12,14 @@ import {
   computeElapsedSeconds,
   estimateManualFieldReduction,
   isTransitionFirstCohort,
-} from '@/lib/onboarding-speed'
+} from '@/lib/onboarding/onboarding-speed'
 import { type RoleFamily, type RoleTitle } from '@/lib/role-taxonomy'
 import { ScanProgressPanel, type ScanStatusPayload } from './scan-progress-panel'
 import { RelationshipProgressPanel, type RelationshipStatusPayload } from './relationship-progress-panel'
 import { OnboardingContextStep } from './onboarding-context-step'
 import { OnboardingDoneStep } from './onboarding-done-step'
 import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
-import type { OnboardingDraft } from '@/lib/onboarding-state'
+import type { OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 import { reportOnboardingStepCompleted, useOnboardingDraftState } from './use-onboarding-draft-state'
 
 type ImportResult = {

@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { validateCronRequest } from '@/lib/cron-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
-import { unsubscribeUrl } from '@/lib/unsubscribe-token'
+import { unsubscribeUrl } from '@/lib/email/unsubscribe-token'
 
 // Activation drip schedule: days since trial start -> content key
 const DRIP_DAYS = [0, 3, 5, 7, 10, 14, 28] as const

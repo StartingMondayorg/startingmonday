@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { calculateOnboardingJourneySnapshot } from '@/lib/onboarding-agent-metrics'
-import type { OnboardingEventRow } from '@/lib/onboarding-agent-contracts'
+import { calculateOnboardingJourneySnapshot } from '@/lib/onboarding/onboarding-agent-metrics'
+import type { OnboardingEventRow } from '@/lib/onboarding/onboarding-agent-contracts'
 
 function event(overrides: Partial<OnboardingEventRow> & Pick<OnboardingEventRow, 'user_id' | 'event_name' | 'created_at'>): OnboardingEventRow {
   return {

@@ -20,8 +20,8 @@ const state = vi.hoisted(() => ({
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/events', () => ({ logEvent: state.logEvent }))
 vi.mock('@/lib/staff', () => ({ getStaffMember: state.getStaffMember }))
-vi.mock('@/lib/email-quality', () => ({ reviewEmail: state.reviewEmail }))
-vi.mock('@/lib/email-council', () => ({ autoRefineEmailDraft: state.autoRefineEmailDraft }))
+vi.mock('@/lib/email/email-quality', () => ({ reviewEmail: state.reviewEmail }))
+vi.mock('@/lib/email/email-council', () => ({ autoRefineEmailDraft: state.autoRefineEmailDraft }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: state.createAdminClient }))
 vi.mock('@/lib/outreach/template-engine.cjs', () => ({
   default: {

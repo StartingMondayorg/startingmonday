@@ -1,4 +1,4 @@
-import { BOT_SCORE_HIGH_CONFIDENCE, BOT_SCORE_THRESHOLD } from '@/lib/bot-signals'
+import { BOT_SCORE_HIGH_CONFIDENCE, BOT_SCORE_THRESHOLD } from '@/lib/bot-detection/bot-signals'
 
 // SMK-467: one source of truth for bot traffic numbers.
 //

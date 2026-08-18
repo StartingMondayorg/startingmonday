@@ -3,7 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { BOT_SCORE_THRESHOLD } from '@/lib/bot-signals'
+import { BOT_SCORE_THRESHOLD } from '@/lib/bot-detection/bot-signals'
 import {
   ADMIN_DARK_ACTION_CARD,
   ADMIN_DARK_PAGE_BG,

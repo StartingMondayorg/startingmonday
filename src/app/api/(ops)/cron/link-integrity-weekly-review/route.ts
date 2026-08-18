@@ -4,8 +4,8 @@ import { execFile } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { validateCronRequest } from '@/lib/cron-auth'
-import { sendEmail } from '@/lib/email'
-import { getOwnerEmail } from '@/lib/owner-email'
+import { sendEmail } from '@/lib/email/email'
+import { getOwnerEmail } from '@/lib/email/owner-email'
 import { sendSlackMessage } from '@/lib/slack'
 
 const execFileAsync = promisify(execFile)

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { logEvent, type UserEventName } from '@/lib/events'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { enqueueOnboardingVideoRunForMilestoneEvent } from '@/lib/onboarding-video-queue'
+import { enqueueOnboardingVideoRunForMilestoneEvent } from '@/lib/onboarding/onboarding-video-queue'
 
 const ALLOWED_EVENTS: UserEventName[] = [
   'onboarding_started',

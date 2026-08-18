@@ -6,7 +6,7 @@ import {
   type OnboardingEventRow,
   normalizeOnboardingEventProperties,
   validateOnboardingEventProperties,
-} from '@/lib/onboarding-agent-contracts'
+} from '@/lib/onboarding/onboarding-agent-contracts'
 
 export type OnboardingIntegrityFinding = {
   finding_id: string

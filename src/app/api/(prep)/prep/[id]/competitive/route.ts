@@ -5,7 +5,7 @@ import { trackApiUsage } from '@/lib/api-usage'
 import { COMPETITIVE_SYSTEM } from '@/lib/prompts'
 import { isDemoUser } from '@/lib/demo'
 import { anthropic, getModelForTier } from '@/lib/anthropic'
-import { assessPrepGrounding, prepGroundingNotice } from '@/lib/prep-grounding'
+import { assessPrepGrounding, prepGroundingNotice } from '@/lib/prep/prep-grounding'
 import { apiError } from '@/lib/api-error'
 import { PrepRouteParamsSchema, firstZodError } from '@/lib/schemas'
 

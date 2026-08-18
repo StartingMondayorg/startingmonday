@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { validateCronRequest } from '@/lib/cron-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
-import { getOwnerEmail } from '@/lib/owner-email'
+import { getOwnerEmail } from '@/lib/email/owner-email'
 import { ACTION_SCORES, compositeScore, GROUP_LABELS, type ScoreGroup } from '@/lib/action-scores'
 
 const OWNER_EMAIL = getOwnerEmail()

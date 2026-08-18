@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type Stripe from 'stripe'
 import { APP_URL } from '@/lib/config'
 import { mapStripeStatus } from '@/lib/stripe-status'
-import { getOwnerEmail } from '@/lib/owner-email'
+import { getOwnerEmail } from '@/lib/email/owner-email'
 import { captureServerEvent } from '@/lib/posthog-server'
 
 const VALID_PLANS = new Set(['free', 'passive', 'active', 'executive', 'campaign', 'coach'])

@@ -6,7 +6,7 @@ const state = vi.hoisted(() => ({
   update: vi.fn(),
 }))
 
-vi.mock('@/lib/unsubscribe-token', () => ({
+vi.mock('@/lib/email/unsubscribe-token', () => ({
   verifyUnsubscribeToken: state.verifyUnsubscribeToken,
 }))
 

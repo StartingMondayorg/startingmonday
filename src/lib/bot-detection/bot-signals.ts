@@ -1,5 +1,5 @@
 import { createHash } from 'crypto'
-import { BENIGN_CRAWLER, SCRIPTED_USER_AGENT } from '@/lib/bot-user-agents'
+import { BENIGN_CRAWLER, SCRIPTED_USER_AGENT } from '@/lib/bot-detection/bot-user-agents'
 
 // SMK-467: heuristic bot classification for public endpoint traffic.
 //

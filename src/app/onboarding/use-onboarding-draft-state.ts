@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import type { OnboardingChannel } from '@/lib/onboarding-speed'
-import { computeElapsedSeconds } from '@/lib/onboarding-speed'
-import type { OnboardingDraft } from '@/lib/onboarding-state'
+import type { OnboardingChannel } from '@/lib/onboarding/onboarding-speed'
+import { computeElapsedSeconds } from '@/lib/onboarding/onboarding-speed'
+import type { OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 import type { RoleFamily, RoleTitle } from '@/lib/role-taxonomy'
 import type { SearchPersona } from './onboarding-helpers'
 

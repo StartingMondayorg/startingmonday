@@ -16,7 +16,7 @@ vi.mock('@/lib/admin-automation-route', () => ({
   asLooseSupabaseClient: state.asLooseSupabaseClient,
 }))
 
-vi.mock('@/lib/onboarding-video-queue', () => ({
+vi.mock('@/lib/onboarding/onboarding-video-queue', () => ({
   enqueueOnboardingVideoRun: state.enqueueOnboardingVideoRun,
   fetchOnboardingVideoRunSnapshot: state.fetchOnboardingVideoRunSnapshot,
 }))

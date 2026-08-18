@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { validateCronRequest } from '@/lib/cron-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
-import { unsubscribeUrl } from '@/lib/unsubscribe-token'
+import { unsubscribeUrl } from '@/lib/email/unsubscribe-token'
 
 function buildEmail(firstName: string, goal: number, userId: string, warmPaths: { contactName: string; companyName: string }[]): string {
   const unsubUrl = unsubscribeUrl(userId)
