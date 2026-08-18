@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import TurnstileWidget from '@/components/turnstile-widget'
+import TurnstileWidget from '@/app/components/turnstile-widget'
 
 const TURNSTILE_ENABLED = process.env.NEXT_PUBLIC_TURNSTILE_ENABLED === '1'
 

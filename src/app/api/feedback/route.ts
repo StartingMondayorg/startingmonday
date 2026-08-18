@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { checkBurstLimit } from '@/lib/burst-limit'
-import { sendEmail } from '@/lib/email'
-import { getNotifyEmails } from '@/lib/owner-email'
-import { anthropic, MODELS, TEMP } from '@/lib/anthropic'
+import { sendEmail } from '@/lib/email/email'
+import { getNotifyEmails } from '@/lib/email/owner-email'
+import { anthropic, MODELS, TEMP } from '@/lib/ai/anthropic'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
 
 export async function POST(request: NextRequest) {

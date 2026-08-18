@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription } from '@/lib/subscription'
+import { getUserSubscription } from '@/lib/billing/subscription'
 import { canUserSeeAdminHeader } from '@/lib/staff'
 import { BillingClient } from './billing-client'
 

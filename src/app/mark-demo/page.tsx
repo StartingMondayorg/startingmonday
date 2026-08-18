@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { DemoContent } from '@/app/demo/page'
+import { DemoContent } from '@/app/(marketing)/demo/page'
 
 export const metadata: Metadata = {
   title: 'Starting Monday | Private Demo',

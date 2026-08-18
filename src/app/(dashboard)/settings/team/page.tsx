@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { canUserSeeAdminHeader } from '@/lib/staff'
 import { TeamSettings } from './team-settings'
-import { ClientCoachAccessManager } from '@/components/client/coach-access-manager'
+import { ClientCoachAccessManager } from '@/app/(dashboard)/settings/_components/coach-access-manager'
 import { resolveWhiteLabelSettings } from '@/lib/white-label'
 import {
   resolvePartnerProgramSettings,

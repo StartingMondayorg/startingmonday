@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from '../logout-button'
 import { getRecruiterToolkit, getRoleLaneTutorials } from '@/lib/role-lane-learning'
-import { FirstMileTelemetry } from '@/components/FirstMileTelemetry'
+import { FirstMileTelemetry } from '@/app/components/FirstMileTelemetry'
 import { FirstRunSeenCookie } from './first-run-seen-cookie'
 import {
   decisionRoleTargetsForCompany,

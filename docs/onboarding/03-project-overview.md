@@ -131,6 +131,6 @@ Starting Monday communicates with executives the way a board advisor would — n
 - **Colors**: `slate-900` dominant background, `orange-500` (#f97316) as the only accent
 - **Typography**: All sizes in px (`text-[13px]`), not Tailwind's named scale
 - **Buttons**: Orange primary CTAs use `text-slate-900` (not white) — WCAG contrast requirement
-- **Reference file**: `docs/ui-guide.md` and `src/components/LandingPage.tsx` for patterns
+- **Reference file**: `docs/ui-guide.md` and `src/app/components/LandingPage.tsx` for patterns
 
 Never add a second accent color. Never use purple, teal, or green as UI chrome.

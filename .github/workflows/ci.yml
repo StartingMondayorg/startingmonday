@@ -286,9 +286,9 @@ jobs:
             risky:
               - 'src/app/[(]auth[)]/**'
               - 'src/app/auth/**'
-              - 'src/app/for-coaches/**'
-              - 'src/app/pricing/**'
-              - 'src/app/demo/**'
+              - 'src/app/(marketing)/for-coaches/**'
+              - 'src/app/(marketing)/pricing/**'
+              - 'src/app/(marketing)/demo/**'
               - '.github/workflows/ci.yml'
             rollout_policy:
               - 'config/feature-rollout-policy.json'
@@ -413,7 +413,7 @@ jobs:
               - 'src/app/(auth)/**'
               - 'tests/e2e/auth-ux.spec.ts'
             luxuryux:
-              - 'src/app/for-coaches/**'
+              - 'src/app/(marketing)/for-coaches/**'
               - 'tests/e2e/luxury-ux.spec.ts'
             synthetic10:
               - 'tests/e2e/synthetics.spec.ts'

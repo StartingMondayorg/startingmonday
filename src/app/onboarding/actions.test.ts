@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { OnboardingDraft } from '@/lib/onboarding-state'
+import type { OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 
 const state = vi.hoisted(() => ({
   getUser: vi.fn(),
@@ -57,8 +57,8 @@ vi.mock('@/lib/supabase/server', () => ({
 
 vi.mock('@/lib/events', () => ({ logEvent: state.logEvent }))
 vi.mock('@/lib/posthog-server', () => ({ captureServerEvent: state.captureServerEvent }))
-vi.mock('@/lib/email', () => ({ sendEmail: vi.fn() }))
-vi.mock('@/lib/owner-email', () => ({ getNotifyEmails: () => [] }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: vi.fn() }))
+vi.mock('@/lib/email/owner-email', () => ({ getNotifyEmails: () => [] }))
 
 import { completeOnboarding, saveOnboardingProgress, skipOnboarding } from './actions'
 

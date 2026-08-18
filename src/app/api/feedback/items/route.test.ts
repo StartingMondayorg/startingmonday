@@ -13,9 +13,9 @@ const state = vi.hoisted(() => ({
 vi.mock('@/lib/require-auth', () => ({ requireAuth: state.requireAuth }))
 vi.mock('@/lib/supabase/server', () => ({ createClient: state.createClient }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: state.createAdminClient }))
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
-vi.mock('@/lib/owner-email', () => ({ getNotifyEmails: state.getNotifyEmails }))
-vi.mock('@/lib/anthropic', () => ({
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/owner-email', () => ({ getNotifyEmails: state.getNotifyEmails }))
+vi.mock('@/lib/ai/anthropic', () => ({
   anthropic: { messages: { create: state.anthropicCreate } },
   MODELS: { haiku: 'haiku-test' },
   TEMP: { extract: 0.2 },

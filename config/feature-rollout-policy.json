@@ -5,9 +5,9 @@
   "riskyPaths": [
     "src/app/[(]auth[)]/**",
     "src/app/auth/**",
-    "src/app/for-coaches/**",
-    "src/app/pricing/**",
-    "src/app/demo/**",
+    "src/app/(marketing)/for-coaches/**",
+    "src/app/(marketing)/pricing/**",
+    "src/app/(marketing)/demo/**",
     ".github/workflows/ci.yml"
   ],
   "requiredPrLabel": "feature-flagged",
@@ -42,12 +42,12 @@
       "id": "pricing-plan-names-2026-06",
       "description": "Pricing and for-coaches page updates: plan naming, pricing card layout, and economics page revisions",
       "paths": [
-        "src/app/pricing/**",
-        "src/app/for-coaches/**"
+        "src/app/(marketing)/pricing/**",
+        "src/app/(marketing)/for-coaches/**"
       ],
       "phase": "full rollout",
       "rollbackPath": "Revert PR #128 to restore previous pricing and for-coaches pages",
-      "killSwitch": "Revert src/lib/pricing.ts to previous plan names and values",
+      "killSwitch": "Revert src/lib/billing/pricing.ts to previous plan names and values",
       "startedAt": "2026-06-18"
     },
     {
@@ -77,9 +77,9 @@
       "description": "P0 fix for returning users re-entering onboarding after completion writes failed; persist explicit completion and resumable progress independently of target-company presence (PR #362)",
       "paths": [
         "src/app/auth/callback/**",
-        "src/app/api/auth/login-submit/**",
+        "src/app/api/(auth)/auth/login-submit/**",
         "src/app/onboarding/**",
-        "src/lib/onboarding-state.ts"
+        "src/lib/onboarding/onboarding-state.ts"
       ],
       "phase": "full rollout",
       "rollbackPath": "Revert PR #362 application changes while retaining the additive migration 168 columns; use docs/development/migration-rollbacks/168_onboarding_completion_resume_state.md only if schema rollback is required",
@@ -91,7 +91,7 @@
       "description": "Add landing-page change approval guard to predeploy-gates; remove homepage proof banner (PR #157)",
       "paths": [
         ".github/workflows/ci.yml",
-        "src/app/page.tsx",
+        "src/app/(marketing)/page.tsx",
         "scripts/check-landing-page-change-approval.mjs"
       ],
       "phase": "full rollout",
@@ -104,7 +104,7 @@
       "description": "Phase 3 guided first-session briefing state for new users (<=1 tracked company and account age under 48 hours), with deterministic 50/50 rollout by user id hash.",
       "paths": [
         "src/app/(dashboard)/dashboard/briefing/**",
-        "src/lib/briefing-first-session.ts"
+        "src/lib/onboarding/briefing-first-session.ts"
       ],
       "phase": "percentage rollout",
       "rollbackPath": "Set FF_BRIEFING_FIRST_SESSION_GUIDED_BRIEFING=off to return all users to the full briefing layout.",

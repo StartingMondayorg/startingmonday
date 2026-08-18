@@ -6,7 +6,7 @@ import type { EmailOtpType } from '@supabase/supabase-js'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
 import { logEvent } from '@/lib/events'
 import { reportAttributionFailure } from '@/lib/attribution-failure'
-import { resolveOnboardingDestination } from '@/lib/onboarding-state'
+import { resolveOnboardingDestination } from '@/lib/onboarding/onboarding-state'
 
 function getSafeNextPath(nextParam: string | null): string {
   if (!nextParam) return '/dashboard/briefing'

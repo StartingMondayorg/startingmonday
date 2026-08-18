@@ -4,7 +4,7 @@ import {
   buildSignalSection,
   buildContactSection,
   buildDocSection,
-} from '@/lib/prep-context'
+} from '@/lib/prep/prep-context'
 
 describe('buildScanSection', () => {
   it('returns default text when no scan results', () => {

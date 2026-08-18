@@ -80,7 +80,7 @@ const sourceRegistry = readHeadFile('worker/lib/source-registry.js')
 const proposedSourceRegistry = fs.readFileSync('worker/lib/source-registry.js', 'utf8')
 const precursorStats = readHeadFile('worker/jobs/precursor-stats-job.js')
 const personSignals = readHeadFile('worker/jobs/person-signal-job.js')
-const sourceCatalogRoute = readHeadFile('src/app/api/admin/automation/signals/source-catalog/route.ts')
+const sourceCatalogRoute = readHeadFile('src/app/api/(ops)/admin/automation/signals/source-catalog/route.ts')
 
 const evidence = {
   schemaVersion: 'ws1-08-source-rights-readiness/v1',

@@ -1,4 +1,4 @@
-import { sendEmail } from '@/lib/email'
+import { sendEmail } from '@/lib/email/email'
 import {
   applyAcceptedOutreachSideEffectsEffect,
   insertFailedOutreachLogEffect,

@@ -1,5 +1,5 @@
 ﻿import Link from 'next/link'
-import { DraftPanel } from '@/components/DraftPanel'
+import { DraftPanel } from '@/app/(dashboard)/dashboard/_components/DraftPanel'
 import { buildSignalTranslation } from '../../signal-orientation'
 import { SIGNAL_LABELS, type SignalDetailRow } from './company-detail-constants'
 

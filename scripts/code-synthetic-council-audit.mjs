@@ -172,7 +172,7 @@ function buildFindings(fileMetrics, hasTestMap) {
       findings.push({ severity: 'critical', area: 'security', points: 16, path, issue: 'Uses eval or new Function' })
     }
     if (m.dangerousHtmlCount > 0) {
-      if (path === 'src/components/JsonLd.tsx' && m.hasSafeJsonLdEscaping) {
+      if (path === 'src/app/components/JsonLd.tsx' && m.hasSafeJsonLdEscaping) {
         continue
       }
       findings.push({ severity: 'high', area: 'security', points: 9, path, issue: 'Uses dangerouslySetInnerHTML' })

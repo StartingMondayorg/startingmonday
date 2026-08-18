@@ -1,9 +1,9 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
 import { PrepClient } from './prep-client'
-import type { InterviewStage } from '@/lib/prompts'
+import type { InterviewStage } from '@/lib/ai/prompts'
 
 const VALID_STAGES: InterviewStage[] = [
   'informal_meeting', 'first_interview', 'executive_interview', 'board_presentation', 'final_round',

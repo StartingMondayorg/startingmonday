@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-import { PRICING } from '@/lib/pricing'
+import { PRICING } from '@/lib/billing/pricing'
 
 const PASSIVE_FEATURES = [
   'Pipeline tracking for up to 25 companies',

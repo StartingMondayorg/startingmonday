@@ -4,8 +4,8 @@ import path from 'node:path'
 import process from 'node:process'
 
 const ROOT = process.cwd()
-const PAGE_FILE = path.join(ROOT, 'src', 'app', 'page.tsx')
-const LANDING_FILE = path.join(ROOT, 'src', 'components', 'LandingPage.tsx')
+const PAGE_FILE = path.join(ROOT, 'src', 'app', '(marketing)', 'page.tsx')
+const LANDING_FILE = path.join(ROOT, 'src', 'app', 'components', 'LandingPage.tsx')
 const OUT_DIR = path.join(ROOT, 'docs')
 const OUT_JSON = path.join(OUT_DIR, 'hero-dual-track-council.latest.json')
 const OUT_MD = path.join(OUT_DIR, 'hero-dual-track-council.latest.md')
@@ -220,8 +220,8 @@ function main() {
   const result = {
     generatedAt: new Date().toISOString(),
     scope: {
-      pageFile: 'src/app/page.tsx',
-      componentFile: 'src/components/LandingPage.tsx',
+      pageFile: 'src/app/(marketing)/page.tsx',
+      componentFile: 'src/app/components/LandingPage.tsx',
       area: 'hero top fold',
     },
     council: {

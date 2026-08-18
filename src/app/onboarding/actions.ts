@@ -4,11 +4,11 @@ import { createClient } from '@/lib/supabase/server'
 import { OnboardingFormSchema } from '@/lib/schemas'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { logEvent } from '@/lib/events'
-import { computeElapsedSeconds, isTransitionFirstCohort, normalizeOnboardingChannel } from '@/lib/onboarding-speed'
-import { sendEmail } from '@/lib/email'
-import { getNotifyEmails } from '@/lib/owner-email'
+import { computeElapsedSeconds, isTransitionFirstCohort, normalizeOnboardingChannel } from '@/lib/onboarding/onboarding-speed'
+import { sendEmail } from '@/lib/email/email'
+import { getNotifyEmails } from '@/lib/email/owner-email'
 import { resolveRoleProfile } from '@/lib/role-taxonomy'
-import { ONBOARDING_FINAL_STEP, type OnboardingDraft } from '@/lib/onboarding-state'
+import { ONBOARDING_FINAL_STEP, type OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 
 function parseCsv(raw: string) {
   return raw.split(',').map(s => s.trim()).filter(Boolean)

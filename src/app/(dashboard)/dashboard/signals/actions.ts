@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { str } from '@/lib/form-utils'
-import { anthropic, MODELS } from '@/lib/anthropic'
+import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { logEvent } from '@/lib/events'
 

@@ -7,7 +7,7 @@ const readRepoFile = (path: string) => readFileSync(resolve(process.cwd(), path)
 describe('monitoring alert state migration contract', () => {
   const createMigration = readRepoFile('supabase/migrations/132_monitoring_alert_state.sql')
   const hardeningMigration = readRepoFile('supabase/migrations/167_monitoring_alert_state_compat_rls.sql')
-  const compatibilityRoute = readRepoFile('src/app/api/cron/apollo-quality-audit/route.ts')
+  const compatibilityRoute = readRepoFile('src/app/api/(ops)/cron/apollo-quality-audit/route.ts')
   const deploymentWorkflow = readRepoFile('.github/workflows/apply-monitoring-alert-state-migration.yml')
 
   it('allows the status written by compatibility telemetry', () => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { ExecutiveDecisionCockpit } from '@/components/executive/ExecutiveDecisionCockpit'
+import { ExecutiveDecisionCockpit } from '@/app/(dashboard)/dashboard/_components/ExecutiveDecisionCockpit'
 
 /**
  * Decision cockpit sub-route under optionality.

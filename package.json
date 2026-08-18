@@ -129,7 +129,7 @@
         "audit:weekly-unified-report": "node scripts/weekly-unified-audit-report.mjs",
         "test:placeholder-guard": "node scripts/check-placeholder-test-regressions.mjs",
         "test:placeholder-guard:update-baseline": "node scripts/check-placeholder-test-regressions.mjs --update-baseline",
-        "test:route-guards": "vitest run src/app/api/google-calendar/connect/route.test.ts",
+        "test:route-guards": "vitest run \"src/app/api/(auth)/google-calendar/connect/route.test.ts\"",
         "sprint5:ads-gate": "node scripts/check-linkedin-ads-gate.mjs",
         "sprint5:ads-gate:json": "node scripts/check-linkedin-ads-gate.mjs --json",
         "sprint5:ads-gate:strict": "node scripts/check-linkedin-ads-gate.mjs --strict",

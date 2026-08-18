@@ -4,7 +4,7 @@ import { getDevAuthHeaders, isDevAuthBypassEnabled } from '@/lib/dev-auth'
 import { getBrandContextFromHosts } from '@/lib/brand'
 // Obvious non-browser clients: blocked on /api/optimize and /intelligence/* routes.
 // Shared with the bot scoring in @/lib/bot-signals so there is one definition.
-import { isObviousNonBrowser } from '@/lib/bot-user-agents'
+import { isObviousNonBrowser } from '@/lib/bot-detection/bot-user-agents'
 
 const NOINDEX = { 'X-Robots-Tag': 'noindex, nofollow' }
 
