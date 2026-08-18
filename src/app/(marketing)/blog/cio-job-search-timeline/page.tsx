@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BlogPost } from '@/components/BlogPost'
-import { BlogCallout } from '@/components/BlogCallout'
+import { BlogCallout } from '@/app/(marketing)/blog/_components/BlogCallout'
 import { getPost } from '@/lib/blog-posts'
 
 const post = getPost('cio-job-search-timeline')!

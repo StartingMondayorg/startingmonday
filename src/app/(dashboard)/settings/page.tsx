@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { SearchControlsPanel } from '@/components/SearchControlsPanel'
-import { EmailPreferencesPanel } from '@/components/EmailPreferencesPanel'
+import { SearchControlsPanel } from '@/app/(dashboard)/settings/_components/SearchControlsPanel'
+import { EmailPreferencesPanel } from '@/app/(dashboard)/settings/_components/EmailPreferencesPanel'
 import { DashboardActivitySnooze } from '../dashboard/_components/activity-snooze'
 
 export const metadata = { title: 'Settings' }

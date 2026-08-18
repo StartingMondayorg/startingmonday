@@ -2,8 +2,8 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CoachValueNudge } from '@/components/CoachValueNudge'
-import { CoachDeliverablePreviewTabs } from '@/components/micro-products/CoachDeliverablePreviewTabs'
-import { MicroProductCheckoutButton } from '@/components/micro-products/MicroProductCheckoutButton'
+import { CoachDeliverablePreviewTabs } from '@/app/(marketing)/for-coaches/_components/CoachDeliverablePreviewTabs'
+import { MicroProductCheckoutButton } from '@/app/(marketing)/for-coaches/_components/MicroProductCheckoutButton'
 import { COACH_MICRO_PRODUCTS, getCoachMicroProduct } from '../product-data'
 
 type Params = { slug: string }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import { LearnMoreBriefShowcase } from '@/components/LearnMoreBriefShowcase'
+import { LearnMoreBriefShowcase } from '@/app/(marketing)/learn-more/_components/LearnMoreBriefShowcase'
 import {
   BLUF_POINTS,
   COMPARISON_ROWS,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30",
+  "generatedAt": "2026-08-18",
   "fileTermCounts": {
     "src/app/(marketing)/page.tsx": {
       "mandate": 16
@@ -16,6 +16,9 @@
     },
     "src/app/(marketing)/pricing/page.tsx": {
       "decision-grade": 1
+    },
+    "src/app/(marketing)/learn-more/_components/LearnMoreBriefShowcase.tsx": {
+      "mandate": 2
     },
     "src/app/(marketing)/learn-more/content.ts": {
       "cadence": 2
@@ -65,12 +68,12 @@
     "src/app/(marketing)/for-data-officer/page.tsx": {
       "mandate": 19
     },
-    "src/app/(marketing)/for-executives/page.tsx": {
-      "mandate": 1
-    },
     "src/app/(marketing)/for-executives/[lane]/page.tsx": {
       "mandate": 6,
       "cadence": 5
+    },
+    "src/app/(marketing)/for-executives/page.tsx": {
+      "mandate": 1
     },
     "src/app/(marketing)/for-fractional-executives/page.tsx": {
       "mandate": 1

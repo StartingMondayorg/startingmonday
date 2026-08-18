@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { MarkdownArticle } from '@/components/docs/MarkdownArticle'
+import { MarkdownArticle } from '@/app/(marketing)/features/_components/MarkdownArticle'
 import { FEATURE_DOCS, loadFeatureDocBySlug } from '@/lib/feature-docs'
 
 type FeatureDocPageProps = {

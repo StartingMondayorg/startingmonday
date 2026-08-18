@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CompactTimelineModule } from '@/components/channel/CompactTimelineModule'
+import { CompactTimelineModule } from '@/app/(marketing)/for-outplacement/_components/CompactTimelineModule'
 import { ProofStoriesModule } from '@/components/channel/ProofStoriesModule'
 
 export const metadata: Metadata = {
