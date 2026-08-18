@@ -2,7 +2,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { addContact } from './actions'
-import { ContactsList, type ContactListItem } from '@/components/ContactsList'
+import { ContactsList, type ContactListItem } from '@/app/(dashboard)/dashboard/_components/ContactsList'
 import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
 import { summarizeRelationshipNetwork, CONTACT_TYPE_LABELS } from '@/lib/relationship-infrastructure'
 import { RelationshipMatchPanel } from './relationship-match-panel'

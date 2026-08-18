@@ -4,8 +4,8 @@ import ProfileResumeUpload from './profile-resume-upload'
 import ProfileLinkedinUpload from './profile-linkedin-upload'
 import CareerVerificationPanel from '@/components/CareerVerificationPanel'
 import type { CareerEntry } from '@/components/CareerVerificationPanel'
-import StarStoriesPanel from '@/components/StarStoriesPanel'
-import type { StarStory } from '@/components/StarStoriesPanel'
+import StarStoriesPanel from '@/app/(dashboard)/dashboard/_components/StarStoriesPanel'
+import type { StarStory } from '@/app/(dashboard)/dashboard/_components/StarStoriesPanel'
 
 type Props = {
   resumeText: string

@@ -1,10 +1,10 @@
 ﻿import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
 import { signalLabel, SIGNAL_COLORS } from '@/lib/intelligence'
-import { FollowUpItem } from '@/components/FollowUpItem'
-import { ContactStatusStepper } from '@/components/ContactStatusStepper'
+import { FollowUpItem } from '@/app/(dashboard)/dashboard/_components/FollowUpItem'
+import { ContactStatusStepper } from '@/app/(dashboard)/dashboard/_components/ContactStatusStepper'
 import { markContactSentForm, scheduleMeetingFollowUp } from '../actions'
 import { addContactFollowUp, logOutreach } from './actions'
 

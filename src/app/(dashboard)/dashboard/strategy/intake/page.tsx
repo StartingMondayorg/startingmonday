@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
-import { TagInput } from '@/components/TagInput'
+import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
+import { TagInput } from '@/app/(dashboard)/dashboard/_components/TagInput'
 import { saveStrategyIntake } from './actions'
 import {
   type SearchIntake,

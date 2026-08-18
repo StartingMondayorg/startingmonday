@@ -1,4 +1,4 @@
-import { SuggestionCards } from '@/components/SuggestionCards'
+import { SuggestionCards } from '@/app/(dashboard)/dashboard/_components/SuggestionCards'
 import Link from 'next/link'
 import { DashboardIntelSetupSections } from './intel-setup-sections'
 import { DashboardPipelinePulse } from './pipeline-pulse'

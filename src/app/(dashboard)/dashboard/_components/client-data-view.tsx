@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CoachPreSessionSnapshot } from '@/components/coach/CoachPreSessionSnapshot'
+import { CoachPreSessionSnapshot } from '@/app/(dashboard)/dashboard/_components/CoachPreSessionSnapshot'
 
 interface Scorecard {
   pipeline: {

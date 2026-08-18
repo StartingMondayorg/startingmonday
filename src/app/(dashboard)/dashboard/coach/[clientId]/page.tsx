@@ -1,8 +1,8 @@
 ﻿import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { CoachClientDataView } from '@/components/coach/client-data-view'
-import { ClientAlertPreferences } from '@/components/coach/client-alert-preferences'
+import { CoachClientDataView } from '@/app/(dashboard)/dashboard/_components/client-data-view'
+import { ClientAlertPreferences } from '@/app/(dashboard)/dashboard/_components/client-alert-preferences'
 import { verifyCoachAccess } from '@/lib/coach-access'
 
 export default async function CoachClientPage({ params }: { params: Promise<{ clientId: string }> }) {

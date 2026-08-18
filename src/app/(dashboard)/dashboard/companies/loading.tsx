@@ -1,4 +1,4 @@
-import { SkeletonTable, Skeleton } from '@/components/Skeleton'
+import { SkeletonTable, Skeleton } from '@/app/(dashboard)/dashboard/_components/Skeleton'
 
 export default function CompaniesLoading() {
   return (

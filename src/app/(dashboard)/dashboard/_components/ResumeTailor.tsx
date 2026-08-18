@@ -10,7 +10,7 @@ import {
   gradeColor,
   atsColor,
   downloadDocx,
-} from './resume-tailor-utils'
+} from '../_utils/resume-tailor-utils'
 
 type Props = {
   resumeText: string

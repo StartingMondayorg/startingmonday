@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { PipelineFilter } from '../PipelineFilter'
-import { EmptyState, EMPTY_ICONS } from '@/components/EmptyState'
+import { EmptyState, EMPTY_ICONS } from '@/app/(dashboard)/dashboard/_components/EmptyState'
 
 type CompanyRow = {
   id: string

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { archiveContactSilent, toggleContactPriority } from '@/app/(dashboard)/dashboard/contacts/actions'
-import { STATUS_STEPS, STATUS_CLS } from '@/components/ContactStatusStepper'
+import { STATUS_STEPS, STATUS_CLS } from '@/app/(dashboard)/dashboard/_components/ContactStatusStepper'
 
 const CHANNEL: Record<string, { label: string; cls: string }> = {
   linkedin:  { label: 'LinkedIn',  cls: 'border border-blue-300/20 bg-blue-500/10 text-blue-100' },

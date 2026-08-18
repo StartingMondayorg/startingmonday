@@ -1,6 +1,6 @@
 'use client'
 
-import { ExecutiveBrandingProfile } from '@/components/executive/ExecutiveBrandingProfile'
+import { ExecutiveBrandingProfile } from '@/app/(dashboard)/dashboard/_components/ExecutiveBrandingProfile'
 
 /**
  * Branding profile sub-route under optionality.

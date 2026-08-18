@@ -1,4 +1,4 @@
-import { NextBestActionPrompt } from '@/components/NextBestActionPrompt'
+import { NextBestActionPrompt } from '@/app/(dashboard)/dashboard/_components/NextBestActionPrompt'
 import { DashboardPathWelcomeCard } from './path-welcome-card'
 
 type StallNudge = {
