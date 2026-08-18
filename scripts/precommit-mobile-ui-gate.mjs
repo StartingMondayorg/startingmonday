@@ -8,7 +8,7 @@ function sh(cmd) {
 function hasMobileUiChanges(stagedFiles) {
   return stagedFiles.some((file) =>
     file.startsWith('src/app/(dashboard)/dashboard/') ||
-    file === 'src/components/BottomNav.tsx' ||
+    file === 'src/app/(dashboard)/_components/BottomNav.tsx' ||
     file === 'src/app/globals.css' ||
     file.startsWith('src/components/')
   )
@@ -26,7 +26,7 @@ if (!hasMobileUiChanges(staged)) {
 
 console.log('mobile-ui gate: relevant staged files detected')
 for (const f of staged) {
-  if (f.startsWith('src/app/(dashboard)/dashboard/') || f === 'src/components/BottomNav.tsx' || f === 'src/app/globals.css') {
+  if (f.startsWith('src/app/(dashboard)/dashboard/') || f === 'src/app/(dashboard)/_components/BottomNav.tsx' || f === 'src/app/globals.css') {
     console.log(` - ${f}`)
   }
 }

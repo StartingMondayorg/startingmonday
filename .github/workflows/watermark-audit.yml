@@ -47,7 +47,7 @@ jobs:
           Read these source files:
           - src/lib/watermark.ts
           - worker/lib/watermark.js
-          - src/components/WatermarkOverlay.tsx
+          - src/app/(dashboard)/_components/WatermarkOverlay.tsx
           - src/app/api/(ai)/strategy/route.ts
           - src/app/api/(outreach)/outreach/draft/route.ts
           - src/app/api/(prep)/briefs/save/route.ts
