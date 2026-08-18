@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildDailyMomentumActions } from './dashboard-momentum-actions'
+import { buildDailyMomentumActions } from './momentum-actions'
 
 const base = {
   warmPath: null,

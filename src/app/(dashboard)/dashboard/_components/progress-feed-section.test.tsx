@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DashboardProgressFeedSection } from './dashboard-progress-feed-section'
+import { DashboardProgressFeedSection } from './progress-feed-section'
 
 describe('dashboard progress feed section module', () => {
   it('exports DashboardProgressFeedSection', () => {

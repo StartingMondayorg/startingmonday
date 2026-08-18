@@ -1,5 +1,5 @@
 ﻿import Link from 'next/link'
-import { LogoutButton } from './logout-button'
+import { LogoutButton } from '../logout-button'
 
 type CompanyListItem = {
   name: string

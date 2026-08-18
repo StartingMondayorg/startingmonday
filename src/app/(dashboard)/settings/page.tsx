@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SearchControlsPanel } from '@/components/SearchControlsPanel'
 import { EmailPreferencesPanel } from '@/components/EmailPreferencesPanel'
-import { DashboardActivitySnooze } from '../dashboard/dashboard-activity-snooze'
+import { DashboardActivitySnooze } from '../dashboard/_components/activity-snooze'
 
 export const metadata = { title: 'Settings' }
 

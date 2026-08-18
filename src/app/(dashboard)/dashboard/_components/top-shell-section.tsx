@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { DashboardPrimaryNavSections } from './dashboard-primary-nav-sections'
-import { DashboardStatusBanners } from './dashboard-status-banners'
-import { DashboardGreetingBlock } from './dashboard-greeting-block'
+import { DashboardPrimaryNavSections } from './primary-nav-sections'
+import { DashboardStatusBanners } from './status-banners'
+import { DashboardGreetingBlock } from './greeting-block'
 
 type ExecutiveRiskLevel = 'low' | 'medium' | 'high'
 

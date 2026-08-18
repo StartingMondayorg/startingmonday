@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { PipelineFilter } from './PipelineFilter'
+import { PipelineFilter } from '../PipelineFilter'
 import { EmptyState, EMPTY_ICONS } from '@/components/EmptyState'
 
 type CompanyRow = {

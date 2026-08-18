@@ -1,5 +1,5 @@
 import { NextBestActionPrompt } from '@/components/NextBestActionPrompt'
-import { DashboardPathWelcomeCard } from './dashboard-path-welcome-card'
+import { DashboardPathWelcomeCard } from './path-welcome-card'
 
 type StallNudge = {
   headline: string

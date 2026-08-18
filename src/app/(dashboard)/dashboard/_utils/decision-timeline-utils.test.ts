@@ -3,7 +3,7 @@ import {
   decisionMarkerForStage,
   extractDecisionOwnerFromNotes,
   upsertDecisionOwnerInNotes,
-} from './dashboard-decision-timeline-utils'
+} from './decision-timeline-utils'
 
 describe('dashboard decision timeline utils', () => {
   it('maps known stages to decision markers', () => {

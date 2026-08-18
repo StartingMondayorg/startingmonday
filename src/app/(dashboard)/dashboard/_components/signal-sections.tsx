@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { signalLabel, SIGNAL_COLORS_DARK } from '@/lib/intelligence'
-import { addSignalFollowUp } from './signals/actions'
+import { addSignalFollowUp } from '../signals/actions'
 
 type CompanyRef = {
   id: string

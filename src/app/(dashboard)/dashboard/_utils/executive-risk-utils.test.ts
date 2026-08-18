@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildExecutiveRiskModel } from './dashboard-executive-risk-utils'
+import { buildExecutiveRiskModel } from './executive-risk-utils'
 
 const base = {
   daysSinceLastAction: 0,

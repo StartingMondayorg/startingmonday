@@ -1,5 +1,5 @@
 import { fullDateInTz, greetingInTz } from '@/lib/date'
-import { LocalGreeting } from './LocalGreeting'
+import { LocalGreeting } from '../LocalGreeting'
 
 type DashboardGreetingBlockProps = {
   firstName: string

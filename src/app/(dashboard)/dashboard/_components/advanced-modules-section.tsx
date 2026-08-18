@@ -1,8 +1,8 @@
 import { SuggestionCards } from '@/components/SuggestionCards'
 import Link from 'next/link'
-import { DashboardIntelSetupSections } from './dashboard-intel-setup-sections'
-import { DashboardPipelinePulse } from './dashboard-pipeline-pulse'
-import { DashboardWeeklyPerformanceSection } from './dashboard-weekly-performance-section'
+import { DashboardIntelSetupSections } from './intel-setup-sections'
+import { DashboardPipelinePulse } from './pipeline-pulse'
+import { DashboardWeeklyPerformanceSection } from './weekly-performance-section'
 import type { WeekActivity } from '@/components/ActivityChart'
 import type { VelocityRow } from '@/components/PipelineVelocity'
 
