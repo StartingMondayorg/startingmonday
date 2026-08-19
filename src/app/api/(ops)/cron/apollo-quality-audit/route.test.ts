@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const state = vi.hoisted(() => ({
   providerGet: vi.fn(),
+  validateCronRequest: vi.fn(() => true),
   createAdminClient: vi.fn(),
   maybeSingle: vi.fn(),
   upsert: vi.fn(),
@@ -14,6 +15,10 @@ vi.mock('@/app/api/(ops)/cron/provider-quality-audit/route', () => ({
 
 vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: state.createAdminClient,
+}))
+
+vi.mock('@/lib/cron-auth', () => ({
+  validateCronRequest: state.validateCronRequest,
 }))
 
 import { GET, runtime } from './route'
