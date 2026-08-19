@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { usePostHog } from 'posthog-js/react'
 import type { PostHog } from 'posthog-js'
 import type { HeroEventName } from '@/lib/channel-metrics-events'
+import { onPosthogClientReady } from '@/lib/posthog-client-readiness'
 
 type HeroPageViewTelemetryProps = {
   event: HeroEventName
@@ -18,7 +19,7 @@ export function captureHeroPageViewWhenReady(
   properties: HeroPageViewTelemetryProps['properties'],
   hasCaptured: { current: boolean },
 ) {
-  return posthog.onFeatureFlags(() => {
+  return onPosthogClientReady(() => {
     if (hasCaptured.current) return
     hasCaptured.current = true
 

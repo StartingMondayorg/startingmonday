@@ -2,16 +2,26 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const state = vi.hoisted(() => ({
   init: vi.fn(),
+  markReady: vi.fn(),
 }))
 
 vi.mock('posthog-js', () => ({
   default: { init: state.init },
 }))
 
+vi.mock('@/lib/posthog-client-readiness', () => ({
+  markPosthogClientReady: state.markReady,
+}))
+
+vi.mock('@sentry/nextjs', () => ({
+  captureRouterTransitionStart: vi.fn(),
+}))
+
 describe('client instrumentation', () => {
   beforeEach(() => {
     vi.resetModules()
     state.init.mockReset()
+    state.markReady.mockReset()
   })
 
   afterEach(() => {
@@ -29,6 +39,7 @@ describe('client instrumentation', () => {
       api_host: 'https://posthog.example.test',
       capture_pageview: false,
       capture_pageleave: true,
+      loaded: state.markReady,
     })
   })
 
