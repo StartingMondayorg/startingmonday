@@ -58,6 +58,9 @@ import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
 import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
 import { rankSignals } from "@/lib/intelligence/intelligence-quality";
 import { stripStaleRelativeTime } from "@/lib/outreach/follow-up-copy";
+import { Card } from "@/components/ui/card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-flags";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
