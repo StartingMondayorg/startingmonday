@@ -7,6 +7,7 @@ import { getActivationStatus } from "@/lib/onboarding/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
 import { LogoutButton } from "./logout-button";
 import { HelpQuickButton } from "@/app/components/HelpQuickButton";
+import { Alert, AlertTitle, AlertDescription, Button, Card } from "@/components/ui";
 import {
   saveQuickProfile,
   saveWeeklyGoal,
