@@ -1,6 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 type EntitlementStatus = 'not_started' | 'checkout_started' | 'active' | 'delivered' | 'converted' | 'expired'
 
@@ -87,7 +89,7 @@ export default function ShortlistSprintStatusCard() {
   }
 
   return (
-    <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+    <Card variant="glass" className="rounded-xl p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">Sprint entitlement status</p>
       <p className="mt-2 text-[13px] text-slate-200">
         Operational view for SMK-396 and SMK-397. Status is derived from canonical user events.
@@ -121,17 +123,18 @@ export default function ShortlistSprintStatusCard() {
 
       <div className="mt-4 flex flex-wrap gap-2.5">
         {ACTIONS.map((action) => (
-          <button
+          <Button
             key={action.key}
             type="button"
+            variant="outline"
             disabled={Boolean(savingAction)}
             onClick={() => runAction(action.key)}
-            className="rounded-full border border-white/20 px-3 py-1.5 text-[12px] font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full !border-white/20 !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-slate-100 hover:!border-orange-300/70 hover:!bg-white/5"
           >
             {savingAction === action.key ? 'Saving...' : action.label}
-          </button>
+          </Button>
         ))}
       </div>
-    </article>
+    </Card>
   )
 }

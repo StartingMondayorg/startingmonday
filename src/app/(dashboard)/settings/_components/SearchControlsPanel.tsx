@@ -2,6 +2,19 @@
 
 import { useMemo, useState } from 'react'
 import { TrackLink } from '@/app/components/TrackLink'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type BriefingFrequency = 'daily' | 'weekly'
 
@@ -102,7 +115,7 @@ export function SearchControlsPanel({
   }
 
   return (
-    <div className="bg-white/5 border border-white/15 rounded p-5 mb-6 sm:mb-8">
+    <Card variant="glass" className="p-5 mb-6 sm:mb-8">
       <div className="flex items-center justify-between gap-3 mb-3">
         <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Search controls</p>
         <TrackLink
@@ -116,122 +129,141 @@ export function SearchControlsPanel({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="border border-white/15 rounded p-4">
+        <Card variant="glass" className="p-4 bg-transparent">
           <p className="text-[12px] font-semibold text-white mb-2">Pause search</p>
           <p className="text-[12px] text-slate-400 leading-relaxed mb-3">
             Keep major alerts and low-frequency digest active while you take a break.
           </p>
           {!paused ? (
             <div className="flex flex-wrap items-center gap-2">
-              <select
-                value={days}
-                onChange={e => setDays(Number(e.target.value))}
-                aria-label="Pause duration"
-                className="border border-white/20 rounded px-2.5 py-2 text-[12px] text-slate-100 bg-slate-900"
+              <Select
+                value={String(days)}
+                onValueChange={(value) => setDays(Number(value))}
                 disabled={pausing}
               >
-                <option value={7}>7 days</option>
-                <option value={14}>14 days</option>
-                <option value={30}>30 days</option>
-              </select>
-              <button
+                <SelectTrigger aria-label="Pause duration" className="bg-slate-900 text-slate-100">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7">7 days</SelectItem>
+                  <SelectItem value="14">14 days</SelectItem>
+                  <SelectItem value="30">30 days</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
                 type="button"
                 onClick={handlePause}
                 disabled={pausing}
-                className="text-[12px] font-semibold text-slate-100 border border-white/20 rounded px-3 py-2 hover:border-white/40 transition-colors disabled:opacity-50 cursor-pointer"
+                variant="outline"
+                size="sm"
               >
                 {pausing ? 'Pausing...' : 'Pause search'}
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
+            <Button
               type="button"
               onClick={handleResume}
               disabled={resuming}
-              className="text-[12px] font-semibold text-slate-950 bg-orange-500 rounded px-3 py-2 hover:bg-orange-400 transition-colors disabled:opacity-50 cursor-pointer border-0"
+              size="sm"
             >
               {resuming ? 'Resuming...' : 'Resume search'}
-            </button>
+            </Button>
           )}
-          {pauseMessage && <p className="text-[12px] text-emerald-300 mt-2">{pauseMessage}</p>}
+          {pauseMessage && (
+            <Alert variant="success" className="mt-2">
+              <AlertDescription>{pauseMessage}</AlertDescription>
+            </Alert>
+          )}
           {pauseError && (
-            <div className="mt-2">
-              <p className="text-[12px] text-rose-300">{pauseError}</p>
-              <button
-                type="button"
-                onClick={paused ? handleResume : handlePause}
-                disabled={pausing || resuming}
-                className="mt-1 text-[11px] font-semibold text-rose-300 border border-rose-300/40 rounded px-2 py-1 hover:bg-rose-500/10 transition-colors disabled:opacity-50 cursor-pointer"
-              >
-                Retry
-              </button>
-            </div>
+            <Alert variant="destructive" className="mt-2">
+              <AlertDescription className="flex flex-col items-start gap-1.5">
+                {pauseError}
+                <Button
+                  type="button"
+                  onClick={paused ? handleResume : handlePause}
+                  disabled={pausing || resuming}
+                  variant="outline"
+                  size="xs"
+                  className="border-rose-300/40 text-rose-300 hover:bg-rose-500/10"
+                >
+                  Retry
+                </Button>
+              </AlertDescription>
+            </Alert>
           )}
-        </div>
+        </Card>
 
-        <div className="border border-white/15 rounded p-4">
+        <Card variant="glass" className="p-4 bg-transparent">
           <p className="text-[12px] font-semibold text-white mb-2">Digest preferences</p>
-          <div className="flex items-center gap-3 mb-3">
-            <label className="text-[12px] text-slate-300">
-              <input
-                type="radio"
-                name="frequency"
-                checked={frequency === 'daily'}
-                onChange={() => setFrequency('daily')}
-                className="mr-1"
-              />
-              Daily briefing
-            </label>
-            <label className="text-[12px] text-slate-300">
-              <input
-                type="radio"
-                name="frequency"
-                checked={frequency === 'weekly'}
-                onChange={() => setFrequency('weekly')}
-                className="mr-1"
-              />
-              Weekly digest
-            </label>
-          </div>
+          <RadioGroup
+            value={frequency}
+            onValueChange={(value) => setFrequency(value as BriefingFrequency)}
+            className="flex items-center gap-4 mb-3"
+          >
+            <div className="flex items-center gap-1.5">
+              <RadioGroupItem value="daily" id="frequency-daily" />
+              <Label htmlFor="frequency-daily" className="text-[12px] text-slate-300 font-normal">
+                Daily briefing
+              </Label>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <RadioGroupItem value="weekly" id="frequency-weekly" />
+              <Label htmlFor="frequency-weekly" className="text-[12px] text-slate-300 font-normal">
+                Weekly digest
+              </Label>
+            </div>
+          </RadioGroup>
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-[12px] text-slate-400">Time:</span>
-            <input
+            <Label htmlFor="briefing-time" className="text-[12px] text-slate-400 font-normal">Time:</Label>
+            <Input
+              id="briefing-time"
               type="time"
               value={briefingTime}
               onChange={e => setBriefingTime(e.target.value)}
               disabled={frequency === 'weekly'}
-              aria-label="Daily briefing time"
-              className="border border-white/20 rounded px-2 py-1.5 text-[12px] text-slate-100 bg-slate-900 disabled:text-slate-600"
+              className="w-auto bg-slate-900 text-slate-100"
             />
           </div>
-          <button
+          <Button
             type="button"
             onClick={saveBriefingPrefs}
             disabled={canSavePrefs}
-            className="text-[12px] font-semibold text-slate-100 border border-white/20 rounded px-3 py-2 hover:border-white/40 transition-colors disabled:opacity-50 cursor-pointer"
+            variant="outline"
+            size="sm"
           >
             {savingPrefs ? 'Saving...' : 'Save preferences'}
-          </button>
+          </Button>
           {frequency === 'daily' && !validTime && (
-            <p className="text-[12px] text-amber-300 mt-2">Enter a valid daily time before saving.</p>
+            <Alert variant="warning" className="mt-2">
+              <AlertDescription>Enter a valid daily time before saving.</AlertDescription>
+            </Alert>
           )}
-          {prefsMessage && <p className="text-[12px] text-emerald-300 mt-2">{prefsMessage}</p>}
+          {prefsMessage && (
+            <Alert variant="success" className="mt-2">
+              <AlertDescription>{prefsMessage}</AlertDescription>
+            </Alert>
+          )}
           {prefsError && (
-            <div className="mt-2">
-              <p className="text-[12px] text-rose-300">{prefsError}</p>
-              <button
-                type="button"
-                onClick={saveBriefingPrefs}
-                disabled={savingPrefs}
-                className="mt-1 text-[11px] font-semibold text-rose-300 border border-rose-300/40 rounded px-2 py-1 hover:bg-rose-500/10 transition-colors disabled:opacity-50 cursor-pointer"
-              >
-                Retry save
-              </button>
-            </div>
+            <Alert variant="destructive" className="mt-2">
+              <AlertDescription className="flex flex-col items-start gap-1.5">
+                {prefsError}
+                <Button
+                  type="button"
+                  onClick={saveBriefingPrefs}
+                  disabled={savingPrefs}
+                  variant="outline"
+                  size="xs"
+                  className="border-rose-300/40 text-rose-300 hover:bg-rose-500/10"
+                >
+                  Retry save
+                </Button>
+              </AlertDescription>
+            </Alert>
           )}
-        </div>
+        </Card>
       </div>
-    </div>
+    </Card>
   )
 }
 

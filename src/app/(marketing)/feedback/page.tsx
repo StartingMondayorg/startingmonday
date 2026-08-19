@@ -3,6 +3,10 @@ import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { SiteFooter } from '@/app/components/SiteFooter'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 
 const PROMPT_STARTERS = [
   'The signal timing helped me prioritize where to spend my outreach time.',
@@ -53,55 +57,56 @@ function FeedbackForm() {
           Starting Monday Feedback
         </h2>
         {state === 'done' ? (
-          <div className="rounded-2xl border border-emerald-200 bg-white p-8 shadow-[0_10px_40px_rgba(15,23,42,0.08)]">
+          <Card className="border-emerald-200 p-8 shadow-[0_10px_40px_rgba(15,23,42,0.08)]">
             <h2 className="text-[28px] font-bold text-slate-900 mb-2">Thank you.</h2>
             <p className="text-[16px] text-slate-600 leading-relaxed">
               Your feedback is in. We use notes like this to sharpen what we build next.
             </p>
-          </div>
+          </Card>
         ) : (
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-[0_10px_40px_rgba(15,23,42,0.08)]">
+          <Card className="p-8 shadow-[0_10px_40px_rgba(15,23,42,0.08)]">
             <h1 className="text-[30px] font-bold text-slate-900 mb-3 leading-tight">One sentence is enough.</h1>
             <p className="text-[17px] text-slate-600 leading-relaxed max-w-[58ch]">
               Share one sentence about what worked, what did not, or what would make Starting Monday more useful in your search.
             </p>
             <p className="text-[14px] text-slate-500 mt-3">Specific and honest beats polished.</p>
 
-            <section className="mt-6 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+            <Card className="mt-6 bg-slate-50/80 p-4">
               <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-2">Quick starter (optional)</h2>
               <div className="flex flex-wrap gap-2">
                 {PROMPT_STARTERS.map((starter) => (
-                  <button
+                  <Button
                     key={starter}
                     type="button"
+                    variant="outline"
                     onClick={() => applyStarter(starter)}
-                    className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-left text-[13px] text-slate-700 hover:border-slate-400 hover:bg-slate-100 transition-colors"
+                    className="h-auto whitespace-normal px-3 py-2 text-left text-[13px] font-normal text-slate-700"
                   >
                     {starter}
-                  </button>
+                  </Button>
                 ))}
               </div>
-            </section>
+            </Card>
 
-            <section className="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+            <Card className="mt-5 bg-slate-50/80 p-4">
               <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-1">How this is used</h2>
               <p className="text-[13px] text-slate-600 leading-relaxed">
                 We use this feedback to shape roadmap priorities and improve product messaging. We do not publish private details from your account unless you explicitly approve public use.
               </p>
-            </section>
+            </Card>
 
             <form onSubmit={handleSubmit} className="mt-5">
-              <label htmlFor="feedback-text" className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-2">
+              <Label htmlFor="feedback-text" className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-2">
                 Your one sentence
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 id="feedback-text"
                 value={text}
                 onChange={e => setText(e.target.value)}
                 placeholder="Starting Monday helped me..."
                 rows={5}
                 maxLength={1000}
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-300/50 resize-none bg-white"
+                className="w-full rounded-xl border-slate-300 px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 focus-visible:border-slate-500 focus-visible:ring-slate-300/50 resize-none bg-white"
               />
 
               <div className="flex items-center justify-between mt-2 mb-4">
@@ -113,15 +118,15 @@ function FeedbackForm() {
                 <p className="text-[13px] text-red-600 mb-3">{errorMessage}</p>
               )}
 
-              <button
+              <Button
                 type="submit"
                 disabled={!text.trim() || state === 'submitting'}
-                className="w-full bg-slate-900 text-white text-[15px] font-bold py-3.5 rounded-xl hover:bg-slate-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full rounded-xl py-3.5 text-[15px] font-bold"
               >
                 {state === 'submitting' ? 'Submitting feedback...' : 'Submit feedback'}
-              </button>
+              </Button>
             </form>
-          </div>
+          </Card>
         )}
       </section>
     </div>

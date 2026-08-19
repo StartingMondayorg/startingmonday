@@ -1,5 +1,11 @@
 'use client'
 import { useState, useId } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export type CareerEntry = {
   company: string
@@ -19,8 +25,6 @@ interface Props {
   resumeText?: string
 }
 
-const inputCls = 'w-full border border-slate-200 rounded px-2.5 py-1.5 text-[12px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400'
-
 function ReadCard({ entry, onEdit, onDelete }: {
   entry: EntryWithId
   onEdit: () => void
@@ -28,7 +32,7 @@ function ReadCard({ entry, onEdit, onDelete }: {
 }) {
   const dates = `${entry.start_year || '?'}${entry.end_year ? ` - ${entry.end_year}` : ' - present'}`
   return (
-    <div className={`border rounded p-3 flex gap-3 ${entry.uncertain ? 'border-l-[3px] border-l-orange-400 border-slate-200' : 'border-slate-200'}`}>
+    <Card className={`p-3 flex-row gap-3 ${entry.uncertain ? 'border-l-[3px] border-l-orange-400' : ''}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-0.5">
           <p className="text-[13px] font-semibold text-slate-900 leading-tight">
@@ -48,10 +52,10 @@ function ReadCard({ entry, onEdit, onDelete }: {
         )}
       </div>
       <div className="flex flex-col items-end gap-1 shrink-0">
-        <button type="button" onClick={onEdit} className="text-[11px] text-slate-400 hover:text-slate-700 transition-colors">Edit</button>
-        <button type="button" onClick={onDelete} className="text-[11px] text-slate-300 hover:text-red-500 transition-colors">Delete</button>
+        <Button type="button" variant="link" onClick={onEdit} className="h-auto p-0 text-[11px] text-slate-400 hover:text-slate-700">Edit</Button>
+        <Button type="button" variant="link" onClick={onDelete} className="h-auto p-0 text-[11px] text-slate-300 hover:text-red-500">Delete</Button>
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -69,54 +73,53 @@ function EditCard({ draft, onChange, onSave, onCancel }: {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Company</p>
-          <input value={draft.company} onChange={field('company')} placeholder="Company name" className={inputCls} />
+          <Input value={draft.company} onChange={field('company')} placeholder="Company name" className="text-[12px]" />
         </div>
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Parent / Acquirer</p>
-          <input value={draft.parent_company} onChange={field('parent_company')} placeholder="If acquired or subsidiary" className={inputCls} />
+          <Input value={draft.parent_company} onChange={field('parent_company')} placeholder="If acquired or subsidiary" className="text-[12px]" />
         </div>
       </div>
       <div>
         <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Title</p>
-        <input value={draft.title} onChange={field('title')} placeholder="Title" className={inputCls} />
+        <Input value={draft.title} onChange={field('title')} placeholder="Title" className="text-[12px]" />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Start year</p>
-          <input value={draft.start_year} onChange={field('start_year')} placeholder="2018" className={inputCls} />
+          <Input value={draft.start_year} onChange={field('start_year')} placeholder="2018" className="text-[12px]" />
         </div>
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">End year</p>
-          <input value={draft.end_year} onChange={field('end_year')} placeholder="Blank if current role" className={inputCls} />
+          <Input value={draft.end_year} onChange={field('end_year')} placeholder="Blank if current role" className="text-[12px]" />
         </div>
       </div>
       <div>
         <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Key outcome</p>
-        <textarea value={draft.key_outcome} onChange={field('key_outcome')} placeholder="One specific, quantified achievement" rows={2} className={inputCls + ' resize-none'} />
+        <Textarea value={draft.key_outcome} onChange={field('key_outcome')} placeholder="One specific, quantified achievement" rows={2} className="text-[12px] resize-none" />
       </div>
       <div>
         <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Acquisition or merger note</p>
-        <input value={draft.acquisition_note} onChange={field('acquisition_note')} placeholder="e.g. Glu Mobile was acquired by EA in 2021" className={inputCls} />
+        <Input value={draft.acquisition_note} onChange={field('acquisition_note')} placeholder="e.g. Glu Mobile was acquired by EA in 2021" className="text-[12px]" />
       </div>
       <div className="flex items-center justify-between mt-1">
         <label className="flex items-center gap-1.5 text-[11px] text-slate-500 cursor-pointer select-none">
-          <input
-            type="checkbox"
+          <Checkbox
             checked={draft.uncertain}
-            onChange={e => onChange({ ...draft, uncertain: e.target.checked })}
-            className="w-3 h-3 rounded"
+            onCheckedChange={(checked) => onChange({ ...draft, uncertain: checked === true })}
           />
           Flag for review
         </label>
         <div className="flex items-center gap-3">
-          <button type="button" onClick={onCancel} className="text-[12px] text-slate-400 hover:text-slate-700 transition-colors">Cancel</button>
-          <button
+          <Button type="button" variant="link" onClick={onCancel} className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-700">Cancel</Button>
+          <Button
             type="button"
+            size="sm"
             onClick={onSave}
-            className="text-[12px] font-semibold text-white bg-slate-900 hover:bg-slate-700 px-3 py-1.5 rounded transition-colors"
+            className="!bg-slate-900 hover:!bg-slate-700"
           >
             Save entry
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -224,17 +227,20 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
             </span>
           )}
         </p>
-        <button
+        <Button
           type="button"
+          variant="link"
           onClick={addEntry}
-          className="text-[11px] font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+          className="h-auto p-0 text-[11px] text-slate-500 hover:text-slate-900"
         >
           + Add entry
-        </button>
+        </Button>
       </div>
 
       {extractError && (
-        <p className="text-[12px] text-amber-700 mb-2">{extractError}</p>
+        <Alert variant="warning" className="mb-2">
+          <AlertDescription>{extractError}</AlertDescription>
+        </Alert>
       )}
 
       {entries.length === 0 ? (
@@ -243,14 +249,15 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
             No verified entries. Extract from your career history, or add each role manually.
           </p>
           {resumeText && resumeText.length > 50 && (
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={handleExtract}
               disabled={extracting}
-              className="text-[12px] font-semibold text-slate-600 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 transition-colors disabled:opacity-40"
             >
               {extracting ? 'Extracting...' : 'Extract entries from career history'}
-            </button>
+            </Button>
           )}
         </div>
       ) : (
@@ -263,14 +270,15 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
             )
           )}
           {resumeText && resumeText.length > 50 && (
-            <button
+            <Button
               type="button"
+              variant="link"
               onClick={handleExtract}
               disabled={extracting}
-              className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors self-start mt-0.5"
+              className="h-auto self-start p-0 text-[11px] text-slate-400 hover:text-slate-600"
             >
               {extracting ? 'Re-extracting...' : 'Re-extract from career history'}
-            </button>
+            </Button>
           )}
         </div>
       )}

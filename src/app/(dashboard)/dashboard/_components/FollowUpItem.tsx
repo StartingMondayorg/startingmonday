@@ -2,6 +2,8 @@
 import { useState, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { markFollowUpDone, updateFollowUp } from '@/app/(dashboard)/dashboard/actions'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 interface Props {
   id: string
@@ -50,39 +52,41 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
       <div className="px-6 py-4">
         <form action={handleSave} className="flex flex-col gap-3">
           <input type="hidden" name="id" value={id} />
-          <input
+          <Input
             ref={inputRef}
             name="action"
             defaultValue={action}
             aria-label="Action text"
-            className="w-full border border-white/20 rounded px-3 py-2 text-[14px] font-semibold text-slate-100 bg-slate-900 focus:outline-none focus:border-orange-300/60"
+            className="border-white/20 bg-slate-900 text-[14px] font-semibold text-slate-100 focus-visible:border-orange-300/60"
           />
           <div className="flex items-center gap-3">
-            <input
+            <Input
               type="date"
               name="due_date"
               defaultValue={dueDate}
               aria-label="Due date"
-              className="border border-white/20 rounded px-3 py-1.5 text-[13px] text-slate-100 bg-slate-900 focus:outline-none focus:border-orange-300/60"
+              className="w-auto border-white/20 bg-slate-900 text-[13px] text-slate-100 focus-visible:border-orange-300/60"
             />
             {companyName && (
               <span className="text-[12px] text-slate-400">{companyName}</span>
             )}
             <div className="ml-auto flex items-center gap-2">
-              <button
+              <Button
                 type="submit"
+                size="sm"
                 disabled={savePending}
-                className="text-[12px] text-slate-950 bg-orange-500 rounded px-3 py-1.5 hover:bg-orange-400 cursor-pointer disabled:opacity-50"
               >
                 {savePending ? 'Saving…' : 'Save'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => setEditing(false)}
-                className="text-[12px] text-slate-400 hover:text-slate-200 cursor-pointer"
+                className="text-slate-400 hover:text-slate-200"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </form>
@@ -109,14 +113,16 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
         {dateLabel}
       </span>
 
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleDone}
         disabled={donePending}
-        className="text-[12px] text-slate-400 border border-white/20 rounded px-3 py-1 hover:border-white/40 hover:text-slate-200 cursor-pointer bg-transparent disabled:opacity-50"
+        className="text-slate-400 border-white/20 hover:border-white/40 hover:text-slate-200 bg-transparent"
       >
         {donePending ? '…' : 'Done'}
-      </button>
+      </Button>
     </div>
   )
 }

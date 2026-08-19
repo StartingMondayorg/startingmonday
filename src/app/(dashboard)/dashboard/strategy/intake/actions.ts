@@ -10,7 +10,8 @@ function parseCsv(raw: string) {
 
 function toNullableString(value: FormDataEntryValue | null) {
   const text = (value as string | null ?? '').trim()
-  return text.length > 0 ? text : null
+  if (text.length === 0 || text === '__none__') return null
+  return text
 }
 
 export async function saveStrategyIntake(formData: FormData) {

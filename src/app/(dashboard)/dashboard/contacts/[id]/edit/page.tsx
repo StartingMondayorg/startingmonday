@@ -2,8 +2,24 @@
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { updateContact } from '../actions'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
-const inputCls = 'w-full border border-white/15 rounded-lg px-3 py-2.5 text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/30 bg-slate-950/70'
+const selectTriggerCls = 'w-full border-white/15 bg-slate-950/70 text-slate-100'
+
+// shadcn Select can't have an item with value "" — use this sentinel for the
+// "unset" option and strip it back to an empty string in the form action below.
+const NONE = '__none__'
 
 const CHANNELS = [
   { value: 'linkedin',  label: 'LinkedIn' },
@@ -46,6 +62,14 @@ export default async function EditContactPage({
   const contact = rawContact as unknown as ContactRow
   const companyList = companies ?? []
 
+  async function updateContactForm(formData: FormData) {
+    'use server'
+    for (const key of ['channel', 'company_id', 'contact_type']) {
+      if (formData.get(key) === NONE) formData.set(key, '')
+    }
+    await updateContact(id, formData)
+  }
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
 
@@ -71,122 +95,135 @@ export default async function EditContactPage({
           <form action={updateContact.bind(null, id)} className="flex flex-col gap-4">
 
             <div>
-              <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                 Name <span className="text-red-500">*</span>
-              </label>
-              <input
+              </Label>
+              <Input
                 name="name"
                 required
                 defaultValue={contact.name}
                 placeholder="Jane Smith"
-                className={inputCls}
+                className="bg-slate-950/70 text-slate-100"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Title</label>
-                <input name="title" defaultValue={contact.title ?? ''} placeholder="VP of Engineering" className={inputCls} />
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Title</Label>
+                <Input name="title" defaultValue={contact.title ?? ''} placeholder="VP of Engineering" className="bg-slate-950/70 text-slate-100" />
               </div>
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Firm</label>
-                <input name="firm" defaultValue={contact.firm ?? ''} placeholder="Korn Ferry" className={inputCls} />
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Firm</Label>
+                <Input name="firm" defaultValue={contact.firm ?? ''} placeholder="Korn Ferry" className="bg-slate-950/70 text-slate-100" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Email</label>
-                <input
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Email</Label>
+                <Input
                   name="email"
                   type="text"
                   defaultValue={contact.email ?? ''}
                   placeholder="jane@company.com"
-                  className={inputCls}
+                  className="bg-slate-950/70 text-slate-100"
                 />
               </div>
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">LinkedIn URL</label>
-                <input
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">LinkedIn URL</Label>
+                <Input
                   name="linkedin_url"
                   type="text"
                   defaultValue={contact.linkedin_url ?? ''}
                   placeholder="https://linkedin.com/in/jane"
-                  className={inputCls}
+                  className="bg-slate-950/70 text-slate-100"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Channel</label>
-                <select id="contact-channel" name="channel" defaultValue={contact.channel ?? ''} className={inputCls} title="Channel">
-                  <option value="">-</option>
-                  {CHANNELS.map(c => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
-                  ))}
-                </select>
+                <Label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Channel</Label>
+                <Select name="channel" defaultValue={contact.channel || NONE}>
+                  <SelectTrigger id="contact-channel" title="Channel" className={selectTriggerCls}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE}>-</SelectItem>
+                    {CHANNELS.map(c => (
+                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               {companyList.length > 0 && (
                 <div>
-                  <label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Company</label>
-                  <select id="contact-company" name="company_id" defaultValue={contact.company_id ?? ''} className={inputCls} title="Company">
-                    <option value="">- No company -</option>
-                    {companyList.map(co => (
-                      <option key={co.id} value={co.id}>{co.name}</option>
-                    ))}
-                  </select>
+                  <Label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Company</Label>
+                  <Select name="company_id" defaultValue={contact.company_id || NONE}>
+                    <SelectTrigger id="contact-company" title="Company" className={selectTriggerCls}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NONE}>- No company -</SelectItem>
+                      {companyList.map(co => (
+                        <SelectItem key={co.id} value={co.id}>{co.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Relationship type</label>
-                <select id="contact-type" name="contact_type" defaultValue={contact.contact_type ?? ''} className={inputCls} title="Relationship type">
-                  <option value="">-</option>
-                  <option value="recruiter">Recruiter</option>
-                  <option value="hiring_manager">Hiring Manager</option>
-                  <option value="peer">Peer</option>
-                  <option value="coach">Coach</option>
-                  <option value="board">Board</option>
-                </select>
+                <Label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Relationship type</Label>
+                <Select name="contact_type" defaultValue={contact.contact_type || NONE}>
+                  <SelectTrigger id="contact-type" title="Relationship type" className={selectTriggerCls}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE}>-</SelectItem>
+                    <SelectItem value="recruiter">Recruiter</SelectItem>
+                    <SelectItem value="hiring_manager">Hiring Manager</SelectItem>
+                    <SelectItem value="peer">Peer</SelectItem>
+                    <SelectItem value="coach">Coach</SelectItem>
+                    <SelectItem value="board">Board</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Last role discussed</label>
-                <input
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Last role discussed</Label>
+                <Input
                   name="last_role_discussed"
                   defaultValue={contact.last_role_discussed ?? ''}
                   placeholder="CIO at Acme Corp"
-                  className={inputCls}
+                  className="bg-slate-950/70 text-slate-100"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Notes</label>
-              <textarea
+              <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Notes</Label>
+              <Textarea
                 name="notes"
                 defaultValue={contact.notes ?? ''}
                 rows={3}
                 placeholder="Met at SaaStr, warm connection..."
-                className={inputCls + ' resize-none'}
+                className="bg-slate-950/70 text-slate-100 resize-none"
               />
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
-              <Link
-                href={`/dashboard/contacts/${id}`}
-                className="text-[13px] text-slate-300 hover:text-white transition-colors"
+              <Button
+                variant="ghost"
+                className="text-slate-300 hover:text-white"
+                render={<Link href={`/dashboard/contacts/${id}`} />}
               >
                 Cancel
-              </Link>
-              <button
-                type="submit"
-                className="bg-orange-500 hover:bg-orange-400 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer border-0"
-              >
+              </Button>
+              <Button type="submit">
                 Save changes
-              </button>
+              </Button>
             </div>
 
           </form>

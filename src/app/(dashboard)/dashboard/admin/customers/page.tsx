@@ -5,6 +5,11 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { sendWelcomeEmail } from './actions'
 import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 type Filter = 'all' | 'trialing' | 'intelligence' | 'search' | 'executive'
 
@@ -170,12 +175,12 @@ export default async function CustomersPage({
 
   const filteredUsers = users.filter(u => matchesFilter(u, filter))
 
-  const statusBadge: Record<string, string> = {
-    trialing:  'bg-amber-50 text-amber-700',
-    active:    'bg-green-50 text-green-700',
-    past_due:  'bg-red-50 text-red-700',
-    canceled:  'bg-slate-100 text-slate-400',
-    inactive:  'bg-slate-100 text-slate-400',
+  const statusBadgeVariant: Record<string, 'warning' | 'success' | 'destructive' | 'secondary'> = {
+    trialing:  'warning',
+    active:    'success',
+    past_due:  'destructive',
+    canceled:  'secondary',
+    inactive:  'secondary',
   }
 
   const cards: { filter: Filter; label: string; sublabel: string; accent: boolean }[] = [
@@ -208,7 +213,7 @@ export default async function CustomersPage({
         </div>
 
         {/* Conversion stats */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" className="p-6 mb-6">
           <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-5">Conversion overview</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
             <div>
@@ -235,41 +240,38 @@ export default async function CustomersPage({
             <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Signups by source</p>
             <div className="flex flex-wrap gap-2">
               {topSources.map(([src, count]) => (
-                <span key={src} className="inline-flex items-center gap-1.5 text-[13px] bg-white/5 border border-white/10 rounded px-3 py-1.5">
+                <Badge key={src} variant="outline" className="gap-1.5 text-[13px] bg-white/5 border-white/10 px-3 py-1.5">
                   <span className="font-semibold text-slate-200">{src}</span>
                   <span className="text-slate-400">{count}</span>
-                </span>
+                </Badge>
               ))}
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
-          {cards.map(card => (
-            <Link
-              key={card.filter}
-              href={`/dashboard/admin/customers?filter=${card.filter}`}
-              className={`rounded p-5 border transition-colors ${
-                filter === card.filter
-                  ? 'bg-orange-400 border-orange-300/30 text-slate-950'
-                  : 'bg-white/5 border-white/10 hover:border-white/30'
-              }`}
-            >
-              <div className={`text-[30px] font-bold leading-none ${
-                filter === card.filter ? 'text-white' : card.accent ? 'text-orange-300' : 'text-white'
-              }`}>
-                {card.label}
-              </div>
-              <div className="text-[13px] mt-2 font-semibold tracking-wide text-slate-400">
-                {card.sublabel}
-              </div>
-            </Link>
-          ))}
-        </div>
+        <Tabs value={filter} className="mb-6">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-transparent p-0 h-auto w-full">
+            {cards.map(card => (
+              <TabsTrigger
+                key={card.filter}
+                value={card.filter}
+                render={<Link href={`/dashboard/admin/customers?filter=${card.filter}`} />}
+                className="flex-col items-start rounded h-auto p-5 border border-white/10 bg-white/5 hover:border-white/30 data-active:bg-orange-400 data-active:border-orange-300/30 data-active:shadow-none"
+              >
+                <div className={`text-[30px] font-bold leading-none text-white ${card.accent ? 'text-orange-300' : ''}`}>
+                  {card.label}
+                </div>
+                <div className="text-[13px] mt-2 font-semibold tracking-wide text-slate-400">
+                  {card.sublabel}
+                </div>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
         {/* Table */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+        <Card variant="glass" className="p-0">
           <div className="px-6 py-[18px] border-b border-white/10">
             <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
               {FILTER_LABELS[filter]} ({filteredUsers.length})
@@ -279,94 +281,89 @@ export default async function CustomersPage({
           {filteredUsers.length === 0 ? (
             <p className="px-6 py-8 text-[13px] text-slate-400">No customers in this segment yet.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="bg-white/5 border-b border-white/10 text-left">
-                    <th className="px-6 py-2.5 font-semibold text-slate-400">Email</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Plan</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Status</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Joined</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-center hidden sm:table-cell">Score</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 hidden md:table-cell">Last active</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 hidden lg:table-cell">Source</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-center">Onboard</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-center">Co. added</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 hidden sm:table-cell">Trial ends</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-right hidden sm:table-cell">7d outreach</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-right">Welcome</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {filteredUsers.map(u => {
-                    const wasSent = sent === u.id
-                    return (
-                      <tr key={u.id} className={wasSent ? 'bg-green-50' : undefined}>
-                        <td className="px-6 py-3 font-semibold text-white max-w-[180px] truncate">
-                          {u.email}
-                        </td>
-                        <td className="px-4 py-3 text-slate-300">
-                          {TIER_NAMES[u.subscription_tier ?? 'free'] ?? 'Free'}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={`text-[13px] font-bold px-2 py-0.5 rounded ${statusBadge[u.subscription_status] ?? 'bg-slate-100 text-slate-400'}`}>
-                            {u.subscription_status.charAt(0).toUpperCase() + u.subscription_status.slice(1)}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-slate-300 whitespace-nowrap">
-                          {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        </td>
-                        <td className="px-4 py-3 text-center hidden sm:table-cell">
-                          {(() => {
-                            const score = activationScore(u.id)
-                            const color = score >= 5 ? 'text-green-600' : score >= 3 ? 'text-amber-600' : 'text-slate-400'
-                            return <span className={`font-bold ${color}`}>{score}/6</span>
-                          })()}
-                        </td>
-                        <td className="px-4 py-3 text-slate-300 hidden md:table-cell whitespace-nowrap">
-                          {daysAgo(lastActiveMap[u.id])}
-                        </td>
-                        <td className="px-4 py-3 text-slate-400 font-mono text-[13px] hidden lg:table-cell">
-                          {u.signup_source ?? '--'}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          {u.first_company_added_at
-                            ? <span className="text-green-600 font-bold">&#10003;</span>
-                            : <span className="text-slate-200">--</span>}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          {u.first_company_added_at
-                            ? <span className="text-green-600 font-bold">&#10003;</span>
-                            : <span className="text-slate-200">--</span>}
-                        </td>
-                        <td className="px-4 py-3 text-slate-300 hidden sm:table-cell whitespace-nowrap">
-                          {u.subscription_status === 'trialing' ? daysLeft(u.trial_ends_at) : '--'}
-                        </td>
-                        <td className="px-4 py-3 text-right text-slate-200 tabular-nums font-semibold hidden sm:table-cell">
-                          {outreachByUser[u.id] ?? 0}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          {wasSent ? (
-                            <span className="text-[13px] font-bold text-green-700">Sent</span>
-                          ) : (
-                            <form action={sendEmailAction.bind(null, u.id, filter)}>
-                              <button
-                                type="submit"
-                                className="text-[13px] font-semibold text-slate-300 border border-white/10 rounded px-2.5 py-1 hover:border-white/30 hover:text-slate-200 bg-transparent cursor-pointer transition-colors whitespace-nowrap"
-                              >
-                                Send welcome
-                              </button>
-                            </form>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <Table className="text-[13px]">
+              <TableHeader>
+                <TableRow className="bg-white/5">
+                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Email</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Plan</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Joined</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-center hidden sm:table-cell">Score</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 hidden md:table-cell">Last active</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 hidden lg:table-cell">Source</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-center">Onboard</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-center">Co. added</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 hidden sm:table-cell">Trial ends</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right hidden sm:table-cell">7d outreach</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Welcome</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredUsers.map(u => {
+                  const wasSent = sent === u.id
+                  return (
+                    <TableRow key={u.id} className={wasSent ? 'bg-green-50' : undefined}>
+                      <TableCell className="px-6 py-3 font-semibold text-white max-w-[180px] truncate">
+                        {u.email}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300">
+                        {TIER_NAMES[u.subscription_tier ?? 'free'] ?? 'Free'}
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        <Badge variant={statusBadgeVariant[u.subscription_status] ?? 'secondary'}>
+                          {u.subscription_status.charAt(0).toUpperCase() + u.subscription_status.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300 whitespace-nowrap">
+                        {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center hidden sm:table-cell">
+                        {(() => {
+                          const score = activationScore(u.id)
+                          const color = score >= 5 ? 'text-green-600' : score >= 3 ? 'text-amber-600' : 'text-slate-400'
+                          return <span className={`font-bold ${color}`}>{score}/6</span>
+                        })()}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300 hidden md:table-cell whitespace-nowrap">
+                        {daysAgo(lastActiveMap[u.id])}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-400 font-mono text-[13px] hidden lg:table-cell">
+                        {u.signup_source ?? '--'}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center">
+                        {u.first_company_added_at
+                          ? <span className="text-green-600 font-bold">&#10003;</span>
+                          : <span className="text-slate-200">--</span>}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-center">
+                        {u.first_company_added_at
+                          ? <span className="text-green-600 font-bold">&#10003;</span>
+                          : <span className="text-slate-200">--</span>}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300 hidden sm:table-cell whitespace-nowrap">
+                        {u.subscription_status === 'trialing' ? daysLeft(u.trial_ends_at) : '--'}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right text-slate-200 tabular-nums font-semibold hidden sm:table-cell">
+                        {outreachByUser[u.id] ?? 0}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        {wasSent ? (
+                          <span className="text-[13px] font-bold text-green-700">Sent</span>
+                        ) : (
+                          <form action={sendEmailAction.bind(null, u.id, filter)}>
+                            <Button type="submit" variant="outline" size="sm" className="whitespace-nowrap">
+                              Send welcome
+                            </Button>
+                          </form>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
           )}
-        </div>
+        </Card>
 
       </main>
     </div>

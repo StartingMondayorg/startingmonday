@@ -7,6 +7,7 @@
  */
 
 import { LocalGreeting } from '../LocalGreeting'
+import { Card } from '@/components/ui/card'
 
 type BriefingHeaderProps = {
   firstName: string
@@ -40,7 +41,7 @@ export function BriefingHeader({
       </div>
 
       {/* Primary Stat Card - "Find Roles First" */}
-      <div className="mb-8 rounded-lg border border-white/12 bg-gradient-to-br from-slate-900/80 to-slate-950 p-6 sm:p-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
+      <Card variant="glass" className="mb-8 border-white/12 bg-gradient-to-br from-slate-900/80 to-slate-950 p-6 sm:p-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
         <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-orange-200/90 mb-5">
           Position Watch
         </p>
@@ -63,7 +64,7 @@ export function BriefingHeader({
         <p className="mt-4 text-[12px] text-slate-400">
           {totalCompanies} {totalCompanies === 1 ? 'company' : 'companies'} under watch · {matchCount} aligned {matchCount === 1 ? 'role' : 'roles'} · {movesReadyCount} {movesReadyCount === 1 ? 'move' : 'moves'} ready today
         </p>
-      </div>
+      </Card>
     </section>
   )
 }

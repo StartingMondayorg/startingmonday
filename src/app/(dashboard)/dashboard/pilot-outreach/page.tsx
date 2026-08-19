@@ -1,6 +1,11 @@
 
 "use client"
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function PilotOutreachForm() {
   const [form, setForm] = useState({ name: '', email: '', company: '', message: '' })
@@ -18,27 +23,37 @@ export default function PilotOutreachForm() {
   }
 
   return (
-    <form className="max-w-lg mx-auto bg-white border border-slate-200 rounded-lg shadow p-8 mt-12" onSubmit={handleSubmit}>
-      <h1 className="sr-only">Pilot Outreach</h1>
-      <h2 className="text-2xl font-bold mb-4 text-slate-900">Pilot Outreach</h2>
-      <p className="mb-6 text-slate-600">Request a pilot or partnership. We'll get back to you within 1 business day.</p>
-      <div className="mb-4">
-        <input className="w-full border px-3 py-2 rounded" required placeholder="Your Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-      </div>
-      <div className="mb-4">
-        <input className="w-full border px-3 py-2 rounded" required type="email" placeholder="Your Email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-      </div>
-      <div className="mb-4">
-        <input className="w-full border px-3 py-2 rounded" required placeholder="Company" value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
-      </div>
-      <div className="mb-4">
-        <textarea className="w-full border px-3 py-2 rounded" placeholder="Message (optional)" value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
-      </div>
-      <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded" type="submit" disabled={status==='sending'}>
-        {status==='sending' ? 'Sending...' : 'Request Pilot'}
-      </button>
-      {status==='sent' && <p className="mt-4 text-green-600">Thank you! We'll be in touch soon.</p>}
-      {status==='error' && <p className="mt-4 text-red-600">Something went wrong. Please try again.</p>}
+    <form className="max-w-lg mx-auto mt-12" onSubmit={handleSubmit}>
+      <Card className="p-8">
+        <h1 className="sr-only">Pilot Outreach</h1>
+        <h2 className="text-2xl font-bold mb-4 text-slate-900">Pilot Outreach</h2>
+        <p className="mb-6 text-slate-600">Request a pilot or partnership. We'll get back to you within 1 business day.</p>
+        <div className="mb-4">
+          <Input required placeholder="Your Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+        </div>
+        <div className="mb-4">
+          <Input required type="email" placeholder="Your Email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+        </div>
+        <div className="mb-4">
+          <Input required placeholder="Company" value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
+        </div>
+        <div className="mb-4">
+          <Textarea placeholder="Message (optional)" value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} />
+        </div>
+        <Button type="submit" disabled={status==='sending'}>
+          {status==='sending' ? 'Sending...' : 'Request Pilot'}
+        </Button>
+        {status==='sent' && (
+          <Alert variant="success" className="mt-4">
+            <AlertDescription>Thank you! We'll be in touch soon.</AlertDescription>
+          </Alert>
+        )}
+        {status==='error' && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertDescription>Something went wrong. Please try again.</AlertDescription>
+          </Alert>
+        )}
+      </Card>
     </form>
   )
 }

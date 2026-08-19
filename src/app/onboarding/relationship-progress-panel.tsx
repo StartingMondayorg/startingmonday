@@ -1,5 +1,10 @@
 'use client'
 
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 export type RelationshipStatusPayload = {
   companies: Array<{
     companyId: string
@@ -61,7 +66,7 @@ export function RelationshipProgressPanel({
         </p>
       </div>
 
-      <div className="border border-white/10 rounded-lg bg-white/5 p-5 flex flex-col gap-4">
+      <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 p-5">
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200">Relationship enrichment</p>
           <span className="text-[12px] text-slate-400">{done ? 'Contact map ready' : enrichmentStarted ? 'Finding contacts...' : 'Waiting to start'}</span>
@@ -95,65 +100,64 @@ export function RelationshipProgressPanel({
         <p className="text-[12px] text-slate-400">
           {progress?.progress?.totalContacts ?? 0} contacts tracked, {progress?.progress?.totalEnriched ?? 0} discovered by enrichment.
         </p>
-      </div>
+      </Card>
 
-      <div className="border border-white/10 rounded-lg bg-slate-950/40 p-5 flex flex-col gap-3">
+      <Card variant="glass" className="rounded-lg border-white/10 bg-slate-950/40 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">Add a contact now</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <input
+          <Input
             type="text"
             value={contactName}
             onChange={(event) => onContactName(event.target.value)}
             placeholder="Contact name"
-            className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+            className="w-full !border-white/15 !bg-slate-950/60 text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
           />
-          <input
+          <Input
             type="text"
             value={contactTitle}
             onChange={(event) => onContactTitle(event.target.value)}
             placeholder="Title (optional)"
-            className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+            className="w-full !border-white/15 !bg-slate-950/60 text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
           />
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2.5 sm:items-center">
           {canAdd ? (
-            <select
-              value={effectiveSelectedCompanyId}
-              onChange={(event) => onSelectedCompany(event.target.value)}
-              aria-label="Company for contact"
-              className="flex-1 border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/40 bg-slate-950/60"
-            >
-              <option value="">Choose a company</option>
-              {rows.map((row) => (
-                <option key={row.companyId} value={row.companyId}>{row.name}</option>
-              ))}
-            </select>
+            <Select value={effectiveSelectedCompanyId || undefined} onValueChange={(value) => onSelectedCompany(value ?? '')}>
+              <SelectTrigger aria-label="Company for contact" className="flex-1 w-full !border-white/15 !bg-slate-950/60 text-[13px] text-slate-100">
+                <SelectValue placeholder="Choose a company" />
+              </SelectTrigger>
+              <SelectContent>
+                {rows.map((row) => (
+                  <SelectItem key={row.companyId} value={row.companyId}>{row.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
-            <input
+            <Input
               type="text"
               value={contactCompanyName}
               onChange={(event) => onContactCompanyName(event.target.value)}
               placeholder="Company name"
               aria-label="Company for contact"
-              className="flex-1 border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+              className="flex-1 !border-white/15 !bg-slate-950/60 text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
             />
           )}
-          <button
+          <Button
             type="button"
             onClick={onAddContact}
             disabled={addingContact || !canSubmit}
-            className="bg-white/10 hover:bg-white/15 text-slate-100 text-[13px] font-semibold px-4 py-2 rounded transition-colors cursor-pointer border border-white/15 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="!border-white/15 !bg-white/10 text-slate-100 text-[13px] font-semibold hover:!bg-white/15"
           >
             {addingContact ? 'Adding...' : 'Add contact'}
-          </button>
+          </Button>
         </div>
         {!canAdd && (
           <p className="text-[12px] text-slate-400">
             Company list is still loading. Type the company name and we will create it with your contact.
           </p>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

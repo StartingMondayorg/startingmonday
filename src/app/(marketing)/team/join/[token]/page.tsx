@@ -1,7 +1,9 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Accept Invite - Starting Monday' }
 
@@ -118,7 +120,7 @@ export default async function TeamJoinPage({
           </p>
           </section>
 
-          <section id="invite-benefits" className="mb-8 rounded border border-slate-700 bg-slate-800/50 p-4">
+          <Card variant="glass" className="mb-8 rounded !border-slate-700 !bg-slate-800/50 p-4">
             <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-200 mb-2">What you get</h2>
             <ul className="text-[13px] text-slate-200 space-y-1.5 leading-relaxed">
               <li>Shared account access with full dashboard workflow.</li>
@@ -127,43 +129,43 @@ export default async function TeamJoinPage({
             </ul>
             <p className="text-[12px] text-slate-200 mt-3">Trust and confidentiality: invite access is secure and tied to this email seat and account authentication.</p>
             <p className="text-[12px] text-slate-200 mt-1">Outcome metric: most members begin their first dashboard action in under 5 minutes after joining.</p>
-          </section>
+          </Card>
 
           <section id="next-step">
           <h2 className="sr-only">Next step</h2>
           <p className="text-[12px] text-slate-200 mb-3">CTA: get started now by accepting this invite.</p>
           {user ? (
             <form action={acceptInvite}>
-              <button
+              <Button
                 type="submit"
-                className="w-full bg-white text-slate-900 text-[14px] font-bold px-7 py-3.5 rounded hover:bg-slate-100 transition-colors cursor-pointer border-0"
+                className="w-full !bg-white !text-slate-900 hover:!bg-slate-100 px-7 py-3.5 text-[14px] font-bold"
               >
                 Get started now
-              </button>
+              </Button>
               <p className="text-[12px] text-slate-500 mt-3">Joining as {user.email}</p>
             </form>
           ) : (
             <div className="flex flex-col gap-3">
-              <Link
-                href={`/signup?seat_token=${token}`}
-                className="block text-center bg-white text-slate-900 text-[14px] font-bold px-7 py-3.5 rounded hover:bg-slate-100 transition-colors"
+              <Button
+                render={<Link href={`/signup?seat_token=${token}`} />}
+                className="w-full !bg-white !text-slate-900 hover:!bg-slate-100 px-7 py-3.5 text-[14px] font-bold"
               >
                 Create account and join
-              </Link>
-              <Link
-                href={`/login?next=/team/join/${token}`}
-                className="block text-center border border-slate-600 text-slate-200 text-[14px] font-semibold px-7 py-3.5 rounded hover:border-slate-400 transition-colors"
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href={`/login?next=/team/join/${token}`} />}
+                className="w-full !border-slate-600 !bg-transparent !text-slate-200 hover:!border-slate-400 px-7 py-3.5 text-[14px] font-semibold"
               >
                 Log in and join
-              </Link>
+              </Button>
             </div>
           )}
           </section>
         </div>
-      
+
         <p className="sr-only">Private by default. We do not share your data with recruiters, employers, or third parties.</p>
       </main>
     </div>
   )
 }
-

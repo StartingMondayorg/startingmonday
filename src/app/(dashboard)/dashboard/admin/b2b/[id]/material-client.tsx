@@ -1,6 +1,10 @@
 'use client'
 import { useState, useRef, useTransition } from 'react'
 import { saveMaterial } from './actions'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 type Props = {
   prospectId: string
@@ -93,24 +97,24 @@ export default function MaterialClient(props: Props) {
       <div className="px-5 py-4 border-b border-slate-100">
         <div className="flex flex-col gap-3">
           <div>
-            <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+            <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
               Additional context for this meeting
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               value={additionalContext}
               onChange={e => setAdditionalContext(e.target.value)}
               rows={2}
               placeholder="Upcoming conference they're speaking at, specific pain point mentioned on a call, particular exec cohort they want to help..."
-              className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none"
+              className="resize-none"
             />
           </div>
-          <button
+          <Button
             onClick={generate}
             disabled={generating}
-            className="self-start bg-orange-500 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="self-start"
           >
             {generating ? 'Generating...' : 'Generate leave-behind'}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -131,30 +135,30 @@ export default function MaterialClient(props: Props) {
 
               {!generating && (
                 <div className="mt-4 flex items-start gap-3 flex-wrap border-t border-slate-100 pt-4">
-                  <button
+                  <Button
                     onClick={copy}
-                    className="text-[12px] font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded cursor-pointer border-0 transition-colors"
+                    variant="secondary"
                   >
                     {copied ? 'Copied!' : 'Copy to clipboard'}
-                  </button>
+                  </Button>
 
                   <form action={handleSave} className="flex items-center gap-2 flex-1 min-w-[280px]">
                     <input type="hidden" name="prospect_id" value={prospectId} />
                     <input type="hidden" name="content" value={output} />
-                    <input
+                    <Input
                       name="title"
                       value={saveTitle}
                       onChange={e => setSaveTitle(e.target.value)}
                       placeholder="Title for this version"
-                      className="flex-1 border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400"
+                      className="flex-1"
                     />
-                    <button
+                    <Button
                       type="submit"
                       disabled={!saveTitle.trim()}
-                      className="bg-slate-900 text-white text-[12px] font-semibold px-4 py-2 rounded cursor-pointer border-0 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+                      className="shrink-0"
                     >
                       Save
-                    </button>
+                    </Button>
                   </form>
                 </div>
               )}

@@ -12,6 +12,7 @@ import { scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
 import { PMF_EVENTS } from '@/lib/pmf-event-taxonomy'
 import { type PrepRoleMode } from '@/lib/prep/prep-role-modes'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
+import { Skeleton } from '@/app/(dashboard)/dashboard/_components/Skeleton'
 import type { InterviewStage } from '@/lib/ai/prompts'
 import {
   DEFAULT_INTERVIEW_STAGE,
@@ -19,6 +20,24 @@ import {
   ROLE_MODE_OPTIONS,
   STAGE_OPTIONS,
 } from './prep-config'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+
+function PulsingDots({ dotClassName = 'w-1.5 h-1.5', className = '' }: { dotClassName?: string; className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      <Skeleton className={`${dotClassName} rounded-full`} />
+      <Skeleton className={`${dotClassName} rounded-full [animation-delay:150ms]`} />
+      <Skeleton className={`${dotClassName} rounded-full [animation-delay:300ms]`} />
+    </span>
+  )
+}
 
 function BoldText({ text }: { text: string }) {
   const parts = text.split(/\*\*(.+?)\*\*/g)
@@ -93,29 +112,29 @@ function TraceLabel({
   originClass: ClaimOriginClass
   onClick?: () => void
 }) {
-  const className = `inline-flex items-center rounded border px-2 py-[1px] text-[10px] font-semibold tracking-[0.04em] uppercase ${originClassClassName(originClass)} ${onClick ? 'cursor-pointer hover:brightness-95 transition' : ''}`
+  const label = originClassLabel(originClass)
+  const badge = (
+    <Badge
+      className={`${originClassClassName(originClass)} ${onClick ? 'cursor-pointer hover:brightness-95 transition' : ''}`}
+      title={onClick ? `Trace source: ${label}. Click to filter.` : `Trace source: ${label}`}
+      aria-label={`Trace source ${label}`}
+    >
+      {label}
+    </Badge>
+  )
   if (onClick) {
     return (
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={onClick}
-        className={className}
-        title={`Trace source: ${originClassLabel(originClass)}. Click to filter.`}
-        aria-label={`Trace source ${originClassLabel(originClass)}`}
+        className="h-auto rounded-4xl p-0 bg-transparent hover:bg-transparent"
       >
-        {originClassLabel(originClass)}
-      </button>
+        {badge}
+      </Button>
     )
   }
-  return (
-    <span
-      className={className}
-      title={`Trace source: ${originClassLabel(originClass)}`}
-      aria-label={`Trace source ${originClassLabel(originClass)}`}
-    >
-      {originClassLabel(originClass)}
-    </span>
-  )
+  return badge
 }
 
 function SourceLegend({
@@ -137,13 +156,16 @@ function SourceLegend({
   return (
     <div className="mb-5 rounded border border-white/10 bg-white/5 p-3">
       <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Source Legend</p>
-      <div className="flex flex-wrap gap-2 mb-2">
+      <ToggleGroup
+        value={[traceFilter]}
+        onValueChange={(values) => { const next = values[0] as TraceFilter | undefined; if (next) onChangeFilter(next) }}
+        className="flex-wrap gap-2 mb-2"
+      >
         {buttons.map((button) => (
-          <button
+          <ToggleGroupItem
             key={button.key}
-            type="button"
-            onClick={() => onChangeFilter(button.key)}
-            className={`inline-flex items-center gap-1 rounded border px-2 py-1 text-[10px] font-semibold tracking-[0.04em] uppercase transition-colors ${
+            value={button.key}
+            className={`h-auto gap-1 rounded border px-2 py-1 text-[10px] font-semibold tracking-[0.04em] uppercase transition-colors ${
               traceFilter === button.key
                 ? 'bg-orange-500 text-slate-950 border-orange-500'
                 : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
@@ -153,9 +175,9 @@ function SourceLegend({
             <span className={`rounded px-1.5 py-[1px] ${traceFilter === button.key ? 'bg-slate-700 text-slate-100' : 'bg-white/10 text-slate-400'}`}>
               {button.count}
             </span>
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
       <div className="flex flex-wrap gap-2">
         <TraceLabel originClass="user_provided" />
         <TraceLabel originClass="system_detected" />
@@ -262,7 +284,7 @@ function ResourcePanel({ brief }: { brief: string }) {
   if (resources.length === 0) return null
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded p-6 mb-4">
+    <Card variant="glass" className="p-6 mb-4">
       <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-4">
         Further Reading
       </p>
@@ -285,7 +307,7 @@ function ResourcePanel({ brief }: { brief: string }) {
           </a>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -418,7 +440,7 @@ function OnDemandPanel({
 }) {
   const claimOriginCounts = useMemo(() => buildClaimOriginCounts(content), [content])
   return (
-    <div className="bg-white/5 border border-white/10 rounded mb-4">
+    <Card variant="glass" className="gap-0 p-0 mb-4">
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
         <div>
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">{title}</p>
@@ -426,22 +448,19 @@ function OnDemandPanel({
             <p className="text-[12px] text-slate-400 mt-0.5">{description}</p>
           )}
         </div>
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onGenerate}
           disabled={loading}
-          className="shrink-0 text-[12px] font-semibold text-slate-400 border border-white/10 rounded px-3 py-1.5 hover:border-white/30 hover:text-slate-200 bg-transparent cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="shrink-0 text-slate-400 hover:text-slate-200"
         >
           {loading ? 'Generating…' : content ? 'Regenerate' : 'Generate'}
-        </button>
+        </Button>
       </div>
       {loading && !content && (
         <div className="px-6 py-5">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
-          </div>
+          <PulsingDots />
         </div>
       )}
       {error && !content && (
@@ -450,21 +469,22 @@ function OnDemandPanel({
       {(content || (loading && content)) && (
         <div className="px-6 py-5">
           {groundingMode === 'pattern' && (
-            <div className="mb-4 rounded border border-amber-500/30 bg-amber-500/10 px-4 py-3">
-              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-amber-300">Pattern Analysis, Not Verified Intel</p>
-              <p className="mt-1 text-[12px] text-amber-200 leading-relaxed">
+            <Alert variant="warning" className="mb-4 px-4 py-3">
+              <AlertTitle className="text-[10px] tracking-[0.12em] uppercase">Pattern Analysis, Not Verified Intel</AlertTitle>
+              <AlertDescription className="mt-1 text-[12px] leading-relaxed">
                 This section used limited evidence{typeof evidenceCount === 'number' ? ` (${evidenceCount} source${evidenceCount === 1 ? '' : 's'})` : ''}.
                 Add notes, documents, contacts, or fresh signals and regenerate for company-verified specificity.
-              </p>
+              </AlertDescription>
               <div className="mt-2">
-                <Link
-                  href={addEvidenceHref ?? '#'}
-                  className="text-[11px] font-semibold text-amber-200 border border-amber-500/40 rounded px-2.5 py-1 hover:bg-amber-500/20 transition-colors"
+                <Button
+                  variant="outline"
+                  className="text-[11px] text-amber-200 border-amber-500/40 hover:bg-amber-500/20"
+                  render={<Link href={addEvidenceHref ?? '#'} />}
                 >
                   Add evidence
-                </Link>
+                </Button>
               </div>
-            </div>
+            </Alert>
           )}
           <SourceLegend
             traceFilter={traceFilter}
@@ -487,7 +507,7 @@ function OnDemandPanel({
           <BriefRating briefId={briefId} />
         </div>
       )}
-    </div>
+    </Card>
   )
 }
 
@@ -1020,56 +1040,59 @@ export function PrepClient({
               <p className="text-[13px] text-slate-400 mt-1.5">{companyName} · {stageLabel}</p>
             </div>
             <div className="flex flex-col items-stretch sm:items-end gap-2 shrink-0">
-              <input
+              <Input
                 type="url"
                 value={postingUrl}
                 onChange={e => setPostingUrl(e.target.value)}
                 placeholder="Paste job posting URL (optional)"
                 disabled={busy}
-                className="text-[12px] text-slate-300 placeholder-slate-400 border border-white/10 rounded px-3 py-2 w-full sm:w-72 focus:outline-none focus:border-slate-400 disabled:opacity-50"
+                className="text-[12px] text-slate-300 placeholder:text-slate-400 w-full sm:w-72 focus-visible:border-slate-400"
               />
               <div className="flex gap-2">
-                <button
+                <Button
                   type="button"
                   onClick={handleGenerate}
                   disabled={busy}
-                  className="flex-1 bg-orange-500 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 text-[13px] px-5"
                 >
                   {loading ? 'Generating…' : brief ? 'Regenerate' : 'Generate prep brief'}
-                </button>
+                </Button>
                 {brief && !busy && (
                   <>
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={() => {
                         void handleMarkReviewed()
                       }}
                       disabled={markingReviewed || reviewedBriefId === (briefId ?? '__reviewed__')}
-                      className="shrink-0 text-[13px] font-semibold text-slate-300 border border-white/10 rounded px-4 py-2.5 hover:border-white/30 hover:text-slate-200 bg-white/5 cursor-pointer transition-colors disabled:opacity-40"
+                      className="shrink-0 text-[13px] text-slate-300 hover:text-slate-200"
                       title="Mark this prep brief as reviewed"
                     >
                       {reviewedBriefId === (briefId ?? '__reviewed__') ? 'Reviewed' : markingReviewed ? 'Saving…' : 'Mark reviewed'}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={handleDownload}
                       disabled={downloading || exportBlockedByConfidence}
-                      className="shrink-0 text-[13px] font-semibold text-slate-300 border border-white/10 rounded px-4 py-2.5 hover:border-white/30 hover:text-slate-200 bg-white/5 cursor-pointer transition-colors disabled:opacity-40"
+                      className="shrink-0 text-[13px] text-slate-300 hover:text-slate-200"
                       title="Download as Word document"
                     >
                       {downloading ? '…' : 'Word'}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={() => {
                         void handlePdfExport()
                       }}
                       disabled={exportBlockedByConfidence}
-                      className="shrink-0 text-[13px] font-semibold text-slate-300 border border-white/10 rounded px-4 py-2.5 hover:border-white/30 hover:text-slate-200 bg-white/5 cursor-pointer transition-colors"
+                      className="shrink-0 text-[13px] text-slate-300 hover:text-slate-200"
                       title="Save as PDF"
                     >
                       PDF
-                    </button>
+                    </Button>
                   </>
                 )}
               </div>
@@ -1078,63 +1101,69 @@ export function PrepClient({
 
           <div>
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Interview stage</p>
-            <div className="flex flex-wrap gap-1.5">
+            <ToggleGroup
+              value={[interviewStage]}
+              onValueChange={(values) => { const next = values[0] as InterviewStage | undefined; if (next) setInterviewStage(next) }}
+              disabled={busy}
+              className="flex-wrap gap-1.5"
+            >
               {STAGE_OPTIONS.map(opt => (
-                <button
+                <ToggleGroupItem
                   key={opt.value}
-                  type="button"
-                  onClick={() => setInterviewStage(opt.value)}
-                  disabled={busy}
-                  className={`text-[12px] font-medium px-3 py-1.5 rounded border transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
+                  value={opt.value}
+                  className={`h-auto text-[12px] font-medium px-3 py-1.5 rounded border transition-colors ${
                     interviewStage === opt.value
                       ? 'bg-orange-500 text-slate-950 border-orange-500'
                       : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30 hover:text-slate-200'
                   }`}
                 >
                   {opt.label}
-                </button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
           </div>
 
           <div className="mt-4">
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Role mode</p>
-            <div className="flex flex-wrap gap-1.5">
+            <ToggleGroup
+              value={[roleMode]}
+              onValueChange={(values) => { const next = values[0] as PrepRoleMode | undefined; if (next) setRoleMode(next) }}
+              disabled={busy}
+              className="flex-wrap gap-1.5"
+            >
               {ROLE_MODE_OPTIONS.map(opt => (
-                <button
+                <ToggleGroupItem
                   key={opt.value}
-                  type="button"
-                  onClick={() => setRoleMode(opt.value)}
-                  disabled={busy}
-                  className={`text-[12px] font-medium px-3 py-1.5 rounded border transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
+                  value={opt.value}
+                  className={`h-auto text-[12px] font-medium px-3 py-1.5 rounded border transition-colors ${
                     roleMode === opt.value
                       ? 'bg-orange-500 text-slate-950 border-orange-500'
                       : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30 hover:text-slate-200'
                   }`}
                 >
                   {opt.label}
-                </button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
           </div>
         </div>
 
         {firstCompany && !brief && (
-          <div className="mb-6 bg-orange-500/10 border border-orange-500/30 rounded px-6 py-5">
-            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Your first intelligence brief</p>
+          <Alert variant="warning" className="mb-6 px-6 py-5">
+            <AlertTitle className="text-[10px] tracking-[0.14em] uppercase">Your first intelligence brief</AlertTitle>
             <p className="text-[14px] font-semibold text-white mb-1">
               {loading ? `Building your brief on ${companyName}...` : `Ready to brief you on ${companyName}.`}
             </p>
-            <p className="text-[13px] text-slate-300 leading-relaxed">
+            <AlertDescription className="text-[13px] leading-relaxed">
               {loading
                 ? 'Scanning public signals, leadership context, strategic priorities, and likely objections. This takes about 20 seconds.'
                 : 'We scanned public signals, leadership context, and strategic priorities. Your brief is ready.'}
-            </p>
-          </div>
+            </AlertDescription>
+          </Alert>
         )}
 
         {exportGateError && (
-          <div className={`mb-4 rounded border px-5 py-4 ${exportGateError.type === 'sensitive' ? 'bg-red-500/10 border-red-500/30' : 'bg-amber-500/10 border-amber-500/30'}`}>
+          <Alert variant={exportGateError.type === 'sensitive' ? 'destructive' : 'warning'} className="mb-4 px-5 py-4">
             <p className="text-[12px] font-semibold text-white">{exportGateError.message}</p>
             <ul className="mt-2 space-y-1.5 text-[12px] text-slate-300">
               {exportGateError.remediation.slice(0, 6).map((item) => (
@@ -1142,27 +1171,29 @@ export function PrepClient({
               ))}
             </ul>
             <div className="mt-3 flex gap-2">
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => setBriefViewMode('full')}
-                className="text-[11px] font-semibold border border-white/10 rounded px-2.5 py-1 hover:border-white/30"
+                className="text-[11px]"
               >
                 Review full brief
-              </button>
-              <Link
-                href={`/dashboard/companies/${companyId}`}
-                className="text-[11px] font-semibold border border-white/10 rounded px-2.5 py-1 hover:border-white/30"
+              </Button>
+              <Button
+                variant="outline"
+                className="text-[11px]"
+                render={<Link href={`/dashboard/companies/${companyId}`} />}
               >
                 Add evidence
-              </Link>
+              </Button>
             </div>
-          </div>
+          </Alert>
         )}
 
         {error && (
-          <div className="mb-6 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded text-[13px] text-red-300">
-            {error}
-          </div>
+          <Alert variant="destructive" className="mb-6 px-4 py-3">
+            <AlertDescription className="text-[13px]">{error}</AlertDescription>
+          </Alert>
         )}
 
         {!brief && !busy && (() => {
@@ -1214,10 +1245,10 @@ export function PrepClient({
           const readyCount = items.filter(i => i.state !== 'missing').length
           if (readyCount === items.length && items.every(i => i.state === 'ready')) return null
           return (
-            <div className="mb-4 bg-white/5 border border-white/10 rounded px-5 py-4">
+            <Card variant="glass" className="mb-4 px-5 py-4">
               <div className="flex items-baseline justify-between gap-4 mb-3">
                 <p className="text-[12px] font-bold tracking-[0.1em] uppercase text-slate-300">Brief readiness</p>
-                <p className="text-[12px] text-slate-400">{readyCount} of {items.length} inputs ready</p>
+                <Badge variant="outline" className="text-slate-400">{readyCount} of {items.length} inputs ready</Badge>
               </div>
               <div className="flex flex-col gap-2">
                 {items.map(i => (
@@ -1232,9 +1263,13 @@ export function PrepClient({
                       </div>
                     </div>
                     {i.state !== 'ready' && (
-                      <Link href={i.href} className="shrink-0 text-[11px] font-semibold text-slate-200 border border-white/15 rounded px-2.5 py-1 hover:border-white/40 transition-colors whitespace-nowrap">
+                      <Button
+                        variant="outline"
+                        className="shrink-0 text-[11px] text-slate-200 whitespace-nowrap"
+                        render={<Link href={i.href} />}
+                      >
                         {i.cta}
-                      </Link>
+                      </Button>
                     )}
                   </div>
                 ))}
@@ -1242,72 +1277,73 @@ export function PrepClient({
               <p className="mt-3 text-[11px] text-slate-500">
                 You can generate the brief now. Each input you add makes it more specific to you.
               </p>
-            </div>
+            </Card>
           )
         })()}
 
         {!brief && !busy && !error && (
-          <div className="bg-white/5 border border-white/10 rounded p-8 sm:p-10 text-center">
+          <Card variant="glass" className="p-8 sm:p-10 text-center">
             <p className="text-[14px] text-slate-400">
               Generates an elite brief using your pipeline data, company notes, scan results, and known contacts.
             </p>
-          </div>
+          </Card>
         )}
 
         {!brief && !busy && error && (
-          <div className="bg-white/5 border border-white/10 rounded p-8 sm:p-10 text-center">
+          <Card variant="glass" className="p-8 sm:p-10 text-center">
             <p className="text-[14px] text-slate-400">
               Click Generate to try again.
             </p>
-          </div>
+          </Card>
         )}
 
         {busy && !brief && (
-          <div className="bg-white/5 border border-white/10 rounded p-5 sm:p-8">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
-            </div>
-          </div>
+          <Card variant="glass" className="p-5 sm:p-8">
+            <PulsingDots />
+          </Card>
         )}
 
         {brief && profileScore < 50 && !busy && (
-          <div className="mb-4 px-5 py-4 bg-amber-500/10 border border-amber-500/30 rounded flex items-start gap-4">
+          <Alert variant="warning" className="mb-4 px-5 py-4 flex items-start gap-4">
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold text-amber-200">
+              <AlertTitle className="text-[13px]">
                 This brief used limited profile data.
-              </p>
-              <p className="text-[12px] text-amber-300 mt-1 leading-relaxed">
+              </AlertTitle>
+              <AlertDescription className="text-[12px] mt-1 leading-relaxed">
                 Adding your resume unlocks significantly more specific talking points, win thesis, and pushback prep. The brief you just generated is a starting point.
-              </p>
+              </AlertDescription>
             </div>
-            <Link
-              href="/dashboard/profile#section-resume"
-              className="shrink-0 text-[12px] font-semibold text-amber-200 border border-amber-500/40 hover:border-amber-500 px-3 py-1.5 rounded transition-colors"
+            <Button
+              variant="outline"
+              className="shrink-0 text-[12px] text-amber-200 border-amber-500/40 hover:border-amber-500"
+              render={<Link href="/dashboard/profile#section-resume" />}
             >
               Add resume →
-            </Link>
-          </div>
+            </Button>
+          </Alert>
         )}
 
         {brief && briefConfidence && !busy && (
-          <div className={`mb-4 rounded border px-5 py-4 ${isLowConfidence ? 'bg-amber-500/10 border-amber-500/30' : 'bg-white/5 border-white/10'}`}>
-            <div className="mb-3 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setBriefViewMode('tonight')}
-                className={`text-[11px] font-semibold border rounded px-2.5 py-1 ${briefViewMode === 'tonight' ? 'bg-orange-500 text-slate-950 border-orange-500' : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'}`}
+          <Alert variant={isLowConfidence ? 'warning' : 'default'} className="mb-4 px-5 py-4">
+            <div className="mb-3">
+              <ToggleGroup
+                value={[briefViewMode]}
+                onValueChange={(values) => { const next = values[0] as 'tonight' | 'full' | undefined; if (next) setBriefViewMode(next) }}
+                className="gap-2"
               >
-                Tonight view
-              </button>
-              <button
-                type="button"
-                onClick={() => setBriefViewMode('full')}
-                className={`text-[11px] font-semibold border rounded px-2.5 py-1 ${briefViewMode === 'full' ? 'bg-orange-500 text-slate-950 border-orange-500' : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'}`}
-              >
-                Full dossier
-              </button>
+                <ToggleGroupItem
+                  value="tonight"
+                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'tonight' ? 'bg-orange-500 text-slate-950 border-orange-500' : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'}`}
+                >
+                  Tonight view
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="full"
+                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'full' ? 'bg-orange-500 text-slate-950 border-orange-500' : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'}`}
+                >
+                  Full dossier
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
@@ -1328,8 +1364,9 @@ export function PrepClient({
                     <li key={item}>- {item}</li>
                   ))}
                 </ul>
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => {
                     setLowConfidenceAcknowledged(true)
                     void emitPmfEvent(PMF_EVENTS.prep.prep_low_confidence_seen, {
@@ -1340,17 +1377,17 @@ export function PrepClient({
                       interview_stage: interviewStage,
                     })
                   }}
-                  className="mt-3 text-[12px] font-semibold text-amber-200 border border-amber-500/40 rounded px-3 py-1.5 hover:bg-amber-500/20 transition-colors"
+                  className="mt-3 text-[12px] text-amber-200 border-amber-500/40 hover:bg-amber-500/20"
                 >
                   Acknowledge and allow export
-                </button>
+                </Button>
               </div>
             )}
-          </div>
+          </Alert>
         )}
 
         {brief && (
-          <div className="bg-white/5 border border-white/10 rounded p-5 sm:p-8 mb-4">
+          <Card variant="glass" className="p-5 sm:p-8 mb-4">
             <SourceLegend
               traceFilter={traceFilter}
               counts={buildClaimOriginCounts(displayedBrief)}
@@ -1365,7 +1402,7 @@ export function PrepClient({
                 AI-generated - use as input, not advice. Verify facts before any conversation.
               </p>
             )}
-          </div>
+          </Card>
         )}
 
         {briefId && !busy && (
@@ -1375,39 +1412,42 @@ export function PrepClient({
         )}
 
         {briefId && !busy && (
-          <div className="mb-4 rounded border border-white/10 bg-white/5 p-4 no-print">
+          <Card variant="glass" className="mb-4 p-4 no-print">
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Post-interview outcome</p>
             <p className="mt-1 text-[13px] text-slate-300">Log the result after this conversation to improve efficacy tracking.</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => { void handleLogOutcome('advanced') }}
                 disabled={!!outcomeLogging}
-                className="text-[12px] font-semibold border border-emerald-300 text-emerald-300 rounded px-3 py-1.5 hover:bg-emerald-500/10 disabled:opacity-50"
+                className="text-[12px] border-emerald-300 text-emerald-300 hover:bg-emerald-500/10"
               >
                 {outcomeLogging === 'advanced' ? 'Saving…' : 'Advanced'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => { void handleLogOutcome('offer') }}
                 disabled={!!outcomeLogging}
-                className="text-[12px] font-semibold border border-blue-300 text-blue-300 rounded px-3 py-1.5 hover:bg-blue-500/10 disabled:opacity-50"
+                className="text-[12px] border-blue-300 text-blue-300 hover:bg-blue-500/10"
               >
                 {outcomeLogging === 'offer' ? 'Saving…' : 'Offer'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => { void handleLogOutcome('rejected') }}
                 disabled={!!outcomeLogging}
-                className="text-[12px] font-semibold border border-amber-500/40 text-amber-300 rounded px-3 py-1.5 hover:bg-amber-500/10 disabled:opacity-50"
+                className="text-[12px] border-amber-500/40 text-amber-300 hover:bg-amber-500/10"
               >
                 {outcomeLogging === 'rejected' ? 'Saving…' : 'Rejected'}
-              </button>
+              </Button>
             </div>
             {outcomeLogged && (
               <p className="mt-2 text-[12px] text-slate-400">Outcome saved: {outcomeLogged}.</p>
             )}
-          </div>
+          </Card>
         )}
 
         {brief && !busy && (() => {
@@ -1435,19 +1475,23 @@ export function PrepClient({
           const top = nudges.slice(0, 2)
           if (top.length === 0) return null
           return (
-            <div className="mb-4 bg-white/5 border border-white/10 rounded p-5 no-print">
+            <Card variant="glass" className="mb-4 p-5 no-print">
               <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">What would sharpen the next brief</p>
               <div className="flex flex-col gap-2.5">
                 {top.map((n, i) => (
                   <div key={i} className="flex items-start justify-between gap-4">
                     <p className="text-[13px] text-slate-300">{n.message}</p>
-                    <Link href={n.href} className="shrink-0 text-[11px] font-semibold text-slate-300 border border-white/10 rounded px-2.5 py-1 hover:border-white/30 transition-colors whitespace-nowrap">
+                    <Button
+                      variant="outline"
+                      className="shrink-0 text-[11px] text-slate-300 whitespace-nowrap"
+                      render={<Link href={n.href} />}
+                    >
                       {n.cta}
-                    </Link>
+                    </Button>
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
           )
         })()}
 
@@ -1579,34 +1623,32 @@ export function PrepClient({
         {brief && !loading && <div className="no-print"><ResourcePanel brief={brief} /></div>}
 
         {brief && !loading && (
-          <div className="bg-white/5 border border-white/10 rounded p-6 mb-4 no-print">
+          <Card variant="glass" className="p-6 mb-4 no-print">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-3">
               Ask about this brief
             </p>
             {chatMessages.length > 0 && (
-              <div className="flex flex-col gap-3 mb-4 max-h-80 overflow-y-auto">
-                {chatMessages.map((msg, i) => (
-                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] rounded-lg px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${
-                      msg.role === 'user'
-                        ? 'bg-orange-500 text-slate-950'
-                        : 'bg-white/5 border border-white/10 text-slate-200'
-                    }`}>
-                      {msg.content}
-                      {msg.role === 'assistant' && msg.content === '' && chatLoading && (
-                        <span className="inline-flex gap-1 ml-1">
-                          <span className="w-1 h-1 rounded-full bg-slate-400 animate-pulse inline-block" />
-                          <span className="w-1 h-1 rounded-full bg-slate-400 animate-pulse inline-block [animation-delay:150ms]" />
-                          <span className="w-1 h-1 rounded-full bg-slate-400 animate-pulse inline-block [animation-delay:300ms]" />
-                        </span>
-                      )}
+              <ScrollArea className="mb-4 max-h-80">
+                <div className="flex flex-col gap-3">
+                  {chatMessages.map((msg, i) => (
+                    <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[85%] rounded-lg px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${
+                        msg.role === 'user'
+                          ? 'bg-orange-500 text-slate-950'
+                          : 'bg-white/5 border border-white/10 text-slate-200'
+                      }`}>
+                        {msg.content}
+                        {msg.role === 'assistant' && msg.content === '' && chatLoading && (
+                          <PulsingDots dotClassName="w-1 h-1" className="ml-1 gap-1" />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             )}
             <div className="flex gap-2 items-end">
-              <textarea
+              <Textarea
                 ref={chatInputRef}
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
@@ -1618,23 +1660,23 @@ export function PrepClient({
                   : 'Ask a follow-up...'}
                 rows={2}
                 disabled={chatLoading || loading}
-                className="flex-1 border border-white/10 rounded-lg px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none disabled:opacity-50"
+                className="flex-1 text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none"
               />
-              <button
+              <Button
                 type="button"
                 onClick={handleChat}
                 disabled={chatLoading || loading || !chatInput.trim()}
-                className="shrink-0 bg-orange-500 text-slate-950 text-[13px] font-semibold px-4 py-2.5 rounded-lg cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="shrink-0 text-[13px] px-4"
               >
                 {chatLoading ? '…' : 'Ask'}
-              </button>
+              </Button>
             </div>
             <p className="mt-2 text-[11px] text-slate-300">Enter to send · Shift+Enter for new line</p>
-          </div>
+          </Card>
         )}
 
         {brief && !loading && (
-          <div className="bg-white/5 border border-white/10 rounded p-6 no-print">
+          <Card variant="glass" className="p-6 no-print">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-3">
               Refine this brief
             </p>
@@ -1644,18 +1686,19 @@ export function PrepClient({
                 'Add a first 30/60/90 day plan',
                 "Assume they'll challenge my industry experience",
               ].map(chip => (
-                <button
+                <Button
                   key={chip}
                   type="button"
+                  variant="outline"
                   onClick={() => { setRefineInput(chip); refineRef.current?.focus() }}
-                  className="text-[12px] text-slate-400 border border-white/10 rounded-full px-3 py-1 hover:border-white/30 hover:text-slate-200 bg-transparent cursor-pointer transition-colors"
+                  className="rounded-full text-[12px] text-slate-400 hover:text-slate-200"
                 >
                   {chip}
-                </button>
+                </Button>
               ))}
             </div>
             <div className="flex gap-3 items-end">
-              <textarea
+              <Textarea
                 ref={refineRef}
                 value={refineInput}
                 onChange={e => setRefineInput(e.target.value)}
@@ -1665,36 +1708,37 @@ export function PrepClient({
                 placeholder="Or type your own refinement request..."
                 rows={2}
                 disabled={refining}
-                className="flex-1 border border-white/10 rounded-lg px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none disabled:opacity-50"
+                className="flex-1 rounded-lg text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none"
               />
-              <button
+              <Button
                 type="button"
                 onClick={handleRefine}
                 disabled={refining || !refineInput.trim()}
-                className="shrink-0 bg-orange-500 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded-lg cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="shrink-0 rounded-lg text-[13px] px-5"
               >
                 {refining ? 'Refining…' : 'Refine'}
-              </button>
+              </Button>
             </div>
             <p className="mt-2 text-[11px] text-slate-300">Enter to submit · Shift+Enter for new line</p>
-          </div>
+          </Card>
         )}
 
         {brief && (
-          <div className="mt-6 border border-white/10 bg-white/5 backdrop-blur-md rounded px-6 py-5 no-print">
+          <Card variant="glass" className="mt-6 px-6 py-5 no-print">
             <div className="flex items-center justify-between gap-4 mb-3">
               <p className="text-[13px] text-slate-300 font-semibold">
                 Draft outreach from this brief
               </p>
               {!outreachDraft && !outreachLoading && (
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={handleGenerateOutreach}
                   disabled={outreachLoading}
-                  className="shrink-0 text-[12px] font-semibold text-white border border-slate-600 hover:border-white/30 px-3 py-1.5 rounded transition-colors cursor-pointer bg-transparent disabled:opacity-50"
+                  className="shrink-0 text-[12px] text-white"
                 >
                   Generate →
-                </button>
+                </Button>
               )}
             </div>
 
@@ -1712,34 +1756,37 @@ export function PrepClient({
                   {outreachDraft}
                 </p>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
                     onClick={handleCopyOutreach}
-                    className="text-[12px] font-semibold text-white border border-slate-600 hover:border-white/30 px-3 py-1.5 rounded transition-colors cursor-pointer bg-transparent"
+                    className="text-[12px] text-white"
                   >
                     {outreachCopied ? 'Copied!' : 'Copy'}
-                  </button>
+                  </Button>
                   {hasContacts && !outreachLogged && (
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={handleLogOutreach}
                       disabled={outreachLogLoading}
-                      className="text-[12px] font-semibold text-slate-400 hover:text-slate-200 border border-slate-600 hover:border-white/30 px-3 py-1.5 rounded transition-colors cursor-pointer bg-transparent disabled:opacity-50"
+                      className="text-[12px] text-slate-400 hover:text-slate-200"
                     >
                       {outreachLogLoading ? 'Logging…' : 'Log as sent'}
-                    </button>
+                    </Button>
                   )}
                   {outreachLogged && (
                     <span className="text-[12px] font-semibold text-green-400">Logged</span>
                   )}
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={handleGenerateOutreach}
                     disabled={outreachLoading}
-                    className="text-[12px] font-semibold text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded transition-colors cursor-pointer bg-transparent border-0 disabled:opacity-50"
+                    className="text-[12px] text-slate-400 hover:text-slate-200"
                   >
                     Regenerate
-                  </button>
+                  </Button>
                   {!hasContacts && (
                     <Link
                       href={`/dashboard/companies/${companyId}`}
@@ -1758,7 +1805,7 @@ export function PrepClient({
                 {!hasContacts && ' Add a contact at ' + companyName + ' to log the outreach after.'}
               </p>
             )}
-          </div>
+          </Card>
         )}
 
       </main>

@@ -1,6 +1,21 @@
-﻿'use client'
+'use client'
 
-import { useState, useRef } from 'react'
+import { Fragment, useState, useRef } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 type Appearance = {
   conference_name: string
@@ -89,6 +104,17 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
     setSpeakers(prev => prev.map(s => s.id === id ? { ...s, ...speaker } : s))
   }
 
+  async function updatePriority(id: string, priority: number) {
+    const res = await fetch(`/api/admin/speakers/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ priority }),
+    })
+    if (!res.ok) return
+    const { speaker } = await res.json()
+    setSpeakers(prev => prev.map(s => s.id === id ? { ...s, ...speaker } : s))
+  }
+
   async function updateNotes(id: string, outreach_notes: string) {
     const res = await fetch(`/api/admin/speakers/${id}`, {
       method: 'PATCH',
@@ -127,7 +153,11 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
   return (
     <div>
       {/* Stats bar */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <ToggleGroup
+        value={[statusFilter]}
+        onValueChange={(values) => { if (values[0]) setStatusFilter(values[0]) }}
+        className="flex-wrap gap-2 mb-6"
+      >
         {[
           { key: 'all', label: 'All' },
           { key: 'not_started', label: 'Not started' },
@@ -137,36 +167,33 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
           { key: 'not_interested', label: 'Not interested' },
           { key: 'skip', label: 'Skip' },
         ].map(({ key, label }) => (
-          <button
+          <ToggleGroupItem
             key={key}
-            onClick={() => setStatusFilter(key)}
+            value={key}
             className={`text-[12px] font-semibold px-3 py-1.5 rounded border transition-colors ${
               statusFilter === key
-                ? 'bg-slate-900 border-slate-900 text-white'
+                ? 'bg-slate-900 border-slate-900 text-white hover:bg-slate-900'
                 : 'bg-white border-slate-200 text-slate-600 hover:border-slate-400'
             }`}
           >
             {label} <span className="ml-1 opacity-60">{counts[key] ?? 0}</span>
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
 
       {/* Search + import + export toolbar */}
       <div className="flex items-center gap-3 mb-6">
-        <input
+        <Input
           type="text"
           placeholder="Search name, company, title..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="flex-1 text-[13px] border border-slate-200 rounded px-3 py-2 focus:outline-none focus:border-slate-400"
+          className="flex-1"
         />
-        <a
-          href="/api/admin/speakers/export"
-          className="text-[12px] font-semibold text-slate-700 border border-slate-200 bg-white hover:border-slate-400 rounded px-4 py-2 transition-colors whitespace-nowrap"
-        >
+        <Button variant="outline" render={<a href="/api/admin/speakers/export" />}>
           Export CSV
-        </a>
-        <label className="text-[12px] font-semibold text-white bg-slate-900 hover:bg-slate-700 rounded px-4 py-2 transition-colors cursor-pointer whitespace-nowrap">
+        </Button>
+        <Button render={<label className="cursor-pointer" />}>
           {importing ? 'Importing...' : 'Import CSV'}
           <input
             ref={fileRef}
@@ -176,17 +203,17 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
             onChange={handleImport}
             disabled={importing}
           />
-        </label>
+        </Button>
       </div>
 
       {importResult && (
-        <div className="mb-4 text-[13px] text-slate-700 bg-slate-50 border border-slate-200 rounded px-4 py-3">
-          {importResult}
-        </div>
+        <Alert variant={importResult.startsWith('Error:') ? 'destructive' : 'success'} className="mb-4">
+          <AlertDescription>{importResult}</AlertDescription>
+        </Alert>
       )}
 
       {/* Table */}
-      <div className="bg-white border border-slate-200 rounded overflow-hidden">
+      <Card variant="default" className="p-0 overflow-hidden">
         <div className="px-6 py-[18px] border-b border-slate-200">
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
             Speakers ({filtered.length})
@@ -198,31 +225,30 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
             No speakers match this filter. Import a CSV to get started.
           </p>
         ) : (
-          <table className="w-full text-[12px]">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-100 text-left">
-                <th className="px-6 py-2.5 font-semibold text-slate-400">Name</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Company</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Conferences</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Priority</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Status</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Notes</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
+          <Table className="text-[12px]">
+            <TableHeader>
+              <TableRow className="bg-slate-50 border-b border-slate-100">
+                <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Name</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Company</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Conferences</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Priority</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Notes</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-slate-50">
               {filtered.map(s => {
                 const isExpanded = expandedId === s.id
                 const appearances = [...(s.conference_appearances ?? [])].sort(
                   (a, b) => b.conference_year - a.conference_year
                 )
                 return (
-                  <>
-                    <tr
-                      key={s.id}
+                  <Fragment key={s.id}>
+                    <TableRow
                       className={`cursor-pointer hover:bg-slate-50 transition-colors ${isExpanded ? 'bg-slate-50' : ''}`}
                       onClick={() => setExpandedId(isExpanded ? null : s.id)}
                     >
-                      <td className="px-6 py-3">
+                      <TableCell className="px-6 py-3 whitespace-normal">
                         <div className="font-semibold text-slate-900">{s.full_name}</div>
                         {s.title && <div className="text-slate-400 text-[11px] mt-0.5">{s.title}</div>}
                         {s.linkedin_url && (
@@ -236,12 +262,12 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                             LinkedIn
                           </a>
                         )}
-                      </td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-normal">
                         <div className="text-slate-700">{s.company ?? '-'}</div>
                         {s.sector && <div className="text-slate-400 text-[11px]">{s.sector}</div>}
-                      </td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-normal">
                         {appearances.length === 0 ? (
                           <span className="text-slate-300">-</span>
                         ) : (
@@ -256,85 +282,83 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                             )}
                           </div>
                         )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <label htmlFor={`priority-select-${s.id}`} className="sr-only">Speaker priority</label>
-                        <select
-                          id={`priority-select-${s.id}`}
-                          aria-label="Speaker priority"
-                          value={s.priority}
-                          onClick={e => e.stopPropagation()}
-                          onChange={async e => {
-                            const p = parseInt(e.target.value, 10)
-                            const res = await fetch(`/api/admin/speakers/${s.id}`, {
-                              method: 'PATCH',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ priority: p }),
-                            })
-                            if (res.ok) {
-                              const { speaker } = await res.json()
-                              setSpeakers(prev => prev.map(x => x.id === s.id ? { ...x, ...speaker } : x))
-                            }
-                          }}
-                          className={`bg-transparent border-none cursor-pointer text-[12px] font-semibold ${PRIORITY_COLORS[s.priority]}`}
+                      </TableCell>
+                      <TableCell className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                        <Select
+                          value={String(s.priority)}
+                          onValueChange={(value) => value && updatePriority(s.id, parseInt(value, 10))}
                         >
-                          <option value={1}>High</option>
-                          <option value={2}>Medium</option>
-                          <option value={3}>Low</option>
-                        </select>
-                      </td>
-                      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-                        <label htmlFor={`status-select-${s.id}`} className="sr-only">Speaker outreach status</label>
-                        <select
-                          id={`status-select-${s.id}`}
-                          aria-label="Speaker outreach status"
+                          <SelectTrigger
+                            aria-label="Speaker priority"
+                            title="Speaker priority"
+                            className={`h-auto w-fit border-0 bg-transparent px-0 py-0 text-[12px] shadow-none [&_svg]:size-3 ${PRIORITY_COLORS[s.priority]}`}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(PRIORITY_LABELS).map(([val, label]) => (
+                              <SelectItem key={val} value={val}>{label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                        <Select
                           value={s.outreach_status}
-                          onChange={e => updateStatus(s.id, e.target.value)}
-                          className={`text-[11px] font-bold px-2 py-0.5 rounded border-0 cursor-pointer ${STATUS_COLORS[s.outreach_status]}`}
+                          onValueChange={(value) => value && updateStatus(s.id, value)}
                         >
-                          {Object.entries(STATUS_LABELS).map(([val, label]) => (
-                            <option key={val} value={val}>{label}</option>
-                          ))}
-                        </select>
+                          <SelectTrigger
+                            aria-label="Speaker outreach status"
+                            title="Speaker outreach status"
+                            className={`h-auto w-fit border-0 rounded px-2 py-0.5 text-[11px] font-bold shadow-none [&_svg]:size-3 ${STATUS_COLORS[s.outreach_status]}`}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(STATUS_LABELS).map(([val, label]) => (
+                              <SelectItem key={val} value={val}>{label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         {s.outreach_date && (
                           <div className="text-slate-400 text-[11px] mt-0.5">{s.outreach_date}</div>
                         )}
-                      </td>
-                      <td className="px-4 py-3 max-w-[200px]" onClick={e => e.stopPropagation()}>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 max-w-[200px] whitespace-normal" onClick={e => e.stopPropagation()}>
                         <OutreachNotesCell
                           speakerId={s.id}
                           notes={s.outreach_notes}
                           onSave={notes => updateNotes(s.id, notes)}
                         />
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                     {isExpanded && (
-                      <tr key={`${s.id}-expand`} className="bg-slate-50">
-                        <td colSpan={6} className="px-6 py-4">
+                      <TableRow className="bg-slate-50">
+                        <TableCell colSpan={6} className="px-6 py-4 whitespace-normal">
                           <div className="grid grid-cols-2 gap-6">
                             <div>
                               <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">All Appearances</div>
                               {appearances.length === 0 ? (
                                 <p className="text-[12px] text-slate-400">None recorded.</p>
                               ) : (
-                                <table className="w-full text-[12px]">
-                                  <thead>
-                                    <tr className="text-left text-slate-400">
-                                      <th className="pb-1 font-semibold">Conference</th>
-                                      <th className="pb-1 font-semibold">Year</th>
-                                      <th className="pb-1 font-semibold">Type</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody className="divide-y divide-slate-100">
+                                <Table className="text-[12px]">
+                                  <TableHeader>
+                                    <TableRow className="text-slate-400">
+                                      <TableHead className="pb-1 font-semibold">Conference</TableHead>
+                                      <TableHead className="pb-1 font-semibold">Year</TableHead>
+                                      <TableHead className="pb-1 font-semibold">Type</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody className="divide-y divide-slate-100">
                                     {appearances.map(a => (
-                                      <tr key={`${a.conference_name}-${a.conference_year}`}>
-                                        <td className="py-1.5 text-slate-700">{a.conference_name}</td>
-                                        <td className="py-1.5 text-slate-500">{a.conference_year}</td>
-                                        <td className="py-1.5 text-slate-400 capitalize">{a.session_type ?? '-'}</td>
-                                      </tr>
+                                      <TableRow key={`${a.conference_name}-${a.conference_year}`}>
+                                        <TableCell className="py-1.5 text-slate-700">{a.conference_name}</TableCell>
+                                        <TableCell className="py-1.5 text-slate-500">{a.conference_year}</TableCell>
+                                        <TableCell className="py-1.5 text-slate-400 capitalize">{a.session_type ?? '-'}</TableCell>
+                                      </TableRow>
                                     ))}
-                                  </tbody>
-                                </table>
+                                  </TableBody>
+                                </Table>
                               )}
                             </div>
                             {s.notes && (
@@ -344,19 +368,19 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                               </div>
                             )}
                           </div>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     )}
-                  </>
+                  </Fragment>
                 )
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         )}
-      </div>
+      </Card>
 
       {/* CSV format hint */}
-      <div className="mt-6 bg-white border border-slate-200 rounded p-5">
+      <Card variant="default" className="mt-6 p-5">
         <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">CSV Import Format</div>
         <p className="text-[12px] text-slate-500 mb-2">
           Header row required. Columns (all optional except full_name):
@@ -369,7 +393,7 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
           Multiple rows per speaker are allowed (one row per appearance). Speakers are matched by linkedin_url
           when present, otherwise by (full_name, company).
         </p>
-      </div>
+      </Card>
     </div>
   )
 }
@@ -390,42 +414,44 @@ function OutreachNotesCell({
     return (
       <div className="flex flex-col gap-1">
         <label htmlFor="speaker-notes" className="sr-only">Speaker notes</label>
-        <textarea
+        <Textarea
           id="speaker-notes"
           autoFocus
           value={value}
           onChange={e => setValue(e.target.value)}
           rows={2}
           aria-label="Speaker notes"
-          className="text-[12px] border border-slate-300 rounded px-2 py-1 w-full resize-none focus:outline-none focus:border-slate-500"
+          className="text-[12px] resize-none"
         />
         <div className="flex gap-2">
-          <button
+          <Button
+            size="sm"
             onClick={() => { onSave(value); setEditing(false) }}
-            className="text-[11px] font-semibold text-white bg-slate-900 rounded px-2 py-0.5"
           >
             Save
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
             onClick={() => { setValue(notes ?? ''); setEditing(false) }}
-            className="text-[11px] text-slate-400 hover:text-slate-600"
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     )
   }
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={() => setEditing(true)}
-      className="text-left text-slate-500 hover:text-slate-900 transition-colors w-full"
+      className="justify-start text-left text-slate-500 hover:text-slate-900 h-auto w-full px-0 font-normal"
     >
       {notes
         ? <span className="line-clamp-2 text-[11px]">{notes}</span>
         : <span className="text-slate-300 text-[11px] italic">Add notes</span>
       }
-    </button>
+    </Button>
   )
 }

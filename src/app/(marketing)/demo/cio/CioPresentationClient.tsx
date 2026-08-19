@@ -2,6 +2,19 @@
 
 import Link from 'next/link'
 import { useMemo, useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type ArchetypeKey =
   | 'kenneth'
@@ -532,7 +545,7 @@ export function CioPresentationClient() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">Kenneth transition presentation mode</p>
           <h1 className="text-[28px] sm:text-[34px] font-bold text-slate-900 leading-[1.1] mb-4">
             Executive-in-transition walkthrough tailored to Kenneth
@@ -545,75 +558,79 @@ export function CioPresentationClient() {
             <Link href="/demo/cio/notes" className="text-[12px] px-3 py-1.5 rounded border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition-colors">Talking points page</Link>
           </div>
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="border border-slate-200 rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Transition lens: from current CIO seat to next enterprise CIO role</div>
-            <div className="border border-slate-200 rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Search outcome: stronger target narrative, faster prep, higher-quality outreach</div>
-            <div className="border border-slate-200 rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Credibility signals: transformation wins, governance leadership, advisory footprint</div>
+            <Card variant="default" className="rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Transition lens: from current CIO seat to next enterprise CIO role</Card>
+            <Card variant="default" className="rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Search outcome: stronger target narrative, faster prep, higher-quality outreach</Card>
+            <Card variant="default" className="rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Credibility signals: transformation wins, governance leadership, advisory footprint</Card>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Target discovery</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Find best-fit companies for Kenneth</h2>
           <p className="text-[14px] text-slate-600 mb-5">
             Show that Starting Monday is not only prep and outreach. It also helps identify high-fit target companies for executives in transition.
           </p>
 
-          <form onSubmit={findCompanyFit} className="border border-slate-200 rounded p-5 bg-slate-50 flex flex-col gap-4">
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Fit keywords (comma-separated)</label>
-              <input
-                value={fitKeywords}
-                onChange={(e) => setFitKeywords(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="public sector transformation, enterprise modernization"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-slate-900 hover:bg-slate-800 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors self-start"
-            >
-              Find company matches
-            </button>
+          <form onSubmit={findCompanyFit}>
+            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+              <div>
+                <Label htmlFor="fit-keywords" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Fit keywords (comma-separated)</Label>
+                <Input
+                  id="fit-keywords"
+                  value={fitKeywords}
+                  onChange={(e) => setFitKeywords(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="public sector transformation, enterprise modernization"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                className="h-auto text-[13px] font-semibold px-5 py-2.5 rounded self-start"
+              >
+                Find company matches
+              </Button>
+            </Card>
           </form>
 
           {fitResults.length > 0 && (
             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
               {fitResults.map((company) => (
-                <div key={company.name} className="border border-slate-200 rounded-xl p-4 bg-white">
+                <Card key={company.name} variant="default" className="rounded-xl p-4 bg-white">
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div>
                       <p className="text-[16px] font-semibold text-slate-900 leading-tight">{company.name}</p>
                       <p className="text-[12px] text-slate-500">{company.sector}</p>
                     </div>
-                    <span className="text-[11px] bg-emerald-100 text-emerald-800 px-2 py-1 rounded">Fit score {company.score}</span>
+                    <Badge variant="success" className="rounded">Fit score {company.score}</Badge>
                   </div>
                   <p className="text-[13px] text-slate-700 leading-relaxed mb-2">{company.whyFit}</p>
                   <p className="text-[12px] text-slate-500">Signals: {company.strengths.join(', ')}</p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <button
+                    <Button
                       type="button"
                       onClick={() => saveToTargetList(company)}
                       disabled={targetList.some((item) => item.name === company.name)}
-                      className="text-[12px] px-3 py-1.5 rounded border border-slate-300 bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="h-auto text-[12px] px-3 py-1.5 rounded"
                     >
                       {targetList.some((item) => item.name === company.name) ? 'Saved' : 'Save to Target List'}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={() => loadInBrief(company.name)}
-                      className="text-[12px] px-3 py-1.5 rounded border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 transition-colors"
+                      className="h-auto text-[12px] px-3 py-1.5 rounded border-slate-300"
                     >
                       Use in live brief
-                    </button>
+                    </Button>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Demo pipeline view</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Kenneth target list</h2>
           <p className="text-[14px] text-slate-600 mb-5">
@@ -621,83 +638,92 @@ export function CioPresentationClient() {
           </p>
 
           {targetList.length === 0 ? (
-            <div className="border border-dashed border-slate-300 rounded-xl p-4 text-[13px] text-slate-500 bg-slate-50">
+            <Card variant="default" className="border-dashed rounded-xl p-4 text-[13px] text-slate-500 bg-slate-50">
               No saved targets yet. Use Save to Target List on any company match above.
-            </div>
+            </Card>
           ) : (
             <div className="space-y-3">
               {targetList.map((company) => (
-                <div key={company.name} className="border border-slate-200 rounded-xl p-4 bg-white flex items-start justify-between gap-4">
+                <Card key={company.name} variant="default" className="rounded-xl p-4 bg-white flex items-start justify-between gap-4">
                   <div>
                     <p className="text-[15px] font-semibold text-slate-900">{company.name}</p>
                     <p className="text-[12px] text-slate-500 mb-1">{company.sector}</p>
                     <p className="text-[13px] text-slate-700 leading-relaxed">{company.whyFit}</p>
                   </div>
                   <div className="shrink-0 flex flex-col items-end gap-2">
-                    <span className="text-[11px] bg-emerald-100 text-emerald-800 px-2 py-1 rounded">Fit {company.score}</span>
-                    <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-1 rounded">{company.stage}</span>
+                    <Badge variant="success" className="rounded">Fit {company.score}</Badge>
+                    <Badge variant="secondary" className="rounded">{company.stage}</Badge>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Brief demo</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Generate the company brief on the fly</h2>
           <p className="text-[14px] text-slate-600 mb-5">Use this as a transition scenario: choose Kenneth's target company and target role, then show the brief quality before high-stakes interviews.</p>
 
-          <form onSubmit={generateCompanyBrief} className="border border-slate-200 rounded p-5 bg-slate-50 flex flex-col gap-4">
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</label>
-              <input
-                value={companyBriefCompany}
-                onChange={(e) => setCompanyBriefCompany(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="ServiceNow"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</label>
-              <input
-                value={companyBriefRole}
-                onChange={(e) => setCompanyBriefRole(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="Enterprise CIO (Next Role)"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={companyBriefLoading || !companyBriefCompany.trim() || !companyBriefRole.trim()}
-              className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors self-start"
-            >
-              {companyBriefLoading ? 'Generating...' : 'Generate company brief'}
-            </button>
-            {companyBriefStatus && <p className="text-[12px] text-slate-500">{companyBriefStatus}</p>}
-            {companyFirstTokenSlow && <p className="text-[12px] text-slate-500">First response chunk is taking longer than usual.</p>}
-            {lastCompanyRequest && !companyBriefLoading && (
-              <button
-                type="button"
-                onClick={retryCompanyBrief}
-                className="text-[12px] text-slate-600 underline underline-offset-2 hover:text-slate-900 self-start"
+          <form onSubmit={generateCompanyBrief}>
+            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+              <div>
+                <Label htmlFor="presentation-company-brief-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Input
+                  id="presentation-company-brief-company"
+                  value={companyBriefCompany}
+                  onChange={(e) => setCompanyBriefCompany(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="ServiceNow"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="presentation-company-brief-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Input
+                  id="presentation-company-brief-role"
+                  value={companyBriefRole}
+                  onChange={(e) => setCompanyBriefRole(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="Enterprise CIO (Next Role)"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={companyBriefLoading || !companyBriefCompany.trim() || !companyBriefRole.trim()}
+                className="h-auto text-[13px] font-semibold px-5 py-2.5 rounded self-start"
               >
-                Retry last request
-              </button>
-            )}
-            {companyBriefError && <p className="text-[13px] text-red-600">{companyBriefError}</p>}
+                {companyBriefLoading ? 'Generating...' : 'Generate company brief'}
+              </Button>
+              {companyBriefStatus && <p className="text-[12px] text-slate-500">{companyBriefStatus}</p>}
+              {companyFirstTokenSlow && <p className="text-[12px] text-slate-500">First response chunk is taking longer than usual.</p>}
+              {lastCompanyRequest && !companyBriefLoading && (
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={retryCompanyBrief}
+                  className="h-auto p-0 text-[12px] text-slate-600 hover:text-slate-900 self-start"
+                >
+                  Retry last request
+                </Button>
+              )}
+              {companyBriefError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{companyBriefError}</AlertDescription>
+                </Alert>
+              )}
+            </Card>
           </form>
 
           {(companyBriefLoading || companyBrief) && (
-            <div ref={companyBriefRef} className="mt-5 border border-slate-200 rounded p-6 bg-white">
+            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={companyBriefRef}>
               {renderBrief(companyBrief, companyBriefLoading)}
-            </div>
+            </Card>
           )}
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Tailored brief demo</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Kenneth transition brief at the named company and role</h2>
           <p className="text-[14px] text-slate-600 mb-5">
@@ -705,82 +731,94 @@ export function CioPresentationClient() {
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-            <div className="border border-slate-200 rounded p-4 bg-slate-50">
+            <Card variant="default" className="rounded p-4 bg-slate-50">
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">Profile snapshot ({activeProfile.label})</p>
               <pre className="text-[12px] text-slate-700 whitespace-pre-wrap leading-relaxed">{activeProfile.resume}</pre>
-            </div>
-            <div className="border border-slate-200 rounded p-4 bg-slate-50">
+            </Card>
+            <Card variant="default" className="rounded p-4 bg-slate-50">
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">LinkedIn-style summary</p>
               <p className="text-[12px] text-slate-700 leading-relaxed">{activeProfile.linkedin}</p>
-            </div>
+            </Card>
           </div>
 
-          <form onSubmit={generateTailoredBrief} className="border border-slate-200 rounded p-5 bg-slate-50 flex flex-col gap-4">
-            <div>
-              <label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Profile source</label>
-              <select
-                id="demo-archetype"
-                value={archetype}
-                onChange={(e) => {
-                  const selected = e.target.value as ArchetypeKey
-                  setArchetype(selected)
-                  const profile = ARCHETYPES.find((item) => item.key === selected)
-                  if (profile) setTailoredRole(profile.defaultRole)
-                }}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
+          <form onSubmit={generateTailoredBrief}>
+            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+              <div>
+                <Label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Profile source</Label>
+                <Select
+                  value={archetype}
+                  onValueChange={(value) => {
+                    const selected = value as ArchetypeKey
+                    setArchetype(selected)
+                    const profile = ARCHETYPES.find((item) => item.key === selected)
+                    if (profile) setTailoredRole(profile.defaultRole)
+                  }}
+                >
+                  <SelectTrigger id="demo-archetype" className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ARCHETYPES.map((option) => (
+                      <SelectItem key={option.key} value={option.key}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="presentation-tailored-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Input
+                  id="presentation-tailored-company"
+                  value={tailoredCompany}
+                  onChange={(e) => setTailoredCompany(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="ServiceNow"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="presentation-tailored-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Input
+                  id="presentation-tailored-role"
+                  value={tailoredRole}
+                  onChange={(e) => setTailoredRole(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="Enterprise CIO (Next Role)"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={tailoredLoading || !tailoredCompany.trim() || !tailoredRole.trim()}
+                className="h-auto text-[13px] font-semibold px-5 py-2.5 rounded self-start"
               >
-                {ARCHETYPES.map((option) => (
-                  <option key={option.key} value={option.key}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</label>
-              <input
-                value={tailoredCompany}
-                onChange={(e) => setTailoredCompany(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="ServiceNow"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</label>
-              <input
-                value={tailoredRole}
-                onChange={(e) => setTailoredRole(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="Enterprise CIO (Next Role)"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={tailoredLoading || !tailoredCompany.trim() || !tailoredRole.trim()}
-              className="bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors self-start"
-            >
-                  {tailoredLoading ? 'Generating...' : 'Generate Kenneth-tailored brief'}
-            </button>
-            {tailoredStatus && <p className="text-[12px] text-slate-500">{tailoredStatus}</p>}
-            {tailoredFirstTokenSlow && <p className="text-[12px] text-slate-500">First response chunk is taking longer than usual.</p>}
-            {lastTailoredRequest && !tailoredLoading && (
-              <button
-                type="button"
-                onClick={retryTailoredBrief}
-                className="text-[12px] text-slate-600 underline underline-offset-2 hover:text-slate-900 self-start"
-              >
-                Retry last request
-              </button>
-            )}
-            {tailoredError && <p className="text-[13px] text-red-600">{tailoredError}</p>}
+                {tailoredLoading ? 'Generating...' : 'Generate Kenneth-tailored brief'}
+              </Button>
+              {tailoredStatus && <p className="text-[12px] text-slate-500">{tailoredStatus}</p>}
+              {tailoredFirstTokenSlow && <p className="text-[12px] text-slate-500">First response chunk is taking longer than usual.</p>}
+              {lastTailoredRequest && !tailoredLoading && (
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={retryTailoredBrief}
+                  className="h-auto p-0 text-[12px] text-slate-600 hover:text-slate-900 self-start"
+                >
+                  Retry last request
+                </Button>
+              )}
+              {tailoredError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{tailoredError}</AlertDescription>
+                </Alert>
+              )}
+            </Card>
           </form>
 
           {(tailoredLoading || tailoredBrief) && (
-            <div ref={tailoredBriefRef} className="mt-5 border border-slate-200 rounded p-6 bg-white">
+            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={tailoredBriefRef}>
               {renderBrief(tailoredBrief, tailoredLoading)}
-            </div>
+            </Card>
           )}
-        </section>
+        </Card>
       </main>
     </div>
   )

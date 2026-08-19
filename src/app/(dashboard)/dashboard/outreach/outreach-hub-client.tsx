@@ -2,6 +2,22 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { detectLegacyTemplateCopy } from '@/lib/outreach/legacy-copy-guard'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
@@ -311,12 +327,11 @@ function prefillForRow(row: ProspectRow): { subject: string; body: string } {
   }
 }
 
-function statusBadge(status: string): string {
-  if (status === 'reached_out') return 'bg-blue-50 text-blue-700'
-  if (status === 'in_conversation') return 'bg-amber-50 text-amber-700'
-  if (status === 'meeting_scheduled') return 'bg-green-50 text-green-700'
-  if (status === 'closed') return 'bg-slate-200 text-slate-600'
-  return 'bg-slate-100 text-slate-600'
+function statusBadgeVariant(status: string): 'info' | 'warning' | 'success' | 'secondary' {
+  if (status === 'reached_out') return 'info'
+  if (status === 'in_conversation') return 'warning'
+  if (status === 'meeting_scheduled') return 'success'
+  return 'secondary'
 }
 
 function statusText(status: string): string {
@@ -765,104 +780,101 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
   const staleBlocked = staleComposerHits.length > 0
   const liveBlocked = sendMode === 'live' && !confirmLive
 
+  const channelToggleValue = activeChannel === 'coaches' && activeCampaign === 'coach_day1_60'
+    ? 'coaches:day1'
+    : activeChannel
+
   return (
-    <section className="bg-white border border-slate-200 rounded overflow-hidden">
+    <Card className="overflow-hidden">
       <div className="px-5 py-4 border-b border-slate-100">
         <h2 className="text-[16px] font-bold text-slate-900">Send Queue</h2>
         <p className="text-[12px] text-slate-500 mt-1">Defaults to high-confidence emails. Filter by confidence and status, review content, then send from {fromAddressLabel}.</p>
 
-        <div className="mt-3 flex flex-wrap gap-2">
-          {CHANNEL_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => {
-                setActiveChannel(option.value)
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <ToggleGroup
+            value={[channelToggleValue]}
+            onValueChange={(values) => {
+              const next = values[0]
+              if (!next) return
+              if (next === 'coaches:day1') {
+                setActiveChannel('coaches')
+                setActiveCampaign('coach_day1_60')
+              } else {
+                setActiveChannel(next as typeof activeChannel)
                 setActiveCampaign('all')
-                setSelectedIndex(0)
-                setSearch('')
-              }}
-              className={[
-                'text-[12px] font-semibold px-3 py-1.5 rounded border transition-colors',
-                activeChannel === option.value
-                  ? 'bg-slate-900 text-white border-slate-900'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400',
-              ].join(' ')}
-            >
-              {option.label}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={() => {
-              setActiveChannel('coaches')
-              setActiveCampaign('coach_day1_60')
+              }
               setSelectedIndex(0)
               setSearch('')
             }}
-            className={[
-              'text-[12px] font-semibold px-3 py-1.5 rounded border transition-colors',
-              activeChannel === 'coaches' && activeCampaign === 'coach_day1_60'
-                ? 'bg-orange-600 text-white border-orange-600'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400',
-            ].join(' ')}
+            className="flex-wrap gap-2"
           >
-            Day 1 Coach List (60)
-          </button>
-          <button
-            type="button"
+            {CHANNEL_OPTIONS.map((option) => (
+              <ToggleGroupItem key={option.value} value={option.value} variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-slate-900 data-[state=on]:text-white data-[state=on]:border-slate-900">
+                {option.label}
+              </ToggleGroupItem>
+            ))}
+            <ToggleGroupItem value="coaches:day1" variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-orange-600 data-[state=on]:text-white data-[state=on]:border-orange-600">
+              Day 1 Coach List (60)
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <Button
             onClick={sendCrossChannelFollowUps}
             disabled={sendingFollowUps || sending || suppressing}
-            className="text-[12px] font-semibold px-3 py-1.5 rounded border border-slate-900 bg-slate-900 text-white hover:bg-slate-700 disabled:opacity-50"
+            className="text-[12px] px-3 py-1.5 h-auto"
             title="Send follow-up emails to all reached-out contacts across all channels"
           >
             {sendingFollowUps
               ? 'Sending Follow-ups...'
               : `Send First Follow-Ups (Eligible${followUpTargets.length > 0 ? `: ${followUpTargets.length}` : ''})`}
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] min-h-[640px]">
         <div className="border-r border-slate-100">
           <div className="px-4 py-3 border-b border-slate-100 flex flex-wrap gap-2">
-            <input
+            <Input
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value)
                 setSelectedIndex(0)
               }}
               placeholder="Search name, company, role, email"
-              className="flex-1 min-w-[220px] border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 focus:outline-none focus:border-slate-400"
+              className="flex-1 min-w-[220px] text-[13px]"
             />
-            <select
-              aria-label="Filter prospects by status"
-              title="Filter prospects by status"
+            <Select
               value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value)
+              onValueChange={(value) => {
+                if (value == null) return
+                setStatusFilter(value)
                 setSelectedIndex(0)
               }}
-              className="border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 bg-white"
             >
-              {STATUS_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-            <select
-              aria-label="Filter prospects by email confidence"
-              title="Filter prospects by email confidence"
+              <SelectTrigger aria-label="Filter prospects by status" title="Filter prospects by status" className="text-[13px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_OPTIONS.map(option => (
+                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
               value={confidenceFilter}
-              onChange={(e) => {
-                setConfidenceFilter(e.target.value as 'all' | 'high' | 'medium' | 'low')
+              onValueChange={(value) => {
+                setConfidenceFilter(value as 'all' | 'high' | 'medium' | 'low')
                 setSelectedIndex(0)
               }}
-              className="border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 bg-white"
             >
-              {CONFIDENCE_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
+              <SelectTrigger aria-label="Filter prospects by email confidence" title="Filter prospects by email confidence" className="text-[13px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {CONFIDENCE_OPTIONS.map(option => (
+                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="max-h-[560px] overflow-y-auto divide-y divide-slate-100">
@@ -886,42 +898,37 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                     <p className="text-[11px] text-slate-400 mt-1">{row.email}</p>
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500">{row.outreachChannel.replace('_', ' ')}</span>
-                      <span className={[
-                        'text-[10px] font-semibold px-1.5 py-0.5 rounded',
-                        row.fitTier === 'strong' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700',
-                      ].join(' ')}>
+                      <Badge variant={row.fitTier === 'strong' ? 'success' : 'warning'} className="text-[10px]">
                         {row.fitTier}
-                      </span>
-                      <span className={[
-                        'text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase',
-                        row.emailConfidence === 'high'
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : row.emailConfidence === 'medium'
-                            ? 'bg-yellow-50 text-yellow-700'
-                            : 'bg-rose-50 text-rose-700',
-                      ].join(' ')}>
+                      </Badge>
+                      <Badge
+                        variant={row.emailConfidence === 'high' ? 'success' : row.emailConfidence === 'medium' ? 'warning' : 'destructive'}
+                        className="text-[10px] uppercase"
+                      >
                         {row.emailConfidence}
-                      </span>
+                      </Badge>
                     </div>
                   </div>
-                  <span className={`text-[10px] font-semibold px-2 py-1 rounded-full ${statusBadge(row.status)}`}>
+                  <Badge variant={statusBadgeVariant(row.status)} className="text-[10px]">
                     {statusText(row.status)}
-                  </span>
+                  </Badge>
                 </div>
 
                 <div className="mt-2 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                  <select
-                    aria-label={`Set status for ${row.fullName}`}
-                    title={`Set status for ${row.fullName}`}
+                  <Select
                     value={row.status}
-                    onChange={(e) => updateStatus(row.email, row.fullName, row.company, e.target.value)}
+                    onValueChange={(value) => { if (value != null) updateStatus(row.email, row.fullName, row.company, value) }}
                     disabled={saveBusyEmail === row.email}
-                    className="text-[11px] border border-slate-200 rounded px-2 py-1 text-slate-700 bg-white"
                   >
-                    {STATUS_OPTIONS.filter(s => s.value !== 'all').map(option => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger aria-label={`Set status for ${row.fullName}`} title={`Set status for ${row.fullName}`} size="sm" className="text-[11px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STATUS_OPTIONS.filter(s => s.value !== 'all').map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <span className="text-[11px] text-slate-400">Review and send on right</span>
                 </div>
               </button>
@@ -932,7 +939,7 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
         <div className="p-4 space-y-3">
           {selected ? (
             <>
-              <div className="bg-slate-50 border border-slate-200 rounded p-3">
+              <Card className="bg-slate-50 p-3">
                 <p className="text-[11px] text-slate-500">To</p>
                 <p className="text-[13px] font-semibold text-slate-900">{selected.fullName} ({selected.email})</p>
                 <p className="text-[12px] text-slate-500 mt-1">Channel: {selected.outreachChannel.replace('_', ' ')} · Fit: {selected.fitTier}</p>
@@ -940,139 +947,148 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                 <p className="text-[12px] text-slate-500 mt-1">Persona focus: {selected.personaFocus}</p>
                 <p className="text-[12px] text-slate-500 mt-1">From: {fromAddressLabel}</p>
                 <p className="text-[11px] text-slate-400 mt-2">Template build: {buildVersion}</p>
-              </div>
+              </Card>
 
               <div>
-                <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Subject</label>
-                <input
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Subject</Label>
+                <Input
                   aria-label="Email subject"
                   title="Email subject"
                   placeholder="Subject line"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 focus:outline-none focus:border-slate-400"
+                  className="w-full text-[13px]"
                 />
               </div>
 
               <div>
                 <div className="mb-1.5 flex items-center justify-between gap-2">
-                  <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">Message</label>
+                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">Message</Label>
                   {isCoachComposer && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={insertCoachWorksheetLink}
-                      className="text-[11px] font-semibold text-slate-700 border border-slate-300 rounded px-2 py-1 hover:border-slate-500"
+                      className="text-[11px] h-auto py-1"
                       title="Insert coach worksheet link"
                     >
                       Send worksheet
-                    </button>
+                    </Button>
                   )}
                 </div>
-                <textarea
+                <Textarea
                   aria-label="Email message"
                   title="Email message"
                   placeholder="Review and edit message before sending"
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
                   rows={16}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 focus:outline-none focus:border-slate-400"
+                  className="w-full text-[13px]"
                 />
               </div>
 
-              <div className="bg-slate-50 border border-slate-200 rounded p-3 space-y-2">
-                <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">Send Mode</label>
-                <select
-                  aria-label="Select send mode"
-                  title="Select send mode"
+              <Card className="bg-slate-50 p-3 space-y-2">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">Send Mode</Label>
+                <Select
                   value={sendMode}
-                  onChange={(e) => {
-                    const next = e.target.value as 'dry_run' | 'test_to_self' | 'live'
+                  onValueChange={(value) => {
+                    const next = value as 'dry_run' | 'test_to_self' | 'live'
                     setSendMode(next)
                     if (next !== 'live') setConfirmLive(false)
                   }}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 bg-white"
                 >
-                  <option value="dry_run">Dry Run (no send)</option>
-                  <option value="test_to_self">Send Test To Me</option>
-                  <option value="live">Send Live To Prospect</option>
-                </select>
+                  <SelectTrigger aria-label="Select send mode" title="Select send mode" className="w-full text-[13px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dry_run">Dry Run (no send)</SelectItem>
+                    <SelectItem value="test_to_self">Send Test To Me</SelectItem>
+                    <SelectItem value="live">Send Live To Prospect</SelectItem>
+                  </SelectContent>
+                </Select>
                 <p className="text-[11px] text-slate-500">
                   Start with Dry Run, then Send Test To Me, then Send Live.
                 </p>
                 {sendMode === 'live' && (
-                  <label className="flex items-start gap-2 text-[12px] text-slate-700">
-                    <input
-                      type="checkbox"
+                  <Label className="flex items-start gap-2 text-[12px] text-slate-700 font-normal normal-case tracking-normal">
+                    <Checkbox
                       checked={confirmLive}
-                      onChange={(e) => setConfirmLive(e.target.checked)}
+                      onCheckedChange={(checked) => setConfirmLive(checked === true)}
                       className="mt-0.5"
                     />
                     I reviewed this message and confirm it is personalized and ready for live send.
-                  </label>
+                  </Label>
                 )}
-              </div>
+              </Card>
 
               {guardrailViolations.length > 0 && (
-                <div className="border border-red-200 bg-red-50 rounded p-3">
-                  <p className="text-[12px] font-semibold text-red-700 mb-1">Guardrail violations</p>
-                  <ul className="text-[12px] text-red-700 list-disc ml-5 space-y-1">
-                    {guardrailViolations.map((v, i) => <li key={`v-${i}`}>{v}</li>)}
-                  </ul>
-                </div>
+                <Alert variant="destructive">
+                  <AlertTitle>Guardrail violations</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-disc ml-5 space-y-1">
+                      {guardrailViolations.map((v, i) => <li key={`v-${i}`}>{v}</li>)}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
               )}
 
               {guardrailWarnings.length > 0 && (
-                <div className="border border-amber-200 bg-amber-50 rounded p-3">
-                  <p className="text-[12px] font-semibold text-amber-800 mb-1">Quality warnings</p>
-                  <ul className="text-[12px] text-amber-800 list-disc ml-5 space-y-1">
-                    {guardrailWarnings.map((w, i) => <li key={`w-${i}`}>{w}</li>)}
-                  </ul>
-                </div>
+                <Alert variant="warning">
+                  <AlertTitle>Quality warnings</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-disc ml-5 space-y-1">
+                      {guardrailWarnings.map((w, i) => <li key={`w-${i}`}>{w}</li>)}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
               )}
 
               {staleBlocked && (
-                <div className="border border-red-200 bg-red-50 rounded p-3">
-                  <p className="text-[12px] font-semibold text-red-700 mb-1">Legacy template markers detected</p>
-                  <ul className="text-[12px] text-red-700 list-disc ml-5 space-y-1">
-                    {staleComposerHits.map((hit, i) => <li key={`legacy-${i}`}>{hit}</li>)}
-                  </ul>
-                </div>
+                <Alert variant="destructive">
+                  <AlertTitle>Legacy template markers detected</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-disc ml-5 space-y-1">
+                      {staleComposerHits.map((hit, i) => <li key={`legacy-${i}`}>{hit}</li>)}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
               )}
 
               {error && (
-                <div className="border border-red-200 bg-red-50 rounded p-3">
-                  <p className="text-[12px] font-semibold text-red-700">{error.title}</p>
-                  <p className="text-[12px] text-red-700 mt-1">{error.detail}</p>
-                  {error.rawReason && (
-                    <p className="text-[11px] text-red-800 mt-2">Reason: {error.rawReason}</p>
-                  )}
-                </div>
+                <Alert variant="destructive">
+                  <AlertTitle>{error.title}</AlertTitle>
+                  <AlertDescription>
+                    <p>{error.detail}</p>
+                    {error.rawReason && (
+                      <p className="text-[11px] mt-2">Reason: {error.rawReason}</p>
+                    )}
+                  </AlertDescription>
+                </Alert>
               )}
               {success && <p className="text-[12px] text-green-700">{success}</p>}
 
               {(googleFollowUp3Url || googleFollowUp7Url) && (
-                <div className="border border-slate-200 bg-slate-50 rounded p-3">
+                <Card className="bg-slate-50 p-3">
                   <p className="text-[12px] font-semibold text-slate-700 mb-2">Follow-up reminders created</p>
                   <div className="flex flex-wrap gap-2">
                     {googleFollowUp3Url && (
-                      <a href={googleFollowUp3Url} target="_blank" rel="noreferrer" className="text-[12px] font-semibold text-slate-900 border border-slate-300 rounded px-2.5 py-1.5 hover:border-slate-500">
+                      <Button variant="outline" size="sm" className="text-[12px] h-auto py-1.5" render={<a href={googleFollowUp3Url} target="_blank" rel="noreferrer" />}>
                         Add Follow-up 1 to Google Calendar
-                      </a>
+                      </Button>
                     )}
                     {googleFollowUp7Url && (
-                      <a href={googleFollowUp7Url} target="_blank" rel="noreferrer" className="text-[12px] font-semibold text-slate-900 border border-slate-300 rounded px-2.5 py-1.5 hover:border-slate-500">
+                      <Button variant="outline" size="sm" className="text-[12px] h-auto py-1.5" render={<a href={googleFollowUp7Url} target="_blank" rel="noreferrer" />}>
                         Add Follow-up 2 to Google Calendar
-                      </a>
+                      </Button>
                     )}
                   </div>
-                </div>
+                </Card>
               )}
 
-              <button
-                type="button"
+              <Button
                 onClick={sendSelected}
                 disabled={sending || templateLoading || !subject.trim() || !messageText.trim() || liveBlocked || staleBlocked}
-                className="w-full bg-slate-900 text-white text-[13px] font-semibold py-2 rounded disabled:opacity-50"
+                className="w-full text-[13px]"
               >
                 {sending
                   ? 'Processing...'
@@ -1083,22 +1099,22 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                       : sendMode === 'test_to_self'
                         ? 'Send Test To Me'
                         : `Send Live To ${selected.fullName}`}
-              </button>
+              </Button>
 
-              <button
-                type="button"
+              <Button
+                variant="outline"
                 onClick={suppressSelected}
                 disabled={suppressing}
-                className="w-full bg-white border border-slate-300 text-slate-700 text-[13px] font-semibold py-2 rounded disabled:opacity-50"
+                className="w-full text-[13px]"
               >
                 {suppressing ? 'Updating...' : `Suppress ${selected.fullName}`}
-              </button>
+              </Button>
             </>
           ) : (
             <p className="text-[13px] text-slate-400">Select a person to review and send.</p>
           )}
         </div>
       </div>
-    </section>
+    </Card>
   )
 }

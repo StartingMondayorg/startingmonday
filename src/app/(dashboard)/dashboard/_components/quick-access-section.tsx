@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { TrackLink } from '@/app/components/TrackLink'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 type DashboardQuickAccessSectionProps = {
   isExecutiveMode: boolean
@@ -53,21 +55,26 @@ export function DashboardQuickAccessSection({
       ]
 
   return (
-    <section id="quick-access" className="rounded-2xl border border-white/15 bg-white/5 p-4 sm:p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" id="quick-access" className="gap-0 p-4 sm:p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Index</h2>
       <div className="flex flex-wrap gap-2">
         {indexLinks.map((v) => (
-          <TrackLink
+          <Badge
             key={`${v.href}-${v.label}`}
-            href={v.href}
-            event="power_view_clicked"
-            properties={{ target: v.label.toLowerCase().replace(/\s+/g, '_') }}
-            className="text-[12px] text-slate-200 border border-white/20 rounded px-2.5 py-1.5 hover:border-white/40 transition-colors"
+            variant="outline"
+            render={
+              <TrackLink
+                href={v.href}
+                event="power_view_clicked"
+                properties={{ target: v.label.toLowerCase().replace(/\s+/g, '_') }}
+              />
+            }
+            className="h-auto text-[12px] text-slate-200 border-white/20 px-2.5 py-1.5 hover:border-white/40 hover:bg-transparent transition-colors"
           >
             {v.label}
-          </TrackLink>
+          </Badge>
         ))}
       </div>
-    </section>
+    </Card>
   )
 }

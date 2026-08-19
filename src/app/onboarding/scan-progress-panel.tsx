@@ -1,5 +1,9 @@
 'use client'
 
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
 export type ScanStatusPayload = {
   companies: Array<{ companyId: string; name: string; scannable: boolean; status: string; matches: number }>
   signalCount: number
@@ -30,7 +34,7 @@ export function ScanProgressPanel({
   const signalCount = progress?.signalCount ?? 0
 
   return (
-    <div className="mt-6 border border-white/10 rounded-lg bg-white/5 p-5 flex flex-col gap-4">
+    <Card variant="glass" className="mt-6 rounded-lg border-white/10 bg-white/5 p-5">
       <div className="flex items-center justify-between">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200">
           First scan
@@ -83,24 +87,24 @@ export function ScanProgressPanel({
 
       {canAddMore && (
         <div className="flex items-center gap-2 pt-1 border-t border-white/10">
-          <input
+          <Input
             type="text"
             value={extraCompany}
             onChange={e => onExtraCompany(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), onAddCompany())}
             placeholder="Add another company while we work"
-            className="flex-1 border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60 mt-3"
+            className="flex-1 !border-white/15 !bg-slate-950/60 text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 mt-3"
           />
-          <button
+          <Button
             type="button"
             onClick={onAddCompany}
             disabled={addingCompany || !extraCompany.trim()}
-            className="mt-3 bg-white/10 hover:bg-white/15 text-slate-100 text-[13px] font-semibold px-4 py-2 rounded transition-colors cursor-pointer border border-white/15 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mt-3 !border-white/15 !bg-white/10 text-slate-100 text-[13px] font-semibold hover:!bg-white/15"
           >
             {addingCompany ? 'Adding...' : 'Add'}
-          </button>
+          </Button>
         </div>
       )}
-    </div>
+    </Card>
   )
 }

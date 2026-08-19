@@ -1,6 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 function formatDateTime(iso: string) {
   return new Date(iso).toLocaleString('en-US', {
@@ -125,24 +139,24 @@ export function ClientCoachAccessManager() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       {coaches.length === 0 ? (
-        <div className="border border-slate-200 rounded-lg p-8 text-center bg-slate-50">
+        <Card className="p-8 text-center bg-slate-50">
           <p className="text-slate-600">No coaches have been invited yet.</p>
           <p className="text-sm text-slate-500 mt-2">
             Coaches will appear here when you invite them to preview your account.
           </p>
-        </div>
+        </Card>
       ) : (
         <div className="space-y-3">
           {coaches.map((coach) => (
             <div key={coach.coach_id} className="space-y-2">
-            <div
-              className="border border-slate-200 rounded-lg p-4 bg-white flex items-center justify-between"
+            <Card
+              className="p-4 flex-row items-center justify-between"
             >
               <div className="flex-1">
                 <p className="font-semibold text-slate-900">{coach.coach_name || coach.member_email}</p>
@@ -182,36 +196,59 @@ export function ClientCoachAccessManager() {
               </div>
 
               <div className="flex gap-2">
-                <button
+                <Button
                   onClick={() => loadActivity(coach.coach_id)}
                   disabled={loadingActivityFor === coach.coach_id}
-                  className="px-3 py-2 rounded text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors disabled:opacity-50"
+                  variant="secondary"
+                  size="sm"
                 >
                   {loadingActivityFor === coach.coach_id ? 'Loading...' : 'View Activity'}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => toggleCoachAccess(coach.coach_id, !coach.coach_access_enabled)}
                   disabled={updating === coach.coach_id}
-                  className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                  variant={coach.coach_access_enabled ? 'outline' : 'secondary'}
+                  size="sm"
+                  className={
                     coach.coach_access_enabled
-                      ? 'bg-orange-100 text-orange-700 hover:bg-orange-200 disabled:opacity-50'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50'
-                  }`}
+                      ? 'border-orange-200 bg-orange-100 text-orange-700 hover:bg-orange-200'
+                      : undefined
+                  }
                 >
                   {coach.coach_access_enabled ? 'Disable' : 'Enable'}
-                </button>
-                <button
-                  onClick={() => revokeCoachAccess(coach.coach_id)}
-                  disabled={updating === coach.coach_id}
-                  className="px-3 py-2 rounded text-sm font-medium bg-red-50 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50"
-                >
-                  Revoke
-                </button>
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    render={
+                      <Button
+                        disabled={updating === coach.coach_id}
+                        variant="destructive"
+                        size="sm"
+                      >
+                        Revoke
+                      </Button>
+                    }
+                  />
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Revoke coach access?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {(coach.coach_name || coach.member_email)} will immediately lose access to your pipeline, signals, briefs, and interview outcomes.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => revokeCoachAccess(coach.coach_id)}>
+                        Revoke access
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-            </div>
+            </Card>
 
             {activityByCoach[coach.coach_id] && (
-              <div className="mt-2 bg-slate-50 border border-slate-200 rounded-lg p-3">
+              <Card className="mt-2 bg-slate-50 p-3">
                 <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
                   Recent Coach Activity
                 </p>
@@ -226,20 +263,20 @@ export function ClientCoachAccessManager() {
                     ))}
                   </div>
                 )}
-              </div>
+              </Card>
             )}
             </div>
           ))}
         </div>
       )}
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-900">
+      <Alert variant="info">
+        <AlertDescription>
           <strong>Note:</strong> When you enable coach access, your coach can view your pipeline,
           signals, briefs, and interview outcomes. They can see when you take actions and track
           your progress. All coach activity is logged for your reference.
-        </p>
-      </div>
+        </AlertDescription>
+      </Alert>
     </div>
   )
 }

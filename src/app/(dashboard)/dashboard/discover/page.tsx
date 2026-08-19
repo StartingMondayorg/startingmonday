@@ -1,7 +1,13 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type DiscoveryCompany = {
   id?: string
@@ -23,17 +29,17 @@ type DiscoveryCompany = {
   }>
 }
 
-function scoreBadge(score?: number) {
-  if (typeof score !== 'number') return 'bg-slate-100 text-slate-500'
-  if (score >= 80) return 'bg-emerald-100 text-emerald-800'
-  if (score >= 60) return 'bg-amber-100 text-amber-800'
-  return 'bg-rose-100 text-rose-800'
+function scoreVariant(score?: number): 'secondary' | 'success' | 'warning' | 'destructive' {
+  if (typeof score !== 'number') return 'secondary'
+  if (score >= 80) return 'success'
+  if (score >= 60) return 'warning'
+  return 'destructive'
 }
 
-function fitBadge(fit: number) {
-  if (fit >= 8) return 'bg-green-100 text-green-800'
-  if (fit >= 6) return 'bg-amber-50 text-amber-700'
-  return 'bg-slate-100 text-slate-500'
+function fitVariant(fit: number): 'success' | 'warning' | 'secondary' {
+  if (fit >= 8) return 'success'
+  if (fit >= 6) return 'warning'
+  return 'secondary'
 }
 
 export default function DiscoverPage() {
@@ -107,12 +113,13 @@ export default function DiscoverPage() {
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </span>
           <div className="flex items-center gap-5">
-            <Link
-              href="/dashboard/companies/new"
-              className="text-[12px] font-semibold text-slate-400 border border-slate-700 rounded px-3 py-1 hover:border-slate-500 transition-colors whitespace-nowrap"
+            <Button
+              variant="outline"
+              className="border-slate-700 text-[12px] font-semibold text-slate-400 hover:border-slate-500 whitespace-nowrap"
+              render={<Link href="/dashboard/companies/new" />}
             >
               Add manually
-            </Link>
+            </Button>
             <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">
               &larr; Dashboard
             </Link>
@@ -121,7 +128,7 @@ export default function DiscoverPage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-<div className="mb-6">
+        <div className="mb-6">
           <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Company Discovery</div>
           <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Discover Companies</h1>
           <p className="text-[13px] text-slate-500 mt-1">
@@ -132,85 +139,87 @@ export default function DiscoverPage() {
         </div>
 
         {/* Seed input */}
-        <div className="bg-white border border-slate-200 rounded p-4 mb-6">
+        <Card className="p-4 mb-6">
           <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.08em] mb-2">
             Find companies similar to
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <input
+            <Input
               type="text"
               value={seedInput}
               onChange={e => setSeedInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleFindSimilar()}
               placeholder="ServiceNow, Workday, Salesforce (comma-separated)"
-              className="flex-1 border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-400"
+              className="flex-1 text-[13px] text-slate-800 placeholder:text-slate-400"
             />
             <div className="flex gap-2 shrink-0">
-              <button
+              <Button
                 onClick={handleFindSimilar}
                 disabled={loading || !seedInput.trim()}
-                className="bg-slate-900 hover:bg-slate-700 disabled:opacity-40 text-white text-[13px] font-semibold px-4 py-2 rounded transition-colors cursor-pointer border-0 whitespace-nowrap"
+                className="text-[13px] font-semibold whitespace-nowrap"
               >
                 Find similar
-              </button>
+              </Button>
               {seedMode && (
-                <button
+                <Button
+                  variant="secondary"
                   onClick={handleReset}
-                  className="text-[13px] font-semibold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded transition-colors cursor-pointer border-0 whitespace-nowrap"
+                  className="text-[13px] font-semibold whitespace-nowrap"
                 >
                   Reset
-                </button>
+                </Button>
               )}
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Added banner */}
         {addedCount > 0 && (
-          <div className="mb-6 px-5 py-3 rounded bg-green-50 border border-green-200 text-[13px] text-green-800 flex items-center justify-between gap-4">
-            <span>
+          <Alert variant="success" className="mb-6 px-5 py-3 flex items-center justify-between gap-4">
+            <AlertDescription className="text-[13px]">
               {addedCount} {addedCount === 1 ? 'company' : 'companies'} added to your pipeline.
-            </span>
-            <Link href="/dashboard" className="font-semibold underline shrink-0">
+            </AlertDescription>
+            <Link href="/dashboard" className="font-semibold underline shrink-0 text-[13px]">
               View pipeline &rarr;
             </Link>
-          </div>
+          </Alert>
         )}
 
         {/* Cards */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="bg-white border border-slate-200 rounded p-4 animate-pulse">
+              <Card key={i} className="p-4">
                 <div className="flex items-start justify-between mb-2">
-                  <div className="h-4 bg-slate-100 rounded w-2/3" />
-                  <div className="h-5 bg-slate-100 rounded w-10 ml-2 shrink-0" />
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-5 w-10 ml-2 shrink-0" />
                 </div>
-                <div className="h-3 bg-slate-100 rounded w-1/3 mb-3" />
-                <div className="h-3 bg-slate-100 rounded w-full mb-1.5" />
-                <div className="h-3 bg-slate-100 rounded w-4/5 mb-1.5" />
-                <div className="h-3 bg-slate-100 rounded w-2/3 mb-4" />
-                <div className="h-8 bg-slate-100 rounded w-full" />
-              </div>
+                <Skeleton className="h-3 w-1/3 mb-3" />
+                <Skeleton className="h-3 w-full mb-1.5" />
+                <Skeleton className="h-3 w-4/5 mb-1.5" />
+                <Skeleton className="h-3 w-2/3 mb-4" />
+                <Skeleton className="h-8 w-full" />
+              </Card>
             ))}
           </div>
         ) : error ? (
           <div className="text-center py-16">
-            <p className="text-[14px] text-slate-500 mb-4">{error}</p>
-            <button
-              onClick={() => fetchSuggestions()}
-              className="text-[13px] font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded transition-colors cursor-pointer border-0"
-            >
-              Try again
-            </button>
+            <Alert variant="destructive" className="inline-flex mb-4 px-4 py-2">
+              <AlertDescription className="text-[14px]">{error}</AlertDescription>
+            </Alert>
+            <div>
+              <Button variant="secondary" onClick={() => fetchSuggestions()} className="text-[13px] font-semibold">
+                Try again
+              </Button>
+            </div>
           </div>
         ) : companies.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-[14px] text-slate-500 mb-2">No suggestions returned.</p>
             <p className="text-[13px] text-slate-400 mb-4">Complete your profile to improve results.</p>
-            <Link href="/dashboard/profile" className="text-[13px] font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded transition-colors">
+            <Button variant="secondary" className="text-[13px] font-semibold" render={<Link href="/dashboard/profile" />}>
               Go to profile &rarr;
-            </Link>
+            </Button>
           </div>
         ) : (
           <>
@@ -219,24 +228,24 @@ export default function DiscoverPage() {
                 const isAdded = added.has(co.name)
                 const isAdding = adding.has(co.name)
                 return (
-                  <div key={co.name} className="bg-white border border-slate-200 rounded p-4 flex flex-col">
+                  <Card key={co.name} className="p-4 flex flex-col">
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <span className="text-[15px] font-bold text-slate-900 leading-tight">{co.name}</span>
-                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 ${fitBadge(co.fit)}`}>
+                      <Badge variant={fitVariant(co.fit)} className="shrink-0">
                         {co.fit}/10
-                      </span>
+                      </Badge>
                     </div>
                     <div className="text-[10px] text-slate-400 uppercase tracking-[0.08em] font-semibold mb-2">
                       {co.sector}
                     </div>
                     <p className="text-[13px] text-slate-600 leading-relaxed flex-1 mb-4">{co.why}</p>
                     <div className="mb-3 flex flex-wrap gap-1.5">
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${scoreBadge(co.signalFreshnessScore)}`}>
+                      <Badge variant={scoreVariant(co.signalFreshnessScore)}>
                         Signal freshness {co.signalFreshnessScore ?? '--'}
-                      </span>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${scoreBadge(co.provenanceCoverage)}`}>
+                      </Badge>
+                      <Badge variant={scoreVariant(co.provenanceCoverage)}>
                         Provenance coverage {co.provenanceCoverage ?? '--'}
-                      </span>
+                      </Badge>
                     </div>
                     {co.narrativeUrl && (
                       <Link
@@ -246,35 +255,31 @@ export default function DiscoverPage() {
                         Why this company and who to contact &rarr;
                       </Link>
                     )}
-                    <button
+                    <Button
+                      variant={isAdded || isAdding ? 'secondary' : 'default'}
                       onClick={() => handleAdd(co)}
                       disabled={isAdded || isAdding}
-                      className={`w-full text-[12px] font-semibold py-2 rounded transition-colors cursor-pointer border-0 ${
-                        isAdded
-                          ? 'bg-green-50 text-green-700 cursor-default'
-                          : isAdding
-                            ? 'bg-slate-100 text-slate-400 cursor-default'
-                            : 'bg-slate-900 hover:bg-slate-700 text-white'
-                      }`}
+                      className="w-full text-[12px] font-semibold"
                     >
                       {isAdded ? '✓ Added' : isAdding ? 'Adding...' : '+ Add to watchlist'}
-                    </button>
-                  </div>
+                    </Button>
+                  </Card>
                 )
               })}
             </div>
 
             <div className="mt-6 text-center">
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => seedMode
                   ? fetchSuggestions(seedInput.split(',').map(s => s.trim()).filter(Boolean))
                   : fetchSuggestions()
                 }
                 disabled={loading}
-                className="text-[13px] text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer disabled:opacity-40"
+                className="text-[13px] text-slate-400 hover:text-slate-600"
               >
                 Regenerate suggestions &rarr;
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -283,4 +288,3 @@ export default function DiscoverPage() {
     </div>
   )
 }
-

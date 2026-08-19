@@ -5,6 +5,7 @@ import path from 'node:path'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
+import { Card } from '@/components/ui/card'
 
 type GuideManifest = {
   generatedAt?: string
@@ -106,26 +107,26 @@ export default async function AdminGuidePage() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-          <div className="bg-white border border-slate-200 rounded p-4">
+          <Card className="p-4">
             <div className="text-[24px] font-bold text-slate-900 leading-none">{manifest?.entryCount ?? 0}</div>
             <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Guide entries</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-4">
+          </Card>
+          <Card className="p-4">
             <div className="text-[24px] font-bold text-slate-900 leading-none">{manifest?.changedEntryCount ?? 0}</div>
             <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Changed on latest sync</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-4">
+          </Card>
+          <Card className="p-4">
             <div className="text-[24px] font-bold text-slate-900 leading-none">{toPercent(evalReport?.summary?.recallAt3)}</div>
             <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Retrieval recall@3</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-4">
+          </Card>
+          <Card className="p-4">
             <div className="text-[24px] font-bold text-slate-900 leading-none">{totalQueries7d}</div>
             <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Queries (7d)</div>
-          </div>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          <section className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Freshness and quality status</h2>
             <div className="space-y-2 text-[13px] text-slate-700">
               <p>Manifest generated: {manifest?.generatedAt ?? 'N/A'}</p>
@@ -135,9 +136,9 @@ export default async function AdminGuidePage() {
               <p>Recall@5: {toPercent(evalReport?.summary?.recallAt5)}</p>
               <p>Eval misses: {evalReport?.summary?.misses?.length ?? 0}</p>
             </div>
-          </section>
+          </Card>
 
-          <section className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Query risk signals (7d)</h2>
             <div className="space-y-2 text-[13px] text-slate-700">
               <p>No match: {noMatch7d}</p>
@@ -145,11 +146,11 @@ export default async function AdminGuidePage() {
               <p>Not helpful feedback: {notHelpful7d}</p>
               <p>Low-confidence rate: {totalQueries7d > 0 ? `${Math.round((lowConfidence7d / totalQueries7d) * 100)}%` : 'N/A'}</p>
             </div>
-          </section>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <section className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Top repeated queries (7d)</h2>
             {topQuestionRows.length === 0 ? (
               <p className="text-[13px] text-slate-500">No guide queries captured yet.</p>
@@ -160,9 +161,9 @@ export default async function AdminGuidePage() {
                 ))}
               </ol>
             )}
-          </section>
+          </Card>
 
-          <section className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Recent low-confidence queries</h2>
             {((lowConfidenceQueries.data ?? []) as Array<{ question: string; confidence: number | null; top_source_url: string | null }>).length === 0 ? (
               <p className="text-[13px] text-slate-500">No low-confidence queries in the last 7 days.</p>
@@ -176,7 +177,7 @@ export default async function AdminGuidePage() {
                 ))}
               </ul>
             )}
-          </section>
+          </Card>
         </div>
       </main>
     </div>

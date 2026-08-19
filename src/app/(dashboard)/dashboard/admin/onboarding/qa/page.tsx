@@ -3,6 +3,17 @@ import { redirect, notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 export const metadata = { title: 'Onboarding QA Scorecard - Admin' }
 
@@ -21,10 +32,6 @@ type ScorecardRow = {
   channel_mix: Record<string, number>
   persona_mix: Record<string, number>
   notes: string | null
-}
-
-function statusClass(pass: boolean): string {
-  return pass ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
 }
 
 function formatMinutes(seconds: number): string {
@@ -77,99 +84,105 @@ export default async function OnboardingQaScorecardPage() {
             <p className="text-[13px] text-slate-500 mt-1.5">Weekly Sprint 6 quality loop for implementation speed, setup defaults, low-energy usage, and completion nudges.</p>
           </div>
           {latest && (
-            <span className={`text-[13px] font-semibold px-2 py-1 rounded ${statusClass(latestPass)}`}>
+            <Badge variant={latestPass ? 'success' : 'warning'}>
               {latestPass ? 'PASS' : 'ATTENTION'}
-            </span>
+            </Badge>
           )}
         </div>
 
         {latest && (
           <section className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
-            <div className="bg-white border border-slate-200 rounded p-4">
+            <Card className="p-4">
               <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">TTFV median</p>
               <p className="text-[24px] font-bold text-slate-900 mt-1">{formatMinutes(latest.median_seconds_to_first_value)}</p>
-            </div>
-            <div className="bg-white border border-slate-200 rounded p-4">
+            </Card>
+            <Card className="p-4">
               <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Under 10 min</p>
               <p className="text-[24px] font-bold text-slate-900 mt-1">{latest.under_ten_min_rate.toFixed(1)}%</p>
-            </div>
-            <div className="bg-white border border-slate-200 rounded p-4">
+            </Card>
+            <Card className="p-4">
               <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Manual field reduction</p>
               <p className="text-[24px] font-bold text-slate-900 mt-1">{latest.avg_manual_fields_reduction_rate.toFixed(1)}%</p>
-            </div>
-            <div className="bg-white border border-slate-200 rounded p-4">
+            </Card>
+            <Card className="p-4">
               <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Low-energy adoption</p>
               <p className="text-[24px] font-bold text-slate-900 mt-1">{latest.low_energy_mode_rate.toFixed(1)}%</p>
-            </div>
+            </Card>
           </section>
         )}
 
         {latest && (
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <div className="bg-white border border-slate-200 rounded p-5">
+            <Card className="p-5">
               <h2 className="text-[13px] font-semibold text-slate-900 mb-3">Channel mix</h2>
               <div className="space-y-2 text-[13px]">
                 {Object.keys(latest.channel_mix ?? {}).length === 0 && <p className="text-slate-500">No channel mix data in latest run.</p>}
-                {Object.entries(latest.channel_mix ?? {}).map(([channel, count]) => (
-                  <div key={channel} className="flex items-center justify-between border-b border-slate-100 pb-1">
-                    <span className="text-slate-700">{channel}</span>
-                    <span className="font-semibold text-slate-900">{count}</span>
+                {Object.entries(latest.channel_mix ?? {}).map(([channel, count], index, arr) => (
+                  <div key={channel}>
+                    <div className="flex items-center justify-between pb-1">
+                      <span className="text-slate-700">{channel}</span>
+                      <span className="font-semibold text-slate-900">{count}</span>
+                    </div>
+                    {index < arr.length - 1 && <Separator />}
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
 
-            <div className="bg-white border border-slate-200 rounded p-5">
+            <Card className="p-5">
               <h2 className="text-[13px] font-semibold text-slate-900 mb-3">Persona mix</h2>
               <div className="space-y-2 text-[13px]">
                 {Object.keys(latest.persona_mix ?? {}).length === 0 && <p className="text-slate-500">No persona data in latest run.</p>}
-                {Object.entries(latest.persona_mix ?? {}).map(([persona, count]) => (
-                  <div key={persona} className="flex items-center justify-between border-b border-slate-100 pb-1">
-                    <span className="text-slate-700">{persona}</span>
-                    <span className="font-semibold text-slate-900">{count}</span>
+                {Object.entries(latest.persona_mix ?? {}).map(([persona, count], index, arr) => (
+                  <div key={persona}>
+                    <div className="flex items-center justify-between pb-1">
+                      <span className="text-slate-700">{persona}</span>
+                      <span className="font-semibold text-slate-900">{count}</span>
+                    </div>
+                    {index < arr.length - 1 && <Separator />}
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
           </section>
         )}
 
-        <section className="bg-white border border-slate-200 rounded overflow-hidden">
+        <Card className="overflow-hidden">
           <div className="px-5 py-3 border-b border-slate-100">
             <h2 className="text-[13px] font-semibold text-slate-900">Weekly history</h2>
           </div>
-          <table className="w-full text-[13px]">
-            <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
-              <tr>
-                <th className="px-5 py-2 text-left">Week</th>
-                <th className="px-4 py-2 text-right">Started</th>
-                <th className="px-4 py-2 text-right">Completed</th>
-                <th className="px-4 py-2 text-right">TTFV median</th>
-                <th className="px-4 py-2 text-right">Under 10 min %</th>
-                <th className="px-4 py-2 text-right">Reduction %</th>
-                <th className="px-5 py-2 text-right">Low-energy %</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="text-[13px]">
+            <TableHeader className="bg-slate-50 text-slate-500">
+              <TableRow>
+                <TableHead className="px-5 py-2 text-left">Week</TableHead>
+                <TableHead className="px-4 py-2 text-right">Started</TableHead>
+                <TableHead className="px-4 py-2 text-right">Completed</TableHead>
+                <TableHead className="px-4 py-2 text-right">TTFV median</TableHead>
+                <TableHead className="px-4 py-2 text-right">Under 10 min %</TableHead>
+                <TableHead className="px-4 py-2 text-right">Reduction %</TableHead>
+                <TableHead className="px-5 py-2 text-right">Low-energy %</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {rows.length === 0 && (
-                <tr>
-                  <td className="px-5 py-4 text-slate-500" colSpan={7}>No weekly scorecards yet. Run the onboarding QA automation endpoint to generate one.</td>
-                </tr>
+                <TableRow>
+                  <TableCell className="px-5 py-4 text-slate-500" colSpan={7}>No weekly scorecards yet. Run the onboarding QA automation endpoint to generate one.</TableCell>
+                </TableRow>
               )}
               {rows.map((row) => (
-                <tr key={row.id} className="border-t border-slate-100">
-                  <td className="px-5 py-2 text-slate-700">{row.week_start}</td>
-                  <td className="px-4 py-2 text-right text-slate-700">{row.started_users}</td>
-                  <td className="px-4 py-2 text-right text-slate-700">{row.completed_users}</td>
-                  <td className="px-4 py-2 text-right text-slate-700">{formatMinutes(row.median_seconds_to_first_value)}</td>
-                  <td className="px-4 py-2 text-right text-slate-700">{row.under_ten_min_rate.toFixed(1)}%</td>
-                  <td className="px-4 py-2 text-right text-slate-700">{row.avg_manual_fields_reduction_rate.toFixed(1)}%</td>
-                  <td className="px-5 py-2 text-right text-slate-700">{row.low_energy_mode_rate.toFixed(1)}%</td>
-                </tr>
+                <TableRow key={row.id}>
+                  <TableCell className="px-5 py-2 text-slate-700">{row.week_start}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-700">{row.started_users}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-700">{row.completed_users}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-700">{formatMinutes(row.median_seconds_to_first_value)}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-700">{row.under_ten_min_rate.toFixed(1)}%</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-700">{row.avg_manual_fields_reduction_rate.toFixed(1)}%</TableCell>
+                  <TableCell className="px-5 py-2 text-right text-slate-700">{row.low_energy_mode_rate.toFixed(1)}%</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </section>
+            </TableBody>
+          </Table>
+        </Card>
       </main>
     </div>
   )

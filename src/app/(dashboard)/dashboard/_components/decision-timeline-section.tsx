@@ -1,4 +1,24 @@
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 
 type DecisionTimelineItem = {
   id: string
@@ -42,7 +62,7 @@ export function DashboardDecisionTimelineSection({
   }
 
   return (
-    <section className="mb-6 rounded-xl border border-white/15 bg-slate-950/55 p-4 sm:p-5 backdrop-blur-sm">
+    <Card className="mb-6 border-white/15 bg-slate-950/55 p-4 sm:p-5 backdrop-blur-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-400">Decision timeline engine</p>
@@ -50,39 +70,55 @@ export function DashboardDecisionTimelineSection({
           <p className="text-[13px] text-slate-300 mt-1">Every campaign carries a next irreversible decision marker with owner and timing.</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded border border-white/15 bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-slate-200">Viewing as {roleLensLabel}</span>
-          <span className={`rounded px-2.5 py-1 text-[11px] font-semibold ${stalledCount > 0 ? 'bg-amber-500/15 text-amber-200 border border-amber-300/30' : 'bg-emerald-500/15 text-emerald-200 border border-emerald-300/30'}`}>
+          <Badge variant="outline" className="border-white/15 bg-slate-900/80 text-slate-200">Viewing as {roleLensLabel}</Badge>
+          <Badge variant={stalledCount > 0 ? 'warning' : 'success'}>
             {stalledCount > 0 ? `${stalledCount} stalled 14d+` : 'No stalled campaigns'}
-          </span>
+          </Badge>
         </div>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="text-[12px] text-slate-400">Sort:</span>
-        <Link href={withParams(0, 'stalled_desc')} className={`rounded border px-2 py-1 text-[11px] font-semibold ${currentSort === 'stalled_desc' ? 'border-white/25 bg-white/10 text-slate-100' : 'border-white/15 bg-slate-900/80 text-slate-300 hover:text-slate-100'}`}>
-          Stalled first
-        </Link>
-        <Link href={withParams(0, 'recent_desc')} className={`rounded border px-2 py-1 text-[11px] font-semibold ${currentSort === 'recent_desc' ? 'border-white/25 bg-white/10 text-slate-100' : 'border-white/15 bg-slate-900/80 text-slate-300 hover:text-slate-100'}`}>
-          Recently moved
-        </Link>
-        <Link href={withParams(0, 'name_asc')} className={`rounded border px-2 py-1 text-[11px] font-semibold ${currentSort === 'name_asc' ? 'border-white/25 bg-white/10 text-slate-100' : 'border-white/15 bg-slate-900/80 text-slate-300 hover:text-slate-100'}`}>
-          Name A-Z
-        </Link>
+        <ToggleGroup value={[currentSort]} className="gap-2">
+          <ToggleGroupItem
+            value="stalled_desc"
+            render={<Link href={withParams(0, 'stalled_desc')} />}
+            className={`rounded border px-2 py-1 text-[11px] font-semibold ${currentSort === 'stalled_desc' ? 'border-white/25 bg-white/10 text-slate-100' : 'border-white/15 bg-slate-900/80 text-slate-300 hover:text-slate-100'}`}
+          >
+            Stalled first
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="recent_desc"
+            render={<Link href={withParams(0, 'recent_desc')} />}
+            className={`rounded border px-2 py-1 text-[11px] font-semibold ${currentSort === 'recent_desc' ? 'border-white/25 bg-white/10 text-slate-100' : 'border-white/15 bg-slate-900/80 text-slate-300 hover:text-slate-100'}`}
+          >
+            Recently moved
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="name_asc"
+            render={<Link href={withParams(0, 'name_asc')} />}
+            className={`rounded border px-2 py-1 text-[11px] font-semibold ${currentSort === 'name_asc' ? 'border-white/25 bg-white/10 text-slate-100' : 'border-white/15 bg-slate-900/80 text-slate-300 hover:text-slate-100'}`}
+          >
+            Name A-Z
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
       {items.length === 0 ? (
-        <div className="mt-4 rounded border border-white/15 bg-slate-900/70 p-3">
-          <p className="text-[13px] text-slate-300">No campaigns yet. Add your first target to initialize timeline markers.</p>
+        <Alert className="mt-4 border-white/15 bg-slate-900/70">
+          <AlertDescription className="text-[13px] text-slate-300">
+            No campaigns yet. Add your first target to initialize timeline markers.
+          </AlertDescription>
           <Link href="/dashboard/companies/new" className="inline-block mt-2 text-[13px] font-semibold text-slate-100 underline underline-offset-2 hover:text-orange-300">
             Add first campaign
           </Link>
-        </div>
+        </Alert>
       ) : (
         <div className="mt-4 space-y-2.5">
           {items.map((item) => (
-            <article
+            <Card
               key={item.id}
-              className={`rounded-lg border p-3 ${item.stalled ? 'border-amber-300/40 bg-amber-500/10' : 'border-white/15 bg-slate-900/70'}`}
+              className={`p-3 ${item.stalled ? 'border-amber-300/40 bg-amber-500/10' : 'border-white/15 bg-slate-900/70'}`}
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <Link href={item.href} className="rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-300/70">
@@ -114,46 +150,53 @@ export function DashboardDecisionTimelineSection({
 
               <form action={updateDecisionOwner} className="mt-2 flex items-center gap-2">
                 <input type="hidden" name="company_id" value={item.id} />
-                <label className="text-[11px] text-slate-400" htmlFor={`owner-${item.id}`}>Decision owner</label>
-                <select
-                  id={`owner-${item.id}`}
+                <Label className="text-[11px] font-normal text-slate-400" htmlFor={`owner-${item.id}`}>Decision owner</Label>
+                <Select
                   name="decision_owner"
                   defaultValue={['Account owner', 'Coach', 'Partner', 'Admin'].includes(item.ownerLabel) ? item.ownerLabel : 'Account owner'}
-                  className="border border-white/15 rounded px-2 py-1 text-[12px] text-slate-100 bg-slate-900/90"
                 >
-                  <option value="Account owner">Account owner</option>
-                  <option value="Coach">Coach</option>
-                  <option value="Partner">Partner</option>
-                  <option value="Admin">Admin</option>
-                </select>
-                <button type="submit" className="text-[12px] font-semibold text-slate-200 hover:text-white">Save</button>
+                  <SelectTrigger id={`owner-${item.id}`} className="border-white/15 text-[12px] text-slate-100 bg-slate-900/90">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Account owner">Account owner</SelectItem>
+                    <SelectItem value="Coach">Coach</SelectItem>
+                    <SelectItem value="Partner">Partner</SelectItem>
+                    <SelectItem value="Admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button type="submit" variant="link" className="text-[12px] font-semibold text-slate-200 hover:text-white">Save</Button>
               </form>
 
               <Link href={item.href} className="inline-block mt-2 text-[12px] font-semibold text-slate-100 underline underline-offset-2 hover:text-orange-300">
                 Edit campaign details
               </Link>
-            </article>
+            </Card>
           ))}
         </div>
       )}
 
       {totalPages > 1 && (
-        <div className="mt-3 flex items-center justify-between">
-          <Link
-            href={withParams(Math.max(0, page - 1))}
-            className={`text-[12px] font-semibold ${page === 0 ? 'pointer-events-none text-slate-600' : 'text-slate-300 hover:text-slate-100'}`}
-          >
-            Previous
-          </Link>
+        <Pagination className="mt-3 justify-between">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={withParams(Math.max(0, page - 1))}
+                className={`text-[12px] font-semibold ${page === 0 ? 'pointer-events-none text-slate-600' : 'text-slate-300 hover:text-slate-100'}`}
+              />
+            </PaginationItem>
+          </PaginationContent>
           <p className="text-[12px] text-slate-400">Page {page + 1} of {totalPages}</p>
-          <Link
-            href={withParams(Math.min(totalPages - 1, page + 1))}
-            className={`text-[12px] font-semibold ${page >= totalPages - 1 ? 'pointer-events-none text-slate-600' : 'text-slate-300 hover:text-slate-100'}`}
-          >
-            Next
-          </Link>
-        </div>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationNext
+                href={withParams(Math.min(totalPages - 1, page + 1))}
+                className={`text-[12px] font-semibold ${page >= totalPages - 1 ? 'pointer-events-none text-slate-600' : 'text-slate-300 hover:text-slate-100'}`}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
-    </section>
+    </Card>
   )
 }

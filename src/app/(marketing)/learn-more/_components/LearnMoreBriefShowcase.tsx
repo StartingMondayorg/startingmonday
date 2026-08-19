@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 const BRIEF = {
   company: 'ServiceNow',
@@ -65,7 +67,7 @@ export function LearnMoreBriefShowcase() {
       </div>
 
       {/* Bottom Line - always visible */}
-      <div className="mt-7 rounded-2xl border border-orange-300/20 bg-orange-300/[0.05] p-5">
+      <Card variant="glass" className="mt-7 border-orange-300/20 bg-orange-300/[0.05] p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Bottom line</p>
         <ol className="mt-4 space-y-3">
           {BRIEF.bottomLine.map((sentence, i) => (
@@ -77,19 +79,19 @@ export function LearnMoreBriefShowcase() {
             </li>
           ))}
         </ol>
-      </div>
+      </Card>
 
       {/* Win Thesis - always visible */}
-      <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/50 p-5">
+      <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Win thesis</p>
         <p className="mt-4 text-[14px] leading-relaxed text-slate-100">{BRIEF.winThesis}</p>
-      </div>
+      </Card>
 
       {/* Expandable sections */}
       {open ? (
         <>
           {/* Anticipated Pushback */}
-          <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/50 p-5">
+          <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Anticipated pushback</p>
             <div className="mt-4 space-y-5">
               {BRIEF.objections.map((obj, i) => (
@@ -105,10 +107,10 @@ export function LearnMoreBriefShowcase() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Likely Questions */}
-          <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/50 p-5">
+          <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Questions to ask - peer level</p>
             <div className="mt-4 space-y-5">
               {BRIEF.questions.map((q, i) => (
@@ -121,10 +123,10 @@ export function LearnMoreBriefShowcase() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Leave Out */}
-          <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/50 p-5">
+          <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">What to leave out</p>
             <ul className="mt-4 space-y-2.5">
               {BRIEF.leaveOut.map((item, i) => (
@@ -134,33 +136,35 @@ export function LearnMoreBriefShowcase() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Card>
 
-          <button
+          <Button
             type="button"
             onClick={() => setOpen(false)}
-            className="mt-4 cursor-pointer border-0 bg-transparent text-[12px] text-slate-500 transition-colors hover:text-slate-300"
+            variant="link"
+            className="mt-4 h-auto self-start p-0 text-[12px] text-slate-500 hover:text-slate-300 hover:no-underline"
           >
             Show less
-          </button>
+          </Button>
         </>
       ) : (
-        <button
+        <Button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-4 cursor-pointer rounded-xl border border-white/10 bg-slate-950/30 px-4 py-2.5 text-[13px] font-semibold text-slate-200 transition-colors hover:border-white/20 hover:text-white"
+          variant="outline"
+          className="mt-4 h-auto self-start rounded-xl border-white/10 bg-slate-950/30 px-4 py-2.5 text-[13px] font-semibold text-slate-200 hover:border-white/20 hover:bg-slate-950/30 hover:text-white"
         >
           See objections, peer questions, and what to leave out ↓
-        </button>
+        </Button>
       )}
 
       <div className="mt-7 flex flex-col items-start gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:gap-5">
-        <Link
-          href="/demo"
-          className="inline-flex items-center rounded-full bg-orange-500 px-5 py-2.5 text-[14px] font-semibold text-slate-950 transition-colors hover:bg-orange-600"
+        <Button
+          render={<Link href="/demo" />}
+          className="h-auto rounded-full px-5 py-2.5 text-[14px] font-semibold"
         >
           Generate your own brief
-        </Link>
+        </Button>
         <p className="text-[12px] text-slate-400">Free for 30 days. No credit card. Usually ready in about a minute.</p>
       </div>
     </section>

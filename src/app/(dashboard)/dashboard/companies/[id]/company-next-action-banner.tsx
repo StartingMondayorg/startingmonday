@@ -1,4 +1,6 @@
 ﻿import Link from 'next/link'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 
 type ContactLite = {
   id: string
@@ -23,60 +25,61 @@ export function CompanyNextActionBanner(props: Props) {
 
   if (!hasContacts && !hasBrief) {
     return (
-      <div className="mt-6 border border-white/10 bg-white/5 backdrop-blur-md rounded px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
+      <Alert className="mt-6 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1">
           <p className="text-[13px] font-semibold text-white">Two things move this forward.</p>
           <p className="text-[12px] text-slate-400 mt-0.5">Add a contact at {props.companyName} and run a prep brief before your first conversation.</p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <Link href="#add-contact-form" className="text-[12px] font-semibold text-white border border-slate-600 hover:border-white/30 px-3 py-1.5 rounded transition-colors">
+          <Button variant="outline" render={<Link href="#add-contact-form" />}>
             Add contact
-          </Link>
-          <Link href={`/dashboard/companies/${props.companyId}/prep`} className="text-[12px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded transition-colors border-0">
+          </Button>
+          <Button render={<Link href={`/dashboard/companies/${props.companyId}/prep`} />}>
             Run a brief
-          </Link>
+          </Button>
         </div>
-      </div>
+      </Alert>
     )
   }
 
   if (isInterviewing && !hasInterviewLogs) {
     return (
-      <div className="mt-6 bg-amber-500/10 border border-amber-500/30 rounded px-6 py-4 flex items-center justify-between gap-4">
-        <p className="text-[13px] text-slate-300">
+      <Alert variant="warning" className="mt-6 px-6 py-4 flex items-center justify-between gap-4">
+        <AlertDescription>
           You are in the interview loop. Log what happened so your next brief reflects the actual conversation.
-        </p>
-        <Link href={`/dashboard/companies/${props.companyId}/prep`} className="shrink-0 text-[12px] font-semibold text-amber-200 border border-amber-500/40 hover:border-amber-500 bg-white/5 px-3 py-1.5 rounded transition-colors">
+        </AlertDescription>
+        <Button variant="outline" className="shrink-0" render={<Link href={`/dashboard/companies/${props.companyId}/prep`} />}>
           Run interview prep
-        </Link>
-      </div>
+        </Button>
+      </Alert>
     )
   }
 
   if (!hasBrief) {
     return (
-      <div className="mt-6 border border-white/10 bg-white/5 backdrop-blur-md rounded px-6 py-4 flex items-center justify-between gap-4">
-        <p className="text-[13px] text-slate-300">
+      <Alert className="mt-6 px-6 py-4 flex items-center justify-between gap-4">
+        <AlertDescription>
           {hasContacts ? `You have contacts at ${props.companyName}. Run a brief before your next call.` : `No prep brief for ${props.companyName} yet.`}
-        </p>
-        <Link href={`/dashboard/companies/${props.companyId}/prep`} className="shrink-0 text-[12px] font-semibold text-white border border-slate-600 hover:border-white/30 px-3 py-1.5 rounded transition-colors">
+        </AlertDescription>
+        <Button variant="outline" className="shrink-0" render={<Link href={`/dashboard/companies/${props.companyId}/prep`} />}>
           Generate brief
-        </Link>
-      </div>
+        </Button>
+      </Alert>
     )
   }
 
   if (hasContacts && !hasOutreachStarted && props.stage === 'watching') {
     return (
-      <div className="mt-6 bg-blue-500/10 border border-blue-500/30 rounded px-6 py-4 flex items-center justify-between gap-4">
-        <p className="text-[13px] text-slate-300">Ready to reach out? You have a contact here.</p>
-        <Link
-          href={`/dashboard/contacts/${props.contacts[0]?.id}/outreach`}
-          className="shrink-0 text-[12px] font-semibold text-blue-300 hover:text-blue-900 border border-blue-500/30 hover:border-blue-400 bg-white/5 px-3 py-1.5 rounded transition-colors"
+      <Alert variant="info" className="mt-6 px-6 py-4 flex items-center justify-between gap-4">
+        <AlertDescription>Ready to reach out? You have a contact here.</AlertDescription>
+        <Button
+          variant="outline"
+          className="shrink-0"
+          render={<Link href={`/dashboard/contacts/${props.contacts[0]?.id}/outreach`} />}
         >
           Draft outreach
-        </Link>
-      </div>
+        </Button>
+      </Alert>
     )
   }
 

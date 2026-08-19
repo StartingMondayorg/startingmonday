@@ -1,4 +1,7 @@
-﻿export default function DashboardLoading() {
+﻿import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+
+export default function DashboardLoading() {
   return (
     <div className="min-h-screen bg-slate-100 font-sans">
 
@@ -11,21 +14,21 @@
       </header>
 
       <section aria-busy="true" aria-live="polite" className="max-w-4xl mx-auto px-6 py-10">
-        <div className="h-7 w-48 bg-slate-200 rounded mb-8" />
+        <Skeleton className="h-7 w-48 mb-8" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="bg-white border border-slate-200 rounded p-5">
-              <div className="h-8 w-10 bg-slate-100 rounded mb-2" />
-              <div className="h-2.5 w-20 bg-slate-100 rounded" />
-            </div>
+            <Card key={i} className="p-5">
+              <Skeleton className="h-8 w-10 mb-2" />
+              <Skeleton className="h-2.5 w-20" />
+            </Card>
           ))}
         </div>
-        <div className="bg-white border border-slate-200 rounded p-6">
-          <div className="h-2.5 w-32 bg-slate-100 rounded mb-4" />
+        <Card className="p-6">
+          <Skeleton className="h-2.5 w-32 mb-4" />
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-4 w-full bg-slate-50 rounded mb-3" />
+            <Skeleton key={i} className="h-4 w-full mb-3" />
           ))}
-        </div>
+        </Card>
       </section>
     </div>
   )

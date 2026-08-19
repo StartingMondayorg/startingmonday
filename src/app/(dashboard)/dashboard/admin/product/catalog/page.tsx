@@ -11,6 +11,12 @@ import {
   createCatalogProduct,
   setCatalogProductStatus,
 } from './actions'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 function createOpsClient() {
   return createSupabaseClient(
@@ -127,188 +133,254 @@ export default async function AdminMicroProductCatalogPage() {
         </p>
 
         <section className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white border border-slate-200 rounded p-4">
+          <Card className="p-4">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Products</p>
             <p className="text-[22px] font-bold text-slate-900 mt-1">{products.length}</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-4">
+          </Card>
+          <Card className="p-4">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Active prices</p>
             <p className="text-[22px] font-bold text-slate-900 mt-1">{prices.filter((p) => p.is_active).length}</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-4">
+          </Card>
+          <Card className="p-4">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Bundles</p>
             <p className="text-[22px] font-bold text-slate-900 mt-1">{bundles.length}</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-4">
+          </Card>
+          <Card className="p-4">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Entitlements</p>
             <p className="text-[22px] font-bold text-slate-900 mt-1">{entitlements.length}</p>
-          </div>
+          </Card>
         </section>
 
         {!isReadOnly && (
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-            <form action={createCatalogProduct} className="bg-white border border-slate-200 rounded p-5 grid grid-cols-1 gap-2">
-              <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Create micro-product</h2>
-              <input name="slug" placeholder="slug" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              <input name="name" placeholder="name" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              <textarea name="summary" placeholder="summary" className="border border-slate-300 rounded px-3 py-2 text-[13px]" rows={3} required />
-              <div className="grid grid-cols-2 gap-2">
-                <select name="channel" title="Product channel" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="executives">executives</option>
-                  <option value="coaches">coaches</option>
-                  <option value="outplacement">outplacement</option>
-                  <option value="search_firms">search_firms</option>
-                </select>
-                <input name="persona" placeholder="persona" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                <select name="product_status" title="Product status" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="draft">draft</option>
-                  <option value="active">active</option>
-                  <option value="retired">retired</option>
-                </select>
-                <select name="billing_type" title="Billing type" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="one_time">one_time</option>
-                  <option value="subscription">subscription</option>
-                </select>
-                <select name="default_interval" title="Default billing interval" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="one_time">one_time</option>
-                  <option value="month">month</option>
-                  <option value="year">year</option>
-                </select>
-              </div>
-              <input name="display_order" type="number" placeholder="display order" defaultValue={100} className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              <button className="mt-1 bg-slate-900 text-white text-[13px] font-semibold rounded px-4 py-2">Create product</button>
+            <form action={createCatalogProduct}>
+              <Card className="p-5 grid grid-cols-1 gap-2">
+                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Create micro-product</h2>
+                <Input name="slug" placeholder="slug" required />
+                <Input name="name" placeholder="name" required />
+                <Textarea name="summary" placeholder="summary" rows={3} required />
+                <div className="grid grid-cols-2 gap-2">
+                  <Select name="channel" defaultValue="executives">
+                    <SelectTrigger aria-label="Product channel" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="executives">executives</SelectItem>
+                      <SelectItem value="coaches">coaches</SelectItem>
+                      <SelectItem value="outplacement">outplacement</SelectItem>
+                      <SelectItem value="search_firms">search_firms</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input name="persona" placeholder="persona" />
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <Select name="product_status" defaultValue="draft">
+                    <SelectTrigger aria-label="Product status" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">draft</SelectItem>
+                      <SelectItem value="active">active</SelectItem>
+                      <SelectItem value="retired">retired</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select name="billing_type" defaultValue="one_time">
+                    <SelectTrigger aria-label="Billing type" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="one_time">one_time</SelectItem>
+                      <SelectItem value="subscription">subscription</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select name="default_interval" defaultValue="one_time">
+                    <SelectTrigger aria-label="Default billing interval" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="one_time">one_time</SelectItem>
+                      <SelectItem value="month">month</SelectItem>
+                      <SelectItem value="year">year</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Input name="display_order" type="number" placeholder="display order" defaultValue={100} />
+                <Button type="submit" className="mt-1 self-start">Create product</Button>
+              </Card>
             </form>
 
-            <form action={createCatalogPrice} className="bg-white border border-slate-200 rounded p-5 grid grid-cols-1 gap-2">
-              <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Attach Stripe price</h2>
-              <select name="micro_product_id" title="Micro-product" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required>
-                <option value="">Select product</option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>{product.name}</option>
-                ))}
-              </select>
-              <input name="stripe_product_id" placeholder="stripe product id" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              <input name="stripe_price_id" placeholder="stripe price id" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              <input name="stripe_coupon_id" placeholder="stripe coupon id (optional)" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              <div className="grid grid-cols-2 gap-2">
-                <select name="interval" title="Price interval" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="one_time">one_time</option>
-                  <option value="month">month</option>
-                  <option value="year">year</option>
-                </select>
-                <input name="unit_amount_cents" type="number" min={1} placeholder="unit amount cents" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              </div>
-              <button className="mt-1 bg-slate-900 text-white text-[13px] font-semibold rounded px-4 py-2">Attach price</button>
+            <form action={createCatalogPrice}>
+              <Card className="p-5 grid grid-cols-1 gap-2">
+                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Attach Stripe price</h2>
+                <Select name="micro_product_id" required>
+                  <SelectTrigger aria-label="Micro-product" className="w-full">
+                    <SelectValue placeholder="Select product" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products.map((product) => (
+                      <SelectItem key={product.id} value={product.id}>{product.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input name="stripe_product_id" placeholder="stripe product id" required />
+                <Input name="stripe_price_id" placeholder="stripe price id" required />
+                <Input name="stripe_coupon_id" placeholder="stripe coupon id (optional)" />
+                <div className="grid grid-cols-2 gap-2">
+                  <Select name="interval" defaultValue="one_time">
+                    <SelectTrigger aria-label="Price interval" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="one_time">one_time</SelectItem>
+                      <SelectItem value="month">month</SelectItem>
+                      <SelectItem value="year">year</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input name="unit_amount_cents" type="number" min={1} placeholder="unit amount cents" required />
+                </div>
+                <Button type="submit" className="mt-1 self-start">Attach price</Button>
+              </Card>
             </form>
           </section>
         )}
 
         {!isReadOnly && (
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-            <form action={createBundleTemplate} className="bg-white border border-slate-200 rounded p-5 grid grid-cols-1 gap-2">
-              <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Create bundle template</h2>
-              <input name="slug" placeholder="bundle slug" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              <input name="name" placeholder="bundle name" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-              <div className="grid grid-cols-3 gap-2">
-                <select name="audience" title="Bundle audience" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="b2b">b2b</option>
-                  <option value="b2c">b2c</option>
-                </select>
-                <select name="bundle_status" title="Bundle status" className="border border-slate-300 rounded px-3 py-2 text-[13px]">
-                  <option value="draft">draft</option>
-                  <option value="active">active</option>
-                  <option value="retired">retired</option>
-                </select>
-                <input name="seat_min" type="number" min={1} defaultValue={1} placeholder="minimum seats" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              </div>
-              <input name="stripe_product_id" placeholder="stripe product id" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              <input name="stripe_price_id" placeholder="stripe price id" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              <input name="stripe_coupon_id" placeholder="stripe coupon id" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-              <button className="mt-1 bg-slate-900 text-white text-[13px] font-semibold rounded px-4 py-2">Create bundle</button>
+            <form action={createBundleTemplate}>
+              <Card className="p-5 grid grid-cols-1 gap-2">
+                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Create bundle template</h2>
+                <Input name="slug" placeholder="bundle slug" required />
+                <Input name="name" placeholder="bundle name" required />
+                <div className="grid grid-cols-3 gap-2">
+                  <Select name="audience" defaultValue="b2b">
+                    <SelectTrigger aria-label="Bundle audience" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="b2b">b2b</SelectItem>
+                      <SelectItem value="b2c">b2c</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select name="bundle_status" defaultValue="draft">
+                    <SelectTrigger aria-label="Bundle status" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">draft</SelectItem>
+                      <SelectItem value="active">active</SelectItem>
+                      <SelectItem value="retired">retired</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input name="seat_min" type="number" min={1} defaultValue={1} placeholder="minimum seats" />
+                </div>
+                <Input name="stripe_product_id" placeholder="stripe product id" />
+                <Input name="stripe_price_id" placeholder="stripe price id" />
+                <Input name="stripe_coupon_id" placeholder="stripe coupon id" />
+                <Button type="submit" className="mt-1 self-start">Create bundle</Button>
+              </Card>
             </form>
 
             <div className="space-y-4">
-              <form action={addBundleItem} className="bg-white border border-slate-200 rounded p-5 grid grid-cols-1 gap-2">
-                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Add bundle item</h2>
-                <select name="bundle_id" title="Bundle template" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required>
-                  <option value="">Select bundle</option>
-                  {bundles.map((bundle) => (
-                    <option key={bundle.id} value={bundle.id}>{bundle.name}</option>
-                  ))}
-                </select>
-                <select name="micro_product_id" title="Bundle micro-product" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required>
-                  <option value="">Select product</option>
-                  {products.map((product) => (
-                    <option key={product.id} value={product.id}>{product.name}</option>
-                  ))}
-                </select>
-                <input name="entitlement_key" placeholder="entitlement key" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-                <button className="mt-1 bg-slate-900 text-white text-[13px] font-semibold rounded px-4 py-2">Attach to bundle</button>
+              <form action={addBundleItem}>
+                <Card className="p-5 grid grid-cols-1 gap-2">
+                  <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Add bundle item</h2>
+                  <Select name="bundle_id" required>
+                    <SelectTrigger aria-label="Bundle template" className="w-full">
+                      <SelectValue placeholder="Select bundle" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {bundles.map((bundle) => (
+                        <SelectItem key={bundle.id} value={bundle.id}>{bundle.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select name="micro_product_id" required>
+                    <SelectTrigger aria-label="Bundle micro-product" className="w-full">
+                      <SelectValue placeholder="Select product" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {products.map((product) => (
+                        <SelectItem key={product.id} value={product.id}>{product.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Input name="entitlement_key" placeholder="entitlement key" required />
+                  <Button type="submit" className="mt-1 self-start">Attach to bundle</Button>
+                </Card>
               </form>
 
-              <form action={assignBundleToPartner} className="bg-white border border-slate-200 rounded p-5 grid grid-cols-1 gap-2">
-                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Assign bundle to partner</h2>
-                <input name="partner_email" placeholder="partner email" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required />
-                <select name="bundle_id" title="Assign bundle template" className="border border-slate-300 rounded px-3 py-2 text-[13px]" required>
-                  <option value="">Select bundle</option>
-                  {bundles.map((bundle) => (
-                    <option key={bundle.id} value={bundle.id}>{bundle.name}</option>
-                  ))}
-                </select>
-                <input name="seat_limit" type="number" min={1} defaultValue={5} placeholder="seat limit" className="border border-slate-300 rounded px-3 py-2 text-[13px]" />
-                <button className="mt-1 bg-slate-900 text-white text-[13px] font-semibold rounded px-4 py-2">Assign entitlements</button>
+              <form action={assignBundleToPartner}>
+                <Card className="p-5 grid grid-cols-1 gap-2">
+                  <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Assign bundle to partner</h2>
+                  <Input name="partner_email" placeholder="partner email" required />
+                  <Select name="bundle_id" required>
+                    <SelectTrigger aria-label="Assign bundle template" className="w-full">
+                      <SelectValue placeholder="Select bundle" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {bundles.map((bundle) => (
+                        <SelectItem key={bundle.id} value={bundle.id}>{bundle.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Input name="seat_limit" type="number" min={1} defaultValue={5} placeholder="seat limit" />
+                  <Button type="submit" className="mt-1 self-start">Assign entitlements</Button>
+                </Card>
               </form>
             </div>
           </section>
         )}
 
-        <section className="bg-white border border-slate-200 rounded overflow-hidden mb-6">
+        <Card className="p-0 overflow-hidden mb-6">
           <div className="px-5 py-3 border-b border-slate-100">
             <h2 className="text-[12px] font-semibold text-slate-900">Catalog products</h2>
           </div>
-          <table className="w-full text-[12px]">
-            <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
-              <tr>
-                <th className="px-5 py-2 text-left">Product</th>
-                <th className="px-4 py-2 text-left">Channel</th>
-                <th className="px-4 py-2 text-left">Billing</th>
-                <th className="px-4 py-2 text-left">Status</th>
-                <th className="px-5 py-2 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="text-[12px]">
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="px-5 py-2">Product</TableHead>
+                <TableHead className="px-4 py-2">Channel</TableHead>
+                <TableHead className="px-4 py-2">Billing</TableHead>
+                <TableHead className="px-4 py-2">Status</TableHead>
+                <TableHead className="px-5 py-2 text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {products.map((product) => (
-                <tr key={product.id} className="border-t border-slate-100">
-                  <td className="px-5 py-2 text-slate-800">
+                <TableRow key={product.id}>
+                  <TableCell className="px-5 py-2 text-slate-800 whitespace-normal">
                     <p className="font-semibold">{product.name}</p>
                     <p className="text-slate-500">{product.slug}</p>
-                  </td>
-                  <td className="px-4 py-2 text-slate-700">{product.channel}</td>
-                  <td className="px-4 py-2 text-slate-700">{product.billing_type} / {product.default_interval}</td>
-                  <td className="px-4 py-2 text-slate-700">{product.product_status}</td>
-                  <td className="px-5 py-2 text-right">
+                  </TableCell>
+                  <TableCell className="px-4 py-2 text-slate-700">{product.channel}</TableCell>
+                  <TableCell className="px-4 py-2 text-slate-700">{product.billing_type} / {product.default_interval}</TableCell>
+                  <TableCell className="px-4 py-2 text-slate-700">{product.product_status}</TableCell>
+                  <TableCell className="px-5 py-2 text-right">
                     {!isReadOnly && (
                       <form action={setCatalogProductStatus} className="inline-flex items-center gap-2">
                         <input type="hidden" name="id" value={product.id} />
-                        <select name="product_status" title="Update product status" defaultValue={product.product_status} className="border border-slate-300 rounded px-2 py-1 text-[12px]">
-                          <option value="draft">draft</option>
-                          <option value="active">active</option>
-                          <option value="retired">retired</option>
-                        </select>
-                        <button className="text-[12px] font-semibold text-slate-800 border border-slate-300 rounded px-2 py-1">Save</button>
+                        <Select name="product_status" defaultValue={product.product_status}>
+                          <SelectTrigger aria-label="Update product status" size="sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="draft">draft</SelectItem>
+                            <SelectItem value="active">active</SelectItem>
+                            <SelectItem value="retired">retired</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button type="submit" variant="outline" size="sm">Save</Button>
                       </form>
                     )}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </section>
+            </TableBody>
+          </Table>
+        </Card>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          <div className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[12px] font-semibold text-slate-900 mb-3">Active Stripe prices</h2>
             <div className="space-y-2 text-[12px]">
               {prices.length === 0 && <p className="text-slate-500">No pricing records yet.</p>}
@@ -320,9 +392,9 @@ export default async function AdminMicroProductCatalogPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[12px] font-semibold text-slate-900 mb-3">Bundle items</h2>
             <div className="space-y-2 text-[12px]">
               {bundleItems.length === 0 && <p className="text-slate-500">No bundle items yet.</p>}
@@ -334,10 +406,10 @@ export default async function AdminMicroProductCatalogPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </section>
 
-        <section className="bg-white border border-slate-200 rounded p-5">
+        <Card className="p-5">
           <h2 className="text-[12px] font-semibold text-slate-900 mb-3">Recent entitlement assignments</h2>
           <div className="space-y-2 text-[12px]">
             {entitlements.length === 0 && <p className="text-slate-500">No entitlement rows yet.</p>}
@@ -354,7 +426,7 @@ export default async function AdminMicroProductCatalogPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
       </main>
     </div>
   )

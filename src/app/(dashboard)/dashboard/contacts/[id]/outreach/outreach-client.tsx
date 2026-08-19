@@ -1,8 +1,24 @@
-﻿'use client'
+'use client'
 import Link from 'next/link'
 import { useState } from 'react'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
 import { markContactSent, remindLater } from '../../actions'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const GOALS = [
   'Request a 20-minute exploratory call',
@@ -96,9 +112,7 @@ export function OutreachClient({
   const [showCopyPrompt, setShowCopyPrompt] = useState(false)
   const [sent, setSent] = useState(false)
   const [customRefine, setCustomRefine] = useState('')
-  const [showHistory, setShowHistory] = useState(false)
   const [expandedHistory, setExpandedHistory] = useState<string | null>(null)
-  const [showInformed, setShowInformed] = useState(false)
   const [actionError, setActionError] = useState('')
 
   const subtitle = [contact.title, contact.firm ?? contact.company_name].filter(Boolean).join(' · ')
@@ -218,22 +232,23 @@ export function OutreachClient({
 
       <main className="max-w-3xl mx-auto px-6 py-10">
         {profileScore < 50 && (
-          <div className="mb-6 px-5 py-4 bg-amber-500/10 border border-amber-300/30 rounded flex items-start gap-4">
+          <Alert variant="warning" className="mb-6 px-5 py-4 flex items-start gap-4">
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold text-amber-100">
+              <AlertTitle className="text-[13px] font-semibold text-amber-100">
                 Your draft quality is limited by an incomplete profile.
-              </p>
-              <p className="text-[12px] text-amber-200 mt-1 leading-relaxed">
+              </AlertTitle>
+              <AlertDescription className="text-[12px] text-amber-200 mt-1 leading-relaxed">
                 The AI is working with partial information. A complete profile (resume, positioning, targets) produces outreach that reads as if you wrote it yourself instead of generic templates.
-              </p>
+              </AlertDescription>
             </div>
-            <Link
-              href="/dashboard/profile#section-resume"
-              className="shrink-0 text-[12px] font-semibold text-amber-100 border border-amber-300/40 hover:border-amber-300/70 px-3 py-1.5 rounded transition-colors"
+            <Button
+              variant="outline"
+              className="shrink-0 border-amber-300/40 text-[12px] font-semibold text-amber-100 hover:border-amber-300/70"
+              render={<Link href="/dashboard/profile#section-resume" />}
             >
               Complete profile →
-            </Link>
-          </div>
+            </Button>
+          </Alert>
         )}
 
         <div className="mb-6">
@@ -245,123 +260,121 @@ export function OutreachClient({
         </div>
 
         {companyId && contact.company_name && (
-          <div className="mb-5 rounded border border-white/15 bg-white/5 px-5 py-4">
+          <Card variant="glass" className="mb-5 rounded border-white/15 bg-white/5 px-5 py-4">
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Brief launcher</p>
             <p className="text-[13px] text-slate-300 leading-relaxed mb-3">
               Before you send this note, open the prep brief for {contact.company_name} so your outreach lands with company-specific context.
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              <Link
-                href={`/dashboard/companies/${companyId}/prep`}
-                className="inline-flex min-h-[40px] items-center rounded bg-orange-500 px-3 text-[12px] font-semibold text-slate-950 hover:bg-orange-400"
-              >
+              <Button className="min-h-[40px] text-[12px] font-semibold" render={<Link href={`/dashboard/companies/${companyId}/prep`} />}>
                 Open company brief
-              </Link>
-              <Link
-                href={`/dashboard/companies/${companyId}`}
-                className="inline-flex min-h-[40px] items-center rounded border border-white/20 bg-white/5 px-3 text-[12px] font-semibold text-slate-200 hover:border-white/40"
-              >
+              </Button>
+              <Button variant="outline" className="min-h-[40px] border-white/20 bg-white/5 text-[12px] font-semibold text-slate-200 hover:border-white/40" render={<Link href={`/dashboard/companies/${companyId}`} />}>
                 Open company page
-              </Link>
-              <Link
-                href="/dashboard/briefing"
-                className="inline-flex min-h-[40px] items-center rounded border border-white/20 bg-white/5 px-3 text-[12px] font-semibold text-slate-200 hover:border-white/40"
-              >
+              </Button>
+              <Button variant="outline" className="min-h-[40px] border-white/20 bg-white/5 text-[12px] font-semibold text-slate-200 hover:border-white/40" render={<Link href="/dashboard/briefing" />}>
                 Open daily briefing
-              </Link>
+              </Button>
             </div>
-          </div>
+          </Card>
         )}
 
         {recentSignals.length > 0 && (
-          <div className="mb-5 bg-amber-500/10 border border-amber-300/30 rounded px-5 py-4">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-amber-200 mb-2">Recent signals at {contact.company_name ?? 'their company'}</p>
+          <Alert variant="warning" className="mb-5 px-5 py-4">
+            <AlertTitle className="text-[10px] font-bold tracking-[0.12em] uppercase text-amber-200 mb-2">
+              Recent signals at {contact.company_name ?? 'their company'}
+            </AlertTitle>
             <ul className="flex flex-col gap-2">
               {recentSignals.map((s, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <span className="shrink-0 text-[10px] font-bold uppercase text-amber-300 bg-amber-500/15 px-1.5 py-0.5 rounded mt-0.5">
+                  <Badge variant="warning" className="shrink-0 uppercase mt-0.5">
                     {s.signalType.replace(/_/g, ' ')}
-                  </span>
+                  </Badge>
                   <span className="text-[13px] text-slate-200 leading-snug">{s.summary}</span>
                 </li>
               ))}
             </ul>
             <p className="text-[11px] text-amber-200 mt-2 italic">Use a signal as a natural reason to reconnect, not as the pitch.</p>
-          </div>
+          </Alert>
         )}
 
-        <div className="bg-white/5 border border-white/15 rounded p-6 mb-4">
+        <Card variant="glass" className="rounded border-white/15 bg-white/5 p-6 mb-4">
           <div className="mb-4">
-            <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
               Goal
-            </label>
-            <select
-              aria-label="Outreach goal"
+            </Label>
+            <Select
               value={goal}
-              onChange={e => { setGoal(e.target.value); setCustomGoal('') }}
-              className="w-full border border-white/15 bg-slate-900 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/40"
+              onValueChange={(value) => { if (value) { setGoal(value); setCustomGoal('') } }}
             >
-              {GOALS.map(g => <option key={g} value={g}>{g}</option>)}
-              <option value="custom">Custom goal…</option>
-            </select>
+              <SelectTrigger aria-label="Outreach goal" className="w-full border-white/15 bg-slate-900 text-[13px] text-slate-100">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {GOALS.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+                <SelectItem value="custom">Custom goal…</SelectItem>
+              </SelectContent>
+            </Select>
             {goal === 'custom' && (
-              <input
+              <Input
                 type="text"
                 value={customGoal}
                 onChange={e => setCustomGoal(e.target.value)}
                 placeholder="Describe what you want to accomplish"
-                className="w-full mt-2 border border-white/15 bg-slate-950/70 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40"
+                className="w-full mt-2 border-white/15 bg-slate-950/70 text-[13px] text-slate-100 placeholder:text-slate-500"
               />
             )}
           </div>
 
           <div className="mb-5">
-            <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
               Additional context <span className="font-normal text-slate-300">(optional)</span>
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               value={additionalContext}
               onChange={e => setAdditionalContext(e.target.value)}
               placeholder="e.g. We met at the CFO Summit last month, they mentioned a transformation role opening up in Q3…"
               rows={3}
-              className="w-full border border-white/15 bg-slate-950/70 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 resize-none"
+              className="w-full border-white/15 bg-slate-950/70 text-[13px] text-slate-100 placeholder:text-slate-500 resize-none"
             />
           </div>
 
-          <button
+          <Button
             type="button"
             onClick={handleGenerate}
             disabled={!!loading || (goal === 'custom' && !customGoal.trim())}
-            className="bg-orange-500 hover:bg-orange-400 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50"
+            className="text-[13px] font-semibold px-5 py-2.5"
           >
             {loading === 'generate' ? 'Drafting…' : draft ? 'Regenerate' : 'Generate draft'}
-          </button>
-        </div>
+          </Button>
+        </Card>
 
         {draft && (
-          <div className="bg-white/5 border border-white/15 rounded p-6 mb-4">
+          <Card variant="glass" className="rounded border-white/15 bg-white/5 p-6 mb-4">
             <div className="flex items-center justify-between mb-4">
               <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Draft</p>
               <div className="flex items-center gap-2">
                 {sent ? (
-                  <span className="text-[12px] font-semibold text-emerald-300">Marked as sent</span>
+                  <Badge variant="success" className="text-[12px] font-semibold">Marked as sent</Badge>
                 ) : (
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
                     onClick={handleMarkSent}
                     disabled={!!loading}
-                    className="text-[12px] font-semibold text-slate-400 hover:text-white border border-white/15 rounded px-3 py-1 cursor-pointer bg-white/5/5 disabled:opacity-40"
+                    className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15 bg-white/5"
                   >
                     {loading === 'sent' ? 'Saving…' : 'Mark as sent'}
-                  </button>
+                  </Button>
                 )}
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={handleCopy}
-                  className="text-[12px] font-semibold text-slate-400 hover:text-white border border-white/15 rounded px-3 py-1 cursor-pointer bg-white/5"
+                  className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15 bg-white/5"
                 >
                   {copied ? 'Copied!' : 'Copy'}
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -369,59 +382,60 @@ export function OutreachClient({
 
             {!loading && (
               <div className="flex gap-2 mb-4">
-                <a
-                  href={contact.email
-                    ? `mailto:${contact.email}?subject=Introduction&body=${encodeURIComponent(draft)}`
-                    : `mailto:?subject=Introduction&body=${encodeURIComponent(draft)}`}
-                  className="text-[12px] font-semibold text-slate-400 hover:text-white border border-white/15 rounded px-3 py-1 transition-colors"
+                <Button
+                  variant="outline"
+                  className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15"
+                  render={<a
+                    href={contact.email
+                      ? `mailto:${contact.email}?subject=Introduction&body=${encodeURIComponent(draft)}`
+                      : `mailto:?subject=Introduction&body=${encodeURIComponent(draft)}`}
+                  />}
                 >
                   Draft email ↗
-                </a>
+                </Button>
                 {contact.linkedin_url && (
-                  <a
-                    href={contact.linkedin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[12px] font-semibold text-slate-400 hover:text-white border border-white/15 rounded px-3 py-1 transition-colors"
+                  <Button
+                    variant="outline"
+                    className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15"
+                    render={<a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer" />}
                   >
                     Open LinkedIn ↗
-                  </a>
+                  </Button>
                 )}
               </div>
             )}
 
             {showCopyPrompt && !sent && !loading && (
-              <div className="mb-4 px-4 py-3 bg-white/5 border border-white/15 rounded flex items-center justify-between gap-4">
+              <Card variant="glass" className="mb-4 rounded border-white/15 bg-white/5 px-4 py-3 flex items-center justify-between gap-4">
                 <p className="text-[13px] text-slate-300">Paste this into LinkedIn or email, then mark it sent here.</p>
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleMarkSent}
-                    className="text-[12px] font-semibold text-slate-950 bg-orange-500 hover:bg-orange-400 rounded px-3 py-1 cursor-pointer border-0"
-                  >
+                  <Button type="button" onClick={handleMarkSent} className="text-[12px] font-semibold px-3 py-1">
                     Mark as sent
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="outline"
                     onClick={handleRemindLater}
-                    className="text-[12px] font-semibold text-slate-400 hover:text-white border border-white/15 rounded px-3 py-1 cursor-pointer bg-white/5"
+                    className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15 bg-white/5"
                   >
                     Remind me later
-                  </button>
+                  </Button>
                 </div>
-              </div>
+              </Card>
             )}
 
             {sent && (
-              <div className="mb-5 px-3 py-2 bg-emerald-500/10 border border-emerald-300/30 rounded text-[12px] text-emerald-200">
-                Logged as contacted. A follow-up has been added for 5 days from now.
-              </div>
+              <Alert variant="success" className="mb-5 px-3 py-2">
+                <AlertDescription className="text-[12px]">
+                  Logged as contacted. A follow-up has been added for 5 days from now.
+                </AlertDescription>
+              </Alert>
             )}
 
             {actionError && (
-              <div className="mb-5 px-3 py-2 bg-rose-500/10 border border-rose-300/30 rounded text-[12px] text-rose-200">
-                {actionError}
-              </div>
+              <Alert variant="destructive" className="mb-5 px-3 py-2">
+                <AlertDescription className="text-[12px]">{actionError}</AlertDescription>
+              </Alert>
             )}
 
             {draftId && !loading && (
@@ -431,138 +445,130 @@ export function OutreachClient({
             )}
 
             {!loading && (
-              <div className="mb-4 border border-white/10 rounded">
-                <button
-                  type="button"
-                  onClick={() => setShowInformed(v => !v)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 text-left bg-transparent cursor-pointer border-0"
-                >
+              <Collapsible className="mb-4 border border-white/10 rounded">
+                <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-2.5 text-left bg-transparent cursor-pointer border-0">
                   <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">
                     What the AI knew about this draft
                   </span>
-                  <span className="text-[11px] text-slate-300">{showInformed ? '▲' : '▼'}</span>
-                </button>
-                {showInformed && (
-                  <div className="px-4 pb-3 flex flex-col gap-1.5 border-t border-white/10">
-                    {(roleType || fullName) && (
-                      <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                        <span className="text-slate-300 shrink-0 mt-0.5">-</span>
-                        <span>
-                          Your background{roleType ? ` as ${ROLE_TYPE_LABELS[roleType] ?? roleType}` : ''}{fullName ? ` (${fullName})` : ''}
-                        </span>
-                      </div>
-                    )}
+                  <span className="text-[11px] text-slate-300">Details</span>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="px-4 pb-3 flex flex-col gap-1.5 border-t border-white/10">
+                  {(roleType || fullName) && (
                     <div className="flex items-start gap-2 text-[12px] text-slate-300">
                       <span className="text-slate-300 shrink-0 mt-0.5">-</span>
                       <span>
-                        {contact.name}{contact.title ? `, ${contact.title}` : ''}{contact.firm ?? contact.company_name ? ` at ${contact.firm ?? contact.company_name}` : ''}
+                        Your background{roleType ? ` as ${ROLE_TYPE_LABELS[roleType] ?? roleType}` : ''}{fullName ? ` (${fullName})` : ''}
                       </span>
                     </div>
+                  )}
+                  <div className="flex items-start gap-2 text-[12px] text-slate-300">
+                    <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                    <span>
+                      {contact.name}{contact.title ? `, ${contact.title}` : ''}{contact.firm ?? contact.company_name ? ` at ${contact.firm ?? contact.company_name}` : ''}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2 text-[12px] text-slate-300">
+                    <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                    <span>Goal: {customGoal.trim() || goal}</span>
+                  </div>
+                  {contact.channel && (
                     <div className="flex items-start gap-2 text-[12px] text-slate-300">
                       <span className="text-slate-300 shrink-0 mt-0.5">-</span>
-                      <span>Goal: {customGoal.trim() || goal}</span>
+                      <span>Channel: {CHANNEL_LABELS[contact.channel] ?? contact.channel}</span>
                     </div>
-                    {contact.channel && (
-                      <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                        <span className="text-slate-300 shrink-0 mt-0.5">-</span>
-                        <span>Channel: {CHANNEL_LABELS[contact.channel] ?? contact.channel}</span>
-                      </div>
-                    )}
-                    {contact.notes && (
-                      <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                        <span className="text-slate-300 shrink-0 mt-0.5">-</span>
-                        <span>Contact notes: {contact.notes.slice(0, 120)}{contact.notes.length > 120 ? '…' : ''}</span>
-                      </div>
-                    )}
-                    {additionalContext.trim() && (
-                      <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                        <span className="text-slate-300 shrink-0 mt-0.5">-</span>
-                        <span>Your additional context: {additionalContext.trim().slice(0, 120)}</span>
-                      </div>
-                    )}
-                    <p className="mt-2 text-[11px] text-slate-300">A blank AI window cannot access any of this.</p>
-                  </div>
-                )}
-              </div>
+                  )}
+                  {contact.notes && (
+                    <div className="flex items-start gap-2 text-[12px] text-slate-300">
+                      <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                      <span>Contact notes: {contact.notes.slice(0, 120)}{contact.notes.length > 120 ? '…' : ''}</span>
+                    </div>
+                  )}
+                  {additionalContext.trim() && (
+                    <div className="flex items-start gap-2 text-[12px] text-slate-300">
+                      <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                      <span>Your additional context: {additionalContext.trim().slice(0, 120)}</span>
+                    </div>
+                  )}
+                  <p className="mt-2 text-[11px] text-slate-300">A blank AI window cannot access any of this.</p>
+                </CollapsibleContent>
+              </Collapsible>
             )}
 
             <div className="border-t border-white/10 pt-4">
               <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Refine</p>
-              <div className="flex flex-wrap gap-2 mb-3">
+              <ToggleGroup
+                value={loading && REFINE_BUTTONS.some(b => b.style === loading) ? [loading] : []}
+                onValueChange={(values) => { if (values[0]) handleRefine(values[0]) }}
+                variant="outline"
+                className="mb-3 flex-wrap"
+              >
                 {REFINE_BUTTONS.map(({ style, label }) => (
-                  <button
+                  <ToggleGroupItem
                     key={style}
-                    type="button"
-                    onClick={() => handleRefine(style)}
+                    value={style}
                     disabled={!!loading}
-                    className="text-[12px] font-medium text-slate-300 border border-white/15 rounded px-3 py-1.5 hover:bg-white/5 hover:border-white/20 cursor-pointer bg-white/5/5 disabled:opacity-40"
+                    className="text-[12px] font-medium text-slate-300 border-white/15 hover:bg-white/5 hover:border-white/20 bg-white/5 disabled:opacity-40"
                   >
                     {loading === style ? 'Rewriting…' : label}
-                  </button>
+                  </ToggleGroupItem>
                 ))}
-              </div>
+              </ToggleGroup>
               <div className="flex gap-2">
-                <input
+                <Input
                   type="text"
                   value={customRefine}
                   onChange={e => setCustomRefine(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') handleCustomRefine() }}
                   placeholder="Or describe your edit…"
                   disabled={!!loading}
-                  className="flex-1 border border-white/15 rounded px-3 py-1.5 text-[13px] text-white placeholder:text-slate-500 focus:outline-none focus:border-white/40 disabled:opacity-40"
+                  className="flex-1 border-white/15 text-[13px] text-white placeholder:text-slate-500 disabled:opacity-40"
                 />
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={handleCustomRefine}
                   disabled={!!loading || !customRefine.trim()}
-                  className="text-[12px] font-medium text-slate-300 border border-white/15 rounded px-3 py-1.5 hover:bg-white/5 cursor-pointer bg-white/5/5 disabled:opacity-40 shrink-0"
+                  className="text-[12px] font-medium text-slate-300 border-white/15 hover:bg-white/5 bg-white/5 disabled:opacity-40 shrink-0"
                 >
                   {loading === 'custom' ? 'Rewriting…' : 'Apply'}
-                </button>
+                </Button>
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {history.length > 0 && (
-          <div className="bg-white/5 border border-white/15 rounded overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setShowHistory(h => !h)}
-              className="w-full px-5 py-3.5 flex items-center justify-between text-left cursor-pointer bg-transparent border-0"
-            >
+          <Collapsible className="rounded border border-white/15 bg-white/5 overflow-hidden">
+            <CollapsibleTrigger className="w-full px-5 py-3.5 flex items-center justify-between text-left cursor-pointer bg-transparent border-0">
               <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">
                 Previous drafts ({history.length})
               </span>
-              <span className="text-[11px] text-slate-400">{showHistory ? '▲' : '▼'}</span>
-            </button>
-            {showHistory && (
-              <div className="divide-y divide-white/5 border-t border-white/10">
-                {history.map(h => (
-                  <div key={h.id} className="px-5 py-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] text-slate-400">{formatDate(h.createdAt)}</span>
-                      <button
-                        type="button"
-                        onClick={() => setExpandedHistory(expandedHistory === h.id ? null : h.id)}
-                        className="text-[11px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer"
-                      >
-                        {expandedHistory === h.id ? 'Collapse' : 'View'}
-                      </button>
-                    </div>
-                    {expandedHistory === h.id ? (
-                      <div className="text-[13px] text-slate-200 leading-relaxed whitespace-pre-wrap">{h.text}</div>
-                    ) : (
-                      <p className="text-[13px] text-slate-400 truncate">{h.text.slice(0, 100)}</p>
-                    )}
+              <span className="text-[11px] text-slate-400">Expand</span>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="divide-y divide-white/5 border-t border-white/10">
+              {history.map(h => (
+                <div key={h.id} className="px-5 py-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] text-slate-400">{formatDate(h.createdAt)}</span>
+                    <button
+                      type="button"
+                      onClick={() => setExpandedHistory(expandedHistory === h.id ? null : h.id)}
+                      className="text-[11px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer"
+                    >
+                      {expandedHistory === h.id ? 'Collapse' : 'View'}
+                    </button>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  {expandedHistory === h.id ? (
+                    <div className="text-[13px] text-slate-200 leading-relaxed whitespace-pre-wrap">{h.text}</div>
+                  ) : (
+                    <p className="text-[13px] text-slate-400 truncate">{h.text.slice(0, 100)}</p>
+                  )}
+                </div>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
         )}
       </main>
     </div>
   )
 }
-

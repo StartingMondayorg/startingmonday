@@ -2,20 +2,21 @@
 import { useState, useTransition, useActionState } from 'react'
 import type { StaffMember, StaffRole } from '@/lib/staff'
 import { addTeamMember, changeTeamRole, removeTeamMember } from './actions'
-import {
-  ADMIN_DARK_BUTTON_MD,
-  ADMIN_DARK_BUTTON_SM,
-  ADMIN_DARK_FIELD_MD,
-  ADMIN_DARK_FIELD_SM,
-  ADMIN_DARK_MUTED_ACTION,
-  ADMIN_DARK_SUB_CARD,
-  ADMIN_DARK_TABLE_PANEL,
-  adminRoleBadgeClass,
-} from '../admin-dark-theme'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Props = {
   members: StaffMember[]
   currentRole: StaffRole
+}
+
+function roleBadgeVariant(role: StaffRole): 'warning' | 'info' | 'secondary' {
+  if (role === 'owner') return 'warning'
+  if (role === 'admin') return 'info'
+  return 'secondary'
 }
 
 function MemberRow({ member, isOwner }: { member: StaffMember; isOwner: boolean }) {
@@ -51,52 +52,63 @@ function MemberRow({ member, isOwner }: { member: StaffMember; isOwner: boolean 
 
       {editing && isOwner ? (
         <div className="flex items-center gap-2 shrink-0">
-          <select
+          <Select
             value={role}
-            onChange={e => setRole(e.target.value as StaffRole)}
+            onValueChange={(value) => setRole(value as StaffRole)}
             disabled={member.role === 'owner' || isPending}
-            aria-label={`Role for ${member.email}`}
-            title="Team member role"
-            className={`${ADMIN_DARK_FIELD_SM} text-[12px] disabled:opacity-50`}
           >
-            <option value="viewer">viewer</option>
-            <option value="admin">admin</option>
-            <option value="owner">owner</option>
-          </select>
-          <button
+            <SelectTrigger
+              size="sm"
+              aria-label={`Role for ${member.email}`}
+              title="Team member role"
+              className="text-[12px]"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="viewer">viewer</SelectItem>
+              <SelectItem value="admin">admin</SelectItem>
+              <SelectItem value="owner">owner</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            size="sm"
+            variant="outline"
             onClick={handleRoleChange}
             disabled={isPending}
-            className={ADMIN_DARK_BUTTON_SM}
           >
             Save
-          </button>
-          <button
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
             onClick={() => { setEditing(false); setRole(member.role) }}
-            className={ADMIN_DARK_MUTED_ACTION}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="flex items-center gap-3 shrink-0">
-          <span className={`text-[11px] font-bold px-2 py-0.5 rounded ${adminRoleBadgeClass(member.role)}`}>
+          <Badge variant={roleBadgeVariant(member.role)}>
             {member.role}
-          </span>
+          </Badge>
           {isOwner && member.role !== 'owner' && (
             <>
-              <button
+              <Button
+                size="sm"
+                variant="ghost"
                 onClick={() => setEditing(true)}
-                className={ADMIN_DARK_MUTED_ACTION}
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
                 onClick={handleRemove}
                 disabled={isPending}
-                className="text-[12px] text-red-300 hover:text-red-200 cursor-pointer bg-transparent border-0 disabled:opacity-40"
               >
                 Remove
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -110,30 +122,30 @@ function AddMemberForm() {
 
   return (
     <form action={formAction} className="px-6 py-5 flex flex-col sm:flex-row gap-3">
-      <input
+      <Input
         name="email"
         type="email"
         required
         placeholder="colleague@company.com"
-        className={`${ADMIN_DARK_FIELD_MD} flex-1 text-[13px] placeholder:text-slate-500`}
+        className="flex-1"
       />
-      <select
-        name="role"
-        defaultValue="viewer"
-        aria-label="Role for new team member"
-        title="New member role"
-        className={`${ADMIN_DARK_FIELD_MD} text-[13px]`}
-      >
-        <option value="viewer">viewer</option>
-        <option value="admin">admin</option>
-      </select>
-      <button
+      <Select name="role" defaultValue="viewer">
+        <SelectTrigger aria-label="Role for new team member" title="New member role" className="w-full sm:w-auto">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="viewer">viewer</SelectItem>
+          <SelectItem value="admin">admin</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button
         type="submit"
+        variant="outline"
         disabled={isPending}
-        className={`${ADMIN_DARK_BUTTON_MD} shrink-0`}
+        className="shrink-0"
       >
         {isPending ? 'Adding...' : 'Add member'}
-      </button>
+      </Button>
       {state.error && (
         <p className="text-[12px] text-red-300 self-center">{state.error}</p>
       )}
@@ -146,7 +158,7 @@ export function TeamClient({ members, currentRole }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className={ADMIN_DARK_TABLE_PANEL}>
+      <Card variant="glass" className="p-0">
         <div className="px-6 py-[18px] border-b border-white/10">
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Team Members</span>
         </div>
@@ -160,13 +172,13 @@ export function TeamClient({ members, currentRole }: Props) {
         </div>
         {isOwner && (
           <>
-            <div className={`${ADMIN_DARK_SUB_CARD} border-t border-white/10 px-6 py-3`}>
+            <div className="border border-white/10 bg-slate-950/60 rounded border-t border-white/10 px-6 py-3">
               <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Add Member</span>
             </div>
             <AddMemberForm />
           </>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

@@ -1,6 +1,8 @@
 ﻿'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 
 const PERSONAL_DOMAINS = new Set([
   'gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'yahoo.co.in',
@@ -33,8 +35,8 @@ export function PersonalEmailNudge({ email }: { email: string }) {
   }
 
   return (
-    <div className="bg-slate-800 border-t border-slate-700 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
-      <p className="text-[12px] text-slate-300 leading-relaxed">
+    <Alert className="rounded-none border-x-0 border-b-0 bg-slate-800 border-slate-700 text-slate-300 flex-row items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
+      <AlertDescription className="text-[12px] leading-relaxed text-slate-300">
         <span className="font-semibold text-white">Work email on file.</span>{' '}
         If an assistant manages your inbox, your daily briefings may not reach you directly.{' '}
         <Link
@@ -43,15 +45,17 @@ export function PersonalEmailNudge({ email }: { email: string }) {
         >
           Set a personal delivery address in profile settings.
         </Link>
-      </p>
-      <button
+      </AlertDescription>
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
         onClick={dismiss}
-        className="shrink-0 text-[12px] text-slate-300 hover:text-white transition-colors cursor-pointer"
+        className="shrink-0 text-slate-300 hover:text-white"
         aria-label="Dismiss"
       >
         Dismiss
-      </button>
-    </div>
+      </Button>
+    </Alert>
   )
 }

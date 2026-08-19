@@ -1,6 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 export default function ProfileResumeUpload() {
   const router = useRouter()
@@ -34,10 +35,8 @@ export default function ProfileResumeUpload() {
 
   return (
     <div className="mb-2">
-      <label className="inline-flex items-center gap-2 cursor-pointer">
-        <span className="text-[12px] text-slate-500 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 transition-colors">
-          {status === 'uploading' ? 'Extracting…' : 'Upload PDF or DOCX'}
-        </span>
+      <Button variant="outline" render={<label className="cursor-pointer" />}>
+        {status === 'uploading' ? 'Extracting…' : 'Upload PDF or DOCX'}
         <input
           ref={inputRef}
           type="file"
@@ -46,7 +45,7 @@ export default function ProfileResumeUpload() {
           disabled={status === 'uploading'}
           onChange={handleChange}
         />
-      </label>
+      </Button>
       {message && (
         <p className={`mt-1.5 text-[12px] ${status === 'error' ? 'text-red-600' : 'text-green-700'}`}>
           {message}

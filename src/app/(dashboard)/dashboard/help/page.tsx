@@ -1,8 +1,10 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from '../logout-button'
 import { FaqAccordion } from '@/app/(dashboard)/dashboard/_components/FaqAccordion'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default async function HelpPage() {
   const supabase = await createClient()
@@ -49,53 +51,51 @@ export default async function HelpPage() {
           <p className="text-[13px] text-slate-600 mt-1.5">Everything you need to run a disciplined search.</p>
         </div>
 
-        <Link
-          href="/guide"
-          className="group flex items-center justify-between bg-slate-900 border border-slate-800 rounded px-6 py-5 mb-6 hover:bg-slate-800 transition-colors"
-        >
-          <div>
-            <p className="text-[14px] font-semibold text-white">Open the full User Guide + Guide Chat</p>
-            <p className="text-[12px] text-slate-300 mt-0.5">Search features, read how-tos, and ask questions with source links.</p>
-          </div>
-          <span className="text-slate-400 group-hover:text-white shrink-0 ml-4 text-lg">→</span>
+        <Link href="/guide" className="group block mb-6">
+          <Card className="rounded bg-slate-900 border-slate-800 px-6 py-5 flex items-center justify-between hover:bg-slate-800 transition-colors">
+            <div>
+              <p className="text-[14px] font-semibold text-white">Open the full User Guide + Guide Chat</p>
+              <p className="text-[12px] text-slate-300 mt-0.5">Search features, read how-tos, and ask questions with source links.</p>
+            </div>
+            <span className="text-slate-400 group-hover:text-white shrink-0 ml-4 text-lg">→</span>
+          </Card>
         </Link>
 
         {/* Setup checklist */}
-        <Link
-          href="/dashboard/start"
-          className="group flex items-center justify-between bg-white border border-slate-200 rounded px-6 py-5 mb-6 hover:border-slate-300 hover:bg-slate-50 transition-colors"
-        >
-          <div>
-            <p className="text-[14px] font-semibold text-slate-900 group-hover:text-slate-700">New here? Start with the setup checklist.</p>
-            <p className="text-[12px] text-slate-400 mt-0.5">Six moves that make everything else work. Takes about 15 minutes.</p>
-          </div>
-          <span className="text-slate-300 group-hover:text-slate-500 shrink-0 ml-4 text-lg">→</span>
+        <Link href="/dashboard/start" className="group block mb-6">
+          <Card className="rounded px-6 py-5 flex items-center justify-between hover:border-slate-300 hover:bg-slate-50 transition-colors">
+            <div>
+              <p className="text-[14px] font-semibold text-slate-900 group-hover:text-slate-700">New here? Start with the setup checklist.</p>
+              <p className="text-[12px] text-slate-400 mt-0.5">Six moves that make everything else work. Takes about 15 minutes.</p>
+            </div>
+            <span className="text-slate-300 group-hover:text-slate-500 shrink-0 ml-4 text-lg">→</span>
+          </Card>
         </Link>
 
         {/* FAQ */}
-        <div className="bg-white border border-slate-200 rounded overflow-hidden mb-6">
+        <Card className="rounded overflow-hidden mb-6 gap-0 p-0">
           <div className="px-6 py-[18px] border-b border-slate-200">
             <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Frequently Asked Questions</span>
           </div>
           <FaqAccordion />
-        </div>
+        </Card>
 
         {/* Contact */}
-        <div className="bg-white border border-slate-200 rounded px-6 py-5 flex items-center justify-between gap-4">
+        <Card className="rounded px-6 py-5 flex items-center justify-between gap-4">
           <div>
             <p className="text-[14px] font-semibold text-slate-900">Still have a question?</p>
-            <p className="text-[13px] text-slate-500 mt-0.5">Email and you'll hear back within one business day.</p>
+            <p className="text-[13px] text-slate-500 mt-0.5">Email and you&apos;ll hear back within one business day.</p>
           </div>
-          <a
-            href="mailto:rothschild@startingmonday.app"
-            className="shrink-0 text-[13px] font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded transition-colors"
+          <Button
+            variant="secondary"
+            className="shrink-0 text-[13px] font-semibold"
+            render={<a href="mailto:rothschild@startingmonday.app" />}
           >
             Email us
-          </a>
-        </div>
+          </Button>
+        </Card>
 
       </main>
     </div>
   )
 }
-

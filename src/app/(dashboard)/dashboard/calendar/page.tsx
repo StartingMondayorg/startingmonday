@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { CalendarItemClient } from './calendar-item'
 import { LogoutButton } from '../logout-button'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 export const metadata = { title: 'Calendar' }
 
@@ -112,12 +114,13 @@ export default async function CalendarPage({
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </span>
           <div className="flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-slate-700 px-3 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
+            <Button
+              variant="outline"
+              className="min-h-[44px] border-slate-700 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
+              render={<Link href="/dashboard" />}
             >
               Dashboard
-            </Link>
+            </Button>
             <LogoutButton label="Sign out" />
           </div>
         </div>
@@ -131,24 +134,26 @@ export default async function CalendarPage({
             <p className="text-[13px] text-slate-300 mt-1">{formatMonthYear(monday, sunday)}</p>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              href={`/dashboard/calendar?week=${prevMonday}`}
-              className="text-[12px] font-semibold text-slate-200 border border-white/15 bg-white/5 rounded px-3 py-1.5 hover:border-white/30 hover:bg-white/10 transition-colors"
+            <Button
+              variant="outline"
+              className="border-white/15 bg-white/5 text-[12px] font-semibold text-slate-200 hover:border-white/30 hover:bg-white/10"
+              render={<Link href={`/dashboard/calendar?week=${prevMonday}`} />}
             >
               &larr; Prev
-            </Link>
-            <Link
-              href={`/dashboard/calendar?week=${mondayOf(todayISO)}`}
-              className="text-[12px] font-semibold text-slate-950 border border-orange-300/30 bg-orange-400 rounded px-3 py-1.5 hover:bg-orange-300 transition-colors"
+            </Button>
+            <Button
+              className="text-[12px] font-semibold text-slate-950"
+              render={<Link href={`/dashboard/calendar?week=${mondayOf(todayISO)}`} />}
             >
               Today
-            </Link>
-            <Link
-              href={`/dashboard/calendar?week=${nextMonday}`}
-              className="text-[12px] font-semibold text-slate-200 border border-white/15 bg-white/5 rounded px-3 py-1.5 hover:border-white/30 hover:bg-white/10 transition-colors"
+            </Button>
+            <Button
+              variant="outline"
+              className="border-white/15 bg-white/5 text-[12px] font-semibold text-slate-200 hover:border-white/30 hover:bg-white/10"
+              render={<Link href={`/dashboard/calendar?week=${nextMonday}`} />}
             >
               Next &rarr;
-            </Link>
+            </Button>
           </div>
         </div>
 

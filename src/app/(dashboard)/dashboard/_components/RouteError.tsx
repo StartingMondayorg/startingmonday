@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 import * as Sentry from '@sentry/nextjs'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export function RouteError({
   error,
@@ -26,7 +28,7 @@ export function RouteError({
         </div>
       </header>
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 flex flex-col items-start">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 max-w-md">
+        <Card variant="glass" className="gap-0 p-8 max-w-md">
           <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">
             {label} Error
           </div>
@@ -37,13 +39,10 @@ export function RouteError({
             This page failed to load. It is usually a temporary issue.
             Try refreshing - if it persists, the team has been notified.
           </p>
-          <button
-            onClick={reset}
-            className="bg-orange-500 text-slate-950 text-[14px] font-semibold px-6 py-2.5 rounded cursor-pointer border-0 hover:bg-orange-400 transition-colors"
-          >
+          <Button onClick={reset} className="h-auto px-6 py-2.5 text-[14px] font-semibold">
             Try again
-          </button>
-        </div>
+          </Button>
+        </Card>
       </main>
     </div>
   )

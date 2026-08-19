@@ -3,6 +3,10 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { LIFECYCLE_TEMPLATES, LIFECYCLE_STATE_DESCRIPTIONS } from '@/lib/executive-lifecycle'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Optionality Mode | Starting Monday',
@@ -50,7 +54,7 @@ export default async function OptionalityModePage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-6">
         {/* Mode header */}
-        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-6">
+        <Card className="px-6 py-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-2">
@@ -63,34 +67,26 @@ export default async function OptionalityModePage() {
                 {LIFECYCLE_STATE_DESCRIPTIONS.optionality}
               </p>
             </div>
-            <span className="flex-shrink-0 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[11px] font-bold text-amber-700">
+            <Badge variant="warning" className="flex-shrink-0 text-[11px] px-3 py-1.5 h-auto">
               Quiet mode
-            </span>
+            </Badge>
           </div>
-        </div>
+        </Card>
 
         {/* Confidentiality notice */}
-        <div className="rounded-xl border border-amber-200 bg-amber-50/40 px-5 py-4">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-amber-600 mb-2">
-            Confidentiality guidance
-          </p>
-          <p className="text-[13px] text-amber-800 leading-relaxed">
-            {template.confidentialityNotes}
-          </p>
-        </div>
+        <Alert variant="warning">
+          <AlertTitle>Confidentiality guidance</AlertTitle>
+          <AlertDescription>{template.confidentialityNotes}</AlertDescription>
+        </Alert>
 
         {/* Subtle external positioning guidance */}
-        <div className="rounded-xl border border-blue-200 bg-blue-50/30 px-5 py-4">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-blue-600 mb-2">
-            External positioning - signal-level guidance
-          </p>
-          <p className="text-[13px] text-blue-800 leading-relaxed">
-            {template.positioningGuidance}
-          </p>
-        </div>
+        <Alert variant="info">
+          <AlertTitle>External positioning - signal-level guidance</AlertTitle>
+          <AlertDescription>{template.positioningGuidance}</AlertDescription>
+        </Alert>
 
         {/* Weekly focus */}
-        <div className="rounded-xl border border-slate-200 bg-white px-5 py-5">
+        <Card className="px-5 py-5">
           <h2 className="text-[13px] font-bold text-slate-700 mb-3">This week&apos;s focus</h2>
           <ul className="space-y-2">
             {template.weeklyFocus.map((item) => (
@@ -100,10 +96,10 @@ export default async function OptionalityModePage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* Session opening prompts */}
-        <div className="rounded-xl border border-slate-200 bg-slate-50 px-5 py-5">
+        <Card className="bg-slate-50 px-5 py-5">
           <h2 className="text-[13px] font-bold text-slate-700 mb-3">Coach session opening prompts</h2>
           <ul className="space-y-2">
             {template.sessionOpeningPrompts.map((prompt) => (
@@ -113,7 +109,7 @@ export default async function OptionalityModePage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* Navigation to related tools */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -122,30 +118,25 @@ export default async function OptionalityModePage() {
             { href: '/dashboard/optionality/decision-cockpit', label: 'Decision cockpit', desc: 'Score targets against what matters to you' },
             { href: '/dashboard/post-landing', label: 'Post-landing mode', desc: '30/60/90 day onboarding plan' },
           ].map(({ href, label, desc }) => (
-            <Link
-              key={href}
-              href={href}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-4 hover:border-orange-300 transition-colors group"
-            >
-              <p className="text-[13px] font-semibold text-slate-900 group-hover:text-orange-700 transition-colors">{label}</p>
-              <p className="text-[12px] text-slate-500 mt-1 leading-relaxed">{desc}</p>
+            <Link key={href} href={href} className="group">
+              <Card className="px-4 py-4 hover:border-orange-300 transition-colors">
+                <p className="text-[13px] font-semibold text-slate-900 group-hover:text-orange-700 transition-colors">{label}</p>
+                <p className="text-[12px] text-slate-500 mt-1 leading-relaxed">{desc}</p>
+              </Card>
             </Link>
           ))}
         </div>
 
         {/* Switch to active search */}
-        <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 flex items-center justify-between gap-4">
+        <Card className="px-5 py-4 flex-row items-center justify-between gap-4">
           <div>
             <p className="text-[13px] font-semibold text-slate-800">Ready to go active?</p>
             <p className="text-[12px] text-slate-500 mt-0.5">Switch to Active when urgency increases.</p>
           </div>
-          <Link
-            href="/dashboard"
-            className="flex-shrink-0 rounded-lg border border-slate-300 px-4 py-2 text-[12px] font-semibold text-slate-700 hover:border-orange-400 hover:text-orange-700 transition-colors"
-          >
+          <Button variant="outline" className="flex-shrink-0" render={<Link href="/dashboard" />}>
             Active dashboard →
-          </Link>
-        </div>
+          </Button>
+        </Card>
       </main>
     </div>
   )

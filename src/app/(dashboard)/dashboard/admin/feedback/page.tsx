@@ -2,6 +2,10 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 export const metadata: Metadata = {
   title: 'Feedback Admin - Dashboard',
@@ -9,13 +13,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  new: 'bg-slate-100 text-slate-700',
-  under_review: 'bg-blue-100 text-blue-700',
-  planned: 'bg-purple-100 text-purple-700',
-  in_progress: 'bg-orange-100 text-orange-700',
-  shipped: 'bg-green-100 text-green-700',
-  declined: 'bg-red-100 text-red-700',
+const STATUS_BADGE_VARIANT: Record<string, 'secondary' | 'info' | 'outline' | 'warning' | 'success' | 'destructive'> = {
+  new: 'secondary',
+  under_review: 'info',
+  planned: 'outline',
+  in_progress: 'warning',
+  shipped: 'success',
+  declined: 'destructive',
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -159,100 +163,100 @@ export default async function FeedbackAdminPage() {
             { label: 'Shipped', count: statusCounts.shipped, color: 'bg-green-50 text-green-700 border-green-200' },
             { label: 'Declined', count: statusCounts.declined, color: 'bg-red-50 text-red-700 border-red-200' },
           ].map((stat) => (
-            <div key={stat.label} className={`border rounded-lg p-3 ${stat.color}`}>
+            <Card key={stat.label} className={`p-3 ${stat.color}`}>
               <p className="text-[11px] font-semibold uppercase mb-1 opacity-75">{stat.label}</p>
               <p className="text-[24px] font-bold">{stat.count}</p>
-            </div>
+            </Card>
           ))}
         </section>
 
         {/* SLA Alerts */}
         <section className="space-y-3">
           {metrics.filter((m) => m.exceeds24h || m.exceeds7d).length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-2">
-              <p className="text-[13px] font-bold text-red-900">🚨 SLA Breaches</p>
-              <ul className="text-[12px] text-red-800 space-y-1">
-                {metrics.filter((m) => m.exceeds24h).map((m) => (
-                  <li key={m.id}>
-                    "{m.title}" - No response for {Math.round(m.hoursOld)} hours
-                  </li>
-                ))}
-                {metrics.filter((m) => m.exceeds7d).map((m) => (
-                  <li key={m.id}>
-                    "{m.title}" - No decision for {Math.round(m.hoursOld / 24)} days
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription className="space-y-2">
+                <p className="text-[13px] font-bold text-red-900">🚨 SLA Breaches</p>
+                <ul className="text-[12px] text-red-800 space-y-1">
+                  {metrics.filter((m) => m.exceeds24h).map((m) => (
+                    <li key={m.id}>
+                      "{m.title}" - No response for {Math.round(m.hoursOld)} hours
+                    </li>
+                  ))}
+                  {metrics.filter((m) => m.exceeds7d).map((m) => (
+                    <li key={m.id}>
+                      "{m.title}" - No decision for {Math.round(m.hoursOld / 24)} days
+                    </li>
+                  ))}
+                </ul>
+              </AlertDescription>
+            </Alert>
           )}
         </section>
 
         {/* Feedback Items Table */}
-        <section className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-[12px] text-left">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-4 py-3 font-semibold text-slate-900">Title</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900">Category</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900">Status</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900">User</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900 text-right">Age</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900 text-right">Votes</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900 text-right">Comments</th>
-                  <th className="px-4 py-3 font-semibold text-slate-900">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {metrics.length === 0 ? (
-                  <tr>
-                    <td colSpan={8} className="px-4 py-6 text-center text-slate-500">
-                      No feedback items yet
-                    </td>
-                  </tr>
-                ) : (
-                  metrics.map((item: FeedbackMetric) => (
-                    <tr key={item.id} className={`hover:bg-slate-50 ${item.exceeds24h || item.exceeds7d ? 'bg-red-50' : ''}`}>
-                      <td className="px-4 py-3 max-w-xs truncate">
-                        <span className="font-medium text-slate-900">{item.title}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[11px]">{CATEGORY_LABELS[item.category] || item.category}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-block px-2 py-1 rounded text-[11px] font-semibold ${STATUS_COLORS[item.status]}`}>
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-[11px]">
-                        {item.user_profiles?.full_name || 'Unknown'}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <span className={item.exceeds24h ? 'text-red-600 font-bold' : ''}>
-                          {Math.round(item.hoursOld)}h
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-right font-semibold text-slate-900">
-                        {item.vote_count}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        {item.feedback_comments?.[0]?.count || 0}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Link
-                          href={`/dashboard/admin/feedback/${item.id}`}
-                          className="text-orange-600 hover:text-orange-700 font-semibold text-[11px]"
-                        >
-                          Review →
-                        </Link>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <Card className="p-0">
+          <Table className="text-[12px] text-left">
+            <TableHeader>
+              <TableRow className="bg-slate-50">
+                <TableHead className="px-4 py-3 font-semibold text-slate-900">Title</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900">Category</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900">Status</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900">User</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900 text-right">Age</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900 text-right">Votes</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900 text-right">Comments</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-900">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {metrics.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="px-4 py-6 text-center text-slate-500">
+                    No feedback items yet
+                  </TableCell>
+                </TableRow>
+              ) : (
+                metrics.map((item: FeedbackMetric) => (
+                  <TableRow key={item.id} className={item.exceeds24h || item.exceeds7d ? 'bg-red-50' : undefined}>
+                    <TableCell className="px-4 py-3 max-w-xs truncate">
+                      <span className="font-medium text-slate-900">{item.title}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
+                      <Badge variant="outline">{CATEGORY_LABELS[item.category] || item.category}</Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
+                      <Badge variant={STATUS_BADGE_VARIANT[item.status] ?? 'secondary'}>
+                        {item.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-[11px]">
+                      {item.user_profiles?.full_name || 'Unknown'}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right">
+                      <span className={item.exceeds24h ? 'text-red-600 font-bold' : ''}>
+                        {Math.round(item.hoursOld)}h
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right font-semibold text-slate-900">
+                      {item.vote_count}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right">
+                      {item.feedback_comments?.[0]?.count || 0}
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
+                      <Link
+                        href={`/dashboard/admin/feedback/${item.id}`}
+                        className="text-orange-600 hover:text-orange-700 font-semibold text-[11px]"
+                      >
+                        Review →
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
       </main>
     </div>
   )

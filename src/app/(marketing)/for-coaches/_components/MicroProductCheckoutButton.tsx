@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type Props = {
   slug: string
@@ -52,26 +54,25 @@ export function MicroProductCheckoutButton({
 
   return (
     <div>
-      <button
+      <Button
         type="button"
         onClick={handleCheckout}
         disabled={loading}
-        className={
-          className ??
-          'inline-flex items-center rounded-lg bg-slate-900 text-white text-[14px] font-semibold px-5 py-3 hover:bg-slate-700 transition-colors disabled:opacity-60'
-        }
+        className={className ?? 'h-auto px-5 py-3 text-[14px] font-semibold'}
       >
         {loading ? 'Opening checkout...' : label}
-      </button>
+      </Button>
 
       {error && (
-        <p className="mt-3 text-[12px] text-amber-700 leading-relaxed">
-          {error}{' '}
-          <Link href={fallbackHref} className="underline underline-offset-2 font-semibold">
-            Get purchase help
-          </Link>
-          .
-        </p>
+        <Alert variant="warning" className="mt-3">
+          <AlertDescription className="text-[12px]">
+            {error}{' '}
+            <Link href={fallbackHref} className="underline underline-offset-2 font-semibold">
+              Get purchase help
+            </Link>
+            .
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   )

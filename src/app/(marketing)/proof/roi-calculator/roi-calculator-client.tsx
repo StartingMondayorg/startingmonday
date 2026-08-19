@@ -1,6 +1,10 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 
 type Channel = 'executives' | 'coaches' | 'outplacement' | 'search_firms'
 type Role = 'program_lead' | 'counselor_lead' | 'procurement' | 'sponsor'
@@ -85,42 +89,46 @@ export function RoiCalculatorClient() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-5">
-      <section className="bg-white border border-slate-200 rounded-2xl p-5">
+      <Card className="rounded-2xl p-5">
         <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-4">Assumptions</p>
 
-        <label htmlFor="roi-channel" className="block text-[12px] font-semibold text-slate-700 mb-1">Channel</label>
-        <select
-          id="roi-channel"
-          title="Channel"
+        <Label htmlFor="roi-channel" className="block text-[12px] font-semibold text-slate-700 mb-1">Channel</Label>
+        <Select
           value={channel}
-          onChange={(event) => {
-            const next = event.target.value as Channel
+          onValueChange={(value) => {
+            const next = value as Channel
             setChannel(next)
             setParticipants(CHANNEL_BASELINE[next].participants)
             setAvgSalary(CHANNEL_BASELINE[next].avgSalary)
           }}
-          className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[14px] mb-4"
         >
-          {Object.entries(CHANNEL_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
+          <SelectTrigger id="roi-channel" title="Channel" className="w-full mb-4">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(CHANNEL_LABELS).map(([value, label]) => (
+              <SelectItem key={value} value={value}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <label htmlFor="roi-role" className="block text-[12px] font-semibold text-slate-700 mb-1">Buyer role</label>
-        <select
-          id="roi-role"
-          title="Buyer role"
+        <Label htmlFor="roi-role" className="block text-[12px] font-semibold text-slate-700 mb-1">Buyer role</Label>
+        <Select
           value={role}
-          onChange={(event) => setRole(event.target.value as Role)}
-          className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[14px] mb-4"
+          onValueChange={(value) => setRole(value as Role)}
         >
-          {Object.entries(ROLE_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
+          <SelectTrigger id="roi-role" title="Buyer role" className="w-full mb-4">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(ROLE_LABELS).map(([value, label]) => (
+              <SelectItem key={value} value={value}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <label htmlFor="roi-participants" className="block text-[12px] font-semibold text-slate-700 mb-1">Participants in cohort</label>
-        <input
+        <Label htmlFor="roi-participants" className="block text-[12px] font-semibold text-slate-700 mb-1">Participants in cohort</Label>
+        <Input
           id="roi-participants"
           title="Participants in cohort"
           placeholder="Enter participants in cohort"
@@ -128,11 +136,11 @@ export function RoiCalculatorClient() {
           min={1}
           value={participants}
           onChange={(event) => setParticipants(Math.max(1, Number(event.target.value || 1)))}
-          className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[14px] mb-4"
+          className="w-full mb-4"
         />
 
-        <label htmlFor="roi-avg-salary" className="block text-[12px] font-semibold text-slate-700 mb-1">Average target salary</label>
-        <input
+        <Label htmlFor="roi-avg-salary" className="block text-[12px] font-semibold text-slate-700 mb-1">Average target salary</Label>
+        <Input
           id="roi-avg-salary"
           title="Average target salary"
           placeholder="Enter average target salary"
@@ -141,11 +149,11 @@ export function RoiCalculatorClient() {
           step={5000}
           value={avgSalary}
           onChange={(event) => setAvgSalary(Math.max(50000, Number(event.target.value || 50000)))}
-          className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[14px]"
+          className="w-full"
         />
-      </section>
+      </Card>
 
-      <section className="bg-white border border-slate-200 rounded-2xl p-5">
+      <Card className="rounded-2xl p-5">
         <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Modeled outputs</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
@@ -160,27 +168,27 @@ export function RoiCalculatorClient() {
           <ValuePanel title="Counselor efficiency value" value={usd(model.counselorValue * 12)} detail="Annualized session-yield recovery" />
           <ValuePanel title="Outcome-risk avoidance" value={usd(model.missRiskValue)} detail="Modeled reduction in missed opportunities" />
         </div>
-      </section>
+      </Card>
     </div>
   )
 }
 
 function MetricCard({ label, value, note }: { label: string; value: string; note: string }) {
   return (
-    <div className="border border-slate-200 rounded-lg p-3 bg-slate-50">
+    <Card className="rounded-lg p-3 !bg-slate-50">
       <p className="text-[11px] uppercase tracking-[0.08em] text-slate-500">{label}</p>
       <p className="text-[20px] font-bold text-slate-900 mt-1">{value}</p>
       <p className="text-[11px] text-slate-500 mt-1">{note}</p>
-    </div>
+    </Card>
   )
 }
 
 function ValuePanel({ title, value, detail }: { title: string; value: string; detail: string }) {
   return (
-    <div className="border border-slate-200 rounded-lg p-4 bg-white">
+    <Card className="rounded-lg p-4">
       <p className="text-[12px] font-semibold text-slate-800">{title}</p>
       <p className="text-[22px] font-bold text-orange-600 mt-2">{value}</p>
       <p className="text-[11px] text-slate-500 mt-2">{detail}</p>
-    </div>
+    </Card>
   )
 }

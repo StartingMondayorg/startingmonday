@@ -3,6 +3,11 @@
 import Link from 'next/link'
 import { usePostHog } from 'posthog-js/react'
 import { useEffect, useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export type DailyMomentumAction = {
   body: string
@@ -187,7 +192,7 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
   }
 
   return (
-    <section id="daily-momentum-plan" className="mb-8 rounded-2xl overflow-hidden border border-white/15 bg-white/5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card id="daily-momentum-plan" variant="glass" className="mb-8 overflow-hidden py-0 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       <div className="px-6 py-4 sm:px-7 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.2),_transparent_34%),linear-gradient(180deg,_rgba(15,23,42,0.98)_0%,_rgba(15,23,42,0.94)_100%)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -254,8 +259,9 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
                   </div>
 
                   <div className="flex flex-col gap-3 lg:w-[15rem] lg:items-end">
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={() => setState((current) => {
                         const nextDone = !current.completed[action.id]
                         const nextState = {
@@ -275,22 +281,22 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
 
                         return nextState
                       })}
-                      className={`inline-flex min-h-[44px] items-center justify-center rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors ${done ? 'border-emerald-300/40 bg-emerald-500/10 text-emerald-100' : 'border-white/25 bg-white/5 text-slate-100 hover:border-white/40'}`}
+                      className={`min-h-[44px] rounded-full px-4 text-[13px] font-semibold ${done ? '!border-emerald-300/40 !bg-emerald-500/10 !text-emerald-100' : '!border-white/25 !bg-white/5 !text-slate-100 hover:!border-white/40'}`}
                     >
                       {done ? 'Done' : 'Complete'}
-                    </button>
-                    <Link
-                      href={action.href}
-                      className="inline-flex h-[44px] items-center justify-center rounded-full bg-orange-500 px-4 text-[13px] font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+                    </Button>
+                    <Button
+                      className="h-[44px] rounded-full px-4 text-[13px] font-semibold"
+                      render={<Link href={action.href} />}
                     >
                       {action.cta}
-                    </Link>
+                    </Button>
                   </div>
                 </div>
 
                 <div className="mt-3">
                   {openNoteId === action.id ? (
-                    <input
+                    <Input
                       id={`daily-note-${action.id}`}
                       aria-label="Optional note"
                       value={state.notes[action.id] ?? ''}
@@ -302,16 +308,17 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
                         },
                       }))}
                       placeholder="What will make this easier to finish?"
-                      className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-[13px] text-slate-100 outline-none transition-colors placeholder:text-slate-400 focus:border-orange-300/60"
+                      className="w-full rounded-xl !border-white/15 !bg-white/5 text-[13px] !text-slate-100 placeholder:!text-slate-400 focus-visible:!border-orange-300/60"
                     />
                   ) : (
-                    <button
+                    <Button
                       type="button"
+                      variant="link"
                       onClick={() => setOpenNoteId(action.id)}
-                      className="text-[12px] font-semibold text-slate-300 hover:text-slate-100"
+                      className="h-auto p-0 text-[12px] font-semibold !text-slate-300 hover:!text-slate-100"
                     >
                       Add note
-                    </button>
+                    </Button>
                   )}
                 </div>
               </article>
@@ -324,28 +331,30 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
             <label className="block text-[13px] font-medium text-slate-200 mb-2" htmlFor="daily-reflection-prompt">
               Daily reflection
             </label>
-            <textarea
+            <Textarea
               id="daily-reflection-prompt"
               value={state.reflection}
               onChange={(event) => setState((current) => ({ ...current, reflection: event.target.value }))}
               onBlur={(event) => emitReflectionSubmitted(event.target.value)}
               placeholder="What moved? What got stuck? What needs a simpler recovery tomorrow?"
-              className="min-h-[112px] w-full resize-y rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-[13px] text-slate-100 outline-none transition-colors placeholder:text-slate-400 focus:border-orange-300/60"
+              className="min-h-[112px] w-full resize-y rounded-xl !border-white/15 !bg-white/5 text-[13px] !text-slate-100 placeholder:!text-slate-400 focus-visible:!border-orange-300/60"
             />
           </div>
 
-          <div className={`rounded-2xl border px-4 py-4 ${isDayComplete ? 'border-emerald-300/40 bg-emerald-500/10' : 'border-amber-300/40 bg-amber-500/10'}`}>
-            <p className={`text-[13px] font-semibold ${isDayComplete ? 'text-emerald-100' : 'text-amber-100'}`}>
-              {isDayComplete ? 'Day complete' : 'Recovery rule'}
-            </p>
-            <p className={`mt-2 text-[13px] leading-relaxed ${isDayComplete ? 'text-emerald-100' : 'text-amber-100'}`}>
-              {isDayComplete
-                ? 'You cleared the daily gate. Leave the rest alone unless it is already in motion.'
-                : 'If today slips, keep tomorrow to one relationship action, one readiness action, and one optional focus action again.'}
-            </p>
-          </div>
+          <Alert variant={isDayComplete ? 'success' : 'warning'} className="rounded-2xl px-4 py-4">
+            <AlertDescription className="text-current">
+              <p className="text-[13px] font-semibold">
+                {isDayComplete ? 'Day complete' : 'Recovery rule'}
+              </p>
+              <p className="mt-2 text-[13px] leading-relaxed">
+                {isDayComplete
+                  ? 'You cleared the daily gate. Leave the rest alone unless it is already in motion.'
+                  : 'If today slips, keep tomorrow to one relationship action, one readiness action, and one optional focus action again.'}
+              </p>
+            </AlertDescription>
+          </Alert>
         </div>
       </div>
-    </section>
+    </Card>
   )
 }

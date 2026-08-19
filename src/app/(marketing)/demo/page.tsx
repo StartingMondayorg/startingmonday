@@ -2,6 +2,9 @@
 import Link from 'next/link'
 import { useState, useRef, Suspense } from 'react'
 import { isEnabledFlag } from '@/lib/feature-flags'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const MAX_RUNS = 5
 
@@ -178,22 +181,28 @@ export function DemoContent({
               <label htmlFor="role-select" className="block text-[11px] font-semibold tracking-[0.12em] uppercase text-slate-400 mb-2">
                 Role
               </label>
-              <select
-                id="role-select"
+              <Select
                 value={role}
-                onChange={e => setRole(e.target.value)}
+                onValueChange={(value) => { if (value) setRole(value) }}
                 disabled={loading}
-                aria-label="Demo role selector"
-                className="w-full rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-[15px] text-white focus:outline-none focus:border-orange-400/40 focus:ring-1 focus:ring-orange-400/20 backdrop-blur-sm"
               >
-                {DEMO_ROLES.map(r => (
-                  <option key={r} value={r} className="bg-slate-900">{r}</option>
-                ))}
-              </select>
+                <SelectTrigger
+                  id="role-select"
+                  aria-label="Demo role selector"
+                  className="w-full rounded-xl border-white/12 bg-white/[0.06] px-4 py-3 h-auto text-[15px] text-white focus-visible:border-orange-400/40 backdrop-blur-sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {DEMO_ROLES.map(r => (
+                    <SelectItem key={r} value={r}>{r}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {exhausted ? (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+              <Card variant="glass" className="!border-white/10 !bg-white/[0.04] p-6">
                 <p className="text-[15px] font-semibold text-white mb-2">Demo limit reached.</p>
                 <p className="text-[13px] leading-relaxed text-slate-300 mb-5">
                   You have seen {MAX_RUNS} briefs. Create a free account to generate unlimited briefs for your own companies, with your background woven in.
@@ -201,15 +210,15 @@ export function DemoContent({
                 <Link href="/signup?from=demo" className="inline-flex items-center rounded-full bg-orange-500 px-6 py-2.5 text-[13px] font-semibold text-slate-950 hover:bg-orange-600 transition-colors">
                   Start free - 30 days, no card
                 </Link>
-              </div>
+              </Card>
             ) : (
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
-                className="rounded-full bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-slate-950 text-[14px] font-semibold px-7 py-3 transition-colors cursor-pointer border-0 disabled:cursor-not-allowed"
+                className="rounded-full h-auto px-7 py-3 text-[14px] font-semibold"
               >
                 {loading ? 'Building brief...' : content ? 'Regenerate' : 'Generate the brief'}
-              </button>
+              </Button>
             )}
 
             {error && <p className="text-[13px] text-red-400">{error}</p>}

@@ -15,6 +15,39 @@ import {
   WEEKDAY_IDS,
   type PartnerProgramSettings,
 } from '@/lib/partner-program-settings'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 type SeatStatus = {
   profileDone: boolean
@@ -39,9 +72,12 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-function Dot({ done }: { done: boolean }) {
+function StatusDot({ done, label }: { done: boolean; label: string }) {
   return (
-    <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${done ? 'bg-emerald-500' : 'bg-slate-200'}`} />
+    <Badge variant={done ? 'success' : 'secondary'} className="gap-1.5">
+      <span className={`size-1.5 rounded-full ${done ? 'bg-success' : 'bg-muted-foreground'}`} />
+      {label}
+    </Badge>
   )
 }
 
@@ -118,8 +154,7 @@ export function TeamSettings({
     }
   }
 
-  async function handleRevokeRole(roleId: string) {
-    if (!confirm('Revoke this role?')) return
+  async function performRevokeRole(roleId: string) {
     try {
       const res = await fetch(`/api/team/roles/${roleId}`, { method: 'DELETE' })
       if (!res.ok) return
@@ -187,8 +222,7 @@ export function TeamSettings({
     }
   }
 
-  const handleRemove = useCallback(async (seatId: string) => {
-    if (!confirm('Remove this member? They will lose access immediately.')) return
+  const performRemove = useCallback(async (seatId: string) => {
     setRemoving(seatId)
     try {
       const res = await fetch(`/api/team/seat/${seatId}`, { method: 'DELETE' })
@@ -269,7 +303,7 @@ export function TeamSettings({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="bg-white border border-orange-200 rounded p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+      <Card className="border-orange-200 shadow-[0_10px_30px_rgba(15,23,42,0.04)] p-6">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-orange-500 mb-2">
           White-label admin
         </p>
@@ -292,10 +326,10 @@ export function TeamSettings({
               { label: 'Track', value: getWhiteLabelTrack(WHITE_LABEL_DEFAULT_SETTINGS.trackId).label },
               { label: 'Tier', value: getWhiteLabelTier(WHITE_LABEL_DEFAULT_SETTINGS.tierId).name },
             ]).map((item) => (
-              <div key={item.label} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <Card key={item.label} className="bg-slate-50 p-3">
                 <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">{item.label}</p>
                 <p className="mt-1 text-[13px] font-semibold text-slate-900">{item.value}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -304,94 +338,95 @@ export function TeamSettings({
           <form onSubmit={handleWhiteLabelSave} className="mt-5 grid grid-cols-1 xl:grid-cols-2 gap-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Brand name</label>
-                <input
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Brand name</Label>
+                <Input
                   value={whiteLabel.brandName}
                   onChange={(event) => setWhiteLabel((current) => current ? { ...current, brandName: event.target.value } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
                   placeholder="Nash Transition Group"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Support email</label>
-                <input
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Support email</Label>
+                <Input
                   type="email"
                   value={whiteLabel.supportEmail}
                   onChange={(event) => setWhiteLabel((current) => current ? { ...current, supportEmail: event.target.value } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
                   placeholder="support@example.com"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Track</label>
-                <select
-                  title="White-label track"
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Track</Label>
+                <Select
                   value={whiteLabel.trackId}
-                  onChange={(event) => setWhiteLabel((current) => current ? { ...current, trackId: event.target.value as WhiteLabelSettings['trackId'] } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] bg-white focus:outline-none focus:border-slate-400"
+                  onValueChange={(value) => setWhiteLabel((current) => current ? { ...current, trackId: value as WhiteLabelSettings['trackId'] } : current)}
                 >
-                  {WHITE_LABEL_TRACKS.map((track) => (
-                    <option key={track.id} value={track.id}>{track.label}</option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full" title="White-label track">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WHITE_LABEL_TRACKS.map((track) => (
+                      <SelectItem key={track.id} value={track.id}>{track.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Tier</label>
-                <select
-                  title="White-label tier"
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Tier</Label>
+                <Select
                   value={whiteLabel.tierId}
-                  onChange={(event) => setWhiteLabel((current) => current ? { ...current, tierId: event.target.value as WhiteLabelSettings['tierId'] } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] bg-white focus:outline-none focus:border-slate-400"
+                  onValueChange={(value) => setWhiteLabel((current) => current ? { ...current, tierId: value as WhiteLabelSettings['tierId'] } : current)}
                 >
-                  {WHITE_LABEL_TIERS.map((tier) => (
-                    <option key={tier.id} value={tier.id}>{tier.name} · {formatWhiteLabelTierPrice(tier)}</option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full" title="White-label tier">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WHITE_LABEL_TIERS.map((tier) => (
+                      <SelectItem key={tier.id} value={tier.id}>{tier.name} · {formatWhiteLabelTierPrice(tier)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Primary color</label>
-                <input
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Primary color</Label>
+                <Input
                   type="text"
                   value={whiteLabel.primaryColor}
                   onChange={(event) => setWhiteLabel((current) => current ? { ...current, primaryColor: event.target.value } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
                   placeholder="#0f172a"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Accent color</label>
-                <input
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Accent color</Label>
+                <Input
                   type="text"
                   value={whiteLabel.accentColor}
                   onChange={(event) => setWhiteLabel((current) => current ? { ...current, accentColor: event.target.value } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
                   placeholder="#f97316"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Logo URL</label>
-                <input
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Logo URL</Label>
+                <Input
                   type="url"
                   value={whiteLabel.logoUrl ?? ''}
                   onChange={(event) => setWhiteLabel((current) => current ? { ...current, logoUrl: event.target.value } : current)}
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
                   placeholder="https://example.com/logo.svg"
                 />
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
+            <Card className="bg-slate-50 p-4 space-y-4">
               <div>
                 <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Preview</p>
-                <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <Card className="p-4">
                   <p className="text-[12px] font-semibold text-slate-900">{whiteLabel.brandName || WHITE_LABEL_DEFAULT_SETTINGS.brandName}</p>
                   <p className="text-[12px] text-slate-500 mt-1">{getWhiteLabelTrack(whiteLabel.trackId).summary}</p>
                   <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-slate-500">
-                    <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5">{whiteLabel.primaryColor}</span>
-                    <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5">{whiteLabel.accentColor}</span>
+                    <Badge variant="outline" className="bg-slate-50">{whiteLabel.primaryColor}</Badge>
+                    <Badge variant="outline" className="bg-slate-50">{whiteLabel.accentColor}</Badge>
                     <span>{whiteLabel.supportEmail}</span>
                   </div>
-                </div>
+                </Card>
               </div>
               <div>
                 <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Selected tier includes</p>
@@ -401,25 +436,29 @@ export function TeamSettings({
                   ))}
                 </ul>
               </div>
-              <button
-                type="submit"
-                disabled={whiteLabelSaving}
-                className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50"
-              >
+              <Button type="submit" disabled={whiteLabelSaving}>
                 {whiteLabelSaving ? 'Saving...' : 'Save white-label settings'}
-              </button>
-              {whiteLabelMessage && <p className="text-[12px] text-emerald-600">{whiteLabelMessage}</p>}
-              {whiteLabelError && <p className="text-[12px] text-red-600">{whiteLabelError}</p>}
-            </div>
+              </Button>
+              {whiteLabelMessage && (
+                <Alert variant="success">
+                  <AlertDescription>{whiteLabelMessage}</AlertDescription>
+                </Alert>
+              )}
+              {whiteLabelError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{whiteLabelError}</AlertDescription>
+                </Alert>
+              )}
+            </Card>
           </form>
         ) : (
-          <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 text-[13px] text-slate-500">
+          <Card className="bg-slate-50 mt-5 px-4 py-5 text-[13px] text-slate-500">
             White-label settings will appear once a partner workspace is linked to this account.
-          </div>
+          </Card>
         )}
-      </div>
+      </Card>
 
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
           Program settings
         </p>
@@ -430,79 +469,91 @@ export function TeamSettings({
         {programSettings ? (
           <form onSubmit={handleProgramSettingsSave} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Default program</label>
-              <select
-                title="Default outplacement program"
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Default program</Label>
+              <Select
                 value={programSettings.defaultProgram}
-                onChange={(event) => setProgramSettings((current) => current ? { ...current, defaultProgram: event.target.value as PartnerProgramSettings['defaultProgram'] } : current)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] bg-white focus:outline-none focus:border-slate-400"
+                onValueChange={(value) => setProgramSettings((current) => current ? { ...current, defaultProgram: value as PartnerProgramSettings['defaultProgram'] } : current)}
               >
-                {PARTNER_PROGRAM_IDS.map((programId) => (
-                  <option key={programId} value={programId}>{programId.replace('outplacement_', '').replace('_', ' ')}</option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full" title="Default outplacement program">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {PARTNER_PROGRAM_IDS.map((programId) => (
+                    <SelectItem key={programId} value={programId}>{programId.replace('outplacement_', '').replace('_', ' ')}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Sponsor template</label>
-              <select
-                title="Sponsor report template"
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Sponsor template</Label>
+              <Select
                 value={programSettings.sponsorTemplateVariant}
-                onChange={(event) => setProgramSettings((current) => current ? { ...current, sponsorTemplateVariant: event.target.value as PartnerProgramSettings['sponsorTemplateVariant'] } : current)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] bg-white focus:outline-none focus:border-slate-400"
+                onValueChange={(value) => setProgramSettings((current) => current ? { ...current, sponsorTemplateVariant: value as PartnerProgramSettings['sponsorTemplateVariant'] } : current)}
               >
-                {SPONSOR_TEMPLATE_VARIANTS.map((variant) => (
-                  <option key={variant} value={variant}>{variant.replace('_', ' ')}</option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full" title="Sponsor report template">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SPONSOR_TEMPLATE_VARIANTS.map((variant) => (
+                    <SelectItem key={variant} value={variant}>{variant.replace('_', ' ')}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Weekly summary day</label>
-              <select
-                title="Weekly summary day"
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Weekly summary day</Label>
+              <Select
                 value={programSettings.weeklySummaryDay}
-                onChange={(event) => setProgramSettings((current) => current ? { ...current, weeklySummaryDay: event.target.value as PartnerProgramSettings['weeklySummaryDay'] } : current)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] bg-white focus:outline-none focus:border-slate-400"
+                onValueChange={(value) => setProgramSettings((current) => current ? { ...current, weeklySummaryDay: value as PartnerProgramSettings['weeklySummaryDay'] } : current)}
               >
-                {WEEKDAY_IDS.map((day) => (
-                  <option key={day} value={day}>{day[0].toUpperCase() + day.slice(1)}</option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full" title="Weekly summary day">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {WEEKDAY_IDS.map((day) => (
+                    <SelectItem key={day} value={day}>{day[0].toUpperCase() + day.slice(1)}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Cohort naming prefix</label>
-              <input
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Cohort naming prefix</Label>
+              <Input
                 type="text"
                 value={programSettings.cohortNamingPrefix ?? ''}
                 onChange={(event) => setProgramSettings((current) => current ? { ...current, cohortNamingPrefix: event.target.value } : current)}
                 placeholder="NTG"
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
               />
             </div>
 
             <div className="sm:col-span-2 flex items-center gap-3">
-              <button
-                type="submit"
-                disabled={programSaving}
-                className="bg-slate-900 hover:bg-slate-700 text-white text-[13px] font-semibold px-4 py-2 rounded cursor-pointer border-0 disabled:opacity-50"
-              >
+              <Button type="submit" variant="secondary" disabled={programSaving}>
                 {programSaving ? 'Saving...' : 'Save program settings'}
-              </button>
-              {programMessage && <p className="text-[12px] text-emerald-600">{programMessage}</p>}
-              {programError && <p className="text-[12px] text-red-600">{programError}</p>}
+              </Button>
+              {programMessage && (
+                <Alert variant="success">
+                  <AlertDescription>{programMessage}</AlertDescription>
+                </Alert>
+              )}
+              {programError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{programError}</AlertDescription>
+                </Alert>
+              )}
             </div>
           </form>
         ) : (
-          <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 text-[13px] text-slate-500">
+          <Card className="bg-slate-50 px-4 py-5 text-[13px] text-slate-500">
             Program settings will appear once a partner workspace is linked to this account.
-          </div>
+          </Card>
         )}
-      </div>
+      </Card>
 
       {initialWhiteLabel && (
-        <div className="bg-white border border-slate-200 rounded p-6">
+        <Card className="p-6">
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
             Partner roles
           </p>
@@ -512,101 +563,121 @@ export function TeamSettings({
           </p>
 
           <form onSubmit={handleAssignRole} className="flex flex-wrap gap-3 mb-4">
-            <input
+            <Input
               type="text"
               value={roleUserId}
               onChange={(e) => setRoleUserId(e.target.value)}
               placeholder="User ID (UUID)"
-              className="flex-1 min-w-[200px] border border-slate-200 rounded px-3 py-2.5 text-[13px] focus:outline-none focus:border-slate-400"
+              className="flex-1 min-w-[200px]"
             />
-            <select
-              title="Role to assign"
-              value={roleValue}
-              onChange={(e) => setRoleValue(e.target.value)}
-              className="border border-slate-200 rounded px-3 py-2.5 text-[13px] bg-white focus:outline-none focus:border-slate-400"
-            >
-              {(['firm_admin', 'counselor', 'participant', 'sponsor_viewer'] as const).map((r) => (
-                <option key={r} value={r}>{r.replace('_', ' ')}</option>
-              ))}
-            </select>
-            <button
-              type="submit"
-              disabled={roleSaving || !roleUserId.trim()}
-              className="bg-slate-900 text-white text-[13px] font-semibold px-4 py-2.5 rounded border-0 cursor-pointer disabled:opacity-50"
-            >
+            <Select value={roleValue} onValueChange={(value) => value && setRoleValue(value)}>
+              <SelectTrigger title="Role to assign">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {(['firm_admin', 'counselor', 'participant', 'sponsor_viewer'] as const).map((r) => (
+                  <SelectItem key={r} value={r}>{r.replace('_', ' ')}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button type="submit" variant="secondary" disabled={roleSaving || !roleUserId.trim()}>
               {roleSaving ? 'Assigning…' : 'Assign role'}
-            </button>
+            </Button>
           </form>
-          {roleMessage && <p className="text-[12px] text-emerald-600 mb-2">{roleMessage}</p>}
-          {roleError && <p className="text-[12px] text-red-600 mb-2">{roleError}</p>}
+          {roleMessage && (
+            <Alert variant="success" className="mb-2">
+              <AlertDescription>{roleMessage}</AlertDescription>
+            </Alert>
+          )}
+          {roleError && (
+            <Alert variant="destructive" className="mb-2">
+              <AlertDescription>{roleError}</AlertDescription>
+            </Alert>
+          )}
 
           {roles === null ? (
             <p className="text-[12px] text-slate-400">Loading roles…</p>
           ) : roles.length === 0 ? (
             <p className="text-[12px] text-slate-400">No partner roles assigned yet.</p>
           ) : (
-            <div className="rounded border border-slate-200 overflow-hidden">
-              <table className="w-full text-[12px]">
-                <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="px-3 py-2 text-left font-semibold text-slate-500">User ID</th>
-                    <th className="px-3 py-2 text-left font-semibold text-slate-500">Role</th>
-                    <th className="px-3 py-2 text-left font-semibold text-slate-500">Granted</th>
-                    <th className="px-3 py-2" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
+            <Card className="overflow-hidden">
+              <Table className="text-[12px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>User ID</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Granted</TableHead>
+                    <TableHead />
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {roles.map((role) => (
-                    <tr key={role.id}>
-                      <td className="px-3 py-2 text-slate-600 font-mono truncate max-w-[160px]">{role.user_id.slice(0, 8)}…</td>
-                      <td className="px-3 py-2">
-                        <span className="rounded-full bg-slate-100 text-slate-700 px-2 py-0.5 font-medium">{role.role}</span>
-                      </td>
-                      <td className="px-3 py-2 text-slate-400">{new Date(role.granted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-                      <td className="px-3 py-2 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleRevokeRole(role.id)}
-                          className="text-[11px] font-semibold text-red-500 hover:text-red-700 bg-transparent border-0 cursor-pointer"
-                        >
-                          Revoke
-                        </button>
-                      </td>
-                    </tr>
+                    <TableRow key={role.id}>
+                      <TableCell className="font-mono truncate max-w-[160px]">{role.user_id.slice(0, 8)}…</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{role.role}</Badge>
+                      </TableCell>
+                      <TableCell className="text-slate-400">{new Date(role.granted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
+                      <TableCell className="text-right">
+                        <AlertDialog>
+                          <AlertDialogTrigger render={<Button type="button" variant="ghost" size="sm" className="text-destructive hover:text-destructive" />}>
+                            Revoke
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Revoke this role?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will immediately remove the &apos;{role.role}&apos; role from this user.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction variant="destructive" onClick={() => performRevokeRole(role.id)}>
+                                Revoke
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </TableBody>
+              </Table>
+            </Card>
           )}
-        </div>
+        </Card>
       )}
 
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-4">
           Invite a member
         </p>
         <form onSubmit={handleInvite} className="flex gap-3">
-          <input
+          <Input
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="colleague@company.com"
             required
-            className="flex-1 border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+            className="flex-1"
           />
-          <button
-            type="submit"
-            disabled={sending || !email.trim()}
-            className="bg-slate-900 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50 shrink-0"
-          >
+          <Button type="submit" variant="secondary" disabled={sending || !email.trim()} className="shrink-0">
             {sending ? 'Sending...' : 'Send invite'}
-          </button>
+          </Button>
         </form>
-        {sentTo && <p className="mt-2.5 text-[12px] text-emerald-600">Invite sent to {sentTo}.</p>}
-        {error && <p className="mt-2.5 text-[12px] text-red-600">{error}</p>}
-      </div>
+        {sentTo && (
+          <Alert variant="success" className="mt-2.5">
+            <AlertDescription>Invite sent to {sentTo}.</AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mt-2.5">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+      </Card>
 
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
           Bulk invite
         </p>
@@ -614,78 +685,90 @@ export function TeamSettings({
           Paste one email per line, or separate with commas.
         </p>
         <form onSubmit={handleBulkInvite} className="flex flex-col gap-3">
-          <textarea
+          <Textarea
             value={bulkInput}
             onChange={(e) => setBulkInput(e.target.value)}
             placeholder={'client1@company.com\nclient2@company.com'}
             rows={5}
-            className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
           />
           <div>
-            <button
-              type="submit"
-              disabled={bulkSending || !bulkInput.trim()}
-              className="bg-slate-900 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50"
-            >
+            <Button type="submit" variant="secondary" disabled={bulkSending || !bulkInput.trim()}>
               {bulkSending ? 'Sending...' : 'Send bulk invites'}
-            </button>
+            </Button>
           </div>
         </form>
-        {bulkSummary && <p className="mt-2.5 text-[12px] text-emerald-600">{bulkSummary}</p>}
-        {error && <p className="mt-2.5 text-[12px] text-red-600">{error}</p>}
-      </div>
+        {bulkSummary && (
+          <Alert variant="success" className="mt-2.5">
+            <AlertDescription>{bulkSummary}</AlertDescription>
+          </Alert>
+        )}
+        {error && (
+          <Alert variant="destructive" className="mt-2.5">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+      </Card>
 
       {seats.length > 0 ? (
-        <div className="bg-white border border-slate-200 rounded overflow-hidden">
+        <Card className="overflow-hidden p-0">
           <div className="px-6 py-3.5 border-b border-slate-100">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
               Members ({seats.length})
             </p>
           </div>
-          <div className="divide-y divide-slate-50">
-            {seats.map(seat => (
-              <div key={seat.id} className="px-6 py-4 flex items-center gap-4">
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-semibold text-slate-900 truncate">{seat.member_email}</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {seat.status === 'accepted' && seat.accepted_at
-                      ? `Joined ${formatDate(seat.accepted_at)}`
-                      : `Invited ${formatDate(seat.invited_at)}`}
-                  </p>
-                </div>
-                {seat.status === 'accepted' && seat.seatStatus ? (
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <Dot done={seat.seatStatus.profileDone} />Profile
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <Dot done={seat.seatStatus.companyAdded} />Company
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <Dot done={seat.seatStatus.briefGenerated} />Brief
-                    </div>
-                  </div>
-                ) : (
-                  <span className="text-[11px] font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded shrink-0">
-                    Pending
-                  </span>
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleRemove(seat.id)}
-                  disabled={removing === seat.id}
-                  className="shrink-0 text-[11px] font-semibold text-red-500 hover:text-red-700 bg-transparent border-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors ml-2"
-                >
-                  {removing === seat.id ? 'Removing…' : 'Remove'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+          <Table>
+            <TableBody>
+              {seats.map(seat => (
+                <TableRow key={seat.id}>
+                  <TableCell className="px-6 py-4 whitespace-normal">
+                    <p className="text-[13px] font-semibold text-slate-900 truncate">{seat.member_email}</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      {seat.status === 'accepted' && seat.accepted_at
+                        ? `Joined ${formatDate(seat.accepted_at)}`
+                        : `Invited ${formatDate(seat.invited_at)}`}
+                    </p>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {seat.status === 'accepted' && seat.seatStatus ? (
+                      <div className="flex items-center gap-2 shrink-0">
+                        <StatusDot done={seat.seatStatus.profileDone} label="Profile" />
+                        <StatusDot done={seat.seatStatus.companyAdded} label="Company" />
+                        <StatusDot done={seat.seatStatus.briefGenerated} label="Brief" />
+                      </div>
+                    ) : (
+                      <Badge variant="warning">Pending</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-right">
+                    <AlertDialog>
+                      <AlertDialogTrigger render={<Button type="button" variant="ghost" size="sm" className="text-destructive hover:text-destructive" disabled={removing === seat.id} />}>
+                        {removing === seat.id ? 'Removing…' : 'Remove'}
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Remove this member?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            They will lose access immediately.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction variant="destructive" onClick={() => performRemove(seat.id)}>
+                            Remove
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
       ) : (
-        <div className="bg-white border border-slate-200 rounded px-6 py-10 text-center">
+        <Card className="px-6 py-10 text-center">
           <p className="text-[14px] text-slate-500">No members yet. Invite your first member above.</p>
-        </div>
+        </Card>
       )}
     </div>
   )

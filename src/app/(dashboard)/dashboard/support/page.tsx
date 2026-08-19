@@ -3,6 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { SupportChat } from './support-chat'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge'
 
 type SupportItem = {
   id: string
@@ -108,20 +115,21 @@ export default function SupportPage() {
           <SupportChat onEscalate={handleEscalate} />
         </div>
 
-        <div ref={founderFormRef} className="bg-white/5 border border-white/15 rounded-xl p-5 sm:p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)] backdrop-blur-md mb-10">
+        <Card ref={founderFormRef} variant="glass" className="p-5 sm:p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)] mb-10">
           {status === 'done' ? (
             <div>
               <h2 className="text-[18px] font-bold text-white mb-2">Thank you.</h2>
               <p className="text-[14px] text-slate-300 leading-relaxed mb-4">
                 Your question is in. You will get a reply at the email on your account.
               </p>
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={() => setStatus('idle')}
-                className="min-h-[44px] rounded-lg bg-white/5 border border-white/15 px-5 text-[13px] font-semibold text-slate-200 hover:border-white/30 hover:bg-white/10 transition-colors cursor-pointer"
+                className="min-h-[44px] bg-white/5 border-white/15 text-slate-200 hover:border-white/30 hover:bg-white/10"
               >
                 Ask another question
-              </button>
+              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -129,31 +137,33 @@ export default function SupportPage() {
               <p className="text-[13px] text-slate-300 leading-relaxed mb-4">
                 Every message here gets a personal reply from a person, not a bot.
               </p>
-              <label htmlFor="support-message" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label htmlFor="support-message" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                 Your question
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 id="support-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={4}
                 maxLength={2000}
                 placeholder="Ask about your account, billing, features, or anything else..."
-                className="w-full rounded-lg border border-white/15 bg-slate-900/70 px-3 py-2.5 text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-300 resize-none"
+                className="w-full border-white/15 bg-slate-900/70 text-[14px] text-slate-100 placeholder:text-slate-500 focus-visible:border-orange-300 resize-none"
               />
               {errorMessage && (
-                <p role="alert" className="mt-2 text-[12px] text-rose-300">{errorMessage}</p>
+                <Alert variant="destructive" className="mt-2 bg-transparent border-0 px-0 py-0">
+                  <AlertDescription className="text-[12px] text-rose-300">{errorMessage}</AlertDescription>
+                </Alert>
               )}
-              <button
+              <Button
                 type="submit"
                 disabled={status === 'submitting' || message.trim().length < 10}
-                className="mt-3 min-h-[44px] rounded-lg bg-orange-400 px-6 text-[14px] font-semibold text-slate-950 hover:bg-orange-300 transition-colors cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-3 min-h-[44px] px-6 text-[14px]"
               >
                 {status === 'submitting' ? 'Sending...' : 'Send question'}
-              </button>
+              </Button>
             </form>
           )}
-        </div>
+        </Card>
 
         <section>
           <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300 pb-3 border-b border-white/10 mb-4">
@@ -162,10 +172,10 @@ export default function SupportPage() {
           {loading ? (
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="rounded-lg border border-white/10 bg-white/5 p-4 animate-pulse backdrop-blur-md">
-                  <div className="h-4 w-2/3 bg-white/10 rounded mb-2" />
-                  <div className="h-3 w-1/3 bg-white/10 rounded" />
-                </div>
+                <Card key={i} variant="glass" className="p-4">
+                  <Skeleton className="h-4 w-2/3 bg-white/10 mb-2" />
+                  <Skeleton className="h-3 w-1/3 bg-white/10" />
+                </Card>
               ))}
             </div>
           ) : items.length === 0 ? (
@@ -173,18 +183,18 @@ export default function SupportPage() {
           ) : (
             <div className="space-y-3">
               {items.map((item) => (
-                <div key={item.id} className="rounded-lg border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+                <Card key={item.id} variant="glass" className="p-4">
                   <div className="flex items-start justify-between gap-3 mb-1.5">
                     <p className="text-[14px] font-semibold text-white leading-snug">{item.title}</p>
-                    <span className="shrink-0 rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-semibold tracking-[0.08em] uppercase text-slate-300">
+                    <Badge variant="outline" className="shrink-0 border-white/15 bg-white/5 text-[10px] tracking-[0.08em] uppercase text-slate-300">
                       {STATUS_LABELS[item.status] ?? item.status}
-                    </span>
+                    </Badge>
                   </div>
                   <p className="text-[13px] text-slate-300 leading-relaxed line-clamp-2">{item.body}</p>
                   <p className="text-[11px] text-slate-500 mt-2">
                     {new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </p>
-                </div>
+                </Card>
               ))}
             </div>
           )}

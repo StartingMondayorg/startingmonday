@@ -1,6 +1,14 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Badge } from '@/components/ui/badge'
 
 type CompanyOption = {
   id: string
@@ -194,7 +202,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
   }
 
   return (
-    <section className="mb-6 rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="mb-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div>
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Relationship matching</p>
@@ -203,200 +211,208 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
       </div>
 
       {!hasUploads && (
-        <p className="mb-4 rounded border border-amber-300/30 bg-amber-500/10 px-3 py-2 text-[12px] text-amber-200">
-          Upload a LinkedIn connections CSV above before running company matching.
-        </p>
+        <Alert variant="warning" className="mb-4">
+          <AlertDescription>
+            Upload a LinkedIn connections CSV above before running company matching.
+          </AlertDescription>
+        </Alert>
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
-        <label className="text-[12px] text-slate-200">
-          Company
-          <select
-            value={companyId}
-            onChange={(event) => setCompanyId(event.target.value)}
-            className="mt-1 block min-h-[44px] w-full rounded border border-white/15 bg-slate-950/70 px-3 text-[13px] text-slate-100"
-          >
-            {companies.map((company) => (
-              <option key={company.id} value={company.id}>{company.name}</option>
-            ))}
-          </select>
-        </label>
+        <div>
+          <Label className="text-[12px] text-slate-200">Company</Label>
+          <Select value={companyId} onValueChange={(value) => setCompanyId(value ?? '')}>
+            <SelectTrigger className="mt-1 min-h-[44px] w-full border-white/15 bg-slate-950/70 text-[13px] text-slate-100">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {companies.map((company) => (
+                <SelectItem key={company.id} value={company.id}>{company.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-        <label className="text-[12px] text-slate-200">
-          LinkedIn upload
-          <select
-            value={uploadId}
-            onChange={(event) => setUploadId(event.target.value)}
-            className="mt-1 block min-h-[44px] w-full rounded border border-white/15 bg-slate-950/70 px-3 text-[13px] text-slate-100"
+        <div>
+          <Label className="text-[12px] text-slate-200">LinkedIn upload</Label>
+          <Select
+            value={hasUploads ? uploadId : undefined}
+            onValueChange={(value) => setUploadId(value ?? '')}
             disabled={!hasUploads}
           >
-            {hasUploads ? (
-              uploads.map((upload) => (
-                <option key={upload.id} value={upload.id}>{upload.label}</option>
-              ))
-            ) : (
-              <option value="">No processed uploads yet</option>
-            )}
-          </select>
-        </label>
+            <SelectTrigger className="mt-1 min-h-[44px] w-full border-white/15 bg-slate-950/70 text-[13px] text-slate-100">
+              <SelectValue placeholder="No processed uploads yet" />
+            </SelectTrigger>
+            <SelectContent>
+              {uploads.map((upload) => (
+                <SelectItem key={upload.id} value={upload.id}>{upload.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-        <button
+        <Button
           type="button"
           onClick={runMatch}
           disabled={!hasCompany || !hasUploads || loading}
-          className="inline-flex min-h-[44px] items-center justify-center rounded bg-orange-500 px-4 text-[13px] font-semibold text-slate-950 transition-colors hover:bg-orange-400 disabled:opacity-50"
+          className="min-h-[44px] px-4 text-[13px]"
         >
           {loading ? 'Matching…' : 'Run match'}
-        </button>
+        </Button>
       </div>
 
       {error && (
-        <p className="mt-3 rounded border border-rose-300/30 bg-rose-500/10 px-3 py-2 text-[12px] text-rose-200">
-          {error}
-        </p>
+        <Alert variant="destructive" className="mt-3">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       {actionMessage && (
-        <p className="mt-3 rounded border border-emerald-300/30 bg-emerald-500/10 px-3 py-2 text-[12px] text-emerald-200">
-          {actionMessage}
-        </p>
+        <Alert variant="success" className="mt-3">
+          <AlertDescription>{actionMessage}</AlertDescription>
+        </Alert>
       )}
 
       {data && (
         <div className="mt-4 space-y-4">
-          <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
+          <Card variant="glass" className="border-white/10 bg-slate-950/30 p-3">
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Likely known to you</p>
             {data.likely_known.length === 0 ? (
               <p className="mt-2 text-[13px] text-slate-300">No strong-overlap matches yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.likely_known.map((item) => (
-                  <li key={item.match_id} className="rounded-lg border border-white/10 bg-slate-950/60 px-3 py-2">
+                  <li key={item.match_id}>
+                  <Card variant="glass" className="border-white/10 bg-slate-950/60 px-3 py-2">
                     <p className="text-[13px] font-semibold text-white">{item.candidate_name} <span className="font-normal text-slate-300">({item.candidate_title ?? 'Role unknown'})</span></p>
                     <p className="mt-1 text-[12px] text-slate-300">Matched to your connection: {item.connection_name}{item.connection_company ? ` at ${item.connection_company}` : ''}</p>
-                    <label className="mt-2 block text-[11px] text-slate-300">
-                      Correct LinkedIn profile URL (optional)
-                      <input
-                        type="url"
-                        value={profileCorrections[item.match_id] ?? ''}
-                        onChange={(event) => setProfileCorrections((prev) => ({ ...prev, [item.match_id]: event.target.value }))}
-                        placeholder={item.connection_profile_url ?? 'https://linkedin.com/in/...'}
-                        className="mt-1 block min-h-[36px] w-full rounded border border-white/15 bg-slate-950/75 px-2.5 text-[12px] text-slate-100 placeholder:text-slate-500"
-                      />
-                    </label>
+                    <Label className="mt-2 block text-[11px] text-slate-300">Correct LinkedIn profile URL (optional)</Label>
+                    <Input
+                      type="url"
+                      value={profileCorrections[item.match_id] ?? ''}
+                      onChange={(event) => setProfileCorrections((prev) => ({ ...prev, [item.match_id]: event.target.value }))}
+                      placeholder={item.connection_profile_url ?? 'https://linkedin.com/in/...'}
+                      className="mt-1 min-h-[36px] w-full border-white/15 bg-slate-950/75 text-[12px] text-slate-100 placeholder:text-slate-500"
+                    />
                     <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[12px] text-slate-200">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={Boolean(confirmChecks[item.match_id])}
-                        onChange={(event) => setConfirmChecks((prev) => ({ ...prev, [item.match_id]: event.target.checked }))}
+                        onCheckedChange={(checked) => setConfirmChecks((prev) => ({ ...prev, [item.match_id]: checked === true }))}
                       />
                       I confirm this is a known relationship.
                     </label>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[11px] uppercase tracking-[0.08em] text-slate-200">{item.confidence_tier}</span>
-                      <button
+                      <Badge variant="outline" className="uppercase tracking-[0.08em]">{item.confidence_tier}</Badge>
+                      <Button
                         type="button"
+                        variant="outline"
                         onClick={() => confirmMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="inline-flex min-h-[36px] items-center rounded border border-emerald-300/30 bg-emerald-500/10 px-2.5 text-[12px] font-semibold text-emerald-200"
+                        className="min-h-[36px] border-emerald-300/30 bg-emerald-500/10 text-[12px] font-semibold text-emerald-200 hover:bg-emerald-500/20"
                       >
                         Confirm + add contact
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
+                        variant="outline"
                         onClick={() => rejectMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="inline-flex min-h-[36px] items-center rounded border border-rose-300/30 bg-rose-500/10 px-2.5 text-[12px] font-semibold text-rose-200"
+                        className="min-h-[36px] border-rose-300/30 bg-rose-500/10 text-[12px] font-semibold text-rose-200 hover:bg-rose-500/20"
                       >
                         Reject
-                      </button>
+                      </Button>
                     </div>
+                  </Card>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
+          </Card>
 
-          <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
+          <Card variant="glass" className="border-white/10 bg-slate-950/30 p-3">
             <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Needs review</p>
             {data.suggested_matches.length === 0 ? (
               <p className="mt-2 text-[13px] text-slate-300">No possible-overlap suggestions yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.suggested_matches.map((item) => (
-                  <li key={item.match_id} className="rounded-lg border border-white/10 bg-slate-950/60 px-3 py-2">
+                  <li key={item.match_id}>
+                  <Card variant="glass" className="border-white/10 bg-slate-950/60 px-3 py-2">
                     <p className="text-[13px] font-semibold text-white">{item.candidate_name}</p>
                     <p className="mt-1 text-[12px] text-slate-300">Potential overlap with {item.connection_name}</p>
-                    <label className="mt-2 block text-[11px] text-slate-300">
-                      Correct LinkedIn profile URL (optional)
-                      <input
-                        type="url"
-                        value={profileCorrections[item.match_id] ?? ''}
-                        onChange={(event) => setProfileCorrections((prev) => ({ ...prev, [item.match_id]: event.target.value }))}
-                        placeholder={item.connection_profile_url ?? 'https://linkedin.com/in/...'}
-                        className="mt-1 block min-h-[36px] w-full rounded border border-white/15 bg-slate-950/75 px-2.5 text-[12px] text-slate-100 placeholder:text-slate-500"
-                      />
-                    </label>
+                    <Label className="mt-2 block text-[11px] text-slate-300">Correct LinkedIn profile URL (optional)</Label>
+                    <Input
+                      type="url"
+                      value={profileCorrections[item.match_id] ?? ''}
+                      onChange={(event) => setProfileCorrections((prev) => ({ ...prev, [item.match_id]: event.target.value }))}
+                      placeholder={item.connection_profile_url ?? 'https://linkedin.com/in/...'}
+                      className="mt-1 min-h-[36px] w-full border-white/15 bg-slate-950/75 text-[12px] text-slate-100 placeholder:text-slate-500"
+                    />
                     <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[12px] text-slate-200">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={Boolean(confirmChecks[item.match_id])}
-                        onChange={(event) => setConfirmChecks((prev) => ({ ...prev, [item.match_id]: event.target.checked }))}
+                        onCheckedChange={(checked) => setConfirmChecks((prev) => ({ ...prev, [item.match_id]: checked === true }))}
                       />
                       I confirm this is a known relationship.
                     </label>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[11px] uppercase tracking-[0.08em] text-slate-200">{item.confidence_tier}</span>
-                      <button
+                      <Badge variant="outline" className="uppercase tracking-[0.08em]">{item.confidence_tier}</Badge>
+                      <Button
                         type="button"
+                        variant="outline"
                         onClick={() => confirmMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="inline-flex min-h-[36px] items-center rounded border border-emerald-300/30 bg-emerald-500/10 px-2.5 text-[12px] font-semibold text-emerald-200"
+                        className="min-h-[36px] border-emerald-300/30 bg-emerald-500/10 text-[12px] font-semibold text-emerald-200 hover:bg-emerald-500/20"
                       >
                         Confirm + add contact
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
+                        variant="outline"
                         onClick={() => rejectMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="inline-flex min-h-[36px] items-center rounded border border-rose-300/30 bg-rose-500/10 px-2.5 text-[12px] font-semibold text-rose-200"
+                        className="min-h-[36px] border-rose-300/30 bg-rose-500/10 text-[12px] font-semibold text-rose-200 hover:bg-rose-500/20"
                       >
                         Reject
-                      </button>
+                      </Button>
                     </div>
+                  </Card>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
+          </Card>
 
-          <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
+          <Card variant="glass" className="border-white/10 bg-slate-950/30 p-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Confirmed relationships</p>
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={exportConfirmedRelationships}
                 disabled={data.confirmed_relationships.length === 0}
-                className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-2.5 text-[12px] font-semibold text-slate-100 disabled:opacity-40"
+                className="min-h-[36px] border-white/15 bg-white/5 text-[12px] font-semibold text-slate-100"
               >
                 Export Sales Navigator CSV
-              </button>
+              </Button>
             </div>
             {data.confirmed_relationships.length === 0 ? (
               <p className="mt-2 text-[13px] text-slate-300">No confirmed relationships yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.confirmed_relationships.map((item) => (
-                  <li key={item.match_id} className="rounded-lg border border-white/10 bg-slate-950/60 px-3 py-2">
+                  <li key={item.match_id}>
+                  <Card variant="glass" className="border-white/10 bg-slate-950/60 px-3 py-2">
                     <p className="text-[13px] font-semibold text-white">{item.candidate_name}</p>
                     <p className="mt-1 text-[12px] text-slate-300">Confirmed through connection {item.connection_name}</p>
+                  </Card>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
+          </Card>
         </div>
       )}
-    </section>
+    </Card>
   )
 }

@@ -1,4 +1,7 @@
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 type DashboardProfileIntelligenceSectionProps = {
   profileScore: number
@@ -85,77 +88,73 @@ export function DashboardProfileIntelligenceSection({
   return (
     <>
       {profileScore < 100 && (
-        <Link
-          href={profileHref}
-          className="mb-6 rounded border border-white/15 bg-white/5 p-5 flex items-center gap-5 hover:border-white/35 transition-colors block"
-        >
-          <div
-            className={`text-[40px] font-bold leading-none tabular-nums shrink-0 ${
-              profileScore >= 80 ? 'text-emerald-300' : profileScore >= 40 ? 'text-amber-300' : 'text-slate-300'
-            }`}
-          >
-            {profileScore}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-semibold text-slate-100">
-              {profileScore >= 80
-                ? 'Profile nearly complete'
-                : profileScore >= 40
-                  ? 'Profile in progress'
-                  : 'Complete your profile to unlock better briefs'}
+        <Link href={profileHref} className="mb-6 block">
+          <Card variant="glass" className="flex-row items-center gap-5 p-5 hover:border-white/35 transition-colors">
+            <div
+              className={`text-[40px] font-bold leading-none tabular-nums shrink-0 ${
+                profileScore >= 80 ? 'text-emerald-300' : profileScore >= 40 ? 'text-amber-300' : 'text-slate-300'
+              }`}
+            >
+              {profileScore}
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">
-              Profile score &middot; {nextProfileSection ? `${nextProfileSection.label} is next` : 'All sections done'}
+            <div className="flex-1 min-w-0">
+              <div className="text-[13px] font-semibold text-slate-100">
+                {profileScore >= 80
+                  ? 'Profile nearly complete'
+                  : profileScore >= 40
+                    ? 'Profile in progress'
+                    : 'Complete your profile to unlock better briefs'}
+              </div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Profile score &middot; {nextProfileSection ? `${nextProfileSection.label} is next` : 'All sections done'}
+              </div>
             </div>
-          </div>
-          <span className="text-[12px] font-semibold text-slate-300 shrink-0">
-            {nextProfileSection ? nextProfileSection.label : 'Profile'}
-          </span>
+            <span className="text-[12px] font-semibold text-slate-300 shrink-0">
+              {nextProfileSection ? nextProfileSection.label : 'Profile'}
+            </span>
+          </Card>
         </Link>
       )}
 
       {profileScore < 40 && (
-        <section className="mb-6 bg-slate-900 rounded p-5 sm:p-6">
+        <Card variant="glass" className="gap-0 mb-6 p-5 sm:p-6">
           <h2 className="text-[13px] font-semibold text-orange-500 mb-1">Quick start</h2>
           <p className="text-[13px] text-slate-300 mb-4">3 fields. Unlocks your first prep brief in under 3 minutes.</p>
           <form action={onSaveQuickProfile} className="flex flex-col gap-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input
+              <Input
                 name="full_name"
                 type="text"
                 required
                 defaultValue={quickProfileDefaults.fullName}
                 placeholder="Your full name"
-                className="w-full border border-slate-700 rounded px-3 py-2.5 text-[14px] text-white bg-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-slate-500"
+                className="h-auto w-full border-slate-700 px-3 py-2.5 text-[14px] text-white bg-slate-800 placeholder:text-slate-500 focus-visible:border-slate-500 focus-visible:ring-0"
               />
-              <input
+              <Input
                 name="current_title"
                 type="text"
                 defaultValue={quickProfileDefaults.currentTitle}
                 placeholder="Current or most recent title"
-                className="w-full border border-slate-700 rounded px-3 py-2.5 text-[14px] text-white bg-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-slate-500"
+                className="h-auto w-full border-slate-700 px-3 py-2.5 text-[14px] text-white bg-slate-800 placeholder:text-slate-500 focus-visible:border-slate-500 focus-visible:ring-0"
               />
             </div>
-            <input
+            <Input
               name="positioning_summary"
               type="text"
               defaultValue={quickProfileDefaults.positioningSummary}
               placeholder="One sentence: what you do and what you're targeting next"
-              className="w-full border border-slate-700 rounded px-3 py-2.5 text-[14px] text-white bg-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-slate-500"
+              className="h-auto w-full border-slate-700 px-3 py-2.5 text-[14px] text-white bg-slate-800 placeholder:text-slate-500 focus-visible:border-slate-500 focus-visible:ring-0"
             />
             <div className="flex items-center gap-3">
-              <button
-                type="submit"
-                className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-5 py-2 rounded transition-colors cursor-pointer border-0"
-              >
+              <Button type="submit" className="text-[13px] px-5 py-2 h-auto">
                 Save and continue
-              </button>
+              </Button>
               <Link href="/dashboard/profile" className="text-[12px] text-slate-400 hover:text-slate-200">
                 Full profile →
               </Link>
             </div>
           </form>
-        </section>
+        </Card>
       )}
 
       <div id="momentum-overview" className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
@@ -170,19 +169,21 @@ export function DashboardProfileIntelligenceSection({
           )
 
           return href ? (
-            <Link key={label} href={href} className="bg-white/5 border border-white/15 rounded p-3 sm:p-5 hover:border-white/35 transition-colors">
-              {inner}
+            <Link key={label} href={href} className="block">
+              <Card variant="glass" className="gap-0 p-3 sm:p-5 hover:border-white/35 transition-colors">
+                {inner}
+              </Card>
             </Link>
           ) : (
-            <div key={label} className="bg-white/5 border border-white/15 rounded p-3 sm:p-5">
+            <Card key={label} variant="glass" className="gap-0 p-3 sm:p-5">
               {inner}
-            </div>
+            </Card>
           )
         })}
       </div>
 
       {showNetworkHealth && (
-        <section className="mb-6 sm:mb-8 bg-white/5 border border-white/15 rounded p-5">
+        <Card variant="glass" className="gap-0 mb-6 sm:mb-8 p-5">
           <div className="flex-1 min-w-0">
             <p className="text-[13px] font-semibold text-slate-100">
               {contactCoverageCount} of {totalCount} companies have a contact
@@ -194,21 +195,23 @@ export function DashboardProfileIntelligenceSection({
           <div className="mt-3">
             <Link href="/dashboard/contacts" className="text-[12px] font-semibold text-slate-300 hover:text-white transition-colors">Contacts</Link>
           </div>
-        </section>
+        </Card>
       )}
 
       {totalCount >= 3 && numIntelGaps > 0 && isExecutiveMode && rankedAttentionCard && (
         <section id="attention-gaps" className="mb-6 sm:mb-8">
           <h2 className="text-[13px] font-semibold text-slate-400 mb-3">Top attention gap</h2>
-          <Link href={rankedAttentionCard.href} className="bg-white/5 border border-white/15 rounded p-5 hover:border-white/35 transition-colors block">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-[30px] font-bold text-slate-100 leading-none mb-1">{rankedAttentionCard.count}</div>
-                <div className="text-[14px] font-semibold text-slate-100 mb-1.5">{rankedAttentionCard.title}</div>
-                <div className="text-[12px] text-slate-400 leading-relaxed">{rankedAttentionCard.body}</div>
+          <Link href={rankedAttentionCard.href} className="block">
+            <Card variant="glass" className="p-5 hover:border-white/35 transition-colors">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-[30px] font-bold text-slate-100 leading-none mb-1">{rankedAttentionCard.count}</div>
+                  <div className="text-[14px] font-semibold text-slate-100 mb-1.5">{rankedAttentionCard.title}</div>
+                  <div className="text-[12px] text-slate-400 leading-relaxed">{rankedAttentionCard.body}</div>
+                </div>
+                <span className="text-[12px] font-semibold text-slate-300 shrink-0">{rankedAttentionCard.cta}</span>
               </div>
-              <span className="text-[12px] font-semibold text-slate-300 shrink-0">{rankedAttentionCard.cta}</span>
-            </div>
+            </Card>
           </Link>
         </section>
       )}
@@ -218,21 +221,23 @@ export function DashboardProfileIntelligenceSection({
           <h2 className="text-[13px] font-semibold text-slate-400 mb-3">What needs attention</h2>
           <div className={`grid grid-cols-1 gap-3 ${numIntelGaps === 2 ? 'sm:grid-cols-2' : numIntelGaps >= 3 ? 'sm:grid-cols-3' : ''}`}>
             {companiesWithoutContact.length > 0 && (
-              <Link href="/dashboard/contacts" className="bg-white/5 border border-white/15 rounded p-4 hover:border-white/35 transition-colors block">
-                <div className="text-[26px] font-bold text-slate-100 leading-none mb-1">{companiesWithoutContact.length}</div>
-                <div className="text-[13px] font-semibold text-slate-200 mb-1.5">
-                  {companiesWithoutContact.length === 1 ? 'company' : 'companies'} with no contact
-                </div>
-                <div className="text-[11px] text-slate-400 leading-relaxed mb-3">
-                  {companiesWithoutContact.slice(0, 2).map(c => c.name).join(', ')}
-                  {companiesWithoutContact.length > 2 ? ` +${companiesWithoutContact.length - 2} more` : ''}
-                </div>
-                <span className="text-[11px] font-semibold text-slate-300">Contacts</span>
+              <Link href="/dashboard/contacts" className="block">
+                <Card variant="glass" className="gap-0 p-4 hover:border-white/35 transition-colors">
+                  <div className="text-[26px] font-bold text-slate-100 leading-none mb-1">{companiesWithoutContact.length}</div>
+                  <div className="text-[13px] font-semibold text-slate-200 mb-1.5">
+                    {companiesWithoutContact.length === 1 ? 'company' : 'companies'} with no contact
+                  </div>
+                  <div className="text-[11px] text-slate-400 leading-relaxed mb-3">
+                    {companiesWithoutContact.slice(0, 2).map(c => c.name).join(', ')}
+                    {companiesWithoutContact.length > 2 ? ` +${companiesWithoutContact.length - 2} more` : ''}
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-300">Contacts</span>
+                </Card>
               </Link>
             )}
 
             {prospectContactCount > 0 && (
-              <section className="bg-white/5 border border-white/15 rounded p-4">
+              <Card variant="glass" className="gap-0 p-4">
                 <div className="text-[26px] font-bold text-slate-100 leading-none mb-1">{prospectContactCount}</div>
                 <div className="text-[13px] font-semibold text-slate-200 mb-1.5">
                   {prospectContactCount === 1 ? 'contact' : 'contacts'} not yet reached
@@ -241,20 +246,22 @@ export function DashboardProfileIntelligenceSection({
                   People you know but have not yet connected with in this search.
                 </div>
                 <Link href="/dashboard/contacts" className="text-[11px] font-semibold text-slate-300 hover:text-white transition-colors">Contacts</Link>
-              </section>
+              </Card>
             )}
 
             {companiesWithoutBrief.length > 0 && (
-              <Link href="/dashboard#pipeline" className="bg-white/5 border border-white/15 rounded p-4 hover:border-white/35 transition-colors block">
-                <div className="text-[26px] font-bold text-slate-100 leading-none mb-1">{companiesWithoutBrief.length}</div>
-                <div className="text-[13px] font-semibold text-slate-200 mb-1.5">
-                  {companiesWithoutBrief.length === 1 ? 'company' : 'companies'} with no prep brief
-                </div>
-                <div className="text-[11px] text-slate-400 leading-relaxed mb-3">
-                  {companiesWithoutBrief.slice(0, 2).map(c => c.name).join(', ')}
-                  {companiesWithoutBrief.length > 2 ? ` +${companiesWithoutBrief.length - 2} more` : ''}
-                </div>
-                <span className="text-[11px] font-semibold text-slate-300">Prep brief</span>
+              <Link href="/dashboard#pipeline" className="block">
+                <Card variant="glass" className="gap-0 p-4 hover:border-white/35 transition-colors">
+                  <div className="text-[26px] font-bold text-slate-100 leading-none mb-1">{companiesWithoutBrief.length}</div>
+                  <div className="text-[13px] font-semibold text-slate-200 mb-1.5">
+                    {companiesWithoutBrief.length === 1 ? 'company' : 'companies'} with no prep brief
+                  </div>
+                  <div className="text-[11px] text-slate-400 leading-relaxed mb-3">
+                    {companiesWithoutBrief.slice(0, 2).map(c => c.name).join(', ')}
+                    {companiesWithoutBrief.length > 2 ? ` +${companiesWithoutBrief.length - 2} more` : ''}
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-300">Prep brief</span>
+                </Card>
               </Link>
             )}
           </div>

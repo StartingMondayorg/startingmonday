@@ -1,5 +1,6 @@
 ﻿import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Join Starting Monday' }
 
@@ -59,12 +60,13 @@ export default async function InvitePage({
             CTA: get started now by creating your free account from this invite.
           </p>
 
-          <Link
-            href={`/signup?ref=${code}`}
-            className="inline-block bg-white text-slate-900 text-[14px] font-bold px-7 py-3.5 rounded hover:bg-slate-100 transition-colors"
+          <Button
+            size="lg"
+            className="!bg-white !text-slate-900 text-[14px] font-bold px-7 py-3.5 h-auto hover:!bg-slate-100"
+            render={<Link href={`/signup?ref=${code}`} />}
           >
             Get started now &rarr;
-          </Link>
+          </Button>
           <p className="text-[12px] text-slate-600 mt-3">Free for 30 days. No credit card.</p>
 
           <div className="mt-10 pt-8 border-t border-slate-800">

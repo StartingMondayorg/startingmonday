@@ -12,8 +12,22 @@ import {
   transitionTypeFromEmploymentStatus,
   urgencyFromSearchTimeline,
 } from '@/lib/search-intake'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
-const selectClass = 'w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white focus:border-orange-400/40 focus:outline-none'
+const fieldClass = 'w-full rounded-xl border-white/10 bg-slate-950/60 text-[14px] text-white placeholder:text-slate-500 focus-visible:border-orange-400/40'
+const labelClass = 'mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300'
 
 function joinTags(values?: string[] | null) {
   return (values ?? []).join(', ')
@@ -69,12 +83,22 @@ export default async function StrategyIntakePage({
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </Link>
           <div className="flex flex-wrap items-center gap-2 text-[13px] text-slate-300">
-            <Link href="/dashboard/strategy/intake?audience=individual" className={`rounded-full px-3 py-1.5 transition-colors ${audience === 'individual' ? 'bg-white/10 text-white' : 'hover:text-white'}`}>
+            <Button
+              variant={audience === 'individual' ? 'secondary' : 'ghost'}
+              size="sm"
+              className="rounded-full"
+              render={<Link href="/dashboard/strategy/intake?audience=individual" />}
+            >
               Individual
-            </Link>
-            <Link href="/dashboard/strategy/intake?audience=partner" className={`rounded-full px-3 py-1.5 transition-colors ${audience === 'partner' ? 'bg-white/10 text-white' : 'hover:text-white'}`}>
+            </Button>
+            <Button
+              variant={audience === 'partner' ? 'secondary' : 'ghost'}
+              size="sm"
+              className="rounded-full"
+              render={<Link href="/dashboard/strategy/intake?audience=partner" />}
+            >
               Partner
-            </Link>
+            </Button>
             <span className="text-slate-600">/</span>
             <Link href="/demo/search-strategy-intake" className="hover:text-white transition-colors">Preview</Link>
             <span className="text-slate-600">/</span>
@@ -94,7 +118,7 @@ export default async function StrategyIntakePage({
         />
 
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20 backdrop-blur-sm sm:p-8">
+          <Card variant="glass" className="p-6 shadow-2xl shadow-black/20 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-orange-200">Authenticated workflow</p>
@@ -105,7 +129,7 @@ export default async function StrategyIntakePage({
                   Complete the six required fields first. Optional fields add context, but they should not get in the way of the first pass.
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-slate-950/65 px-4 py-3 text-[13px] leading-relaxed text-slate-300">
+              <Card variant="glass" className="border-white/10 bg-slate-950/65 px-4 py-3 text-[13px] leading-relaxed text-slate-300">
                 <p className="font-semibold text-white">Start here</p>
                 <ol className="mt-2 space-y-1.5 max-w-72 list-decimal pl-4 text-slate-200">
                   <li>Pick the mode that matches the workflow.</li>
@@ -118,19 +142,21 @@ export default async function StrategyIntakePage({
                     ? 'Partner mode adds coach notes and handoff context for a shared review.'
                     : 'Individual mode is for the candidate completing the search alone.'}
                 </p>
-              </div>
+              </Card>
             </div>
 
             {saved && (
-              <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-[13px] text-emerald-100">
-                Intake saved. Your strategy brief, prep briefs, and outreach drafts now use these decision rules.
-              </div>
+              <Alert variant="success" className="mt-6">
+                <AlertDescription>
+                  Intake saved. Your strategy brief, prep briefs, and outreach drafts now use these decision rules.
+                </AlertDescription>
+              </Alert>
             )}
 
             {saveError && (
-              <div className="mt-4 rounded-2xl border border-rose-400/20 bg-rose-500/10 px-4 py-3 text-[13px] text-rose-100">
-                Save failed: {decodeURIComponent(saveError)}
-              </div>
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>Save failed: {decodeURIComponent(saveError)}</AlertDescription>
+              </Alert>
             )}
 
             <form action={saveStrategyIntake} className="mt-8 space-y-8">
@@ -143,43 +169,56 @@ export default async function StrategyIntakePage({
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="target_titles">Target roles <span className="text-orange-200">required</span></label>
+                    <Label className={labelClass} htmlFor="target_titles">Target roles <span className="text-orange-200">required</span></Label>
                     <TagInput id="target_titles" name="target_titles" required defaultValue={joinTags(profile?.target_titles)} placeholder="CIO, VP of Technology, CTO..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="roles_to_avoid">Roles to avoid <span className="text-slate-500">optional</span></label>
+                    <Label className={labelClass} htmlFor="roles_to_avoid">Roles to avoid <span className="text-slate-500">optional</span></Label>
                     <TagInput id="roles_to_avoid" name="roles_to_avoid" defaultValue={joinTags(intake.roles_to_avoid)} placeholder="Consulting, IC roles, non-technical leadership..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="transition_type">Transition type <span className="text-orange-200">required</span></label>
-                    <select id="transition_type" name="transition_type" required defaultValue={transitionDefault} className={selectClass}>
-                      <option value="" disabled>Select one</option>
-                      {TRANSITION_TYPE_OPTIONS.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                      ))}
-                    </select>
+                    <Label className={labelClass} htmlFor="transition_type">Transition type <span className="text-orange-200">required</span></Label>
+                    <Select name="transition_type" required defaultValue={transitionDefault || undefined}>
+                      <SelectTrigger id="transition_type" className={`${fieldClass} justify-between`}>
+                        <SelectValue placeholder="Select one" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TRANSITION_TYPE_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="search_stage">Search stage <span className="text-orange-200">required</span></label>
-                    <select id="search_stage" name="search_stage" required defaultValue={intake.search_stage ?? ''} className={selectClass}>
-                      <option value="" disabled>Select one</option>
-                      {SEARCH_STAGE_OPTIONS.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                      ))}
-                    </select>
+                    <Label className={labelClass} htmlFor="search_stage">Search stage <span className="text-orange-200">required</span></Label>
+                    <Select name="search_stage" required defaultValue={intake.search_stage || undefined}>
+                      <SelectTrigger id="search_stage" className={`${fieldClass} justify-between`}>
+                        <SelectValue placeholder="Select one" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SEARCH_STAGE_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="urgency">Urgency / timing <span className="text-slate-500">optional</span></label>
-                    <select id="urgency" name="urgency" defaultValue={urgencyDefault} className={selectClass}>
-                      <option value="">Select one</option>
-                      {URGENCY_OPTIONS.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                      ))}
-                    </select>
+                    <Label className={labelClass} htmlFor="urgency">Urgency / timing <span className="text-slate-500">optional</span></Label>
+                    <Select name="urgency" defaultValue={urgencyDefault || '__none__'}>
+                      <SelectTrigger id="urgency" className={`${fieldClass} justify-between`}>
+                        <SelectValue placeholder="Select one" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">Select one</SelectItem>
+                        {URGENCY_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="search_hypothesis">Search hypothesis <span className="text-slate-500">optional</span></label>
-                    <input id="search_hypothesis" name="search_hypothesis" defaultValue={intake.search_hypothesis ?? ''} placeholder="Operator for infrastructure modernization..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="search_hypothesis">Search hypothesis <span className="text-slate-500">optional</span></Label>
+                    <Input id="search_hypothesis" name="search_hypothesis" defaultValue={intake.search_hypothesis ?? ''} placeholder="Operator for infrastructure modernization..." className={fieldClass} />
                   </div>
                 </div>
               </section>
@@ -191,32 +230,32 @@ export default async function StrategyIntakePage({
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="target_sectors">Target industries <span className="text-orange-200">required</span></label>
+                    <Label className={labelClass} htmlFor="target_sectors">Target industries <span className="text-orange-200">required</span></Label>
                     <TagInput id="target_sectors" name="target_sectors" required defaultValue={joinTags(profile?.target_sectors)} placeholder="Health tech, fintech, enterprise SaaS..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="target_locations">Target locations <span className="text-slate-500">optional</span></label>
+                    <Label className={labelClass} htmlFor="target_locations">Target locations <span className="text-slate-500">optional</span></Label>
                     <TagInput id="target_locations" name="target_locations" defaultValue={joinTags(profile?.target_locations)} placeholder="Boston, Remote, New York..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="target_companies">Target companies <span className="text-slate-500">optional</span></label>
+                    <Label className={labelClass} htmlFor="target_companies">Target companies <span className="text-slate-500">optional</span></Label>
                     <TagInput id="target_companies" name="target_companies" defaultValue={joinTags(targetCompaniesDefault)} placeholder="Arcadia, Cotiviti, Kyruus..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="company_size_stage">Company size / stage <span className="text-slate-500">optional</span></label>
-                    <input id="company_size_stage" name="company_size_stage" defaultValue={intake.company_size_stage ?? ''} placeholder="Mid-market, enterprise, PE-backed..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="company_size_stage">Company size / stage <span className="text-slate-500">optional</span></Label>
+                    <Input id="company_size_stage" name="company_size_stage" defaultValue={intake.company_size_stage ?? ''} placeholder="Mid-market, enterprise, PE-backed..." className={fieldClass} />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="intake_geography">Geography <span className="text-slate-500">optional</span></label>
-                    <input id="intake_geography" name="intake_geography" defaultValue={intake.geography ?? ''} placeholder="East Coast, national, local only..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="intake_geography">Geography <span className="text-slate-500">optional</span></Label>
+                    <Input id="intake_geography" name="intake_geography" defaultValue={intake.geography ?? ''} placeholder="East Coast, national, local only..." className={fieldClass} />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="remote_travel">Remote / travel constraints <span className="text-slate-500">optional</span></label>
-                    <input id="remote_travel" name="remote_travel" defaultValue={intake.remote_travel ?? ''} placeholder="Remote first, 25% travel max..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="remote_travel">Remote / travel constraints <span className="text-slate-500">optional</span></Label>
+                    <Input id="remote_travel" name="remote_travel" defaultValue={intake.remote_travel ?? ''} placeholder="Remote first, 25% travel max..." className={fieldClass} />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="comp_guardrails">Compensation guardrails <span className="text-slate-500">optional</span></label>
-                    <textarea id="comp_guardrails" name="comp_guardrails" defaultValue={intake.comp_guardrails ?? ''} placeholder="Include only if the candidate wants to constrain salary or equity targets." className="min-h-24 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="comp_guardrails">Compensation guardrails <span className="text-slate-500">optional</span></Label>
+                    <Textarea id="comp_guardrails" name="comp_guardrails" defaultValue={intake.comp_guardrails ?? ''} placeholder="Include only if the candidate wants to constrain salary or equity targets." className={`min-h-24 rounded-2xl ${fieldClass}`} />
                   </div>
                 </div>
               </section>
@@ -231,16 +270,16 @@ export default async function StrategyIntakePage({
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="positioning_summary">Positioning summary <span className="text-orange-200">required</span></label>
-                    <textarea id="positioning_summary" name="positioning_summary" required defaultValue={profile?.positioning_summary ?? ''} placeholder="Operator for infrastructure modernization and executive transformation roles." className="min-h-28 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="positioning_summary">Positioning summary <span className="text-orange-200">required</span></Label>
+                    <Textarea id="positioning_summary" name="positioning_summary" required defaultValue={profile?.positioning_summary ?? ''} placeholder="Operator for infrastructure modernization and executive transformation roles." className={`min-h-28 rounded-2xl ${fieldClass}`} />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="relationship_targets">Relationships to activate <span className="text-slate-500">optional</span></label>
+                    <Label className={labelClass} htmlFor="relationship_targets">Relationships to activate <span className="text-slate-500">optional</span></Label>
                     <TagInput id="relationship_targets" name="relationship_targets" defaultValue={joinTags(intake.relationship_targets)} placeholder="Former colleagues, board members, search firm contacts..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="culture_criteria">Culture criteria <span className="text-slate-500">optional</span></label>
-                    <input id="culture_criteria" name="culture_criteria" defaultValue={intake.culture_criteria ?? ''} placeholder="Fast-moving, low-ego, execution-focused..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="culture_criteria">Culture criteria <span className="text-slate-500">optional</span></Label>
+                    <Input id="culture_criteria" name="culture_criteria" defaultValue={intake.culture_criteria ?? ''} placeholder="Fast-moving, low-ego, execution-focused..." className={fieldClass} />
                   </div>
                 </div>
               </section>
@@ -252,20 +291,20 @@ export default async function StrategyIntakePage({
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="decision_criteria">Decision criteria <span className="text-orange-200">required</span></label>
+                    <Label className={labelClass} htmlFor="decision_criteria">Decision criteria <span className="text-orange-200">required</span></Label>
                     <TagInput id="decision_criteria" name="decision_criteria" required defaultValue={joinTags(intake.decision_criteria)} placeholder="Mandate quality, sponsor depth, decision clarity..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="red_flags">Red flags <span className="text-slate-500">optional</span></label>
+                    <Label className={labelClass} htmlFor="red_flags">Red flags <span className="text-slate-500">optional</span></Label>
                     <TagInput id="red_flags" name="red_flags" defaultValue={joinTags(intake.red_flags)} placeholder="Unclear mandate, weak sponsor, unrealistic timeline..." />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="board_visibility">Board visibility <span className="text-slate-500">optional</span></label>
-                    <input id="board_visibility" name="board_visibility" defaultValue={intake.board_visibility ?? ''} placeholder="Board-facing, sponsor-led, no board exposure..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="board_visibility">Board visibility <span className="text-slate-500">optional</span></Label>
+                    <Input id="board_visibility" name="board_visibility" defaultValue={intake.board_visibility ?? ''} placeholder="Board-facing, sponsor-led, no board exposure..." className={fieldClass} />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="stakeholder_complexity">Stakeholder complexity <span className="text-slate-500">optional</span></label>
-                    <input id="stakeholder_complexity" name="stakeholder_complexity" defaultValue={intake.stakeholder_complexity ?? ''} placeholder="CEO + board + private equity..." className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                    <Label className={labelClass} htmlFor="stakeholder_complexity">Stakeholder complexity <span className="text-slate-500">optional</span></Label>
+                    <Input id="stakeholder_complexity" name="stakeholder_complexity" defaultValue={intake.stakeholder_complexity ?? ''} placeholder="CEO + board + private equity..." className={fieldClass} />
                   </div>
                 </div>
               </section>
@@ -278,32 +317,32 @@ export default async function StrategyIntakePage({
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="coach_name">Coach or partner name <span className="text-slate-500">optional</span></label>
-                      <input id="coach_name" name="coach_name" defaultValue={intake.coach_name ?? ''} placeholder="Thomas Garland" className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                      <Label className={labelClass} htmlFor="coach_name">Coach or partner name <span className="text-slate-500">optional</span></Label>
+                      <Input id="coach_name" name="coach_name" defaultValue={intake.coach_name ?? ''} placeholder="Thomas Garland" className={fieldClass} />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300" htmlFor="partner_notes">Partner notes <span className="text-slate-500">optional</span></label>
-                      <textarea id="partner_notes" name="partner_notes" defaultValue={intake.partner_notes ?? ''} placeholder="Coach observations, referral context, or follow-up priorities." className="min-h-24 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-[14px] text-white placeholder:text-slate-500 focus:border-orange-400/40 focus:outline-none" />
+                      <Label className={labelClass} htmlFor="partner_notes">Partner notes <span className="text-slate-500">optional</span></Label>
+                      <Textarea id="partner_notes" name="partner_notes" defaultValue={intake.partner_notes ?? ''} placeholder="Coach observations, referral context, or follow-up priorities." className={`min-h-24 rounded-2xl ${fieldClass}`} />
                     </div>
                   </div>
                 </section>
               )}
 
               <div className="flex flex-wrap items-center gap-3">
-                <button type="submit" className="rounded-full bg-orange-500 px-6 py-3 text-[14px] font-semibold text-slate-950 transition-colors hover:bg-orange-400">
+                <Button type="submit" size="lg" className="rounded-full">
                   Save intake
-                </button>
-                <Link href="/dashboard/strategy" className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-white/10">
+                </Button>
+                <Button variant="outline" size="lg" className="rounded-full" render={<Link href="/dashboard/strategy" />}>
                   Back to strategy brief
-                </Link>
+                </Button>
                 <Link href="/demo/search-strategy-intake" className="text-[14px] text-slate-300 underline decoration-slate-500 underline-offset-4 hover:text-white">
                   Open preview version
                 </Link>
               </div>
             </form>
-          </section>
+          </Card>
 
-          <aside className="space-y-4 lg:sticky lg:top-24 self-start rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/20 backdrop-blur-sm sm:p-7">
+          <Card variant="glass" className="space-y-4 lg:sticky lg:top-24 self-start bg-slate-900/80 p-6 shadow-2xl shadow-black/20 sm:p-7">
             <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-orange-200">Completion rules</p>
             <h2 className="font-serif text-[2rem] leading-tight text-white">What to finish first.</h2>
             <p className="text-[14px] leading-relaxed text-slate-300">
@@ -316,18 +355,18 @@ export default async function StrategyIntakePage({
                 'Optional: target companies, geography, comp guardrails, red flags, board visibility, stakeholder complexity, partner notes.',
                 'Answers from onboarding are pre-filled where they overlap; adjust anything that has changed.',
               ].map(item => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[13px] leading-relaxed text-slate-200">
+                <Card key={item} variant="glass" className="px-4 py-3 text-[13px] leading-relaxed text-slate-200">
                   {item}
-                </div>
+                </Card>
               ))}
             </div>
 
-            <div className="rounded-2xl border border-orange-400/20 bg-orange-500/8 p-4 text-[13px] leading-relaxed text-slate-200">
+            <Card variant="glass" className="border-orange-400/20 bg-orange-500/8 p-4 text-[13px] leading-relaxed text-slate-200">
               <p className="font-semibold text-orange-100">Current saved profile</p>
               <p className="mt-2">{profile?.full_name ?? 'No name set'} · {profile?.current_title ?? 'No current title set'}</p>
               <p className="mt-1 text-slate-300">{joinTags(profile?.target_titles)}{profile?.target_titles?.length ? '' : 'No target roles yet'}</p>
-            </div>
-          </aside>
+            </Card>
+          </Card>
         </div>
       </main>
     </div>

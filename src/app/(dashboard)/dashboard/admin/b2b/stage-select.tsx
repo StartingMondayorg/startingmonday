@@ -2,6 +2,7 @@
 import { useTransition } from 'react'
 import { updateProspectStage } from './actions'
 import type { STAGES } from './page'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Props = {
   id: string
@@ -13,8 +14,8 @@ type Props = {
 export default function StageSelect({ id, stage, stages, cls }: Props) {
   const [, startTransition] = useTransition()
 
-  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const newStage = e.target.value
+  function handleChange(newStage: string | null) {
+    if (!newStage) return
     const formData = new FormData()
     formData.set('id', id)
     formData.set('stage', newStage)
@@ -22,14 +23,17 @@ export default function StageSelect({ id, stage, stages, cls }: Props) {
   }
 
   return (
-    <select
-      value={stage}
-      onChange={handleChange}
-      className={`text-[11px] font-semibold rounded-full px-2.5 py-1 border-0 cursor-pointer appearance-none ${cls}`}
-    >
-      {stages.map(s => (
-        <option key={s.key} value={s.key}>{s.label}</option>
-      ))}
-    </select>
+    <Select value={stage} onValueChange={handleChange}>
+      <SelectTrigger
+        className={`h-auto text-[11px] font-semibold rounded-full px-2.5 py-1 border-0 cursor-pointer [&_svg]:size-3 ${cls}`}
+      >
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {stages.map(s => (
+          <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }

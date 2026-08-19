@@ -1,16 +1,17 @@
+import { Skeleton as SkeletonBase } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
+
 export function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div className={`animate-pulse bg-slate-200 rounded ${className}`} />
-  )
+  return <SkeletonBase className={className} />
 }
 
 export function SkeletonText({ lines = 3, className = '' }: { lines?: number; className?: string }) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {Array.from({ length: lines }).map((_, i) => (
-        <div
+        <SkeletonBase
           key={i}
-          className="animate-pulse bg-slate-200 rounded h-3"
+          className="h-3"
           style={{ width: i === lines - 1 ? '60%' : '100%' }}
         />
       ))}
@@ -20,10 +21,10 @@ export function SkeletonText({ lines = 3, className = '' }: { lines?: number; cl
 
 export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
-    <div className={`bg-white border border-slate-200 rounded p-5 ${className}`}>
+    <Card variant="default" className={`gap-0 p-5 ${className}`}>
       <Skeleton className="h-4 w-24 mb-3" />
       <SkeletonText lines={2} />
-    </div>
+    </Card>
   )
 }
 
@@ -31,10 +32,10 @@ export function SkeletonStats() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-white border border-slate-200 rounded p-3 sm:p-5">
+        <Card key={i} variant="default" className="gap-0 p-3 sm:p-5">
           <Skeleton className="h-8 w-12 mb-2" />
           <Skeleton className="h-2.5 w-16" />
-        </div>
+        </Card>
       ))}
     </div>
   )
@@ -42,7 +43,7 @@ export function SkeletonStats() {
 
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-white border border-slate-200 rounded overflow-hidden">
+    <Card variant="default" className="gap-0 p-0">
       <div className="px-6 py-4 border-b border-slate-200">
         <Skeleton className="h-3.5 w-28" />
       </div>
@@ -55,6 +56,6 @@ export function SkeletonTable({ rows = 5 }: { rows?: number }) {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }

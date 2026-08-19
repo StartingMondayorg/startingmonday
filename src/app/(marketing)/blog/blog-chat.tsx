@@ -2,6 +2,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import type { BlogPostMeta } from '@/lib/blog-posts'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 type Result = {
   slug: string
@@ -86,35 +89,35 @@ export function BlogChat({
   }
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-5 sm:p-6">
+    <Card variant="glass" className="p-5 sm:p-6">
       <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">{title}</p>
       <p className="text-[13px] text-slate-300 leading-relaxed mb-4">
         {description}
       </p>
       <form onSubmit={handleSearch} className="flex gap-2 mb-4">
-        <input
+        <Input
           name="query"
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 border border-slate-700 rounded px-3 py-2.5 text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-slate-500 bg-slate-950"
+          className="flex-1 border-slate-700 text-[14px] text-slate-100 placeholder:text-slate-500 focus-visible:border-slate-500 bg-slate-950"
         />
-        <button
+        <Button
           type="submit"
-          className="bg-slate-900 text-white text-[13px] font-semibold px-4 py-2.5 rounded hover:bg-slate-700 transition-colors disabled:opacity-40 shrink-0"
+          className="text-[13px] shrink-0"
         >
           Search
-        </button>
+        </Button>
       </form>
 
       {searched && answerMode && results !== null && (
-        <div className="mb-4 rounded border border-slate-700 bg-slate-950 p-4">
+        <Card variant="glass" className="mb-4 p-4">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1.5">Answer</p>
           <p className="text-[13px] text-slate-200 leading-relaxed">
             {buildAnswer(query.trim(), results)}
           </p>
-        </div>
+        </Card>
       )}
 
       {searched && results !== null && (
@@ -122,13 +125,15 @@ export function BlogChat({
           <ul className="space-y-3">
             {results.map(r => (
               <li key={r.slug}>
-                <Link href={`/blog/${r.slug}`} className="group block rounded border border-slate-700 bg-slate-950 p-4 hover:border-slate-500 transition-colors">
-                  <p className="text-[14px] font-semibold text-slate-100 group-hover:text-white leading-snug mb-1">
-                    {r.title}
-                  </p>
-                  <p className="text-[13px] text-slate-300 leading-relaxed line-clamp-2">
-                    {r.description}
-                  </p>
+                <Link href={`/blog/${r.slug}`} className="group block">
+                  <Card variant="glass" className="p-4 hover:border-slate-500 transition-colors">
+                    <p className="text-[14px] font-semibold text-slate-100 group-hover:text-white leading-snug mb-1">
+                      {r.title}
+                    </p>
+                    <p className="text-[13px] text-slate-300 leading-relaxed line-clamp-2">
+                      {r.description}
+                    </p>
+                  </Card>
                 </Link>
               </li>
             ))}
@@ -140,14 +145,11 @@ export function BlogChat({
 
       {showGuideCta && (
         <div className="mt-4">
-          <Link
-            href={guideCtaHref}
-            className="inline-flex items-center justify-center rounded border border-slate-600 text-slate-100 text-[13px] font-semibold px-5 py-2.5 hover:border-slate-400 transition-colors"
-          >
+          <Button variant="outline" render={<Link href={guideCtaHref} />}>
             {guideCtaLabel}
-          </Link>
+          </Button>
         </div>
       )}
-    </div>
+    </Card>
   )
 }

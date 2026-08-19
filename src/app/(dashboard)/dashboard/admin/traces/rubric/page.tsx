@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 
 export const metadata = { title: 'Prep Brief Rubric - Starting Monday Admin' }
 
@@ -43,14 +45,14 @@ export default async function TraceRubricPage() {
         </p>
 
         {rubric ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)]">
             <pre className="text-[12px] leading-relaxed text-slate-200 whitespace-pre-wrap">{rubric}</pre>
-          </div>
+          </Card>
         ) : (
-          <div className="rounded-2xl border border-red-300/20 bg-red-500/10 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
-            <p className="text-[13px] font-semibold text-red-100">Rubric file not found</p>
-            <p className="text-[12px] text-red-100/90 mt-1">Expected: src/evals/prep_brief_rubric.md</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertTitle>Rubric file not found</AlertTitle>
+            <AlertDescription>Expected: src/evals/prep_brief_rubric.md</AlertDescription>
+          </Alert>
         )}
       </main>
     </div>

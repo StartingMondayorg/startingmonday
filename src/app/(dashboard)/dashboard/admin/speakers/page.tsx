@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { SpeakersClient } from './speakers-client'
+import { Card } from '@/components/ui/card'
 
 export default async function SpeakersPage() {
   const supabase = await createClient()
@@ -66,12 +67,12 @@ export default async function SpeakersPage() {
             { label: 'Converted',         value: converted },
             { label: 'Conferences',       value: conferences },
           ].map(({ label, value }) => (
-            <div key={label} className="bg-white border border-slate-200 rounded p-5">
+            <Card key={label} className="p-5">
               <div className={`text-[28px] font-bold ${label === 'Converted' && value > 0 ? 'text-green-600' : label === 'High priority' && value > 0 ? 'text-orange-500' : 'text-slate-900'}`}>
                 {value}
               </div>
               <div className="text-[12px] text-slate-400 mt-1">{label}</div>
-            </div>
+            </Card>
           ))}
         </div>
 

@@ -4,20 +4,25 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { evaluateBotTrafficAlerts, getBotTrafficSnapshot } from '@/lib/bot-detection/bot-traffic-report'
+import { ADMIN_DARK_PAGE_BG } from '../../admin-dark-theme'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import {
-  ADMIN_DARK_PAGE_BG,
-  ADMIN_DARK_SECTION_CARD,
-  ADMIN_DARK_STAT_CARD,
-  ADMIN_DARK_TABLE_PANEL,
-} from '../../admin-dark-theme'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { BotTrafficChart } from './bot-traffic-chart'
 
 export const dynamic = 'force-dynamic'
 
-const SEVERITY_BADGE: Record<string, string> = {
-  high: 'bg-red-500/15 text-red-100 border border-red-300/25',
-  medium: 'bg-amber-500/15 text-amber-100 border border-amber-300/25',
-  low: 'bg-white/10 text-slate-300 border border-white/10',
+const SEVERITY_BADGE_VARIANT: Record<string, 'destructive' | 'warning' | 'secondary'> = {
+  high: 'destructive',
+  medium: 'warning',
+  low: 'secondary',
 }
 
 function percent(value: number): string {
@@ -79,16 +84,16 @@ export default async function BotTrafficPage() {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {statCards.map((card) => (
-            <div key={card.label} className={ADMIN_DARK_STAT_CARD}>
+            <Card key={card.label} variant="glass" className="p-4">
               <div className="text-[24px] font-bold text-white leading-none">{card.value}</div>
               <div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
-            </div>
+            </Card>
           ))}
         </div>
 
         {/* The number that actually decides anything. Volume the rate limiter
             absorbs is noise; requests that reach the signup handler are not. */}
-        <div className={ADMIN_DARK_SECTION_CARD}>
+        <Card variant="glass" className="p-5 mb-6">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">The number that matters</p>
           <div className="flex flex-wrap items-baseline gap-3">
             <span className={`text-[32px] font-bold leading-none ${snapshot.botAllowedOnSignup1h > 0 ? 'text-red-300' : 'text-white'}`}>
@@ -103,9 +108,9 @@ export default async function BotTrafficPage() {
             reach signup are. If this number is regularly above zero, that is the evidence that would justify revisiting
             captcha as its own piece of work.
           </p>
-        </div>
+        </Card>
 
-        <div className={ADMIN_DARK_SECTION_CARD}>
+        <Card variant="glass" className="p-5 mb-6">
           <div className="flex items-center justify-between mb-3">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Hourly volume (7 days)</p>
             <p className="text-[13px] text-slate-400">
@@ -113,9 +118,9 @@ export default async function BotTrafficPage() {
             </p>
           </div>
           <BotTrafficChart data={snapshot.hourly} />
-        </div>
+        </Card>
 
-        <div className={ADMIN_DARK_SECTION_CARD}>
+        <Card variant="glass" className="p-5 mb-6">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Alert conditions right now</p>
           {alerts.length === 0 ? (
             <p className="text-[13px] text-slate-300">
@@ -129,16 +134,16 @@ export default async function BotTrafficPage() {
                     <p className="text-[13px] font-semibold text-white">{alert.message}</p>
                     <p className="text-[13px] text-slate-400 mt-1">{alert.detail}</p>
                   </div>
-                  <span className={`shrink-0 text-[13px] font-bold px-2 py-0.5 rounded ${SEVERITY_BADGE[alert.severity]}`}>
+                  <Badge variant={SEVERITY_BADGE_VARIANT[alert.severity]} className="shrink-0">
                     {alert.severity}
-                  </span>
+                  </Badge>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className={ADMIN_DARK_TABLE_PANEL}>
+        <Card variant="glass" className="overflow-hidden mb-6">
           <div className="px-5 py-4 border-b border-white/10">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Most active networks (last hour)</p>
           </div>
@@ -146,40 +151,40 @@ export default async function BotTrafficPage() {
             <p className="px-5 py-4 text-[13px] text-slate-300">No requests in the last hour.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="bg-white/5 text-slate-400">
-                    <th className="text-left px-5 py-2.5 font-bold tracking-[0.07em] uppercase">Network</th>
-                    <th className="text-right px-3 py-2.5 font-bold tracking-[0.07em] uppercase">Requests</th>
-                    <th className="text-right px-3 py-2.5 font-bold tracking-[0.07em] uppercase">Bot</th>
-                    <th className="text-left px-3 py-2.5 font-bold tracking-[0.07em] uppercase">Routes</th>
-                    <th className="text-left px-5 py-2.5 font-bold tracking-[0.07em] uppercase">User agent</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
+              <Table className="text-[13px]">
+                <TableHeader>
+                  <TableRow className="bg-white/5 text-slate-400">
+                    <TableHead className="text-left px-5 font-bold tracking-[0.07em] uppercase">Network</TableHead>
+                    <TableHead className="text-right px-3 font-bold tracking-[0.07em] uppercase">Requests</TableHead>
+                    <TableHead className="text-right px-3 font-bold tracking-[0.07em] uppercase">Bot</TableHead>
+                    <TableHead className="text-left px-3 font-bold tracking-[0.07em] uppercase">Routes</TableHead>
+                    <TableHead className="text-left px-5 font-bold tracking-[0.07em] uppercase">User agent</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="divide-y divide-white/10">
                   {snapshot.topPrefixes.map((prefix) => (
-                    <tr key={prefix.ipPrefixHash}>
-                      <td className="px-5 py-2.5 font-mono text-slate-300">
+                    <TableRow key={prefix.ipPrefixHash}>
+                      <TableCell className="px-5 py-2.5 font-mono text-slate-300">
                         {shortHash(prefix.ipPrefixHash)}
                         {prefix.country ? <span className="ml-2 text-slate-500">{prefix.country}</span> : null}
-                      </td>
-                      <td className="px-3 py-2.5 text-right text-white font-semibold">{prefix.requests}</td>
-                      <td className={`px-3 py-2.5 text-right font-semibold ${prefix.botRequests > 0 ? 'text-orange-300' : 'text-slate-400'}`}>
+                      </TableCell>
+                      <TableCell className="px-3 py-2.5 text-right text-white font-semibold">{prefix.requests}</TableCell>
+                      <TableCell className={`px-3 py-2.5 text-right font-semibold ${prefix.botRequests > 0 ? 'text-orange-300' : 'text-slate-400'}`}>
                         {prefix.botRequests}
-                      </td>
-                      <td className="px-3 py-2.5 text-slate-300">{prefix.routes.join(', ')}</td>
-                      <td className="px-5 py-2.5 text-slate-400 max-w-[280px] truncate" title={prefix.userAgent ?? ''}>
+                      </TableCell>
+                      <TableCell className="px-3 py-2.5 text-slate-300">{prefix.routes.join(', ')}</TableCell>
+                      <TableCell className="px-5 py-2.5 text-slate-400 max-w-[280px] truncate" title={prefix.userAgent ?? ''}>
                         {prefix.userAgent ?? '(none sent)'}
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className={ADMIN_DARK_TABLE_PANEL}>
+        <Card variant="glass" className="overflow-hidden">
           <div className="px-5 py-4 border-b border-white/10">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent rejections</p>
           </div>
@@ -203,7 +208,7 @@ export default async function BotTrafficPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </main>
     </div>
   )

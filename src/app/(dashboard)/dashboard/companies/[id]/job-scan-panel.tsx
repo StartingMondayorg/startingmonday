@@ -1,4 +1,6 @@
 ﻿import { getNextScanDate, CSUITE_PATTERNS, type ScanResult } from './company-detail-constants'
+import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type Props = {
   latestScan: ScanResult | null
@@ -79,15 +81,15 @@ export function JobScanPanel(props: Props) {
       <div className="px-6 py-5 border-b border-slate-50">
         <div className="flex items-center gap-3 mb-3 flex-wrap">
           {latestScan.ai_score >= 60 ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-300">
+            <Badge variant="success" className="gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
               {latestScan.ai_score} match score
-            </span>
+            </Badge>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/10 text-slate-400">
+            <Badge variant="secondary" className="gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" />
               No matches
-            </span>
+            </Badge>
           )}
           <span className="text-[11px] text-slate-300">60+ = strong match</span>
         </div>
@@ -101,9 +103,9 @@ export function JobScanPanel(props: Props) {
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <span className="text-[14px] font-semibold text-white">{hit.title}</span>
                 <span className="text-[11px] font-bold text-slate-400">{hit.score}</span>
-                {hit.is_new && <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-300">New</span>}
+                {hit.is_new && <Badge variant="warning">New</Badge>}
                 {isVpUser && isStepUpRole(hit.title) && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-600">Step-Up Opportunity</span>
+                  <Badge className="bg-orange-500/10 text-orange-600">Step-Up Opportunity</Badge>
                 )}
               </div>
               {hit.summary && <p className="text-[12px] text-slate-400">{hit.summary}</p>}
@@ -115,17 +117,20 @@ export function JobScanPanel(props: Props) {
       {scanHistory.length > 0 && (
         <div className="px-6 py-4 border-t border-slate-50 flex items-center gap-2 flex-wrap">
           <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mr-1">History</span>
-          {scanHistory.map((s) => {
-            const dateStr = new Date(s.scanned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-            const scoreStr = s.status === 'error' ? 'Error' : s.ai_score >= 60 ? `Score: ${s.ai_score}` : 'No match'
-            return (
-              <span
-                key={s.id}
-                title={`${dateStr} - ${scoreStr}`}
-                className={`w-2.5 h-2.5 rounded-full inline-block cursor-help ${s.ai_score >= 60 ? 'bg-emerald-400' : s.status === 'error' ? 'bg-red-300' : 'bg-white/10'}`}
-              />
-            )
-          })}
+          <TooltipProvider>
+            {scanHistory.map((s) => {
+              const dateStr = new Date(s.scanned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+              const scoreStr = s.status === 'error' ? 'Error' : s.ai_score >= 60 ? `Score: ${s.ai_score}` : 'No match'
+              return (
+                <Tooltip key={s.id}>
+                  <TooltipTrigger
+                    className={`w-2.5 h-2.5 rounded-full inline-block cursor-help ${s.ai_score >= 60 ? 'bg-emerald-400' : s.status === 'error' ? 'bg-red-300' : 'bg-white/10'}`}
+                  />
+                  <TooltipContent>{`${dateStr} - ${scoreStr}`}</TooltipContent>
+                </Tooltip>
+              )
+            })}
+          </TooltipProvider>
           <span className="text-[10px] text-slate-300 ml-1">hover for date and score</span>
         </div>
       )}

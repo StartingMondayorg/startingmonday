@@ -1,6 +1,15 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { Card } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 export const metadata = { title: 'Results - Dashboard' }
 
@@ -183,25 +192,25 @@ export default async function DashboardResultsPage() {
         </div>
 
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white/5 border border-white/10 rounded p-4">
+          <Card variant="glass" className="p-4">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Pipeline active</p>
             <p className="text-[24px] font-bold text-white mt-1">{activePipelinePct}%</p>
-          </div>
-          <div className="bg-white/5 border border-white/10 rounded p-4">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Contacts per company</p>
             <p className="text-[24px] font-bold text-white mt-1">{contactsPerCompany}</p>
-          </div>
-          <div className="bg-white/5 border border-white/10 rounded p-4">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Signal → draft (14d)</p>
             <p className="text-[24px] font-bold text-white mt-1">{signalToDraftPct}%</p>
-          </div>
-          <div className="bg-white/5 border border-white/10 rounded p-4">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Due now</p>
             <p className="text-[24px] font-bold text-white mt-1">{dueNow}</p>
-          </div>
+          </Card>
         </section>
 
-        <section className="bg-white/5 border border-white/10 rounded overflow-hidden mb-6">
+        <Card variant="glass" className="overflow-hidden mb-6">
           <div className="px-5 py-3 border-b border-white/10">
             <h2 className="text-[13px] font-semibold text-slate-200">42-day production totals</h2>
           </div>
@@ -223,36 +232,36 @@ export default async function DashboardResultsPage() {
               <p className="text-[20px] font-bold text-white mt-1">{outreachBriefs42d}</p>
             </div>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white/5 border border-white/10 rounded overflow-hidden">
+        <Card variant="glass" className="overflow-hidden">
           <div className="px-5 py-3 border-b border-white/10">
             <h2 className="text-[13px] font-semibold text-slate-200">Weekly trend (last 6 weeks)</h2>
           </div>
-          <table className="w-full text-[13px]">
-            <thead className="bg-white/5 border-b border-white/10 text-slate-300">
-              <tr>
-                <th className="px-5 py-2 text-left">Week</th>
-                <th className="px-4 py-2 text-right">Signals</th>
-                <th className="px-4 py-2 text-right">Contact adds</th>
-                <th className="px-5 py-2 text-right">Outreach drafts</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="text-[13px]">
+            <TableHeader className="bg-white/5 border-b border-white/10 text-slate-300">
+              <TableRow className="border-white/10 hover:bg-transparent">
+                <TableHead className="px-5 py-2 text-left text-slate-300">Week</TableHead>
+                <TableHead className="px-4 py-2 text-right text-slate-300">Signals</TableHead>
+                <TableHead className="px-4 py-2 text-right text-slate-300">Contact adds</TableHead>
+                <TableHead className="px-5 py-2 text-right text-slate-300">Outreach drafts</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {weeklyRows.map((row) => (
-                <tr key={row.label} className="border-t border-white/10">
-                  <td className="px-5 py-2 text-slate-200">{row.label}</td>
-                  <td className="px-4 py-2 text-right text-slate-300">{row.signalsWeek}</td>
-                  <td className="px-4 py-2 text-right text-slate-300">{row.contactsWeek}</td>
-                  <td className="px-5 py-2 text-right text-slate-300">{row.briefsWeek}</td>
-                </tr>
+                <TableRow key={row.label} className="border-white/10 hover:bg-white/5">
+                  <TableCell className="px-5 py-2 text-slate-200 whitespace-normal">{row.label}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-300">{row.signalsWeek}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-300">{row.contactsWeek}</TableCell>
+                  <TableCell className="px-5 py-2 text-right text-slate-300">{row.briefsWeek}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           <div className="px-5 py-3 border-t border-white/10 text-[12px] text-slate-400">
             Signals observed: {signals42d} in last 42 days.
           </div>
-        </section>
+        </Card>
       </main>
     </div>
   )

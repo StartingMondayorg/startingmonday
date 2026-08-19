@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false)
@@ -46,8 +47,8 @@ export function BackToTop() {
 
   const className = useMemo(
     () => [
-      'fixed right-4 sm:right-6 z-40 rounded-full border border-white/15 bg-slate-950/80 backdrop-blur px-3 py-2',
-      'text-[12px] text-slate-200 hover:border-white/35 transition-all',
+      'fixed right-4 sm:right-6 z-40 rounded-full border-white/15 bg-slate-950/80 backdrop-blur',
+      'text-[12px] text-slate-200 hover:bg-slate-950/80 hover:border-white/35 transition-all',
       'bottom-32 sm:bottom-16 md:bottom-8',
       visible && !hideNearFooter ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none',
     ].join(' '),
@@ -55,8 +56,10 @@ export function BackToTop() {
   )
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      size="sm"
       aria-label="Back to top"
       className={className}
       onClick={() => {
@@ -64,6 +67,6 @@ export function BackToTop() {
       }}
     >
       ↑ Top
-    </button>
+    </Button>
   )
 }

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 
 const FAQS = [
   {
@@ -73,29 +73,18 @@ const FAQS = [
 ]
 
 export function FaqAccordion() {
-  const [open, setOpen] = useState<number | null>(null)
-
   return (
-    <div className="divide-y divide-slate-100">
+    <Accordion className="divide-y divide-slate-100">
       {FAQS.map((faq, i) => (
-        <div key={i}>
-          <button
-            type="button"
-            onClick={() => setOpen(open === i ? null : i)}
-            className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-slate-50 transition-colors"
-          >
-            <span className="text-[14px] font-semibold text-slate-900 pr-4">{faq.q}</span>
-            <span className="text-slate-400 text-[18px] shrink-0 leading-none">
-              {open === i ? '−' : '+'}
-            </span>
-          </button>
-          {open === i && (
-            <div className="px-6 pb-5">
-              <p className="text-[14px] text-slate-600 leading-relaxed">{faq.a}</p>
-            </div>
-          )}
-        </div>
+        <AccordionItem key={i} value={String(i)} className="border-b-0">
+          <AccordionTrigger className="px-6 py-4 text-[14px] font-semibold text-slate-900 hover:bg-slate-50 hover:no-underline">
+            {faq.q}
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-5 text-[14px] text-slate-600 leading-relaxed">
+            {faq.a}
+          </AccordionContent>
+        </AccordionItem>
       ))}
-    </div>
+    </Accordion>
   )
 }

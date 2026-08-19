@@ -1,6 +1,16 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import {
+  CommandDialog,
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from '@/components/ui/command'
+import { Badge } from '@/components/ui/badge'
 
 type Company = { id: string; name: string; stage: string | null; sector: string | null }
 type Contact = { id: string; full_name: string; title: string | null; company_name: string | null }
@@ -43,17 +53,14 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Result[]>([])
-  const [activeIdx, setActiveIdx] = useState(0)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const inputRef = useRef<HTMLInputElement>(null)
   const fetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const close = useCallback(() => {
     setOpen(false)
     setQuery('')
     setResults([])
-    setActiveIdx(0)
   }, [])
 
   useEffect(() => {
@@ -62,21 +69,15 @@ export function CommandPalette() {
         e.preventDefault()
         setOpen(o => !o)
       }
-      if (e.key === 'Escape') close()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [close])
-
-  useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 20)
-  }, [open])
+  }, [])
 
   useEffect(() => {
     if (fetchTimer.current) clearTimeout(fetchTimer.current)
     if (!query.trim() || query.length < 2) {
       setResults(QUICK_ACTIONS)
-      setActiveIdx(0)
       return
     }
     setLoading(true)
@@ -92,7 +93,6 @@ export function CommandPalette() {
           a.kind === 'action' && a.label.toLowerCase().includes(query.toLowerCase())
         )
         setResults([...next, ...filtered])
-        setActiveIdx(0)
       } finally {
         setLoading(false)
       }
@@ -108,169 +108,95 @@ export function CommandPalette() {
     close()
   }
 
-  function onKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setActiveIdx(i => Math.min(i + 1, results.length - 1))
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setActiveIdx(i => Math.max(i - 1, 0))
-    } else if (e.key === 'Enter' && results[activeIdx]) {
-      navigate(results[activeIdx])
-    }
-  }
-
-  if (!open) return null
-
   const displayList = results.length > 0 ? results : (query.length >= 2 && !loading ? [] : QUICK_ACTIONS)
+  const companies = displayList.filter(r => r.kind === 'company')
+  const contacts = displayList.filter(r => r.kind === 'contact')
+  const actions = displayList.filter(r => r.kind === 'action')
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4"
+    <CommandDialog
+      open={open}
+      onOpenChange={(next) => (next ? setOpen(true) : close())}
+      title="Command palette"
+      description="Search companies, contacts, or actions"
+      className="top-[15vh] max-w-xl"
+      showCloseButton
     >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-        onMouseDown={close}
-        aria-hidden="true"
-      />
-
-      {/* Panel */}
-      <div className="relative w-full max-w-xl bg-white rounded-xl shadow-2xl overflow-hidden border border-slate-200">
-        {/* Search input */}
-        <div className="flex items-center gap-3 px-4 border-b border-slate-100">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0 text-slate-400">
-            <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={onKeyDown}
-            placeholder="Search companies, contacts, or actions..."
-            className="flex-1 py-4 text-[15px] text-slate-900 placeholder:text-slate-400 bg-transparent outline-none"
-          />
-          {loading && (
-            <div className="w-4 h-4 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin shrink-0" />
+      <Command shouldFilter={false}>
+        <CommandInput
+          value={query}
+          onValueChange={setQuery}
+          placeholder="Search companies, contacts, or actions..."
+        />
+        <CommandList>
+          <CommandEmpty>No results for &ldquo;{query}&rdquo;</CommandEmpty>
+          {companies.length > 0 && (
+            <CommandGroup heading="Companies">
+              {companies.map((r) => {
+                const item = (r as Extract<Result, { kind: 'company' }>).item
+                return (
+                  <CommandItem key={resultKey(r)} value={resultKey(r)} onSelect={() => navigate(r)}>
+                    <span className="w-7 h-7 rounded bg-slate-100 flex items-center justify-center text-[11px] font-bold text-slate-500 shrink-0">
+                      {item.name[0].toUpperCase()}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-medium text-slate-900 truncate">{item.name}</div>
+                      {item.sector && <div className="text-[12px] text-slate-400 truncate">{item.sector}</div>}
+                    </div>
+                    <span className="text-[11px] text-slate-400 shrink-0">Company</span>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
           )}
-          <button
-            type="button"
-            onClick={close}
-            className="text-[11px] font-semibold text-slate-400 hover:text-slate-700 transition-colors px-2 py-1 rounded border border-transparent hover:border-slate-200"
-            aria-label="Close command palette"
-          >
-            Close
-          </button>
-          <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-slate-100 rounded border border-slate-200 shrink-0">
-            ESC
-          </kbd>
-        </div>
-
-        {/* Results */}
-        <div className="max-h-80 overflow-y-auto py-1">
-          {displayList.length === 0 && (
-            <div className="px-4 py-8 text-center text-[13px] text-slate-400">
-              No results for &ldquo;{query}&rdquo;
-            </div>
+          {contacts.length > 0 && (
+            <CommandGroup heading="Contacts">
+              {contacts.map((r) => {
+                const item = (r as Extract<Result, { kind: 'contact' }>).item
+                return (
+                  <CommandItem key={resultKey(r)} value={resultKey(r)} onSelect={() => navigate(r)}>
+                    <span className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center text-[11px] font-bold text-blue-500 shrink-0">
+                      {item.full_name[0].toUpperCase()}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-medium text-slate-900 truncate">{item.full_name}</div>
+                      {item.title && <div className="text-[12px] text-slate-400 truncate">{item.title}{item.company_name ? ` · ${item.company_name}` : ''}</div>}
+                    </div>
+                    <span className="text-[11px] text-slate-400 shrink-0">Contact</span>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
           )}
+          {actions.length > 0 && (
+            <CommandGroup heading="Actions">
+              {actions.map((r) => {
+                const action = r as Extract<Result, { kind: 'action' }>
+                return (
+                  <CommandItem key={resultKey(r)} value={resultKey(r)} onSelect={() => navigate(r)}>
+                    <span className="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-[13px] text-white shrink-0">
+                      {action.icon}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-medium text-slate-900">{action.label}</div>
+                      <div className="text-[12px] text-slate-400">{action.sub}</div>
+                    </div>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          )}
+        </CommandList>
 
-          {displayList.length > 0 && (() => {
-            const companies = displayList.filter(r => r.kind === 'company')
-            const contacts  = displayList.filter(r => r.kind === 'contact')
-            const actions   = displayList.filter(r => r.kind === 'action')
-            let globalIdx   = 0
-
-            function Row({ r }: { r: Result }) {
-              const idx = globalIdx++
-              const active = idx === activeIdx
-              return (
-                <button
-                  key={resultKey(r)}
-                  type="button"
-                  onMouseEnter={() => setActiveIdx(idx)}
-                  onClick={() => navigate(r)}
-                  className={[
-                    'w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors cursor-pointer border-0 bg-transparent',
-                    active ? 'bg-slate-50' : '',
-                  ].join(' ')}
-                >
-                  {r.kind === 'company' && (
-                    <>
-                      <span className="w-7 h-7 rounded bg-slate-100 flex items-center justify-center text-[11px] font-bold text-slate-500 shrink-0">
-                        {r.item.name[0].toUpperCase()}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[14px] font-medium text-slate-900 truncate">{r.item.name}</div>
-                        {r.item.sector && <div className="text-[12px] text-slate-400 truncate">{r.item.sector}</div>}
-                      </div>
-                      <span className="text-[11px] text-slate-400 shrink-0">Company</span>
-                    </>
-                  )}
-                  {r.kind === 'contact' && (
-                    <>
-                      <span className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center text-[11px] font-bold text-blue-500 shrink-0">
-                        {r.item.full_name[0].toUpperCase()}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[14px] font-medium text-slate-900 truncate">{r.item.full_name}</div>
-                        {r.item.title && <div className="text-[12px] text-slate-400 truncate">{r.item.title}{r.item.company_name ? ` · ${r.item.company_name}` : ''}</div>}
-                      </div>
-                      <span className="text-[11px] text-slate-400 shrink-0">Contact</span>
-                    </>
-                  )}
-                  {r.kind === 'action' && (
-                    <>
-                      <span className="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-[13px] text-white shrink-0">
-                        {r.icon}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[14px] font-medium text-slate-900">{r.label}</div>
-                        <div className="text-[12px] text-slate-400">{r.sub}</div>
-                      </div>
-                    </>
-                  )}
-                </button>
-              )
-            }
-
-            return (
-              <>
-                {companies.length > 0 && (
-                  <>
-                    <div className="px-4 pt-3 pb-1 text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Companies</div>
-                    {companies.map(r => <Row key={resultKey(r)} r={r} />)}
-                  </>
-                )}
-                {contacts.length > 0 && (
-                  <>
-                    <div className="px-4 pt-3 pb-1 text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Contacts</div>
-                    {contacts.map(r => <Row key={resultKey(r)} r={r} />)}
-                  </>
-                )}
-                {actions.length > 0 && (
-                  <>
-                    {(companies.length > 0 || contacts.length > 0) && (
-                      <div className="px-4 pt-3 pb-1 text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Actions</div>
-                    )}
-                    {actions.map(r => <Row key={resultKey(r)} r={r} />)}
-                  </>
-                )}
-              </>
-            )
-          })()}
-        </div>
-
-        {/* Footer hint */}
         <div className="px-4 py-2.5 border-t border-slate-100 flex items-center gap-4 text-[11px] text-slate-400">
-          <span><kbd className="font-semibold">↑↓</kbd> navigate</span>
-          <span><kbd className="font-semibold">↵</kbd> open</span>
-          <span><kbd className="font-semibold">Esc</kbd> close</span>
-          <span className="ml-auto hidden sm:inline">
-            <kbd className="font-semibold">⌘K</kbd> to reopen
+          <span className="flex items-center gap-1"><Badge variant="outline" className="font-semibold">↑↓</Badge> navigate</span>
+          <span className="flex items-center gap-1"><Badge variant="outline" className="font-semibold">↵</Badge> open</span>
+          <span className="flex items-center gap-1"><Badge variant="outline" className="font-semibold">Esc</Badge> close</span>
+          <span className="ml-auto hidden sm:flex items-center gap-1">
+            <Badge variant="outline" className="font-semibold">⌘K</Badge> to reopen
           </span>
         </div>
-      </div>
-    </div>
+      </Command>
+    </CommandDialog>
   )
 }

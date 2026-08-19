@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
@@ -7,6 +7,14 @@ import { STAGES, TYPE_LABELS } from '../page'
 import { addContact, logActivity, updateProspect, deleteMaterial } from './actions'
 import { archiveProspect } from '../actions'
 import MaterialClient from './material-client'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
 
 export const metadata = { title: 'Prospect - B2B Sales' }
 
@@ -67,14 +75,14 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
 {/* Prospect header */}
-        <div className="bg-white border border-slate-200 rounded p-6">
+        <Card className="p-6">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400">{typLabel}</span>
-                <span className={`text-[13px] font-bold tracking-[0.06em] uppercase rounded-full px-2.5 py-0.5 ${stage?.cls ?? 'bg-slate-100 text-slate-500'}`}>
+                <Badge variant="outline" className={stage?.cls ?? 'bg-slate-100 text-slate-500'}>
                   {stage?.label ?? prospect.stage}
-                </span>
+                </Badge>
               </div>
               <h1 className="text-[26px] font-bold text-slate-900">{prospect.name}</h1>
               {prospect.website && (
@@ -101,45 +109,47 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
           )}
 
           {/* Edit form */}
-          <details className="mt-2">
-            <summary className="text-[13px] font-semibold text-slate-400 cursor-pointer hover:text-slate-700 select-none">
+          <Collapsible className="mt-2">
+            <CollapsibleTrigger className="text-[13px] font-semibold text-slate-400 cursor-pointer hover:text-slate-700 select-none">
               Edit prospect
-            </summary>
-            <form action={updateProspect} className="mt-4 flex flex-col gap-4">
-              <input type="hidden" name="id" value={prospect.id} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Name</label>
-                  <input name="name" defaultValue={prospect.name} className="w-full border border-slate-200 rounded px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <form action={updateProspect} className="mt-4 flex flex-col gap-4">
+                <input type="hidden" name="id" value={prospect.id} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Name</Label>
+                    <Input name="name" defaultValue={prospect.name} />
+                  </div>
+                  <div>
+                    <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Website</Label>
+                    <Input name="website" type="url" defaultValue={prospect.website ?? ''} />
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Website</label>
-                  <input name="website" type="url" defaultValue={prospect.website ?? ''} className="w-full border border-slate-200 rounded px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400" />
+                  <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Notes</Label>
+                  <Textarea name="notes" rows={2} defaultValue={prospect.notes ?? ''} className="resize-none" />
                 </div>
-              </div>
-              <div>
-                <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Notes</label>
-                <textarea name="notes" rows={2} defaultValue={prospect.notes ?? ''} className="w-full border border-slate-200 rounded px-3 py-2 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 resize-none" />
-              </div>
-              <div className="flex items-center gap-3">
-                <button type="submit" className="bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded cursor-pointer border-0 hover:bg-slate-700 transition-colors">
-                  Save changes
-                </button>
-                <form action={archiveProspect}>
-                  <input type="hidden" name="id" value={prospect.id} />
-                  <button type="submit" className="text-[13px] text-red-400 hover:text-red-700 cursor-pointer bg-transparent border-0">
-                    Archive prospect
-                  </button>
-                </form>
-              </div>
-            </form>
-          </details>
-        </div>
+                <div className="flex items-center gap-3">
+                  <Button type="submit">
+                    Save changes
+                  </Button>
+                  <form action={archiveProspect}>
+                    <input type="hidden" name="id" value={prospect.id} />
+                    <Button type="submit" variant="destructive" size="sm">
+                      Archive prospect
+                    </Button>
+                  </form>
+                </div>
+              </form>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
 
         {/* Contacts */}
         <section>
           <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Contacts</h2>
-          <div className="bg-white border border-slate-200 rounded">
+          <Card className="p-0">
             {(contacts ?? []).length > 0 && (
               <div className="divide-y divide-slate-50">
                 {(contacts ?? []).map(c => (
@@ -158,47 +168,49 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
               </div>
             )}
             <div className="px-5 py-4 border-t border-slate-50">
-              <details>
-                <summary className="text-[13px] font-semibold text-slate-400 cursor-pointer hover:text-slate-700 select-none">
+              <Collapsible>
+                <CollapsibleTrigger className="text-[13px] font-semibold text-slate-400 cursor-pointer hover:text-slate-700 select-none">
                   + Add contact
-                </summary>
-                <form action={addContact} className="mt-4 flex flex-col gap-3">
-                  <input type="hidden" name="prospect_id" value={prospect.id} />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Name *</label>
-                      <input name="name" required placeholder="Jane Smith" className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <form action={addContact} className="mt-4 flex flex-col gap-3">
+                    <input type="hidden" name="prospect_id" value={prospect.id} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Name *</Label>
+                        <Input name="name" required placeholder="Jane Smith" />
+                      </div>
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Title</Label>
+                        <Input name="title" placeholder="VP of HR" />
+                      </div>
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Email</Label>
+                        <Input name="email" type="email" placeholder="jane@example.com" />
+                      </div>
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">LinkedIn URL</Label>
+                        <Input name="linkedin_url" type="url" placeholder="https://linkedin.com/in/..." />
+                      </div>
                     </div>
                     <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Title</label>
-                      <input name="title" placeholder="VP of HR" className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
+                      <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Notes</Label>
+                      <Input name="notes" placeholder="Decision-maker, warm intro via..." />
                     </div>
-                    <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Email</label>
-                      <input name="email" type="email" placeholder="jane@example.com" className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
-                    </div>
-                    <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">LinkedIn URL</label>
-                      <input name="linkedin_url" type="url" placeholder="https://linkedin.com/in/..." className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Notes</label>
-                    <input name="notes" placeholder="Decision-maker, warm intro via..." className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
-                  </div>
-                  <button type="submit" className="self-start bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded cursor-pointer border-0 hover:bg-slate-700 transition-colors">
-                    Add contact
-                  </button>
-                </form>
-              </details>
+                    <Button type="submit" className="self-start">
+                      Add contact
+                    </Button>
+                  </form>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
-          </div>
+          </Card>
         </section>
 
         {/* Activity log */}
         <section>
           <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Activity log</h2>
-          <div className="bg-white border border-slate-200 rounded">
+          <Card className="p-0">
             {(activities ?? []).length === 0 ? (
               <div className="px-5 py-6 text-[13px] text-slate-400">No activity logged yet.</div>
             ) : (
@@ -207,9 +219,9 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
                   <div key={a.id} className="px-5 py-3.5">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-[13px] font-bold tracking-[0.06em] uppercase text-slate-400 bg-slate-50 rounded px-2 py-0.5">
+                        <Badge variant="secondary">
                           {ACTIVITY_TYPES.find(t => t.value === a.activity_type)?.label ?? a.activity_type}
-                        </span>
+                        </Badge>
                         <span className="text-[13px] text-slate-400">{a.occurred_at}</span>
                       </div>
                       {a.logged_by && <span className="text-[13px] text-slate-300">{a.logged_by}</span>}
@@ -228,43 +240,50 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
             )}
 
             <div className="px-5 py-4 border-t border-slate-100">
-              <details>
-                <summary className="text-[13px] font-semibold text-slate-400 cursor-pointer hover:text-slate-700 select-none">
+              <Collapsible>
+                <CollapsibleTrigger className="text-[13px] font-semibold text-slate-400 cursor-pointer hover:text-slate-700 select-none">
                   + Log activity
-                </summary>
-                <form action={logActivity} className="mt-4 flex flex-col gap-3">
-                  <input type="hidden" name="prospect_id" value={prospect.id} />
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Type</label>
-                      <select name="activity_type" defaultValue="call" className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] bg-white focus:outline-none focus:border-slate-400">
-                        {ACTIVITY_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                      </select>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <form action={logActivity} className="mt-4 flex flex-col gap-3">
+                    <input type="hidden" name="prospect_id" value={prospect.id} />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Type</Label>
+                        <Select name="activity_type" defaultValue="call">
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ACTIVITY_TYPES.map(t => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Date</Label>
+                        <Input name="occurred_at" type="date" defaultValue={new Date().toISOString().split('T')[0]} />
+                      </div>
+                      <div>
+                        <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Next action due</Label>
+                        <Input name="next_action_due" type="date" />
+                      </div>
                     </div>
                     <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Date</label>
-                      <input name="occurred_at" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
+                      <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Summary *</Label>
+                      <Textarea name="summary" required rows={2} placeholder="What happened, what was discussed..." className="resize-none" />
                     </div>
                     <div>
-                      <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Next action due</label>
-                      <input name="next_action_due" type="date" className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
+                      <Label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Next action</Label>
+                      <Input name="next_action" placeholder="Send proposal, schedule follow-up demo..." />
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Summary *</label>
-                    <textarea name="summary" required rows={2} placeholder="What happened, what was discussed..." className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none" />
-                  </div>
-                  <div>
-                    <label className="block text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Next action</label>
-                    <input name="next_action" placeholder="Send proposal, schedule follow-up demo..." className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400" />
-                  </div>
-                  <button type="submit" className="self-start bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded cursor-pointer border-0 hover:bg-slate-700 transition-colors">
-                    Log activity
-                  </button>
-                </form>
-              </details>
+                    <Button type="submit" className="self-start">
+                      Log activity
+                    </Button>
+                  </form>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
-          </div>
+          </Card>
         </section>
 
         {/* Leave-behind materials */}
@@ -283,7 +302,7 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
           {(materials ?? []).length > 0 && (
             <div className="mt-4 flex flex-col gap-3">
               {(materials ?? []).map(m => (
-                <div key={m.id} className="bg-white border border-slate-200 rounded">
+                <Card key={m.id} className="p-0">
                   <div className="px-5 py-3 flex items-center justify-between border-b border-slate-100">
                     <div>
                       <span className="text-[14px] font-semibold text-slate-900">{m.title}</span>
@@ -292,15 +311,15 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
                     <form action={deleteMaterial}>
                       <input type="hidden" name="id" value={m.id} />
                       <input type="hidden" name="prospect_id" value={prospect.id} />
-                      <button type="submit" className="text-[13px] text-slate-300 hover:text-red-400 cursor-pointer bg-transparent border-0">
+                      <Button type="submit" variant="ghost" size="sm" className="text-slate-300 hover:text-red-400">
                         Delete
-                      </button>
+                      </Button>
                     </form>
                   </div>
                   <div className="px-5 py-4 text-[13px] text-slate-700 whitespace-pre-wrap font-mono max-h-[300px] overflow-y-auto">
                     {m.content}
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}
@@ -310,4 +329,3 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
     </div>
   )
 }
-

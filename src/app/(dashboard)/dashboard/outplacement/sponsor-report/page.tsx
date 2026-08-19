@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { PrintButton } from './print-button'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 
 export const metadata: Metadata = {
   title: 'Sponsor Monthly Report | Starting Monday',
@@ -40,7 +43,7 @@ export default async function SponsorReportPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6 print:py-4 print:max-w-none">
         {/* Report header */}
-        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-6 print:border-0 print:px-0">
+        <Card className="px-6 py-6 print:border-0 print:px-0">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1 print:text-slate-600">
             Starting Monday - Partner Program Report
           </p>
@@ -49,14 +52,14 @@ export default async function SponsorReportPage() {
             Prepared for: <span className="font-semibold text-slate-800">[Sponsor Name]</span> ·
             Program: <span className="font-semibold text-slate-800">[Cohort Name]</span>
           </p>
-          <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/40 px-4 py-2">
-            <p className="text-[11px] text-amber-700">
+          <Alert variant="warning" className="mt-3">
+            <AlertDescription className="text-[11px]">
               <strong>Claims policy:</strong> This report presents observed cohort activity only.
               Outcomes are directional pilot observations, not guaranteed results.
               Methodology and measurement windows are disclosed inline.
-            </p>
-          </div>
-        </div>
+            </AlertDescription>
+          </Alert>
+        </Card>
 
         {/* Program summary KPIs */}
         <div>
@@ -68,17 +71,17 @@ export default async function SponsorReportPage() {
               { label: 'First-interview rate', value: '67%', note: 'Participants with ≥1 first interview' },
               { label: 'Stall index', value: '3 of 18', note: 'No meaningful action > 7 days' },
             ].map((item) => (
-              <div key={item.label} className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+              <Card key={item.label} className="p-4 text-center">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">{item.label}</p>
                 <p className="text-[26px] font-bold text-slate-900 leading-none">{item.value}</p>
                 <p className="text-[11px] text-slate-400 mt-1">{item.note}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
 
         {/* Activity velocity */}
-        <div className="rounded-xl border border-slate-200 bg-white px-5 py-5">
+        <Card className="px-5 py-5">
           <h2 className="text-[13px] font-bold text-slate-800 mb-3">Activity velocity - this month</h2>
           <div className="space-y-2">
             {[
@@ -96,10 +99,10 @@ export default async function SponsorReportPage() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Counselor observations */}
-        <div className="rounded-xl border border-slate-200 bg-white px-5 py-5">
+        <Card className="px-5 py-5">
           <h2 className="text-[13px] font-bold text-slate-800 mb-2">Counselor observations</h2>
           <p className="text-[12px] text-slate-500 mb-3">Qualitative themes from session notes this month. Individual participant data not disclosed.</p>
           <ul className="space-y-2">
@@ -114,36 +117,36 @@ export default async function SponsorReportPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* Risks and interventions */}
-        <div className="rounded-xl border border-red-100 bg-red-50/30 px-5 py-5">
-          <h2 className="text-[13px] font-bold text-red-800 mb-2">Risks and active interventions</h2>
+        <Alert variant="destructive" className="px-5 py-5">
+          <h2 className="text-[13px] font-bold mb-2">Risks and active interventions</h2>
           <ul className="space-y-2">
             {[
               { risk: 'Signal action stall (2 participants)', action: 'Counselor lead conducting check-in sessions this week' },
               { risk: 'Pipeline stuck in watching stage (1 participant)', action: 'Reviewing target quality and mandate fit with counselor' },
             ].map((item) => (
               <li key={item.risk} className="border-l-4 border-red-300 pl-3">
-                <p className="text-[12px] font-semibold text-red-700">{item.risk}</p>
+                <p className="text-[12px] font-semibold">{item.risk}</p>
                 <p className="text-[12px] text-slate-600">{item.action}</p>
               </li>
             ))}
           </ul>
-        </div>
+        </Alert>
 
         {/* Day-30 decision gate */}
-        <div className="rounded-xl border border-slate-200 bg-white px-5 py-5">
+        <Card className="px-5 py-5">
           <h2 className="text-[13px] font-bold text-slate-800 mb-2">Day-30 decision gate status</h2>
           <p className="text-[12px] text-slate-500 mb-3">Pilot commitment for expansion, hold, or close decision at end of current cycle.</p>
           <div className="flex items-center gap-4">
-            <span className="rounded-full bg-emerald-100 text-emerald-700 text-[12px] font-bold px-4 py-2">On track for day-30 review</span>
+            <Badge variant="success" className="text-[12px] px-4 py-2 h-auto">On track for day-30 review</Badge>
             <p className="text-[12px] text-slate-500">Scheduled: [Date to be confirmed with program lead]</p>
           </div>
-        </div>
+        </Card>
 
         {/* Next steps */}
-        <div className="rounded-xl border border-slate-200 bg-white px-5 py-5">
+        <Card className="px-5 py-5">
           <h2 className="text-[13px] font-bold text-slate-800 mb-2">Requested from sponsor</h2>
           <ul className="space-y-2">
             {[
@@ -157,7 +160,7 @@ export default async function SponsorReportPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* Footer */}
         <div className="text-[11px] text-slate-400 border-t border-slate-200 pt-4">

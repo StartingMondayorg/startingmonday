@@ -12,14 +12,19 @@ export async function updateContact(contactId: string, formData: FormData): Prom
   const name = str(formData, 'name')
   if (!name) return
 
+  // The edit form's shadcn Select can't submit an empty string for "unset", so it
+  // submits this sentinel instead - normalize it back to null here.
+  const NONE = '__none__'
+  const orNull = (v: string | null) => (!v || v === NONE ? null : v)
+
   const title              = str(formData, 'title') || null
   const firm               = str(formData, 'firm') || null
-  const channel            = str(formData, 'channel') || null
+  const channel            = orNull(str(formData, 'channel'))
   const email              = str(formData, 'email') || null
   const linkedin_url       = str(formData, 'linkedin_url') || null
   const notes              = str(formData, 'notes') || null
-  const rawCompanyId       = str(formData, 'company_id') || null
-  const contact_type       = str(formData, 'contact_type') || null
+  const rawCompanyId       = orNull(str(formData, 'company_id'))
+  const contact_type       = orNull(str(formData, 'contact_type'))
   const last_role_discussed = str(formData, 'last_role_discussed') || null
 
   let companyId: string | null = null

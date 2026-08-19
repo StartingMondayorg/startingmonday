@@ -1,5 +1,8 @@
 'use client'
 
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+
 /**
  * CoachPreSessionSnapshot
  *
@@ -44,10 +47,16 @@ const LANE_LABELS: Record<StalledLane['lane'], string> = {
   preparation: 'Interview preparation',
 }
 
-const STATE_COLORS: Record<StalledLane['state'], { dot: string; badge: string; text: string }> = {
-  healthy: { dot: 'bg-emerald-400', badge: 'bg-emerald-50 border-emerald-200 text-emerald-700', text: 'text-emerald-700' },
-  watch:   { dot: 'bg-amber-400',   badge: 'bg-amber-50 border-amber-200 text-amber-700',       text: 'text-amber-700' },
-  stalled: { dot: 'bg-red-400',     badge: 'bg-red-50 border-red-200 text-red-700',             text: 'text-red-700' },
+const STATE_COLORS: Record<StalledLane['state'], { dot: string; text: string }> = {
+  healthy: { dot: 'bg-emerald-400', text: 'text-emerald-700' },
+  watch:   { dot: 'bg-amber-400',   text: 'text-amber-700' },
+  stalled: { dot: 'bg-red-400',     text: 'text-red-700' },
+}
+
+const STATE_ALERT_VARIANTS: Record<StalledLane['state'], 'success' | 'warning' | 'destructive'> = {
+  healthy: 'success',
+  watch: 'warning',
+  stalled: 'destructive',
 }
 
 function formatDaysAgo(isoDate: string | null): string {
@@ -75,7 +84,7 @@ export function CoachPreSessionSnapshot({
   return (
     <div className="space-y-4">
       {/* Header strip */}
-      <div className="rounded-xl border border-orange-200 bg-orange-50/40 px-5 py-4">
+      <Card className="border-orange-200 bg-orange-50/40 px-5 py-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">
@@ -89,7 +98,7 @@ export function CoachPreSessionSnapshot({
             Baseline: {formatDaysAgo(snapshot.baseline_started_at)}
           </span>
         </div>
-      </div>
+      </Card>
 
       {/* Change summary - 4 numbers */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -99,87 +108,86 @@ export function CoachPreSessionSnapshot({
           { label: 'Briefs reviewed', value: snapshot.brief_reviews_since_last_session, warn: false },
           { label: 'Interviews', value: snapshot.interviews_since_last_session, warn: false },
         ].map(({ label, value, warn }) => (
-          <div
+          <Card
             key={label}
-            className={`rounded-lg border p-4 text-center ${
-              warn ? 'border-amber-200 bg-amber-50/30' : 'border-slate-200 bg-white'
-            }`}
+            className={`p-4 text-center ${warn ? 'border-amber-200 bg-amber-50/30' : ''}`}
           >
             <p className={`text-[24px] font-bold ${warn ? 'text-amber-600' : 'text-slate-900'}`}>
               {value}
             </p>
             <p className="text-[11px] text-slate-500 mt-0.5">{label}</p>
-          </div>
+          </Card>
         ))}
       </div>
 
       {/* Lane health */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <Card className="p-5">
         <h3 className="text-[12px] font-semibold text-slate-700 mb-3">Activity lane health</h3>
         <div className="space-y-2">
           {snapshot.stalled_lanes.map((lane) => {
             const colors = STATE_COLORS[lane.state]
             return (
-              <div
+              <Alert
                 key={lane.lane}
-                className={`flex items-start gap-3 rounded-lg border px-4 py-3 ${colors.badge}`}
+                variant={STATE_ALERT_VARIANTS[lane.state]}
+                className="flex items-start gap-3 px-4 py-3"
               >
                 <span className={`mt-1.5 h-2.5 w-2.5 flex-shrink-0 rounded-full ${colors.dot}`} />
                 <div className="min-w-0 flex-1">
-                  <p className={`text-[13px] font-semibold ${colors.text}`}>
+                  <AlertTitle className={`text-[13px] font-semibold ${colors.text}`}>
                     {LANE_LABELS[lane.lane]}
-                  </p>
-                  <p className="text-[12px] mt-0.5 text-slate-600 leading-relaxed">
+                  </AlertTitle>
+                  <AlertDescription className="text-[12px] mt-0.5 text-slate-600 leading-relaxed">
                     {lane.reason}
-                  </p>
+                  </AlertDescription>
                 </div>
-              </div>
+              </Alert>
             )
           })}
         </div>
-      </div>
+      </Card>
 
       {/* Overdue actions */}
       {snapshot.overdue_actions > 0 && (
-        <div className="rounded-xl border border-red-200 bg-red-50/30 px-5 py-4">
-          <p className="text-[12px] font-semibold text-red-700 mb-1">
+        <Alert variant="destructive" className="px-5 py-4">
+          <AlertTitle className="text-[12px] font-semibold mb-1">
             {snapshot.overdue_actions} overdue action{snapshot.overdue_actions !== 1 ? 's' : ''}
-          </p>
-          <p className="text-[12px] text-slate-600">
+          </AlertTitle>
+          <AlertDescription className="text-[12px] text-slate-600">
             Review with client at the start of session and confirm or reset commitment.
-          </p>
-        </div>
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Confidence, momentum, narrative drift - Sprint ITS-2 fields */}
       {(confidenceField || momentumField || narrativeDriftFlag) && (
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <Card className="p-5">
           <h3 className="text-[12px] font-semibold text-slate-700 mb-3">State signals</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {confidenceField && (
-              <div className="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3">
+              <Card className="bg-slate-50 px-4 py-3">
                 <p className="text-[10px] uppercase tracking-widest text-slate-400 mb-1">Confidence</p>
                 <p className="text-[14px] font-semibold text-slate-800">{confidenceField}</p>
-              </div>
+              </Card>
             )}
             {momentumField && (
-              <div className="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3">
+              <Card className="bg-slate-50 px-4 py-3">
                 <p className="text-[10px] uppercase tracking-widest text-slate-400 mb-1">Momentum</p>
                 <p className="text-[14px] font-semibold text-slate-800">{momentumField}</p>
-              </div>
+              </Card>
             )}
             {narrativeDriftFlag && (
-              <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
+              <Card className="bg-amber-50 border-amber-200 px-4 py-3">
                 <p className="text-[10px] uppercase tracking-widest text-amber-500 mb-1">Narrative drift</p>
                 <p className="text-[14px] font-semibold text-amber-800">{narrativeDriftFlag}</p>
-              </div>
+              </Card>
             )}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Recommended session opening */}
-      <div className="rounded-xl border border-slate-200 bg-slate-50 px-5 py-4">
+      <Card className="bg-slate-50 px-5 py-4">
         <h3 className="text-[12px] font-semibold text-slate-700 mb-2">Recommended session opening</h3>
         <ul className="space-y-1.5 text-[13px] text-slate-600 list-none">
           {anyStalledOrWatch && (
@@ -205,13 +213,13 @@ export function CoachPreSessionSnapshot({
             Today's goal: one strategic decision, one narrative adjustment, one confirmed next action with a deadline.
           </li>
         </ul>
-      </div>
+      </Card>
 
       {/* Active pipeline reminder */}
-      <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 text-[13px]">
+      <Card className="flex-row items-center justify-between px-4 py-3 text-[13px]">
         <span className="text-slate-500">Active pipeline companies</span>
         <span className="font-bold text-slate-900">{snapshot.active_pipeline_count}</span>
-      </div>
+      </Card>
     </div>
   )
 }

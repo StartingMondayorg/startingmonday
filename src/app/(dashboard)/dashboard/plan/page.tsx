@@ -2,6 +2,13 @@
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type WeeklyPlanResponse = {
   actions?: string[]
@@ -218,7 +225,7 @@ export default function DashboardPlanPage() {
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-10">
-        <div className="mb-6 rounded-2xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="mb-6 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-orange-300">Weekly plan</p>
           <h1 className="mt-1 text-[26px] font-bold leading-tight text-white">Editable three-action operating plan</h1>
           <p className="mt-2 text-[13px] text-slate-200">
@@ -229,34 +236,38 @@ export default function DashboardPlanPage() {
           </p>
 
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-            <label className="text-[13px] text-slate-200">
+            <Label className="flex flex-col items-start gap-0 text-[13px] text-slate-200">
               Week start (Monday)
-              <input
+              <Input
                 type="date"
                 value={weekStart}
                 onChange={(event) => setWeekStart(event.target.value)}
-                className="mt-1 block min-h-[44px] w-full rounded border border-white/15 bg-slate-950/70 px-3 text-[13px] text-slate-100 shadow-inner shadow-black/20"
+                className="mt-1 min-h-[44px] w-full text-[13px]"
               />
-            </label>
+            </Label>
             <p className="text-[13px] text-slate-300">Week of {formatWeekLabel(weekStart)}</p>
           </div>
-        </div>
+        </Card>
 
         {error && (
-          <p className="mb-4 rounded border border-rose-300/30 bg-rose-500/10 px-3 py-2 text-[13px] text-rose-200">{error}</p>
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
         {message && (
-          <p className="mb-4 rounded border border-emerald-300/30 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-200">{message}</p>
+          <Alert variant="success" className="mb-4">
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
         )}
 
-        <section className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <div className="space-y-4">
             {[0, 1, 2].map((index) => (
               <article key={index} className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
-                <label htmlFor={`weekly-plan-action-${index}`} className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300">
+                <Label htmlFor={`weekly-plan-action-${index}`} className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300">
                   Action {index + 1}
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                   id={`weekly-plan-action-${index}`}
                   value={actions[index] ?? ''}
                   onChange={(event) => {
@@ -265,15 +276,14 @@ export default function DashboardPlanPage() {
                     setActions(next)
                   }}
                   disabled={loading}
-                  className="mt-2 min-h-[96px] w-full rounded border border-white/10 bg-slate-950/75 px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500"
+                  className="mt-2 min-h-[96px] w-full text-[13px]"
                 />
                 <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[13px] text-slate-200">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={Boolean(completions[index])}
-                    onChange={(event) => {
+                    onCheckedChange={(checked) => {
                       const next = [...completions]
-                      next[index] = event.target.checked
+                      next[index] = checked === true
                       setCompletions(next)
                     }}
                     disabled={loading}
@@ -284,41 +294,40 @@ export default function DashboardPlanPage() {
             ))}
 
             <div className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
-              <label htmlFor="weekly-plan-reflection" className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300">
+              <Label htmlFor="weekly-plan-reflection" className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300">
                 Reflection notes
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 id="weekly-plan-reflection"
                 value={reflectionNotes}
                 onChange={(event) => setReflectionNotes(event.target.value)}
                 disabled={loading}
-                className="mt-2 min-h-[96px] w-full rounded border border-white/10 bg-slate-950/75 px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500"
+                className="mt-2 min-h-[96px] w-full text-[13px]"
               />
             </div>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <button
+            <Button
               type="button"
               onClick={savePlan}
               disabled={!canSave || loading || saving}
-              className="inline-flex min-h-[44px] items-center rounded bg-orange-500 px-4 text-[13px] font-semibold text-slate-950 transition-colors hover:bg-orange-400 disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save weekly plan'}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="outline"
               onClick={() => void regeneratePlan(false)}
               disabled={loading || saving}
-              className="inline-flex min-h-[44px] items-center rounded border border-white/15 bg-white/5 px-4 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10 disabled:opacity-50"
             >
               {saving ? 'Working...' : 'Regenerate suggestions'}
-            </button>
+            </Button>
             <p className="text-[13px] text-slate-300">Regenerate and history actions land in the next sprint tickets.</p>
           </div>
-        </section>
+        </Card>
 
-        <section className="mt-6 rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="mt-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300">4-week history</p>
           {history && history.length > 0 ? (
             <ul className="mt-3 space-y-3">
@@ -342,7 +351,7 @@ export default function DashboardPlanPage() {
           ) : (
             <p className="mt-2 text-[13px] text-slate-300">No weekly history yet.</p>
           )}
-        </section>
+        </Card>
       </main>
     </div>
   )

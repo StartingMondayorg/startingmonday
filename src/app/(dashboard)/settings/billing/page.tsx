@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserSubscription } from '@/lib/billing/subscription'
 import { canUserSeeAdminHeader } from '@/lib/staff'
 import { BillingClient } from './billing-client'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export const metadata = { title: 'Billing - Starting Monday' }
 
@@ -30,15 +31,15 @@ export default async function BillingPage() {
         <Link href="/dashboard">Return to dashboard</Link>
       </nav>
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-4">
-        <div className="bg-slate-50 border border-slate-200 rounded px-4 py-3 flex items-center justify-between gap-3">
+        <Alert className="flex items-center justify-between gap-3">
           <div>
             <p className="text-[12px] font-semibold text-slate-800">Need billing help?</p>
-            <p className="text-[12px] text-slate-500">Open the guide with a billing-focused query.</p>
+            <AlertDescription className="text-[12px] text-slate-500">Open the guide with a billing-focused query.</AlertDescription>
           </div>
           <Link href="/guide?q=How+do+I+fix+billing+or+subscription+issues%3F" className="text-[12px] font-semibold text-slate-900 hover:text-slate-700 hover:underline">
             Open Guide
           </Link>
-        </div>
+        </Alert>
       </section>
       <BillingClient sub={sub} hasStripeCustomer={sub.isPaid} accountEmail={user.email ?? ''} accountName={accountName} isPlaced={isPlaced} canSeeAdminHeader={canSeeAdminHeader} />
     </main>

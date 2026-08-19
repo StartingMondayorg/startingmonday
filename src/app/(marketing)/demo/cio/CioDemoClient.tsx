@@ -2,6 +2,21 @@
 
 import Link from 'next/link'
 import { useMemo, useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Toggle } from '@/components/ui/toggle'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type ArchetypeKey =
   | 'cio'
@@ -477,7 +492,7 @@ export function CioDemoClient() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">CIO demo</p>
           <h1 className="text-[28px] sm:text-[34px] font-bold text-slate-900 leading-[1.1] mb-4">
             Keep the talking points, show the brief, then pivot live.
@@ -487,22 +502,22 @@ export function CioDemoClient() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
             {TALKING_POINTS.map((point) => (
-              <div key={point.title} className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <Card key={point.title} variant="default" className="bg-slate-50 p-4">
                 <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">{point.title}</p>
                 <p className="text-[13px] text-slate-700 leading-relaxed">{point.body}</p>
-              </div>
+              </Card>
             ))}
           </div>
-          <div className="bg-slate-950 text-slate-100 rounded-xl px-4 py-4 mb-4">
+          <Card variant="default" className="!bg-slate-950 !text-slate-100 rounded-xl px-4 py-4 mb-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-orange-300 mb-2">Cadence visual (Horstman layer)</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {CADENCE_STEPS.map((step) => (
-                <div key={step} className="text-[12px] leading-relaxed bg-white/5 border border-white/10 rounded p-3">
+                <Card key={step} variant="glass" className="rounded p-3 text-[12px] leading-relaxed">
                   {step}
-                </div>
+                </Card>
               ))}
             </div>
-          </div>
+          </Card>
           <div className="text-[12px] text-slate-500 leading-relaxed">
             Reciprocity and commitment close: run this with two clients for 30 days, then decide using a weekly scorecard (first signal action, first prep brief before high-stakes conversation, context-rebuild time reduction).
             <span className="inline-block ml-2">
@@ -511,7 +526,7 @@ export function CioDemoClient() {
               <Link href="/evidence-hub" className="underline underline-offset-2 hover:text-slate-800">Evidence Hub</Link>
             </span>
           </div>
-          <div className="mt-5 border border-slate-200 rounded-xl p-3 bg-slate-50">
+          <Card variant="default" className="mt-5 rounded-xl p-3 bg-slate-50">
             <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-2">Presenter quick jump</p>
             <div className="flex flex-wrap gap-2">
               {PRESENTER_ANCHORS.map((anchor) => (
@@ -524,29 +539,29 @@ export function CioDemoClient() {
                 </a>
               ))}
             </div>
-          </div>
-        </section>
+          </Card>
+        </Card>
 
-        <section id="proof-clarity" className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
+        <Card id="proof-clarity" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Proof clarity</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Confidence and denominator badges</h2>
           <p className="text-[14px] text-slate-600 mb-5">Every claim includes denominator and confidence context so proof stays credible under scrutiny.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROOF_METRICS.map((metric) => (
-              <div key={metric.label} className="border border-slate-200 rounded-xl p-4 bg-slate-50">
+              <Card key={metric.label} variant="default" className="p-4 bg-slate-50">
                 <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">{metric.label}</p>
                 <p className="text-[28px] font-bold text-slate-900 leading-none mb-2">{metric.value}</p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  <span className="text-[11px] bg-slate-900 text-white px-2 py-1 rounded">n={metric.denominator}</span>
-                  <span className="text-[11px] bg-orange-100 text-orange-800 px-2 py-1 rounded">{metric.confidence}</span>
+                  <Badge className="!bg-slate-900 !text-white rounded">n={metric.denominator}</Badge>
+                  <Badge variant="warning" className="rounded">{metric.confidence}</Badge>
                 </div>
                 <p className="text-[12px] text-slate-600 leading-relaxed">{metric.note}</p>
-              </div>
+              </Card>
             ))}
           </div>
-        </section>
+        </Card>
 
-        <section id="pilot-scorecard" className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
+        <Card id="pilot-scorecard" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Pilot motion</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">30-day pilot success scorecard</h2>
           <p className="text-[14px] text-slate-600 mb-4">Use this live during the demo: check boxes as outcomes are met, then decide from evidence.</p>
@@ -562,149 +577,161 @@ export function CioDemoClient() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <button
-              type="button"
-              onClick={() => setPilotScorecard((prev) => ({ ...prev, firstSignalAction: !prev.firstSignalAction }))}
-              className={`text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstSignalAction ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+            <Toggle
+              pressed={pilotScorecard.firstSignalAction}
+              onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, firstSignalAction: pressed }))}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstSignalAction ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
             >
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 1</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed">First signal action in week 1</p>
-            </button>
-            <button
-              type="button"
-              onClick={() => setPilotScorecard((prev) => ({ ...prev, firstPrepBrief: !prev.firstPrepBrief }))}
-              className={`text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstPrepBrief ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">First signal action in week 1</p>
+            </Toggle>
+            <Toggle
+              pressed={pilotScorecard.firstPrepBrief}
+              onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, firstPrepBrief: pressed }))}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstPrepBrief ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
             >
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 2</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed">First prep brief used before a high-stakes conversation</p>
-            </button>
-            <button
-              type="button"
-              onClick={() => setPilotScorecard((prev) => ({ ...prev, contextRebuildDrop: !prev.contextRebuildDrop }))}
-              className={`text-left border rounded-lg p-4 transition-colors ${pilotScorecard.contextRebuildDrop ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">First prep brief used before a high-stakes conversation</p>
+            </Toggle>
+            <Toggle
+              pressed={pilotScorecard.contextRebuildDrop}
+              onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, contextRebuildDrop: pressed }))}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.contextRebuildDrop ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
             >
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 3</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed">Context rebuild time reduction documented</p>
-            </button>
+              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">Context rebuild time reduction documented</p>
+            </Toggle>
           </div>
-        </section>
+        </Card>
 
-        <section id="hesitation-mode" className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
+        <Card id="hesitation-mode" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Negotiation support</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Late-stage hesitation mode (Voss)</h2>
           <p className="text-[14px] text-slate-600 mb-5">One-click scripts for the most common late-stage stalls.</p>
 
-          <div className="flex flex-wrap gap-2 mb-4">
+          <ToggleGroup
+            value={[activeHesitation]}
+            onValueChange={(values) => { if (values[0]) setActiveHesitation(values[0]) }}
+            className="flex-wrap gap-2 mb-4"
+          >
             {HESITATION_SCRIPTS.map((item) => (
-              <button
+              <ToggleGroupItem
                 key={item.key}
-                type="button"
-                onClick={() => setActiveHesitation(item.key)}
+                value={item.key}
                 className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
               >
                 {item.label}
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
+          </ToggleGroup>
 
-          <div className="border border-slate-200 rounded p-4 bg-slate-50">
+          <Card variant="default" className="rounded p-4 bg-slate-50">
             <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-2">Live script</p>
             <p className="text-[14px] text-slate-800 leading-relaxed">{activeScript.script}</p>
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={copyScriptText}
-              className="mt-3 text-[12px] px-3 py-1.5 rounded border border-slate-300 hover:bg-white transition-colors"
+              className="mt-3 text-[12px] px-3 py-1.5 h-auto rounded border-slate-300 hover:bg-white"
             >
               {copiedScript ? 'Copied' : 'Copy script'}
-            </button>
-          </div>
-        </section>
+            </Button>
+          </Card>
+        </Card>
 
-        <section id="accountability-timeline" className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
+        <Card id="accountability-timeline" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Execution rhythm</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Weekly accountability timeline</h2>
           <p className="text-[14px] text-slate-600 mb-5">Make operating cadence visible and measurable every week.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             {TIMELINE_STEPS.map((step) => (
-              <button
+              <Toggle
                 key={step.key}
-                type="button"
-                onClick={() =>
+                pressed={!!timelineChecks[step.key]}
+                onPressedChange={(pressed) =>
                   setTimelineChecks((prev) => ({
                     ...prev,
-                    [step.key]: !prev[step.key],
+                    [step.key]: pressed,
                   }))
                 }
-                className={`text-left border rounded-lg p-4 transition-colors ${timelineChecks[step.key] ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+                className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${timelineChecks[step.key] ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
               >
                 <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Cadence step</p>
-                <p className="text-[13px] text-slate-800 leading-relaxed">{step.label}</p>
-              </button>
+                <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">{step.label}</p>
+              </Toggle>
             ))}
           </div>
           <p className="text-[13px] text-slate-700">
             Weekly cadence completion: <span className="font-semibold">{timelineCompleted}/{TIMELINE_STEPS.length}</span>
           </p>
-        </section>
+        </Card>
 
-        <section id="objection-appendix" className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
+        <Card id="objection-appendix" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Objections</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Objection-handling appendix</h2>
           <p className="text-[14px] text-slate-600 mb-5">Use these responses when concerns come up in real time during the demo.</p>
           <div className="space-y-3">
             {OBJECTION_APPENDIX.map((item) => (
-              <div key={item.objection} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
+              <Card key={item.objection} variant="default" className="rounded-lg p-4 bg-slate-50">
                 <p className="text-[12px] font-bold text-slate-900 mb-1.5">{item.objection}</p>
                 <p className="text-[13px] text-slate-700 leading-relaxed">{item.response}</p>
-              </div>
+              </Card>
             ))}
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Brief demo</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Generate the company brief on the fly</h2>
           <p className="text-[14px] text-slate-600 mb-5">Type the company and role he names, click generate, and narrate the first section aloud.</p>
 
-          <form onSubmit={generateCompanyBrief} className="border border-slate-200 rounded p-5 bg-slate-50 flex flex-col gap-4">
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</label>
-              <input
-                value={companyBriefCompany}
-                onChange={(e) => setCompanyBriefCompany(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="ServiceNow"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</label>
-              <input
-                value={companyBriefRole}
-                onChange={(e) => setCompanyBriefRole(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="Chief Information Officer"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={companyBriefLoading || !companyBriefCompany.trim() || !companyBriefRole.trim()}
-              className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors self-start"
-            >
-              {companyBriefLoading ? 'Generating...' : 'Generate company brief'}
-            </button>
-            {companyBriefError && <p className="text-[13px] text-red-600">{companyBriefError}</p>}
+          <form onSubmit={generateCompanyBrief}>
+            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+              <div>
+                <Label htmlFor="company-brief-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Input
+                  id="company-brief-company"
+                  value={companyBriefCompany}
+                  onChange={(e) => setCompanyBriefCompany(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="ServiceNow"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="company-brief-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Input
+                  id="company-brief-role"
+                  value={companyBriefRole}
+                  onChange={(e) => setCompanyBriefRole(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="Chief Information Officer"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={companyBriefLoading || !companyBriefCompany.trim() || !companyBriefRole.trim()}
+                className="h-auto text-[13px] font-semibold px-5 py-2.5 rounded self-start"
+              >
+                {companyBriefLoading ? 'Generating...' : 'Generate company brief'}
+              </Button>
+              {companyBriefError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{companyBriefError}</AlertDescription>
+                </Alert>
+              )}
+            </Card>
           </form>
 
           {(companyBriefLoading || companyBrief) && (
-            <div ref={companyBriefRef} className="mt-5 border border-slate-200 rounded p-6 bg-white">
+            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={companyBriefRef}>
               {renderBrief(companyBrief, companyBriefLoading)}
-            </div>
+            </Card>
           )}
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+        <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Tailored brief demo</p>
           <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Bob Barker at the named company and role</h2>
           <p className="text-[14px] text-slate-600 mb-5">
@@ -712,71 +739,82 @@ export function CioDemoClient() {
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-            <div className="border border-slate-200 rounded p-4 bg-slate-50">
+            <Card variant="default" className="rounded p-4 bg-slate-50">
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">Fake resume ({activeProfile.label})</p>
               <pre className="text-[12px] text-slate-700 whitespace-pre-wrap leading-relaxed">{activeProfile.resume}</pre>
-            </div>
-            <div className="border border-slate-200 rounded p-4 bg-slate-50">
+            </Card>
+            <Card variant="default" className="rounded p-4 bg-slate-50">
               <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">Fake LinkedIn summary</p>
               <p className="text-[12px] text-slate-700 leading-relaxed">{activeProfile.linkedin}</p>
-            </div>
+            </Card>
           </div>
 
-          <form onSubmit={generateTailoredBrief} className="border border-slate-200 rounded p-5 bg-slate-50 flex flex-col gap-4">
-            <div>
-              <label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Fake profile archetype</label>
-              <select
-                id="demo-archetype"
-                value={archetype}
-                onChange={(e) => {
-                  const selected = e.target.value as ArchetypeKey
-                  setArchetype(selected)
-                  const profile = ARCHETYPES.find((item) => item.key === selected)
-                  if (profile) setTailoredRole(profile.defaultRole)
-                }}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
+          <form onSubmit={generateTailoredBrief}>
+            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+              <div>
+                <Label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Fake profile archetype</Label>
+                <Select
+                  value={archetype}
+                  onValueChange={(value) => {
+                    const selected = value as ArchetypeKey
+                    setArchetype(selected)
+                    const profile = ARCHETYPES.find((item) => item.key === selected)
+                    if (profile) setTailoredRole(profile.defaultRole)
+                  }}
+                >
+                  <SelectTrigger id="demo-archetype" className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ARCHETYPES.map((option) => (
+                      <SelectItem key={option.key} value={option.key}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="tailored-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Input
+                  id="tailored-company"
+                  value={tailoredCompany}
+                  onChange={(e) => setTailoredCompany(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="ServiceNow"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="tailored-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Input
+                  id="tailored-role"
+                  value={tailoredRole}
+                  onChange={(e) => setTailoredRole(e.target.value)}
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  placeholder="Chief Information Officer"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={tailoredLoading || !tailoredCompany.trim() || !tailoredRole.trim()}
+                className="h-auto text-[13px] font-semibold px-5 py-2.5 rounded self-start"
               >
-                {ARCHETYPES.map((option) => (
-                  <option key={option.key} value={option.key}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</label>
-              <input
-                value={tailoredCompany}
-                onChange={(e) => setTailoredCompany(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="ServiceNow"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</label>
-              <input
-                value={tailoredRole}
-                onChange={(e) => setTailoredRole(e.target.value)}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900"
-                placeholder="Chief Information Officer"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={tailoredLoading || !tailoredCompany.trim() || !tailoredRole.trim()}
-              className="bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors self-start"
-            >
-              {tailoredLoading ? 'Generating...' : 'Generate Bob Barker tailored brief'}
-            </button>
-            {tailoredError && <p className="text-[13px] text-red-600">{tailoredError}</p>}
+                {tailoredLoading ? 'Generating...' : 'Generate Bob Barker tailored brief'}
+              </Button>
+              {tailoredError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{tailoredError}</AlertDescription>
+                </Alert>
+              )}
+            </Card>
           </form>
 
           {(tailoredLoading || tailoredBrief) && (
-            <div ref={tailoredBriefRef} className="mt-5 border border-slate-200 rounded p-6 bg-white">
+            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={tailoredBriefRef}>
               {renderBrief(tailoredBrief, tailoredLoading)}
-            </div>
+            </Card>
           )}
-        </section>
+        </Card>
       </main>
     </div>
   )

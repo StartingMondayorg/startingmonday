@@ -1,6 +1,17 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 type LoadState<T> =
   | { status: 'loading' }
@@ -74,16 +85,21 @@ async function fetchJson<T>(url: string): Promise<T> {
   return response.json() as Promise<T>
 }
 
-function statusBadge(ok: boolean): string {
-  return ok
-    ? 'rounded-full border border-emerald-300/30 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-100'
-    : 'rounded-full border border-rose-300/30 bg-rose-500/15 px-2 py-0.5 text-[11px] font-semibold text-rose-100'
+function StatusBadge({ ok, children }: { ok: boolean; children: ReactNode }) {
+  return (
+    <Badge variant={ok ? 'success' : 'destructive'} className="rounded-full">
+      {children}
+    </Badge>
+  )
 }
 
-function decisionBadge(decision: 'scale' | 'iterate' | 'stop'): string {
-  if (decision === 'scale') return 'rounded-full border border-emerald-300/30 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-100'
-  if (decision === 'iterate') return 'rounded-full border border-amber-300/30 bg-amber-500/15 px-2 py-0.5 text-[11px] font-semibold text-amber-100'
-  return 'rounded-full border border-rose-300/30 bg-rose-500/15 px-2 py-0.5 text-[11px] font-semibold text-rose-100'
+function DecisionBadge({ decision }: { decision: 'scale' | 'iterate' | 'stop' }) {
+  const variant = decision === 'scale' ? 'success' : decision === 'iterate' ? 'warning' : 'destructive'
+  return (
+    <Badge variant={variant} className="rounded-full">
+      {decision}
+    </Badge>
+  )
 }
 
 export default function WedgeFunnelsClient() {
@@ -158,55 +174,64 @@ export default function WedgeFunnelsClient() {
 
   return (
     <>
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-slate-400">Unified wedge monitor</p>
             <p className="mt-1 text-[13px] text-slate-300">Single pane for shortlist and partner pilot health.</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className={statusBadge(systemHealthy)}>{systemHealthy ? 'all feeds healthy' : 'attention needed'}</span>
-            <button
+            <StatusBadge ok={systemHealthy}>{systemHealthy ? 'all feeds healthy' : 'attention needed'}</StatusBadge>
+            <Button
               type="button"
+              variant="outline"
               onClick={persistWeeklySnapshot}
               disabled={persisting}
-              className="rounded-full border border-white/20 px-3 py-1.5 text-[12px] font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full"
             >
               {persisting ? 'Saving...' : 'Save weekly snapshot'}
-            </button>
+            </Button>
           </div>
         </div>
         {persistError ? <p className="mt-3 text-[13px] text-rose-300">{persistError}</p> : null}
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <a href="/api/admin/automation/reporting/wedge-funnel-scorecard?lookbackDays=30" className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
-            Wedge scorecard API
+          <a href="/api/admin/automation/reporting/wedge-funnel-scorecard?lookbackDays=30" className="block">
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+              Wedge scorecard API
+            </Card>
           </a>
-          <a href="/api/admin/automation/reporting/shortlist-sprint-funnel?lookbackDays=30" className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
-            Shortlist funnel API
+          <a href="/api/admin/automation/reporting/shortlist-sprint-funnel?lookbackDays=30" className="block">
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+              Shortlist funnel API
+            </Card>
           </a>
-          <a href="/api/admin/automation/reporting/wedge-epic-closeout?lookbackDays=30" className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
-            SMK-395/398/401 closeout artifact API
+          <a href="/api/admin/automation/reporting/wedge-epic-closeout?lookbackDays=30" className="block">
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+              SMK-395/398/401 closeout artifact API
+            </Card>
           </a>
-          <a href="/api/cron/wedge-weekly-scorecard" className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30 sm:col-span-2">
-            Weekly cron trigger API (requires cron secret)
+          <a href="/api/cron/wedge-weekly-scorecard" className="block sm:col-span-2">
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+              Weekly cron trigger API (requires cron secret)
+            </Card>
           </a>
         </div>
-      </section>
+      </Card>
 
-      <section className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="mt-6 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Scale or stop decision gate</p>
-          {decision ? <span className={decisionBadge(decision.summary)}>{decision.summary}</span> : null}
+          {decision ? <DecisionBadge decision={decision.summary} /> : null}
         </div>
         {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-slate-300">Loading...</p> : null}
         {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-rose-300">{scorecard.error}</p> : null}
         {decision ? (
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[13px] text-slate-200">
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[13px] text-slate-200">
               <p>Direct paid sprint: <span className="font-semibold text-white">{decision.motion1_direct_paid_sprint}</span></p>
               <p className="mt-1">Partner pilot: <span className="font-semibold text-white">{decision.motion2_partner_pilot}</span></p>
-            </div>
+            </Card>
             <ul className="space-y-1.5 text-[13px] text-slate-200">
               {decision.reasons.map((reason) => (
                 <li key={reason} className="flex gap-2"><span className="text-orange-300">+</span><span>{reason}</span></li>
@@ -217,27 +242,27 @@ export default function WedgeFunnelsClient() {
 
         {trend ? (
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
               <p className="text-slate-400">Purchase WoW</p>
               <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.purchase_rate_from_checkout_delta, '%')}</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
+            </Card>
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
               <p className="text-slate-400">Delivery WoW</p>
               <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.delivery_completion_rate_delta, '%')}</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
+            </Card>
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
               <p className="text-slate-400">Seats Active WoW</p>
               <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.seats_active_rate_delta, '%')}</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
+            </Card>
+            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
               <p className="text-slate-400">At-risk Seats WoW</p>
               <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.at_risk_seats_delta)}</p>
-            </div>
+            </Card>
           </div>
         ) : null}
-      </section>
+      </Card>
 
-      <section className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="mt-6 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Weekly snapshot history</p>
           <span className="text-[12px] text-slate-300">Latest 8 weeks</span>
@@ -247,35 +272,35 @@ export default function WedgeFunnelsClient() {
           <p className="mt-3 text-[13px] text-slate-300">No snapshots saved yet. Use Save weekly snapshot to persist the current run.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="min-w-full text-left text-[12px] text-slate-200">
-              <thead>
-                <tr className="border-b border-white/10 text-slate-400">
-                  <th className="py-2 pr-4">Week</th>
-                  <th className="py-2 pr-4">Purchase rate</th>
-                  <th className="py-2 pr-4">Delivery rate</th>
-                  <th className="py-2 pr-4">Seats active</th>
-                  <th className="py-2 pr-4">At-risk seats</th>
-                  <th className="py-2 pr-4">Decision</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="text-left text-[12px] text-slate-200">
+              <TableHeader>
+                <TableRow className="border-white/10 text-slate-400">
+                  <TableHead className="py-2 pr-4">Week</TableHead>
+                  <TableHead className="py-2 pr-4">Purchase rate</TableHead>
+                  <TableHead className="py-2 pr-4">Delivery rate</TableHead>
+                  <TableHead className="py-2 pr-4">Seats active</TableHead>
+                  <TableHead className="py-2 pr-4">At-risk seats</TableHead>
+                  <TableHead className="py-2 pr-4">Decision</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {snapshotHistory.map((row) => (
-                  <tr key={`${row.week_start}-${row.generated_at}`} className="border-b border-white/5">
-                    <td className="py-2 pr-4">{row.week_start}</td>
-                    <td className="py-2 pr-4">{row.shortlist_purchase_rate_from_checkout}%</td>
-                    <td className="py-2 pr-4">{row.shortlist_delivery_completion_rate}%</td>
-                    <td className="py-2 pr-4">{row.pilot_seats_active_rate}%</td>
-                    <td className="py-2 pr-4">{row.pilot_at_risk_seats}</td>
-                    <td className="py-2 pr-4"><span className={decisionBadge(row.decision_summary as 'scale' | 'iterate' | 'stop')}>{row.decision_summary}</span></td>
-                  </tr>
+                  <TableRow key={`${row.week_start}-${row.generated_at}`} className="border-white/5">
+                    <TableCell className="py-2 pr-4">{row.week_start}</TableCell>
+                    <TableCell className="py-2 pr-4">{row.shortlist_purchase_rate_from_checkout}%</TableCell>
+                    <TableCell className="py-2 pr-4">{row.shortlist_delivery_completion_rate}%</TableCell>
+                    <TableCell className="py-2 pr-4">{row.pilot_seats_active_rate}%</TableCell>
+                    <TableCell className="py-2 pr-4">{row.pilot_at_risk_seats}</TableCell>
+                    <TableCell className="py-2 pr-4"><DecisionBadge decision={row.decision_summary as 'scale' | 'iterate' | 'stop'} /></TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
-      </section>
+      </Card>
 
-      <section className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="mt-6 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Cron execution log</p>
           <span className="text-[12px] text-slate-300">Latest 8 runs</span>
@@ -285,39 +310,39 @@ export default function WedgeFunnelsClient() {
           <p className="mt-3 text-[13px] text-slate-300">No cron runs logged yet.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="min-w-full text-left text-[12px] text-slate-200">
-              <thead>
-                <tr className="border-b border-white/10 text-slate-400">
-                  <th className="py-2 pr-4">Triggered</th>
-                  <th className="py-2 pr-4">Duration</th>
-                  <th className="py-2 pr-4">HTTP</th>
-                  <th className="py-2 pr-4">Decision</th>
-                  <th className="py-2 pr-4">Status</th>
-                  <th className="py-2 pr-4">Error</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="text-left text-[12px] text-slate-200">
+              <TableHeader>
+                <TableRow className="border-white/10 text-slate-400">
+                  <TableHead className="py-2 pr-4">Triggered</TableHead>
+                  <TableHead className="py-2 pr-4">Duration</TableHead>
+                  <TableHead className="py-2 pr-4">HTTP</TableHead>
+                  <TableHead className="py-2 pr-4">Decision</TableHead>
+                  <TableHead className="py-2 pr-4">Status</TableHead>
+                  <TableHead className="py-2 pr-4">Error</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {cronRuns.map((run) => (
-                  <tr key={run.triggered_at} className="border-b border-white/5">
-                    <td className="py-2 pr-4">{new Date(run.triggered_at).toISOString()}</td>
-                    <td className="py-2 pr-4">{run.duration_ms}ms</td>
-                    <td className="py-2 pr-4">{run.http_status}</td>
-                    <td className="py-2 pr-4">{run.decision_summary ?? '-'}</td>
-                    <td className="py-2 pr-4"><span className={statusBadge(run.success)}>{run.success ? 'success' : 'failed'}</span></td>
-                    <td className="py-2 pr-4">{run.error_message ?? '-'}</td>
-                  </tr>
+                  <TableRow key={run.triggered_at} className="border-white/5">
+                    <TableCell className="py-2 pr-4">{new Date(run.triggered_at).toISOString()}</TableCell>
+                    <TableCell className="py-2 pr-4">{run.duration_ms}ms</TableCell>
+                    <TableCell className="py-2 pr-4">{run.http_status}</TableCell>
+                    <TableCell className="py-2 pr-4">{run.decision_summary ?? '-'}</TableCell>
+                    <TableCell className="py-2 pr-4"><StatusBadge ok={run.success}>{run.success ? 'success' : 'failed'}</StatusBadge></TableCell>
+                    <TableCell className="py-2 pr-4">{run.error_message ?? '-'}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
-      </section>
+      </Card>
 
       <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" className="p-5">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Shortlist sprint</p>
-            <span className={statusBadge(scorecard.status === 'ready')}>{scorecard.status}</span>
+            <StatusBadge ok={scorecard.status === 'ready'}>{scorecard.status}</StatusBadge>
           </div>
           {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-slate-300">Loading...</p> : null}
           {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-rose-300">{scorecard.error}</p> : null}
@@ -331,12 +356,12 @@ export default function WedgeFunnelsClient() {
               <p>Credit application: <span className="font-semibold text-white">{shortlistMetrics.credit_application_rate}%</span></p>
             </div>
           ) : null}
-        </article>
+        </Card>
 
-        <article className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" className="p-5">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Partner pilot</p>
-            <span className={statusBadge(scorecard.status === 'ready')}>{scorecard.status}</span>
+            <StatusBadge ok={scorecard.status === 'ready'}>{scorecard.status}</StatusBadge>
           </div>
           {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-slate-300">Loading...</p> : null}
           {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-rose-300">{scorecard.error}</p> : null}
@@ -349,7 +374,7 @@ export default function WedgeFunnelsClient() {
               <p>Partner accounts active: <span className="font-semibold text-white">{pilotMetrics.partner_accounts_active}</span></p>
             </div>
           ) : null}
-        </article>
+        </Card>
 
       </section>
     </>

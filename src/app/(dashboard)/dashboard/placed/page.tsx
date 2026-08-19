@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getPlacedProofActions } from '@/lib/placed-proof-architecture'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Congratulations - Starting Monday' }
 
@@ -60,7 +62,7 @@ export default async function PlacedPage() {
 
           {/* Stay in the market quietly */}
           {isActive && tier !== 'free' && (
-            <div className="bg-slate-800 rounded-lg px-5 py-5 mb-8">
+            <Card variant="glass" className="px-5 py-5 mb-8">
               <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-2">Stay in the market</p>
               <p className="text-[15px] font-semibold text-white mb-2 leading-snug">
                 Most executives keep one eye on the market after they land.
@@ -69,31 +71,22 @@ export default async function PlacedPage() {
                 Monitor ($49/month) keeps your target companies under surveillance without the pipeline and prep features.
                 No active search required. Just signal monitoring, delivered weekly.
               </p>
-              <Link
-                href="/settings/billing"
-                className="inline-block bg-orange-500 text-slate-900 text-[13px] font-bold px-5 py-2.5 rounded hover:bg-orange-600 transition-colors"
-              >
+              <Button render={<Link href="/settings/billing" />} className="text-[13px]">
                 Switch to Monitor →
-              </Link>
-            </div>
+              </Button>
+            </Card>
           )}
 
           {/* What to do next */}
           <div className="flex flex-col gap-3 mb-10">
             {isTrialing && tier === 'free' && (
-              <Link
-                href="/settings/billing"
-                className="block text-center bg-orange-500 text-white text-[14px] font-bold px-7 py-3.5 rounded hover:bg-orange-600 transition-colors"
-              >
+              <Button render={<Link href="/settings/billing" />} className="w-full justify-center text-[14px] py-3.5 h-auto">
                 Stay sharp - upgrade to Monitor ($49/mo)
-              </Link>
+              </Button>
             )}
-            <Link
-              href="/dashboard"
-              className="block text-center border border-slate-600 text-slate-300 text-[14px] font-semibold px-7 py-3.5 rounded hover:border-slate-400 transition-colors"
-            >
+            <Button render={<Link href="/dashboard" />} variant="outline" className="w-full justify-center text-[14px] py-3.5 h-auto">
               Go to my dashboard
-            </Link>
+            </Button>
           </div>
 
           <p className="text-[12px] text-slate-600 leading-relaxed">
@@ -101,25 +94,27 @@ export default async function PlacedPage() {
             {' '}<a href="mailto:richard@startingmonday.app" className="text-slate-400 hover:text-slate-200">richard@startingmonday.app</a>.
           </p>
 
-          <div id="peer-referral" className="mt-10 rounded-lg border border-slate-700 bg-slate-800/60 px-5 py-5">
+          <Card variant="glass" id="peer-referral" className="mt-10 px-5 py-5">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-2">Sprint 7 scaffold</p>
             <p className="text-[14px] text-slate-300 mb-4">Placed proof architecture checkpoints</p>
             <ul className="space-y-3">
               {proofActions.map((action) => (
-                <li key={action.id} className="rounded border border-slate-700 bg-slate-900/70 px-4 py-3">
-                  <p className="text-[13px] font-semibold text-slate-100 mb-1">{action.title}</p>
-                  <p className="text-[12px] text-slate-400 mb-2">{action.description}</p>
-                  {action.isEnabled ? (
-                    <Link href={action.href} className="text-[12px] font-semibold text-orange-400 hover:text-orange-300">
-                      Open action →
-                    </Link>
-                  ) : (
-                    <p className="text-[12px] text-slate-500">{action.disabledReason}</p>
-                  )}
+                <li key={action.id}>
+                  <Card variant="glass" className="px-4 py-3">
+                    <p className="text-[13px] font-semibold text-slate-100 mb-1">{action.title}</p>
+                    <p className="text-[12px] text-slate-400 mb-2">{action.description}</p>
+                    {action.isEnabled ? (
+                      <Button render={<Link href={action.href} />} variant="link" className="text-[12px] h-auto p-0">
+                        Open action →
+                      </Button>
+                    ) : (
+                      <p className="text-[12px] text-slate-500">{action.disabledReason}</p>
+                    )}
+                  </Card>
                 </li>
               ))}
             </ul>
-          </div>
+          </Card>
 
         </div>
       </main>

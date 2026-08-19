@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import firstWeekSpine from '@/content/first-week-spine.json'
+import { Card } from '@/components/ui/card'
 import {
   decisionRoleTargetsForCompany,
   firstNoteDraftForCompany,
@@ -52,7 +53,7 @@ export function OnboardingDoneStep({
         </p>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+      <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">What we understood about you</p>
         <p className="text-[15px] font-semibold text-white">{currentTitle || 'Your role lane is set'}{currentCompany ? ` at ${currentCompany}` : ''}</p>
         <p className="text-[12px] text-slate-400 mt-1.5">
@@ -60,10 +61,10 @@ export function OnboardingDoneStep({
             ? `We will bias briefs and role hypotheses toward: ${targetTitles}`
             : 'Your profile and target companies now shape the first brief and shortlist.'}
         </p>
-      </div>
+      </Card>
 
       <div className="flex flex-col gap-3">
-        <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+        <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">Companies being watched</p>
           {companies.length === 0 ? (
             <p className="text-[14px] text-slate-300">None yet - add them from your dashboard.</p>
@@ -73,18 +74,18 @@ export function OnboardingDoneStep({
           <p className="text-[12px] text-slate-400 mt-1.5">
             This powers your first likely-to-open role shortlist and signal feed.
           </p>
-        </div>
+        </Card>
 
         {!isPassive && (
-          <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+          <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">First relationship action this week</p>
             <p className="text-[15px] font-semibold text-white">Identify one decision-path contact and start outreach timing.</p>
             <p className="text-[12px] text-slate-400 mt-1.5">Open contacts from the dashboard and begin with your highest-leverage target.</p>
-          </div>
+          </Card>
         )}
 
         {!isPassive && firstCompany && roleTargets.length > 0 && (
-          <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+          <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-2">Seats to map first at {firstCompany}</p>
             <div className="space-y-2">
               {roleTargets.map((seat) => (
@@ -95,57 +96,57 @@ export function OnboardingDoneStep({
               ))}
             </div>
             <p className="text-[11px] text-slate-400 mt-2">These are the seats that typically shape the shortlist. From your dashboard, relationship enrichment finds the actual people in them.</p>
-          </div>
+          </Card>
         )}
 
         {!isPassive && firstCompany && firstNoteDraft && (
-          <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+          <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">First note draft</p>
             <p className="text-[12px] text-slate-300 leading-relaxed">{firstNoteDraft}</p>
             <p className="text-[11px] text-slate-400 mt-2">You can edit this draft from your contacts outreach workspace.</p>
-          </div>
+          </Card>
         )}
 
         {!isPassive && firstCompany && followUps.length > 0 && (
-          <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+          <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">Week-one follow-up sequence</p>
             <ul className="mt-1 space-y-1.5">
               {followUps.map((item) => (
                 <li key={item} className="text-[12px] text-slate-300 leading-relaxed">- {item}</li>
               ))}
             </ul>
-          </div>
+          </Card>
         )}
 
         {isPassive ? (
-          <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+          <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">Weekly digest</p>
             <p className="text-[15px] font-semibold text-white">Every Sunday morning</p>
             <p className="text-[12px] text-slate-400 mt-1.5">
               Scan matches, exec moves, funding signals - delivered once a week. No daily noise.
             </p>
-          </div>
+          </Card>
         ) : (
-          <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+          <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">First briefing</p>
             <p className="text-[15px] font-semibold text-white">Tomorrow at {formatTime(briefingTime)}</p>
             <p className="text-[12px] text-slate-400 mt-1.5">
               New role matches, company signals, and your next actions - every morning.
             </p>
-          </div>
+          </Card>
         )}
 
-        <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
+        <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">First career page scan</p>
           <p className="text-[15px] font-semibold text-white">Next Monday, Wednesday, or Friday at 8 AM UTC</p>
           <p className="text-[12px] text-slate-400 mt-1.5">
             We scan career pages 3x per week and flag matching roles before they reach LinkedIn.
           </p>
-        </div>
+        </Card>
       </div>
 
       {firstCompany && (intelLoading || intelContent) && (
-        <div className="bg-slate-950/70 border border-white/10 rounded-lg px-5 py-5">
+        <Card variant="glass" className="rounded-lg border-white/10 bg-slate-950/70 px-5 py-5">
           <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-300 mb-3">
             {firstCompany} - intelligence preview
           </p>
@@ -167,10 +168,10 @@ export function OnboardingDoneStep({
           <p className="text-[11px] text-slate-300 mt-3">
             This is a preview. Your first full briefing includes live scan results and signal history.
           </p>
-        </div>
+        </Card>
       )}
 
-      <div className="border border-white/10 rounded-lg px-5 py-4 bg-white/5">
+      <Card variant="glass" className="rounded-lg px-5 py-4 bg-white/5 border-white/10">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">Optional next step</p>
         <p className="text-[13px] text-slate-300 leading-relaxed mb-3">
           Want better prep quality? Add LinkedIn and profile detail after launch.
@@ -181,7 +182,7 @@ export function OnboardingDoneStep({
         <p className="text-[12px] text-slate-400 mt-3">
           <span className="font-semibold text-slate-300">{firstWeekSpine.steps[4].label}:</span> {firstWeekSpine.steps[4].body}
         </p>
-      </div>
+      </Card>
     </div>
   )
 }

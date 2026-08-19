@@ -2,6 +2,16 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { OfferSynthesis } from './offer-synthesis'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 export const metadata = { title: 'Offers - Starting Monday' }
 
@@ -88,18 +98,15 @@ export default async function OffersPage() {
         </div>
 
         {offers.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded p-16 text-center">
+          <Card className="p-16 text-center">
             <p className="text-[14px] text-slate-400 mb-4">No companies at the Offer stage.</p>
-            <Link
-              href="/dashboard/briefing"
-              className="text-[13px] font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded transition-colors"
-            >
+            <Button variant="secondary" render={<Link href="/dashboard/briefing" />}>
               Open daily briefing →
-            </Link>
-          </div>
+            </Button>
+          </Card>
         ) : offers.length === 1 ? (
           // Single offer: vertical card layout
-          <div className="bg-white border border-green-200 rounded overflow-hidden">
+          <Card className="border-green-200 py-0 overflow-hidden">
             <div className="px-6 py-[18px] border-b border-green-100 flex items-center justify-between">
               <div>
                 <h2 className="text-[18px] font-bold text-slate-900">{offers[0].name}</h2>
@@ -107,19 +114,17 @@ export default async function OffersPage() {
               </div>
               <div className="flex items-center gap-3">
                 {offers[0].offer_role_title && (
-                  <a
-                    href={`/dashboard/salary?company=${encodeURIComponent(offers[0].name)}&role=${encodeURIComponent(offers[0].offer_role_title)}`}
-                    className="text-[13px] font-semibold text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded transition-colors"
+                  <Button
+                    variant="secondary"
+                    className="text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100"
+                    render={<a href={`/dashboard/salary?company=${encodeURIComponent(offers[0].name)}&role=${encodeURIComponent(offers[0].offer_role_title)}`} />}
                   >
                     Get negotiation script →
-                  </a>
+                  </Button>
                 )}
-                <Link
-                  href={`/dashboard/companies/${offers[0].id}`}
-                  className="text-[13px] font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-400 px-3 py-1.5 rounded transition-colors"
-                >
+                <Button variant="outline" render={<Link href={`/dashboard/companies/${offers[0].id}`} />}>
                   View company →
-                </Link>
+                </Button>
               </div>
             </div>
             <div className="divide-y divide-slate-50">
@@ -142,70 +147,68 @@ export default async function OffersPage() {
                 {' '}to unlock total cash calculation and the negotiation script.
               </p>
             </div>
-          </div>
+          </Card>
         ) : (
           // Multiple offers: comparison table
-          <div className="bg-white border border-green-200 rounded overflow-hidden">
+          <Card className="border-green-200 py-0 overflow-hidden">
             <div className="px-6 py-[18px] border-b border-green-100">
               <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-green-700">Side-by-side comparison</p>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-100">
-                    <th scope="col" className="py-3 pl-6 pr-4 text-left text-[13px] font-bold tracking-[0.09em] uppercase text-slate-400 w-28">
+              <Table className="w-full border-collapse">
+                <TableHeader>
+                  <TableRow className="border-b border-slate-100">
+                    <TableHead scope="col" className="py-3 pl-6 pr-4 text-left text-[13px] font-bold tracking-[0.09em] uppercase text-slate-400 w-28">
                       Field
-                    </th>
+                    </TableHead>
                     {offers.map(o => (
-                      <th key={o.id} className="py-3 px-4 text-left">
+                      <TableHead key={o.id} className="py-3 px-4 text-left">
                         <Link href={`/dashboard/companies/${o.id}`} className="text-[14px] font-bold text-slate-900 hover:text-slate-600 block">
                           {o.name}
                         </Link>
                         {o.sector && <p className="text-[13px] text-slate-400 font-normal mt-0.5">{o.sector}</p>}
-                      </th>
+                      </TableHead>
                     ))}
-                  </tr>
-                </thead>
-                <tbody>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {ROWS.map(row => (
-                    <tr key={row.label} className="border-b border-slate-50">
-                      <td className="py-3.5 pl-6 pr-4 text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 align-top">
+                    <TableRow key={row.label} className="border-b border-slate-50">
+                      <TableCell className="py-3.5 pl-6 pr-4 text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 align-top">
                         {row.label}
-                      </td>
+                      </TableCell>
                       {offers.map(o => (
-                        <td key={o.id} className="py-3.5 px-4 text-[14px] text-slate-800 align-top">
+                        <TableCell key={o.id} className="py-3.5 px-4 text-[14px] text-slate-800 align-top">
                           {row.render(o)}
-                        </td>
+                        </TableCell>
                       ))}
-                    </tr>
+                    </TableRow>
                   ))}
-                  <tr>
-                    <td className="py-4 pl-6 pr-4" />
+                  <TableRow>
+                    <TableCell className="py-4 pl-6 pr-4" />
                     {offers.map(o => (
-                      <td key={o.id} className="py-4 px-4">
+                      <TableCell key={o.id} className="py-4 px-4">
                         <div className="flex flex-col gap-2">
                           {o.offer_role_title && (
-                            <a
-                              href={`/dashboard/salary?company=${encodeURIComponent(o.name)}&role=${encodeURIComponent(o.offer_role_title)}`}
-                              className="text-[13px] font-semibold text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded transition-colors inline-block"
+                            <Button
+                              variant="secondary"
+                              className="text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100 inline-block"
+                              render={<a href={`/dashboard/salary?company=${encodeURIComponent(o.name)}&role=${encodeURIComponent(o.offer_role_title)}`} />}
                             >
                               Negotiate →
-                            </a>
+                            </Button>
                           )}
-                          <Link
-                            href={`/dashboard/companies/${o.id}`}
-                            className="text-[13px] font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-400 px-3 py-1.5 rounded transition-colors inline-block"
-                          >
+                          <Button variant="outline" className="inline-block" render={<Link href={`/dashboard/companies/${o.id}`} />}>
                             Details →
-                          </Link>
+                          </Button>
                         </div>
-                      </td>
+                      </TableCell>
                     ))}
-                  </tr>
-                </tbody>
-              </table>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
-          </div>
+          </Card>
         )}
 
         {offers.length > 0 && <OfferSynthesis offers={offers} />}

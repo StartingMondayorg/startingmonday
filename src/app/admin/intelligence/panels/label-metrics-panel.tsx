@@ -6,6 +6,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 interface LabelStats {
   totalCompanies: number
@@ -69,10 +73,12 @@ export function LabelMetricsPanel() {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded">
-        <p className="text-red-800 font-medium">Error loading label metrics</p>
-        <p className="text-red-700 text-sm mt-1">{error}</p>
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          <p className="font-medium">Error loading label metrics</p>
+          <p className="text-sm mt-1">{error}</p>
+        </AlertDescription>
+      </Alert>
     )
   }
 
@@ -81,10 +87,10 @@ export function LabelMetricsPanel() {
   }
 
   const coverageStatus = stats.coveragePercent >= 60 ? 'pass' : stats.coveragePercent >= 40 ? 'warn' : 'fail'
-  const statusColor = {
-    pass: 'text-green-700 bg-green-50',
-    warn: 'text-yellow-700 bg-yellow-50',
-    fail: 'text-red-700 bg-red-50',
+  const coverageVariant = {
+    pass: 'success' as const,
+    warn: 'warning' as const,
+    fail: 'destructive' as const,
   }[coverageStatus]
 
   return (
@@ -92,54 +98,53 @@ export function LabelMetricsPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-900">Label Coverage & Latency</h2>
-        <button
-          onClick={handleRefresh}
-          className="px-3 py-1 text-sm bg-slate-600 text-white rounded hover:bg-slate-700"
-        >
+        <Button size="sm" variant="secondary" onClick={handleRefresh}>
           Refresh
-        </button>
+        </Button>
       </div>
 
       {/* Coverage Card */}
-      <div className={`p-6 rounded-lg border-2 ${statusColor}`}>
-        <div className="flex items-end justify-between">
+      <Alert variant={coverageVariant} className="p-6">
+        <AlertDescription className="flex items-end justify-between text-current">
           <div>
             <p className="text-sm font-medium opacity-75">Label Coverage</p>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-4xl font-bold">{stats.coveragePercent.toFixed(1)}%</span>
+              <span className="text-4xl font-bold text-current">{stats.coveragePercent.toFixed(1)}%</span>
               <span className="text-lg opacity-75">({stats.companiesWithLabels} / {stats.totalCompanies})</span>
             </div>
             <p className="text-xs mt-2 opacity-75">Companies with {'\u2265'} 1 labeled outcome</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-semibold">
+            <p className="text-2xl font-semibold text-current">
               {coverageStatus === 'pass' ? '✓ On Track' : coverageStatus === 'warn' ? '⚠ Monitor' : '✗ Backlog'}
             </p>
             <p className="text-xs mt-1 opacity-75">Target: {'\u2265'} 60%</p>
           </div>
-        </div>
-      </div>
+        </AlertDescription>
+      </Alert>
 
       {/* Latency Card */}
-      <div className="p-6 bg-blue-50 border-2 border-blue-200 rounded-lg">
-        <p className="text-sm font-medium text-blue-700">Median Label Latency</p>
-        <div className="mt-2 flex items-baseline gap-2">
-          {stats.medianDaysToOpening !== null ? (
-            <>
-              <span className="text-4xl font-bold text-blue-900">{stats.medianDaysToOpening.toFixed(0)}</span>
-              <span className="text-lg text-blue-700">days before opening</span>
-            </>
-          ) : (
-            <span className="text-lg text-blue-700 italic">No labeled outcomes yet</span>
-          )}
-        </div>
-        <p className="text-xs mt-2 text-blue-700">Signal-to-label detection latency (precursor quality)</p>
-      </div>
+      <Alert variant="info" className="p-6">
+        <AlertDescription className="text-current">
+          <p className="text-sm font-medium">Median Label Latency</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            {stats.medianDaysToOpening !== null ? (
+              <>
+                <span className="text-4xl font-bold text-current">{stats.medianDaysToOpening.toFixed(0)}</span>
+                <span className="text-lg">days before opening</span>
+              </>
+            ) : (
+              <span className="text-lg italic">No labeled outcomes yet</span>
+            )}
+          </div>
+          <p className="text-xs mt-2">Signal-to-label detection latency (precursor quality)</p>
+        </AlertDescription>
+      </Alert>
 
       {/* Breakdown Tables */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* By Source */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+        <Card className="p-4">
           <h3 className="font-semibold text-slate-900 mb-3">By Source</h3>
           <div className="space-y-2">
             {stats.openingsBySource.length > 0 ? (
@@ -153,10 +158,10 @@ export function LabelMetricsPanel() {
               <p className="text-slate-600 text-sm italic">No data</p>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* By Role Family */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+        <Card className="p-4">
           <h3 className="font-semibold text-slate-900 mb-3">By Role Family</h3>
           <div className="space-y-2">
             {stats.openingsByFamily.length > 0 ? (
@@ -170,10 +175,10 @@ export function LabelMetricsPanel() {
               <p className="text-slate-600 text-sm italic">No data</p>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* By Sector */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+        <Card className="p-4">
           <h3 className="font-semibold text-slate-900 mb-3">By Sector (Top 5)</h3>
           <div className="space-y-2">
             {stats.openingsBySector.slice(0, 5).length > 0 ? (
@@ -187,40 +192,38 @@ export function LabelMetricsPanel() {
               <p className="text-slate-600 text-sm italic">No data</p>
             )}
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Source Details Table */}
       {sourceBreakdown.length > 0 && (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+        <Card className="p-4">
           <h3 className="font-semibold text-slate-900 mb-3">Source Details (Last 24h)</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b border-slate-300">
-                <tr>
-                  <th className="text-left py-2 px-2 text-slate-700">Source</th>
-                  <th className="text-right py-2 px-2 text-slate-700">Openings</th>
-                  <th className="text-right py-2 px-2 text-slate-700">Hit Rate</th>
-                  <th className="text-right py-2 px-2 text-slate-700">Median Days</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sourceBreakdown.map((row) => (
-                  <tr key={row.source_key} className="border-b border-slate-200 hover:bg-slate-100">
-                    <td className="py-2 px-2 text-slate-700">{row.source_key}</td>
-                    <td className="py-2 px-2 text-right text-slate-900 font-mono">{row.total_openings}</td>
-                    <td className="py-2 px-2 text-right text-slate-900 font-mono">
-                      {(row.hit_rate * 100).toFixed(1)}%
-                    </td>
-                    <td className="py-2 px-2 text-right text-slate-900 font-mono">
-                      {row.median_days_to_opening !== null ? row.median_days_to_opening.toFixed(0) : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Source</TableHead>
+                <TableHead className="text-right">Openings</TableHead>
+                <TableHead className="text-right">Hit Rate</TableHead>
+                <TableHead className="text-right">Median Days</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sourceBreakdown.map((row) => (
+                <TableRow key={row.source_key}>
+                  <TableCell>{row.source_key}</TableCell>
+                  <TableCell className="text-right font-mono">{row.total_openings}</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {(row.hit_rate * 100).toFixed(1)}%
+                  </TableCell>
+                  <TableCell className="text-right font-mono">
+                    {row.median_days_to_opening !== null ? row.median_days_to_opening.toFixed(0) : '-'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       {/* Footer */}

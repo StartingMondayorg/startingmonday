@@ -1,6 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Toggle } from '@/components/ui/toggle'
 
 export type StarStory = {
   id: string
@@ -52,71 +59,73 @@ function StoryForm({
   const canSave = situation.trim() && action.trim() && result.trim()
 
   const labelCls = 'block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5'
-  const inputCls = 'w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none'
+  const inputCls = 'w-full px-3 py-2 text-[13px] resize-none'
 
   return (
-    <div className="border border-slate-200 rounded p-5 bg-slate-50 flex flex-col gap-4">
+    <Card variant="default" className="gap-4 p-5 bg-slate-50">
       <div>
-        <label className={labelCls}>Situation <span className="text-red-500">*</span></label>
-        <textarea rows={2} value={situation} onChange={e => setSituation(e.target.value)}
+        <Label className={labelCls}>Situation <span className="text-red-500">*</span></Label>
+        <Textarea rows={2} value={situation} onChange={e => setSituation(e.target.value)}
           placeholder="The context and challenge - one or two sentences."
           className={inputCls} />
       </div>
       <div>
-        <label className={labelCls}>What you did <span className="text-red-500">*</span></label>
-        <textarea rows={2} value={action} onChange={e => setAction(e.target.value)}
+        <Label className={labelCls}>What you did <span className="text-red-500">*</span></Label>
+        <Textarea rows={2} value={action} onChange={e => setAction(e.target.value)}
           placeholder="Your specific decision or action - not the team, you."
           className={inputCls} />
       </div>
       <div>
-        <label className={labelCls}>Outcome <span className="text-red-500">*</span></label>
-        <textarea rows={2} value={result} onChange={e => setResult(e.target.value)}
+        <Label className={labelCls}>Outcome <span className="text-red-500">*</span></Label>
+        <Textarea rows={2} value={result} onChange={e => setResult(e.target.value)}
           placeholder="Quantified result - dollars, %, time, scope."
           className={inputCls} />
       </div>
       <div>
-        <label className={labelCls}>When this story applies</label>
+        <Label className={labelCls}>When this story applies</Label>
         <div className="flex flex-wrap gap-1.5 mb-2">
           {tags.map(t => (
-            <span key={t} className="inline-flex items-center gap-1 bg-slate-200 text-slate-700 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+            <Badge key={t} variant="secondary" className="h-auto gap-1 px-2 py-0.5 font-semibold">
               {t}
               <button type="button" onClick={() => removeTag(t)} className="text-slate-400 hover:text-slate-600 leading-none">×</button>
-            </span>
+            </Badge>
           ))}
         </div>
-        <input
+        <Input
           type="text"
           value={tagInput}
           onChange={e => setTagInput(e.target.value)}
           onKeyDown={handleTagKey}
           onBlur={() => { if (tagInput.trim()) { addTag(tagInput); setTagInput('') } }}
           placeholder="Type a tag and press Enter"
-          className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 mb-2"
+          className="h-auto w-full px-3 py-2 text-[13px] mb-2"
         />
         <div className="flex flex-wrap gap-1.5">
           {COMMON_TAGS.filter(t => !tags.includes(t)).map(t => (
-            <button key={t} type="button" onClick={() => addTag(t)}
-              className="text-[11px] text-slate-500 border border-slate-200 rounded-full px-2 py-0.5 hover:bg-slate-100 transition-colors">
+            <Toggle
+              key={t}
+              pressed={false}
+              onPressedChange={() => addTag(t)}
+              className="h-auto rounded-full px-2 py-0.5 text-[11px] text-slate-500 border border-slate-200 hover:bg-slate-100"
+            >
               + {t}
-            </button>
+            </Toggle>
           ))}
         </div>
       </div>
       <div className="flex items-center gap-3 pt-1">
-        <button
-          type="button"
+        <Button
           disabled={!canSave}
           onClick={() => onSave({ id: initial.id ?? newId(), situation, action, result, tags })}
-          className="bg-slate-900 text-white text-[12px] font-semibold px-4 py-2 rounded disabled:opacity-40 cursor-pointer border-0"
+          className="h-auto px-4 py-2 text-[12px] font-semibold"
         >
           Save story
-        </button>
-        <button type="button" onClick={onCancel}
-          className="text-[12px] text-slate-400 hover:text-slate-600 border-0 bg-transparent cursor-pointer">
+        </Button>
+        <Button variant="ghost" onClick={onCancel} className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-600 hover:bg-transparent">
           Cancel
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -162,7 +171,7 @@ export default function StarStoriesPanel({
             onSave={handleEdit}
             onCancel={() => setEditId(null)} />
         ) : (
-          <div key={s.id} className="border border-slate-200 rounded p-4 bg-white">
+          <Card key={s.id} variant="default" className="gap-0 p-4">
             <div className="text-[13px] text-slate-700 leading-relaxed mb-1">
               <span className="font-semibold text-slate-500 text-[10px] tracking-[0.08em] uppercase mr-1.5">Situation</span>
               {s.situation}
@@ -178,21 +187,21 @@ export default function StarStoriesPanel({
             {s.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {s.tags.map(t => (
-                  <span key={t} className="bg-slate-100 text-slate-500 text-[11px] font-semibold px-2 py-0.5 rounded-full">{t}</span>
+                  <Badge key={t} variant="secondary" className="h-auto px-2 py-0.5 font-semibold">{t}</Badge>
                 ))}
               </div>
             )}
             <div className="flex items-center gap-3">
-              <button type="button" onClick={() => setEditId(s.id)}
-                className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 border-0 bg-transparent cursor-pointer p-0">
+              <Button variant="ghost" onClick={() => setEditId(s.id)}
+                className="h-auto p-0 text-[11px] font-semibold text-slate-500 hover:text-slate-700 hover:bg-transparent">
                 Edit
-              </button>
-              <button type="button" onClick={() => handleDelete(s.id)}
-                className="text-[11px] font-semibold text-red-400 hover:text-red-600 border-0 bg-transparent cursor-pointer p-0">
+              </Button>
+              <Button variant="ghost" onClick={() => handleDelete(s.id)}
+                className="h-auto p-0 text-[11px] font-semibold text-red-400 hover:text-red-600 hover:bg-transparent">
                 Delete
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         )
       ))}
 
@@ -201,10 +210,10 @@ export default function StarStoriesPanel({
           onSave={handleAdd}
           onCancel={() => setAdding(false)} />
       ) : (
-        <button type="button" onClick={() => setAdding(true)}
-          className="self-start text-[12px] font-semibold text-orange-600 hover:text-orange-800 border border-orange-200 hover:border-orange-400 bg-orange-50 hover:bg-orange-100 rounded px-3 py-1.5 transition-colors cursor-pointer">
+        <Button variant="outline" onClick={() => setAdding(true)}
+          className="self-start h-auto px-3 py-1.5 text-[12px] font-semibold">
           + Add story
-        </button>
+        </Button>
       )}
     </div>
   )

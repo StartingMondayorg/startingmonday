@@ -4,6 +4,12 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { archiveContactSilent, toggleContactPriority } from '@/app/(dashboard)/dashboard/contacts/actions'
 import { STATUS_STEPS, STATUS_CLS } from '@/app/(dashboard)/dashboard/_components/ContactStatusStepper'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Toggle } from '@/components/ui/toggle'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 const CHANNEL: Record<string, { label: string; cls: string }> = {
   linkedin:  { label: 'LinkedIn',  cls: 'border border-blue-300/20 bg-blue-500/10 text-blue-100' },
@@ -118,7 +124,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
 
   if (contacts.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/15 bg-white/5 overflow-hidden shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+      <Card variant="glass" className="overflow-hidden">
         <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300">All contacts</span>
           <span className="text-[12px] text-slate-400">0 contacts</span>
@@ -133,7 +139,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
           <p className="text-[14px] font-semibold text-white mb-1">No contacts yet</p>
           <p className="text-[13px] text-slate-300 max-w-xs mx-auto">Add recruiters, hiring managers, and warm connections. Roles at this level fill through relationships.</p>
         </div>
-      </div>
+      </Card>
     )
   }
 
@@ -157,14 +163,14 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
     return (
       <div className="px-6 py-4 flex items-start gap-3 bg-slate-950/10 hover:bg-white/[0.03] transition-colors">
         {isLeader && (
-          <button
-            type="button"
+          <Toggle
+            pressed={isPriority}
+            onPressedChange={() => togglePriority(ct)}
             title={isPriority ? 'Remove priority' : 'Mark as priority'}
-            onClick={() => togglePriority(ct)}
-            className={`shrink-0 mt-0.5 text-[16px] leading-none cursor-pointer bg-transparent border-0 p-0 transition-opacity ${isPriority ? 'text-orange-300 opacity-100' : 'text-slate-500 opacity-30 hover:opacity-70'}`}
+            className={`shrink-0 mt-0.5 h-auto min-w-0 p-0 text-[16px] leading-none hover:bg-transparent ${isPriority ? 'text-orange-300 opacity-100' : 'text-slate-500 opacity-30 hover:opacity-70'}`}
           >
             ★
-          </button>
+          </Toggle>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -172,18 +178,18 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
               {ct.name}
             </Link>
             {ch && (
-              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-[0.04em] ${ch.cls}`}>
+              <Badge className={`font-semibold tracking-[0.04em] ${ch.cls}`}>
                 {ch.label}
-              </span>
+              </Badge>
             )}
             {relationshipType && (
-              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-[0.04em] border border-orange-300/20 bg-orange-500/10 text-orange-100">
+              <Badge className="font-semibold tracking-[0.04em] border border-orange-300/20 bg-orange-500/10 text-orange-100">
                 {relationshipType}
-              </span>
+              </Badge>
             )}
-            <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusCls}`}>
+            <Badge className={`font-semibold ${statusCls}`}>
               {statusLabel}
-            </span>
+            </Badge>
           </div>
           {subtitle && (
             <p className="text-[13px] text-slate-300 mt-0.5">{subtitle}</p>
@@ -211,14 +217,16 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0 mt-0.5">
-          <Link
-            href={`/dashboard/contacts/${ct.id}/outreach`}
-            className="text-[11px] text-slate-300 hover:text-white font-medium"
+          <Button
+            variant="ghost"
+            render={<Link href={`/dashboard/contacts/${ct.id}/outreach`} />}
+            className="text-[11px] text-slate-300 hover:text-white hover:bg-transparent font-medium h-auto p-0"
           >
             Draft outreach (with brief)
-          </Link>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => {
               setRemovedIds(prev => new Set([...prev, ct.id]))
               startTransition(async () => {
@@ -226,28 +234,29 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
                 router.refresh()
               })
             }}
-            className="text-[11px] text-slate-400 hover:text-red-200 cursor-pointer bg-transparent border-0 p-0 min-h-[32px] min-w-[44px]"
+            className="text-[11px] text-slate-400 hover:text-red-200 hover:bg-transparent p-0 min-h-[32px] min-w-[44px] h-auto"
           >
             Remove
-          </button>
+          </Button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl border border-white/15 bg-white/5 overflow-hidden shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="overflow-hidden">
       <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
         <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300">All contacts</span>
         <div className="flex items-center gap-3">
           {isLeader && filtered.length > 0 && (
-            <button
+            <Button
               type="button"
+              variant="ghost"
               onClick={() => exportContactsCsv(filtered)}
-              className="text-[11px] font-semibold text-slate-300 hover:text-white cursor-pointer bg-transparent border-0 p-0"
+              className="text-[11px] font-semibold text-slate-300 hover:text-white hover:bg-transparent p-0 h-auto"
             >
               Export CSV
-            </button>
+            </Button>
           )}
           <span className="text-[12px] text-slate-400">
             {filtered.length !== contacts.length
@@ -259,44 +268,42 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
 
       {/* Search */}
       <div className="px-6 py-3 border-b border-white/10 bg-slate-950/20">
-        <input
+        <Input
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by name, title, or company..."
-          className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none bg-transparent"
+          className="w-full h-auto border-0 p-0 text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0 bg-transparent"
         />
       </div>
 
       {/* Channel filter */}
       {activeChannelFilters.length > 1 && (
-        <div className="px-6 py-2.5 border-b border-white/10 flex items-center gap-1.5 overflow-x-auto bg-slate-950/20">
-          <button
-            type="button"
-            onClick={() => setChannelFilter('')}
-            className={[
-              'text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 cursor-pointer border-0 transition-colors',
-              !channelFilter ? 'bg-orange-500 text-slate-950' : 'bg-white/5 text-slate-300 hover:bg-white/10',
-            ].join(' ')}
+        <div className="px-6 py-2.5 border-b border-white/10 overflow-x-auto bg-slate-950/20">
+          <ToggleGroup
+            value={channelFilter ? [channelFilter] : []}
+            onValueChange={(values) => setChannelFilter(values[0] ?? '')}
+            className="gap-1.5"
           >
-            All
-          </button>
-          {activeChannelFilters.map(v => {
-            const ch = CHANNEL[v]
-            return (
-              <button
-                key={v}
-                type="button"
-                onClick={() => setChannelFilter(channelFilter === v ? '' : v)}
-                className={[
-                  'text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 cursor-pointer border-0 transition-colors',
-                  channelFilter === v ? 'bg-orange-500 text-slate-950' : 'bg-white/5 text-slate-300 hover:bg-white/10',
-                ].join(' ')}
-              >
-                {ch?.label ?? v}
-              </button>
-            )
-          })}
+            <ToggleGroupItem
+              value=""
+              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${!channelFilter ? 'bg-orange-500 text-slate-950 hover:bg-orange-500' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+            >
+              All
+            </ToggleGroupItem>
+            {activeChannelFilters.map(v => {
+              const ch = CHANNEL[v]
+              return (
+                <ToggleGroupItem
+                  key={v}
+                  value={v}
+                  className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${channelFilter === v ? 'bg-orange-500 text-slate-950 hover:bg-orange-500' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+                >
+                  {ch?.label ?? v}
+                </ToggleGroupItem>
+              )
+            })}
+          </ToggleGroup>
         </div>
       )}
 
@@ -324,6 +331,6 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
 
         </div>
       )}
-    </div>
+    </Card>
   )
 }

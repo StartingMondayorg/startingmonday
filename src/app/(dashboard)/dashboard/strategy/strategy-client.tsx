@@ -2,6 +2,10 @@
 import Link from 'next/link'
 import { useState, useRef } from 'react'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 
 function BoldText({ text }: { text: string }) {
   const parts = text.split(/\*\*(.+?)\*\*/g)
@@ -167,67 +171,64 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
               Your market position, target profile, outreach framework, and first 30 days.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleGenerate}
-            disabled={loading}
-            className="shrink-0 bg-slate-900 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <Button onClick={handleGenerate} disabled={loading} className="shrink-0">
             {loading ? 'Generating…' : brief ? 'Regenerate' : 'Generate strategy brief'}
-          </button>
+          </Button>
         </div>
 
         {missingFields.length > 0 && !brief && (
-          <div className="mb-6 px-5 py-4 bg-amber-50 border border-amber-200 rounded text-[13px] text-amber-800 leading-relaxed">
-            <p className="font-semibold mb-2">Your brief will be generic without these fields:</p>
-            <ul className="mb-2 space-y-0.5">
-              {missingFields.map(f => (
-                <li key={f.anchor} className="flex items-center gap-2">
-                  <span className="text-amber-400">–</span>
-                  <Link
-                    href={`/dashboard/profile#${f.anchor}`}
-                    className="underline hover:text-amber-900"
-                  >
-                    {f.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <span className="text-amber-700">Add them first for a sharper result. You can generate now and improve it after.</span>
-          </div>
+          <Alert variant="warning" className="mb-6 [&>svg]:hidden">
+            <AlertTitle className="mb-2">Your brief will be generic without these fields:</AlertTitle>
+            <AlertDescription>
+              <ul className="mb-2 space-y-0.5">
+                {missingFields.map(f => (
+                  <li key={f.anchor} className="flex items-center gap-2">
+                    <span className="text-warning/70">–</span>
+                    <Link
+                      href={`/dashboard/profile#${f.anchor}`}
+                      className="underline hover:text-warning"
+                    >
+                      {f.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <span>Add them first for a sharper result. You can generate now and improve it after.</span>
+            </AlertDescription>
+          </Alert>
         )}
 
         {error && (
-          <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 rounded text-[13px] text-red-700">
-            {error}
-          </div>
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         {!brief && !loading && !error && (
-          <div className="bg-white border border-slate-200 rounded p-10 text-center">
+          <Card className="p-10 text-center">
             <p className="text-[14px] text-slate-400 leading-relaxed max-w-md mx-auto">
               Generates an honest read on your market position and a concrete action framework - based on your profile, target roles, and pipeline.
             </p>
-          </div>
+          </Card>
         )}
 
         {loading && !brief && (
-          <div className="bg-white border border-slate-200 rounded p-8">
+          <Card className="p-8">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
               <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
               <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
             </div>
-          </div>
+          </Card>
         )}
 
         {brief && (
-          <div className="bg-white border border-slate-200 rounded p-8">
+          <Card className="p-8">
             {renderBrief(brief)}
             {loading && (
               <span className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />
             )}
-          </div>
+          </Card>
         )}
 
         {briefId && !loading && (
@@ -244,43 +245,40 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
                 'How should I handle gaps in my background?',
                 'Draft a 30-second elevator pitch for my search',
               ].map(chip => (
-                <button
+                <Button
                   key={chip}
-                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full text-slate-500 hover:text-slate-700"
                   onClick={() => { setQuestion(chip); questionRef.current?.focus() }}
-                  className="text-[12px] text-slate-500 border border-slate-200 rounded-full px-3 py-1 hover:border-slate-400 hover:text-slate-700 bg-transparent cursor-pointer transition-colors"
                 >
                   {chip}
-                </button>
+                </Button>
               ))}
             </div>
             <form onSubmit={handleFollowup} className="flex gap-3">
-              <input
+              <Input
                 ref={questionRef}
                 type="text"
                 value={question}
                 onChange={e => setQuestion(e.target.value)}
                 placeholder="Ask a follow-up question about your strategy…"
                 disabled={answerLoading}
-                className="flex-1 border border-slate-200 rounded px-4 py-2.5 text-[14px] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent disabled:opacity-50"
+                className="flex-1"
               />
-              <button
-                type="submit"
-                disabled={!question.trim() || answerLoading}
-                className="shrink-0 bg-slate-900 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <Button type="submit" disabled={!question.trim() || answerLoading} className="shrink-0">
                 {answerLoading ? 'Thinking…' : 'Ask'}
-              </button>
+              </Button>
             </form>
 
             {answerError && (
-              <div className="mt-3 px-4 py-3 bg-red-50 border border-red-200 rounded text-[13px] text-red-700">
-                {answerError}
-              </div>
+              <Alert variant="destructive" className="mt-3">
+                <AlertDescription>{answerError}</AlertDescription>
+              </Alert>
             )}
 
             {(answer || answerLoading) && (
-              <div className="mt-4 bg-white border border-slate-200 rounded p-6">
+              <Card className="mt-4 p-6">
                 {answer && (
                   <div className="text-[14px] text-slate-700 leading-relaxed whitespace-pre-wrap">
                     {answer}
@@ -296,7 +294,7 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
                 {answerLoading && answer && (
                   <span className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />
                 )}
-              </div>
+              </Card>
             )}
           </div>
         )}

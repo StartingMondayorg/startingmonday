@@ -1,6 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
+import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type SnoozeState = {
   startDate: string
@@ -101,7 +106,10 @@ export function DashboardActivitySnooze() {
   }
 
   return (
-    <section className="mb-4 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.12)] backdrop-blur-md sm:px-5 sm:py-4">
+    <Card
+      variant="glass"
+      className="mb-4 px-4 py-3 shadow-[0_16px_40px_rgba(15,23,42,0.12)] sm:px-5 sm:py-4"
+    >
       <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div className="min-w-0">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Activity controls</p>
@@ -113,90 +121,100 @@ export function DashboardActivitySnooze() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {!isActive && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => setOpen((prev) => !prev)}
-              className="inline-flex min-h-[44px] items-center rounded-md border border-white/25 px-3 text-[12px] font-semibold text-slate-100 hover:border-white/40 hover:text-white"
+              className="min-h-[44px] border-white/25 bg-transparent text-[12px] font-semibold text-slate-100 hover:border-white/40 hover:bg-transparent hover:text-white"
             >
               Snooze activity
-            </button>
+            </Button>
           )}
           {isActive && (
             <>
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => setOpen((prev) => !prev)}
-                className="inline-flex min-h-[44px] items-center rounded-md border border-white/25 px-3 text-[12px] font-semibold text-slate-100 hover:border-white/40 hover:text-white"
+                className="min-h-[44px] border-white/25 bg-transparent text-[12px] font-semibold text-slate-100 hover:border-white/40 hover:bg-transparent hover:text-white"
               >
                 Edit snooze
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="outline"
                 onClick={clearSnooze}
-                className="inline-flex min-h-[44px] items-center rounded-md border border-orange-300/50 bg-orange-500/20 px-3 text-[12px] font-semibold text-orange-100 hover:text-white"
+                className="min-h-[44px] border-orange-300/50 bg-orange-500/20 text-[12px] font-semibold text-orange-100 hover:bg-orange-500/20 hover:text-white"
               >
                 Resume activity
-              </button>
+              </Button>
             </>
           )}
         </div>
       </div>
 
-      {open && (
-        <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4">
+      <Collapsible open={open} onOpenChange={setOpen}>
+        <CollapsibleContent className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4">
           <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-slate-300">Quick options</p>
           <div className="mt-2 flex flex-wrap gap-2">
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => applyPreset(1)}
-              className="inline-flex min-h-[44px] items-center rounded-md border border-white/20 px-3 text-[12px] font-semibold text-slate-100 hover:border-white/35"
+              className="min-h-[44px] border-white/20 bg-transparent text-[12px] font-semibold text-slate-100 hover:border-white/35 hover:bg-transparent"
             >
               Snooze 1 day
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="outline"
               onClick={() => applyPreset(7)}
-              className="inline-flex min-h-[44px] items-center rounded-md border border-white/20 px-3 text-[12px] font-semibold text-slate-100 hover:border-white/35"
+              className="min-h-[44px] border-white/20 bg-transparent text-[12px] font-semibold text-slate-100 hover:border-white/35 hover:bg-transparent"
             >
               Snooze 1 week
-            </button>
+            </Button>
           </div>
 
           <p className="mt-3 text-[11px] font-semibold tracking-[0.08em] uppercase text-slate-300">Custom date range</p>
           <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
             <label className="text-[12px] text-slate-200">
               Start
-              <input
+              <Input
                 type="date"
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
-                className="mt-1 block min-h-[44px] w-full rounded-md border border-white/20 bg-slate-950/40 px-2 text-[12px] text-slate-100"
+                className="mt-1 min-h-[44px] w-full border-white/20 bg-slate-950/40 text-[12px] text-slate-100"
               />
             </label>
             <label className="text-[12px] text-slate-200">
               End
-              <input
+              <Input
                 type="date"
                 value={endDate}
                 min={startDate}
                 onChange={(event) => setEndDate(event.target.value)}
-                className="mt-1 block min-h-[44px] w-full rounded-md border border-white/20 bg-slate-950/40 px-2 text-[12px] text-slate-100"
+                className="mt-1 min-h-[44px] w-full border-white/20 bg-slate-950/40 text-[12px] text-slate-100"
               />
             </label>
-            <button
+            <Button
               type="button"
+              variant="outline"
               disabled={!customRangeValid}
               onClick={applyCustomRange}
-              className="inline-flex min-h-[44px] items-center justify-center rounded-md border border-orange-300/40 bg-orange-500/20 px-3 text-[12px] font-semibold text-orange-100 hover:text-white disabled:opacity-50"
+              className="min-h-[44px] justify-center border-orange-300/40 bg-orange-500/20 text-[12px] font-semibold text-orange-100 hover:bg-orange-500/20 hover:text-white disabled:opacity-50"
             >
               Apply range
-            </button>
+            </Button>
           </div>
           {!customRangeValid && (
-            <p className="mt-2 text-[12px] text-amber-200">End date must be the same as or after start date.</p>
+            <Alert variant="warning" className="mt-2 border-none bg-transparent px-0 py-0 text-[12px] text-amber-200">
+              <AlertDescription className="text-[12px] text-amber-200">
+                End date must be the same as or after start date.
+              </AlertDescription>
+            </Alert>
           )}
-        </div>
-      )}
-    </section>
+        </CollapsibleContent>
+      </Collapsible>
+    </Card>
   )
 }

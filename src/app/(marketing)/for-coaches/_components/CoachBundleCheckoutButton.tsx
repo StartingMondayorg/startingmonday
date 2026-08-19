@@ -2,6 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Card } from '@/components/ui/card'
 
 type Props = {
   bundleSlug: string
@@ -54,37 +59,40 @@ export function CoachBundleCheckoutButton({
 
   return (
     <div className="space-y-3">
-      <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
-        <label htmlFor={`discount-code-${bundleSlug}`} className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-600 mb-1.5">
+      <Card className="gap-1.5 p-3">
+        <Label htmlFor={`discount-code-${bundleSlug}`} className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-600">
           Discount code
-        </label>
-        <input
+        </Label>
+        <Input
           id={`discount-code-${bundleSlug}`}
           type="text"
           value={discountCode}
           onChange={(event) => setDiscountCode(event.target.value)}
           placeholder="Enter code (optional)"
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          className="text-[13px]"
         />
-      </div>
+      </Card>
 
-      <button
+      <Button
         type="button"
         onClick={handleCheckout}
         disabled={loading}
-        className="w-full inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-800 text-[13px] font-semibold px-4 py-2 hover:bg-slate-100 transition-colors disabled:opacity-60"
+        variant="outline"
+        className="w-full text-[13px]"
       >
         {loading ? 'Opening checkout...' : buttonLabel}
-      </button>
+      </Button>
 
       {error && (
-        <p className="text-[12px] text-amber-700 leading-relaxed">
-          {error}{' '}
-          <Link href={fallbackHref} className="underline underline-offset-2 font-semibold">
-            Get purchase help
-          </Link>
-          .
-        </p>
+        <Alert variant="warning">
+          <AlertDescription className="text-[12px]">
+            {error}{' '}
+            <Link href={fallbackHref} className="underline underline-offset-2 font-semibold">
+              Get purchase help
+            </Link>
+            .
+          </AlertDescription>
+        </Alert>
       )}
     </div>
   )
