@@ -1,7 +1,13 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { isEnabledFlag } from '@/lib/feature-flags'
 
-const TIER_0_PUBLIC_ROUTES = ['/', '/login', '/signup']
+const TIER_0_PUBLIC_ROUTES = [
+  '/',
+  '/login',
+  '/signup',
+  ...(isEnabledFlag(process.env.NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED) ? ['/example'] : []),
+]
 
 test.describe('tier-0 accessibility gate', () => {
   for (const route of TIER_0_PUBLIC_ROUTES) {

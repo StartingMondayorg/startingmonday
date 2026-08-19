@@ -498,6 +498,17 @@ jobs:
               - 'tests/e2e/synthetics.spec.ts'
               - 'src/app/(auth)/signup/**'
               - 'src/app/partners/**'
+            landinghero:
+              - 'src/app/(marketing)/page.tsx'
+              - 'src/app/(marketing)/example/**'
+              - 'src/app/components/LandingPage.tsx'
+              - 'src/app/components/SignalTimelineCard.tsx'
+              - 'src/components/ui/button.tsx'
+              - 'src/lib/starting-monday-hero-content.ts'
+              - 'src/lib/feature-flags.ts'
+              - 'tests/e2e/landing-hero.spec.ts'
+              - 'tests/e2e/accessibility-tier0.spec.ts'
+              - 'tests/e2e/__screenshots__/landing-hero-*.png'
             full:
               - '.github/workflows/ci.yml'
               - 'playwright.config.ts'
@@ -527,6 +538,7 @@ jobs:
           AUTH_CHANGED: ${{ steps.changed.outputs.authux }}
           LUXURY_CHANGED: ${{ steps.changed.outputs.luxuryux }}
           SYNTHETIC_CHANGED: ${{ steps.changed.outputs.synthetic10 }}
+          LANDING_HERO_CHANGED: ${{ steps.changed.outputs.landinghero }}
           FULL_CHANGED: ${{ steps.changed.outputs.full }}
         run: |
           node <<'NODE' >> "$GITHUB_OUTPUT"
@@ -535,6 +547,7 @@ jobs:
           const auth = process.env.AUTH_CHANGED === 'true'
           const luxury = process.env.LUXURY_CHANGED === 'true'
           const synthetic = process.env.SYNTHETIC_CHANGED === 'true'
+          const landingHero = process.env.LANDING_HERO_CHANGED === 'true'
 
           // local: true  => render-only suite, runs against the PR's own build
           // local: false => needs a real backend (auth/signup), runs against staging
@@ -544,9 +557,23 @@ jobs:
               command: 'npx playwright test tests/e2e/smoke.spec.ts --project=setup --project=smoke',
               local: false,
             })
+            suites.push({
+              name: 'landing-hero',
+              command: 'npx playwright test tests/e2e/landing-hero.spec.ts --project=landing-hero',
+              local: true,
+              hero_evidence: true,
+            })
           } else {
             if (auth) suites.push({ name: 'auth-ux', command: 'npm run test:e2e:auth-ux', local: true })
             if (luxury) suites.push({ name: 'luxury-ux', command: 'npm run test:e2e:luxury', local: true })
+            if (landingHero) {
+              suites.push({
+                name: 'landing-hero',
+                command: 'npx playwright test tests/e2e/landing-hero.spec.ts --project=landing-hero',
+                local: true,
+                hero_evidence: true,
+              })
+            }
             if (synthetic) {
               suites.push({
                 name: 'synthetic-10',
@@ -598,10 +625,13 @@ jobs:
         if: matrix.local
         env:
           MOBILE_ELITE_GATE_STRICT: '0'
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: ${{ matrix.hero_evidence && '1' || '0' }}
         run: npm run build
 
       - name: Start app for local E2E
         if: matrix.local
+        env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: ${{ matrix.hero_evidence && '1' || '0' }}
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid
@@ -621,6 +651,7 @@ jobs:
       - name: Run E2E tests (${{ matrix.name }})
         run: ${{ matrix.command }}
         env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: ${{ matrix.hero_evidence && '1' || '0' }}
           PLAYWRIGHT_BASE_URL: ${{ matrix.local && 'http://127.0.0.1:3000' || needs.playwright-pr-plan.outputs.playwright_base_url }}
           PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
           PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
@@ -906,10 +937,14 @@ jobs:
 
       - name: Build PR branch for local accessibility run
         if: github.event_name == 'pull_request'
+        env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
         run: npm run build
 
       - name: Start local app for PR accessibility run
         if: github.event_name == 'pull_request'
+        env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid
@@ -932,6 +967,7 @@ jobs:
       - name: Run tier-0 accessibility suite
         run: npx playwright test tests/e2e/accessibility-tier0.spec.ts --project=accessibility-tier0
         env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: ${{ github.event_name == 'pull_request' && '1' || vars.NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED }}
           PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL) }}
 
       - name: Stop local app

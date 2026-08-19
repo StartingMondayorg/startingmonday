@@ -9,7 +9,6 @@ import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/app/com
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { OpportunityTimingGapChart, OpportunityTimingGapChartMobile } from '@/app/components/OpportunityCharts'
 import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
-import { HeroPageViewTelemetry } from '@/app/components/HeroPageViewTelemetry'
 import { HERO_EVENT_NAMES } from '@/lib/channel-metrics-events'
 import type { StartingMondayHeroProofCase } from '@/lib/starting-monday-hero-content'
 
@@ -199,7 +198,6 @@ export function LandingPage({
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
       {isHomePage && <FirstMileTelemetry eventName="homepage_viewed" pageName="homepage" properties={{ source_page: sourcePage }} />}
-      {showHeroEvidence && <HeroPageViewTelemetry event={HERO_EVENT_NAMES.heroView} properties={{ source_page: '/' }} />}
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
       <nav className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
@@ -329,7 +327,7 @@ export function LandingPage({
               </>
             )}
             {showHeroEvidence && heroEvidence && (
-              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center" data-hero-evidence-actions>
                 <Button
                   className="min-h-[48px] rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
                   render={
