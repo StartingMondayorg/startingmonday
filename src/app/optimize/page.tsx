@@ -2,6 +2,11 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePostHog } from 'posthog-js/react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type Status = 'idle' | 'uploading' | 'streaming' | 'done' | 'error'
 
@@ -80,16 +85,18 @@ function HelpPopover() {
 
   return (
     <div className="relative" ref={ref}>
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="icon-xs"
         onClick={() => setOpen(o => !o)}
-        className="w-5 h-5 rounded-full border border-slate-300 text-[11px] font-bold text-slate-200 hover:border-slate-500 hover:text-slate-600 transition-colors flex items-center justify-center leading-none"
+        className="rounded-full text-[11px] font-bold"
         aria-label="How to get your LinkedIn profile"
       >
         ?
-      </button>
+      </Button>
       {open && (
-        <div className="absolute right-0 top-7 z-50 w-72 bg-white border border-slate-200 rounded shadow-lg p-4 text-[12px] text-slate-600 leading-relaxed">
+        <Card className="absolute right-0 top-7 z-50 w-72 p-4 text-[12px] text-slate-600 leading-relaxed shadow-lg">
           <p className="font-semibold text-slate-800 mb-3">How to get your LinkedIn profile text</p>
 
           <p className="font-semibold text-slate-700 mb-1">Easiest - works on every LinkedIn version:</p>
@@ -106,7 +113,7 @@ function HelpPopover() {
             <li><span className="font-medium text-slate-600">More</span> button &rarr; Save to PDF</li>
             <li><span className="font-medium text-slate-600">&hellip;</span> menu &rarr; Save to PDF</li>
           </ul>
-        </div>
+        </Card>
       )}
     </div>
   )
@@ -195,12 +202,13 @@ export default function OptimizePage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-[12px] text-slate-200 hover:text-white transition-colors">Sign in</Link>
-            <Link
-              href="/signup"
-              className="text-[12px] font-semibold text-white bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded transition-colors"
+            <Button
+              size="sm"
+              className="!bg-slate-700 hover:!bg-slate-600"
+              render={<Link href="/signup" />}
             >
               Get started free
-            </Link>
+            </Button>
           </div>
         </div>
       </header>
@@ -218,8 +226,8 @@ export default function OptimizePage() {
         </div>
 
         {/* Input card */}
-        <section id="profile-input" className="bg-white border border-slate-200 rounded overflow-hidden mb-6">
-          <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between">
+        <Card id="profile-input" className="overflow-hidden mb-6 py-0">
+          <div className="px-6 py-[18px] border-b flex items-center justify-between">
             <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-200">Your LinkedIn Profile</h2>
             <div className="flex items-center gap-2">
               <HelpPopover />
@@ -240,53 +248,53 @@ export default function OptimizePage() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <textarea
+            <Textarea
               value={text}
               onChange={e => setText(e.target.value)}
               placeholder={'Paste your LinkedIn profile text here - About section, Experience, Skills, Headline...\n\nQuickest: open your LinkedIn profile, press Ctrl+A (Cmd+A on Mac), then Ctrl+C, and paste here.\n\nOr export a PDF: on your profile look for Resources, More, or the ... menu ? Save to PDF ? open the PDF ? select all text ? paste here.'}
               rows={12}
               disabled={status === 'streaming'}
-              className="w-full px-6 py-4 text-[14px] text-slate-800 placeholder:text-slate-200 resize-none focus:outline-none leading-relaxed disabled:opacity-60"
+              className="w-full rounded-none border-0 px-6 py-4 text-[14px] resize-none leading-relaxed"
             />
-            <div className="px-6 py-4 border-t border-slate-100">
+            <div className="px-6 py-4 border-t">
               <div className="flex items-center gap-3 mb-3">
-                <input
+                <Input
                   type="email"
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Your work email to receive the analysis"
                   disabled={status === 'streaming'}
-                  className="flex-1 border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-900 placeholder:text-slate-200 focus:outline-none focus:border-slate-400 disabled:opacity-60"
+                  className="flex-1 text-[13px]"
                 />
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span className="text-[12px] text-slate-200">
                   {text.length > 0 ? `${text.length.toLocaleString()} characters` : 'Min. 100 characters'}
                 </span>
-                <button
+                <Button
                   type="submit"
                   disabled={!canSubmit}
-                  className="text-[13px] font-semibold text-white bg-slate-950 hover:bg-slate-700 px-5 py-2.5 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  className="!bg-slate-950 hover:!bg-slate-700"
                 >
                   {status === 'streaming' ? 'Analyzing…' : 'Analyze my profile'}
-                </button>
+                </Button>
               </div>
             </div>
           </form>
-        </section>
+        </Card>
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded px-5 py-3 mb-6">
-            <p className="text-[13px] text-red-700">{error}</p>
-          </div>
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         {/* Output */}
         {(output || status === 'streaming') && (
-          <section id="profile-analysis" className="bg-white border border-slate-200 rounded overflow-hidden mb-6">
-            <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between">
+          <Card id="profile-analysis" className="overflow-hidden mb-6 py-0">
+            <div className="px-6 py-[18px] border-b flex items-center justify-between">
               <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-200">Analysis</h2>
               {status === 'streaming' && (
                 <span className="text-[11px] text-slate-200 animate-pulse">Thinking…</span>
@@ -295,7 +303,7 @@ export default function OptimizePage() {
             <div className="px-6 py-6">
               {renderOutput(output)}
             </div>
-          </section>
+          </Card>
         )}
 
         {/* Share card - shown after analysis completes */}
@@ -315,21 +323,22 @@ export default function OptimizePage() {
             setTimeout(() => setCopied(false), 2000)
           }
           return (
-            <section id="share-score" className="bg-white border border-slate-200 rounded p-5 mb-6 flex items-center justify-between gap-4 flex-wrap">
+            <Card id="share-score" className="p-5 mb-6 flex-row items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-3">
                 <span className="text-[12px] text-slate-500">Share your score</span>
                 {grade && (
                   <span className={`text-[14px] font-bold px-2.5 py-0.5 rounded ${gradeColor}`}>{grade}</span>
                 )}
               </div>
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={copyShare}
-                className="text-[13px] font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded transition-colors cursor-pointer border-0 shrink-0"
+                className="shrink-0"
               >
                 {copied ? 'Copied!' : 'Copy to share'}
-              </button>
-            </section>
+              </Button>
+            </Card>
           )
         })()}
 
@@ -345,12 +354,13 @@ export default function OptimizePage() {
             <p className="text-[14px] text-slate-200 leading-relaxed mb-6 max-w-sm mx-auto">
               Profile quality is step one. Starting Monday tracks departures, board changes, and funding signals so you can move before formal search cycles start.
             </p>
-            <Link
-              href="/signup"
-              className="inline-block text-[14px] font-semibold text-slate-900 bg-white hover:bg-slate-100 px-6 py-3 rounded transition-colors"
+            <Button
+              size="lg"
+              className="!bg-white !text-slate-900 hover:!bg-slate-100"
+              render={<Link href="/signup" />}
             >
               Start your free 30-day trial &rarr;
-            </Link>
+            </Button>
             <p className="text-[11px] text-slate-600 mt-3">No credit card required to start.</p>
             <p className="text-[12px] text-slate-500 mt-4">
               Want to see the platform first?{' '}
