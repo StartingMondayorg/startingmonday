@@ -3,6 +3,18 @@
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 type GuideSection = {
   id: string
@@ -328,43 +340,77 @@ export function InternalGuideClient({ sections, initialQuestion = '', staffRole,
           <p className="text-[13px] text-slate-500 mt-1">Admin/owner handbook organized as: section overview, then function-level drill-down inside each section.</p>
         </div>
 
-        <section className="sticky top-4 z-20 bg-slate-950 text-slate-100 border border-slate-800 rounded-xl p-4 mb-6 shadow-lg">
+        <Card className="sticky top-4 z-20 bg-slate-950 text-slate-100 border-slate-800 p-4 mb-6 shadow-lg">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
               <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">You are here</p>
-              <p className="text-[14px] font-semibold text-white mt-1">Internal Guide{activeSection ? ` / ${activeSection.section.title}` : ''}{activeFunction ? ` / ${activeFunction.functionKey}` : ''}</p>
+              <Breadcrumb className="mt-1">
+                <BreadcrumbList className="text-[14px] font-semibold text-white flex-nowrap">
+                  <BreadcrumbItem><BreadcrumbPage className="text-white">Internal Guide</BreadcrumbPage></BreadcrumbItem>
+                  {activeSection ? (
+                    <>
+                      <BreadcrumbSeparator className="text-slate-500" />
+                      <BreadcrumbItem><BreadcrumbPage className="text-white">{activeSection.section.title}</BreadcrumbPage></BreadcrumbItem>
+                    </>
+                  ) : null}
+                  {activeFunction ? (
+                    <>
+                      <BreadcrumbSeparator className="text-slate-500" />
+                      <BreadcrumbItem><BreadcrumbPage className="text-white">{activeFunction.functionKey}</BreadcrumbPage></BreadcrumbItem>
+                    </>
+                  ) : null}
+                </BreadcrumbList>
+              </Breadcrumb>
               <p className="text-[12px] text-slate-400 mt-1">{activeFunction?.summary ?? activeSection?.section.body.split('\n').find((line) => line.trim())?.replace(/^[-*]\s*/, '') ?? 'Choose a section to see its functions and source items.'}</p>
               <p className="text-[11px] text-slate-500 mt-2">Guide synced {formatDate(guideGeneratedAt)}</p>
             </div>
             {activeSection ? (
               <div className="lg:max-w-[45%]">
                 <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">Mini map</p>
-                <div className="space-y-2">
+                <ToggleGroup
+                  orientation="vertical"
+                  className="w-full gap-2"
+                  value={activeFunction ? [activeFunction.functionKey] : []}
+                  onValueChange={(values) => {
+                    const next = values[0]
+                    if (next) updateSelection(activeSection.section.id, next)
+                  }}
+                >
                   {activeSection.functions.map((entry) => (
-                    <button key={entry.functionKey} type="button" onClick={() => updateSelection(activeSection.section.id, entry.functionKey)} className={`w-full rounded-lg border px-3 py-2 text-left text-[12px] ${activeFunction?.functionKey === entry.functionKey ? 'border-orange-400 bg-orange-500/10 text-white' : 'border-slate-800 bg-slate-900 text-slate-200 hover:border-slate-700'}`}>
+                    <ToggleGroupItem
+                      key={entry.functionKey}
+                      value={entry.functionKey}
+                      className={`h-auto w-full flex-col items-start whitespace-normal rounded-lg border px-3 py-2 text-left text-[12px] ${activeFunction?.functionKey === entry.functionKey ? 'border-orange-400 bg-orange-500/10 text-white' : 'border-slate-800 bg-slate-900 text-slate-200 hover:border-slate-700'}`}
+                    >
                       <p className="font-semibold">{entry.functionKey}</p>
                       <p className="mt-1 text-[11px] text-slate-300">Covers {entry.summary}.</p>
                       <p className="mt-1 text-[11px] text-slate-400">Why: this is the next drill-down when the section alone is too broad.</p>
-                    </button>
+                    </ToggleGroupItem>
                   ))}
-                </div>
+                </ToggleGroup>
               </div>
             ) : null}
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded p-4 mb-6">
+        <Card className="p-4 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Audit shortcuts</p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <p className="text-[12px] font-semibold text-slate-900 mb-2">Most reviewed</p>
               <div className="space-y-2">
                 {mostReviewed.map((entry) => (
-                  <button key={`${entry.sectionId}-${entry.functionKey}`} type="button" onClick={() => updateSelection(entry.sectionId, entry.functionKey)} className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-left hover:border-slate-400">
+                  <Button
+                    key={`${entry.sectionId}-${entry.functionKey}`}
+                    type="button"
+                    variant="outline"
+                    onClick={() => updateSelection(entry.sectionId, entry.functionKey)}
+                    className="h-auto w-full flex-col items-start whitespace-normal bg-slate-50 px-3 py-2 text-left"
+                  >
                     <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
                     <p className="text-[11px] text-slate-600 mt-1">Covers {entry.summary}.</p>
                     <p className="text-[11px] text-slate-500 mt-1">Why: this is one of the highest-signal places to inspect first.</p>
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -372,11 +418,17 @@ export function InternalGuideClient({ sections, initialQuestion = '', staffRole,
               <p className="text-[12px] font-semibold text-slate-900 mb-2">Recently changed</p>
               <div className="space-y-2">
                 {recentlyChanged.map((entry) => (
-                  <button key={`${entry.sectionId}-${entry.functionKey}-recent`} type="button" onClick={() => updateSelection(entry.sectionId, entry.functionKey)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-left hover:border-slate-400">
+                  <Button
+                    key={`${entry.sectionId}-${entry.functionKey}-recent`}
+                    type="button"
+                    variant="outline"
+                    onClick={() => updateSelection(entry.sectionId, entry.functionKey)}
+                    className="h-auto w-full flex-col items-start whitespace-normal px-3 py-2 text-left"
+                  >
                     <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
                     <p className="text-[11px] text-slate-600 mt-1">Covers {entry.summary}.</p>
                     <p className="text-[11px] text-slate-500 mt-1">Why: updated {formatDate(entry.lastModifiedAt)}, so it is the freshest area to inspect.</p>
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -384,65 +436,103 @@ export function InternalGuideClient({ sections, initialQuestion = '', staffRole,
           <div className="mt-4 pt-4 border-t border-slate-100">
             <p className="text-[12px] font-semibold text-slate-900 mb-2">Quick links</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              <a href="/dashboard/admin/diagrams" className="rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-left hover:border-orange-400 hover:bg-orange-50 transition-colors">
-                <p className="text-[12px] font-semibold text-slate-900">Architecture Diagrams</p>
-                <p className="text-[11px] text-slate-600 mt-1">10 Mermaid diagrams covering auth, onboarding, billing, signals, integrations, and SRE.</p>
-                <p className="text-[11px] text-orange-500 mt-1">View diagrams →</p>
-              </a>
+              <Link href="/dashboard/admin/diagrams">
+                <Card className="p-0 hover:border-orange-400 hover:bg-orange-50 transition-colors">
+                  <div className="px-3 py-2">
+                    <p className="text-[12px] font-semibold text-slate-900">Architecture Diagrams</p>
+                    <p className="text-[11px] text-slate-600 mt-1">10 Mermaid diagrams covering auth, onboarding, billing, signals, integrations, and SRE.</p>
+                    <p className="text-[11px] text-orange-500 mt-1">View diagrams →</p>
+                  </div>
+                </Card>
+              </Link>
             </div>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded p-4 mb-6">
+        <Card className="p-4 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Level 1: Sections</p>
           <p className="text-[13px] text-slate-600 mb-3">Pick a section, then review the next level by function.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <ToggleGroup
+            className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2"
+            value={activeSection ? [activeSection.section.id] : []}
+            onValueChange={(values) => {
+              const id = values[0]
+              if (id) updateSelection(id, sectionDetails.find((detail) => detail.section.id === id)?.functions[0]?.functionKey ?? null)
+            }}
+          >
             {sectionRollup.map((entry) => (
-              <button key={entry.id} type="button" onClick={() => updateSelection(entry.id, sectionDetails.find((detail) => detail.section.id === entry.id)?.functions[0]?.functionKey ?? null)} className={`text-left rounded border px-3 py-2 ${activeSection?.section.id === entry.id ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}>
+              <ToggleGroupItem
+                key={entry.id}
+                value={entry.id}
+                className={`h-auto w-full flex-col items-start whitespace-normal rounded border px-3 py-2 text-left ${activeSection?.section.id === entry.id ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+              >
                 <p className="text-[12px] font-semibold text-slate-900">{entry.title}</p>
                 <p className="text-[12px] text-slate-500 mt-1">Covers {entry.sectionSummary}.</p>
                 <p className="text-[11px] text-slate-500 mt-1">Why: use this when you want the broad overview before drilling into functions.</p>
                 <p className="text-[11px] text-slate-500 mt-1">{entry.functionCount} functions · {entry.itemCount} items</p>
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
-        </section>
+          </ToggleGroup>
+        </Card>
 
         {activeSection ? (
-          <section className="bg-white border border-slate-200 rounded p-4 mb-6">
+          <Card className="p-4 mb-6">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Level 2: Functions in {activeSection.section.title}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <ToggleGroup
+              className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2"
+              value={activeFunction ? [activeFunction.functionKey] : []}
+              onValueChange={(values) => {
+                const next = values[0]
+                if (next) updateSelection(activeSection.section.id, next)
+              }}
+            >
               {activeSection.functions.map((entry) => (
-                <button key={entry.functionKey} type="button" onClick={() => updateSelection(activeSection.section.id, entry.functionKey)} className={`text-left rounded border px-3 py-2 ${activeFunction?.functionKey === entry.functionKey ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}>
+                <ToggleGroupItem
+                  key={entry.functionKey}
+                  value={entry.functionKey}
+                  className={`h-auto w-full flex-col items-start whitespace-normal rounded border px-3 py-2 text-left ${activeFunction?.functionKey === entry.functionKey ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+                >
                   <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
                   <p className="text-[12px] text-slate-500 mt-1">Covers {entry.summary}.</p>
                   <p className="text-[11px] text-slate-500 mt-1">Why: this groups the related items you would usually review together.</p>
                   <p className="text-[11px] text-slate-500 mt-1">{entry.items.length} items{entry.lastModifiedAt ? ` · updated ${formatDate(entry.lastModifiedAt)}` : ''}</p>
-                </button>
+                </ToggleGroupItem>
               ))}
-            </div>
-          </section>
+            </ToggleGroup>
+          </Card>
         ) : null}
 
-        <div className="bg-slate-900 border border-slate-800 rounded p-4 sm:p-5 mb-6">
+        <Card className="bg-slate-900 border-slate-800 text-slate-100 p-4 sm:p-5 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Internal Engineering Chat</p>
           <p className="text-[13px] text-slate-300 mb-3">Ask about internals: feature behavior, route handlers, scripts, migrations, or architecture links.</p>
           <div className="flex flex-col sm:flex-row gap-2">
-            <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); void askInternalChat() } }} placeholder="Example: Which route handles onboarding events and what tables does it touch?" className="w-full text-[14px] border border-slate-700 rounded px-3 py-2 bg-slate-950 text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-slate-500" />
-            <button type="button" onClick={() => { void askInternalChat() }} disabled={chatLoading || !question.trim()} className="sm:w-auto px-4 py-2 text-[13px] font-semibold rounded bg-orange-500 text-black hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed">
+            <Input
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); void askInternalChat() } }}
+              placeholder="Example: Which route handles onboarding events and what tables does it touch?"
+              className="w-full bg-slate-950 border-slate-700 text-slate-100 placeholder:text-slate-500"
+            />
+            <Button
+              type="button"
+              onClick={() => { void askInternalChat() }}
+              disabled={chatLoading || !question.trim()}
+              className="sm:w-auto"
+            >
               {chatLoading ? 'Searching...' : 'Ask'}
-            </button>
+            </Button>
           </div>
 
           {chatError ? <p className="text-[12px] text-rose-300 mt-3">{chatError}</p> : null}
 
           {chatResult ? (
-            <div className="mt-4 p-4 rounded border border-slate-700 bg-slate-950">
+            <Card className="mt-4 bg-slate-950 border-slate-700 p-4">
               <p className="text-[13px] text-slate-200 whitespace-pre-wrap">{chatResult.answer}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-                <span className="px-2 py-1 rounded bg-slate-800 text-slate-300">intent: {chatResult.intent ?? 'general'}</span>
-                <span className="px-2 py-1 rounded bg-slate-800 text-slate-300">confidence: {Math.round((chatResult.confidence ?? 0) * 100)}%</span>
-                {chatResult.conservative ? <span className="px-2 py-1 rounded bg-amber-900/30 text-amber-300">source-first mode</span> : null}
+                <Badge variant="secondary">intent: {chatResult.intent ?? 'general'}</Badge>
+                <Badge variant="secondary">confidence: {Math.round((chatResult.confidence ?? 0) * 100)}%</Badge>
+                {chatResult.conservative ? <Badge variant="warning">source-first mode</Badge> : null}
               </div>
               {chatResult.sources.length > 0 ? (
                 <div className="mt-3 space-y-2">
@@ -459,40 +549,40 @@ export function InternalGuideClient({ sections, initialQuestion = '', staffRole,
                   })}
                 </div>
               ) : null}
-            </div>
+            </Card>
           ) : null}
-        </div>
+        </Card>
 
-        <div className="bg-white border border-slate-200 rounded p-4 mb-5">
+        <Card className="p-4 mb-5">
           <label htmlFor="internal-guide-search" className="block text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Search internal guide sections</label>
-          <input id="internal-guide-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search architecture, route names, modules, scripts, migrations, docs..." className="w-full text-[14px] border border-slate-300 rounded px-3 py-2 bg-white text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-300" />
+          <Input id="internal-guide-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search architecture, route names, modules, scripts, migrations, docs..." className="w-full" />
           <p className="text-[12px] text-slate-400 mt-2">Showing {filtered.length} of {sections.length} sections.</p>
-        </div>
+        </Card>
 
         {activeSection ? (
-          <section className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[18px] font-bold text-slate-900 mb-2">{activeSection.section.title}</h2>
             <p className="text-[13px] text-slate-600 mb-4">{activeFunction ? `Showing ${activeFunction.items.length} items for ${activeFunction.functionKey}.` : 'Select a function to inspect implementation details.'}</p>
             {activeFunction ? (
               <div className="space-y-3">
                 {activeFunction.items.map((item, index) => (
-                  <article key={`${item.title}-${index}`} className="rounded border border-slate-200 bg-slate-50 p-3">
+                  <Card key={`${item.title}-${index}`} className="bg-slate-50 p-3">
                     {item.href ? <a href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined} className="text-[13px] font-semibold text-slate-900 hover:text-slate-700 hover:underline">{item.title}</a> : <p className="text-[13px] font-semibold text-slate-900">{item.title}</p>}
                     {item.ref ? <p className="text-[12px] text-slate-500 mt-1">Covers {item.summary || 'the linked source item'}.</p> : null}
                     {item.ref ? <p className="text-[11px] text-slate-500 mt-1">Why: open this for the exact file or route referenced by the current function.</p> : null}
                     {item.ref ? <p className="text-[12px] text-slate-500 mt-1">{item.ref}</p> : null}
                     {item.summary ? <p className="text-[12px] text-slate-600 mt-1">{item.summary}</p> : null}
                     {item.lastModifiedAt ? <p className="text-[11px] text-slate-500 mt-2">Updated {formatDate(item.lastModifiedAt)}</p> : null}
-                  </article>
+                  </Card>
                 ))}
               </div>
             ) : null}
-          </section>
+          </Card>
         ) : (
-          <div className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <p className="text-[14px] font-semibold text-slate-900">No internal guide sections found for this search.</p>
             <p className="text-[13px] text-slate-600 mt-1">Try a broader keyword like architecture, api, script, migration, or dashboard.</p>
-          </div>
+          </Card>
         )}
       </main>
     </div>

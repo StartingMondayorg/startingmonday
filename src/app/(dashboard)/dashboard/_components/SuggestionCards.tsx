@@ -1,6 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Toggle } from '@/components/ui/toggle'
 
 type Recruiter = { name: string; focus: string }
 type Suggestions = { companies: string[]; recruiters: Recruiter[] }
@@ -62,7 +65,7 @@ export function SuggestionCards() {
   if (!data) return null
 
   return (
-    <div className="bg-white border border-slate-200 rounded overflow-hidden mb-8">
+    <Card variant="default" className="gap-0 p-0 mb-8">
       <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between">
         <div>
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
@@ -70,13 +73,9 @@ export function SuggestionCards() {
           </span>
           <p className="text-[12px] text-slate-400 mt-0.5">Based on your profile. Dismiss when you no longer need this.</p>
         </div>
-        <button
-          type="button"
-          onClick={dismiss}
-          className="text-[12px] text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer p-0"
-        >
+        <Button variant="ghost" onClick={dismiss} className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-600 hover:bg-transparent">
           Dismiss
-        </button>
+        </Button>
       </div>
 
       <div className="divide-y divide-slate-50">
@@ -91,13 +90,13 @@ export function SuggestionCards() {
                 const isAdded   = added.has(name)
                 const isAdding  = adding === name
                 return (
-                  <button
+                  <Toggle
                     key={name}
-                    type="button"
-                    onClick={() => quickAdd(name)}
+                    pressed={isAdded}
                     disabled={isAdded || isAdding}
+                    onPressedChange={() => quickAdd(name)}
                     className={[
-                      'inline-flex items-center gap-1.5 text-[13px] border rounded-full px-3.5 py-1.5 transition-colors cursor-pointer',
+                      'h-auto gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px]',
                       isAdded
                         ? 'border-emerald-300 bg-emerald-50 text-emerald-700 cursor-default'
                         : isAdding
@@ -107,7 +106,7 @@ export function SuggestionCards() {
                   >
                     <span className="text-[11px]">{isAdded ? '✓' : isAdding ? '...' : '+'}</span>
                     {name}
-                  </button>
+                  </Toggle>
                 )
               })}
             </div>
@@ -140,6 +139,6 @@ export function SuggestionCards() {
         )}
 
       </div>
-    </div>
+    </Card>
   )
 }

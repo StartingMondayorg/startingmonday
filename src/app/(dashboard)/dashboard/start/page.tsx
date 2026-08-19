@@ -10,6 +10,10 @@ import {
   firstNoteDraftForCompany,
   followUpSequenceForWeekOne,
 } from '@/app/onboarding/onboarding-helpers'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export const metadata = {
   title: 'Get Started',
@@ -253,21 +257,18 @@ export default async function StartPage() {
         </div>
 
         {isFirstRunArrival && nextTask && (
-          <section className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+          <Card variant="glass" className="mb-8 p-5">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-orange-200 mb-1">Next best action</p>
             <h2 className="text-[20px] font-bold text-white leading-tight">Today&rsquo;s one action: {nextTask.title}</h2>
             <p className="text-[13px] text-slate-300 mt-2 leading-relaxed">{nextTask.body}</p>
-            <Link
-              href={nextTask.href}
-              className="inline-block mt-4 bg-orange-500 text-slate-950 text-[13px] font-semibold px-4 py-2 rounded hover:bg-orange-400 transition-colors"
-            >
+            <Button render={<Link href={nextTask.href} />} className="mt-4">
               {nextTask.cta} &rarr;
-            </Link>
-          </section>
+            </Button>
+          </Card>
         )}
 
         {(earnedBriefPreview || firstCompanyName) && (
-          <section className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+          <Card variant="glass" className="mb-8 p-5">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-orange-200 mb-1">Value already earned</p>
             {earnedBriefPreview ? (
               <>
@@ -279,11 +280,11 @@ export default async function StartPage() {
                 Your onboarding profile is complete. The next step unlocks your first full prep brief.
               </p>
             )}
-          </section>
+          </Card>
         )}
 
         {isFirstRunArrival && firstCompanyName && (
-          <section className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+          <Card variant="glass" className="mb-8 p-5">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-orange-200 mb-2">Week-one relationship bridge</p>
             <p className="text-[13px] text-slate-300 mb-3">Seats to map first at {firstCompanyName}</p>
             <div className="space-y-2 mb-3">
@@ -307,39 +308,35 @@ export default async function StartPage() {
                 <li key={item} className="text-[12px] text-slate-400">• {item}</li>
               ))}
             </ul>
-          </section>
+          </Card>
         )}
 
         {/* Next scheduled events */}
         {(briefingDisplay || (companyCount ?? 0) > 0) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
             {briefingDisplay && (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+              <Card variant="glass" className="p-4">
                 <p className="text-[13px] font-medium text-slate-400 mb-1">First briefing</p>
                 <p className="text-[16px] font-bold text-white">Tomorrow at {briefingDisplay}</p>
                 {tz && <p className="text-[13px] text-slate-400 mt-0.5">{tz}</p>}
-              </div>
+              </Card>
             )}
             {(companyCount ?? 0) > 0 && (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+              <Card variant="glass" className="p-4">
                 <p className="text-[13px] font-medium text-slate-400 mb-1">Companies watching</p>
                 <p className="text-[16px] font-bold text-white">{companyCount} {(companyCount ?? 0) === 1 ? 'company' : 'companies'}</p>
                 <p className="text-[13px] text-slate-400 mt-0.5">Add career page URLs to start scanning</p>
-              </div>
+              </Card>
             )}
           </div>
         )}
 
         {/* Progress */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="flex items-center gap-1 shrink-0">
-            {tasks.map((_, i) => (
-              <div
-                key={i}
-                className={`h-1.5 w-7 rounded-full ${i < doneCount ? 'bg-orange-500' : 'bg-white/10'}`}
-              />
-            ))}
-          </div>
+          <Progress
+            value={(doneCount / tasks.length) * 100}
+            className="w-44 shrink-0 [&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-track]]:bg-white/10 [&_[data-slot=progress-indicator]]:bg-orange-500"
+          />
           <span className="text-[13px] font-semibold text-slate-400 shrink-0">
             {doneCount} of {tasks.length} complete
           </span>
@@ -351,22 +348,23 @@ export default async function StartPage() {
             <p className="text-[12px] text-slate-400">After you complete today&rsquo;s action, return here for the next one.</p>
           )}
           {tasks.map(task => (
-            <div
+            <Card
               key={task.num}
-              className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden ${
-                task.done ? 'opacity-70' : ''
-              }`}
+              variant="glass"
+              className={`overflow-hidden ${task.done ? 'opacity-70' : ''}`}
             >
               <div className="px-6 py-5">
                 <div className="flex items-start gap-4">
                   {/* Number / check */}
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-[13px] font-bold ${
-                    task.done
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-white/10 text-slate-300'
-                  }`}>
-                    {task.done ? '✓' : task.num}
-                  </div>
+                  <Avatar
+                    className={`shrink-0 mt-0.5 text-[13px] font-bold ${
+                      task.done ? 'bg-emerald-500 text-white' : 'bg-white/10 text-slate-300'
+                    }`}
+                  >
+                    <AvatarFallback className="bg-transparent text-inherit">
+                      {task.done ? '✓' : task.num}
+                    </AvatarFallback>
+                  </Avatar>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -384,24 +382,21 @@ export default async function StartPage() {
                         <p className="text-[13px] text-slate-300 leading-relaxed mb-4">
                           {task.body}
                         </p>
-                        <Link
-                          href={task.href}
-                          className="inline-block bg-orange-500 text-slate-950 text-[13px] font-semibold px-4 py-2 rounded hover:bg-orange-400 transition-colors"
-                        >
+                        <Button render={<Link href={task.href} />}>
                           {task.cta} &rarr;
-                        </Link>
+                        </Button>
                       </>
                     )}
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
         {/* CTA */}
         <div className="mt-10 mb-8 grid grid-cols-1 gap-4">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <p className="text-[13px] font-medium text-slate-400 mb-2">Role lane tutorials</p>
             <p className="text-[13px] text-slate-300 mb-4">Fast training assets tailored to your current role lane.</p>
             <div className="space-y-3">
@@ -412,9 +407,9 @@ export default async function StartPage() {
                 </Link>
               ))}
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <p className="text-[13px] font-medium text-slate-400 mb-2">Recruiter outreach toolkit</p>
             <p className="text-[13px] text-slate-300 mb-2">{recruiterToolkit.lane}</p>
             <p className="text-[13px] text-slate-300 mb-3">Use this role-lane toolkit to run targeted recruiter and hiring manager outreach.</p>
@@ -434,17 +429,14 @@ export default async function StartPage() {
                 ))}
               </ul>
             </div>
-          </div>
+          </Card>
 
         </div>
 
         <div className="text-center">
-          <Link
-            href="/dashboard"
-            className="inline-block bg-orange-500 text-slate-950 text-[13px] font-bold px-8 py-3 rounded hover:bg-orange-400 transition-colors"
-          >
+          <Button render={<Link href="/dashboard" />} size="lg" className="px-8 font-bold">
             {allDone ? 'Go to dashboard ->' : 'Continue to dashboard ->'}
-          </Link>
+          </Button>
           {!allDone && (
             <p className="text-[12px] text-slate-400 mt-2">You can finish these any time from your dashboard.</p>
           )}

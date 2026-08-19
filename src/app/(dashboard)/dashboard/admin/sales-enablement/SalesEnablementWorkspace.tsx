@@ -1,14 +1,34 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
-  ADMIN_DARK_FIELD_MD,
-  ADMIN_DARK_FIELD_SM,
-  ADMIN_DARK_SECTION_CARD,
-  ADMIN_DARK_SUB_CARD,
-  ADMIN_DARK_TABLE_PANEL,
-} from '../admin-dark-theme'
-import { DEFAULT_STATE, LOCAL_FALLBACK_KEY, clampScore, weightedScore, scoreClass, type DeliveryModel, type OptionStatus, type VendorOption, type WorkspaceState, type SaveState } from './sales-enablement-data'
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table'
+import { DEFAULT_STATE, LOCAL_FALLBACK_KEY, clampScore, weightedScore, type DeliveryModel, type OptionStatus, type VendorOption, type WorkspaceState, type SaveState } from './sales-enablement-data'
+
+function scoreBadgeVariant(score: number): 'success' | 'warning' | 'secondary' {
+  if (score >= 80) return 'success'
+  if (score >= 60) return 'warning'
+  return 'secondary'
+}
 
 export function SalesEnablementWorkspace() {
   const [state, setState] = useState<WorkspaceState>(DEFAULT_STATE)
@@ -129,310 +149,308 @@ export function SalesEnablementWorkspace() {
     saveState === 'read-only' ? 'Read-only access (viewer role)' :
     'Save failed. Check auth or retry.'
 
-  const fieldMdClass = ADMIN_DARK_FIELD_MD
-  const fieldSmClass = ADMIN_DARK_FIELD_SM
-  const sectionCardClass = ADMIN_DARK_SECTION_CARD.replace(' mb-6', '')
-  const tablePanelClass = ADMIN_DARK_TABLE_PANEL.replace(' mb-6', '')
-  const subCardClass = ADMIN_DARK_SUB_CARD
-
   return (
     <div className="space-y-6">
-      <section className={sectionCardClass}>
+      <Card variant="glass" className="p-5">
         <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Decision Inputs</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[13px]">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-slate-300">Primary objective</span>
-            <input
+          <div className="flex flex-col gap-1.5">
+            <Label className="block text-slate-300">Primary objective</Label>
+            <Input
               value={state.objective}
               onChange={(event) => setState((prev) => ({ ...prev, objective: event.target.value }))}
               disabled={!canEdit}
-              className={fieldMdClass}
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-slate-300">Budget ceiling (monthly)</span>
-            <input
+          <div className="flex flex-col gap-1.5">
+            <Label className="block text-slate-300">Budget ceiling (monthly)</Label>
+            <Input
               type="number"
               min={0}
               value={state.budgetCeiling}
               onChange={(event) => setState((prev) => ({ ...prev, budgetCeiling: Number(event.target.value || 0) }))}
               disabled={!canEdit}
-              className={fieldMdClass}
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-slate-300">Execution mode</span>
-            <select
+          <div className="flex flex-col gap-1.5">
+            <Label className="block text-slate-300">Execution mode</Label>
+            <Select
               value={state.primaryModel}
-              onChange={(event) => setState((prev) => ({ ...prev, primaryModel: event.target.value as WorkspaceState['primaryModel'] }))}
+              onValueChange={(value) => setState((prev) => ({ ...prev, primaryModel: value as WorkspaceState['primaryModel'] }))}
               disabled={!canEdit}
-              className={fieldMdClass}
             >
-              <option value="done-for-you">Done-for-you</option>
-              <option value="done-with-you">Done-with-you</option>
-              <option value="hybrid">Hybrid</option>
-            </select>
-          </label>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="done-for-you">Done-for-you</SelectItem>
+                <SelectItem value="done-with-you">Done-with-you</SelectItem>
+                <SelectItem value="hybrid">Hybrid</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-slate-300">Checkpoint window</span>
-            <select
+          <div className="flex flex-col gap-1.5">
+            <Label className="block text-slate-300">Checkpoint window</Label>
+            <Select
               value={state.checkpointWindow}
-              onChange={(event) => setState((prev) => ({ ...prev, checkpointWindow: event.target.value as WorkspaceState['checkpointWindow'] }))}
+              onValueChange={(value) => setState((prev) => ({ ...prev, checkpointWindow: value as WorkspaceState['checkpointWindow'] }))}
               disabled={!canEdit}
-              className={fieldMdClass}
             >
-              <option value="day-14">Day 14</option>
-              <option value="day-30">Day 30</option>
-              <option value="both">Day 14 and Day 30</option>
-            </select>
-          </label>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="day-14">Day 14</SelectItem>
+                <SelectItem value="day-30">Day 30</SelectItem>
+                <SelectItem value="both">Day 14 and Day 30</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <label className="mt-4 block text-[13px]">
-          <span className="text-slate-300 block mb-1.5">Qualified meeting definition</span>
-          <textarea
+        <div className="mt-4 flex flex-col gap-1.5 text-[13px]">
+          <Label className="block text-slate-300">Qualified meeting definition</Label>
+          <Textarea
             value={state.qualifiedMeetingDefinition}
             onChange={(event) => setState((prev) => ({ ...prev, qualifiedMeetingDefinition: event.target.value }))}
             disabled={!canEdit}
-            className={`${fieldMdClass} w-full min-h-[88px]`}
+            className="w-full min-h-[88px]"
           />
-        </label>
-      </section>
+        </div>
+      </Card>
 
-      <section className={tablePanelClass}>
+      <Card variant="glass" className="overflow-hidden p-0">
         <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between gap-3">
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Option Scorecard</h2>
           <p className="text-[12px] text-slate-300">Weighted score = Fit 40% + Commercial 35% + Execution 25%</p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-[12px] min-w-[1180px]">
-            <thead>
-              <tr className="bg-slate-950/60 border-b border-white/10 text-left">
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Option</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Model</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Cost</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Status</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Fit</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Commercial</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Execution</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Day 14 target</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400">Day 30 target</th>
-                <th className="px-4 py-2.5 font-semibold text-slate-400 text-right">Weighted</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/10">
-              {state.options.map((option) => {
-                const total = weightedScore(option)
-                return (
-                  <tr key={option.id}>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        value={option.name}
-                        onChange={(event) => updateOption(option.id, { name: event.target.value })}
-                        aria-label={`${option.id}-name`}
-                        title="Option name"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[170px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <select
-                        value={option.model}
-                        onChange={(event) => updateOption(option.id, { model: event.target.value as DeliveryModel })}
-                        aria-label={`${option.id}-model`}
-                        title="Delivery model"
-                        disabled={!canEdit}
-                        className={fieldSmClass}
-                      >
-                        <option value="freelancer">Freelancer</option>
-                        <option value="agency">Agency</option>
-                        <option value="hybrid">Hybrid</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        type="number"
-                        min={0}
-                        value={option.monthlyCost}
-                        onChange={(event) => updateOption(option.id, { monthlyCost: Number(event.target.value || 0) })}
-                        aria-label={`${option.id}-monthly-cost`}
-                        title="Monthly cost"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[110px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <select
-                        value={option.status}
-                        onChange={(event) => updateOption(option.id, { status: event.target.value as OptionStatus })}
-                        aria-label={`${option.id}-status`}
-                        title="Evaluation status"
-                        disabled={!canEdit}
-                        className={fieldSmClass}
-                      >
-                        <option value="active">Active</option>
-                        <option value="hold">Hold</option>
-                        <option value="pass">Pass</option>
-                        <option value="new">New</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        type="number"
-                        min={0}
-                        max={5}
-                        step={1}
-                        value={option.strategicFit}
-                        onChange={(event) => updateOption(option.id, { strategicFit: clampScore(Number(event.target.value)) })}
-                        aria-label={`${option.id}-strategic-fit`}
-                        title="Strategic fit score"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[68px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        type="number"
-                        min={0}
-                        max={5}
-                        step={1}
-                        value={option.commercialRisk}
-                        onChange={(event) => updateOption(option.id, { commercialRisk: clampScore(Number(event.target.value)) })}
-                        aria-label={`${option.id}-commercial-score`}
-                        title="Commercial score"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[68px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        type="number"
-                        min={0}
-                        max={5}
-                        step={1}
-                        value={option.executionConfidence}
-                        onChange={(event) => updateOption(option.id, { executionConfidence: clampScore(Number(event.target.value)) })}
-                        aria-label={`${option.id}-execution-confidence`}
-                        title="Execution confidence score"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[68px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        value={option.day14Target}
-                        onChange={(event) => updateOption(option.id, { day14Target: event.target.value })}
-                        aria-label={`${option.id}-day14-target`}
-                        title="Day 14 target"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[230px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top">
-                      <input
-                        value={option.day30Target}
-                        onChange={(event) => updateOption(option.id, { day30Target: event.target.value })}
-                        aria-label={`${option.id}-day30-target`}
-                        title="Day 30 target"
-                        disabled={!canEdit}
-                        className={`${fieldSmClass} w-[230px]`}
-                      />
-                    </td>
-                    <td className="px-4 py-2 align-top text-right">
-                      <span className={`inline-flex items-center border px-2 py-1 rounded font-semibold ${scoreClass(total)}`}>
-                        {total}
-                      </span>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        <Table className="text-[12px] min-w-[1180px]">
+          <TableHeader>
+            <TableRow className="bg-slate-950/60 border-white/10 hover:bg-slate-950/60">
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Option</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Model</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Cost</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Fit</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Commercial</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Execution</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Day 14 target</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Day 30 target</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Weighted</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-white/10">
+            {state.options.map((option) => {
+              const total = weightedScore(option)
+              return (
+                <TableRow key={option.id} className="border-white/10 hover:bg-white/5">
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      value={option.name}
+                      onChange={(event) => updateOption(option.id, { name: event.target.value })}
+                      aria-label={`${option.id}-name`}
+                      title="Option name"
+                      disabled={!canEdit}
+                      className="w-[170px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Select
+                      value={option.model}
+                      onValueChange={(value) => updateOption(option.id, { model: value as DeliveryModel })}
+                      disabled={!canEdit}
+                    >
+                      <SelectTrigger aria-label={`${option.id}-model`} title="Delivery model">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="freelancer">Freelancer</SelectItem>
+                        <SelectItem value="agency">Agency</SelectItem>
+                        <SelectItem value="hybrid">Hybrid</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      type="number"
+                      min={0}
+                      value={option.monthlyCost}
+                      onChange={(event) => updateOption(option.id, { monthlyCost: Number(event.target.value || 0) })}
+                      aria-label={`${option.id}-monthly-cost`}
+                      title="Monthly cost"
+                      disabled={!canEdit}
+                      className="w-[110px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Select
+                      value={option.status}
+                      onValueChange={(value) => updateOption(option.id, { status: value as OptionStatus })}
+                      disabled={!canEdit}
+                    >
+                      <SelectTrigger aria-label={`${option.id}-status`} title="Evaluation status">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="hold">Hold</SelectItem>
+                        <SelectItem value="pass">Pass</SelectItem>
+                        <SelectItem value="new">New</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      type="number"
+                      min={0}
+                      max={5}
+                      step={1}
+                      value={option.strategicFit}
+                      onChange={(event) => updateOption(option.id, { strategicFit: clampScore(Number(event.target.value)) })}
+                      aria-label={`${option.id}-strategic-fit`}
+                      title="Strategic fit score"
+                      disabled={!canEdit}
+                      className="w-[68px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      type="number"
+                      min={0}
+                      max={5}
+                      step={1}
+                      value={option.commercialRisk}
+                      onChange={(event) => updateOption(option.id, { commercialRisk: clampScore(Number(event.target.value)) })}
+                      aria-label={`${option.id}-commercial-score`}
+                      title="Commercial score"
+                      disabled={!canEdit}
+                      className="w-[68px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      type="number"
+                      min={0}
+                      max={5}
+                      step={1}
+                      value={option.executionConfidence}
+                      onChange={(event) => updateOption(option.id, { executionConfidence: clampScore(Number(event.target.value)) })}
+                      aria-label={`${option.id}-execution-confidence`}
+                      title="Execution confidence score"
+                      disabled={!canEdit}
+                      className="w-[68px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      value={option.day14Target}
+                      onChange={(event) => updateOption(option.id, { day14Target: event.target.value })}
+                      aria-label={`${option.id}-day14-target`}
+                      title="Day 14 target"
+                      disabled={!canEdit}
+                      className="w-[230px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top">
+                    <Input
+                      value={option.day30Target}
+                      onChange={(event) => updateOption(option.id, { day30Target: event.target.value })}
+                      aria-label={`${option.id}-day30-target`}
+                      title="Day 30 target"
+                      disabled={!canEdit}
+                      className="w-[230px]"
+                    />
+                  </TableCell>
+                  <TableCell className="px-4 py-2 align-top text-right">
+                    <Badge variant={scoreBadgeVariant(total)}>{total}</Badge>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </Card>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className={sectionCardClass}>
+        <Card variant="glass" className="p-5">
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Live Ranking</h2>
           <div className="space-y-2">
             {ranked.map(({ option, score }, index) => (
-              <div key={option.id} className={`${subCardClass} px-3 py-2.5 flex items-center justify-between gap-3`}>
+              <Card key={option.id} variant="glass" className="border-white/10 bg-slate-950/60 rounded px-3 py-2.5 flex-row items-center justify-between gap-3">
                 <div>
                   <p className="text-[13px] font-semibold text-white">{index + 1}. {option.name}</p>
                   <p className="text-[12px] text-slate-300">{option.model} • ${option.monthlyCost.toLocaleString()} / mo • {option.status}</p>
                 </div>
-                <span className={`inline-flex items-center border px-2 py-1 rounded text-[12px] font-semibold ${scoreClass(score)}`}>
-                  {score}
-                </span>
-              </div>
+                <Badge variant={scoreBadgeVariant(score)}>{score}</Badge>
+              </Card>
             ))}
           </div>
-        </div>
+        </Card>
 
-        <div className={`${sectionCardClass} space-y-4`}>
+        <Card variant="glass" className="p-5 space-y-4">
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Decision Summary</h2>
-          <label className="block text-[13px]">
-            <span className="text-slate-300 block mb-1.5">Top choice today</span>
-            <input
+          <div className="flex flex-col gap-1.5 text-[13px]">
+            <Label className="block text-slate-300">Top choice today</Label>
+            <Input
               value={state.todayTopChoice}
               onChange={(event) => setState((prev) => ({ ...prev, todayTopChoice: event.target.value }))}
               disabled={!canEdit}
-              className={`${fieldMdClass} w-full`}
+              className="w-full"
             />
-          </label>
+          </div>
 
-          <label className="block text-[13px]">
-            <span className="text-slate-300 block mb-1.5">Backup choice</span>
-            <input
+          <div className="flex flex-col gap-1.5 text-[13px]">
+            <Label className="block text-slate-300">Backup choice</Label>
+            <Input
               value={state.backupChoice}
               onChange={(event) => setState((prev) => ({ ...prev, backupChoice: event.target.value }))}
               disabled={!canEdit}
-              className={`${fieldMdClass} w-full`}
+              className="w-full"
             />
-          </label>
+          </div>
 
-          <label className="block text-[13px]">
-            <span className="text-slate-300 block mb-1.5">Next actions</span>
-            <textarea
+          <div className="flex flex-col gap-1.5 text-[13px]">
+            <Label className="block text-slate-300">Next actions</Label>
+            <Textarea
               value={state.nextActions}
               onChange={(event) => setState((prev) => ({ ...prev, nextActions: event.target.value }))}
               disabled={!canEdit}
-              className={`${fieldMdClass} w-full min-h-[110px]`}
+              className="w-full min-h-[110px]"
             />
-          </label>
+          </div>
 
           <div className="flex items-center justify-between pt-1">
             <p className="text-[11px] text-slate-400">{statusLabel}</p>
-            <button
+            <Button
               type="button"
+              variant="ghost"
               onClick={resetWorkspace}
               disabled={!canEdit}
               className="text-[12px] font-semibold text-slate-300 hover:text-white"
             >
               Reset workspace
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       </section>
 
-      <section className={sectionCardClass}>
+      <Card variant="glass" className="p-5">
         <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Agency vs Freelancer guardrails</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[12px] text-slate-300">
-          <div className={`${subCardClass} p-4`}>
+          <Card variant="glass" className="border-white/10 bg-slate-950/60 rounded p-4">
             <p className="text-[12px] font-semibold text-slate-100 mb-1.5">When agency is better</p>
             <p>Use when you need immediate multi-channel coverage, specialist bandwidth, and redundancy if one operator is unavailable.</p>
-          </div>
-          <div className={`${subCardClass} p-4`}>
+          </Card>
+          <Card variant="glass" className="border-white/10 bg-slate-950/60 rounded p-4">
             <p className="text-[12px] font-semibold text-slate-100 mb-1.5">When freelancer is better</p>
             <p>Use when you need fast iteration, direct operator access, tighter budget control, and high accountability to one owner metric.</p>
-          </div>
+          </Card>
         </div>
-      </section>
+      </Card>
     </div>
   )
 }
-

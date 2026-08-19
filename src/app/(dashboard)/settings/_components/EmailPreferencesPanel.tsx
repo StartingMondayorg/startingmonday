@@ -1,6 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: boolean }) {
   const [enabled, setEnabled] = useState(initialEnabled)
@@ -31,7 +34,7 @@ export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: bool
   }
 
   return (
-    <section className="mb-6 rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="mb-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Email preferences</h2>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="max-w-[46ch]">
@@ -41,41 +44,27 @@ export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: bool
             Daily briefings are separate and unaffected.
           </p>
         </div>
-        <div className="flex gap-2 shrink-0" role="radiogroup" aria-label="Trial tip emails">
-          <button
-            type="button"
-            role="radio"
-            aria-checked={!enabled}
+        <div className="flex shrink-0 items-center gap-2.5">
+          <span className={`text-[13px] font-semibold ${!enabled ? 'text-white' : 'text-slate-400'}`}>Off</span>
+          <Switch
+            checked={enabled}
+            onCheckedChange={toggle}
             disabled={saving}
-            onClick={() => toggle(false)}
-            className={[
-              'inline-flex min-h-[44px] items-center rounded border px-4 text-[13px] font-semibold transition-colors cursor-pointer disabled:opacity-50',
-              !enabled
-                ? 'border-orange-300/70 bg-orange-500/20 text-white'
-                : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/30',
-            ].join(' ')}
-          >
-            Off
-          </button>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={enabled}
-            disabled={saving}
-            onClick={() => toggle(true)}
-            className={[
-              'inline-flex min-h-[44px] items-center rounded border px-4 text-[13px] font-semibold transition-colors cursor-pointer disabled:opacity-50',
-              enabled
-                ? 'border-orange-300/70 bg-orange-500/20 text-white'
-                : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/30',
-            ].join(' ')}
-          >
-            On
-          </button>
+            aria-label="Trial tip emails"
+          />
+          <span className={`text-[13px] font-semibold ${enabled ? 'text-white' : 'text-slate-400'}`}>On</span>
         </div>
       </div>
-      {message && <p className="mt-3 text-[12px] text-emerald-300">{message}</p>}
-      {error && <p role="alert" className="mt-3 text-[12px] text-rose-300">{error}</p>}
-    </section>
+      {message && (
+        <Alert variant="success" className="mt-3">
+          <AlertDescription>{message}</AlertDescription>
+        </Alert>
+      )}
+      {error && (
+        <Alert variant="destructive" className="mt-3">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+    </Card>
   )
 }

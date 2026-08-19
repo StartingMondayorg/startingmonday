@@ -3,6 +3,13 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { LIFECYCLE_TEMPLATES } from '@/lib/executive-lifecycle'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export const metadata: Metadata = {
   title: 'Board & Governance Track | Starting Monday',
@@ -59,7 +66,7 @@ export default async function BoardGovernancePage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-6">
         {/* Header */}
-        <div className="rounded-2xl border border-white/15 bg-white/5 px-6 py-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="gap-0 px-6 py-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <p className="text-[13px] font-semibold text-orange-400 mb-2">
             Board &amp; Governance Track
           </p>
@@ -69,82 +76,87 @@ export default async function BoardGovernancePage() {
           <p className="text-[14px] text-slate-200 mt-2 max-w-xl leading-relaxed">
             Board seats are built over quarters, not weeks. The goal is narrative consistency, relationship compounding, and patient signal monitoring.
           </p>
-        </div>
+        </Card>
 
         {/* Governance thesis builder */}
-        <div className="rounded-xl border border-white/15 bg-white/5 px-5 py-5 space-y-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="gap-4 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <h2 className="text-[13px] font-bold text-white">Governance thesis</h2>
           <p className="text-[13px] text-slate-300">
             Articulate your unique value as a director - not what you have done as an operator, but what you bring to a governance context.
           </p>
           {GOVERNANCE_THESIS_PROMPTS.map(({ label, placeholder }) => (
             <div key={label}>
-              <label className="block text-[13px] font-semibold text-slate-300 mb-1">{label}</label>
-              <textarea
+              <Label className="block text-[13px] font-semibold text-slate-300 mb-1">{label}</Label>
+              <Textarea
                 rows={2}
                 placeholder={placeholder}
-                className="w-full border border-white/15 rounded-lg px-3 py-2 text-[13px] text-slate-100 bg-slate-950/70 placeholder:text-slate-500 focus:outline-none focus:border-white/30 resize-none"
+                className="w-full rounded-lg border-white/15 px-3 py-2 text-[13px] text-slate-100 bg-slate-950/70 placeholder:text-slate-500 focus-visible:border-white/30 focus-visible:ring-0 resize-none"
               />
             </div>
           ))}
-        </div>
+        </Card>
 
         {/* Board composition watchlist */}
-        <div className="rounded-xl border border-white/15 bg-white/5 px-5 py-5 space-y-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="gap-3 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <h2 className="text-[13px] font-bold text-white">Board composition watchlist</h2>
           <p className="text-[13px] text-slate-300">
             Track target companies where the board composition is aging, lacks your functional profile, or has a term expiry coming up.
           </p>
           <div className="rounded-lg border border-white/10 overflow-hidden bg-slate-950/30">
-            <table className="w-full text-[13px]">
-              <thead className="bg-white/5 border-b border-white/10">
-                <tr>
+            <Table className="text-[13px]">
+              <TableHeader className="bg-white/5 [&_tr]:border-white/10">
+                <TableRow className="hover:bg-transparent">
                   {['Company', 'Board gap you fill', 'Next inflection signal', 'Relationship in', 'Warmth'].map((h) => (
-                    <th key={h} className="text-left px-3 py-2 text-[13px] font-semibold text-slate-300">{h}</th>
+                    <TableHead key={h} className="px-3 py-2 text-[13px] font-semibold text-slate-300">{h}</TableHead>
                   ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10">
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-white/10">
                 {[...Array(4)].map((_, i) => (
-                  <tr key={i} className="bg-slate-950/30">
-                    <td className="px-3 py-2"><input className="w-full border-0 bg-transparent text-[13px] text-slate-100 focus:outline-none placeholder-slate-500" placeholder="Company name" /></td>
-                    <td className="px-3 py-2"><input className="w-full border-0 bg-transparent text-[13px] text-slate-100 focus:outline-none placeholder-slate-500" placeholder="e.g. Technology risk" /></td>
-                    <td className="px-3 py-2"><input className="w-full border-0 bg-transparent text-[13px] text-slate-100 focus:outline-none placeholder-slate-500" placeholder="e.g. IPO in 18 months" /></td>
-                    <td className="px-3 py-2"><input className="w-full border-0 bg-transparent text-[13px] text-slate-100 focus:outline-none placeholder-slate-500" placeholder="e.g. via John S." /></td>
-                    <td className="px-3 py-2">
-                      <select title="Relationship warmth" aria-label="Relationship warmth" className="border border-white/15 rounded px-2 py-1 text-[13px] bg-slate-950/70 text-slate-100 focus:outline-none focus:border-white/30">
-                        <option>Cold</option>
-                        <option>Warm</option>
-                        <option>Hot</option>
-                      </select>
-                    </td>
-                  </tr>
+                  <TableRow key={i} className="bg-slate-950/30 border-white/10 hover:bg-slate-950/30">
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="Company name" /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="e.g. Technology risk" /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="e.g. IPO in 18 months" /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="e.g. via John S." /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal">
+                      <Select defaultValue="Cold">
+                        <SelectTrigger aria-label="Relationship warmth" className="border-white/15 bg-slate-950/70 px-2 py-1 text-[13px] text-slate-100">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Cold">Cold</SelectItem>
+                          <SelectItem value="Warm">Warm</SelectItem>
+                          <SelectItem value="Hot">Hot</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
-        </div>
+        </Card>
 
         {/* Relationship cadence tiers */}
-        <div className="rounded-xl border border-white/15 bg-white/5 px-5 py-5 space-y-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="gap-4 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <h2 className="text-[13px] font-bold text-white">Relationship cadence</h2>
           <div className="space-y-3">
             {RELATIONSHIP_TIERS.map(({ tier, description }) => (
               <div key={tier} className="rounded-lg border border-white/10 bg-slate-950/30 px-4 py-3">
                 <p className="text-[13px] font-bold text-slate-100">{tier}</p>
                 <p className="text-[13px] text-slate-300 mt-0.5 mb-2">{description}</p>
-                <textarea
+                <Textarea
                   rows={2}
                   placeholder="List names and last-touched date..."
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 bg-slate-950/70 placeholder:text-slate-500 focus:outline-none focus:border-white/30 resize-none"
+                  className="w-full rounded border-white/15 px-3 py-2 text-[13px] text-slate-100 bg-slate-950/70 placeholder:text-slate-500 focus-visible:border-white/30 focus-visible:ring-0 resize-none"
                 />
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Session prompts */}
-        <div className="rounded-xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="gap-0 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <h2 className="text-[13px] font-bold text-white mb-3">Coach session opening prompts</h2>
           <ul className="space-y-2">
             {template.sessionOpeningPrompts.map((p) => (
@@ -154,13 +166,15 @@ export default async function BoardGovernancePage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* Positioning guidance */}
-        <div className="rounded-xl border border-blue-300/20 bg-blue-500/10 px-5 py-4 backdrop-blur-md">
-          <p className="text-[13px] font-semibold text-blue-200 mb-2">External positioning</p>
-          <p className="text-[13px] text-blue-50 leading-relaxed">{template.positioningGuidance}</p>
-        </div>
+        <Alert variant="info" className="px-5 py-4">
+          <AlertDescription className="text-current">
+            <p className="text-[13px] font-semibold text-blue-200 mb-2">External positioning</p>
+            <p className="text-[13px] text-blue-50 leading-relaxed">{template.positioningGuidance}</p>
+          </AlertDescription>
+        </Alert>
       </main>
     </div>
   )

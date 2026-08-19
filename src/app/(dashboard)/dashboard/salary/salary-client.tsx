@@ -1,5 +1,17 @@
 'use client'
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type PushbackItem = { objection: string; response: string }
 
@@ -62,9 +74,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
   const [result, setResult]           = useState<SalaryResult | null>(null)
   const [error, setError]             = useState('')
 
-  const inputCls  = 'w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 bg-white'
-  const selectCls = 'w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 bg-white'
-  const labelCls  = 'block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5'
+  const labelCls = 'block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -95,30 +105,29 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
 
   return (
     <div className="flex flex-col gap-6">
-      <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded p-6 flex flex-col gap-4">
+      <form onSubmit={handleSubmit}>
+      <Card className="p-6 flex flex-col gap-4">
 
         {/* Row 1: role + company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Role <span className="text-red-500">*</span></label>
-            <input
+            <Label className={labelCls}>Role <span className="text-red-500">*</span></Label>
+            <Input
               type="text"
               value={role}
               onChange={e => setRole(e.target.value)}
               placeholder="Chief Information Officer"
               required
-              className={inputCls}
             />
           </div>
           <div>
-            <label className={labelCls}>Company <span className="text-red-500">*</span></label>
-            <input
+            <Label className={labelCls}>Company <span className="text-red-500">*</span></Label>
+            <Input
               type="text"
               value={company}
               onChange={e => setCompany(e.target.value)}
               placeholder="Acme Corp"
               required
-              className={inputCls}
             />
           </div>
         </div>
@@ -126,57 +135,76 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
         {/* Row 2: level + sector */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Level <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></label>
-            <select value={level} onChange={e => setLevel(e.target.value)} className={selectCls}>
-              <option value="">Select level…</option>
-              {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
-            </select>
+            <Label className={labelCls}>Level <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Select value={level || '__none__'} onValueChange={v => setLevel(!v || v === '__none__' ? '' : v)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select level…" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Select level…</SelectItem>
+                {LEVELS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <div>
-            <label className={labelCls}>Sector <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></label>
-            <select value={sector} onChange={e => setSector(e.target.value)} className={selectCls}>
-              <option value="">Select sector…</option>
-              {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
+            <Label className={labelCls}>Sector <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Select value={sector || '__none__'} onValueChange={v => setSector(!v || v === '__none__' ? '' : v)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select sector…" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Select sector…</SelectItem>
+                {SECTORS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         {/* Row 3: company stage + location */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Company stage <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></label>
-            <select value={companyStage} onChange={e => setCompanyStage(e.target.value)} className={selectCls}>
-              <option value="">Select stage…</option>
-              {COMPANY_STAGES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
+            <Label className={labelCls}>Company stage <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Select value={companyStage || '__none__'} onValueChange={v => setCompanyStage(!v || v === '__none__' ? '' : v)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select stage…" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Select stage…</SelectItem>
+                {COMPANY_STAGES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <div>
-            <label className={labelCls}>Location <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></label>
-            <input
+            <Label className={labelCls}>Location <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Input
               type="text"
               value={location}
               onChange={e => setLocation(e.target.value)}
               placeholder="San Francisco, CA"
-              className={inputCls}
             />
           </div>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={!role.trim() || !company.trim() || loading}
-          className="bg-orange-500 hover:bg-orange-600 disabled:opacity-30 text-white text-[13px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed self-start"
+          className="self-start"
         >
           {loading ? 'Analyzing…' : 'Generate salary analysis'}
-        </button>
-        {error && <p className="text-[13px] text-red-600">{error}</p>}
+        </Button>
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+      </Card>
       </form>
 
       {result && (
         <div className="flex flex-col gap-4">
 
           {/* Total comp range */}
-          <div className="bg-white border border-slate-200 rounded p-6">
+          <Card className="p-6">
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Total cash compensation</p>
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center">
@@ -195,10 +223,10 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
             {result.notes && (
               <p className="text-[13px] text-slate-500 leading-relaxed border-t border-slate-100 pt-4">{result.notes}</p>
             )}
-          </div>
+          </Card>
 
           {/* Component breakdown */}
-          <div className="bg-white border border-slate-200 rounded p-6">
+          <Card className="p-6">
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Compensation breakdown</p>
             <div className="flex flex-col gap-5">
 
@@ -255,11 +283,11 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
                 </div>
               )}
             </div>
-          </div>
+          </Card>
 
           {/* Negotiation levers */}
           {result.levers?.length > 0 && (
-            <div className="bg-white border border-slate-200 rounded p-6">
+            <Card className="p-6">
               <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Negotiation levers</p>
               <ul className="flex flex-col gap-2">
                 {result.levers.map((lever, i) => (
@@ -269,18 +297,18 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
                   </li>
                 ))}
               </ul>
-            </div>
+            </Card>
           )}
 
           {/* Negotiation script */}
-          <div className="bg-white border border-slate-200 rounded p-6">
+          <Card className="p-6">
             <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What to say when they present the offer</p>
             <p className="text-[14px] text-slate-700 leading-relaxed">{result.negotiation_script}</p>
-          </div>
+          </Card>
 
           {/* Pushback responses */}
           {result.pushback_responses?.length > 0 && (
-            <div className="bg-white border border-slate-200 rounded p-6">
+            <Card className="p-6">
               <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Pushback responses</p>
               <div className="flex flex-col gap-5">
                 {result.pushback_responses.map((item, i) => (
@@ -290,7 +318,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
           )}
 
         </div>

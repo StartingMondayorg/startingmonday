@@ -7,6 +7,15 @@ import { todayInTz } from '@/lib/date'
 import { PREVIEW_CHARS } from '@/lib/ai/ai-limits'
 import { LogSignalForm } from '@/app/(dashboard)/dashboard/_components/LogSignalForm'
 import { ScanPoller } from '@/app/(dashboard)/dashboard/_components/ScanPoller'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
   DOC_LABELS,
   CHANNEL,
@@ -248,31 +257,22 @@ export default async function CompanyPage({
             )}
           </div>
           <div className="flex items-center gap-3 flex-wrap">
-            <Link
-              href={`/dashboard/profile/tailor?companyId=${id}`}
-              className="text-[13px] font-semibold text-slate-300 bg-white/5 border border-white/10 hover:border-white/30 px-4 py-2 rounded transition-colors"
-            >
+            <Button variant="outline" render={<Link href={`/dashboard/profile/tailor?companyId=${id}`} />}>
               Tailor resume
-            </Link>
-            <Link
-              href={`/dashboard/companies/${id}/prep?stage=informal_meeting`}
-              className="text-[13px] font-semibold text-slate-300 bg-white/5 border border-white/10 hover:border-white/30 px-4 py-2 rounded transition-colors"
-            >
+            </Button>
+            <Button variant="outline" render={<Link href={`/dashboard/companies/${id}/prep?stage=informal_meeting`} />}>
               Conversation prep
-            </Link>
-            <Link
-              href={`/dashboard/companies/${id}/prep`}
-              className="text-[13px] font-semibold text-white bg-white/5 border border-white/10 hover:border-white/30 px-4 py-2 rounded transition-colors"
-            >
+            </Button>
+            <Button variant="outline" render={<Link href={`/dashboard/companies/${id}/prep`} />}>
               Interview prep
-            </Link>
+            </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 items-start">
 
           {/* Edit form */}
-          <section id="company-details" className="bg-white/5 border border-white/10 rounded p-5 sm:p-8">
+          <Card variant="glass" id="company-details" className="rounded p-5 sm:p-8">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-5">
               Company details
             </h2>
@@ -280,32 +280,29 @@ export default async function CompanyPage({
             <CompanyFitCard fitSummary={fitSummary} />
 
             {errorMsg && (
-              <div className="mb-5 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded text-[13px] text-red-300">
-                {errorMsg}
-              </div>
+              <Alert variant="destructive" className="mb-5">
+                <AlertDescription>{errorMsg}</AlertDescription>
+              </Alert>
             )}
             {stageUp ? (
-              <div className="mb-5 px-5 py-4 bg-green-50 border border-green-200 rounded flex items-center gap-4">
-                <span className="text-[22px] leading-none">&#10003;</span>
-                <div>
-                  <p className="text-[14px] font-semibold text-green-900">
-                    {company.name} moved to {
-                      stageUp === 'researching'  ? 'Researching' :
-                      stageUp === 'applied'       ? 'In Process' :
-                      stageUp === 'interviewing'  ? 'Interviewing' :
-                      stageUp === 'offer'         ? 'Offer' : stageUp
-                    }.
-                  </p>
-                  <p className="text-[13px] text-green-700 mt-0.5">That is real progress.</p>
-                </div>
-              </div>
+              <Alert variant="success" className="mb-5">
+                <AlertTitle>
+                  {company.name} moved to {
+                    stageUp === 'researching'  ? 'Researching' :
+                    stageUp === 'applied'       ? 'In Process' :
+                    stageUp === 'interviewing'  ? 'Interviewing' :
+                    stageUp === 'offer'         ? 'Offer' : stageUp
+                  }.
+                </AlertTitle>
+                <AlertDescription>That is real progress.</AlertDescription>
+              </Alert>
             ) : saved ? (
-              <div className="mb-5 px-4 py-3 bg-green-50 border border-green-200 rounded text-[13px] text-green-700">
-                Changes saved.
-              </div>
+              <Alert variant="success" className="mb-5">
+                <AlertDescription>Changes saved.</AlertDescription>
+              </Alert>
             ) : null}
 
-            <div className="mb-5 bg-white/5 border border-white/10 rounded p-4">
+            <Card variant="glass" className="mb-5 rounded p-4">
               <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Current snapshot</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[13px] text-slate-300">
                 <p><span className="font-semibold text-slate-300">Stage:</span> {(STAGES.find((s) => s.value === company.stage)?.label) ?? company.stage}</p>
@@ -313,59 +310,60 @@ export default async function CompanyPage({
                 <p><span className="font-semibold text-slate-300">Sector:</span> {company.sector ?? 'Not set'}</p>
                 <p><span className="font-semibold text-slate-300">Size:</span> {company.company_size ?? 'Not set'}</p>
               </div>
-            </div>
+            </Card>
 
-            <details className="border border-white/10 rounded">
-              <summary className="cursor-pointer list-none px-4 py-3 bg-white/5 border-b border-white/10 flex items-center justify-between">
+            <Collapsible className="border border-white/10 rounded">
+              <CollapsibleTrigger className="w-full cursor-pointer px-4 py-3 bg-white/5 border-b border-white/10 flex items-center justify-between">
                 <span className="text-[13px] font-semibold text-slate-300">Edit company profile</span>
                 <span className="text-[13px] text-slate-400">Open fields</span>
-              </summary>
+              </CollapsibleTrigger>
 
+              <CollapsibleContent>
               <form action={updateCompany.bind(null, id)} className="flex flex-col gap-5 p-4 sm:p-5">
 
               <div>
-                <label htmlFor="company-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="company-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                   Company name <span className="text-red-500">*</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   id="company-name"
                   name="name"
                   type="text"
                   required
                   defaultValue={company.name}
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white focus:outline-none focus:border-slate-400"
+                  className="w-full text-white"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="stage" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label htmlFor="stage" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                     Stage
-                  </label>
-                  <select
-                    id="stage"
-                    name="stage"
-                    defaultValue={company.stage}
-                    className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white focus:outline-none focus:border-slate-400 bg-white/5"
-                  >
-                    {STAGES.map(s => (
-                      <option key={s.value} value={s.value}>{s.label}</option>
-                    ))}
-                  </select>
+                  </Label>
+                  <Select name="stage" defaultValue={company.stage}>
+                    <SelectTrigger id="stage" className="w-full text-white bg-white/5">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STAGES.map(s => (
+                        <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>
-                  <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                     Fit score <span className="text-slate-300 font-normal">(1–10)</span>
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     name="fit_score"
                     type="number"
                     min="1"
                     max="10"
                     defaultValue={company.fit_score ?? ''}
                     placeholder="-"
-                    className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                    className="w-full text-white placeholder:text-slate-300"
                   />
                   <p className="mt-1.5 text-[13px] text-slate-400">1 = weak fit &middot; 10 = dream company</p>
                 </div>
@@ -373,101 +371,101 @@ export default async function CompanyPage({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                     Sector
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     name="sector"
                     type="text"
                     defaultValue={company.sector ?? ''}
                     placeholder="e.g. Healthcare, Fintech"
-                    className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                    className="w-full text-white placeholder:text-slate-300"
                   />
                 </div>
                 <div>
-                  <label htmlFor="edit_company_size" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label htmlFor="edit_company_size" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                     Company size
-                  </label>
-                  <select
-                    id="edit_company_size"
-                    name="company_size"
-                    defaultValue={company.company_size ?? ''}
-                    className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white focus:outline-none focus:border-slate-400 bg-white/5"
-                  >
-                    <option value="">Unknown</option>
-                    <option value="startup">Startup (under 200)</option>
-                    <option value="midmarket">Mid-Market (200-2,000)</option>
-                    <option value="enterprise">Enterprise (2,000+)</option>
-                  </select>
+                  </Label>
+                  <Select name="company_size" defaultValue={company.company_size ?? 'unset'}>
+                    <SelectTrigger id="edit_company_size" className="w-full text-white bg-white/5">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unset">Unknown</SelectItem>
+                      <SelectItem value="startup">Startup (under 200)</SelectItem>
+                      <SelectItem value="midmarket">Mid-Market (200-2,000)</SelectItem>
+                      <SelectItem value="enterprise">Enterprise (2,000+)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                   Company website
-                </label>
-                <input
+                </Label>
+                <Input
                   name="company_url"
                   type="text"
                   defaultValue={company.company_url ?? ''}
                   placeholder="acme.com or https://acme.com"
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                  className="w-full text-white placeholder:text-slate-300"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Main URL - used to discover press room and leadership page</p>
               </div>
 
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                   Career page URL
-                </label>
-                <input
+                </Label>
+                <Input
                   name="career_page_url"
                   type="text"
                   defaultValue={company.career_page_url ?? ''}
                   placeholder="acme.com/careers or https://acme.com/careers"
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                  className="w-full text-white placeholder:text-slate-300"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Used in job scans - runs Mon / Wed / Fri</p>
               </div>
 
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                   LinkedIn company URL
-                </label>
-                <input
+                </Label>
+                <Input
                   name="linkedin_url"
                   type="text"
                   defaultValue={company.linkedin_url ?? ''}
                   placeholder="linkedin.com/company/acme"
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                  className="w-full text-white placeholder:text-slate-300"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Used to detect executive hires and departures</p>
               </div>
 
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                   Crunchbase permalink
-                </label>
-                <input
+                </Label>
+                <Input
                   name="crunchbase_id"
                   type="text"
                   defaultValue={company.crunchbase_id ?? ''}
                   placeholder="e.g. acme-corp"
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                  className="w-full text-white placeholder:text-slate-300"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Last segment of the Crunchbase URL - crunchbase.com/organization/<span className="font-medium text-slate-400">acme-corp</span>. Enables funding round signals.</p>
               </div>
 
               <div>
-                <label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                   Notes
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                   name="notes"
                   rows={4}
                   defaultValue={company.notes ?? ''}
                   placeholder={notesPlaceholder}
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none"
+                  className="w-full text-white placeholder:text-slate-300 resize-none"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Your notes are private. Only you can read them.</p>
               </div>
@@ -476,12 +474,12 @@ export default async function CompanyPage({
 
               <div className="pt-1 border-t border-white/10">
                 <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-2">Interview Notes</p>
-                <textarea
+                <Textarea
                   name="interview_notes"
                   rows={5}
                   defaultValue={company.interview_notes ?? ''}
                   placeholder={'Add notes after each conversation. What was asked, what landed, what surprised you, who was in the room, what you want to prep differently next time.\n\nSeparate entries by stage or date - e.g. "Recruiter screen 5/7:" then "Hiring manager 5/14:"'}
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-y"
+                  className="w-full text-white placeholder:text-slate-300 resize-y"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Private. Each entry sharpens your next prep brief based on what actually happened.</p>
               </div>
@@ -492,48 +490,44 @@ export default async function CompanyPage({
 
               <div className="pt-1 border-t border-white/10">
                 <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-2">What I&rsquo;m Looking For Here</p>
-                <textarea
+                <Textarea
                   name="role_watch_description"
                   rows={3}
                   defaultValue={company.role_watch_description ?? ''}
                   placeholder="e.g. A CTO or VP Engineering role overseeing platform, specifically where they need someone to scale the team post-Series B and modernize the data stack..."
-                  className="w-full border border-white/10 rounded px-3 py-2.5 text-[14px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none"
+                  className="w-full text-white placeholder:text-slate-300 resize-none"
                 />
                 <p className="mt-1.5 text-[13px] text-slate-400">Used by the job scanner to match roles semantically, not just by keyword. More specific beats generic.</p>
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  className="bg-orange-500 text-slate-950 text-[14px] font-semibold px-6 py-2.5 rounded cursor-pointer border-0"
-                >
+                <Button type="submit">
                   Save changes
-                </button>
+                </Button>
               </div>
 
               </form>
-            </details>
+              </CollapsibleContent>
+            </Collapsible>
 
             <div className="mt-8 pt-6 border-t border-white/10">
               <form action={archiveCompany.bind(null, id)}>
-                <button
-                  type="submit"
-                  className="text-[13px] font-semibold text-slate-400 hover:text-red-400 hover:border-red-500/30 border border-white/10 rounded px-4 py-2 cursor-pointer bg-white/5 transition-colors"
-                >
+                <Button type="submit" variant="outline" className="hover:text-red-400 hover:border-red-500/30">
                   Archive company
-                </button>
+                </Button>
               </form>
             </div>
-          </section>
+          </Card>
 
           {/* Follow-ups sidebar */}
           <div className="flex flex-col gap-4">
 
-            <details className="bg-white/5 border border-white/10 rounded overflow-hidden">
-              <summary className="cursor-pointer list-none px-5 py-4 border-b border-white/10 flex items-center justify-between">
+            <Collapsible className="bg-white/5 border border-white/10 rounded overflow-hidden">
+              <CollapsibleTrigger className="w-full cursor-pointer px-5 py-4 border-b border-white/10 flex items-center justify-between">
                 <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Open Actions</span>
                 <span className="text-[13px] text-slate-400">{(followUps ?? []).length}</span>
-              </summary>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
               {followUps && followUps.length > 0 ? (
                 <div className="divide-y divide-white/10">
                   {followUps.map(fu => {
@@ -552,12 +546,9 @@ export default async function CompanyPage({
                             {dateLabel}
                           </span>
                           <form action={markFollowUpDone.bind(null, fu.id, id)}>
-                            <button
-                              type="submit"
-                              className="text-[13px] text-slate-400 border border-white/10 rounded px-2.5 py-0.5 hover:border-white/30 hover:text-slate-200 cursor-pointer bg-transparent"
-                            >
+                            <Button type="submit" variant="outline" size="sm" className="text-slate-400 hover:text-slate-200">
                               Done
-                            </button>
+                            </Button>
                           </form>
                         </div>
                       </div>
@@ -569,7 +560,8 @@ export default async function CompanyPage({
                   No open actions.
                 </div>
               )}
-            </details>
+              </CollapsibleContent>
+            </Collapsible>
 
           </div>
         </div>
@@ -601,9 +593,11 @@ export default async function CompanyPage({
           />
         </section>
 
+        <Accordion className="mt-6 flex flex-col gap-6">
+
         {/* Documents */}
-        <details id="documents" className="mt-6 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <summary className="cursor-pointer list-none px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+        <AccordionItem value="documents" id="documents" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
             <div>
               <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
                 Documents
@@ -613,14 +607,15 @@ export default async function CompanyPage({
             <span className="text-[13px] text-slate-400 shrink-0">
               {(documents ?? []).length} {(documents ?? []).length === 1 ? 'document' : 'documents'}
             </span>
-          </summary>
-
-          <DocumentsPanel companyId={id} documents={documents ?? []} previewChars={PREVIEW_CHARS} />
-        </details>
+          </AccordionTrigger>
+          <AccordionContent className="pb-0">
+            <DocumentsPanel companyId={id} documents={documents ?? []} previewChars={PREVIEW_CHARS} />
+          </AccordionContent>
+        </AccordionItem>
 
         {/* Scan results */}
-        <details id="job-scan" className="mt-6 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <summary className="cursor-pointer list-none px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+        <AccordionItem value="job-scan" id="job-scan" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
               Job Scan
             </h2>
@@ -631,67 +626,66 @@ export default async function CompanyPage({
             ) : (
               <span className="text-[13px] text-slate-400">Scans run Mon / Wed / Fri</span>
             )}
-          </summary>
+          </AccordionTrigger>
+          <AccordionContent className="pb-0">
+            <JobScanPanel
+              latestScan={latestScan}
+              isScanning={isScanning}
+              careerPageUrl={company.career_page_url}
+              isVpUser={isVpUser}
+              scanHistory={scanHistory}
+            />
 
-          <JobScanPanel
-            latestScan={latestScan}
-            isScanning={isScanning}
-            careerPageUrl={company.career_page_url}
-            isVpUser={isVpUser}
-            scanHistory={scanHistory}
-          />
-
-          <div className="px-6 py-5 border-t border-white/10 bg-slate-50/60">
-            <p className="text-[12px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-2">Report a role we missed</p>
-            <p className="text-[13px] text-slate-400 mb-3">Paste a leadership role URL. We verify it and feed confirmed misses back into scanner training.</p>
-            {missedRoleMsg ? (
-              <p className={`mb-3 text-[13px] ${missed === '1' ? 'text-emerald-300' : 'text-red-400'}`}>
-                {missedRoleMsg}
-              </p>
-            ) : null}
-            <form action={reportMissedRole.bind(null, id)} className="grid grid-cols-1 sm:grid-cols-[1fr_220px_auto] gap-2">
-              <input
-                type="text"
-                name="role_url"
-                placeholder="https://boards.greenhouse.io/company/jobs/12345"
-                className="w-full border border-white/10 rounded px-3 py-2 text-[13px] text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-400"
-                required
-              />
-              <input
-                type="text"
-                name="role_title"
-                placeholder="Optional title"
-                className="w-full border border-white/10 rounded px-3 py-2 text-[13px] text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-400"
-              />
-              <button
-                type="submit"
-                className="px-3 py-2 text-[13px] font-semibold bg-orange-500 text-slate-950 rounded border-0 hover:bg-orange-400"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </details>
+            <div className="px-6 py-5 border-t border-white/10 bg-slate-50/60">
+              <p className="text-[12px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-2">Report a role we missed</p>
+              <p className="text-[13px] text-slate-400 mb-3">Paste a leadership role URL. We verify it and feed confirmed misses back into scanner training.</p>
+              {missedRoleMsg ? (
+                <Alert variant={missed === '1' ? 'success' : 'destructive'} className="mb-3">
+                  <AlertDescription>{missedRoleMsg}</AlertDescription>
+                </Alert>
+              ) : null}
+              <form action={reportMissedRole.bind(null, id)} className="grid grid-cols-1 sm:grid-cols-[1fr_220px_auto] gap-2">
+                <Input
+                  type="text"
+                  name="role_url"
+                  placeholder="https://boards.greenhouse.io/company/jobs/12345"
+                  className="w-full text-white placeholder:text-slate-400"
+                  required
+                />
+                <Input
+                  type="text"
+                  name="role_title"
+                  placeholder="Optional title"
+                  className="w-full text-white placeholder:text-slate-400"
+                />
+                <Button type="submit">
+                  Submit
+                </Button>
+              </form>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
         {/* Signals */}
-        <details id="signals" className="mt-6 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <summary className="cursor-pointer list-none px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+        <AccordionItem value="signals" id="signals" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
               Company Signals
             </h2>
             <LogSignalForm companyId={company.id} />
-          </summary>
-
+          </AccordionTrigger>
+          <AccordionContent className="pb-0">
             <SignalsPanel
               signals={signals}
               company={{ id: company.id, name: company.name, sector: company.sector }}
               profile={profile ?? null}
             />
-        </details>
+          </AccordionContent>
+        </AccordionItem>
 
         {/* Interview Logs */}
-        <details id="interview-sessions" className="mt-6 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <summary className="cursor-pointer list-none px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+        <AccordionItem value="interview-sessions" id="interview-sessions" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
             <div>
               <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
                 Interview Sessions
@@ -701,10 +695,13 @@ export default async function CompanyPage({
             <span className="text-[13px] text-slate-400 shrink-0">
               {interviewLogs.length} {interviewLogs.length === 1 ? 'session' : 'sessions'}
             </span>
-          </summary>
+          </AccordionTrigger>
+          <AccordionContent className="pb-0">
+            <InterviewSessionsPanel companyId={id} interviewLogs={interviewLogs} todayISO={todayISO} />
+          </AccordionContent>
+        </AccordionItem>
 
-          <InterviewSessionsPanel companyId={id} interviewLogs={interviewLogs} todayISO={todayISO} />
-        </details>
+        </Accordion>
 
       </main>
     </div>

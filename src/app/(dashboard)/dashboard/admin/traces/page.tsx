@@ -5,6 +5,10 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { TraceViewer } from './trace-client'
 import { CopyCommandButton } from './copy-command-button'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Progress } from '@/components/ui/progress'
 
 export const metadata = { title: 'LLM Traces - Starting Monday Admin' }
 
@@ -102,32 +106,28 @@ export default async function TracesPage({
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <Link
-              href="/dashboard/admin/traces?feature=prep_brief&unrated=1"
-              className="text-[13px] font-semibold text-slate-950 bg-orange-400 hover:bg-orange-300 px-3 py-1.5 rounded transition-colors"
-            >
+            <Button render={<Link href="/dashboard/admin/traces?feature=prep_brief&unrated=1" />}>
               Start labeling
-            </Link>
-            <Link
-              href="/dashboard/admin/traces/rubric"
-              className="text-[13px] font-semibold text-slate-200 border border-white/10 hover:border-white/30 bg-white/5 px-3 py-1.5 rounded transition-colors"
-            >
+            </Button>
+            <Button variant="outline" render={<Link href="/dashboard/admin/traces/rubric" />}>
               Rubric
-            </Link>
+            </Button>
           </div>
         </div>
 
-        <div className={`mb-4 rounded border px-3 py-2 text-[13px] ${labelingFocusMode ? 'bg-slate-900 text-slate-100 border-white/10' : 'bg-white/5 text-slate-300 border-white/10'}`}>
-          {labelingFocusMode ? (
-            <>
-              <span className="font-semibold">Labeling shortcuts:</span> P = pass, F = fail, U = unrated, O = output, J/K = active trace, G/Shift+G = first/last row, D = dense view, 1-8 = fail tags. In this mode, rating auto-advances to the next trace.
-            </>
-          ) : (
-            <>
-              <span className="font-semibold text-slate-200">Shortcut tip:</span> P = pass, F = fail, U = unrated, O = output.
-            </>
-          )}
-        </div>
+        <Alert variant="info" className={`mb-4 ${labelingFocusMode ? 'bg-slate-900 border-white/10 text-slate-100' : ''}`}>
+          <AlertDescription className={labelingFocusMode ? 'text-slate-100' : undefined}>
+            {labelingFocusMode ? (
+              <>
+                <span className="font-semibold">Labeling shortcuts:</span> P = pass, F = fail, U = unrated, O = output, J/K = active trace, G/Shift+G = first/last row, D = dense view, 1-8 = fail tags. In this mode, rating auto-advances to the next trace.
+              </>
+            ) : (
+              <>
+                <span className="font-semibold text-slate-200">Shortcut tip:</span> P = pass, F = fail, U = unrated, O = output.
+              </>
+            )}
+          </AlertDescription>
+        </Alert>
 
         <div className="mb-6 bg-white/5 border border-white/10 rounded p-4">
           <div className="flex items-center justify-between gap-3 mb-3">
@@ -135,9 +135,9 @@ export default async function TracesPage({
               <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Prep Brief Labeling Progress</p>
               <p className="text-[13px] text-slate-300 mt-1">Target for golden set: 25 pass + 25 fail labeled traces.</p>
             </div>
-            <span className={`text-[13px] font-bold px-2.5 py-1 rounded border ${goldenSetReady ? 'text-emerald-100 bg-emerald-500/15 border-emerald-300/20' : 'text-amber-100 bg-amber-500/15 border-amber-300/20'}`}>
+            <Badge variant={goldenSetReady ? 'success' : 'warning'}>
               {goldenSetReady ? 'Ready to export' : 'In progress'}
-            </span>
+            </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="border border-white/10 rounded p-3">
@@ -145,10 +145,9 @@ export default async function TracesPage({
                 <span className="text-[13px] text-slate-300">Pass labels</span>
                 <span className="text-[13px] font-semibold text-slate-200">{prepPass}/{GOLDEN_SET_TARGET_PER_CLASS}</span>
               </div>
-              <progress
-                max={100}
+              <Progress
                 value={prepPassPct}
-                className="w-full h-2 [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-emerald-500 [&::-moz-progress-bar]:bg-emerald-500"
+                className="w-full [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-slate-100 [&_[data-slot=progress-indicator]]:bg-emerald-500"
               />
             </div>
             <div className="border border-white/10 rounded p-3">
@@ -156,10 +155,9 @@ export default async function TracesPage({
                 <span className="text-[13px] text-slate-300">Fail labels</span>
                 <span className="text-[13px] font-semibold text-slate-200">{prepFail}/{GOLDEN_SET_TARGET_PER_CLASS}</span>
               </div>
-              <progress
-                max={100}
+              <Progress
                 value={prepFailPct}
-                className="w-full h-2 [&::-webkit-progress-bar]:bg-slate-100 [&::-webkit-progress-value]:bg-red-500 [&::-moz-progress-bar]:bg-red-500"
+                className="w-full [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-slate-100 [&_[data-slot=progress-indicator]]:bg-red-500"
               />
             </div>
             <div className="border border-white/10 rounded p-3 flex items-center justify-between gap-3">
@@ -167,32 +165,31 @@ export default async function TracesPage({
                 <p className="text-[13px] text-slate-300">Unrated prep_brief traces</p>
                 <p className="text-[18px] font-bold text-white mt-0.5">{prepUnrated}</p>
               </div>
-              <Link
-                href="/dashboard/admin/traces?feature=prep_brief&unrated=1"
-                className="text-[13px] font-semibold text-slate-200 border border-white/10 hover:border-white/30 bg-white/5 px-3 py-1.5 rounded transition-colors"
-              >
+              <Button variant="outline" render={<Link href="/dashboard/admin/traces?feature=prep_brief&unrated=1" />}>
                 Label now
-              </Link>
+              </Button>
             </div>
           </div>
-          <div className={`mt-3 rounded border px-3 py-2 ${goldenSetReady ? 'bg-emerald-500/10 border-emerald-300/20' : 'bg-amber-500/10 border-amber-300/20'}`}>
+          <Alert variant={goldenSetReady ? 'success' : 'warning'} className="mt-3">
             {goldenSetReady ? (
               <>
-                <p className="text-[13px] font-semibold text-emerald-100">Golden set is ready to export.</p>
-                <div className="mt-1 flex flex-wrap items-center gap-2">
-                  <p className="text-[13px] text-emerald-100/90">Run: <span className="font-mono">npm run evals:export-golden-set</span></p>
-                  <CopyCommandButton command="npm run evals:export-golden-set" />
-                </div>
+                <AlertTitle>Golden set is ready to export.</AlertTitle>
+                <AlertDescription>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <p>Run: <span className="font-mono">npm run evals:export-golden-set</span></p>
+                    <CopyCommandButton command="npm run evals:export-golden-set" />
+                  </div>
+                </AlertDescription>
               </>
             ) : (
               <>
-                <p className="text-[13px] font-semibold text-amber-100">Keep labeling to unlock export.</p>
-                <p className="text-[13px] text-amber-100/90 mt-0.5">
+                <AlertTitle>Keep labeling to unlock export.</AlertTitle>
+                <AlertDescription>
                   Remaining: {prepPassRemaining} pass, {prepFailRemaining} fail.
-                </p>
+                </AlertDescription>
               </>
             )}
-          </div>
+          </Alert>
         </div>
 
         <TraceViewer

@@ -1,6 +1,7 @@
 'use client'
-import { useEffect, useRef, useState, useTransition, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { rateTrace } from './actions'
 import { buildFailureSummaryPayload } from './copy-summary'
 import { resolveNextActiveRowId } from './active-row'
@@ -13,9 +14,30 @@ import {
   parseEvalNotes,
   type BulkApplyUndoChange,
   type LastActionState,
-  type ToastState,
   type Trace,
 } from './trace-shared'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { Toggle } from '@/components/ui/toggle'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from '@/components/ui/pagination'
 
 function TraceRow({
   trace,
@@ -53,16 +75,20 @@ function TraceRow({
     onRated?.(trace.id, prevPass, nextPass, categories)
   }
 
-  function toggleCategory(category: string) {
-    const nextCategories = categories.includes(category)
-      ? categories.filter((item) => item !== category)
-      : [...categories, category]
-
+  function setCategoriesAndPersist(nextCategories: string[]) {
     setCategories(nextCategories)
     persist(evalPass, evalNotesBody, nextCategories)
     if (evalPass === false) {
       onRated?.(trace.id, false, false, nextCategories)
     }
+  }
+
+  function toggleCategory(category: string) {
+    const nextCategories = categories.includes(category)
+      ? categories.filter((item) => item !== category)
+      : [...categories, category]
+
+    setCategoriesAndPersist(nextCategories)
   }
 
   function saveNotes() {
@@ -122,30 +148,30 @@ function TraceRow({
 
         {/* Pass / Fail column */}
         <div className="flex flex-col gap-1.5 shrink-0 pt-0.5">
-          <button
-            type="button"
-            onClick={() => setRating(evalPass === true ? null : true)}
+          <Toggle
+            pressed={evalPass === true}
+            onPressedChange={() => setRating(evalPass === true ? null : true)}
             aria-keyshortcuts="P"
-            className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer border-0 transition-colors w-14 ${
+            className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === true
-                ? 'bg-emerald-500 text-white'
+                ? 'bg-emerald-500 text-white hover:bg-emerald-500'
                 : 'bg-slate-100 text-slate-400 hover:bg-emerald-50 hover:text-emerald-700'
             }`}
           >
             Pass
-          </button>
-          <button
-            type="button"
-            onClick={() => setRating(evalPass === false ? null : false)}
+          </Toggle>
+          <Toggle
+            pressed={evalPass === false}
+            onPressedChange={() => setRating(evalPass === false ? null : false)}
             aria-keyshortcuts="F"
-            className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer border-0 transition-colors w-14 ${
+            className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === false
-                ? 'bg-red-500 text-white'
+                ? 'bg-red-500 text-white hover:bg-red-500'
                 : 'bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-700'
             }`}
           >
             Fail
-          </button>
+          </Toggle>
         </div>
 
         {/* Content column */}
@@ -157,19 +183,19 @@ function TraceRow({
               {featureLabel}
             </span>
             {enableShortcuts && (
-              <span className="text-[10px] font-bold tracking-[0.08em] uppercase text-slate-200 bg-slate-200 px-2 py-0.5 rounded">
+              <Badge variant="secondary" className="text-[10px] tracking-[0.08em] uppercase">
                 Active
-              </span>
+              </Badge>
             )}
             <span className="text-[11px] text-slate-400">{dateStr}</span>
             {trace.latency_ms != null && (
-              <span className="text-[11px] text-slate-300">{(trace.latency_ms / 1000).toFixed(1)}s</span>
+              <Badge variant="outline" className="text-[11px] text-slate-300">{(trace.latency_ms / 1000).toFixed(1)}s</Badge>
             )}
             {tokens > 0 && (
-              <span className="text-[11px] text-slate-300">{tokens.toLocaleString()} tok</span>
+              <Badge variant="outline" className="text-[11px] text-slate-300">{tokens.toLocaleString()} tok</Badge>
             )}
             {trace.user_id && (
-              <span className="text-[11px] font-mono text-slate-200">{trace.user_id.slice(0, 8)}</span>
+              <Badge variant="outline" className="text-[11px] font-mono text-slate-200">{trace.user_id.slice(0, 8)}</Badge>
             )}
           </div>
 
@@ -186,59 +212,65 @@ function TraceRow({
 
           {/* Output snapshot */}
           {trace.output_snapshot && (
-            <div className="mb-3">
-          const [focusMode, setFocusMode] = useState(false)
-              <button
-                type="button"
-                onClick={() => setExpanded(v => !v)}
+            <Collapsible open={expanded} onOpenChange={setExpanded} className="mb-3">
+              <CollapsibleTrigger
                 aria-keyshortcuts="O"
                 className="text-[11px] text-slate-400 hover:text-slate-300 bg-transparent border-0 cursor-pointer p-0 mb-1.5"
               >
                 Output {expanded ? '▲' : '▼'}
-              </button>
-              {expanded ? (
-                <pre className="text-[12px] text-slate-200 whitespace-pre-wrap leading-relaxed bg-slate-950/60 border border-white/10 rounded p-3 max-h-[500px] overflow-y-auto">
-                  {trace.output_snapshot}
-                </pre>
-              ) : !denseMode ? (
-                <p className="text-[12px] text-slate-300 leading-relaxed">
-                  {trace.output_snapshot.slice(0, 220)}{trace.output_snapshot.length > 220 ? '…' : ''}
-                </p>
-              ) : (
-                <p className="text-[11px] text-slate-400">Collapsed in dense mode. Expand output when needed.</p>
+              </CollapsibleTrigger>
+              {!expanded && (
+                !denseMode ? (
+                  <p className="text-[12px] text-slate-300 leading-relaxed">
+                    {trace.output_snapshot.slice(0, 220)}{trace.output_snapshot.length > 220 ? '…' : ''}
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-slate-400">Collapsed in dense mode. Expand output when needed.</p>
+                )
               )}
-            </div>
+              <CollapsibleContent>
+                <ScrollArea className="max-h-[500px] bg-slate-950/60 border border-white/10 rounded">
+                  <pre className="text-[12px] text-slate-200 whitespace-pre-wrap leading-relaxed p-3">
+                    {trace.output_snapshot}
+                  </pre>
+                </ScrollArea>
+              </CollapsibleContent>
+            </Collapsible>
           )}
 
           {/* Notes */}
-          <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          <ToggleGroup
+            value={categories}
+            onValueChange={setCategoriesAndPersist}
+            variant="outline"
+            className="mb-2 w-full flex-wrap justify-start"
+          >
             {FAILURE_CATEGORIES.map((category, idx) => {
               const active = categories.includes(category)
               return (
-                <button
+                <ToggleGroupItem
                   key={category}
-                  type="button"
-                  onClick={() => toggleCategory(category)}
+                  value={category}
                   aria-keyshortcuts={String(idx + 1)}
-                  className={`text-[10px] px-2 py-1 rounded border transition-colors ${
+                  className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                     active
                       ? 'bg-orange-400 text-slate-950 border-orange-300/30'
                       : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
                   }`}
                 >
                   <span className="mr-1 font-semibold">{idx + 1}</span>{category}
-                </button>
+                </ToggleGroupItem>
               )
             })}
-          </div>
+          </ToggleGroup>
 
-          <textarea
+          <Textarea
             value={evalNotesBody}
             onChange={e => setEvalNotesBody(e.target.value)}
             onBlur={saveNotes}
             placeholder="Open coding: what is wrong (or strong) about this output?"
             rows={denseMode ? 1 : 2}
-            className="w-full text-[12px] text-slate-200 border border-white/10 rounded px-3 py-2 placeholder:text-slate-400 focus:outline-none focus:border-white/30 resize-none bg-white/5"
+            className="w-full text-[12px] text-slate-200 border-white/10 px-3 py-2 placeholder:text-slate-400 focus-visible:border-white/30 resize-none bg-white/5"
           />
           <p className="mt-1.5 text-[10px] text-slate-400">Shortcuts: P = pass, F = fail, U = unrated, O = output, J/K = active row, 1-8 = fail tags.</p>
         </div>
@@ -269,19 +301,14 @@ export function TraceViewer({
   const [isApplyingTopTag, setIsApplyingTopTag] = useState(false)
   const [isUndoingTopTag, setIsUndoingTopTag] = useState(false)
   const [lastBulkApply, setLastBulkApply] = useState<{ tag: string; changes: BulkApplyUndoChange[] } | null>(null)
-  const [toast, setToast] = useState<ToastState | null>(null)
   const [lastAction, setLastAction] = useState<LastActionState | null>(null)
   const [includeZeroCountsInCopy, setIncludeZeroCountsInCopy] = useState(false)
   const [copyFormat, setCopyFormat] = useState<'list' | 'table'>('list')
   const [showCopyPreview, setShowCopyPreview] = useState(false)
   const [trimForSlack, setTrimForSlack] = useState(false)
   const [showCopyActions, setShowCopyActions] = useState(false)
-  const [copyMenuAnnouncement, setCopyMenuAnnouncement] = useState('')
   const [activeRowId, setActiveRowId] = useState<string | null>(traces[0]?.id ?? null)
-  const copyActionsRef = useRef<HTMLDivElement | null>(null)
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const copyActionsToggleRef = useRef<HTMLButtonElement | null>(null)
-  const copyActionItemRefs = useRef<Array<HTMLButtonElement | null>>([])
   const focusMode = unratedOnly && currentFeature === 'prep_brief'
   const [denseMode, setDenseMode] = useState(focusMode)
 
@@ -386,120 +413,6 @@ export function TraceViewer({
     isUndoingTopTag,
     focusMode,
   ])
-
-  useEffect(() => {
-    if (!showCopyActions) return
-
-    const focusTimeout = window.setTimeout(() => {
-      copyActionItemRefs.current[0]?.focus()
-    }, 0)
-
-    function onDocumentMouseDown(event: MouseEvent) {
-      const target = event.target as Node | null
-      if (!target) return
-      if (copyActionsRef.current?.contains(target)) return
-      setShowCopyActions(false)
-    }
-
-    function onDocumentKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setShowCopyActions(false)
-      }
-    }
-
-    document.addEventListener('mousedown', onDocumentMouseDown)
-    document.addEventListener('keydown', onDocumentKeyDown)
-
-    return () => {
-      window.clearTimeout(focusTimeout)
-      document.removeEventListener('mousedown', onDocumentMouseDown)
-      document.removeEventListener('keydown', onDocumentKeyDown)
-    }
-  }, [showCopyActions])
-
-  useEffect(() => {
-    if (showCopyActions) {
-      setCopyMenuAnnouncement('Copy actions menu opened. Use arrow keys or tab to navigate, enter to select, and escape to close.')
-    } else {
-      setCopyMenuAnnouncement('Copy actions menu closed.')
-    }
-  }, [showCopyActions])
-
-  function focusCopyActionByIndex(index: number) {
-    const buttons = copyActionItemRefs.current.filter(Boolean)
-    if (buttons.length === 0) return
-    const next = ((index % buttons.length) + buttons.length) % buttons.length
-    buttons[next]?.focus()
-  }
-
-  function onCopyActionKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, index: number) {
-    const key = event.key.toLowerCase()
-    if (key === 's' || key === '1') {
-      event.preventDefault()
-      setShowCopyActions(false)
-      void copyFailureSummary()
-      return
-    }
-    if (key === 'c' || key === '2') {
-      event.preventDefault()
-      setShowCopyActions(false)
-      void copyCompactSummary()
-      return
-    }
-    if (key === 't' || key === '3') {
-      event.preventDefault()
-      setShowCopyActions(false)
-      void copyCompactSummaryTable()
-      return
-    }
-
-    if (event.key === 'ArrowDown') {
-      event.preventDefault()
-      focusCopyActionByIndex(index + 1)
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault()
-      focusCopyActionByIndex(index - 1)
-    } else if (event.key === 'Tab') {
-      event.preventDefault()
-      focusCopyActionByIndex(event.shiftKey ? index - 1 : index + 1)
-    } else if (event.key === 'Home') {
-      event.preventDefault()
-      focusCopyActionByIndex(0)
-    } else if (event.key === 'End') {
-      event.preventDefault()
-      focusCopyActionByIndex(copyActionItemRefs.current.length - 1)
-    } else if (event.key === 'Escape') {
-      event.preventDefault()
-      setShowCopyActions(false)
-      copyActionsToggleRef.current?.focus()
-    }
-  }
-
-  function onCopyActionsTriggerKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>) {
-    if (event.key === 'ArrowDown') {
-      event.preventDefault()
-      setShowCopyActions(true)
-      window.setTimeout(() => focusCopyActionByIndex(0), 0)
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault()
-      setShowCopyActions(true)
-      window.setTimeout(() => focusCopyActionByIndex(copyActionItemRefs.current.length - 1), 0)
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      setShowCopyActions((value) => !value)
-    } else if (event.key === 'Escape') {
-      if (showCopyActions) {
-        event.preventDefault()
-        setShowCopyActions(false)
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (!toast) return
-    const timeout = window.setTimeout(() => setToast(null), 1800)
-    return () => window.clearTimeout(timeout)
-  }, [toast])
 
   function handleRated(traceId: string, prevPass: boolean | null, nextPass: boolean | null, categories: string[]) {
     setSessionLabeled((prev) => {
@@ -630,14 +543,14 @@ export function TraceViewer({
 
       if (changes.length > 0) {
         setLastBulkApply({ tag: topTag, changes })
-        setToast({ kind: 'success', message: `Applied ${topTag} to ${changes.length} trace${changes.length === 1 ? '' : 's'}.` })
+        toast.success(`Applied ${topTag} to ${changes.length} trace${changes.length === 1 ? '' : 's'}.`)
         setLastAction({
           message: `Applied ${topTag} to ${changes.length} trace${changes.length === 1 ? '' : 's'}`,
           at: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
         })
       }
     } catch {
-      setToast({ kind: 'error', message: 'Could not apply top tag. Try again.' })
+      toast.error('Could not apply top tag. Try again.')
     } finally {
       setIsApplyingTopTag(false)
     }
@@ -672,13 +585,13 @@ export function TraceViewer({
       }
 
       setLastBulkApply(null)
-      setToast({ kind: 'success', message: `Undid bulk tag on ${undoCount} trace${undoCount === 1 ? '' : 's'}.` })
+      toast.success(`Undid bulk tag on ${undoCount} trace${undoCount === 1 ? '' : 's'}.`)
       setLastAction({
         message: `Undid bulk tag on ${undoCount} trace${undoCount === 1 ? '' : 's'}`,
         at: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
       })
     } catch {
-      setToast({ kind: 'error', message: 'Could not undo bulk tag. Try again.' })
+      toast.error('Could not undo bulk tag. Try again.')
     } finally {
       setIsUndoingTopTag(false)
     }
@@ -688,13 +601,13 @@ export function TraceViewer({
     if (!topFailureTheme) return
     try {
       await navigator.clipboard.writeText(topFailureTheme[0])
-      setToast({ kind: 'success', message: `Copied top theme: ${topFailureTheme[0]}` })
+      toast.success(`Copied top theme: ${topFailureTheme[0]}`)
       setLastAction({
         message: `Copied top theme ${topFailureTheme[0]}`,
         at: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
       })
     } catch {
-      setToast({ kind: 'error', message: 'Could not copy top theme.' })
+      toast.error('Could not copy top theme.')
     }
   }
 
@@ -704,13 +617,13 @@ export function TraceViewer({
 
     try {
       await navigator.clipboard.writeText(payload)
-      setToast({ kind: 'success', message: `Copied ${modeLabel} failure summary.` })
+      toast.success(`Copied ${modeLabel} failure summary.`)
       setLastAction({
         message: `Copied ${modeLabel} failure summary (${copyFormat})`,
         at: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
       })
     } catch {
-      setToast({ kind: 'error', message: 'Could not copy failure summary.' })
+      toast.error('Could not copy failure summary.')
     }
   }
 
@@ -736,13 +649,13 @@ export function TraceViewer({
 
     try {
       await navigator.clipboard.writeText(payload)
-      setToast({ kind: 'success', message: `Copied compact ${modeLabel} summary.` })
+      toast.success(`Copied compact ${modeLabel} summary.`)
       setLastAction({
         message: `Copied compact ${modeLabel} summary`,
         at: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
       })
     } catch {
-      setToast({ kind: 'error', message: 'Could not copy compact summary.' })
+      toast.error('Could not copy compact summary.')
     }
   }
 
@@ -771,52 +684,48 @@ export function TraceViewer({
 
     try {
       await navigator.clipboard.writeText(payload)
-      setToast({ kind: 'success', message: `Copied compact table ${modeLabel} summary.` })
+      toast.success(`Copied compact table ${modeLabel} summary.`)
       setLastAction({
         message: `Copied compact table ${modeLabel} summary`,
         at: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
       })
     } catch {
-      setToast({ kind: 'error', message: 'Could not copy compact table summary.' })
+      toast.error('Could not copy compact table summary.')
     }
   }
 
   return (
     <>
-      <div aria-live="polite" className="sr-only">{copyMenuAnnouncement}</div>
-
-      {toast && (
-        <div className={`mb-4 rounded border px-3 py-2 text-[11px] ${toast.kind === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-red-50 border-red-200 text-red-700'}`}>
-          {toast.message}
-        </div>
-      )}
-
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-3 mb-5">
-        {FEATURES.map(f => (
-          <Link
-            key={f}
-            href={buildUrl({ feature: f || undefined, unrated: unratedOnly ? '1' : undefined })}
-            className={`text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
-              currentFeature === f
-                ? 'bg-slate-900 text-white'
-                : 'bg-white/5 border border-white/10 text-slate-300 hover:border-white/30'
-            }`}
-          >
-            {FEATURE_LABELS[f]}
-          </Link>
-        ))}
+        <ToggleGroup value={[currentFeature]} variant="outline" className="flex-wrap">
+          {FEATURES.map(f => (
+            <ToggleGroupItem
+              key={f}
+              value={f}
+              render={<Link href={buildUrl({ feature: f || undefined, unrated: unratedOnly ? '1' : undefined })} />}
+              className={`h-auto text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
+                currentFeature === f
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-white/5 border border-white/10 text-slate-300 hover:border-white/30'
+              }`}
+            >
+              {FEATURE_LABELS[f]}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
         <div className="ml-auto">
-          <Link
-            href={buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? undefined : '1' })}
-            className={`text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
+          <Toggle
+            pressed={unratedOnly}
+            render={<Link href={buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? undefined : '1' })} />}
+            className={`h-auto text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
               unratedOnly
                 ? 'bg-amber-500 text-white'
                 : 'bg-white/5 border border-white/10 text-slate-300 hover:border-white/30'
             }`}
           >
             Unrated only
-          </Link>
+          </Toggle>
         </div>
       </div>
 
@@ -828,14 +737,14 @@ export function TraceViewer({
           <span className="text-slate-300">Active row: {activeRowIndex + 1}/{visibleTraces.length}</span>
         )}
         {focusMode && (
-          <button
-            type="button"
-            onClick={() => setDenseMode((v) => !v)}
+          <Toggle
+            pressed={denseMode}
+            onPressedChange={() => setDenseMode((v) => !v)}
             aria-keyshortcuts="D"
-            className="ml-auto text-[11px] font-semibold border border-white/10 bg-white/5 text-slate-200 hover:border-white/30 px-2 py-1 rounded transition-colors"
+            className="ml-auto h-auto text-[11px] font-semibold border border-white/10 bg-white/5 text-slate-200 hover:border-white/30 px-2 py-1 rounded transition-colors"
           >
             {denseMode ? 'Dense view: on' : 'Dense view: off'}
-          </button>
+          </Toggle>
         )}
       </div>
 
@@ -859,166 +768,144 @@ export function TraceViewer({
           </div>
           <div className="flex items-center gap-1">
             {topFailureTheme && untaggedFailedTraces.length > 0 && (
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={applyTopTagToUntaggedFails}
                 disabled={isApplyingTopTag}
                 aria-keyshortcuts="A"
-                className={`text-[10px] px-2 py-1 rounded border transition-colors ${
-                  isApplyingTopTag
-                    ? 'bg-white/10 text-slate-400 border-white/10'
-                    : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
-                }`}
+                className="h-auto text-[10px] px-2 py-1 rounded border-white/10 bg-white/5 text-slate-300 hover:border-white/30"
               >
                 {isApplyingTopTag ? 'Applying…' : `Apply top tag to ${untaggedFailedTraces.length}`}
-              </button>
+              </Button>
             )}
             {topFailureTheme && (
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={copyTopTheme}
-                className="text-[10px] px-2 py-1 rounded border transition-colors bg-white/5 text-slate-300 border-white/10 hover:border-white/30"
+                className="h-auto text-[10px] px-2 py-1 rounded border-white/10 bg-white/5 text-slate-300 hover:border-white/30"
               >
                 Copy top theme
-              </button>
+              </Button>
             )}
             {summaryRows.length > 0 && (
-              <div className="relative" ref={copyActionsRef}>
-                <button
-                  type="button"
-                  ref={copyActionsToggleRef}
-                  onClick={() => setShowCopyActions((value) => !value)}
-                  onKeyDown={onCopyActionsTriggerKeyDown}
-                  className={`text-[10px] px-2 py-1 rounded border transition-colors ${
-                    showCopyActions
-                      ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                      : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
-                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-1`}
+              <DropdownMenu open={showCopyActions} onOpenChange={setShowCopyActions}>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={`h-auto text-[10px] px-2 py-1 rounded ${
+                        showCopyActions
+                          ? 'bg-orange-400 text-slate-950 border-orange-300/30'
+                          : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                      }`}
+                    />
+                  }
                 >
                   Copy actions
-                </button>
-                {showCopyActions && (
-                  <div role="menu" className="absolute right-0 top-[calc(100%+4px)] z-10 min-w-[150px] bg-white/5 border border-white/10 rounded shadow-sm p-1 space-y-1">
-                    <button
-                      type="button"
-                      role="menuitem"
-                      ref={(el) => { copyActionItemRefs.current[0] = el }}
-                      onKeyDown={(event) => onCopyActionKeyDown(event, 0)}
-                      onClick={() => { setShowCopyActions(false); void copyFailureSummary() }}
-                      className="w-full text-left text-[10px] px-2 py-1 rounded text-slate-300 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
-                    >
-                      Copy summary
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      ref={(el) => { copyActionItemRefs.current[1] = el }}
-                      onKeyDown={(event) => onCopyActionKeyDown(event, 1)}
-                      onClick={() => { setShowCopyActions(false); void copyCompactSummary() }}
-                      className="w-full text-left text-[10px] px-2 py-1 rounded text-slate-300 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
-                    >
-                      Copy compact
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      ref={(el) => { copyActionItemRefs.current[2] = el }}
-                      onKeyDown={(event) => onCopyActionKeyDown(event, 2)}
-                      onClick={() => { setShowCopyActions(false); void copyCompactSummaryTable() }}
-                      className="w-full text-left text-[10px] px-2 py-1 rounded text-slate-300 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
-                    >
-                      Copy compact table
-                    </button>
-                    <div className="pt-1 mt-1 border-t border-slate-100 text-[9px] text-slate-400 px-1">
-                      ↑/↓/Tab navigate · Enter select · Esc close · S/C/T or 1/2/3 quick keys
-                    </div>
-                  </div>
-                )}
-              </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => void copyFailureSummary()}>
+                    Copy summary
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => void copyCompactSummary()}>
+                    Copy compact
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => void copyCompactSummaryTable()}>
+                    Copy compact table
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
             {summaryRows.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setShowCopyPreview((value) => !value)}
-                className={`text-[10px] px-2 py-1 rounded border transition-colors ${
+              <Toggle
+                pressed={showCopyPreview}
+                onPressedChange={() => setShowCopyPreview((value) => !value)}
+                className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   showCopyPreview
                     ? 'bg-orange-400 text-slate-950 border-orange-300/30'
                     : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
                 }`}
               >
                 {showCopyPreview ? 'Hide preview' : 'Preview copy'}
-              </button>
+              </Toggle>
             )}
-            <button
-              type="button"
-              onClick={() => setCopyFormat((value) => (value === 'list' ? 'table' : 'list'))}
-              className={`text-[10px] px-2 py-1 rounded border transition-colors ${
+            <Toggle
+              pressed={copyFormat === 'table'}
+              onPressedChange={() => setCopyFormat((value) => (value === 'list' ? 'table' : 'list'))}
+              className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 copyFormat === 'table'
                   ? 'bg-orange-400 text-slate-950 border-orange-300/30'
                   : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
               }`}
             >
               Format: {copyFormat}
-            </button>
-            <button
-              type="button"
-              onClick={() => setIncludeZeroCountsInCopy((value) => !value)}
-              className={`text-[10px] px-2 py-1 rounded border transition-colors ${
+            </Toggle>
+            <Toggle
+              pressed={includeZeroCountsInCopy}
+              onPressedChange={() => setIncludeZeroCountsInCopy((value) => !value)}
+              className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 includeZeroCountsInCopy
                   ? 'bg-orange-400 text-slate-950 border-orange-300/30'
                   : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
               }`}
             >
               Include zeros: {includeZeroCountsInCopy ? 'on' : 'off'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setTrimForSlack((value) => !value)}
-              className={`text-[10px] px-2 py-1 rounded border transition-colors ${
+            </Toggle>
+            <Toggle
+              pressed={trimForSlack}
+              onPressedChange={() => setTrimForSlack((value) => !value)}
+              className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 trimForSlack
                   ? 'bg-orange-400 text-slate-950 border-orange-300/30'
                   : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
               }`}
             >
               Trim for Slack: {trimForSlack ? 'on' : 'off'}
-            </button>
+            </Toggle>
             {lastBulkApply && (
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={undoLastBulkApplyTopTag}
                 disabled={isUndoingTopTag}
                 aria-keyshortcuts="Z"
-                className={`text-[10px] px-2 py-1 rounded border transition-colors ${
-                  isUndoingTopTag
-                    ? 'bg-white/10 text-slate-400 border-white/10'
+                className="h-auto text-[10px] px-2 py-1 rounded border-white/10 bg-white/5 text-slate-300 hover:border-white/30"
+              >
+                {isUndoingTopTag ? 'Undoing…' : `Undo ${lastBulkApply.tag}`}
+              </Button>
+            )}
+            <ToggleGroup
+              value={[failureSummaryMode]}
+              onValueChange={(values) => {
+                const next = values[0]
+                if (next === 'page' || next === 'session') setFailureSummaryMode(next)
+              }}
+              variant="outline"
+            >
+              <ToggleGroupItem
+                value="page"
+                className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
+                  failureSummaryMode === 'page'
+                    ? 'bg-orange-400 text-slate-950 border-orange-300/30'
                     : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
                 }`}
               >
-                {isUndoingTopTag ? 'Undoing…' : `Undo ${lastBulkApply.tag}`}
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setFailureSummaryMode('page')}
-              className={`text-[10px] px-2 py-1 rounded border transition-colors ${
-                failureSummaryMode === 'page'
-                  ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
-              }`}
-            >
-              Page
-            </button>
-            <button
-              type="button"
-              onClick={() => setFailureSummaryMode('session')}
-              className={`text-[10px] px-2 py-1 rounded border transition-colors ${
-                failureSummaryMode === 'session'
-                  ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
-              }`}
-            >
-              Session
-            </button>
+                Page
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="session"
+                className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
+                  failureSummaryMode === 'session'
+                    ? 'bg-orange-400 text-slate-950 border-orange-300/30'
+                    : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                }`}
+              >
+                Session
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
         </div>
         {summaryRows.length > 0 ? (
@@ -1042,29 +929,32 @@ export function TraceViewer({
               <p className="text-[10px] font-semibold text-slate-300">Copy payload preview</p>
               <div className="flex items-center gap-2">
                 <p className="text-[10px] text-slate-400">{copyPreviewChars} chars · {copyPreviewLines} lines</p>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded border ${fitsSlack ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-amber-700 bg-amber-50 border-amber-200'}`}>
+                <Badge variant={fitsSlack ? 'success' : 'warning'} className="text-[10px]">
                   {fitsSlack ? 'Fits Slack' : 'Over 4k'}
-                </span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded border ${fitsGithubComment ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-amber-700 bg-amber-50 border-amber-200'}`}>
+                </Badge>
+                <Badge variant={fitsGithubComment ? 'success' : 'warning'} className="text-[10px]">
                   {fitsGithubComment ? 'Fits GitHub comment' : 'Over 65k'}
-                </span>
+                </Badge>
               </div>
             </div>
             {shouldSuggestTrimForSlack && (
-              <div className="mb-2 flex items-center justify-between gap-2 rounded border border-amber-300/20 bg-amber-500/10 px-2 py-1.5">
-                <p className="text-[10px] text-amber-100">Payload exceeds Slack-friendly length. Enable Trim for Slack?</p>
-                <button
+              <Alert variant="warning" className="mb-2 flex items-center justify-between gap-2 px-2 py-1.5">
+                <AlertDescription className="text-[10px] text-amber-100">Payload exceeds Slack-friendly length. Enable Trim for Slack?</AlertDescription>
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => setTrimForSlack(true)}
-                  className="text-[10px] font-semibold rounded border border-amber-300/30 bg-amber-500/15 text-amber-100 hover:border-amber-200 px-2 py-1 transition-colors"
+                  className="h-auto text-[10px] font-semibold rounded border-amber-300/30 bg-amber-500/15 text-amber-100 hover:border-amber-200 px-2 py-1"
                 >
                   Enable trim
-                </button>
-              </div>
+                </Button>
+              </Alert>
             )}
-            <pre className="text-[10px] text-slate-300 whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto">
-              {copyPreviewPayload}
-            </pre>
+            <ScrollArea className="max-h-40">
+              <pre className="text-[10px] text-slate-300 whitespace-pre-wrap leading-relaxed">
+                {copyPreviewPayload}
+              </pre>
+            </ScrollArea>
           </div>
         )}
       </div>
@@ -1077,30 +967,31 @@ export function TraceViewer({
 
       {/* Trace list */}
       {totalCount === 0 ? (
-        <div className="bg-white/5 border border-white/10 rounded p-10 text-center">
+        <Card variant="glass" className="p-10 text-center">
           <p className="text-[14px] text-slate-400">
             No traces yet. Traces are written on every Claude API call once migration 040 is applied.
           </p>
-        </div>
+        </Card>
       ) : visibleTraces.length === 0 ? (
-        <div className="bg-white/5 border border-white/10 rounded p-10 text-center">
+        <Card variant="glass" className="p-10 text-center">
           <p className="text-[14px] text-slate-300">This page of unrated traces is complete.</p>
           {unratedOnly && page < totalPages - 1 ? (
             <>
               <p className="text-[12px] text-slate-400 mt-1">Move to the next unrated page to continue labeling.</p>
-              <Link
-                href={buildUrl({ feature: currentFeature || undefined, unrated: '1', page: String(page + 1) })}
-                className="inline-block mt-3 text-[12px] font-semibold px-3 py-1.5 rounded border border-white/10 bg-white/5 text-slate-200 hover:border-white/30 transition-colors"
+              <Button
+                variant="outline"
+                className="mt-3"
+                render={<Link href={buildUrl({ feature: currentFeature || undefined, unrated: '1', page: String(page + 1) })} />}
               >
                 Next unrated page
-              </Link>
+              </Button>
             </>
           ) : (
             <p className="text-[12px] text-slate-400 mt-1">No more unrated traces on remaining pages for this filter.</p>
           )}
-        </div>
+        </Card>
       ) : (
-        <div className="bg-white/5 border border-white/10 rounded overflow-hidden mb-5">
+        <Card variant="glass" className="gap-0 p-0 overflow-hidden mb-5">
           {visibleTraces.map((t, idx) => (
             <TraceRow
               key={t.id}
@@ -1119,28 +1010,32 @@ export function TraceViewer({
               onRated={handleRated}
             />
           ))}
-        </div>
+        </Card>
       )}
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <Link
-            href={page > 0 ? buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? '1' : undefined, page: String(page - 1) }) : '#'}
-            className={`text-[13px] font-semibold px-4 py-2 rounded border border-white/10 bg-white/5 hover:bg-white/10 ${page === 0 ? 'opacity-40 pointer-events-none' : ''}`}
-          >
-            Previous
-          </Link>
+        <Pagination className="justify-between">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={page > 0 ? buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? '1' : undefined, page: String(page - 1) }) : '#'}
+                className={page === 0 ? 'opacity-40 pointer-events-none' : ''}
+              />
+            </PaginationItem>
+          </PaginationContent>
           <span className="text-[12px] text-slate-400">
             Page {page + 1} of {totalPages} &middot; {totalCount} total
           </span>
-          <Link
-            href={page < totalPages - 1 ? buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? '1' : undefined, page: String(page + 1) }) : '#'}
-            className={`text-[13px] font-semibold px-4 py-2 rounded border border-white/10 bg-white/5 hover:bg-white/10 ${page >= totalPages - 1 ? 'opacity-40 pointer-events-none' : ''}`}
-          >
-            Next
-          </Link>
-        </div>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationNext
+                href={page < totalPages - 1 ? buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? '1' : undefined, page: String(page + 1) }) : '#'}
+                className={page >= totalPages - 1 ? 'opacity-40 pointer-events-none' : ''}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
     </>
   )

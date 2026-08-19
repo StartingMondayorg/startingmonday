@@ -1,4 +1,8 @@
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 
 type Activation = {
   isComplete: boolean
@@ -22,8 +26,10 @@ export function DashboardIntelSetupSections(props: Props) {
 
   if (activation.isComplete || hasFilters) return null
 
+  const completed = setupSteps.filter((s) => s.done).length
+
   return (
-    <section id="search-setup" className="bg-white/5 border border-white/15 rounded overflow-hidden mb-8">
+    <Card variant="glass" id="search-setup" className="gap-0 rounded overflow-hidden mb-8 py-0">
       <div className="px-6 py-[18px] border-b border-white/10">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
@@ -33,20 +39,15 @@ export function DashboardIntelSetupSections(props: Props) {
             View details &rarr;
           </Link>
         </div>
-        {(() => {
-          const completed = setupSteps.filter((s) => s.done).length
-          const barCls = ['w-0', 'w-[16.67%]', 'w-1/3', 'w-1/2', 'w-2/3', 'w-5/6', 'w-full'][completed] ?? 'w-0'
-          return (
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div className={`h-full bg-orange-500 rounded-full transition-all duration-500 ${barCls}`} />
-              </div>
-              <span className="text-[12px] font-semibold text-slate-300 shrink-0">
-                {completed} of {setupSteps.length} complete
-              </span>
-            </div>
-          )
-        })()}
+        <div className="flex items-center gap-3">
+          <Progress
+            value={(completed / setupSteps.length) * 100}
+            className="flex-1 h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-orange-500"
+          />
+          <span className="text-[12px] font-semibold text-slate-300 shrink-0">
+            {completed} of {setupSteps.length} complete
+          </span>
+        </div>
       </div>
       <div className="divide-y divide-white/10">
         {setupSteps.map((step, i) => (
@@ -54,13 +55,12 @@ export function DashboardIntelSetupSections(props: Props) {
             key={i}
             className={`px-6 py-3.5 flex items-center gap-4 ${step.done ? 'opacity-50' : ''}`}
           >
-            <div
-              className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${
-                step.done ? 'bg-emerald-500 text-white' : 'bg-white/10 text-slate-300'
-              }`}
+            <Badge
+              variant={step.done ? 'success' : 'secondary'}
+              className="w-5 h-5 rounded-full p-0 flex items-center justify-center shrink-0 text-[10px] font-bold"
             >
               {step.done ? '✓' : i + 1}
-            </div>
+            </Badge>
             <span
               className={`text-[13px] flex-1 min-w-0 ${
                 step.done ? 'line-through text-slate-400 decoration-slate-500' : 'text-slate-100'
@@ -69,16 +69,18 @@ export function DashboardIntelSetupSections(props: Props) {
               {step.label}
             </span>
             {!step.done && (
-              <Link
-                href={step.href}
-                className="text-[12px] font-semibold text-slate-100 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded transition-colors shrink-0"
+              <Button
+                size="sm"
+                variant="secondary"
+                className="shrink-0"
+                render={<Link href={step.href} />}
               >
                 {step.cta} &rarr;
-              </Link>
+              </Button>
             )}
           </div>
         ))}
       </div>
-    </section>
+    </Card>
   )
 }

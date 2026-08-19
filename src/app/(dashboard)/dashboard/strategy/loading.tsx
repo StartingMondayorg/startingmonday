@@ -1,4 +1,7 @@
-﻿export default function StrategyLoading() {
+﻿import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+
+export default function StrategyLoading() {
   return (
     <div className="min-h-screen bg-slate-100 font-sans">
 
@@ -7,28 +10,28 @@
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </span>
-          <div className="h-3 w-20 bg-slate-700 rounded animate-pulse" />
+          <Skeleton className="h-3 w-20 bg-slate-700" />
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 
         <div className="mb-8">
-          <div className="h-7 w-56 bg-slate-200 rounded animate-pulse mb-2" />
-          <div className="h-3.5 w-80 bg-slate-200 rounded animate-pulse" />
+          <Skeleton className="h-7 w-56 mb-2" />
+          <Skeleton className="h-3.5 w-80" />
         </div>
 
-        <div className="bg-white border border-slate-200 rounded p-6 space-y-4">
+        <Card className="p-6 space-y-4">
           {[1, 2, 3].map(i => (
             <div key={i} className="space-y-2">
-              <div className="h-4 w-full bg-slate-100 rounded animate-pulse" />
-              <div className="h-4 w-4/5 bg-slate-100 rounded animate-pulse" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-4/5" />
             </div>
           ))}
           <div className="pt-2">
-            <div className="h-10 w-48 bg-slate-200 rounded animate-pulse" />
+            <Skeleton className="h-10 w-48" />
           </div>
-        </div>
+        </Card>
 
       </main>
     </div>

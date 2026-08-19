@@ -2,6 +2,15 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { Card } from '@/components/ui/card'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 export const metadata: Metadata = {
   title: 'Outplacement Outreach - Admin',
@@ -164,7 +173,7 @@ export default async function OutplacementOutreachPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card variant="default" className="p-6 space-y-4">
           <h2 className="text-[18px] font-bold text-slate-900">Channel Overview</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[13px] text-slate-600 leading-relaxed">
             <div>
@@ -180,9 +189,9 @@ export default async function OutplacementOutreachPage() {
               <p>All four approved default emails currently score 90 EJES with no blockers in the live email council.</p>
             </div>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card variant="default" className="p-6 space-y-4">
           <h2 className="text-[18px] font-bold text-slate-900">Top Buyer Pain Points</h2>
           <ul className="space-y-2 text-[13px] text-slate-600 leading-relaxed">
             {painPoints.map((item) => (
@@ -192,9 +201,9 @@ export default async function OutplacementOutreachPage() {
               </li>
             ))}
           </ul>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card variant="default" className="p-6 space-y-4">
           <h2 className="text-[18px] font-bold text-slate-900">Prospect Search Filters</h2>
           {filters.map((filterSet) => (
             <div key={filterSet.title} className="border-t border-slate-100 pt-4 first:border-t-0 first:pt-0">
@@ -209,9 +218,9 @@ export default async function OutplacementOutreachPage() {
               </ul>
             </div>
           ))}
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card variant="default" className="p-6 space-y-4">
           <h2 className="text-[18px] font-bold text-slate-900">4-Step Outreach Process</h2>
           <div className="space-y-4 pt-2">
             {outreachSteps.map((step) => (
@@ -221,33 +230,33 @@ export default async function OutplacementOutreachPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card variant="default" className="p-6 space-y-4">
           <h2 className="text-[18px] font-bold text-slate-900">Default Sequence</h2>
-          <div className="overflow-x-auto mt-4">
-            <table className="w-full text-[12px] text-left">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-4 py-2.5 font-semibold text-slate-900">Touch</th>
-                  <th className="px-4 py-2.5 font-semibold text-slate-900">Subject</th>
-                  <th className="px-4 py-2.5 font-semibold text-slate-900">Use when</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
+          <div className="mt-4">
+            <Table className="text-[12px] text-left">
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="font-semibold text-slate-900">Touch</TableHead>
+                  <TableHead className="font-semibold text-slate-900">Subject</TableHead>
+                  <TableHead className="font-semibold text-slate-900">Use when</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {sequence.map((item) => (
-                  <tr key={item.touch} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 text-slate-700 font-semibold">{item.touch}</td>
-                    <td className="px-4 py-3 text-slate-700">{item.subject}</td>
-                    <td className="px-4 py-3 text-slate-600">{item.useWhen}</td>
-                  </tr>
+                  <TableRow key={item.touch}>
+                    <TableCell className="text-slate-700 font-semibold whitespace-normal">{item.touch}</TableCell>
+                    <TableCell className="text-slate-700 whitespace-normal">{item.subject}</TableCell>
+                    <TableCell className="text-slate-600 whitespace-normal">{item.useWhen}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-6">
+        <Card variant="default" className="p-6 space-y-6">
           <h2 className="text-[18px] font-bold text-slate-900">Approved Message Templates</h2>
           <p className="text-[13px] text-slate-600">
             Personalize the trigger, company context, and buyer lens. Keep the pain and proof architecture intact.
@@ -260,15 +269,17 @@ export default async function OutplacementOutreachPage() {
                 <p className="text-[12px] font-semibold text-slate-900 mb-4">Subject: {template.subject}</p>
                 <ul className="space-y-4">
                   {template.body.map((line) => (
-                    <li key={line} className="bg-slate-50 border border-slate-200 rounded p-3.5 text-[13px] text-slate-700 leading-relaxed">
-                      {line}
+                    <li key={line}>
+                      <Card variant="default" className="bg-slate-50 p-3.5 text-[13px] text-slate-700 leading-relaxed">
+                        {line}
+                      </Card>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-        </section>
+        </Card>
       </main>
     </div>
   )

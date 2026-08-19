@@ -1,4 +1,12 @@
 import Link from 'next/link'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 export type BreadcrumbItem = {
   label: string
@@ -9,26 +17,29 @@ export function Breadcrumbs({ items, className = '' }: { items: BreadcrumbItem[]
   if (!items.length) return null
 
   return (
-    <nav aria-label="Breadcrumb" className={className}>
-      <ol className="flex flex-wrap items-center gap-2 text-[12px] text-slate-400">
+    <Breadcrumb className={className}>
+      <BreadcrumbList className="flex-nowrap gap-2 text-[12px] text-slate-400">
         {items.map((item, index) => {
           const isLast = index === items.length - 1
           return (
-            <li key={`${item.label}-${index}`} className="flex items-center gap-2">
+            <BreadcrumbItem key={`${item.label}-${index}`} className="gap-2">
               {item.href && !isLast ? (
-                <Link href={item.href} className="hover:text-slate-200 transition-colors">
+                <BreadcrumbLink render={<Link href={item.href} className="hover:text-slate-200 transition-colors" />}>
                   {item.label}
-                </Link>
+                </BreadcrumbLink>
               ) : (
-                <span aria-current={isLast ? 'page' : undefined} className={isLast ? 'text-slate-200 font-semibold' : undefined}>
+                <BreadcrumbPage
+                  aria-current={isLast ? 'page' : undefined}
+                  className={isLast ? 'text-slate-200 font-semibold' : undefined}
+                >
                   {item.label}
-                </span>
+                </BreadcrumbPage>
               )}
-              {!isLast && <span className="text-slate-600">/</span>}
-            </li>
+              {!isLast && <BreadcrumbSeparator className="text-slate-600">/</BreadcrumbSeparator>}
+            </BreadcrumbItem>
           )
         })}
-      </ol>
-    </nav>
+      </BreadcrumbList>
+    </Breadcrumb>
   )
 }

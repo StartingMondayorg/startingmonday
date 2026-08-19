@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 type DashboardPipelinePulseProps = {
   isExecutive: boolean
@@ -26,11 +28,11 @@ export function DashboardPipelinePulse({
   if (!isExecutive) return null
 
   return (
-    <section id="pipeline-pulse" className="rounded overflow-hidden mb-8 border border-orange-300/35 bg-orange-500/10 shadow-[0_18px_40px_rgba(15,23,42,0.22)] backdrop-blur-sm">
+    <Card variant="glass" id="pipeline-pulse" className="gap-0 rounded overflow-hidden mb-8 border-orange-300/35 bg-orange-500/10 shadow-[0_18px_40px_rgba(15,23,42,0.22)] py-0">
       <div className="px-6 py-[18px] border-b border-orange-300/25 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500">Pipeline Pulse</h2>
-          <span className="text-[10px] font-semibold text-orange-100 bg-orange-500/20 border border-orange-300/35 px-2 py-0.5 rounded-full">Executive</span>
+          <Badge variant="warning">Executive</Badge>
         </div>
         <Link href="/dashboard/signals" className="text-[12px] text-slate-300 hover:text-orange-200">
           Signals
@@ -89,6 +91,6 @@ export function DashboardPipelinePulse({
           <div className="text-[11px] text-slate-400 mt-0.5">active offer context</div>
         </div>
       </div>
-    </section>
+    </Card>
   )
 }

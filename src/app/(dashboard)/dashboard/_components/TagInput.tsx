@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState, useEffect } from 'react'
+import { Badge } from '@/components/ui/badge'
 
 interface TagInputProps {
   name?: string
@@ -80,7 +81,7 @@ export function TagInput({ name, id, placeholder, defaultValue, value, onChange,
         />
       )}
       {tags.map((t, i) => (
-        <span key={i} className="inline-flex items-center gap-1 bg-slate-100 text-slate-700 text-[12px] font-medium px-2.5 py-1 rounded-full">
+        <Badge key={i} variant="secondary" className="h-auto gap-1 px-2.5 py-1 font-medium">
           {t}
           <button
             type="button"
@@ -90,7 +91,7 @@ export function TagInput({ name, id, placeholder, defaultValue, value, onChange,
           >
             &times;
           </button>
-        </span>
+        </Badge>
       ))}
       <input
         ref={inputRef}

@@ -20,6 +20,13 @@ import { HelpQuickButton } from '@/app/components/HelpQuickButton'
 import { BriefingPulseSupport } from './BriefingPulseSupport'
 import { BriefingHeader } from './BriefingHeader'
 import { parseBriefingJson } from './briefing-json'
+import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Progress } from '@/components/ui/progress'
 
 export const metadata = {
   title: 'Daily Briefing',
@@ -586,32 +593,32 @@ Output valid JSON only, no markdown fences.`
 
 function BriefingBodySkeleton() {
   return (
-    <div className="rounded-b-2xl border border-white/15 border-t-0 bg-white/5 px-5 sm:px-8 py-6 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="rounded-b-2xl border-t-0 px-5 sm:px-8 py-6 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       <div className="flex items-center gap-3 mb-8">
         <div className="w-2 h-2 rounded-full bg-orange-300 animate-pulse" />
         <p className="text-[13px] text-slate-300">Assembling your briefing...</p>
       </div>
       <div className="mb-8 space-y-2">
-        <div className="h-4 w-full bg-white/10 rounded animate-pulse" />
-        <div className="h-4 w-4/5 bg-white/10 rounded animate-pulse" />
+        <Skeleton className="h-4 w-full rounded bg-white/10" />
+        <Skeleton className="h-4 w-4/5 rounded bg-white/10" />
       </div>
       <div className="mb-8">
-        <div className="h-2 w-28 bg-white/10 rounded animate-pulse mb-4" />
-        <div className="p-4 bg-amber-500/10 border border-amber-300/20 rounded-r space-y-2 backdrop-blur-md">
-          <div className="h-4 w-32 bg-amber-200/20 rounded animate-pulse" />
-          <div className="h-3.5 w-full bg-amber-200/20 rounded animate-pulse" />
-          <div className="h-3.5 w-3/4 bg-amber-200/20 rounded animate-pulse" />
-        </div>
+        <Skeleton className="h-2 w-28 rounded mb-4 bg-white/10" />
+        <Card variant="glass" className="p-4 bg-amber-500/10 border-amber-300/20 rounded-r space-y-2">
+          <Skeleton className="h-4 w-32 rounded bg-amber-200/20" />
+          <Skeleton className="h-3.5 w-full rounded bg-amber-200/20" />
+          <Skeleton className="h-3.5 w-3/4 rounded bg-amber-200/20" />
+        </Card>
       </div>
       <div className="mb-8">
-        <div className="h-2 w-24 bg-white/10 rounded animate-pulse mb-4" />
-        <div className="p-4 bg-white/5 border border-white/10 rounded-r space-y-2 backdrop-blur-md">
-          <div className="h-4 w-40 bg-white/10 rounded animate-pulse" />
-          <div className="h-3.5 w-full bg-white/10 rounded animate-pulse" />
-          <div className="h-3.5 w-2/3 bg-white/10 rounded animate-pulse" />
-        </div>
+        <Skeleton className="h-2 w-24 rounded mb-4 bg-white/10" />
+        <Card variant="glass" className="p-4 rounded-r space-y-2">
+          <Skeleton className="h-4 w-40 rounded bg-white/10" />
+          <Skeleton className="h-3.5 w-full rounded bg-white/10" />
+          <Skeleton className="h-3.5 w-2/3 rounded bg-white/10" />
+        </Card>
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -647,7 +654,7 @@ async function BriefingBody({
   const stalledLanes = context.stalledLanes ?? []
 
   return (
-    <div className="rounded-b-2xl border border-white/15 border-t-0 bg-white/5 px-5 sm:px-8 py-8 sm:py-10 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="rounded-b-2xl border-t-0 px-5 sm:px-8 py-8 sm:py-10 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       {!context.hasContent ? (
         <div className="text-center py-12">
           <p className="text-[16px] sm:text-[18px] font-semibold text-white mb-3">Nothing urgent is pulling at the search today.</p>
@@ -655,27 +662,27 @@ async function BriefingBody({
             No new matches, relationship follow-through, or company signals need attention right now.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/dashboard/companies/new" className="inline-block bg-orange-400 text-slate-950 text-[13px] font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-300 transition-colors">
+            <Button render={<Link href="/dashboard/companies/new" />}>
               Add a company
-            </Link>
-            <Link href="/dashboard" className="inline-block border border-white/15 text-slate-200 text-[13px] font-semibold px-6 py-2.5 rounded-lg hover:border-white/30 hover:bg-white/5 transition-colors">
+            </Button>
+            <Button variant="outline" render={<Link href="/dashboard" />}>
               Back to dashboard
-            </Link>
+            </Button>
           </div>
         </div>
       ) : (
         <>
           {usedFallback && (
-            <div className="mb-8 rounded-2xl border border-amber-300/20 bg-amber-500/10 p-5 backdrop-blur-md">
-              <p className="text-[12px] font-semibold text-amber-100 mb-1.5">Fallback briefing from live data</p>
-              <p className="text-[13px] text-amber-100/80 leading-relaxed">
+            <Alert variant="warning" className="mb-8 p-5">
+              <AlertTitle>Fallback briefing from live data</AlertTitle>
+              <AlertDescription>
                 {fallbackReason === 'credits_exhausted'
                   ? 'AI generation credits were unavailable. This briefing is a deterministic summary of your current signals, matches, and follow-ups.'
                   : fallbackReason === 'timeout'
                     ? 'AI generation took too long. This briefing is a deterministic summary of your current signals, matches, and follow-ups.'
                   : 'AI output formatting failed validation. This briefing is a deterministic summary of your current signals, matches, and follow-ups.'}
-              </p>
-            </div>
+              </AlertDescription>
+            </Alert>
           )}
 
           {briefing?.intro && (
@@ -699,39 +706,36 @@ async function BriefingBody({
                   <>
                     <div className="flex flex-col gap-3">
                       {signalAlerts.map((s, i) => (
-                        <div key={i} className="p-4 sm:p-5 bg-gradient-to-br from-amber-500/10 to-white/5 border border-amber-300/20 border-l-[4px] border-l-orange-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow backdrop-blur-md">
+                        <Card key={i} variant="glass" className="p-4 sm:p-5 bg-gradient-to-br from-amber-500/10 to-white/5 border-amber-300/20 border-l-[4px] border-l-orange-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow">
                           <div className="flex items-center gap-2 flex-wrap mb-2">
                             <span className="font-bold text-[16px] sm:text-[17px] text-white">{s.company}</span>
-                            <span className="text-[10px] font-semibold tracking-[0.08em] uppercase bg-orange-500/15 text-orange-100 px-2.5 py-0.5 rounded-md border border-orange-300/20">
+                            <Badge variant="warning">
                               {SIGNAL_LABELS[s.signalType] ?? s.signalType}
-                            </span>
+                            </Badge>
                           </div>
                           <p className="text-[15px] sm:text-[16px] text-slate-200 leading-relaxed mb-2">{s.summary}</p>
                           {s.angle && (
                             <p className="text-[14px] text-slate-300 italic leading-relaxed">{s.angle}</p>
                           )}
-                        </div>
+                        </Card>
                       ))}
                     </div>
                     <div className="mt-5">
                       <form action={logBriefingAction}>
                         <input type="hidden" name="section" value="signals_to_review" />
                         <input type="hidden" name="target" value="/dashboard/signals" />
-                        <button
-                          type="submit"
-                          className="inline-block text-[12px] font-semibold text-slate-950 border border-orange-300/30 rounded-lg px-5 py-2.5 hover:bg-orange-300 hover:border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:ring-offset-2 focus:ring-offset-slate-950 active:scale-95 transition-all duration-200 cursor-pointer bg-orange-400"
-                        >
+                        <Button type="submit">
                           Signals &rarr;
-                        </button>
+                        </Button>
                       </form>
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-lg border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-md">
+                  <Card variant="glass" className="rounded-lg p-4 sm:p-5">
                     <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
                       No new market signals are competing for attention right now. Keep your current follow-through moving.
                     </p>
-                  </div>
+                  </Card>
                 )}
               </section>
             </section>
@@ -753,34 +757,31 @@ async function BriefingBody({
                   <>
                     <div className="flex flex-col gap-3">
                       {matchInsights.map((m, i) => (
-                        <div key={i} className="p-4 sm:p-5 bg-white/5 border border-white/10 border-l-[4px] border-l-emerald-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow backdrop-blur-md">
+                        <Card key={i} variant="glass" className="p-4 sm:p-5 border-l-[4px] border-l-emerald-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow">
                           <div className="font-bold text-[16px] sm:text-[17px] text-white mb-2">{m.company}</div>
                           <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-slate-400 mb-3">
                             {(m.roles ?? []).join(' · ')}
                           </div>
                           <p className="text-[15px] sm:text-[16px] text-slate-200 leading-relaxed">{m.insight}</p>
-                        </div>
+                        </Card>
                       ))}
                     </div>
                     <div className="mt-5">
                       <form action={logBriefingAction}>
                         <input type="hidden" name="section" value="people_to_reach" />
                         <input type="hidden" name="target" value="/dashboard/contacts" />
-                        <button
-                          type="submit"
-                          className="inline-block text-[12px] font-semibold text-slate-950 border border-emerald-300/30 rounded-lg px-5 py-2.5 hover:bg-emerald-300 hover:border-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-300/50 focus:ring-offset-2 focus:ring-offset-slate-950 active:scale-95 transition-all duration-200 cursor-pointer bg-emerald-400"
-                        >
+                        <Button type="submit">
                           Move one relationship forward &rarr;
-                        </button>
+                        </Button>
                       </form>
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-lg border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-md">
+                  <Card variant="glass" className="rounded-lg p-4 sm:p-5">
                     <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
                       No new role-to-contact matches surfaced yet. Use one existing relationship to keep the week moving.
                     </p>
-                  </div>
+                  </Card>
                 )}
               </section>
             </section>
@@ -801,26 +802,27 @@ async function BriefingBody({
                 {stalledLanes.length > 0 ? (
                   <div className="flex flex-col gap-3">
                     {stalledLanes.map((lane, index) => (
-                      <div
+                      <Card
                         key={`${lane.lane}-${index}`}
-                        className={`p-4 sm:p-5 border rounded-lg border-l-[4px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] transition-shadow hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] backdrop-blur-md ${lane.state === 'stalled' ? 'bg-gradient-to-br from-amber-500/10 to-white/5 border-amber-300/20 border-l-amber-400' : 'bg-gradient-to-br from-amber-500/5 to-white/5 border-amber-300/15 border-l-amber-300'}`}
+                        variant="glass"
+                        className={`p-4 sm:p-5 rounded-lg border-l-[4px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] transition-shadow hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] ${lane.state === 'stalled' ? 'bg-gradient-to-br from-amber-500/10 to-white/5 border-amber-300/20 border-l-amber-400' : 'bg-gradient-to-br from-amber-500/5 to-white/5 border-amber-300/15 border-l-amber-300'}`}
                       >
                         <div className="flex items-center gap-2 flex-wrap mb-2">
                           <span className="font-bold text-[16px] sm:text-[17px] text-white capitalize">{lane.lane}</span>
-                          <span className={`text-[10px] font-semibold tracking-[0.08em] uppercase px-2.5 py-0.5 rounded-md border ${lane.state === 'stalled' ? 'bg-amber-500/15 text-amber-100 border-amber-300/20' : 'bg-amber-500/10 text-amber-100 border-amber-300/15'}`}>
+                          <Badge variant="warning">
                             {normalizeLaneState(lane.state)}
-                          </span>
+                          </Badge>
                         </div>
                         <p className="text-[15px] sm:text-[16px] text-slate-200 leading-relaxed">{normalizeLaneReason(lane.reason)}</p>
-                      </div>
+                      </Card>
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-md">
+                  <Card variant="glass" className="rounded-lg p-4 sm:p-5">
                     <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
                       Your current cadence is steady. Keep one relationship move active and protect follow-through quality.
                     </p>
-                  </div>
+                  </Card>
                 )}
               </section>
 
@@ -832,33 +834,30 @@ async function BriefingBody({
                   <>
                     <div className="flex flex-col gap-2">
                       {followUpItems.map((f, i) => (
-                        <div key={i} className="p-4 sm:p-5 bg-gradient-to-br from-white/5 to-slate-950/30 border border-white/10 border-l-[4px] border-l-blue-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow backdrop-blur-md">
+                        <Card key={i} variant="glass" className="p-4 sm:p-5 bg-gradient-to-br from-white/5 to-slate-950/30 border-l-[4px] border-l-blue-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow">
                           <div className="font-semibold text-[15px] sm:text-[16px] text-white mb-1">
                             {f.person} <span className="font-normal text-slate-400">·</span> {f.action}
                           </div>
                           <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">{f.suggestion}</p>
-                        </div>
+                        </Card>
                       ))}
                     </div>
                     <div className="mt-5">
                       <form action={logBriefingAction}>
                         <input type="hidden" name="section" value="best_next_moves" />
                         <input type="hidden" name="target" value="/dashboard/calendar" />
-                        <button
-                          type="submit"
-                          className="inline-block text-[12px] font-semibold text-slate-950 border border-blue-300/30 rounded-lg px-5 py-2.5 hover:bg-blue-300 hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300/50 focus:ring-offset-2 focus:ring-offset-slate-950 active:scale-95 transition-all duration-200 cursor-pointer bg-blue-400"
-                        >
+                        <Button type="submit">
                           Map your week &rarr;
-                        </button>
+                        </Button>
                       </form>
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-lg border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur-md">
+                  <Card variant="glass" className="rounded-lg p-4 sm:p-5">
                     <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
                       Nothing urgent is due right now. Hold focus on one proactive relationship move to stay ahead of timing.
                     </p>
-                  </div>
+                  </Card>
                 )}
               </section>
             </section>
@@ -870,16 +869,13 @@ async function BriefingBody({
           )}
 
           <div className="text-center">
-            <Link
-              href="/dashboard"
-              className="inline-block bg-orange-400 text-slate-950 text-[13px] font-semibold px-8 py-3 rounded hover:bg-orange-300 transition-colors"
-            >
+            <Button className="px-8 py-3" render={<Link href="/dashboard" />}>
               Back to dashboard
-            </Link>
+            </Button>
           </div>
         </>
       )}
-    </div>
+    </Card>
   )
 }
 
@@ -895,7 +891,7 @@ function FirstSessionGuidedState({
   prepHref: string
 }) {
   return (
-    <section className="rounded-2xl border border-white/15 bg-white/5 px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
       <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-slate-300 mb-3">Guided first session</p>
       <h2 className="text-[22px] sm:text-[24px] font-bold text-white leading-tight mb-2">
         {firstName}, here is your first move.
@@ -931,18 +927,15 @@ function FirstSessionGuidedState({
         <input type="hidden" name="section" value="first_session_guided" />
         <input type="hidden" name="action" value="primary_prep_cta_clicked" />
         <input type="hidden" name="target" value={prepHref} />
-        <button
-          type="submit"
-          className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-orange-400 px-6 py-3 text-[13px] font-semibold text-slate-950 hover:bg-orange-300 transition-colors"
-        >
+        <Button type="submit" className="min-h-[44px] px-6 py-3">
           Generate prep brief now
-        </button>
+        </Button>
       </form>
 
       <p className="text-[12px] text-slate-400 mt-4">
         Your full briefing unlocks as your search builds.
       </p>
-    </section>
+    </Card>
   )
 }
 
@@ -1038,12 +1031,13 @@ export default async function BriefingPage({
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </span>
           <div className="flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-slate-700 px-3 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
+            <Button
+              variant="outline"
+              className="min-h-[44px] border-slate-700 text-slate-200 hover:text-white hover:border-slate-500"
+              render={<Link href="/dashboard" />}
             >
               Dashboard
-            </Link>
+            </Button>
             <LogoutButton label="Sign out" />
           </div>
         </div>
@@ -1052,17 +1046,17 @@ export default async function BriefingPage({
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-5 sm:py-10">
       <p className="sr-only">Briefing</p>
         {noteSaved === '1' && (
-          <section className="mb-4 rounded-2xl border border-emerald-300/20 bg-emerald-500/10 px-4 py-3 backdrop-blur-md">
-            <p className="text-[12px] font-semibold text-emerald-100">Today&apos;s note saved.</p>
-            <p className="text-[12px] text-emerald-100/80">Your weekly pulse plan is now captured in your daily notes.</p>
-          </section>
+          <Alert variant="success" className="mb-4 px-4 py-3">
+            <AlertTitle>Today&apos;s note saved.</AlertTitle>
+            <AlertDescription>Your weekly pulse plan is now captured in your daily notes.</AlertDescription>
+          </Alert>
         )}
 
         {errorCode === 'note-save-failed' && (
-          <section className="mb-4 rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 backdrop-blur-md">
-            <p className="text-[12px] font-semibold text-amber-100">We could not save that note right now.</p>
-            <p className="text-[12px] text-amber-100/80">Please try again in a moment. Your plan is still visible on this page.</p>
-          </section>
+          <Alert variant="warning" className="mb-4 px-4 py-3">
+            <AlertTitle>We could not save that note right now.</AlertTitle>
+            <AlertDescription>Please try again in a moment. Your plan is still visible on this page.</AlertDescription>
+          </Alert>
         )}
 
         {/* Header - Phase 1a redesign with primary stat card */}
@@ -1087,7 +1081,7 @@ export default async function BriefingPage({
           </p>
         )}
 
-        <section id="weekly-pulse" className="rounded-2xl border border-white/15 bg-white/5 px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" id="weekly-pulse" className="px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <div className="rounded-2xl border border-slate-200/80 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.08),_transparent_34%),linear-gradient(180deg,_rgba(15,23,42,0.98)_0%,_rgba(15,23,42,0.94)_100%)] p-6 sm:p-8 shadow-[0_20px_48px_rgba(15,23,42,0.16)]">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <div>
@@ -1097,11 +1091,10 @@ export default async function BriefingPage({
                 </div>
               </div>
               <div className="w-full max-w-[200px]">
-                <div className="h-2 rounded-full bg-white/10">
-                  <div
-                    className={`h-2 rounded-full transition-all duration-300 ${pulse.meterWidthClass} ${pulse.state === 'watch' ? 'bg-amber-300' : pulse.state === 'steady' ? 'bg-slate-300' : 'bg-orange-300'}`}
-                  />
-                </div>
+                <Progress
+                  value={pulse.state === 'building' ? 80 : pulse.state === 'steady' ? 60 : 40}
+                  className={`h-2 bg-white/10 ${pulse.state === 'watch' ? '[&_[data-slot=progress-indicator]]:bg-amber-300' : pulse.state === 'steady' ? '[&_[data-slot=progress-indicator]]:bg-slate-300' : '[&_[data-slot=progress-indicator]]:bg-orange-300'}`}
+                />
               </div>
             </div>
 
@@ -1115,12 +1108,9 @@ export default async function BriefingPage({
                 <input type="hidden" name="action" value="primary_move_clicked" />
                 <input type="hidden" name="target" value={pulse.ctaTarget} />
                 <input type="hidden" name="pulse_state" value={pulse.state} />
-                <button
-                  type="submit"
-                  className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-orange-400 px-5 py-3 text-[12px] font-semibold text-slate-950 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:ring-offset-2 active:scale-95 transition-all hover:bg-orange-300 hover:shadow-lg duration-200 sm:w-auto"
-                >
+                <Button type="submit" className="min-h-[44px] w-full sm:w-auto px-5 py-3">
                   {pulse.ctaLabel}
-                </button>
+                </Button>
               </form>
 
               <BriefingPulseSupport state={pulse.state} whyNow={pulse.whyNow} mailtoHref={pulse.mailtoHref} />
@@ -1133,16 +1123,13 @@ export default async function BriefingPage({
                   value={`${pulse.headline}\n\n${pulse.support}\n\nWhy this matters now: ${pulse.whyNow}\n\nNext step: ${pulse.ctaLabel}`}
                 />
                 <input type="hidden" name="pulse_state" value={pulse.state} />
-                <button
-                  type="submit"
-                  className="inline-flex min-h-[44px] w-full items-center justify-center rounded-lg border border-white/15 px-5 py-3 text-[12px] font-semibold text-slate-100 hover:border-white/30 hover:bg-white/5 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-slate-950 active:scale-95 transition-all duration-200 sm:w-auto"
-                >
+                <Button type="submit" variant="outline" className="min-h-[44px] w-full sm:w-auto px-5 py-3">
                   Save as today&apos;s note
-                </button>
+                </Button>
               </form>
             </div>
           </div>
-        </section>
+        </Card>
 
 
 
@@ -1155,21 +1142,19 @@ export default async function BriefingPage({
           />
         ) : (
           <>
-            <section id="briefing-mode" className="rounded-2xl border border-white/15 bg-white/5 px-5 sm:px-8 py-3 flex items-center gap-2 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+            <Card variant="glass" id="briefing-mode" className="flex-row px-5 sm:px-8 py-3 items-center gap-2 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
               <h2 className="text-[11px] font-semibold text-slate-300">View:</h2>
-              <Link
-                href="/dashboard/briefing?mode=focused"
-                className={`inline-flex items-center min-h-[44px] px-3 text-[11px] font-semibold border rounded transition-colors ${mode === 'focused' ? 'text-slate-950 bg-orange-400 border-orange-400' : 'text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/5'}`}
-              >
-                Focused
-              </Link>
-              <Link
-                href="/dashboard/briefing?mode=full"
-                className={`inline-flex items-center min-h-[44px] px-3 text-[11px] font-semibold border rounded transition-colors ${mode === 'full' ? 'text-slate-950 bg-orange-400 border-orange-400' : 'text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/5'}`}
-              >
-                Full
-              </Link>
-            </section>
+              <Tabs value={mode}>
+                <TabsList>
+                  <TabsTrigger value="focused" render={<Link href="/dashboard/briefing?mode=focused" />}>
+                    Focused
+                  </TabsTrigger>
+                  <TabsTrigger value="full" render={<Link href="/dashboard/briefing?mode=full" />}>
+                    Full
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </Card>
 
             {/* Briefing body - streams in after Claude call completes */}
             <Suspense fallback={<BriefingBodySkeleton />}>

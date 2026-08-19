@@ -15,6 +15,12 @@
 import { useState } from 'react'
 import type { ExecutiveLifecycleState, ExecutivePersonaVariant } from '@/lib/executive-lifecycle'
 import { LIFECYCLE_TEMPLATES } from '@/lib/executive-lifecycle'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 interface AudienceVariant {
   audience: string
@@ -92,28 +98,28 @@ export function ExecutiveBrandingProfile({
     <div className="space-y-6">
       {/* Positioning guidance for this lifecycle state */}
       {template.positioningGuidance && (
-        <div className="rounded-xl border border-blue-200 bg-blue-50/40 px-5 py-4">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-blue-600 mb-1">
+        <Alert variant="info" className="px-5 py-4">
+          <AlertTitle className="text-[10px] tracking-[0.14em] uppercase mb-1">
             Positioning guidance - {LIFECYCLE_TEMPLATES.find((t) => t.state === lifecycleState)?.state.replace('_', ' ')}
-          </p>
-          <p className="text-[13px] text-blue-800 leading-relaxed">{template.positioningGuidance}</p>
-        </div>
+          </AlertTitle>
+          <AlertDescription className="text-[13px] leading-relaxed">{template.positioningGuidance}</AlertDescription>
+        </Alert>
       )}
 
       {/* Confidentiality notice for in-role users */}
       {lifecycleState === 'optionality' && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50/40 px-5 py-4">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-amber-600 mb-1">
+        <Alert variant="warning" className="px-5 py-4">
+          <AlertTitle className="text-[10px] tracking-[0.14em] uppercase mb-1">
             Confidentiality - subtle external positioning
-          </p>
-          <p className="text-[13px] text-amber-800 leading-relaxed">
+          </AlertTitle>
+          <AlertDescription className="text-[13px] leading-relaxed">
             {template.confidentialityNotes}
-          </p>
-        </div>
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Narrative architecture: 3 layers */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+      <Card className="p-5 space-y-4">
         <h3 className="text-[13px] font-bold text-slate-800">Narrative architecture</h3>
         <p className="text-[12px] text-slate-500">Three-layer story: what you built, why now, where your edge is strongest next.</p>
         {[
@@ -122,8 +128,8 @@ export function ExecutiveBrandingProfile({
           { label: '3. Next mandate - where my edge is strongest', value: nextMandate, setter: setNextMandate, placeholder: 'e.g. PE-backed platforms scaling from $50M to $200M where the operating complexity is highest.' },
         ].map(({ label, value, setter, placeholder }) => (
           <div key={label}>
-            <label className="block text-[11px] font-semibold text-slate-600 mb-1">{label}</label>
-            <textarea
+            <Label className="block text-[11px] font-semibold text-slate-600 mb-1">{label}</Label>
+            <Textarea
               value={value}
               onChange={(e) => setter(e.target.value)}
               rows={2}
@@ -134,8 +140,8 @@ export function ExecutiveBrandingProfile({
           </div>
         ))}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-600 mb-1">Master thesis (one-sentence synthesis)</label>
-          <textarea
+          <Label className="block text-[11px] font-semibold text-slate-600 mb-1">Master thesis (one-sentence synthesis)</Label>
+          <Textarea
             value={narrativeThesis}
             onChange={(e) => setNarrativeThesis(e.target.value)}
             rows={2}
@@ -144,16 +150,16 @@ export function ExecutiveBrandingProfile({
             className="w-full border border-orange-200 rounded-lg px-3 py-2 text-[13px] text-slate-800 focus:outline-none focus:border-orange-500 resize-none bg-orange-50/20 disabled:bg-slate-50"
           />
         </div>
-      </div>
+      </Card>
 
       {/* Leadership proof points */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-3">
+      <Card className="p-5 space-y-3">
         <h3 className="text-[13px] font-bold text-slate-800">Leadership proof points</h3>
         <p className="text-[12px] text-slate-500">Specific, quantified outcomes you can cite in any audience context.</p>
         {proofPoints.map((point, index) => (
           <div key={index}>
-            <label className="block text-[10px] font-semibold text-slate-400 mb-1">Proof point {index + 1}</label>
-            <input
+            <Label className="block text-[10px] font-semibold text-slate-400 mb-1">Proof point {index + 1}</Label>
+            <Input
               value={point}
               onChange={(e) => updateProofPoint(index, e.target.value)}
               disabled={readOnly}
@@ -163,27 +169,28 @@ export function ExecutiveBrandingProfile({
           </div>
         ))}
         {!readOnly && (
-          <button
+          <Button
             type="button"
+            variant="link"
             onClick={() => setProofPoints((prev) => [...prev, ''])}
-            className="text-[12px] text-orange-600 hover:text-orange-700 font-semibold"
+            className="text-[12px] font-semibold"
           >
             + Add proof point
-          </button>
+          </Button>
         )}
-      </div>
+      </Card>
 
       {/* Audience-specific variants */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+      <Card className="p-5 space-y-4">
         <h3 className="text-[13px] font-bold text-slate-800">Audience-specific message variants</h3>
         <p className="text-[12px] text-slate-500">Different stakeholders need different angles on the same story.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {variants.map((variant, index) => (
-            <div key={variant.audience} className="rounded-lg border border-slate-100 bg-slate-50 p-4 space-y-2">
+            <Card key={variant.audience} className="bg-slate-50 p-4 space-y-2">
               <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">{variant.audience}</p>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-0.5">Headline for this audience</label>
-                <input
+                <Label className="block text-[10px] text-slate-400 mb-0.5">Headline for this audience</Label>
+                <Input
                   value={variant.headline}
                   onChange={(e) => updateVariant(index, 'headline', e.target.value)}
                   disabled={readOnly}
@@ -192,8 +199,8 @@ export function ExecutiveBrandingProfile({
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-0.5">Key message</label>
-                <input
+                <Label className="block text-[10px] text-slate-400 mb-0.5">Key message</Label>
+                <Input
                   value={variant.keyMessage}
                   onChange={(e) => updateVariant(index, 'keyMessage', e.target.value)}
                   disabled={readOnly}
@@ -202,8 +209,8 @@ export function ExecutiveBrandingProfile({
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-0.5">Avoid with this audience</label>
-                <input
+                <Label className="block text-[10px] text-slate-400 mb-0.5">Avoid with this audience</Label>
+                <Input
                   value={variant.avoidLanguage}
                   onChange={(e) => updateVariant(index, 'avoidLanguage', e.target.value)}
                   disabled={readOnly}
@@ -211,19 +218,19 @@ export function ExecutiveBrandingProfile({
                   className="w-full border border-slate-200 rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-orange-400 disabled:bg-white"
                 />
               </div>
-            </div>
+            </Card>
           ))}
         </div>
-      </div>
+      </Card>
 
       {!readOnly && (
-        <button
+        <Button
           type="button"
           onClick={handleSave}
-          className="bg-orange-600 hover:bg-orange-500 text-white font-semibold text-[13px] px-5 py-2.5 rounded-lg transition-colors"
+          className="text-[13px] px-5 py-2.5"
         >
           Save branding profile
-        </button>
+        </Button>
       )}
 
       {data.lastUpdatedAt && (

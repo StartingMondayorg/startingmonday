@@ -2,6 +2,10 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { markPlaced } from '../placed/actions'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 export const metadata = { title: 'Search Complete -- Starting Monday' }
 
@@ -46,39 +50,36 @@ export default async function WrapUpPage() {
 
           <form action={markPlaced} className="flex flex-col gap-4 mb-8">
             <div>
-              <label htmlFor="company" className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
+              <Label htmlFor="company" className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
                 Company you accepted (optional)
-              </label>
-              <input
+              </Label>
+              <Input
                 id="company"
                 name="company"
                 type="text"
                 placeholder="Leave blank if not applicable"
-                className="w-full bg-slate-800 border border-slate-700 text-white text-[14px] rounded px-4 py-3 placeholder:text-slate-500 focus:outline-none focus:border-slate-500"
+                className="w-full bg-slate-800 border-slate-700 text-white text-[14px] placeholder:text-slate-500 focus-visible:border-slate-500"
               />
             </div>
-            <button
+            <Button
               type="submit"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-bold px-7 py-3.5 rounded transition-colors"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-bold px-7 py-3.5"
             >
               Mark search complete
-            </button>
+            </Button>
           </form>
 
           {(isActivePaid || isTrialing) && tier !== 'free' && (
-            <div className="bg-slate-800 rounded p-5 mb-6">
+            <Card className="bg-slate-800 p-5 mb-6 ring-0">
               <p className="text-[13px] text-white font-semibold mb-1">Keep your market intelligence running.</p>
               <p className="text-[13px] text-slate-400 leading-relaxed mb-4">
                 After you land, the executives who stay sharp are the ones who have options when things change.
                 Monitor ($49/mo) keeps your signal monitoring and briefing running with no active search work required.
               </p>
-              <Link
-                href="/settings/billing"
-                className="inline-block text-[13px] font-semibold text-slate-300 hover:text-white border border-slate-600 hover:border-slate-400 px-4 py-2 rounded transition-colors"
-              >
+              <Button variant="outline" render={<Link href="/settings/billing" />} className="text-[13px] font-semibold text-slate-300 hover:text-white border-slate-600 hover:border-slate-400">
                 Review subscription options
-              </Link>
-            </div>
+              </Button>
+            </Card>
           )}
 
           <Link

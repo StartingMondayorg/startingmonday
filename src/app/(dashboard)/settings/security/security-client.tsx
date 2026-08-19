@@ -1,6 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export function SecurityClient({ accountEmail }: { accountEmail: string }) {
   const [password, setPassword] = useState('')
@@ -51,7 +56,7 @@ export function SecurityClient({ accountEmail }: { accountEmail: string }) {
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded p-6 sm:p-8">
+    <Card className="p-6 sm:p-8">
       <h2 className="text-[20px] font-bold text-slate-900">Security</h2>
       <p className="text-[13px] text-slate-500 mt-1">
         Add or change your password for <span className="font-semibold text-slate-700">{accountEmail}</span>.
@@ -62,10 +67,10 @@ export function SecurityClient({ accountEmail }: { accountEmail: string }) {
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4 max-w-md">
         <div>
-          <label htmlFor="new-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5">
+          <Label htmlFor="new-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5">
             New password
-          </label>
-          <input
+          </Label>
+          <Input
             id="new-password"
             name="new-password"
             type="password"
@@ -74,15 +79,15 @@ export function SecurityClient({ accountEmail }: { accountEmail: string }) {
             onChange={e => setPassword(e.target.value)}
             required
             minLength={8}
-            className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400"
+            className="w-full"
           />
         </div>
 
         <div>
-          <label htmlFor="confirm-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5">
+          <Label htmlFor="confirm-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5">
             Confirm password
-          </label>
-          <input
+          </Label>
+          <Input
             id="confirm-password"
             name="confirm-password"
             type="password"
@@ -91,21 +96,25 @@ export function SecurityClient({ accountEmail }: { accountEmail: string }) {
             onChange={e => setConfirmPassword(e.target.value)}
             required
             minLength={8}
-            className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400"
+            className="w-full"
           />
         </div>
 
-        {error && <p className="text-[13px] text-red-600">{error}</p>}
-        {success && <p className="text-[13px] text-emerald-700">{success}</p>}
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="success">
+            <AlertDescription>{success}</AlertDescription>
+          </Alert>
+        )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full sm:w-auto bg-slate-900 text-white text-[14px] font-semibold py-2.5 px-5 rounded cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        <Button type="submit" disabled={loading} className="w-full sm:w-auto">
           {loading ? 'Saving...' : 'Save password'}
-        </button>
+        </Button>
       </form>
-    </div>
+    </Card>
   )
 }

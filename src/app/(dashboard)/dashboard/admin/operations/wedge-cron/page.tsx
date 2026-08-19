@@ -3,12 +3,33 @@ import { notFound, redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
+import { ADMIN_DARK_PAGE_BG } from '../../admin-dark-theme'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
-  ADMIN_DARK_PAGE_BG,
-  ADMIN_DARK_SECTION_CARD,
-  ADMIN_DARK_STAT_CARD,
-  ADMIN_DARK_TABLE_PANEL,
-} from '../../admin-dark-theme'
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type WedgeCronRunsPageProps = {
   searchParams: Promise<{
@@ -59,11 +80,6 @@ function parseLookbackDays(value: string | undefined): number {
   return Math.max(7, Math.min(parsed, 120))
 }
 
-function statusBadge(success: boolean): string {
-  return success
-    ? 'rounded-full border border-emerald-300/30 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-100'
-    : 'rounded-full border border-rose-300/30 bg-rose-500/15 px-2 py-0.5 text-[11px] font-semibold text-rose-100'
-}
 
 export default async function WedgeCronRunsPage({ searchParams }: WedgeCronRunsPageProps) {
   const supabase = await createClient()
@@ -150,54 +166,64 @@ export default async function WedgeCronRunsPage({ searchParams }: WedgeCronRunsP
           </Link>
         </div>
 
-        <section className={ADMIN_DARK_SECTION_CARD}>
+        <Card variant="glass" className="p-5 mb-6">
           <form method="get" className="grid grid-cols-1 gap-3 md:grid-cols-5">
-            <label className="text-[12px] text-slate-300">
-              <span className="block mb-1">Status</span>
-              <select name="status" defaultValue={selectedStatus} className="w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100">
-                <option value="all">All</option>
-                <option value="success">Success</option>
-                <option value="failed">Failed</option>
-              </select>
-            </label>
+            <div>
+              <Label className="block mb-1 text-[12px] text-slate-300">Status</Label>
+              <Select name="status" defaultValue={selectedStatus}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="success">Success</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-            <label className="text-[12px] text-slate-300">
-              <span className="block mb-1">From date (UTC)</span>
-              <input type="date" name="from" defaultValue={selectedFrom} className="w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
+            <div>
+              <Label className="block mb-1 text-[12px] text-slate-300">From date (UTC)</Label>
+              <Input type="date" name="from" defaultValue={selectedFrom} />
+            </div>
 
-            <label className="text-[12px] text-slate-300">
-              <span className="block mb-1">To date (UTC)</span>
-              <input type="date" name="to" defaultValue={selectedTo} className="w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
+            <div>
+              <Label className="block mb-1 text-[12px] text-slate-300">To date (UTC)</Label>
+              <Input type="date" name="to" defaultValue={selectedTo} />
+            </div>
 
-            <label className="text-[12px] text-slate-300">
-              <span className="block mb-1">Error code</span>
-              <select name="errorCode" defaultValue={selectedErrorCode} className="w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100">
-                <option value="all">All</option>
-                {errorCodes.map((code) => (
-                  <option key={code} value={code}>{code}</option>
-                ))}
-              </select>
-            </label>
+            <div>
+              <Label className="block mb-1 text-[12px] text-slate-300">Error code</Label>
+              <Select name="errorCode" defaultValue={selectedErrorCode}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {errorCodes.map((code) => (
+                    <SelectItem key={code} value={code}>{code}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             <div className="flex items-end gap-2">
               <input type="hidden" name="lookbackDays" value={String(lookbackDays)} />
-              <button type="submit" className="rounded border border-white/20 px-3 py-2 text-[13px] font-semibold text-slate-100 hover:border-orange-300/70 hover:bg-white/5">Apply filters</button>
-              <Link href="/dashboard/admin/operations/wedge-cron" className="rounded border border-white/15 px-3 py-2 text-[13px] text-slate-300 hover:text-white">Reset</Link>
+              <Button type="submit" variant="outline">Apply filters</Button>
+              <Button variant="ghost" render={<Link href="/dashboard/admin/operations/wedge-cron" />}>Reset</Button>
             </div>
           </form>
           {error ? <p className="mt-3 text-[13px] text-rose-300">Failed to load run history: {error.message}</p> : null}
-        </section>
+        </Card>
 
         <section className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className={ADMIN_DARK_STAT_CARD}><div className="text-[24px] font-bold text-white leading-none">{summary.total}</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Filtered Runs</div></div>
-          <div className={ADMIN_DARK_STAT_CARD}><div className="text-[24px] font-bold text-emerald-200 leading-none">{summary.success}</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Success</div></div>
-          <div className={ADMIN_DARK_STAT_CARD}><div className="text-[24px] font-bold text-rose-200 leading-none">{summary.failed}</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Failed</div></div>
-          <div className={ADMIN_DARK_STAT_CARD}><div className="text-[24px] font-bold text-white leading-none">{summary.avgDurationMs}ms</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Avg Duration</div></div>
+          <Card variant="glass" className="p-4"><div className="text-[24px] font-bold text-white leading-none">{summary.total}</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Filtered Runs</div></Card>
+          <Card variant="glass" className="p-4"><div className="text-[24px] font-bold text-emerald-200 leading-none">{summary.success}</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Success</div></Card>
+          <Card variant="glass" className="p-4"><div className="text-[24px] font-bold text-rose-200 leading-none">{summary.failed}</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Failed</div></Card>
+          <Card variant="glass" className="p-4"><div className="text-[24px] font-bold text-white leading-none">{summary.avgDurationMs}ms</div><div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">Avg Duration</div></Card>
         </section>
 
-        <section className={`${ADMIN_DARK_TABLE_PANEL} mt-5`}>
+        <Card variant="glass" className="mt-5 overflow-hidden">
           <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Cron run ledger</p>
             <span className="text-[13px] text-slate-400">Showing up to 250 rows</span>
@@ -206,38 +232,49 @@ export default async function WedgeCronRunsPage({ searchParams }: WedgeCronRunsP
           {rows.length === 0 ? (
             <p className="px-5 py-4 text-[13px] text-slate-300">No runs match the current filters.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left text-[12px] text-slate-200">
-                <thead>
-                  <tr className="border-b border-white/10 text-slate-400">
-                    <th className="px-5 py-2 pr-4">Triggered</th>
-                    <th className="py-2 pr-4">Status</th>
-                    <th className="py-2 pr-4">HTTP</th>
-                    <th className="py-2 pr-4">Duration</th>
-                    <th className="py-2 pr-4">Error code</th>
-                    <th className="py-2 pr-4">Error message</th>
-                    <th className="py-2 pr-4">Decision</th>
-                    <th className="py-2 pr-4">History</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row) => (
-                    <tr key={row.id} className="border-b border-white/5">
-                      <td className="px-5 py-2 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.triggered_at).toISOString()}</td>
-                      <td className="py-2 pr-4"><span className={statusBadge(row.success)}>{row.success ? 'success' : 'failed'}</span></td>
-                      <td className="py-2 pr-4">{row.http_status ?? '--'}</td>
-                      <td className="py-2 pr-4">{row.duration_ms ?? 0}ms</td>
-                      <td className="py-2 pr-4 font-mono text-[11px] text-slate-300">{row.error_code ?? '--'}</td>
-                      <td className="py-2 pr-4 max-w-[280px] truncate" title={row.error_message ?? '--'}>{row.error_message ?? '--'}</td>
-                      <td className="py-2 pr-4">{row.decision_summary ?? '--'}</td>
-                      <td className="py-2 pr-4">{row.snapshot_history_count ?? 0}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <TooltipProvider>
+              <div className="overflow-x-auto">
+                <Table className="text-[12px] text-slate-200">
+                  <TableHeader>
+                    <TableRow className="text-slate-400">
+                      <TableHead className="px-5 pr-4">Triggered</TableHead>
+                      <TableHead className="pr-4">Status</TableHead>
+                      <TableHead className="pr-4">HTTP</TableHead>
+                      <TableHead className="pr-4">Duration</TableHead>
+                      <TableHead className="pr-4">Error code</TableHead>
+                      <TableHead className="pr-4">Error message</TableHead>
+                      <TableHead className="pr-4">Decision</TableHead>
+                      <TableHead className="pr-4">History</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell className="px-5 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.triggered_at).toISOString()}</TableCell>
+                        <TableCell className="pr-4">
+                          <Badge variant={row.success ? 'success' : 'destructive'}>{row.success ? 'success' : 'failed'}</Badge>
+                        </TableCell>
+                        <TableCell className="pr-4">{row.http_status ?? '--'}</TableCell>
+                        <TableCell className="pr-4">{row.duration_ms ?? 0}ms</TableCell>
+                        <TableCell className="pr-4 font-mono text-[11px] text-slate-300">{row.error_code ?? '--'}</TableCell>
+                        <TableCell className="pr-4 max-w-[280px] truncate">
+                          {row.error_message ? (
+                            <Tooltip>
+                              <TooltipTrigger className="block max-w-[280px] truncate text-left">{row.error_message}</TooltipTrigger>
+                              <TooltipContent>{row.error_message}</TooltipContent>
+                            </Tooltip>
+                          ) : '--'}
+                        </TableCell>
+                        <TableCell className="pr-4">{row.decision_summary ?? '--'}</TableCell>
+                        <TableCell className="pr-4">{row.snapshot_history_count ?? 0}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TooltipProvider>
           )}
-        </section>
+        </Card>
       </main>
     </div>
   )

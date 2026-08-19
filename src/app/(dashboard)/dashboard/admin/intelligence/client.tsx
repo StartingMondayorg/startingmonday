@@ -1,7 +1,19 @@
 ﻿'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { useToast } from '@/lib/toast'
+import { toast } from 'sonner'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 type Token = { id: string; label: string | null; expires_at: string | null; created_at: string }
 type IntelCompany = {
@@ -14,8 +26,6 @@ type IntelCompany = {
   tokens: Token[]
 }
 
-const inputCls = 'w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 bg-white'
-
 export function IntelligenceAdminClient({
   companies: initial,
   appUrl,
@@ -23,7 +33,6 @@ export function IntelligenceAdminClient({
   companies: IntelCompany[]
   appUrl: string
 }) {
-  const showToast = useToast()
   const [companies, setCompanies] = useState(initial)
   const [addOpen, setAddOpen] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -57,7 +66,7 @@ export function IntelligenceAdminClient({
         }),
       })
       const data = await res.json()
-      if (!res.ok) { showToast(data.error ?? 'Failed to add company', 'error'); return }
+      if (!res.ok) { toast.error(data.error ?? 'Failed to add company'); return }
 
       const newEntry: IntelCompany = {
         slug: data.slug,
@@ -71,7 +80,7 @@ export function IntelligenceAdminClient({
       setCompanies(c => [newEntry, ...c])
       setNewName(''); setNewDesc(''); setNewSector(''); setNewWebsite('')
       setAddOpen(false)
-      showToast(`${newEntry.company_name} added to intelligence.`)
+      toast.success(`${newEntry.company_name} added to intelligence.`)
     } finally {
       setSaving(false)
     }
@@ -87,7 +96,7 @@ export function IntelligenceAdminClient({
         body: JSON.stringify({ slug, label, expiresInDays: 30 }),
       })
       const data = await res.json()
-      if (!res.ok) { showToast(data.error ?? 'Failed to generate link', 'error'); return }
+      if (!res.ok) { toast.error(data.error ?? 'Failed to generate link'); return }
 
       const url = `${appUrl}/intelligence/${slug}?t=${data.tokenId}`
       await navigator.clipboard.writeText(url)
@@ -103,7 +112,7 @@ export function IntelligenceAdminClient({
       setCompanies(cs =>
         cs.map(c => c.slug === slug ? { ...c, tokens: [newToken, ...c.tokens] } : c)
       )
-      showToast('Link copied to clipboard. Valid for 30 days.')
+      toast.success('Link copied to clipboard. Valid for 30 days.')
     } finally {
       setTokenLoading(null)
     }
@@ -126,7 +135,7 @@ export function IntelligenceAdminClient({
         size: '',
       }))
       setFinderResults(results)
-      if (results.length === 0) showToast('No companies found. Try a different keyword.', 'info')
+      if (results.length === 0) toast.info('No companies found. Try a different keyword.')
     } finally {
       setFinding(false)
     }
@@ -157,77 +166,66 @@ export function IntelligenceAdminClient({
             <p className="text-[13px] text-slate-500 mt-1">Manage public intelligence pages and generate ungated links for B2B demos.</p>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              href="/dashboard/admin/intelligence/qa"
-              className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-[13px] font-semibold px-4 py-2.5 rounded transition-colors"
-            >
+            <Button variant="outline" render={<Link href="/dashboard/admin/intelligence/qa" />}>
               QA scorecard
-            </Link>
-            <button
-              type="button"
-              onClick={() => setAddOpen(true)}
-              className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer border-0"
-            >
+            </Button>
+            <Button onClick={() => setAddOpen(true)}>
               + Add company
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Add company modal */}
-        {addOpen && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-slate-900/50"
-            onMouseDown={e => { if (e.target === e.currentTarget) setAddOpen(false) }}
-          >
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6">
-              <h2 className="text-[17px] font-bold text-slate-900 mb-5">Add company to intelligence</h2>
-              <form onSubmit={handleAddCompany} className="flex flex-col gap-4">
+        <Dialog open={addOpen} onOpenChange={setAddOpen}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Add company to intelligence</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleAddCompany} className="flex flex-col gap-4">
+              <div>
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Company name *</Label>
+                <Input value={newName} onChange={e => setNewName(e.target.value)} required placeholder="Accenture" />
+              </div>
+              <div>
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Description</Label>
+                <Textarea value={newDesc} onChange={e => setNewDesc(e.target.value)} rows={2} placeholder="One-line description for the public page..." className="resize-none" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Company name *</label>
-                  <input value={newName} onChange={e => setNewName(e.target.value)} required placeholder="Accenture" className={inputCls} />
+                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Sector</Label>
+                  <Input value={newSector} onChange={e => setNewSector(e.target.value)} placeholder="Consulting" />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Description</label>
-                  <textarea value={newDesc} onChange={e => setNewDesc(e.target.value)} rows={2} placeholder="One-line description for the public page..." className={inputCls + ' resize-none'} />
+                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Website</Label>
+                  <Input value={newWebsite} onChange={e => setNewWebsite(e.target.value)} placeholder="accenture.com" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Sector</label>
-                    <input value={newSector} onChange={e => setNewSector(e.target.value)} placeholder="Consulting" className={inputCls} />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Website</label>
-                    <input value={newWebsite} onChange={e => setNewWebsite(e.target.value)} placeholder="accenture.com" className={inputCls} />
-                  </div>
-                </div>
-                <div className="flex items-center justify-end gap-3 mt-2">
-                  <button type="button" onClick={() => setAddOpen(false)} className="text-[13px] text-slate-400 hover:text-slate-700 bg-transparent border-0 cursor-pointer">Cancel</button>
-                  <button
-                    type="submit"
-                    disabled={saving || !newName.trim()}
-                    className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer border-0"
-                  >
-                    {saving ? 'Saving...' : 'Add company'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+              </div>
+              <div className="flex items-center justify-end gap-3 mt-2">
+                <Button type="button" variant="ghost" onClick={() => setAddOpen(false)} className="text-slate-400 hover:text-slate-700">Cancel</Button>
+                <Button
+                  type="submit"
+                  disabled={saving || !newName.trim()}
+                >
+                  {saving ? 'Saving...' : 'Add company'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
 
         {/* Companies list */}
         {companies.length > 0 && (
           <div className="flex flex-col gap-4 mb-10">
             {companies.map(co => (
-              <div key={co.slug} className="bg-white border border-slate-200 rounded-lg p-5 sm:p-6">
+              <Card key={co.slug} className="p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-1 flex-wrap">
                       <span className="text-[16px] font-bold text-slate-900">{co.company_name}</span>
                       {co.sector && <span className="text-[11px] text-slate-400">{co.sector}</span>}
-                      <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                      <Badge variant="secondary">
                         {co.signalCount} signals
-                      </span>
+                      </Badge>
                     </div>
                     {co.website && (
                       <a href={co.website.startsWith('http') ? co.website : `https://${co.website}`} target="_blank" rel="noopener noreferrer" className="text-[12px] text-slate-400 hover:text-slate-700">
@@ -236,21 +234,16 @@ export function IntelligenceAdminClient({
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Link
-                      href={`/intelligence/${co.slug}`}
-                      target="_blank"
-                      className="text-[12px] font-semibold text-slate-500 hover:text-slate-900 border border-slate-200 rounded px-3 py-1.5 transition-colors"
-                    >
+                    <Button variant="outline" size="sm" render={<Link href={`/intelligence/${co.slug}`} target="_blank" />}>
                       View public &nearr;
-                    </Link>
-                    <button
-                      type="button"
+                    </Button>
+                    <Button
+                      size="sm"
                       onClick={() => generateToken(co.slug, co.company_name)}
                       disabled={tokenLoading === co.slug}
-                      className="bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-[12px] font-semibold px-3 py-1.5 rounded transition-colors cursor-pointer border-0"
                     >
                       {tokenLoading === co.slug ? 'Generating...' : 'Generate ungated link'}
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -270,55 +263,56 @@ export function IntelligenceAdminClient({
                                 {expired ? 'Expired' : `Exp. ${new Date(tok.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
                               </span>
                             )}
-                            <button
-                              type="button"
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={async () => {
                                 await navigator.clipboard.writeText(url)
                                 setCopiedId(tok.id)
                                 setTimeout(() => setCopiedId(null), 2000)
                               }}
-                              className="shrink-0 text-[11px] font-semibold text-slate-500 hover:text-slate-900 bg-transparent border-0 cursor-pointer"
+                              className="shrink-0 text-slate-500 hover:text-slate-900"
                             >
                               {copiedId === tok.id ? 'Copied!' : 'Copy'}
-                            </button>
+                            </Button>
                           </div>
                         )
                       })}
                     </div>
                   </div>
                 )}
-              </div>
+              </Card>
             ))}
           </div>
         )}
 
         {companies.length === 0 && (
-          <div className="bg-white border border-slate-200 rounded-lg px-6 py-12 text-center mb-10">
+          <Card className="px-6 py-12 text-center mb-10">
             <p className="text-[15px] font-semibold text-slate-900 mb-2">No companies added yet</p>
             <p className="text-[13px] text-slate-500 mb-4">Add companies to create public intelligence pages and generate ungated demo links.</p>
-          </div>
+          </Card>
         )}
 
         {/* B2B client finder */}
-        <div className="bg-white border border-slate-200 rounded-lg p-5 sm:p-6">
+        <Card className="p-5 sm:p-6">
           <div className="mb-4">
             <h2 className="text-[14px] font-bold text-slate-900 mb-1">B2B prospect finder</h2>
             <p className="text-[13px] text-slate-500">Search companies in your pipeline as potential Starting Monday customers. Add them above to build a demo intelligence page.</p>
           </div>
           <form onSubmit={handleFinder} className="flex gap-3 mb-4">
-            <input
+            <Input
               value={finderQuery}
               onChange={e => setFinderQuery(e.target.value)}
               placeholder="Search by company name or sector..."
-              className={inputCls + ' flex-1'}
+              className="flex-1"
             />
-            <button
+            <Button
               type="submit"
               disabled={finding || !finderQuery.trim()}
-              className="bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer border-0 shrink-0"
+              className="shrink-0"
             >
               {finding ? 'Searching...' : 'Search'}
-            </button>
+            </Button>
           </form>
 
           {finderResults.length > 0 && (
@@ -329,8 +323,9 @@ export function IntelligenceAdminClient({
                     <span className="text-[14px] font-semibold text-slate-900">{r.name}</span>
                     {r.industry && <span className="text-[12px] text-slate-400 ml-2">{r.industry}</span>}
                   </div>
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={async () => {
                       setSaving(true)
                       try {
@@ -340,7 +335,7 @@ export function IntelligenceAdminClient({
                           body: JSON.stringify({ company_name: r.name, sector: r.industry || undefined }),
                         })
                         const data = await res.json()
-                        if (!res.ok) { showToast(data.error ?? 'Failed', 'error'); return }
+                        if (!res.ok) { toast.error(data.error ?? 'Failed'); return }
                         const entry: IntelCompany = {
                           slug: data.slug,
                           company_name: r.name,
@@ -351,21 +346,21 @@ export function IntelligenceAdminClient({
                           tokens: [],
                         }
                         setCompanies(c => [entry, ...c])
-                        showToast(`${r.name} added to intelligence.`)
+                        toast.success(`${r.name} added to intelligence.`)
                       } finally {
                         setSaving(false)
                       }
                     }}
                     disabled={saving || companies.some(c => c.company_name.toLowerCase() === r.name.toLowerCase())}
-                    className="text-[12px] font-semibold text-slate-500 hover:text-slate-900 disabled:opacity-40 bg-transparent border-0 cursor-pointer shrink-0"
+                    className="text-slate-500 hover:text-slate-900 shrink-0"
                   >
                     {companies.some(c => c.company_name.toLowerCase() === r.name.toLowerCase()) ? 'Added' : '+ Add to intel'}
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
       </main>
     </div>

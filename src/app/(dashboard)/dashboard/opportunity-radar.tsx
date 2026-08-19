@@ -1,5 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 interface RadarHit {
   company_name: string
@@ -43,25 +46,27 @@ export function OpportunityRadar() {
       </div>
       <div className="space-y-2">
         {hits.map((hit, i) => (
-          <div key={i} className="flex items-start justify-between gap-3 p-3.5 bg-white border border-slate-200 rounded hover:border-slate-300 transition-colors">
+          <Card key={i} className="flex-row items-start justify-between gap-3 p-3.5 hover:border-slate-300 transition-colors">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <span className="text-[13px] font-semibold text-slate-800">{hit.company_name}</span>
                 {hit.signal_type && SIGNAL_LABELS[hit.signal_type] && (
-                  <span className="text-[10px] font-semibold tracking-[0.06em] uppercase text-cyan-700 bg-cyan-50 border border-cyan-200 px-1.5 py-0.5 rounded-full">
+                  <Badge variant="info" className="uppercase tracking-[0.06em]">
                     {SIGNAL_LABELS[hit.signal_type]}
-                  </span>
+                  </Badge>
                 )}
               </div>
               <p className="text-[12px] text-slate-500 leading-relaxed">{hit.reason}</p>
             </div>
-            <a
-              href={`/dashboard/companies/new?name=${encodeURIComponent(hit.company_name)}`}
-              className="text-[12px] font-semibold text-orange-600 hover:text-orange-700 whitespace-nowrap flex-shrink-0 mt-0.5 transition-colors"
+            <Button
+              variant="link"
+              size="sm"
+              className="whitespace-nowrap flex-shrink-0 mt-0.5"
+              render={<a href={`/dashboard/companies/new?name=${encodeURIComponent(hit.company_name)}`} />}
             >
               + Add
-            </a>
-          </div>
+            </Button>
+          </Card>
         ))}
       </div>
     </div>

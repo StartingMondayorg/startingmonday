@@ -1,5 +1,10 @@
 'use client'
 import { useState, useRef } from 'react'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 
 interface Props {
   defaultValue: string
@@ -66,20 +71,21 @@ export function PositioningGeneratorTextarea({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label htmlFor="positioning_summary" className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
+        <Label htmlFor="positioning_summary" className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
           Positioning summary
-        </label>
-        <button
+        </Label>
+        <Button
           type="button"
+          variant="link"
           onClick={handleGenerate}
           disabled={loading}
-          className="text-[11px] font-semibold text-orange-600 hover:text-orange-700 disabled:opacity-50 transition-colors cursor-pointer border-0 bg-transparent p-0"
+          className="h-auto p-0 text-[11px] font-semibold text-orange-600 hover:text-orange-700"
         >
           {loading ? 'Generating...' : 'Generate from resume'}
-        </button>
+        </Button>
       </div>
 
-      <textarea
+      <Textarea
         ref={textareaRef}
         id="positioning_summary"
         name="positioning_summary"
@@ -87,7 +93,7 @@ export function PositioningGeneratorTextarea({
         value={value}
         onChange={e => setValue(e.target.value)}
         placeholder="2-3 sentences: your title + years of experience, what you're known for, and what you're targeting next."
-        className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none leading-relaxed"
+        className="resize-none leading-relaxed"
       />
 
       {error && (
@@ -95,52 +101,54 @@ export function PositioningGeneratorTextarea({
       )}
 
       {suggestion && (
-        <div className="mt-2 border border-orange-200 bg-orange-50 rounded p-4">
+        <Card className="mt-2 border-orange-200 bg-orange-50 p-4">
           <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-orange-500 mb-2">Generated suggestion</p>
           <p className="text-[13px] text-slate-700 leading-relaxed mb-3">{suggestion}</p>
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleUse}
-              className="text-[12px] font-semibold text-white bg-orange-500 hover:bg-orange-600 px-3 py-1.5 rounded transition-colors cursor-pointer border-0"
-            >
+            <Button type="button" size="sm" onClick={handleUse}>
               Use this
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => { setSuggestion(''); setGaps([]) }}
-              className="text-[12px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer border-0 bg-transparent"
+              className="text-slate-400 hover:text-slate-600"
             >
               Discard
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       )}
 
       {gaps.length > 0 && !suggestion && (
-        <div className="mt-2 border border-amber-200 bg-amber-50 rounded p-3">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-amber-600 mb-1.5">Narrative gaps</p>
-          <ul className="flex flex-col gap-1">
-            {gaps.map((gap, i) => (
-              <li key={i} className="text-[12px] text-slate-600 flex gap-2">
-                <span className="text-amber-500 shrink-0">+</span>{gap}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Alert variant="warning" className="mt-2">
+          <AlertTitle>Narrative gaps</AlertTitle>
+          <AlertDescription>
+            <ul className="flex flex-col gap-1">
+              {gaps.map((gap, i) => (
+                <li key={i} className="flex gap-2">
+                  <span className="shrink-0">+</span>{gap}
+                </li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
       )}
 
       {gaps.length > 0 && suggestion && (
-        <div className="mt-2 border border-amber-200 bg-amber-50 rounded p-3">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-amber-600 mb-1.5">Narrative gaps to address</p>
-          <ul className="flex flex-col gap-1">
-            {gaps.map((gap, i) => (
-              <li key={i} className="text-[12px] text-slate-600 flex gap-2">
-                <span className="text-amber-500 shrink-0">+</span>{gap}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Alert variant="warning" className="mt-2">
+          <AlertTitle>Narrative gaps to address</AlertTitle>
+          <AlertDescription>
+            <ul className="flex flex-col gap-1">
+              {gaps.map((gap, i) => (
+                <li key={i} className="flex gap-2">
+                  <span className="shrink-0">+</span>{gap}
+                </li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
       )}
 
       {!value && !suggestion && (

@@ -9,6 +9,11 @@ import { PositioningGeneratorTextarea } from './positioning-generator'
 import { LinkedInGenerator } from './linkedin-generator'
 import { canUserSeeAdminHeader } from '@/lib/staff'
 import { ProfileAdvancedPanels } from './profile-advanced-panels'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Progress } from '@/components/ui/progress'
 
 const DEFAULT_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 const ABBR_TO_FULL: Record<string, string> = {
@@ -127,37 +132,33 @@ export default async function ProfilePage({
           <p className="text-[13px] text-slate-300 mt-1.5">{user.email}</p>
         </div>
 
-        <div className="mb-6 bg-white/5 border border-white/15 rounded-lg px-5 py-3.5 max-w-xl flex items-center gap-4 backdrop-blur-md">
-          <div className="flex items-center gap-1.5 shrink-0">
-            {progressSections.map((section, index) => <div key={index} title={section.label} className={`h-1.5 w-9 rounded-full transition-colors ${section.done ? 'bg-orange-300' : 'bg-white/20'}`} />)}
-          </div>
-          <span className="text-[13px] font-semibold text-slate-300">{completedSections} of 5 sections complete</span>
-        </div>
+        <Card variant="glass" className="mb-6 px-5 py-3.5 max-w-xl flex-row items-center gap-4">
+          <Progress value={(completedSections / progressSections.length) * 100} className="flex-1" />
+          <span className="text-[13px] font-semibold text-slate-300 shrink-0">{completedSections} of 5 sections complete</span>
+        </Card>
 
-        <div className="mb-4 max-w-xl px-5 py-4 bg-white/5 border border-white/10 rounded-lg flex items-start gap-3 backdrop-blur-md">
-          <div className="shrink-0 mt-0.5 text-slate-400">
-            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5C5.567 1.5 4 3.067 4 5v1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1V5c0-1.933-1.567-3.5-3.5-3.5Zm2.5 4.5V5a2.5 2.5 0 0 0-5 0v1h5Z" fill="currentColor"/></svg>
-          </div>
-          <p className="text-[13px] text-slate-300 leading-relaxed">Your resume and career notes are stored only in your account and are used only to generate your briefs.</p>
-        </div>
+        <Alert variant="info" className="mb-4 max-w-xl">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5C5.567 1.5 4 3.067 4 5v1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1V5c0-1.933-1.567-3.5-3.5-3.5Zm2.5 4.5V5a2.5 2.5 0 0 0-5 0v1h5Z" fill="currentColor"/></svg>
+          <AlertDescription>Your resume and career notes are stored only in your account and are used only to generate your briefs.</AlertDescription>
+        </Alert>
 
-        <section id="profile-editor" className="bg-white/5 border border-white/15 rounded-xl p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)] backdrop-blur-md">
-          {saved && <div className="mb-6 px-4 py-3 bg-emerald-500/15 border border-emerald-300/30 rounded text-[13px] text-emerald-100">Profile saved.</div>}
-          {saveError && <div className="mb-6 px-4 py-3 bg-rose-500/15 border border-rose-300/30 rounded text-[13px] text-rose-100">Save failed: {decodeURIComponent(saveError)}</div>}
+        <Card variant="glass" id="profile-editor" className="p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+          {saved && <Alert variant="success" className="mb-6"><AlertDescription>Profile saved.</AlertDescription></Alert>}
+          {saveError && <Alert variant="destructive" className="mb-6"><AlertDescription>Save failed: {decodeURIComponent(saveError)}</AlertDescription></Alert>}
 
           <form id="profile-form" action={saveProfile} className="flex flex-col gap-6">
             <section id="section-identity">
               <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Identity and role</h2>
               <label htmlFor="full_name" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Full name</label>
-              <input id="full_name" name="full_name" type="text" defaultValue={profile?.full_name ?? ''} placeholder="Richard Rothschild" className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300" />
+              <Input id="full_name" name="full_name" type="text" defaultValue={profile?.full_name ?? ''} placeholder="Richard Rothschild" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label htmlFor="current_title" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Current or most recent title</label>
-                  <input id="current_title" name="current_title" type="text" defaultValue={profile?.current_title ?? ''} placeholder="Chief Information Officer" className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300" />
+                  <Input id="current_title" name="current_title" type="text" defaultValue={profile?.current_title ?? ''} placeholder="Chief Information Officer" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
                 </div>
                 <div>
                   <label htmlFor="current_company" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Current or most recent company</label>
-                  <input id="current_company" name="current_company" type="text" defaultValue={profile?.current_company ?? ''} placeholder="Acme Corp" className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300" />
+                  <Input id="current_company" name="current_company" type="text" defaultValue={profile?.current_company ?? ''} placeholder="Acme Corp" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
                 </div>
               </div>
             </section>
@@ -185,7 +186,7 @@ export default async function ProfilePage({
 
             <div>
               <label htmlFor="linkedin_url" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">LinkedIn URL</label>
-              <input id="linkedin_url" name="linkedin_url" type="url" defaultValue={linkedinUrl} placeholder="https://www.linkedin.com/in/yourname" className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300" />
+              <Input id="linkedin_url" name="linkedin_url" type="url" defaultValue={linkedinUrl} placeholder="https://www.linkedin.com/in/yourname" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
               <LinkedInGenerator positioning={positioningSummary} targetTitles={targetTitles} roleType={profile?.role_type ?? ''} currentTitle={profile?.current_title ?? ''} initialHeadline={linkedinHeadline} initialAbout={linkedinAbout} />
             </div>
 
@@ -222,9 +223,9 @@ export default async function ProfilePage({
               userEmail={user.email ?? ''}
             />
 
-            <button type="submit" className="bg-orange-400 text-slate-950 text-[14px] font-semibold px-6 py-2.5 rounded cursor-pointer border-0 hover:bg-orange-300 transition-colors">Save profile</button>
+            <Button type="submit" className="w-fit">Save profile</Button>
           </form>
-        </section>
+        </Card>
       </main>
 
       <ProfileInactivityNudge formId="profile-form" />

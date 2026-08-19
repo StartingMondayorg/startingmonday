@@ -1,3 +1,5 @@
+import { Card } from '@/components/ui/card'
+
 type SignalItem = {
   label: string
   why: string
@@ -34,7 +36,7 @@ const CULTURE_FIT_PROMPTS = [
 
 export function CultureFitRetentionSignalsCard() {
   return (
-    <div className="rounded-xl border border-orange-400/30 bg-orange-500/5 p-5 sm:p-6">
+    <Card className="border-orange-400/30 bg-orange-500/5 p-5 sm:p-6">
       <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-orange-300">First version: culture-fit + retention signals</p>
       <p className="mt-2 text-[14px] leading-relaxed text-slate-200">
         Use this as a decision-quality filter before you accept. A strong offer can still be a weak long-term fit if these signals are unclear.
@@ -67,6 +69,6 @@ export function CultureFitRetentionSignalsCard() {
           </p>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

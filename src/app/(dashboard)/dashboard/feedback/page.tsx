@@ -5,6 +5,21 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { FeedbackItem } from '@/lib/database.types'
 import { BrandIcon } from '@/app/components/BrandIcon'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Toggle } from '@/components/ui/toggle'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type FeedbackCategory = 'bug' | 'feature_request' | 'ui_ux' | 'performance' | 'other'
 type FeedbackStatus = 'new' | 'under_review' | 'planned' | 'in_progress' | 'shipped' | 'declined'
@@ -25,13 +40,13 @@ const CATEGORY_ICONS: Record<FeedbackCategory, 'bug' | 'feature' | 'uiux' | 'per
   other: 'other',
 }
 
-const STATUS_COLORS: Record<FeedbackStatus, string> = {
-  new: 'bg-slate-100 text-slate-700',
-  under_review: 'bg-blue-100 text-blue-700',
-  planned: 'bg-purple-100 text-purple-700',
-  in_progress: 'bg-orange-100 text-orange-700',
-  shipped: 'bg-green-100 text-green-700',
-  declined: 'bg-red-100 text-red-700',
+const STATUS_VARIANT: Record<FeedbackStatus, 'secondary' | 'info' | 'default' | 'warning' | 'success' | 'destructive'> = {
+  new: 'secondary',
+  under_review: 'info',
+  planned: 'default',
+  in_progress: 'warning',
+  shipped: 'success',
+  declined: 'destructive',
 }
 
 const STATUS_LABELS: Record<FeedbackStatus, string> = {
@@ -42,6 +57,10 @@ const STATUS_LABELS: Record<FeedbackStatus, string> = {
   shipped: 'Shipped',
   declined: 'Declined',
 }
+
+// shadcn Select can't have an item with value "" — use this sentinel for the
+// "all" filter options and normalize back to '' when reading it out.
+const ALL = '__none__'
 
 export default function FeedbackPage() {
   const router = useRouter()
@@ -146,8 +165,8 @@ export default function FeedbackPage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-{/* Submit Form */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        {/* Submit Form */}
+        <Card className="p-6 space-y-4">
           <h2 className="text-[16px] font-bold text-slate-900">Share Your Feedback</h2>
           <p className="text-[13px] text-slate-600">
             Help us improve Starting Monday. Your feedback is valuable and we review everything.
@@ -155,143 +174,150 @@ export default function FeedbackPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {submitError && (
-              <div className="bg-red-50 border border-red-200 rounded p-3 text-[13px] text-red-700">
-                {submitError}
-              </div>
+              <Alert variant="destructive" className="p-3">
+                <AlertDescription className="text-[13px]">{submitError}</AlertDescription>
+              </Alert>
             )}
             {submitSuccess && (
-              <div className="bg-green-50 border border-green-200 rounded p-3 text-[13px] text-green-700">
-                Thank you! We'll review your feedback within 24 hours.
-              </div>
+              <Alert variant="success" className="p-3">
+                <AlertDescription className="text-[13px]">
+                  Thank you! We&apos;ll review your feedback within 24 hours.
+                </AlertDescription>
+              </Alert>
             )}
 
             <div>
-              <label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
                 Title *
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="title"
                 placeholder="Brief summary of your feedback"
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[13px] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full text-[13px]"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
                 Description *
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 name="body"
                 placeholder="Tell us more about what you experienced or what you'd like to see..."
                 rows={4}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[13px] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full text-[13px]"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="category-input" className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label htmlFor="category-input" className="block text-[12px] font-semibold text-slate-900 mb-2">
                 Category *
-              </label>
-              <select
-                id="category-input"
-                name="category"
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[13px] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                required
-              >
-                <option value="">Select a category</option>
-                <option value="bug">Bug Report</option>
-                <option value="feature_request">Feature Request</option>
-                <option value="ui_ux">UI/UX Suggestion</option>
-                <option value="performance">Performance Issue</option>
-                <option value="other">Other</option>
-              </select>
+              </Label>
+              <Select name="category" required>
+                <SelectTrigger id="category-input" className="w-full text-[13px]">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="bug">Bug Report</SelectItem>
+                  <SelectItem value="feature_request">Feature Request</SelectItem>
+                  <SelectItem value="ui_ux">UI/UX Suggestion</SelectItem>
+                  <SelectItem value="performance">Performance Issue</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-orange-600 hover:bg-orange-700 disabled:bg-slate-300 text-white px-4 py-2 rounded font-semibold text-[13px] transition-colors"
+              className="text-[13px] font-semibold"
             >
               {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
-            </button>
+            </Button>
           </form>
-        </section>
+        </Card>
 
         {/* Filters & Sorting */}
-        <section className="bg-white border border-slate-200 rounded-lg p-4 space-y-4">
+        <Card className="p-4 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
-              <label htmlFor="category-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label htmlFor="category-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
                 Category
-              </label>
-              <select
-                id="category-filter"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value as FeedbackCategory | '')}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[12px] focus:outline-none focus:ring-2 focus:ring-orange-500"
+              </Label>
+              <Select
+                value={selectedCategory || ALL}
+                onValueChange={(value) => setSelectedCategory(value === ALL ? '' : value as FeedbackCategory)}
               >
-                <option value="">All Categories</option>
-                <option value="bug">Bug</option>
-                <option value="feature_request">Feature</option>
-                <option value="ui_ux">UI/UX</option>
-                <option value="performance">Performance</option>
-                <option value="other">Other</option>
-              </select>
+                <SelectTrigger id="category-filter" className="w-full text-[12px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>All Categories</SelectItem>
+                  <SelectItem value="bug">Bug</SelectItem>
+                  <SelectItem value="feature_request">Feature</SelectItem>
+                  <SelectItem value="ui_ux">UI/UX</SelectItem>
+                  <SelectItem value="performance">Performance</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label htmlFor="status-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label htmlFor="status-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
                 Status
-              </label>
-              <select
-                id="status-filter"
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value as FeedbackStatus | '')}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[12px] focus:outline-none focus:ring-2 focus:ring-orange-500"
+              </Label>
+              <Select
+                value={selectedStatus || ALL}
+                onValueChange={(value) => setSelectedStatus(value === ALL ? '' : value as FeedbackStatus)}
               >
-                <option value="">All Statuses</option>
-                <option value="new">New</option>
-                <option value="under_review">Under Review</option>
-                <option value="planned">Planned</option>
-                <option value="in_progress">In Progress</option>
-                <option value="shipped">Shipped</option>
-                <option value="declined">Declined</option>
-              </select>
+                <SelectTrigger id="status-filter" className="w-full text-[12px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>All Statuses</SelectItem>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="under_review">Under Review</SelectItem>
+                  <SelectItem value="planned">Planned</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="declined">Declined</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label htmlFor="sort-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label htmlFor="sort-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
                 Sort By
-              </label>
-              <select
-                id="sort-filter"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'recent' | 'votes' | 'comments')}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[12px] focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="recent">Most Recent</option>
-                <option value="votes">Most Votes</option>
-                <option value="comments">Most Comments</option>
-              </select>
+              </Label>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'recent' | 'votes' | 'comments')}>
+                <SelectTrigger id="sort-filter" className="w-full text-[12px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recent">Most Recent</SelectItem>
+                  <SelectItem value="votes">Most Votes</SelectItem>
+                  <SelectItem value="comments">Most Comments</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
                 Search
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 placeholder="Search feedback..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[12px] focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full text-[12px]"
               />
             </div>
           </div>
-        </section>
+        </Card>
 
         {/* Feedback Items List */}
         <section className="space-y-3">
@@ -303,7 +329,7 @@ export default function FeedbackPage() {
             </div>
           ) : (
             items.map((item) => (
-              <div key={item.id} className="bg-white border border-slate-200 rounded-lg p-4 space-y-3">
+              <Card key={item.id} className="p-4 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start gap-2 mb-1">
@@ -314,13 +340,9 @@ export default function FeedbackPage() {
                     <p className="text-[12px] text-slate-600 line-clamp-2">{item.body}</p>
                   </div>
                   <div className="flex gap-2 shrink-0">
-                    <span
-                      className={`inline-block px-2.5 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
-                        STATUS_COLORS[item.status as FeedbackStatus]
-                      }`}
-                    >
+                    <Badge variant={STATUS_VARIANT[item.status as FeedbackStatus]} className="whitespace-nowrap">
                       {STATUS_LABELS[item.status as FeedbackStatus]}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
 
@@ -338,21 +360,22 @@ export default function FeedbackPage() {
                 </div>
 
                 <div className="flex gap-4 text-[12px] border-t border-slate-100 pt-3">
-                  <button
-                    onClick={() => handleVote(item.id, item.user_voted)}
-                    className={`flex items-center gap-1 transition-colors ${
+                  <Toggle
+                    pressed={item.user_voted}
+                    onPressedChange={() => handleVote(item.id, item.user_voted)}
+                    className={`h-auto px-0 gap-1 hover:bg-transparent ${
                       item.user_voted
                         ? 'text-orange-600 font-semibold'
                         : 'text-slate-500 hover:text-orange-600'
                     }`}
                   >
                     Votes {item.vote_count}
-                  </button>
+                  </Toggle>
                   <div className="flex items-center gap-1 text-slate-500">
                     Comments {item.comment_count}
                   </div>
                 </div>
-              </div>
+              </Card>
             ))
           )}
         </section>

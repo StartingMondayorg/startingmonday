@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import type { Diagram, DiagramCategory as Category } from './diagrams-data'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 function MermaidRenderer({ code, id }: { code: string; id: string }) {
   const [svgDataUri, setSvgDataUri] = useState<string | null>(null)
@@ -37,19 +39,20 @@ export function DiagramsClient({ categories }: { categories: Category[] }) {
   if (selected) {
     return (
       <div>
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={() => setSelected(null)}
-          className="mb-4 text-[12px] text-orange-500 hover:text-orange-600 flex items-center gap-1"
+          className="mb-4 text-orange-500 hover:text-orange-600"
         >
           ← Back to index
-        </button>
-        <div className="bg-white border border-slate-200 rounded p-4">
+        </Button>
+        <Card className="p-4">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">{selected.category}</p>
           <h2 className="text-[16px] font-semibold text-slate-900 mb-1">{selected.title}</h2>
           <p className="text-[12px] text-slate-500 mb-4">{selected.description}</p>
           <MermaidRenderer code={selected.mermaidCode} id={selected.slug} />
-        </div>
+        </Card>
       </div>
     )
   }
@@ -65,11 +68,13 @@ export function DiagramsClient({ categories }: { categories: Category[] }) {
                 key={d.slug}
                 type="button"
                 onClick={() => setSelected(d)}
-                className="text-left rounded border border-slate-200 bg-white px-3 py-3 hover:border-orange-400 hover:bg-orange-50 transition-colors"
+                className="text-left"
               >
-                <p className="text-[13px] font-semibold text-slate-900">{d.title}</p>
-                <p className="text-[11px] text-slate-500 mt-1">{d.description}</p>
-                <p className="text-[11px] text-orange-500 mt-2">View diagram →</p>
+                <Card className="px-3 py-3 hover:border-orange-400 hover:bg-orange-50 transition-colors">
+                  <p className="text-[13px] font-semibold text-slate-900">{d.title}</p>
+                  <p className="text-[11px] text-slate-500 mt-1">{d.description}</p>
+                  <p className="text-[11px] text-orange-500 mt-2">View diagram →</p>
+                </Card>
               </button>
             ))}
           </div>

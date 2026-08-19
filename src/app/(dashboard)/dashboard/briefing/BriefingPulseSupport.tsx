@@ -1,7 +1,8 @@
 'use client'
 
-import type { MouseEvent, SyntheticEvent } from 'react'
 import { usePostHog } from 'posthog-js/react'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import { Button } from '@/components/ui/button'
 
 type BriefingPulseSupportProps = {
   state: 'building' | 'steady' | 'watch'
@@ -42,8 +43,8 @@ export function BriefingPulseSupport({ state, whyNow, mailtoHref }: BriefingPuls
     }
   }
 
-  function handleToggle(event: SyntheticEvent<HTMLDetailsElement>) {
-    if (event.currentTarget.open) {
+  function handleToggle(open: boolean) {
+    if (open) {
       track('why_this_matters_opened', 'inline_explainer')
     }
   }
@@ -52,33 +53,29 @@ export function BriefingPulseSupport({ state, whyNow, mailtoHref }: BriefingPuls
     track('email_plan_clicked', 'mailto')
   }
 
-  function preventSummaryClickJank(event: MouseEvent<HTMLElement>) {
-    event.stopPropagation()
-  }
-
   return (
     <>
-      <details
-        className="group w-full rounded-md border border-white/12 bg-white/5 px-4 py-2 text-[12px] text-slate-100/90 sm:w-auto"
-        onToggle={handleToggle}
+      <Collapsible
+        className="w-full rounded-md border border-white/12 bg-white/5 px-4 py-2 text-[12px] text-slate-100/90 sm:w-auto"
+        onOpenChange={handleToggle}
       >
-        <summary
-          className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-2 font-semibold text-white/90"
-          onClick={preventSummaryClickJank}
-        >
+        <CollapsibleTrigger className="group flex w-full min-h-[44px] cursor-pointer items-center justify-between gap-2 font-semibold text-white/90">
           Why this matters now
-          <span className="text-slate-300 transition-transform group-open:rotate-180">▾</span>
-        </summary>
-        <p className="mt-2 max-w-xl leading-relaxed text-slate-200/90">{whyNow}</p>
-      </details>
+          <span className="text-slate-300 transition-transform group-data-panel-open:rotate-180">▾</span>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <p className="mt-2 max-w-xl leading-relaxed text-slate-200/90">{whyNow}</p>
+        </CollapsibleContent>
+      </Collapsible>
 
-      <a
-        href={mailtoHref}
+      <Button
+        variant="outline"
+        className="min-h-[44px] border-white/12 text-slate-100 hover:border-white/30 hover:text-white"
         onClick={handleEmailClick}
-        className="inline-flex min-h-[44px] items-center justify-center rounded-md border border-white/12 px-4 py-2 text-[12px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:text-white"
+        render={<a href={mailtoHref} />}
       >
         Email me this plan
-      </a>
+      </Button>
     </>
   )
 }

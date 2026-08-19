@@ -1,6 +1,25 @@
 import Link from 'next/link'
 import { PipelineFilter } from '../PipelineFilter'
 import { EmptyState, EMPTY_ICONS } from '@/app/(dashboard)/dashboard/_components/EmptyState'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from '@/components/ui/pagination'
 
 type CompanyRow = {
   id: string
@@ -56,9 +75,9 @@ export function DashboardPipelineSection(props: Props) {
   } = props
 
   return (
-    <section id="pipeline" className="rounded border border-white/10 bg-slate-900/70 overflow-hidden shadow-[0_14px_34px_rgba(2,6,23,0.35)]">
-      <details open className="group">
-        <summary className="cursor-pointer list-none px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+    <Card variant="glass" id="pipeline" className="gap-0 rounded overflow-hidden shadow-[0_14px_34px_rgba(2,6,23,0.35)] py-0">
+      <Collapsible defaultOpen>
+        <CollapsibleTrigger className="group w-full cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
           <h2 className="text-[13px] font-semibold text-slate-400">
             Pipeline
           </h2>
@@ -71,48 +90,46 @@ export function DashboardPipelineSection(props: Props) {
                   : totalCount} {totalCount === 1 ? 'company' : 'companies'}
             </span>
             <span className="text-[11px] font-semibold text-slate-400">
-              <span className="group-open:hidden">Expand</span>
-              <span className="hidden group-open:inline">Collapse</span>
+              <span className="group-data-panel-open:hidden">Expand</span>
+              <span className="hidden group-data-panel-open:inline">Collapse</span>
             </span>
           </div>
-        </summary>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
 
       <div className="px-4 sm:px-6 pt-3 flex justify-end">
-        <Link
-          href="/dashboard/companies/new"
-          className="inline-flex min-h-[36px] items-center rounded border border-slate-600 bg-slate-800 px-3 text-[12px] font-semibold text-slate-100 transition-colors hover:border-slate-500 hover:bg-slate-700"
-        >
+        <Button size="sm" variant="outline" className="border-slate-600 bg-slate-800 hover:border-slate-500 hover:bg-slate-700" render={<Link href="/dashboard/companies/new" />}>
           Add company
-        </Link>
+        </Button>
       </div>
 
       <PipelineFilter q={q} stage={stage} stages={stageOptions} />
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-slate-950/70 border-b border-white/10">
-              <th className="py-2.5 pl-6 pr-4 text-left text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
+        <Table className="w-full border-collapse">
+          <TableHeader>
+            <TableRow className="bg-slate-950/70 border-b border-white/10 hover:bg-slate-950/70">
+              <TableHead className="py-2.5 pl-6 pr-4 text-left text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
                 Company
-              </th>
-              <th className="py-2.5 px-4 text-left text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell">
+              </TableHead>
+              <TableHead className="py-2.5 px-4 text-left text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell">
                 Sector
-              </th>
-              <th className="py-2.5 px-4 text-left text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
+              </TableHead>
+              <TableHead className="py-2.5 px-4 text-left text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
                 Stage
-              </th>
-              <th className="py-2.5 pl-4 pr-6 text-right text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
+              </TableHead>
+              <TableHead className="py-2.5 pl-4 pr-6 text-right text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
                 Fit <span className="normal-case font-normal text-slate-500">/10</span>
-              </th>
-              <th className="py-2.5 pl-2 pr-6 text-right text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
+              </TableHead>
+              <TableHead className="py-2.5 pl-2 pr-6 text-right text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">
                 Brief
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={5}>
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={5}>
                   {totalCount === 0 ? (
                     !activationResumeDone ? (
                       <EmptyState
@@ -142,24 +159,24 @@ export function DashboardPipelineSection(props: Props) {
                       )}
                     </div>
                   )}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               filtered.map((co, i) => {
                 const s = stageMap[co.stage] ?? { label: co.stage, cls: 'bg-slate-100 text-slate-500' }
                 const contactCount = contactCountMap.get(co.id) ?? 0
                 return (
-                  <tr
+                  <TableRow
                     key={co.id}
-                    className={i < filtered.length - 1 ? 'border-b border-white/5' : ''}
+                    className={i < filtered.length - 1 ? 'border-b border-white/5 hover:bg-transparent' : 'hover:bg-transparent'}
                   >
-                    <td className="py-3.5 pl-6 pr-4">
+                    <TableCell className="py-3.5 pl-6 pr-4">
                       <div className="flex items-center gap-2">
                         <Link href={`/dashboard/companies/${co.id}`} className="text-[14px] font-semibold text-slate-100 hover:text-white">{co.name}</Link>
                         {contactCount > 0 && (
-                          <span className="text-[10px] font-semibold text-slate-300 bg-white/10 px-1.5 py-0.5 rounded-full shrink-0 border border-white/10">
+                          <Badge variant="outline" className="shrink-0 border-white/10 bg-white/10 text-slate-300">
                             {contactCount} {contactCount === 1 ? 'contact' : 'contacts'}
-                          </span>
+                          </Badge>
                         )}
                       </div>
                       {co.notes && (
@@ -167,32 +184,29 @@ export function DashboardPipelineSection(props: Props) {
                           {co.notes}
                         </div>
                       )}
-                    </td>
-                    <td className="py-3.5 px-4 text-[13px] text-slate-500 hidden sm:table-cell">
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 text-[13px] text-slate-500 hidden sm:table-cell">
                       {co.sector?.trim() ? co.sector : '—'}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-[0.04em] ${s.cls}`}>
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4">
+                      <Badge className={`tracking-[0.04em] ${s.cls}`}>
                         {s.label}
-                      </span>
-                    </td>
-                    <td className="py-3.5 pl-4 pr-6 text-right text-[14px] font-bold text-slate-100">
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="py-3.5 pl-4 pr-6 text-right text-[14px] font-bold text-slate-100">
                       {co.fit_score ?? '-'}
-                    </td>
-                    <td className="py-3.5 pl-2 pr-6 text-right">
-                      <Link
-                        href={`/dashboard/companies/${co.id}/prep`}
-                        className="inline-flex min-h-[36px] items-center rounded border border-white/20 px-3 text-[12px] font-semibold text-slate-100 hover:border-white/35"
-                      >
+                    </TableCell>
+                    <TableCell className="py-3.5 pl-2 pr-6 text-right">
+                      <Button size="sm" variant="outline" className="border-white/20 hover:border-white/35" render={<Link href={`/dashboard/companies/${co.id}/prep`} />}>
                         Get brief
-                      </Link>
-                    </td>
-                  </tr>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 )
               })
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {totalPages > 1 && (
@@ -200,24 +214,26 @@ export function DashboardPipelineSection(props: Props) {
           <span className="text-[12px] text-slate-400">
             Page {page + 1} of {totalPages}
           </span>
-          <div className="flex items-center gap-2">
-            {page > 0 && (
-              <a
-                href={`/dashboard?${new URLSearchParams({ ...(q ? { q } : {}), ...(stage ? { stage } : {}), page: String(page - 1) }).toString()}`}
-                className="text-[12px] font-semibold text-slate-200 border border-white/15 rounded px-3 py-1.5 hover:border-white/30"
-              >
-                  Previous
-              </a>
-            )}
-            {page < totalPages - 1 && (
-              <a
-                href={`/dashboard?${new URLSearchParams({ ...(q ? { q } : {}), ...(stage ? { stage } : {}), page: String(page + 1) }).toString()}`}
-                className="text-[12px] font-semibold text-slate-200 border border-white/15 rounded px-3 py-1.5 hover:border-white/30"
-              >
-                  Next
-              </a>
-            )}
-          </div>
+          <Pagination className="mx-0 w-auto justify-end">
+            <PaginationContent>
+              {page > 0 && (
+                <PaginationItem>
+                  <PaginationPrevious
+                    href={`/dashboard?${new URLSearchParams({ ...(q ? { q } : {}), ...(stage ? { stage } : {}), page: String(page - 1) }).toString()}`}
+                    className="text-slate-200 border-white/15 hover:border-white/30"
+                  />
+                </PaginationItem>
+              )}
+              {page < totalPages - 1 && (
+                <PaginationItem>
+                  <PaginationNext
+                    href={`/dashboard?${new URLSearchParams({ ...(q ? { q } : {}), ...(stage ? { stage } : {}), page: String(page + 1) }).toString()}`}
+                    className="text-slate-200 border-white/15 hover:border-white/30"
+                  />
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
 
@@ -232,7 +248,8 @@ export function DashboardPipelineSection(props: Props) {
           </Link>
         </div>
       )}
-      </details>
-    </section>
+      </CollapsibleContent>
+      </Collapsible>
+    </Card>
   )
 }

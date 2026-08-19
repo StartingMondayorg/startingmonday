@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { ActivityChart, type WeekActivity } from '@/app/components/ActivityChart'
 import { PipelineVelocity, type VelocityRow } from '@/app/components/PipelineVelocity'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 type MomentumData = {
   momentum_score: number | null
@@ -60,7 +64,7 @@ export function DashboardWeeklyPerformanceSection({
         if (goal) {
           const remaining = Math.max(0, goal - done)
           return (
-            <div className="bg-white/5 border border-white/15 rounded p-5 mb-6 sm:mb-8 flex items-center gap-5">
+            <Card variant="glass" className="flex-row items-center gap-5 p-5 mb-6 sm:mb-8">
               <div className={`text-[40px] font-bold leading-none tabular-nums shrink-0 ${
                 done >= goal ? 'text-emerald-300' : done > 0 ? 'text-amber-300' : 'text-slate-500'
               }`}>
@@ -76,44 +80,45 @@ export function DashboardWeeklyPerformanceSection({
               </div>
               <form action={onSaveWeeklyGoal} className="shrink-0">
                 <input type="hidden" name="weekly_goal" value={goal === 1 ? 1 : goal + 1} />
-                <button type="submit" className="text-[11px] text-slate-400 hover:text-slate-200 border border-white/20 rounded px-2.5 py-1 cursor-pointer bg-transparent transition-colors">
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="h-auto border-white/20 bg-transparent px-2.5 py-1 text-[11px] text-slate-400 hover:text-slate-200"
+                >
                   Goal: {goal} &uarr;
-                </button>
+                </Button>
               </form>
-            </div>
+            </Card>
           )
         }
 
         return (
-          <div className="bg-white/5 border border-white/15 rounded p-5 mb-6 sm:mb-8">
+          <Card variant="glass" className="gap-0 p-5 mb-6 sm:mb-8">
             <p className="text-[13px] font-semibold text-white mb-1">Set a weekly outreach target.</p>
             <p className="text-[12px] text-slate-400 mb-3 leading-relaxed">A weekly target increases follow-through.</p>
             <form action={onSaveWeeklyGoal} className="flex items-center gap-3">
-              <select
-                name="weekly_goal"
-                aria-label="Weekly outreach goal"
-                defaultValue="2"
-                className="border border-white/20 rounded px-3 py-2 text-[13px] text-slate-100 bg-slate-900 focus:outline-none focus:border-orange-300/50"
-              >
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <option key={n} value={n}>
-                    {n} per week
-                  </option>
-                ))}
-              </select>
-              <button
-                type="submit"
-                className="bg-orange-500 hover:bg-orange-400 text-slate-950 text-[13px] font-semibold px-4 py-2 rounded transition-colors cursor-pointer border-0"
-              >
+              <Select name="weekly_goal" defaultValue="2">
+                <SelectTrigger aria-label="Weekly outreach goal" className="border-white/20 bg-slate-900 px-3 py-2 text-[13px] text-slate-100">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <SelectItem key={n} value={String(n)}>
+                      {n} per week
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="submit" className="h-auto px-4 py-2 text-[13px] font-semibold">
                 Set goal
-              </button>
+              </Button>
             </form>
-          </div>
+          </Card>
         )
       })()}
 
       {momentumData?.momentum_score != null && (
-        <div className="bg-white/5 border border-white/15 rounded p-5 mb-6 sm:mb-8 flex items-center gap-5">
+        <Card variant="glass" className="flex-row items-center gap-5 p-5 mb-6 sm:mb-8">
           <div
             className={`text-[40px] font-bold leading-none tabular-nums shrink-0 ${
               momentumData.momentum_score >= 70
@@ -153,11 +158,11 @@ export function DashboardWeeklyPerformanceSection({
               </a>
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       {isExecutiveMode && riskItems.length > 0 && (
-        <section id="risk-engine" className="mb-6 sm:mb-8 bg-slate-900/70 border border-white/10 rounded overflow-hidden">
+        <Card variant="glass" id="risk-engine" className="gap-0 mb-6 sm:mb-8 bg-slate-900/70 p-0">
           <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between gap-3">
             <h2 className="text-[13px] font-semibold text-slate-400">Risk signals</h2>
             <span className="text-[13px] text-slate-400">Operational state from behavior patterns</span>
@@ -176,11 +181,11 @@ export function DashboardWeeklyPerformanceSection({
               </div>
             ))}
           </div>
-        </section>
+        </Card>
       )}
 
       {offerCockpit.show && (
-        <section id="offer-cockpit" className="mb-6 sm:mb-8 bg-slate-900 border border-slate-700 rounded overflow-hidden">
+        <Card variant="glass" id="offer-cockpit" className="gap-0 mb-6 sm:mb-8 border-slate-700 bg-slate-900 p-0">
           <div className="px-5 py-4 border-b border-slate-700 flex items-center justify-between gap-3">
             <h2 className="text-[13px] font-semibold text-orange-400">Offer comparison</h2>
             <span className="text-[13px] text-slate-300">{offerCockpit.offerCount} offer{offerCockpit.offerCount === 1 ? '' : 's'} in play</span>
@@ -200,55 +205,73 @@ export function DashboardWeeklyPerformanceSection({
               ))}
             </div>
             <div className="flex flex-wrap gap-3">
-                <Link href="/dashboard/offers" className="inline-flex min-h-[44px] items-center justify-center border border-white/15 bg-white/5 text-slate-100 text-[13px] font-semibold px-4 py-2 rounded hover:border-white/30 hover:bg-white/10">
+              <Button
+                variant="outline"
+                render={<Link href="/dashboard/offers" />}
+                className="h-auto min-h-[44px] border-white/15 bg-white/5 px-4 py-2 text-[13px] font-semibold text-slate-100 hover:border-white/30 hover:bg-white/10"
+              >
                 Offers
-              </Link>
-              <Link href="/dashboard/strategy" className="inline-flex min-h-[44px] items-center justify-center border border-slate-500 text-slate-200 text-[13px] font-semibold px-4 py-2 rounded hover:border-slate-300">
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href="/dashboard/strategy" />}
+                className="h-auto min-h-[44px] border-slate-500 px-4 py-2 text-[13px] font-semibold text-slate-200 hover:border-slate-300"
+              >
                 Criteria
-              </Link>
-              <Link href="/dashboard/wrap-up" className="inline-flex min-h-[44px] items-center justify-center border border-emerald-500 text-emerald-200 text-[13px] font-semibold px-4 py-2 rounded hover:border-emerald-300">
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href="/dashboard/wrap-up" />}
+                className="h-auto min-h-[44px] border-emerald-500 px-4 py-2 text-[13px] font-semibold text-emerald-200 hover:border-emerald-300"
+              >
                 Mark accepted
-              </Link>
-              <Link href="/dashboard/wrap-up" className="inline-flex min-h-[44px] items-center justify-center border border-slate-500 text-slate-200 text-[13px] font-semibold px-4 py-2 rounded hover:border-slate-300">
+              </Button>
+              <Button
+                variant="outline"
+                render={<Link href="/dashboard/wrap-up" />}
+                className="h-auto min-h-[44px] border-slate-500 px-4 py-2 text-[13px] font-semibold text-slate-200 hover:border-slate-300"
+              >
                 Launch 30/60/90 transition
-              </Link>
+              </Button>
             </div>
           </div>
-        </section>
+        </Card>
       )}
 
       {isExecutiveMode ? (
-        <details className="mb-6 sm:mb-8 bg-slate-900/70 border border-white/10 rounded overflow-hidden">
-          <summary className="cursor-pointer list-none px-5 py-4 flex items-center justify-between">
-            <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Review performance</span>
-            <span className="text-[11px] text-slate-400">Expand</span>
-          </summary>
-          <div className="px-5 pb-5">
-            <section id="benchmarks" className="bg-white/5 border border-white/15 rounded px-5 py-4 mb-6">
-              <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What works at this level</h2>
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <p className="text-[20px] font-bold text-white leading-none">12-18</p>
-                  <p className="text-[12px] text-slate-300 mt-1">target companies in a 90-day search</p>
+        <Collapsible>
+          <Card variant="glass" className="gap-0 mb-6 sm:mb-8 bg-slate-900/70 p-0">
+            <CollapsibleTrigger className="w-full cursor-pointer px-5 py-4 flex items-center justify-between">
+              <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Review performance</span>
+              <span className="text-[11px] text-slate-400">Expand</span>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="px-5 pb-5">
+              <Card variant="glass" id="benchmarks" className="gap-0 px-5 py-4 mb-6">
+                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What works at this level</h2>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-[20px] font-bold text-white leading-none">12-18</p>
+                    <p className="text-[12px] text-slate-300 mt-1">target companies in a 90-day search</p>
+                  </div>
+                  <div>
+                    <p className="text-[20px] font-bold text-white leading-none">2-3</p>
+                    <p className="text-[12px] text-slate-300 mt-1">new conversations per week to maintain momentum</p>
+                  </div>
+                  <div>
+                    <p className="text-[20px] font-bold text-white leading-none">72 hrs</p>
+                    <p className="text-[12px] text-slate-300 mt-1">typical response time after a warm intro</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[20px] font-bold text-white leading-none">2-3</p>
-                  <p className="text-[12px] text-slate-300 mt-1">new conversations per week to maintain momentum</p>
-                </div>
-                <div>
-                  <p className="text-[20px] font-bold text-white leading-none">72 hrs</p>
-                  <p className="text-[12px] text-slate-300 mt-1">typical response time after a warm intro</p>
-                </div>
-              </div>
-            </section>
+              </Card>
 
-            <ActivityChart data={weekSlots} />
-            <PipelineVelocity companies={velocityRows} />
-          </div>
-        </details>
+              <ActivityChart data={weekSlots} />
+              <PipelineVelocity companies={velocityRows} />
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
       ) : (
         <>
-          <section id="benchmarks" className="bg-slate-900/70 border border-white/10 rounded px-5 py-4 mb-6 sm:mb-8">
+          <Card variant="glass" id="benchmarks" className="gap-0 bg-slate-900/70 px-5 py-4 mb-6 sm:mb-8">
             <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What works at this level</h2>
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -264,7 +287,7 @@ export function DashboardWeeklyPerformanceSection({
                 <p className="text-[12px] text-slate-300 mt-1">typical response time after a warm intro</p>
               </div>
             </div>
-          </section>
+          </Card>
 
           <ActivityChart data={weekSlots} />
           <PipelineVelocity companies={velocityRows} />

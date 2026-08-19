@@ -1,6 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 type ScoreValue = 'clear' | 'partial' | 'vague'
 type ConsistencySignal = 'stable' | 'mixed' | 'high-risk'
@@ -236,59 +244,59 @@ export function MeetingDebriefPersistencePanel() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-orange-400/30 bg-orange-500/5 p-5 sm:p-6">
+      <Card className="border-orange-400/30 bg-orange-500/5 p-5 sm:p-6">
         <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-orange-300">Stage-based question bank and risk scoring</p>
         <p className="mt-2 text-[13px] leading-relaxed text-slate-300">
           Keep the 5 core questions as the default spine, add 2 situational questions per interview stage, score answers immediately, and escalate if 2 or more are Vague.
         </p>
-      </div>
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="sm:col-span-2">
-          <label htmlFor="meeting_name_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Meeting name or company</label>
-          <input
+          <Label htmlFor="meeting_name_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Meeting name or company</Label>
+          <Input
             id="meeting_name_persist"
             value={meetingName}
             onChange={(event) => setMeetingName(event.target.value)}
             type="text"
             placeholder="e.g., Alto-Shaam role-fit call"
-            className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+            className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
           />
         </div>
         <div>
-          <label htmlFor="meeting_date_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Meeting date</label>
-          <input
+          <Label htmlFor="meeting_date_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Meeting date</Label>
+          <Input
             id="meeting_date_persist"
             value={meetingDate}
             onChange={(event) => setMeetingDate(event.target.value)}
             type="date"
-            className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+            className="bg-slate-950/50 border-slate-700/50 text-white focus-visible:border-orange-400/50"
           />
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="interviewer_name_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Interviewer name (optional)</label>
-          <input
+          <Label htmlFor="interviewer_name_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Interviewer name (optional)</Label>
+          <Input
             id="interviewer_name_persist"
             value={interviewerName}
             onChange={(event) => setInterviewerName(event.target.value)}
             type="text"
             placeholder="e.g., Jane Smith"
-            className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+            className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
           />
         </div>
 
         <div>
-          <label htmlFor="interview_stage_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Interview stage (optional)</label>
-          <input
+          <Label htmlFor="interview_stage_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Interview stage (optional)</Label>
+          <Input
             id="interview_stage_persist"
             value={interviewStage}
             onChange={(event) => setInterviewStage(event.target.value)}
             type="text"
             placeholder="e.g., Hiring manager round"
-            className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+            className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
           />
         </div>
       </div>
@@ -297,14 +305,14 @@ export function MeetingDebriefPersistencePanel() {
         <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-400">Core culture + retention questions</p>
         {CORE_QUESTION_IDS.map((question) => (
           <div key={question.id}>
-            <label htmlFor={question.id} className="block text-[13px] font-semibold text-slate-200 mb-2">{question.label}</label>
-            <textarea
+            <Label htmlFor={question.id} className="block text-[13px] font-semibold text-slate-200 mb-2">{question.label}</Label>
+            <Textarea
               id={question.id}
               rows={2}
               value={coreAnswers[question.id] ?? ''}
               onChange={(event) => updateCoreAnswer(question.id, event.target.value)}
               placeholder="Capture what they said and your interpretation."
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
         ))}
@@ -313,75 +321,77 @@ export function MeetingDebriefPersistencePanel() {
       <div className="space-y-4">
         <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-400">Stage-based situational questions</p>
         {STAGE_QUESTION_BANK.map((question) => (
-          <div key={question.id} className="rounded-lg border border-white/10 bg-slate-900/40 p-4">
+          <Card key={question.id} className="border-white/10 bg-slate-900/40 p-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">{question.stage}</p>
             <p className="mt-1 text-[13px] text-slate-100">{question.label}</p>
 
-            <div className="mt-3 flex flex-wrap gap-2">
+            <ToggleGroup
+              value={stageScores[question.id] ? [stageScores[question.id]] : []}
+              onValueChange={(values) => { if (values[0]) updateScore(question.id, values[0] as ScoreValue) }}
+              className="mt-3 flex flex-wrap justify-start gap-2"
+            >
               {(['clear', 'partial', 'vague'] as ScoreValue[]).map((score) => {
                 const selected = stageScores[question.id] === score
                 return (
-                  <button
+                  <ToggleGroupItem
                     key={score}
-                    type="button"
-                    onClick={() => updateScore(question.id, score)}
+                    value={score}
                     className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors ${selected ? scorePillClass(score) : 'border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}
                   >
                     {score}
-                  </button>
+                  </ToggleGroupItem>
                 )
               })}
-            </div>
+            </ToggleGroup>
 
-            <label htmlFor={`${question.id}_persist_answer`} className="mt-3 block text-[12px] font-semibold text-slate-300">Answer notes</label>
-            <textarea
+            <Label htmlFor={`${question.id}_persist_answer`} className="mt-3 block text-[12px] font-semibold text-slate-300">Answer notes</Label>
+            <Textarea
               id={`${question.id}_persist_answer`}
               rows={2}
               value={stageAnswers[question.id] ?? ''}
               onChange={(event) => updateStageAnswer(question.id, event.target.value)}
               placeholder="Write exactly what they said plus your take."
-              className="mt-1 w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-3 py-2 text-[13px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="mt-1 bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
-          </div>
+          </Card>
         ))}
       </div>
 
       <div>
-        <label htmlFor="overall_review_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Overall meeting review</label>
-        <textarea
+        <Label htmlFor="overall_review_persist" className="block text-[13px] font-semibold text-slate-200 mb-2">Overall meeting review</Label>
+        <Textarea
           id="overall_review_persist"
           rows={4}
           value={overallReview}
           onChange={(event) => setOverallReview(event.target.value)}
           placeholder="Summarize confidence level, top risks, and your recommendation for next move."
-          className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+          className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
         />
       </div>
 
-      <div className={`rounded-lg border px-4 py-3 ${riskFlag ? 'border-rose-400/40 bg-rose-500/10' : 'border-emerald-400/30 bg-emerald-500/10'}`}>
-        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-100">Culture risk rule</p>
-        <p className="mt-1 text-[13px] text-slate-200">
+      <Alert variant={riskFlag ? 'destructive' : 'success'}>
+        <AlertTitle>Culture risk rule</AlertTitle>
+        <AlertDescription>
           {riskFlag
             ? `Flag raised: ${vagueCount} answers are scored Vague. Investigate before moving forward.`
             : `Current state: ${vagueCount} answers are scored Vague. If this reaches 2 or more, investigate before moving forward.`}
-        </p>
-      </div>
+        </AlertDescription>
+      </Alert>
 
-      {error ? <p className="text-[13px] text-rose-300">{error}</p> : null}
-      {success ? <p className="text-[13px] text-emerald-300">{success}</p> : null}
+      {error ? <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert> : null}
+      {success ? <Alert variant="success"><AlertDescription>{success}</AlertDescription></Alert> : null}
 
       <div className="flex justify-end">
-        <button
+        <Button
           type="button"
           onClick={handleSaveDebrief}
           disabled={loading}
-          className="rounded-lg bg-orange-500 px-5 py-2.5 text-[13px] font-semibold text-slate-900 hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Saving debrief...' : 'Save debrief'}
-        </button>
+        </Button>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-slate-900/40 p-5 sm:p-6">
+      <Card className="border-white/10 bg-slate-900/40 p-5 sm:p-6">
         <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-slate-300">Debrief history</p>
         {loadingHistory ? (
           <p className="mt-3 text-[13px] text-slate-400">Loading history...</p>
@@ -389,35 +399,35 @@ export function MeetingDebriefPersistencePanel() {
           <p className="mt-3 text-[13px] text-slate-400">No saved debriefs yet.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-left text-[13px]">
-              <thead>
-                <tr className="border-b border-white/10 text-slate-400">
-                  <th className="px-2 py-2 font-semibold">Meeting</th>
-                  <th className="px-2 py-2 font-semibold">Date</th>
-                  <th className="px-2 py-2 font-semibold">Interviewer</th>
-                  <th className="px-2 py-2 font-semibold">Stage</th>
-                  <th className="px-2 py-2 font-semibold">Vague</th>
-                  <th className="px-2 py-2 font-semibold">Risk</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="min-w-[720px] text-left text-[13px]">
+              <TableHeader>
+                <TableRow className="border-white/10 text-slate-400 hover:bg-transparent">
+                  <TableHead className="px-2 py-2 font-semibold">Meeting</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Date</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Interviewer</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Stage</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Vague</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Risk</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {history.map((item) => (
-                  <tr key={item.id} className="border-b border-white/5 text-slate-200 align-top">
-                    <td className="px-2 py-2">{item.meeting_name}</td>
-                    <td className="px-2 py-2">{item.meeting_date}</td>
-                    <td className="px-2 py-2">{item.interviewer_name ?? '-'}</td>
-                    <td className="px-2 py-2">{item.interview_stage ?? '-'}</td>
-                    <td className="px-2 py-2">{item.vague_count}</td>
-                    <td className="px-2 py-2">{item.risk_flag ? 'Flagged' : 'Clear'}</td>
-                  </tr>
+                  <TableRow key={item.id} className="border-white/5 text-slate-200 align-top">
+                    <TableCell className="px-2 py-2">{item.meeting_name}</TableCell>
+                    <TableCell className="px-2 py-2">{item.meeting_date}</TableCell>
+                    <TableCell className="px-2 py-2">{item.interviewer_name ?? '-'}</TableCell>
+                    <TableCell className="px-2 py-2">{item.interview_stage ?? '-'}</TableCell>
+                    <TableCell className="px-2 py-2">{item.vague_count}</TableCell>
+                    <TableCell className="px-2 py-2">{item.risk_flag ? 'Flagged' : 'Clear'}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
-      </div>
+      </Card>
 
-      <div className="rounded-xl border border-white/10 bg-slate-900/40 p-5 sm:p-6">
+      <Card className="border-white/10 bg-slate-900/40 p-5 sm:p-6">
         <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-slate-300">Interviewer consistency over time</p>
         {loadingHistory ? (
           <p className="mt-3 text-[13px] text-slate-400">Loading interviewer consistency...</p>
@@ -425,33 +435,33 @@ export function MeetingDebriefPersistencePanel() {
           <p className="mt-3 text-[13px] text-slate-400">Add interviewer names to compare consistency trends over time.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-left text-[13px]">
-              <thead>
-                <tr className="border-b border-white/10 text-slate-400">
-                  <th className="px-2 py-2 font-semibold">Interviewer</th>
-                  <th className="px-2 py-2 font-semibold">Meetings</th>
-                  <th className="px-2 py-2 font-semibold">Avg vague count</th>
-                  <th className="px-2 py-2 font-semibold">Risk flag rate</th>
-                  <th className="px-2 py-2 font-semibold">Latest</th>
-                  <th className="px-2 py-2 font-semibold">Signal</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="min-w-[720px] text-left text-[13px]">
+              <TableHeader>
+                <TableRow className="border-white/10 text-slate-400 hover:bg-transparent">
+                  <TableHead className="px-2 py-2 font-semibold">Interviewer</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Meetings</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Avg vague count</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Risk flag rate</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Latest</TableHead>
+                  <TableHead className="px-2 py-2 font-semibold">Signal</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {consistencyRows.map((row) => (
-                  <tr key={row.interviewer} className="border-b border-white/5 text-slate-200">
-                    <td className="px-2 py-2">{row.interviewer}</td>
-                    <td className="px-2 py-2">{row.meetings}</td>
-                    <td className="px-2 py-2">{row.avgVagueCount.toFixed(2)}</td>
-                    <td className="px-2 py-2">{Math.round(row.riskFlagRate * 100)}%</td>
-                    <td className="px-2 py-2">{row.latestMeetingDate ?? '-'}</td>
-                    <td className={`px-2 py-2 font-semibold ${signalClass(row.consistencySignal)}`}>{row.consistencySignal}</td>
-                  </tr>
+                  <TableRow key={row.interviewer} className="border-white/5 text-slate-200 hover:bg-transparent">
+                    <TableCell className="px-2 py-2">{row.interviewer}</TableCell>
+                    <TableCell className="px-2 py-2">{row.meetings}</TableCell>
+                    <TableCell className="px-2 py-2">{row.avgVagueCount.toFixed(2)}</TableCell>
+                    <TableCell className="px-2 py-2">{Math.round(row.riskFlagRate * 100)}%</TableCell>
+                    <TableCell className="px-2 py-2">{row.latestMeetingDate ?? '-'}</TableCell>
+                    <TableCell className={`px-2 py-2 font-semibold ${signalClass(row.consistencySignal)}`}>{row.consistencySignal}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

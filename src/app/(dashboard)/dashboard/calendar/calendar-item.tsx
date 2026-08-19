@@ -3,6 +3,8 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { markFollowUpDone } from '@/app/(dashboard)/dashboard/actions'
 import { stripStaleRelativeTime } from '@/lib/outreach/follow-up-copy'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type Props = {
   id: string
@@ -43,27 +45,31 @@ export function CalendarItemClient({ id, action, dueDate, googleEventUrl, today,
         <p className="text-[14px] font-semibold text-white leading-tight">{cleanAction || action}</p>
         {label && <p className="text-[12px] text-slate-400 mt-0.5">{label}</p>}
         {googleEventUrl && (
-          <a
-            href={googleEventUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-block text-[11px] text-orange-200 hover:text-orange-100 underline mt-1"
+          <Button
+            variant="link"
+            className="h-auto p-0 text-[11px] text-orange-200 hover:text-orange-100 mt-1"
+            render={<a href={googleEventUrl} target="_blank" rel="noreferrer" />}
           >
             Add to Google Calendar
-          </a>
+          </Button>
         )}
       </div>
-      <span className={`shrink-0 text-[11px] font-semibold mt-0.5 ${overdue || isToday ? 'text-rose-200' : 'text-slate-400'}`}>
-        {dateLabel}
-      </span>
-      <button
+      {overdue || isToday ? (
+        <Badge variant="destructive" className="shrink-0 mt-0.5">{dateLabel}</Badge>
+      ) : (
+        <span className="shrink-0 text-[11px] font-semibold mt-0.5 text-slate-400">
+          {dateLabel}
+        </span>
+      )}
+      <Button
         type="button"
+        variant="outline"
         onClick={handleDone}
         disabled={pending}
-        className="shrink-0 text-[12px] text-slate-200 border border-white/15 rounded px-3 py-1 hover:border-white/30 hover:bg-white/10 hover:text-white cursor-pointer bg-transparent disabled:opacity-50 min-h-[32px]"
+        className="shrink-0 text-[12px] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/10 hover:text-white min-h-[32px]"
       >
         {pending ? '…' : 'Done'}
-      </button>
+      </Button>
     </div>
   )
 }

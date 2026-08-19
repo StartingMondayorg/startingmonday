@@ -4,16 +4,23 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { FeedbackItem } from '@/lib/database.types'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type FeedbackStatus = 'new' | 'under_review' | 'planned' | 'in_progress' | 'shipped' | 'declined'
 
-const STATUS_COLORS: Record<FeedbackStatus, string> = {
-  new: 'bg-slate-100 text-slate-700',
-  under_review: 'bg-blue-100 text-blue-700',
-  planned: 'bg-purple-100 text-purple-700',
-  in_progress: 'bg-orange-100 text-orange-700',
-  shipped: 'bg-green-100 text-green-700',
-  declined: 'bg-red-100 text-red-700',
+const STATUS_BADGE_VARIANT: Record<FeedbackStatus, 'secondary' | 'info' | 'outline' | 'warning' | 'success' | 'destructive'> = {
+  new: 'secondary',
+  under_review: 'info',
+  planned: 'outline',
+  in_progress: 'warning',
+  shipped: 'success',
+  declined: 'destructive',
 }
 
 const STATUS_LABELS: Record<FeedbackStatus, string> = {
@@ -155,12 +162,12 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
               <h2 className="text-[18px] font-bold text-slate-900 mb-2">{item.title}</h2>
               <p className="text-[13px] text-slate-600 mb-3">{item.body}</p>
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="inline-block px-3 py-1 bg-slate-100 text-slate-700 rounded text-[12px] font-semibold">
+                <Badge variant="secondary">
                   {item.category}
-                </span>
-                <span className={`inline-block px-3 py-1 rounded text-[12px] font-semibold ${STATUS_COLORS[item.status as FeedbackStatus]}`}>
+                </Badge>
+                <Badge variant={STATUS_BADGE_VARIANT[item.status as FeedbackStatus]}>
                   {STATUS_LABELS[item.status as FeedbackStatus]}
-                </span>
+                </Badge>
               </div>
             </div>
             <div className="text-right text-[12px] text-slate-500">
@@ -170,7 +177,7 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
             </div>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded p-3 text-[12px] text-slate-600 space-y-1">
+          <Card className="bg-slate-50 border-slate-200 p-3 text-[12px] text-slate-600 space-y-1">
             <p><strong>Submitted:</strong> {new Date(item.created_at).toLocaleString()}</p>
             <p><strong>Last Updated:</strong> {new Date(item.updated_at).toLocaleString()}</p>
             {item.first_staff_response_at && (
@@ -179,7 +186,7 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
             {item.status_decided_at && (
               <p><strong>Decision Made:</strong> {new Date(item.status_decided_at).toLocaleString()}</p>
             )}
-          </div>
+          </Card>
         </section>
 
         {/* Status Update Form */}
@@ -187,69 +194,66 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
           <h3 className="text-[16px] font-bold text-slate-900">Update Status</h3>
 
           {updateError && (
-            <div className="bg-red-50 border border-red-200 rounded p-3 text-[13px] text-red-700">
-              {updateError}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{updateError}</AlertDescription>
+            </Alert>
           )}
           {updateSuccess && (
-            <div className="bg-green-50 border border-green-200 rounded p-3 text-[13px] text-green-700">
-              Status updated successfully
-            </div>
+            <Alert variant="success">
+              <AlertDescription>Status updated successfully</AlertDescription>
+            </Alert>
           )}
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="status-select" className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label htmlFor="status-select" className="block text-[12px] font-semibold text-slate-900 mb-2">
                 Status
-              </label>
-              <select
-                id="status-select"
-                value={newStatus}
-                onChange={(e) => setNewStatus(e.target.value as FeedbackStatus)}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[13px] focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="new">New</option>
-                <option value="under_review">Under Review</option>
-                <option value="planned">Planned</option>
-                <option value="in_progress">In Progress</option>
-                <option value="shipped">Shipped</option>
-                <option value="declined">Declined</option>
-              </select>
+              </Label>
+              <Select value={newStatus} onValueChange={(v) => setNewStatus(v as FeedbackStatus)}>
+                <SelectTrigger id="status-select" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="under_review">Under Review</SelectItem>
+                  <SelectItem value="planned">Planned</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="declined">Declined</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
                 Change Note (visible to user)
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 value={changeNote}
                 onChange={(e) => setChangeNote(e.target.value)}
                 placeholder="E.g., 'We're working on this bug and expect to ship in v2.1'"
                 rows={2}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[13px] focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
             <div>
-              <label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
                 Internal Staff Notes
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 value={staffNotes}
                 onChange={(e) => setStaffNotes(e.target.value)}
                 placeholder="Internal notes about this item"
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-300 rounded text-[13px] focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
-            <button
+            <Button
               onClick={handleStatusUpdate}
               disabled={isUpdating || newStatus === item.status}
-              className="bg-orange-600 hover:bg-orange-700 disabled:bg-slate-300 text-white px-4 py-2 rounded font-semibold text-[13px] transition-colors"
             >
               {isUpdating ? 'Updating...' : 'Update Status'}
-            </button>
+            </Button>
           </div>
         </section>
 

@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { Metadata } from 'next'
 import { WHITE_LABEL_TIERS, WHITE_LABEL_TRACKS, formatDollarAmount, formatWhiteLabelTierPrice, resolveWhiteLabelSettings } from '@/lib/white-label'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 export const metadata: Metadata = {
   title: 'Firm Admin View | Starting Monday',
@@ -304,13 +306,13 @@ export default async function FirmAdminViewPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        <section className="rounded-2xl border border-slate-200 bg-white px-6 py-5">
+        <Card className="px-6 py-5">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Firm admin view</p>
           <h1 className="text-[24px] font-bold text-slate-900 leading-tight">Compare by book and by cohort</h1>
           <p className="text-[13px] text-slate-500 mt-1">
             Practice leaders can compare counselor load, cohort consistency, and risk patterns without digging into individual participant records.
           </p>
-        </section>
+        </Card>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
@@ -318,14 +320,14 @@ export default async function FirmAdminViewPage() {
             { label: 'Cohorts in review', value: String(COHORT_ROWS.length) },
             { label: 'Open exceptions', value: String(openExceptions) },
           ].map((card) => (
-            <div key={card.label} className="rounded-xl border border-slate-200 bg-white p-4">
+            <Card key={card.label} className="p-4">
               <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">{card.label}</p>
               <p className="mt-1 text-[28px] font-bold text-slate-900">{card.value}</p>
-            </div>
+            </Card>
           ))}
         </section>
 
-        <section className="rounded-2xl border border-orange-200 bg-white p-5 space-y-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <Card className="border-orange-200 p-5 space-y-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
           <div>
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">White-label setup</p>
             <h2 className="text-[18px] font-bold text-slate-900 leading-tight">Partner-branded delivery for mixed-seniority transition programs</h2>
@@ -336,30 +338,30 @@ export default async function FirmAdminViewPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {brandingSummary.map((item) => (
-              <div key={item} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <Card key={item} className="bg-slate-50 p-4">
                 <p className="text-[13px] font-semibold text-slate-900">{item}</p>
-              </div>
+              </Card>
             ))}
           </div>
 
           {whiteLabelSettings && (
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <Card className="p-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400">Current saved configuration</p>
                   <p className="text-[14px] font-semibold text-slate-900 mt-1">{whiteLabelSettings.brandName}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 text-[12px] text-slate-500">
-                  <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5">{whiteLabelSettings.primaryColor}</span>
-                  <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5">{whiteLabelSettings.accentColor}</span>
+                  <Badge variant="outline" className="bg-slate-50">{whiteLabelSettings.primaryColor}</Badge>
+                  <Badge variant="outline" className="bg-slate-50">{whiteLabelSettings.accentColor}</Badge>
                   <span>{whiteLabelSettings.supportEmail}</span>
                 </div>
               </div>
-            </div>
+            </Card>
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <Card className="p-4">
               <h3 className="text-[12px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Tracks</h3>
               <div className="space-y-3">
                 {WHITE_LABEL_TRACKS.map((track) => (
@@ -370,9 +372,9 @@ export default async function FirmAdminViewPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <Card className="p-4">
               <h3 className="text-[12px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Pricing</h3>
               <div className="space-y-3">
                 {WHITE_LABEL_TIERS.map((tier) => (
@@ -388,11 +390,11 @@ export default async function FirmAdminViewPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </Card>
           </div>
-        </section>
+        </Card>
 
-        <section className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+        <Card className="py-0 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Compare by book</h2>
           </div>
@@ -411,9 +413,9 @@ export default async function FirmAdminViewPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
 
-        <section className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+        <Card className="py-0 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Benchmark layer</h2>
             <p className="text-[12px] text-slate-500 mt-1">Partner analytics for recurring cohort benchmarks and delivery variance checks.</p>
@@ -421,10 +423,10 @@ export default async function FirmAdminViewPage() {
           <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {BENCHMARK_DEFINITIONS.map((item) => (
-                <article key={item.metric} className="rounded-xl border border-slate-200 bg-white p-3">
+                <Card key={item.metric} className="p-3">
                   <p className="text-[12px] font-semibold text-slate-800">{item.metric}</p>
                   <p className="text-[12px] text-slate-500 mt-1">{item.definition}</p>
-                </article>
+                </Card>
               ))}
             </div>
           </div>
@@ -441,9 +443,9 @@ export default async function FirmAdminViewPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
 
-        <section className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+        <Card className="py-0 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Compare by cohort</h2>
           </div>
@@ -458,17 +460,16 @@ export default async function FirmAdminViewPage() {
                 </div>
                 <div className="text-[13px] text-slate-700">Activation {row.activation}</div>
                 <div className="text-[13px] text-slate-700">Actions {row.action_rate}/wk</div>
-                <div className={`text-[13px] font-semibold capitalize ${
-                  row.risk === 'on_track'
-                    ? 'text-emerald-700'
-                    : row.risk === 'watch'
-                      ? 'text-amber-700'
-                      : 'text-red-700'
-                }`}>{row.risk}</div>
+                <Badge
+                  variant={row.risk === 'on_track' ? 'success' : row.risk === 'watch' ? 'warning' : 'destructive'}
+                  className="capitalize justify-self-start"
+                >
+                  {row.risk}
+                </Badge>
               </div>
             ))}
           </div>
-        </section>
+        </Card>
       </main>
     </div>
   )

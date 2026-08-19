@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 
 type EmptyStateProps = {
   icon?: React.ReactNode
@@ -12,29 +14,32 @@ export function EmptyState({ icon, title, body, cta, ctaSecondary }: EmptyStateP
   return (
     <div className="flex flex-col items-center justify-center text-center py-16 px-6">
       {icon && (
-        <div className="mb-5 w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-          {icon}
-        </div>
+        <Avatar size="lg" className="mb-5 w-14 h-14">
+          <AvatarFallback className="bg-slate-100 text-slate-400">
+            {icon}
+          </AvatarFallback>
+        </Avatar>
       )}
       <h3 className="text-[16px] font-semibold text-slate-900 mb-2">{title}</h3>
       <p className="text-[14px] text-slate-500 leading-relaxed max-w-sm mb-6">{body}</p>
       {(cta || ctaSecondary) && (
         <div className="flex items-center gap-3 flex-wrap justify-center">
           {cta && (
-            <Link
-              href={cta.href}
-              className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors"
+            <Button
+              render={<Link href={cta.href} />}
+              className="text-[13px] font-semibold px-5 py-2.5"
             >
               {cta.label}
-            </Link>
+            </Button>
           )}
           {ctaSecondary && (
-            <Link
-              href={ctaSecondary.href}
-              className="text-[13px] font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+            <Button
+              variant="link"
+              render={<Link href={ctaSecondary.href} />}
+              className="text-[13px] font-semibold text-slate-500 hover:text-slate-900"
             >
               {ctaSecondary.label}
-            </Link>
+            </Button>
           )}
         </div>
       )}

@@ -4,21 +4,32 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { loadReliabilitySnapshotFromDb } from '@/lib/outreach/reliability-metrics'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 function pct(value: number): string {
   return `${value.toFixed(1)}%`
 }
 
-function alertClass(level: 'info' | 'warning' | 'critical'): string {
-  if (level === 'critical') return 'border-red-200 bg-red-50 text-red-900'
-  if (level === 'warning') return 'border-amber-200 bg-amber-50 text-amber-900'
-  return 'border-sky-200 bg-sky-50 text-sky-900'
+function alertVariant(level: 'info' | 'warning' | 'critical'): 'info' | 'warning' | 'destructive' {
+  if (level === 'critical') return 'destructive'
+  if (level === 'warning') return 'warning'
+  return 'info'
 }
 
-function confidenceClass(band: 'high' | 'medium' | 'low'): string {
-  if (band === 'high') return 'text-emerald-700'
-  if (band === 'medium') return 'text-amber-700'
-  return 'text-red-700'
+function confidenceBadgeVariant(band: 'high' | 'medium' | 'low'): 'success' | 'warning' | 'destructive' {
+  if (band === 'high') return 'success'
+  if (band === 'medium') return 'warning'
+  return 'destructive'
 }
 
 export default async function OutreachReliabilityPage() {
@@ -61,29 +72,31 @@ export default async function OutreachReliabilityPage() {
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white border border-slate-200 rounded p-5">
+          <Card variant="default" className="p-5">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Confidence Score</h2>
-            <p className={`text-[28px] font-bold ${confidenceClass(snapshot.confidence.band)}`}>{snapshot.confidence.score}</p>
-            <p className="text-[13px] text-slate-500 mt-1 capitalize">{snapshot.confidence.band} confidence</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-5">
+            <p className="text-[28px] font-bold text-slate-900">{snapshot.confidence.score}</p>
+            <Badge variant={confidenceBadgeVariant(snapshot.confidence.band)} className="mt-1 capitalize">
+              {snapshot.confidence.band} confidence
+            </Badge>
+          </Card>
+          <Card variant="default" className="p-5">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Accepted Rate (7d)</h2>
             <p className="text-[28px] font-bold text-slate-900">{pct(last7AcceptedRate)}</p>
             <p className="text-[13px] text-slate-500 mt-1">Threshold: {snapshot.thresholds.minAcceptedRatePct}%</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-5">
+          </Card>
+          <Card variant="default" className="p-5">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Negative Outcomes</h2>
             <p className="text-[28px] font-bold text-slate-900">{pct(snapshot.totals.negativeOutcomeRatePct)}</p>
             <p className="text-[13px] text-slate-500 mt-1">Threshold: {snapshot.thresholds.maxNegativeOutcomeRatePct}% max</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded p-5">
+          </Card>
+          <Card variant="default" className="p-5">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Queue Health</h2>
             <p className="text-[28px] font-bold text-slate-900">{snapshot.queueHealth.queuedStaleCount + snapshot.queueHealth.sendingStaleCount}</p>
             <p className="text-[13px] text-slate-500 mt-1">Stale queued + stale sending jobs</p>
-          </div>
+          </Card>
         </section>
 
-        <section className="bg-white border border-slate-200 rounded overflow-hidden">
+        <Card variant="default" className="overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Alert Thresholds</h2>
             <span className="text-[13px] text-slate-500">Updated {new Date(snapshot.generatedAt).toLocaleString()}</span>
@@ -98,10 +111,10 @@ export default async function OutreachReliabilityPage() {
             <div className="border border-slate-200 rounded p-3">Webhook lag max: <span className="font-semibold">{snapshot.thresholds.maxWebhookLagMinutes}m</span></div>
             <div className="border border-slate-200 rounded p-3">Today volume: <span className="font-semibold">{latestDay?.total ?? 0} jobs</span></div>
           </div>
-        </section>
+        </Card>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="bg-white border border-slate-200 rounded overflow-hidden">
+          <Card variant="default" className="overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100">
               <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Active Alerts</h2>
             </div>
@@ -110,16 +123,16 @@ export default async function OutreachReliabilityPage() {
                 <p className="text-[13px] text-emerald-700">No active reliability alerts.</p>
               ) : (
                 snapshot.alerts.map(alert => (
-                  <article key={alert.code} className={`border rounded p-3 ${alertClass(alert.level)}`}>
-                    <h3 className="text-[13px] font-semibold">{alert.title}</h3>
-                    <p className="text-[13px] mt-1">{alert.detail}</p>
-                  </article>
+                  <Alert key={alert.code} variant={alertVariant(alert.level)}>
+                    <AlertTitle>{alert.title}</AlertTitle>
+                    <AlertDescription>{alert.detail}</AlertDescription>
+                  </Alert>
                 ))
               )}
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white border border-slate-200 rounded overflow-hidden">
+          <Card variant="default" className="overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100">
               <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Domain Reliability</h2>
             </div>
@@ -127,32 +140,32 @@ export default async function OutreachReliabilityPage() {
               {snapshot.domainBreakdown.length === 0 ? (
                 <p className="text-[13px] text-slate-500">No sends in the selected window.</p>
               ) : (
-                <table className="w-full text-[13px]">
-                  <thead>
-                    <tr className="text-left text-slate-400">
-                      <th className="pb-2 font-semibold">Bucket</th>
-                      <th className="pb-2 font-semibold text-right">Jobs</th>
-                      <th className="pb-2 font-semibold text-right">Accepted</th>
-                      <th className="pb-2 font-semibold text-right">Hard Fail</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
+                <Table className="text-[13px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-slate-400">Bucket</TableHead>
+                      <TableHead className="text-right text-slate-400">Jobs</TableHead>
+                      <TableHead className="text-right text-slate-400">Accepted</TableHead>
+                      <TableHead className="text-right text-slate-400">Hard Fail</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                     {snapshot.domainBreakdown.map(row => (
-                      <tr key={row.domainBucket}>
-                        <td className="py-2 text-slate-700 capitalize">{row.domainBucket}</td>
-                        <td className="py-2 text-right text-slate-900 font-semibold">{row.total}</td>
-                        <td className="py-2 text-right text-slate-900 font-semibold">{pct(row.acceptedRatePct)}</td>
-                        <td className="py-2 text-right text-slate-900 font-semibold">{pct(row.hardFailureRatePct)}</td>
-                      </tr>
+                      <TableRow key={row.domainBucket}>
+                        <TableCell className="text-slate-700 capitalize">{row.domainBucket}</TableCell>
+                        <TableCell className="text-right text-slate-900 font-semibold">{row.total}</TableCell>
+                        <TableCell className="text-right text-slate-900 font-semibold">{pct(row.acceptedRatePct)}</TableCell>
+                        <TableCell className="text-right text-slate-900 font-semibold">{pct(row.hardFailureRatePct)}</TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                </table>
+                  </TableBody>
+                </Table>
               )}
             </div>
-          </div>
+          </Card>
         </section>
 
-        <section className="bg-white border border-slate-200 rounded overflow-hidden">
+        <Card variant="default" className="overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Daily Reliability Trend</h2>
           </div>
@@ -160,33 +173,33 @@ export default async function OutreachReliabilityPage() {
             {snapshot.daily.length === 0 ? (
               <p className="text-[13px] text-slate-500">No daily records yet.</p>
             ) : (
-              <table className="w-full text-[13px] min-w-[720px]">
-                <thead>
-                  <tr className="text-left text-slate-400">
-                    <th className="pb-2 font-semibold">Date</th>
-                    <th className="pb-2 font-semibold text-right">Jobs</th>
-                    <th className="pb-2 font-semibold text-right">Accepted</th>
-                    <th className="pb-2 font-semibold text-right">Delivered</th>
-                    <th className="pb-2 font-semibold text-right">Replied</th>
-                    <th className="pb-2 font-semibold text-right">Negative</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
+              <Table className="text-[13px] min-w-[720px]">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-slate-400">Date</TableHead>
+                    <TableHead className="text-right text-slate-400">Jobs</TableHead>
+                    <TableHead className="text-right text-slate-400">Accepted</TableHead>
+                    <TableHead className="text-right text-slate-400">Delivered</TableHead>
+                    <TableHead className="text-right text-slate-400">Replied</TableHead>
+                    <TableHead className="text-right text-slate-400">Negative</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {snapshot.daily.map(day => (
-                    <tr key={day.date}>
-                      <td className="py-2 text-slate-700">{day.date}</td>
-                      <td className="py-2 text-right text-slate-900 font-semibold">{day.total}</td>
-                      <td className="py-2 text-right text-slate-900 font-semibold">{pct(day.acceptedRatePct)}</td>
-                      <td className="py-2 text-right text-slate-900 font-semibold">{day.delivered}</td>
-                      <td className="py-2 text-right text-slate-900 font-semibold">{day.replied}</td>
-                      <td className="py-2 text-right text-slate-900 font-semibold">{pct(day.negativeOutcomeRatePct)}</td>
-                    </tr>
+                    <TableRow key={day.date}>
+                      <TableCell className="text-slate-700">{day.date}</TableCell>
+                      <TableCell className="text-right text-slate-900 font-semibold">{day.total}</TableCell>
+                      <TableCell className="text-right text-slate-900 font-semibold">{pct(day.acceptedRatePct)}</TableCell>
+                      <TableCell className="text-right text-slate-900 font-semibold">{day.delivered}</TableCell>
+                      <TableCell className="text-right text-slate-900 font-semibold">{day.replied}</TableCell>
+                      <TableCell className="text-right text-slate-900 font-semibold">{pct(day.negativeOutcomeRatePct)}</TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             )}
           </div>
-        </section>
+        </Card>
       </main>
     </div>
   )

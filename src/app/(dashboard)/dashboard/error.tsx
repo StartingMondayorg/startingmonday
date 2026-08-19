@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 import * as Sentry from '@sentry/nextjs'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default function DashboardError({
   error,
@@ -26,7 +28,7 @@ export default function DashboardError({
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-16 flex flex-col items-start">
-        <div className="bg-white border border-slate-200 rounded p-8 max-w-md">
+        <Card className="p-8 max-w-md">
           <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">
             Dashboard Error
           </div>
@@ -37,13 +39,8 @@ export default function DashboardError({
             The dashboard failed to load. This is usually a temporary issue.
             Try refreshing - if it persists, the team has been notified.
           </p>
-          <button
-            onClick={reset}
-            className="bg-slate-900 text-white text-[14px] font-semibold px-6 py-2.5 rounded cursor-pointer border-0"
-          >
-            Try again
-          </button>
-        </div>
+          <Button onClick={reset}>Try again</Button>
+        </Card>
       </main>
 
     </div>

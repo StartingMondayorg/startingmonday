@@ -2,6 +2,9 @@
 
 import { useRouter } from 'next/navigation'
 import { useRef, useEffect, useTransition } from 'react'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 
 interface Props {
   q: string
@@ -46,9 +49,9 @@ export function PipelineFilter({ q, stage, stages }: Props) {
     timer.current = setTimeout(() => navigate(val, stageRef.current), 350)
   }
 
-  function onStageChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  function onStageChange(rawVal: string | null) {
     clearTimeout(timer.current)
-    const val = e.target.value
+    const val = !rawVal || rawVal === 'all' ? '' : rawVal
     stageRef.current = val
     navigate(qRef.current, val)
   }
@@ -58,30 +61,29 @@ export function PipelineFilter({ q, stage, stages }: Props) {
   return (
     <div className="px-4 sm:px-6 py-3 border-b border-white/10">
       <div className="flex items-center gap-2 flex-wrap">
-        <input
+        <Input
           ref={inputRef}
           type="text"
           defaultValue={q}
           onChange={onQueryChange}
           placeholder="Search companies…"
-          className="flex-1 min-w-[120px] border border-white/15 bg-slate-950/70 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40"
+          className="flex-1 min-w-[120px] border-white/15 bg-slate-950/70 text-slate-100 placeholder:text-slate-500 focus-visible:border-white/40"
         />
-        <select
-          key={`stage-${stage}`}
-          defaultValue={stage}
-          onChange={onStageChange}
-          aria-label="Filter by stage"
-          className="border border-white/15 rounded px-2.5 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/40 bg-slate-900"
-        >
-          <option value="">All stages</option>
-          {stages.map(({ key, label }) => (
-            <option key={key} value={key}>{label}</option>
-          ))}
-        </select>
+        <Select value={stage || 'all'} onValueChange={onStageChange}>
+          <SelectTrigger aria-label="Filter by stage" className="border-white/15 text-slate-100 bg-slate-900">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All stages</SelectItem>
+            {stages.map(({ key, label }) => (
+              <SelectItem key={key} value={key}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         {hasFilters && (
-          <a href="/dashboard" className="text-[12px] text-slate-400 hover:text-slate-700">
+          <Button variant="link" size="sm" className="text-slate-400 hover:text-slate-700" render={<a href="/dashboard" />}>
             Clear
-          </a>
+          </Button>
         )}
       </div>
     </div>

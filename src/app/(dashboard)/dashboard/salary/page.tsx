@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { SalaryIntelClient } from './salary-client'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Salary Intelligence - Starting Monday' }
 
@@ -43,18 +45,15 @@ export default async function SalaryPage({
         </div>
 
         {!canAccess ? (
-          <div className="bg-white border border-slate-200 rounded p-8 text-center">
+          <Card className="p-8 text-center">
             <p className="text-[15px] font-semibold text-slate-900 mb-2">Executive plan required</p>
             <p className="text-[13px] text-slate-500 mb-6 leading-relaxed">
               Salary intelligence is available on the Executive plan ($499/mo). It includes daily scanning, recruiter tracker enhancements, and negotiation scripts.
             </p>
-            <Link
-              href="/settings/billing"
-              className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-6 py-2.5 rounded hover:bg-slate-700 transition-colors"
-            >
+            <Button render={<Link href="/settings/billing" />}>
               Upgrade to Executive →
-            </Link>
-          </div>
+            </Button>
+          </Card>
         ) : (
           <SalaryIntelClient defaultCompany={company ?? ''} defaultRole={role ?? ''} />
         )}

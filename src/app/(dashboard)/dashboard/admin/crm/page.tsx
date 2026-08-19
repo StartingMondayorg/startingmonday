@@ -6,6 +6,11 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { ROUTING_THRESHOLDS } from '@/lib/intelligence/lead-scoring'
 import { runLeadScoringNow } from './actions'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 type LeadRow = {
   id: string
@@ -47,10 +52,10 @@ function channelLabel(value: string | null): string {
   return value
 }
 
-function scoreClass(score: number): string {
-  if (score >= ROUTING_THRESHOLDS.hot) return 'text-red-100 bg-red-500/15 border-red-300/20'
-  if (score >= ROUTING_THRESHOLDS.warm) return 'text-amber-100 bg-amber-500/15 border-amber-300/20'
-  return 'text-slate-300 bg-white/10 border-white/10'
+function scoreBadgeVariant(score: number): 'destructive' | 'warning' | 'secondary' {
+  if (score >= ROUTING_THRESHOLDS.hot) return 'destructive'
+  if (score >= ROUTING_THRESHOLDS.warm) return 'warning'
+  return 'secondary'
 }
 
 export const metadata = { title: 'CRM - Admin' }
@@ -149,113 +154,118 @@ export default async function AdminCrmPage({
             <p className="text-[13px] text-slate-300 mt-1.5">Lead score, channel mix, and queue routing dashboard.</p>
           </div>
           <form action={runLeadScoringNow}>
-            <button
-              type="submit"
-              className="bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded cursor-pointer border-0"
-            >
+            <Button type="submit">
               Run Scoring Now
-            </button>
+            </Button>
           </form>
         </div>
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <h2 className="sr-only">Quick actions</h2>
-          <Link href="/dashboard/contacts" className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md hover:border-white/30 transition-colors">
-            <p className="text-[13px] font-semibold text-white">Open contacts</p>
-            <p className="text-[13px] text-slate-300 mt-1">Review active contacts and outreach status.</p>
+          <Link href="/dashboard/contacts">
+            <Card variant="glass" className="p-4 hover:border-white/30 transition-colors">
+              <p className="text-[13px] font-semibold text-white">Open contacts</p>
+              <p className="text-[13px] text-slate-300 mt-1">Review active contacts and outreach status.</p>
+            </Card>
           </Link>
-          <Link href="/dashboard/outreach" className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md hover:border-white/30 transition-colors">
-            <p className="text-[13px] font-semibold text-white">Open outreach</p>
-            <p className="text-[13px] text-slate-300 mt-1">Run sends and clear follow-up queue.</p>
+          <Link href="/dashboard/outreach">
+            <Card variant="glass" className="p-4 hover:border-white/30 transition-colors">
+              <p className="text-[13px] font-semibold text-white">Open outreach</p>
+              <p className="text-[13px] text-slate-300 mt-1">Run sends and clear follow-up queue.</p>
+            </Card>
           </Link>
-          <Link href="/dashboard/admin/outreach-analytics" className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md hover:border-white/30 transition-colors">
-            <p className="text-[13px] font-semibold text-white">Open analytics</p>
-            <p className="text-[13px] text-slate-300 mt-1">Compare delivery and response trends.</p>
+          <Link href="/dashboard/admin/outreach-analytics">
+            <Card variant="glass" className="p-4 hover:border-white/30 transition-colors">
+              <p className="text-[13px] font-semibold text-white">Open analytics</p>
+              <p className="text-[13px] text-slate-300 mt-1">Compare delivery and response trends.</p>
+            </Card>
           </Link>
         </section>
 
         {scored === '1' && (
-          <div className="mb-6 rounded border border-green-200 bg-green-50 px-4 py-3 text-[13px] text-green-800">
-            Lead scoring completed. Processed {processed ?? '0'} leads and updated {updated ?? '0'} records.
-          </div>
+          <Alert variant="success" className="mb-6">
+            <AlertDescription>
+              Lead scoring completed. Processed {processed ?? '0'} leads and updated {updated ?? '0'} records.
+            </AlertDescription>
+          </Alert>
         )}
 
         {error && (
-          <div className="mb-6 rounded border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
-            {error === 'forbidden'
-              ? 'You do not have permission to run lead scoring.'
-              : 'Lead scoring failed. Please try again or check server logs.'}
-          </div>
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>
+              {error === 'forbidden'
+                ? 'You do not have permission to run lead scoring.'
+                : 'Lead scoring failed. Please try again or check server logs.'}
+            </AlertDescription>
+          </Alert>
         )}
 
-        <section id="crm-run-log" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" id="crm-run-log" className="p-0 mb-6">
           <div className="px-6 py-[14px] border-b border-white/10">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Scoring execution log</h2>
           </div>
           {runs.length === 0 ? (
             <p className="px-6 py-6 text-[13px] text-slate-400">No scoring runs logged yet.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="bg-white/5 border-b border-white/10 text-left">
-                    <th className="px-6 py-2.5 font-semibold text-slate-400">Time</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Trigger</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Status</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-right">Processed</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-right">Updated</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Details</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {runs.map((run) => (
-                    <tr key={run.id}>
-                      <td className="px-6 py-3 text-slate-200">
-                        {new Date(run.created_at).toLocaleString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          hour: 'numeric',
-                          minute: '2-digit',
-                        })}
-                      </td>
-                      <td className="px-4 py-3 text-slate-300 uppercase tracking-wide text-[13px]">{run.trigger}</td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded border text-[13px] font-semibold ${run.status === 'success' ? 'text-green-700 bg-green-50 border-green-200' : 'text-red-700 bg-red-50 border-red-200'}`}>
-                          {run.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-right font-semibold text-white">{run.processed}</td>
-                      <td className="px-4 py-3 text-right font-semibold text-white">{run.updated}</td>
-                      <td className="px-4 py-3 text-slate-300">{run.error_message ?? 'OK'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table className="text-[13px]">
+              <TableHeader>
+                <TableRow className="bg-white/5">
+                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Time</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Trigger</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Processed</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Updated</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Details</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {runs.map((run) => (
+                  <TableRow key={run.id}>
+                    <TableCell className="px-6 py-3 text-slate-200">
+                      {new Date(run.created_at).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-slate-300 uppercase tracking-wide text-[13px]">{run.trigger}</TableCell>
+                    <TableCell className="px-4 py-3">
+                      <Badge variant={run.status === 'success' ? 'success' : 'destructive'}>
+                        {run.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right font-semibold text-white">{run.processed}</TableCell>
+                    <TableCell className="px-4 py-3 text-right font-semibold text-white">{run.updated}</TableCell>
+                    <TableCell className="px-4 py-3 text-slate-300 whitespace-normal">{run.error_message ?? 'OK'}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
-        </section>
+        </Card>
 
         <section id="crm-kpis" className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Total leads</p>
             <p className="text-[30px] font-bold text-white mt-2 leading-none">{totalLeads}</p>
-          </div>
-          <div className="rounded-2xl border border-red-300/20 bg-red-500/10 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="border-red-300/20 bg-red-500/10 p-5">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-red-100">Hot queue</p>
             <p className="text-[30px] font-bold text-red-100 mt-2 leading-none">{queueCounts.hot}</p>
-          </div>
-          <div className="rounded-2xl border border-amber-300/20 bg-amber-500/10 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="border-amber-300/20 bg-amber-500/10 p-5">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-amber-100">Warm queue</p>
             <p className="text-[30px] font-bold text-amber-100 mt-2 leading-none">{queueCounts.warm}</p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="p-5">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-300">Nurture queue</p>
             <p className="text-[30px] font-bold text-slate-200 mt-2 leading-none">{queueCounts.nurture}</p>
-          </div>
+          </Card>
         </section>
 
         <section id="crm-channel-mix" className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Customers by channel</p>
             <div className="space-y-2">
               {sortedChannelTotals.map(([channel, stats]) => (
@@ -268,80 +278,78 @@ export default async function AdminCrmPage({
                 <p className="text-[13px] text-slate-400">No leads yet.</p>
               )}
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Top score by channel</p>
             <div className="space-y-2">
               {topChannels.map(([channel, stats]) => (
                 <div key={channel} className="flex items-center justify-between text-[13px]">
                   <span className="text-slate-200 font-medium">{channel}</span>
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded border text-[13px] font-semibold ${scoreClass(stats.topScore)}`}>
+                  <Badge variant={scoreBadgeVariant(stats.topScore)}>
                     {stats.topScore}
-                  </span>
+                  </Badge>
                 </div>
               ))}
               {topChannels.length === 0 && (
                 <p className="text-[13px] text-slate-400">No channel scoring data yet.</p>
               )}
             </div>
-          </div>
+          </Card>
         </section>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" className="p-5 mb-6">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Lead age cohorts</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {(Object.keys(byAge) as Array<keyof typeof byAge>).map((bucket) => (
-              <div key={bucket} className="border border-white/10 rounded p-4">
+              <Card key={bucket} className="border border-white/10 bg-transparent p-4 text-slate-100">
                 <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">{bucket}</p>
                 <p className="text-[24px] font-bold text-white mt-1 leading-none">{byAge[bucket].count}</p>
                 <p className="text-[13px] text-slate-300 mt-1">Avg score: {byAge[bucket].avgScore}</p>
                 <p className="text-[13px] text-slate-300">Top score: {byAge[bucket].topScore}</p>
-              </div>
+              </Card>
             ))}
           </div>
-        </div>
+        </Card>
 
-        <section id="crm-top-leads" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+        <Card variant="glass" id="crm-top-leads" className="p-0">
           <div className="px-6 py-[14px] border-b border-white/10">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Top lead scores</h2>
           </div>
           {topLeads.length === 0 ? (
             <p className="px-6 py-8 text-[13px] text-slate-400">No scored leads yet.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="bg-white/5 border-b border-white/10 text-left">
-                    <th className="px-6 py-2.5 font-semibold text-slate-400">Name</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Title</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Channel</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400">Queue</th>
-                    <th className="px-4 py-2.5 font-semibold text-slate-400 text-right">Score</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {topLeads.map((lead) => {
-                    const score = lead.lead_score ?? 0
-                    return (
-                      <tr key={lead.id}>
-                        <td className="px-6 py-3 font-semibold text-white">{lead.name}</td>
-                        <td className="px-4 py-3 text-slate-300">{lead.title ?? '\u2014'}</td>
-                        <td className="px-4 py-3 text-slate-300">{channelLabel(lead.channel)}</td>
-                        <td className="px-4 py-3 text-slate-300 capitalize">{lead.lead_queue ?? 'nurture'}</td>
-                        <td className="px-4 py-3 text-right">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded border text-[13px] font-semibold ${scoreClass(score)}`}>
-                            {score}
-                          </span>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <Table className="text-[13px]">
+              <TableHeader>
+                <TableRow className="bg-white/5">
+                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Name</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Title</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Channel</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Queue</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Score</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {topLeads.map((lead) => {
+                  const score = lead.lead_score ?? 0
+                  return (
+                    <TableRow key={lead.id}>
+                      <TableCell className="px-6 py-3 font-semibold text-white">{lead.name}</TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300">{lead.title ?? '\u2014'}</TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300">{channelLabel(lead.channel)}</TableCell>
+                      <TableCell className="px-4 py-3 text-slate-300 capitalize">{lead.lead_queue ?? 'nurture'}</TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        <Badge variant={scoreBadgeVariant(score)}>
+                          {score}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
           )}
-        </section>
+        </Card>
       </main>
     </div>
   )

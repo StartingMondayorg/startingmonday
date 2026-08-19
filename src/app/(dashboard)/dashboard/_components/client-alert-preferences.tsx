@@ -1,6 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 
 type AlertPrefs = {
   alert_on_company_signal: boolean
@@ -66,81 +78,87 @@ export function ClientAlertPreferences({ clientId }: { clientId: string }) {
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-lg p-5">
+    <Card className="p-5">
       <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-4">
         Alert Preferences
       </p>
 
       {activeAlerts.length > 0 && (
-        <div className="mb-4 rounded border border-amber-200 bg-amber-50 p-3">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-amber-700 mb-2">
+        <Alert variant="warning" className="mb-4 flex-col items-stretch">
+          <AlertTitle className="text-[10px] tracking-[0.1em] uppercase mb-2">
             Active alerts{snapshotLabel ? ` · ${snapshotLabel}` : ''}
-          </p>
-          <div className="space-y-2">
-            {activeAlerts.map((alert) => (
-              <div key={alert.id} className={`rounded border px-3 py-2 text-[12px] ${alert.severity === 'high' ? 'border-red-200 bg-red-50 text-red-800' : 'border-amber-200 bg-white text-amber-900'}`}>
-                <div className="font-semibold capitalize">{alert.title}</div>
-                <div className="mt-1 text-slate-600">{alert.message}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+          </AlertTitle>
+          <AlertDescription>
+            <div className="space-y-2">
+              {activeAlerts.map((alert) => (
+                <Alert
+                  key={alert.id}
+                  variant={alert.severity === 'high' ? 'destructive' : 'warning'}
+                  className="px-3 py-2 text-[12px]"
+                >
+                  <AlertTitle className="capitalize">{alert.title}</AlertTitle>
+                  <AlertDescription className="mt-1 text-slate-600">{alert.message}</AlertDescription>
+                </Alert>
+              ))}
+            </div>
+          </AlertDescription>
+        </Alert>
       )}
 
       <div className="space-y-3">
-        <label className="flex items-center justify-between gap-3 text-[13px] text-slate-700">
+        <Label className="flex items-center justify-between gap-3 text-[13px] font-normal text-slate-700">
           <span>Company signal alerts</span>
-          <input
-            type="checkbox"
+          <Checkbox
             checked={prefs.alert_on_company_signal}
-            onChange={(e) => setPrefs((p) => ({ ...p, alert_on_company_signal: e.target.checked }))}
+            onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alert_on_company_signal: checked === true }))}
           />
-        </label>
+        </Label>
 
-        <label className="flex items-center justify-between gap-3 text-[13px] text-slate-700">
+        <Label className="flex items-center justify-between gap-3 text-[13px] font-normal text-slate-700">
           <span>New interview log alerts</span>
-          <input
-            type="checkbox"
+          <Checkbox
             checked={prefs.alert_on_new_interview}
-            onChange={(e) => setPrefs((p) => ({ ...p, alert_on_new_interview: e.target.checked }))}
+            onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alert_on_new_interview: checked === true }))}
           />
-        </label>
+        </Label>
 
-        <label className="flex items-center justify-between gap-3 text-[13px] text-slate-700">
+        <Label className="flex items-center justify-between gap-3 text-[13px] font-normal text-slate-700">
           <span>Client edit activity alerts</span>
-          <input
-            type="checkbox"
+          <Checkbox
             checked={prefs.alert_on_client_edit}
-            onChange={(e) => setPrefs((p) => ({ ...p, alert_on_client_edit: e.target.checked }))}
+            onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alert_on_client_edit: checked === true }))}
           />
-        </label>
+        </Label>
 
         <div className="pt-1">
-          <label htmlFor="alert-frequency" className="text-[12px] text-slate-500">Delivery frequency</label>
-          <select
-            id="alert-frequency"
+          <Label htmlFor="alert-frequency" className="text-[12px] font-normal text-slate-500">Delivery frequency</Label>
+          <Select
             value={prefs.alert_frequency}
-            onChange={(e) => setPrefs((p) => ({ ...p, alert_frequency: e.target.value as AlertPrefs['alert_frequency'] }))}
-            className="mt-1 w-full border border-slate-200 rounded px-3 py-2 text-[13px] text-slate-700"
+            onValueChange={(value) => setPrefs((p) => ({ ...p, alert_frequency: value as AlertPrefs['alert_frequency'] }))}
           >
-            <option value="immediate">Immediate</option>
-            <option value="daily">Daily digest</option>
-            <option value="weekly">Weekly summary</option>
-          </select>
+            <SelectTrigger id="alert-frequency" className="mt-1 w-full text-[13px] text-slate-700">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="immediate">Immediate</SelectItem>
+              <SelectItem value="daily">Daily digest</SelectItem>
+              <SelectItem value="weekly">Weekly summary</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <button
+        <Button
           type="button"
           onClick={savePrefs}
           disabled={saving}
-          className="bg-slate-900 hover:bg-slate-700 disabled:opacity-50 text-white text-[13px] font-semibold px-4 py-2 rounded"
+          className="text-[13px] font-semibold px-4 py-2"
         >
           {saving ? 'Saving...' : 'Save Preferences'}
-        </button>
+        </Button>
         {message && <p className="text-[12px] text-slate-500">{message}</p>}
       </div>
-    </div>
+    </Card>
   )
 }

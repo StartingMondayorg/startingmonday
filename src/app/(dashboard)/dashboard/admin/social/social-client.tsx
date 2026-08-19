@@ -1,6 +1,22 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { ALLOWED_EMOTIONAL_ANGLES, type EmotionalAngle } from '@/lib/social-council-check'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Toggle } from '@/components/ui/toggle'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type SocialPost = {
   id: string
@@ -579,26 +595,29 @@ export function SocialClient() {
 
   if (loading) {
     return (
-      <div className="bg-white border border-slate-200 rounded p-8 flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
-      </div>
+      <Card className="p-8 flex items-center gap-2">
+        <Skeleton className="w-1.5 h-1.5 rounded-full" />
+        <Skeleton className="w-1.5 h-1.5 rounded-full [animation-delay:150ms]" />
+        <Skeleton className="w-1.5 h-1.5 rounded-full [animation-delay:300ms]" />
+      </Card>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-white border border-slate-200 rounded p-6">
-        <p className="text-[13px] text-red-600 mb-3">{error}</p>
-        <button
-          type="button"
-          onClick={() => { setError(''); load() }}
-          className="text-[12px] font-semibold text-slate-600 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 cursor-pointer bg-transparent transition-colors"
-        >
-          Try again
-        </button>
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          <p className="mb-3">{error}</p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => { setError(''); load() }}
+          >
+            Try again
+          </Button>
+        </AlertDescription>
+      </Alert>
     )
   }
 
@@ -606,7 +625,7 @@ export function SocialClient() {
 
   if (!state.isPostDay) {
     return (
-      <div className="bg-white border border-slate-200 rounded p-8 text-center">
+      <Card className="p-8 text-center">
         <p className="text-[14px] font-semibold text-slate-900 mb-2">No post scheduled today.</p>
         <p className="text-[13px] text-slate-500">Posts go out every weekday with audience rotation.</p>
         {state.nextPostDays.length > 0 && (
@@ -614,7 +633,7 @@ export function SocialClient() {
             Next: {state.nextPostDays.map(d => formatDate(d)).join(', ')}
           </p>
         )}
-      </div>
+      </Card>
     )
   }
 
@@ -628,54 +647,49 @@ export function SocialClient() {
     <div className="flex flex-col gap-4">
 
       {/* Date + pillar header */}
-      <div className="bg-white border border-slate-200 rounded px-6 py-5 flex items-center justify-between gap-4">
+      <Card className="px-6 py-5 flex-row items-center justify-between gap-4">
         <div>
           <p className="text-[13px] font-semibold text-slate-900">{formatDate(dateStr)}</p>
           <div className="flex flex-wrap items-center gap-2 mt-1">
-            <span className="text-[11px] font-bold tracking-[0.08em] uppercase bg-orange-50 text-orange-600 px-2 py-0.5 rounded">
-              {pillarLabel}
-            </span>
+            <Badge>{pillarLabel}</Badge>
             {state.audienceLabel && (
-              <span className="text-[11px] font-bold tracking-[0.08em] uppercase bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
-                {state.audienceLabel}
-              </span>
+              <Badge variant="info">{state.audienceLabel}</Badge>
             )}
             {state.recommendedTimeCt && !post.is_posted && (
-              <span className="text-[11px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
-                Target {state.recommendedTimeCt}
-              </span>
+              <Badge variant="secondary">Target {state.recommendedTimeCt}</Badge>
             )}
             {post.is_posted && (
-              <span className="text-[11px] font-bold bg-green-50 text-green-700 px-2 py-0.5 rounded">
+              <Badge variant="success">
                 Posted {post.posted_at ? new Date(post.posted_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : ''}
-              </span>
+              </Badge>
             )}
-            <button
-              type="button"
-              onClick={handleToggleApproval}
+            <Toggle
+              pressed={isApproved}
+              onPressedChange={handleToggleApproval}
               disabled={busy || post.is_posted}
-              className={`text-[11px] font-bold px-2 py-0.5 rounded border transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+              className={`h-auto text-[11px] font-bold px-2 py-0.5 rounded border ${
                 isApproved
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:border-emerald-400'
-                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:border-slate-400'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-400'
+                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-400'
               }`}
             >
               {togglingApproval ? 'Saving…' : isApproved ? 'Approved' : 'Unapproved'}
-            </button>
+            </Toggle>
           </div>
         </div>
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={handleRegenerate}
           disabled={busy}
-          className="shrink-0 text-[12px] font-semibold text-slate-500 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 hover:text-slate-700 bg-transparent cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="shrink-0"
         >
           {regenerating ? 'Generating…' : 'Regenerate'}
-        </button>
-      </div>
+        </Button>
+      </Card>
 
       {/* Draft editor */}
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Post Draft</p>
           {isDirty && !saving && (
@@ -685,51 +699,53 @@ export function SocialClient() {
             <span className="text-[11px] text-slate-400">Saving…</span>
           )}
         </div>
-        <textarea
+        <Textarea
           value={draftText}
           onChange={e => setDraftText(e.target.value)}
           onBlur={isDirty ? handleSave : undefined}
           disabled={busy}
           rows={14}
-          className="w-full text-[14px] text-slate-700 leading-relaxed border border-slate-200 rounded px-4 py-3 resize-none focus:outline-none focus:border-slate-400 font-[inherit] disabled:opacity-50"
+          className="text-[14px] leading-relaxed resize-none"
           placeholder="Draft will appear here…"
         />
         <p className="mt-1.5 text-[11px] text-slate-300">{draftText.length} characters · Edits save on blur</p>
-      </div>
+      </Card>
 
       {/* Character count advisory */}
       {draftText.length > 3000 && (
-        <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded text-[12px] text-amber-700">
-          LinkedIn limits posts to 3,000 characters. This draft is {draftText.length} characters -- trim before posting.
-        </div>
+        <Alert variant="warning">
+          <AlertDescription>
+            LinkedIn limits posts to 3,000 characters. This draft is {draftText.length} characters -- trim before posting.
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Short-form council helper */}
-      <div id="content-checker" className="bg-white border border-slate-200 rounded p-6">
+      <Card id="content-checker" className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Run Short-Form Council Check</p>
             <p className="text-[12px] text-slate-500 mt-1">Server-enforced council gate for posts under 1200 characters.</p>
           </div>
           <div className="flex items-center gap-2">
-            <select
-              value={emotionalAngle}
-              onChange={e => setEmotionalAngle(e.target.value as EmotionalAngle)}
-              className="text-[12px] text-slate-700 border border-slate-300 rounded px-2.5 py-2 bg-white focus:outline-none focus:border-slate-500"
-              title="Primary emotional angle"
-            >
-              {ALLOWED_EMOTIONAL_ANGLES.map(angle => (
-                <option key={angle} value={angle}>{angle.replace('_', ' ')}</option>
-              ))}
-            </select>
-            <button
+            <Select value={emotionalAngle} onValueChange={v => setEmotionalAngle(v as EmotionalAngle)}>
+              <SelectTrigger title="Primary emotional angle" aria-label="Primary emotional angle">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {ALLOWED_EMOTIONAL_ANGLES.map(angle => (
+                  <SelectItem key={angle} value={angle}>{angle.replace('_', ' ')}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
               type="button"
+              variant="outline"
               onClick={handleRunShortFormCouncilCheck}
               disabled={!draftText.trim() || councilChecking}
-              className="text-[12px] font-semibold text-slate-700 border border-slate-300 rounded px-4 py-2 hover:border-slate-500 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors bg-transparent"
             >
               {councilChecking ? 'Checking…' : 'Run Short-Form Council Check'}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -737,24 +753,22 @@ export function SocialClient() {
           <div className="mt-4 border-t border-slate-100 pt-4">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="text-[12px] font-bold text-slate-900">Score {councilCheck.score}/100</span>
-              <span className="text-[11px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">{councilCheck.characterCount} chars</span>
+              <Badge variant="secondary">{councilCheck.characterCount} chars</Badge>
               {councilCheck.emotionalAngle && (
-                <span className="text-[11px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
-                  Angle: {councilCheck.emotionalAngle.replace('_', ' ')}
-                </span>
+                <Badge variant="info">Angle: {councilCheck.emotionalAngle.replace('_', ' ')}</Badge>
               )}
-              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded ${
+              <Badge variant={
                 councilCheck.recommendation === 'publish'
-                  ? 'bg-emerald-50 text-emerald-700'
+                  ? 'success'
                   : councilCheck.recommendation === 'revise'
-                    ? 'bg-amber-50 text-amber-700'
-                    : 'bg-red-50 text-red-700'
-              }`}>
+                    ? 'warning'
+                    : 'destructive'
+              }>
                 {councilCheck.recommendation === 'publish' ? 'Publish' : councilCheck.recommendation === 'revise' ? 'Revise' : 'Rewrite opening'}
-              </span>
-              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded ${councilCheck.councilPass ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+              </Badge>
+              <Badge variant={councilCheck.councilPass ? 'success' : 'destructive'}>
                 {councilCheck.councilPass ? 'Council pass' : 'Council fail'}
-              </span>
+              </Badge>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
@@ -787,45 +801,46 @@ export function SocialClient() {
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
+        <Button
           type="button"
           onClick={handlePost}
           disabled={busy || !draftText.trim() || post.is_posted}
-          className="flex-1 bg-indigo-600 text-white text-[13px] font-semibold px-5 py-3 rounded cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed transition-colors hover:bg-indigo-700"
+          className="flex-1"
         >
           {posting ? 'Posting…' : 'Post to LinkedIn'}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="secondary"
           onClick={handleCopy}
           disabled={busy || !draftText.trim()}
-          className="flex-1 bg-slate-900 text-white text-[13px] font-semibold px-5 py-3 rounded cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed transition-colors hover:bg-slate-800"
+          className="flex-1"
         >
           {copied ? 'Copied!' : 'Copy to clipboard'}
-        </button>
+        </Button>
       </div>
       <div className="flex flex-col sm:flex-row gap-3">
-        <a
-          href={LINKEDIN_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 text-center text-[13px] font-semibold text-slate-700 border border-slate-200 rounded px-5 py-3 hover:border-slate-400 hover:text-slate-900 transition-colors"
+        <Button
+          render={<a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" />}
+          variant="outline"
+          className="flex-1"
         >
           Open LinkedIn
-        </a>
+        </Button>
         {!post.is_posted ? (
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={handleMarkPosted}
             disabled={busy}
-            className="flex-1 text-[13px] font-semibold text-green-700 border border-green-200 rounded px-5 py-3 hover:border-green-400 bg-green-50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="flex-1 text-green-700 border-green-200 bg-green-50 hover:border-green-400 hover:bg-green-50"
           >
             {markingPosted ? 'Saving…' : 'Mark posted (manual)'}
-          </button>
+          </Button>
         ) : (
           <div className="flex-1 text-center text-[13px] font-semibold text-green-700 border border-green-200 rounded px-5 py-3 bg-green-50">
             Posted
@@ -834,7 +849,7 @@ export function SocialClient() {
       </div>
 
       {/* Approved article handoff */}
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
             <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Handoff approved article</p>
@@ -842,20 +857,12 @@ export function SocialClient() {
               One click queues approved variants into upcoming open social slots.
             </p>
             <div className="mt-2 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleAddCalendarReminder}
-                className="text-[11px] font-semibold text-slate-600 border border-slate-200 rounded px-2.5 py-1 hover:border-slate-400 hover:text-slate-800 cursor-pointer transition-colors"
-              >
+              <Button type="button" variant="outline" size="sm" onClick={handleAddCalendarReminder}>
                 Add calendar reminder (.ics)
-              </button>
-              <button
-                type="button"
-                onClick={handleAddGoogleCalendarReminder}
-                className="text-[11px] font-semibold text-slate-600 border border-slate-200 rounded px-2.5 py-1 hover:border-slate-400 hover:text-slate-800 cursor-pointer transition-colors"
-              >
+              </Button>
+              <Button type="button" variant="outline" size="sm" onClick={handleAddGoogleCalendarReminder}>
                 Add to Google Calendar
-              </button>
+              </Button>
               {calendarReminderSaved && (
                 <span className="text-[11px] text-emerald-700">Downloaded</span>
               )}
@@ -864,90 +871,89 @@ export function SocialClient() {
               )}
             </div>
           </div>
-          <span className={`text-[11px] font-bold px-2 py-0.5 rounded ${isApproved ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+          <Badge variant={isApproved ? 'success' : 'warning'}>
             {isApproved ? 'Current draft approved' : 'Current draft not approved'}
-          </span>
+          </Badge>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Article title</label>
-            <input
+            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Article title</Label>
+            <Input
               value={handoffTitle}
               onChange={e => setHandoffTitle(e.target.value)}
               placeholder="Context rebuild and executive transitions"
-              className="w-full text-[13px] text-slate-700 border border-slate-200 rounded px-3 py-2 focus:outline-none focus:border-slate-400"
             />
           </div>
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Article URL (optional)</label>
-            <input
+            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Article URL (optional)</Label>
+            <Input
               value={handoffUrl}
               onChange={e => setHandoffUrl(e.target.value)}
               placeholder="https://startingmonday.app/blog/..."
-              className="w-full text-[13px] text-slate-700 border border-slate-200 rounded px-3 py-2 focus:outline-none focus:border-slate-400"
             />
           </div>
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Pillar</label>
-            <select
-              value={handoffPillar}
-              onChange={e => setHandoffPillar(e.target.value as (typeof PILLAR_OPTIONS)[number]['value'])}
-              className="w-full text-[13px] text-slate-700 border border-slate-200 rounded px-3 py-2 bg-white focus:outline-none focus:border-slate-400"
-              title="Select pillar"
-            >
-              {PILLAR_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
+            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Pillar</Label>
+            <Select value={handoffPillar} onValueChange={v => setHandoffPillar(v as (typeof PILLAR_OPTIONS)[number]['value'])}>
+              <SelectTrigger title="Select pillar" aria-label="Select pillar" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PILLAR_OPTIONS.map(option => (
+                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Audience (optional)</label>
-            <input
+            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Audience (optional)</Label>
+            <Input
               value={handoffAudience}
               onChange={e => setHandoffAudience(e.target.value)}
               placeholder="executive_coaches"
-              className="w-full text-[13px] text-slate-700 border border-slate-200 rounded px-3 py-2 focus:outline-none focus:border-slate-400"
             />
           </div>
         </div>
 
         <div className="mt-3">
-          <label className="block text-[11px] font-semibold text-slate-500 mb-1">Article summary</label>
-          <textarea
+          <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Article summary</Label>
+          <Textarea
             value={handoffSummary}
             onChange={e => setHandoffSummary(e.target.value)}
             rows={4}
-            className="w-full text-[13px] text-slate-700 border border-slate-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-slate-400"
+            className="resize-none"
             placeholder="Paste the approved article summary or leave the draft-derived default."
           />
         </div>
 
         <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-end sm:justify-between">
-          <label className="text-[11px] font-semibold text-slate-500">
+          <Label className="flex-col items-start text-[11px] font-semibold text-slate-500">
             Variant count (1-5)
-            <input
+            <Input
               type="number"
               min={1}
               max={5}
               value={handoffVariants}
               onChange={e => setHandoffVariants(Number(e.target.value || 3))}
-              className="mt-1 block w-32 text-[13px] text-slate-700 border border-slate-200 rounded px-3 py-2 focus:outline-none focus:border-slate-400"
+              className="mt-1 w-32"
             />
-          </label>
+          </Label>
 
-          <button
+          <Button
             type="button"
             onClick={handleApprovedHandoff}
             disabled={busy || !handoffSummary.trim()}
-            className="text-[13px] font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded px-5 py-2.5 disabled:opacity-40 disabled:cursor-not-allowed border-0 cursor-pointer transition-colors"
+            className="bg-emerald-600 text-white hover:bg-emerald-600/80"
           >
             {handoffSubmitting ? 'Queueing…' : 'Handoff approved article'}
-          </button>
+          </Button>
         </div>
 
         {handoffMessage && (
-          <p className="mt-3 text-[12px] text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-3 py-2">{handoffMessage}</p>
+          <Alert variant="success" className="mt-3">
+            <AlertDescription>{handoffMessage}</AlertDescription>
+          </Alert>
         )}
 
         <div className="mt-4 border-t border-slate-100 pt-4">
@@ -963,7 +969,7 @@ export function SocialClient() {
           {handoffHistory.length > 0 && (
             <div className="flex flex-col gap-2">
               {handoffHistory.slice(0, 5).map(run => (
-                <div key={run.batchId} className="border border-slate-200 rounded p-3 bg-slate-50">
+                <Card key={run.batchId} className="p-3 bg-slate-50">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                     <p className="text-[12px] font-semibold text-slate-800 truncate">
                       {run.articleTitle || 'Approved handoff'}
@@ -975,65 +981,51 @@ export function SocialClient() {
                   <p className="mt-1 text-[11px] text-slate-600">
                     Queued dates: {run.dates.map(date => formatDate(date)).join(', ')}
                   </p>
-                </div>
+                </Card>
               ))}
             </div>
           )}
         </div>
-      </div>
+      </Card>
 
       {/* Connection outreach */}
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">LinkedIn Connection Messages</p>
           <div className="flex gap-2">
-            <a
-              href={LINKEDIN_MESSAGING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[11px] font-semibold text-slate-600 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 hover:text-slate-800 transition-colors"
-            >
+            <Button render={<a href={LINKEDIN_MESSAGING_URL} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm">
               Open Messaging
-            </a>
-            <a
-              href={LINKEDIN_MYNETWORK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[11px] font-semibold text-slate-600 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 hover:text-slate-800 transition-colors"
-            >
+            </Button>
+            <Button render={<a href={LINKEDIN_MYNETWORK_URL} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm">
               My Network
-            </a>
+            </Button>
           </div>
         </div>
         <div className="flex flex-col gap-4">
           {CONNECTION_TEMPLATES.map((template, i) => (
-            <div key={template.label} className="border border-slate-100 rounded p-4 bg-slate-50">
+            <Card key={template.label} className="p-4 bg-slate-50">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.07em]">{template.label}</span>
-                <button
-                  type="button"
-                  onClick={() => handleCopyTemplate(i)}
-                  className="text-[11px] font-semibold text-slate-600 border border-slate-200 rounded px-3 py-1 hover:border-slate-400 hover:text-slate-800 bg-white cursor-pointer transition-colors"
-                >
+                <Button type="button" variant="outline" size="sm" onClick={() => handleCopyTemplate(i)}>
                   {copiedTemplate === i ? 'Copied!' : 'Copy'}
-                </button>
+                </Button>
               </div>
-              <textarea
+              <Textarea
                 value={connectionTexts[i]}
                 onChange={e => setConnectionTexts(prev => prev.map((t, j) => j === i ? e.target.value : t))}
                 rows={3}
                 title={template.label}
                 placeholder="Edit connection message…"
-                className="w-full text-[13px] text-slate-700 leading-relaxed border border-slate-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-slate-400 font-[inherit] bg-white"
+                className="leading-relaxed resize-none bg-white"
               />
               <p className="mt-1 text-[11px] text-slate-300">{connectionTexts[i].length} chars</p>
-            </div>
+            </Card>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* Notes */}
-      <div className="bg-white border border-slate-200 rounded p-6">
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Notes (engagement, replies, reach)</p>
           {isNotesDirty && !savingNotes && (
@@ -1043,16 +1035,16 @@ export function SocialClient() {
             <span className="text-[11px] text-slate-400">Saving…</span>
           )}
         </div>
-        <textarea
+        <Textarea
           value={notesText}
           onChange={e => setNotesText(e.target.value)}
           onBlur={isNotesDirty ? handleNotesSave : undefined}
           disabled={busy}
           rows={3}
-          className="w-full text-[13px] text-slate-700 leading-relaxed border border-slate-200 rounded px-4 py-3 resize-none focus:outline-none focus:border-slate-400 font-[inherit] disabled:opacity-50"
+          className="leading-relaxed resize-none"
           placeholder="Likes, comments, notable replies… saves on blur"
         />
-      </div>
+      </Card>
 
     </div>
   )

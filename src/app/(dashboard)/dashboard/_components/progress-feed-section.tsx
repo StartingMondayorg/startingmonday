@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import { signalLabel, SIGNAL_COLORS_DARK } from '@/lib/intelligence/intelligence'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 type CompanyRef = {
   id: string
@@ -121,7 +124,7 @@ export function DashboardProgressFeedSection(props: Props) {
   }
 
   return (
-    <section id="progress-feed" className="bg-white/5 border border-white/15 rounded overflow-hidden mb-8">
+    <Card variant="glass" id="progress-feed" className="gap-0 p-0 mb-8">
       <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between gap-4">
         <div>
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
@@ -141,23 +144,24 @@ export function DashboardProgressFeedSection(props: Props) {
           <div key={item.id} className="px-6 py-4 flex items-start gap-4">
             <Link href={item.href} className="min-w-0 flex-1 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/90">
               <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold tracking-[0.04em] ${item.badgeClassName}`}>
+                <Badge className={item.badgeClassName}>
                   {item.badge}
-                </span>
+                </Badge>
                 <span className="text-[12px] text-slate-400">{item.meta}</span>
               </div>
               <p className="text-[14px] font-semibold text-slate-100 hover:text-white transition-colors">{item.title}</p>
               <p className="text-[13px] text-slate-400 leading-relaxed mt-1">{item.body}</p>
             </Link>
-            <Link
-              href={item.href}
-              className="shrink-0 text-[12px] font-semibold text-slate-100 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded transition-colors"
+            <Button
+              variant="secondary"
+              className="shrink-0 text-slate-100 bg-white/10 hover:bg-white/20 h-auto px-3 py-1.5"
+              render={<Link href={item.href} />}
             >
               {item.cta}
-            </Link>
+            </Button>
           </div>
         ))}
       </div>
-    </section>
+    </Card>
   )
 }

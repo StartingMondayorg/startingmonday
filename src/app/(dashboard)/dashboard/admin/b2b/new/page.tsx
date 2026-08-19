@@ -1,9 +1,15 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
 import { createProspect } from '../actions'
 import { TYPE_LABELS } from '../page'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Add Prospect - B2B Sales' }
 
@@ -34,103 +40,98 @@ export default async function NewProspectPage() {
           <p className="text-[13px] text-slate-500 mt-1">Start tracking a new B2B sales conversation.</p>
         </div>
 
-        <form action={createProspect} className="bg-white border border-slate-200 rounded p-6 flex flex-col gap-5">
+        <form action={createProspect}>
+        <Card className="p-6 flex flex-col gap-5">
           <div>
-            <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
               Organization name <span className="text-red-400">*</span>
-            </label>
-            <input
+            </Label>
+            <Input
               name="name"
               type="text"
               required
               placeholder="e.g. Lee Hecht Harrison, Wharton School, Sequoia Capital"
-              className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
                 Prospect type
-              </label>
-              <select
-                name="type"
-                defaultValue="outplacement"
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 bg-white focus:outline-none focus:border-slate-400"
-              >
-                {Object.entries(TYPE_LABELS).map(([val, label]) => (
-                  <option key={val} value={val}>{label}</option>
-                ))}
-              </select>
+              </Label>
+              <Select name="type" defaultValue="outplacement">
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(TYPE_LABELS).map(([val, label]) => (
+                    <SelectItem key={val} value={val}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
                 Website
-              </label>
-              <input
+              </Label>
+              <Input
                 name="website"
                 type="url"
                 placeholder="https://"
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
                 Estimated seats
-              </label>
-              <input
+              </Label>
+              <Input
                 name="estimated_seats"
                 type="number"
                 min="1"
                 placeholder="e.g. 100"
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
                 Estimated ARR (USD)
-              </label>
-              <input
+              </Label>
+              <Input
                 name="estimated_arr"
                 type="number"
                 min="0"
                 placeholder="e.g. 48000"
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
               Notes
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               name="notes"
               rows={3}
               placeholder="How we know them, warm intro, key context..."
-              className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none"
+              className="resize-none"
             />
           </div>
 
           <div className="flex items-center gap-3 pt-1">
-            <button
-              type="submit"
-              className="bg-slate-900 text-white text-[13px] font-semibold px-5 py-2.5 rounded cursor-pointer border-0 hover:bg-slate-700 transition-colors"
-            >
+            <Button type="submit">
               Add prospect
-            </button>
+            </Button>
             <Link href="/dashboard/admin/b2b" className="text-[13px] text-slate-400 hover:text-slate-700">
               Cancel
             </Link>
           </div>
+        </Card>
         </form>
       </main>
     </div>
   )
 }
-

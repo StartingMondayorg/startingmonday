@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { Card } from '@/components/ui/card'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 
 export const metadata = {
   title: 'My Clients - Starting Monday',
@@ -44,16 +48,16 @@ export default async function CoachClientsPage() {
     },
   ]
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string): 'info' | 'warning' | 'secondary' => {
     switch (status) {
       case 'In Prep':
-        return 'bg-blue-500/10 text-blue-300 border-blue-400/30'
+        return 'info'
       case 'Interviewing':
-        return 'bg-amber-500/10 text-amber-300 border-amber-400/30'
+        return 'warning'
       case 'New':
-        return 'bg-slate-500/10 text-slate-300 border-slate-400/30'
+        return 'secondary'
       default:
-        return 'bg-slate-500/10 text-slate-300 border-slate-400/30'
+        return 'secondary'
     }
   }
 
@@ -75,62 +79,58 @@ export default async function CoachClientsPage() {
       {clients.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {clients.map((client) => (
-            <Link
-              key={client.id}
-              href={`/coach/${client.id}`}
-              className="group rounded-2xl border border-white/10 bg-slate-900/40 p-6 transition-all hover:border-orange-400/40 hover:bg-slate-900/60"
-            >
-              {/* Avatar & Name */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/20 text-[14px] font-semibold text-orange-300">
-                    {client.avatar}
-                  </div>
-                  <div>
-                    <p className="text-[14px] font-semibold text-white group-hover:text-orange-300 transition-colors">
-                      {client.name}
-                    </p>
-                    <p className="text-[12px] text-slate-400">{client.lastActivity}</p>
+            <Link key={client.id} href={`/coach/${client.id}`} className="group block">
+              <Card variant="glass" className="p-6 transition-all group-hover:border-orange-400/40 group-hover:bg-slate-900/60">
+                {/* Avatar & Name */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar size="lg" className="bg-orange-500/20 text-[14px] font-semibold text-orange-300">
+                      <AvatarFallback className="bg-orange-500/20 text-orange-300">{client.avatar}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-[14px] font-semibold text-white group-hover:text-orange-300 transition-colors">
+                        {client.name}
+                      </p>
+                      <p className="text-[12px] text-slate-400">{client.lastActivity}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Status badge */}
-              <div className={`inline-block mb-4 px-3 py-1 rounded-full text-[11px] font-semibold border ${getStatusColor(client.status)}`}>
-                {client.status}
-              </div>
+                {/* Status badge */}
+                <Badge variant={getStatusVariant(client.status)} className="mb-4">
+                  {client.status}
+                </Badge>
 
-              {/* Progress bar */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-[12px] text-slate-400">Prep completion</p>
-                  <p className="text-[12px] font-semibold text-slate-300">{client.completionPercent}%</p>
-                </div>
-                <div className="h-2 rounded-full bg-slate-950/50 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-500"
-                    style={{ width: `${client.completionPercent}%` }}
+                {/* Progress bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[12px] text-slate-400">Prep completion</p>
+                    <p className="text-[12px] font-semibold text-slate-300">{client.completionPercent}%</p>
+                  </div>
+                  <Progress
+                    value={client.completionPercent}
+                    className="gap-0 [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-slate-950/50"
                   />
                 </div>
-              </div>
 
-              {/* CTA */}
-              <p className="text-[12px] text-orange-400 font-semibold mt-4 group-hover:text-orange-300 transition-colors">
-                View progress →
-              </p>
+                {/* CTA */}
+                <p className="text-[12px] text-orange-400 font-semibold mt-4 group-hover:text-orange-300 transition-colors">
+                  View progress →
+                </p>
+              </Card>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-12 text-center">
+        <Card variant="glass" className="p-12 text-center">
           <p className="text-[14px] text-slate-400">
             You don't have any active clients yet.
           </p>
-        </div>
+        </Card>
       )}
 
       {/* Info card */}
-      <div className="rounded-2xl border border-slate-700/50 bg-slate-900/40 p-6 sm:p-8">
+      <Card variant="glass" className="border-slate-700/50 p-6 sm:p-8">
         <p className="text-[13px] font-semibold text-slate-300 mb-3">How to add clients</p>
         <p className="text-[14px] leading-relaxed text-slate-100 mb-4">
           Clients are added through the partnership setup. Once a client accepts your coaching arrangement, they'll appear here automatically.
@@ -141,7 +141,7 @@ export default async function CoachClientsPage() {
         >
           Learn more about client management →
         </Link>
-      </div>
+      </Card>
     </div>
   )
 }

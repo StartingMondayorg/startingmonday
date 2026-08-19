@@ -2,6 +2,7 @@
 import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateOutreachStatus } from '@/app/(dashboard)/dashboard/contacts/actions'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 export const STATUS_STEPS = [
   { value: 'prospect',          label: 'Prospect' },
@@ -40,29 +41,35 @@ export function ContactStatusStepper({
   }
 
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <ToggleGroup
+      value={[currentStatus]}
+      onValueChange={(values) => {
+        const next = values.find((value) => value !== currentStatus)
+        if (next) handleStep(next)
+      }}
+      className="flex-wrap gap-1.5"
+    >
       {STATUS_STEPS.map((step, i) => {
         const isActive = step.value === currentStatus
         const isPast = i < currentIdx
         return (
-          <button
+          <ToggleGroupItem
             key={step.value}
-            type="button"
-            onClick={() => handleStep(step.value)}
+            value={step.value}
             disabled={pending}
             className={[
-              'text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer border-0 disabled:opacity-50',
+              'text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors disabled:opacity-50',
               isActive
-                ? 'bg-slate-900 text-white'
+                ? 'bg-slate-900 text-white hover:bg-slate-900'
                 : isPast
                   ? 'bg-slate-100 text-slate-400 hover:bg-slate-200'
                   : 'bg-slate-50 text-slate-400 hover:bg-slate-100',
             ].join(' ')}
           >
             {step.label}
-          </button>
+          </ToggleGroupItem>
         )
       })}
-    </div>
+    </ToggleGroup>
   )
 }

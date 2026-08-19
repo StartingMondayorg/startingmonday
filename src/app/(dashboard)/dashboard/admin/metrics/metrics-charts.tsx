@@ -5,6 +5,16 @@ import {
   ResponsiveContainer, Legend, CartesianGrid,
 } from 'recharts'
 import { GROUP_COLORS, GROUP_LABELS, type ScoreGroup } from '@/lib/action-scores'
+import { Badge } from '@/components/ui/badge'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 export type WeekRow = {
   week: string
@@ -35,9 +45,9 @@ function ScoreBadge({ value, highGood }: { value: number; highGood: boolean }) {
   const good = highGood ? value >= 8 : value <= 3
   const mid  = highGood ? value >= 5 : value <= 6
   return (
-    <span className={`font-bold ${good ? 'text-green-600' : mid ? 'text-amber-600' : 'text-red-500'}`}>
+    <Badge variant={good ? 'success' : mid ? 'warning' : 'destructive'}>
       {value}
-    </span>
+    </Badge>
   )
 }
 
@@ -77,32 +87,29 @@ export function MetricsCharts({
         </LineChart>
       </ResponsiveContainer>
 
-      <div className="flex flex-wrap gap-2 mt-4 mb-5">
-        <button
-          onClick={() => setSelected(null)}
-          className={`text-[11px] font-semibold px-3 py-1.5 rounded border transition-colors cursor-pointer ${
-            selected === null
-              ? 'bg-slate-900 text-white border-slate-900'
-              : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
-          }`}
-        >
+      <ToggleGroup
+        variant="outline"
+        className="flex-wrap mt-4 mb-5"
+        value={selected ? [selected] : ['all']}
+        onValueChange={(values) => {
+          const next = values[0]
+          setSelected(!next || next === 'all' ? null : (next as ScoreGroup))
+        }}
+      >
+        <ToggleGroupItem value="all" className="text-[11px] font-semibold">
           All groups
-        </button>
+        </ToggleGroupItem>
         {GROUPS.map(g => (
-          <button
+          <ToggleGroupItem
             key={g}
-            onClick={() => setSelected(selected === g ? null : g)}
+            value={g}
             style={selected === g ? { borderColor: GROUP_COLORS[g], color: GROUP_COLORS[g] } : undefined}
-            className={`text-[11px] font-semibold px-3 py-1.5 rounded border transition-colors cursor-pointer ${
-              selected === g
-                ? 'bg-white'
-                : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
-            }`}
+            className="text-[11px] font-semibold"
           >
             {GROUP_LABELS[g]}
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
 
       {selected && (
         <div className="border-t border-slate-100 pt-5">
@@ -112,32 +119,32 @@ export function MetricsCharts({
           {details.length === 0 ? (
             <p className="text-[13px] text-slate-400">No events recorded for this group yet.</p>
           ) : (
-            <table className="w-full text-[12px]">
-              <thead>
-                <tr className="text-left border-b border-slate-100">
-                  <th className="pb-2 font-semibold text-slate-400">Action</th>
-                  <th className="pb-2 font-semibold text-slate-400 text-right">30d</th>
-                  <th className="pb-2 font-semibold text-slate-400 text-right">7d</th>
-                  <th className="pb-2 font-semibold text-slate-400 text-right">Emotion</th>
-                  <th className="pb-2 font-semibold text-slate-400 text-right">Cog load</th>
-                  <th className="pb-2 font-semibold text-slate-400 text-right">Retention</th>
-                  <th className="pb-2 font-semibold text-slate-400 text-right">Composite</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
+            <Table className="text-[12px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-semibold text-slate-400">Action</TableHead>
+                  <TableHead className="font-semibold text-slate-400 text-right">30d</TableHead>
+                  <TableHead className="font-semibold text-slate-400 text-right">7d</TableHead>
+                  <TableHead className="font-semibold text-slate-400 text-right">Emotion</TableHead>
+                  <TableHead className="font-semibold text-slate-400 text-right">Cog load</TableHead>
+                  <TableHead className="font-semibold text-slate-400 text-right">Retention</TableHead>
+                  <TableHead className="font-semibold text-slate-400 text-right">Composite</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {[...details].sort((a, b) => b.composite - a.composite).map(row => (
-                  <tr key={row.event_name} className={row.count30d === 0 ? 'opacity-40' : ''}>
-                    <td className="py-2.5 text-slate-700 font-medium">{row.label}</td>
-                    <td className="py-2.5 text-right font-semibold text-slate-900">{row.count30d}</td>
-                    <td className="py-2.5 text-right text-slate-400">{row.count7d}</td>
-                    <td className="py-2.5 text-right"><ScoreBadge value={row.emotion} highGood /></td>
-                    <td className="py-2.5 text-right"><ScoreBadge value={row.cognitive_load} highGood={false} /></td>
-                    <td className="py-2.5 text-right"><ScoreBadge value={row.retention} highGood /></td>
-                    <td className="py-2.5 text-right font-bold text-slate-900">{row.composite}</td>
-                  </tr>
+                  <TableRow key={row.event_name} className={row.count30d === 0 ? 'opacity-40' : ''}>
+                    <TableCell className="text-slate-700 font-medium">{row.label}</TableCell>
+                    <TableCell className="text-right font-semibold text-slate-900">{row.count30d}</TableCell>
+                    <TableCell className="text-right text-slate-400">{row.count7d}</TableCell>
+                    <TableCell className="text-right"><ScoreBadge value={row.emotion} highGood /></TableCell>
+                    <TableCell className="text-right"><ScoreBadge value={row.cognitive_load} highGood={false} /></TableCell>
+                    <TableCell className="text-right"><ScoreBadge value={row.retention} highGood /></TableCell>
+                    <TableCell className="text-right font-bold text-slate-900">{row.composite}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
         </div>
       )}

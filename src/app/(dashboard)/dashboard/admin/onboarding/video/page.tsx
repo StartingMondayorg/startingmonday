@@ -3,6 +3,16 @@ import { notFound, redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 export const metadata = { title: 'Onboarding Video Runs - Admin' }
 
@@ -44,13 +54,12 @@ type WebhookEventRow = {
   payload: Record<string, unknown>
 }
 
-function statusBadge(status: string): string {
-  if (status === 'completed') return 'bg-emerald-50 text-emerald-700'
-  if (status === 'processing') return 'bg-blue-50 text-blue-700'
-  if (status === 'queued') return 'bg-amber-50 text-amber-700'
-  if (status === 'failed') return 'bg-red-50 text-red-700'
-  if (status === 'canceled') return 'bg-slate-200 text-slate-700'
-  return 'bg-slate-100 text-slate-500'
+function statusBadgeVariant(status: string): 'success' | 'info' | 'warning' | 'destructive' | 'secondary' {
+  if (status === 'completed') return 'success'
+  if (status === 'processing') return 'info'
+  if (status === 'queued') return 'warning'
+  if (status === 'failed') return 'destructive'
+  return 'secondary'
 }
 
 function compactJson(value: Record<string, unknown>): string {
@@ -142,64 +151,64 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
         </div>
 
         <section className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
-          <div className="bg-white border border-slate-200 rounded p-4"><p className="text-[24px] font-bold text-slate-900">{summary.total}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Runs</p></div>
-          <div className="bg-white border border-slate-200 rounded p-4"><p className="text-[24px] font-bold text-amber-700">{summary.queued}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Queued</p></div>
-          <div className="bg-white border border-slate-200 rounded p-4"><p className="text-[24px] font-bold text-blue-700">{summary.processing}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Processing</p></div>
-          <div className="bg-white border border-slate-200 rounded p-4"><p className="text-[24px] font-bold text-emerald-700">{summary.completed}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Completed</p></div>
-          <div className="bg-white border border-slate-200 rounded p-4"><p className="text-[24px] font-bold text-red-700">{summary.failed}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Failed</p></div>
+          <Card className="p-4"><p className="text-[24px] font-bold text-slate-900">{summary.total}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Runs</p></Card>
+          <Card className="p-4"><p className="text-[24px] font-bold text-amber-700">{summary.queued}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Queued</p></Card>
+          <Card className="p-4"><p className="text-[24px] font-bold text-blue-700">{summary.processing}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Processing</p></Card>
+          <Card className="p-4"><p className="text-[24px] font-bold text-emerald-700">{summary.completed}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Completed</p></Card>
+          <Card className="p-4"><p className="text-[24px] font-bold text-red-700">{summary.failed}</p><p className="text-[13px] uppercase tracking-[0.1em] text-slate-400 mt-1">Failed</p></Card>
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-5">
-          <section className="bg-white border border-slate-200 rounded overflow-hidden">
+          <Card className="overflow-hidden">
             <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
               <h2 className="text-[13px] font-semibold text-slate-900">Recent runs</h2>
               <span className="text-[13px] text-slate-400">Showing {runs.length}</span>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[780px] text-[13px]">
-                <thead className="bg-slate-50 border-b border-slate-100 text-slate-500">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Status</th>
-                    <th className="px-4 py-2 text-left">Flow</th>
-                    <th className="px-4 py-2 text-left">Event</th>
-                    <th className="px-4 py-2 text-left">Provider</th>
-                    <th className="px-4 py-2 text-left">User</th>
-                    <th className="px-4 py-2 text-right">Retry</th>
-                    <th className="px-4 py-2 text-left">Created</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <Table className="min-w-[780px] text-[13px]">
+                <TableHeader className="bg-slate-50 text-slate-500">
+                  <TableRow>
+                    <TableHead className="px-4 text-left">Status</TableHead>
+                    <TableHead className="px-4 text-left">Flow</TableHead>
+                    <TableHead className="px-4 text-left">Event</TableHead>
+                    <TableHead className="px-4 text-left">Provider</TableHead>
+                    <TableHead className="px-4 text-left">User</TableHead>
+                    <TableHead className="px-4 text-right">Retry</TableHead>
+                    <TableHead className="px-4 text-left">Created</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {runs.length === 0 && (
-                    <tr>
-                      <td colSpan={7} className="px-4 py-4 text-slate-500">No onboarding video runs found.</td>
-                    </tr>
+                    <TableRow>
+                      <TableCell colSpan={7} className="px-4 py-4 text-slate-500">No onboarding video runs found.</TableCell>
+                    </TableRow>
                   )}
                   {runs.map((run) => {
                     const flow = String(run.input_payload?.tutorial_flow ?? '--')
                     const eventName = String(run.input_payload?.event_name ?? run.trigger_source)
                     return (
-                      <tr key={run.id} className={`border-t border-slate-100 ${selectedRun?.id === run.id ? 'bg-orange-50/40' : ''}`}>
-                        <td className="px-4 py-2">
-                          <Link href={`/dashboard/admin/onboarding/video?runId=${run.id}`} className={`text-[13px] font-semibold px-2 py-1 rounded ${statusBadge(run.status)}`}>
-                            {run.status}
+                      <TableRow key={run.id} className={selectedRun?.id === run.id ? 'bg-orange-50/40' : ''}>
+                        <TableCell className="px-4">
+                          <Link href={`/dashboard/admin/onboarding/video?runId=${run.id}`}>
+                            <Badge variant={statusBadgeVariant(run.status)}>{run.status}</Badge>
                           </Link>
-                        </td>
-                        <td className="px-4 py-2 text-slate-700">{flow}</td>
-                        <td className="px-4 py-2 text-slate-600">{eventName}</td>
-                        <td className="px-4 py-2 text-slate-700">{run.provider}</td>
-                        <td className="px-4 py-2 text-slate-500 font-mono">{run.user_id.slice(0, 8)}...</td>
-                        <td className="px-4 py-2 text-right text-slate-700">{run.retry_count}/{run.max_retries}</td>
-                        <td className="px-4 py-2 text-slate-500">{new Date(run.created_at).toLocaleString()}</td>
-                      </tr>
+                        </TableCell>
+                        <TableCell className="px-4 text-slate-700">{flow}</TableCell>
+                        <TableCell className="px-4 text-slate-600">{eventName}</TableCell>
+                        <TableCell className="px-4 text-slate-700">{run.provider}</TableCell>
+                        <TableCell className="px-4 text-slate-500 font-mono">{run.user_id.slice(0, 8)}...</TableCell>
+                        <TableCell className="px-4 text-right text-slate-700">{run.retry_count}/{run.max_retries}</TableCell>
+                        <TableCell className="px-4 text-slate-500">{new Date(run.created_at).toLocaleString()}</TableCell>
+                      </TableRow>
                     )
                   })}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
-          </section>
+          </Card>
 
           <section className="space-y-5">
-            <div className="bg-white border border-slate-200 rounded p-4">
+            <Card className="p-4">
               <h2 className="text-[13px] font-semibold text-slate-900 mb-3">Run detail</h2>
               {!selectedRun ? (
                 <p className="text-[13px] text-slate-500">Select a run to inspect timeline details.</p>
@@ -214,9 +223,9 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
                   <Link href={`/api/admin/automation/onboarding/video-queue/${selectedRun.id}?include_events=1&include_webhooks=1`} className="inline-flex mt-2 text-[13px] text-slate-600 hover:text-slate-900 underline underline-offset-2">View JSON API response</Link>
                 </div>
               )}
-            </div>
+            </Card>
 
-            <div className="bg-white border border-slate-200 rounded p-4">
+            <Card className="p-4">
               <h3 className="text-[13px] font-semibold text-slate-900 mb-3">Run event timeline</h3>
               {runEvents.length === 0 ? (
                 <p className="text-[13px] text-slate-500">No run events for this selection.</p>
@@ -231,9 +240,9 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
                   ))}
                 </ul>
               )}
-            </div>
+            </Card>
 
-            <div className="bg-white border border-slate-200 rounded p-4">
+            <Card className="p-4">
               <h3 className="text-[13px] font-semibold text-slate-900 mb-3">Webhook timeline</h3>
               {webhookEvents.length === 0 ? (
                 <p className="text-[13px] text-slate-500">No webhook events for this provider run yet.</p>
@@ -243,7 +252,7 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
                     <li key={event.id} className="border border-slate-100 rounded px-3 py-2">
                       <div className="flex items-center justify-between gap-2">
                         <p className="font-semibold text-slate-800">{event.event_type}</p>
-                        <span className={`text-[13px] px-2 py-0.5 rounded ${event.event_status === 'processed' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>{event.event_status}</span>
+                        <Badge variant={event.event_status === 'processed' ? 'success' : 'warning'}>{event.event_status}</Badge>
                       </div>
                       <p className="text-slate-500">Received: {new Date(event.received_at).toLocaleString()}</p>
                       <p className="text-slate-500">Processed: {event.processed_at ? new Date(event.processed_at).toLocaleString() : '--'}</p>
@@ -253,7 +262,7 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
                   ))}
                 </ul>
               )}
-            </div>
+            </Card>
           </section>
         </div>
       </main>

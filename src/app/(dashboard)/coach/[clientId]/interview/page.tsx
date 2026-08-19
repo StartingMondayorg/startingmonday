@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { Textarea } from '@/components/ui/textarea'
 
 export const metadata = {
   title: 'Client Interview Prep - Starting Monday',
@@ -46,16 +50,16 @@ export default async function CoachClientInterviewPage({
 
       {/* Coach actions */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <button className="px-4 py-2 text-[13px] font-semibold bg-orange-500 text-slate-900 rounded-lg hover:bg-orange-600 transition-colors">
+        <Button className="px-4 py-2 text-[13px] bg-orange-500 text-slate-900 hover:bg-orange-600">
           Assign homework
-        </button>
-        <button className="px-4 py-2 text-[13px] font-semibold border border-slate-700 text-slate-300 rounded-lg hover:border-slate-600 transition-colors">
+        </Button>
+        <Button variant="outline" className="px-4 py-2 text-[13px] border-slate-700 text-slate-300 hover:border-slate-600">
           Leave feedback
-        </button>
+        </Button>
       </div>
 
       {/* Client's prep data */}
-      <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
+      <Card variant="glass" className="p-6 sm:p-8 space-y-6">
         <div>
           <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-400 mb-2">
             Company & Role
@@ -87,34 +91,29 @@ export default async function CoachClientInterviewPage({
             {clientData.companyContext}
           </p>
         </div>
-      </div>
+      </Card>
 
       {/* Completion status */}
-      <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8">
+      <Card variant="glass" className="p-6 sm:p-8">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[13px] font-semibold text-slate-300">Interview prep completion</p>
           <p className="text-[13px] font-semibold text-orange-300">{clientData.roleCompletion}%</p>
         </div>
-        <div className="h-2 rounded-full bg-slate-950/50 overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-orange-500 to-orange-400"
-            style={{ width: `${clientData.roleCompletion}%` }}
-          />
-        </div>
-      </div>
+        <Progress value={clientData.roleCompletion} className="gap-0 [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-slate-950/50" />
+      </Card>
 
       {/* Notes section */}
-      <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-4">
+      <Card variant="glass" className="p-6 sm:p-8 space-y-4">
         <p className="text-[13px] font-semibold text-slate-300">Coaching notes</p>
-        <textarea
+        <Textarea
           placeholder="Add feedback or notes for your client..."
           rows={4}
-          className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+          className="w-full bg-slate-950/50 border-slate-700/50 text-[14px] text-white placeholder-slate-500 focus-visible:border-orange-400/50 focus-visible:ring-orange-400/30"
         />
-        <button className="px-4 py-2 text-[13px] font-semibold bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors">
+        <Button variant="secondary" className="px-4 py-2 text-[13px] bg-slate-800 text-white hover:bg-slate-700">
           Save notes
-        </button>
-      </div>
+        </Button>
+      </Card>
 
       {/* Back to client */}
       <Link

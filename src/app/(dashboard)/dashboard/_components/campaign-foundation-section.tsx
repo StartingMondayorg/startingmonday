@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 // Campaign Foundation: "What we understood about your search."
 // Shows the strategy the platform is executing against, with edit paths.
@@ -55,10 +57,11 @@ export function DashboardCampaignFoundationSection({
   const setCount = rows.filter(r => r.value !== null).length
 
   return (
-    <section
+    <Card
+      variant="glass"
       id="campaign-foundation"
       aria-labelledby="campaign-foundation-heading"
-      className="mb-5 rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
+      className="mb-5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]"
     >
       <div className="flex items-baseline justify-between gap-4">
         <div>
@@ -69,12 +72,13 @@ export function DashboardCampaignFoundationSection({
             What we understood about your search
           </h2>
         </div>
-        <Link
-          href="/dashboard/profile"
-          className="shrink-0 text-[12px] font-semibold text-slate-200 border border-white/15 rounded px-2.5 py-1 hover:border-white/40 transition-colors"
+        <Button
+          variant="outline"
+          render={<Link href="/dashboard/profile" />}
+          className="shrink-0 text-[12px] font-semibold"
         >
           Edit
-        </Link>
+        </Button>
       </div>
 
       <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
@@ -99,6 +103,6 @@ export function DashboardCampaignFoundationSection({
           ? `Every signal, company suggestion, and brief is calibrated to this strategy${currentTitle ? ` and your background as ${currentTitle}` : ''}.`
           : 'The more of this you set, the more precisely signals, companies, and briefs calibrate to your search.'}
       </p>
-    </section>
+    </Card>
   )
 }

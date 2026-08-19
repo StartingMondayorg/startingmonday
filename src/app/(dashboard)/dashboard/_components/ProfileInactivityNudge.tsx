@@ -1,5 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export function ProfileInactivityNudge({ formId }: { formId: string }) {
   const [visible, setVisible] = useState(false)
@@ -31,26 +33,26 @@ export function ProfileInactivityNudge({ formId }: { formId: string }) {
   if (!visible) return null
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-700 px-6 py-4 flex items-center justify-between gap-4 shadow-lg">
+    <Card
+      variant="glass"
+      className="fixed bottom-0 left-0 right-0 z-50 rounded-none border-x-0 border-b-0 px-6 py-4 flex-row items-center justify-between gap-4 shadow-lg"
+    >
       <p className="text-[13px] text-slate-300">
         Still with you. Save your progress so far.
       </p>
       <div className="flex items-center gap-3 shrink-0">
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={() => setVisible(false)}
-          className="text-[12px] text-slate-400 hover:text-slate-200 cursor-pointer bg-transparent border-0"
+          className="text-[12px] text-slate-400 hover:text-slate-200"
         >
           Dismiss
-        </button>
-        <button
-          type="submit"
-          form={formId}
-          className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-5 py-2 rounded transition-colors cursor-pointer border-0"
-        >
+        </Button>
+        <Button type="submit" form={formId} className="text-[13px] px-5 py-2 h-auto">
           Save and continue
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   )
 }

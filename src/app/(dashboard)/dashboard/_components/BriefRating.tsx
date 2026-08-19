@@ -1,5 +1,7 @@
 'use client'
 import { useState } from 'react'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 
 export function BriefRating({ briefId }: { briefId: string }) {
   const [stage, setStage] = useState<'idle' | 'feedback' | 'done'>('idle')
@@ -28,32 +30,33 @@ export function BriefRating({ briefId }: { briefId: string }) {
     return (
       <div className="flex flex-col gap-2 max-w-sm">
         <p className="text-[12px] text-slate-500">What&apos;s missing from this brief? (optional)</p>
-        <textarea
+        <Textarea
           value={feedback}
           onChange={e => setFeedback(e.target.value)}
           rows={3}
           maxLength={1000}
           placeholder="Missing context, wrong framing, objections not covered..."
           title="Brief feedback"
-          className="text-[13px] text-slate-800 border border-slate-200 rounded px-3 py-2 resize-none focus:outline-none focus:border-slate-400 placeholder:text-slate-300"
+          className="text-[13px] text-slate-800 resize-none placeholder:text-slate-300"
         />
         <div className="flex items-center gap-2">
-          <button
+          <Button
             type="button"
             onClick={() => handleRate(-1, feedback || undefined)}
             disabled={submitting}
-            className="text-[12px] font-semibold text-white bg-slate-800 hover:bg-slate-900 px-3 py-1.5 rounded cursor-pointer border-0 disabled:opacity-40"
+            className="text-[12px] font-semibold px-3 py-1.5 disabled:opacity-40"
           >
             {submitting ? 'Sending...' : 'Submit'}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="link"
             onClick={() => handleRate(-1)}
             disabled={submitting}
-            className="text-[12px] text-slate-400 hover:text-slate-600 cursor-pointer bg-transparent border-0 disabled:opacity-40"
+            className="text-[12px] text-slate-400 hover:text-slate-600 disabled:opacity-40"
           >
             Skip
-          </button>
+          </Button>
         </div>
       </div>
     )
@@ -62,22 +65,24 @@ export function BriefRating({ briefId }: { briefId: string }) {
   return (
     <div className="flex items-center gap-3 text-[12px] text-slate-400">
       <span>Useful?</span>
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={() => handleRate(1)}
         disabled={submitting}
-        className="border border-slate-200 rounded px-2.5 py-1 text-slate-600 hover:bg-slate-50 hover:border-slate-300 cursor-pointer bg-white disabled:opacity-40"
+        className="px-2.5 py-1 text-slate-600 disabled:opacity-40"
       >
         Yes
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
+        variant="outline"
         onClick={() => setStage('feedback')}
         disabled={submitting}
-        className="border border-slate-200 rounded px-2.5 py-1 text-slate-600 hover:bg-slate-50 hover:border-slate-300 cursor-pointer bg-white disabled:opacity-40"
+        className="px-2.5 py-1 text-slate-600 disabled:opacity-40"
       >
         Flag an issue
-      </button>
+      </Button>
     </div>
   )
 }
