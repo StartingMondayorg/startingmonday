@@ -6,6 +6,10 @@ import { HomepageBriefTeaser } from '@/app/components/HomepageBriefTeaser'
 import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/app/components/FirstWeekSpine'
 import { EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { OpportunityTimingGapChart, OpportunityTimingGapChartMobile } from '@/app/components/OpportunityCharts'
+import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
+import { HeroPageViewTelemetry } from '@/app/components/HeroPageViewTelemetry'
+import { HERO_EVENT_NAMES } from '@/lib/channel-metrics-events'
+import type { StartingMondayHeroProofCase } from '@/lib/starting-monday-hero-content'
 
 export interface SituationCard {
   id: string
@@ -55,6 +59,11 @@ export interface LandingPageProps {
   brandWordmark?: {
     primary: string
     accent: string
+  }
+  heroEvidence?: {
+    proofCase: StartingMondayHeroProofCase
+    timelineAlt: string
+    privacy: string
   }
 }
 
@@ -162,6 +171,7 @@ export function LandingPage({
   experimentVariant = 'control',
   brandWordmark,
   showFirstWeekSpine = false,
+  heroEvidence,
 }: LandingPageProps) {
   const isManagerToolsPage = sourcePage === '/managertools'
   const isHomePage = sourcePage === '/' || isManagerToolsPage
@@ -169,6 +179,7 @@ export function LandingPage({
   const isExecutivesPage = sourcePage === '/for-executives' || sourcePage.startsWith('/for-executives/')
   const useCenteredFooter = isManagerToolsPage || isExecutivesPage
   const executiveLaneBrand = executiveLaneFromSource(sourcePage)
+  const showHeroEvidence = sourcePage === '/' && Boolean(heroEvidence?.proofCase)
   const isLeadershipLanePage = executiveLaneBrand?.key === 'leadership'
   const heroPrimaryHref = isManagerToolsPage
     ? MANAGERTOOLS_SIGNUP_URL
@@ -186,6 +197,7 @@ export function LandingPage({
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
       {isHomePage && <FirstMileTelemetry eventName="homepage_viewed" pageName="homepage" properties={{ source_page: sourcePage }} />}
+      {showHeroEvidence && <HeroPageViewTelemetry event={HERO_EVENT_NAMES.heroView} properties={{ source_page: '/' }} />}
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
       <nav className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
@@ -243,7 +255,7 @@ export function LandingPage({
                       {hero.bodyPreamble}
                     </p>
                   )}
-                  <p className="mt-5 max-w-4xl text-[1.35rem] font-semibold leading-[1.12] tracking-tight text-slate-100/95 sm:text-[1.7rem] lg:text-[2.24rem]">
+                  <p className={`mt-5 max-w-4xl font-semibold tracking-tight text-slate-100/95 ${showHeroEvidence ? 'text-base leading-relaxed sm:text-lg' : 'text-[1.35rem] leading-[1.12] sm:text-[1.7rem] lg:text-[2.24rem]'}`}>
                     {hero.body}
                   </p>
                   {hero.competitiveEdge && (
@@ -272,17 +284,23 @@ export function LandingPage({
                     </div>
                   )}
                 </div>
-                <div className="relative mx-auto h-[480px] w-full max-w-[390px] overflow-hidden rounded-[1.6rem] border border-white/12 shadow-[0_30px_72px_rgba(2,6,23,0.42)] lg:mx-0 lg:mt-10 lg:justify-self-end">
-                  <Image
-                    src="/hero-offer-letter.webp"
-                    alt="Executive reading her employment offer, hand to heart, with a city skyline behind her"
-                    fill
-                    sizes="(max-width: 640px) 92vw, 390px"
-                    preload
-                    fetchPriority="high"
-                    quality={75}
-                    className="object-cover object-center"
-                  />
+                <div className="relative mx-auto min-h-[480px] w-full max-w-[390px] lg:mx-0 lg:mt-10 lg:justify-self-end">
+                  {showHeroEvidence && heroEvidence ? (
+                    <SignalTimelineCard proofCase={heroEvidence.proofCase} altText={heroEvidence.timelineAlt} />
+                  ) : (
+                    <div className="relative h-[480px] w-full overflow-hidden rounded-[1.6rem] border border-white/12 shadow-[0_30px_72px_rgba(2,6,23,0.42)]">
+                      <Image
+                        src="/hero-offer-letter.webp"
+                        alt="Executive reading her employment offer, hand to heart, with a city skyline behind her"
+                        fill
+                        sizes="(max-width: 640px) 92vw, 390px"
+                        preload
+                        fetchPriority="high"
+                        quality={75}
+                        className="object-cover object-center"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -299,6 +317,26 @@ export function LandingPage({
                   {hero.body}
                 </p>
               </>
+            )}
+            {showHeroEvidence && heroEvidence && (
+              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <TrackLink
+                  href="/signup"
+                  event={HERO_EVENT_NAMES.getAccessClick}
+                  properties={{ source_page: '/', cta_label: 'hero_get_access' }}
+                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-orange-300/70 bg-orange-400 px-6 py-3 text-[14px] font-bold text-slate-950 shadow-[0_10px_30px_rgba(193,127,59,0.22)] transition-transform hover:-translate-y-0.5 hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-200"
+                >
+                  Get access
+                </TrackLink>
+                <TrackLink
+                  href="/example"
+                  event={HERO_EVENT_NAMES.exampleClick}
+                  properties={{ source_page: '/', cta_label: 'hero_live_example' }}
+                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-cyan-200/40 px-6 py-3 text-[14px] font-semibold text-cyan-100 transition-colors hover:border-cyan-100 hover:bg-cyan-100/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-100"
+                >
+                  See a live example
+                </TrackLink>
+              </div>
             )}
             {experimentVariant === 'proof_first' && proofHighlights && proofHighlights.length > 0 && (
               <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3" data-emi-proof="executive_outcomes_grid">
@@ -335,7 +373,7 @@ export function LandingPage({
               <section className="mb-12" aria-labelledby="homepage-trust-title">
                 <h2 id="homepage-trust-title" className="sr-only">Trust assurance</h2>
                 <p className="max-w-3xl text-[13px] font-semibold uppercase tracking-[0.12em] text-orange-200/90">
-                  Private by default. You control every signal and every share.
+                  {showHeroEvidence && heroEvidence ? heroEvidence.privacy : 'Private by default. You control every signal and every share.'}
                 </p>
               </section>
             )}

@@ -1,0 +1,67 @@
+import type { Metadata } from 'next'
+import { headers } from 'next/headers'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { HeroPageViewTelemetry } from '@/app/components/HeroPageViewTelemetry'
+import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
+import { TrackLink } from '@/app/components/TrackLink'
+import { getBrandContextFromHosts } from '@/lib/brand'
+import { HERO_EVENT_NAMES } from '@/lib/channel-metrics-events'
+import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
+import { STARTING_MONDAY_HERO_CONTENT } from '@/lib/starting-monday-hero-content'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+export const metadata: Metadata = {
+  title: 'Live signal timeline | Starting Monday',
+  description: 'A factual public-signal timeline from an anonymized Starting Monday case.',
+  alternates: {
+    canonical: 'https://startingmonday.app/example',
+  },
+}
+
+export default async function ExamplePage() {
+  const requestHeaders = await headers()
+  const brand = getBrandContextFromHosts([
+    requestHeaders.get('host'),
+    requestHeaders.get('x-forwarded-host'),
+  ])
+
+  if (brand.isMandateSignal || !isStartingMondayHeroEvidenceEnabled() || !STARTING_MONDAY_HERO_CONTENT.proofCase) {
+    notFound()
+  }
+
+  const proofCase = STARTING_MONDAY_HERO_CONTENT.proofCase
+
+  return (
+    <main className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100 sm:px-6 sm:py-20">
+      <HeroPageViewTelemetry event={HERO_EVENT_NAMES.exampleView} properties={{ source_page: '/example' }} />
+      <div className="mx-auto max-w-4xl">
+        <Link href="/" className="inline-flex min-h-[48px] items-center text-[13px] font-bold uppercase tracking-[0.14em] text-orange-200 hover:text-white">
+          Starting Monday
+        </Link>
+        <p className="mt-12 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">Public signal example</p>
+        <h1 className="mt-4 max-w-3xl font-display text-[2.4rem] font-semibold leading-[1.04] text-white sm:text-[4rem]">
+          What a forming role looks like.
+        </h1>
+        <div className="mt-10">
+          <SignalTimelineCard proofCase={proofCase} altText={STARTING_MONDAY_HERO_CONTENT.timelineAlt} expanded />
+        </div>
+        <div className="mt-10">
+          <TrackLink
+            href="/signup"
+            event={HERO_EVENT_NAMES.exampleToAccessClick}
+            properties={{ source_page: '/example', cta_label: 'example_get_access' }}
+            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-orange-400 px-7 py-3 text-[14px] font-bold text-slate-950 transition-colors hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-200"
+          >
+            Get access
+          </TrackLink>
+        </div>
+        <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-orange-200/90">
+          Private by default. No one knows you&apos;re looking until you decide they do.
+        </p>
+      </div>
+    </main>
+  )
+}
