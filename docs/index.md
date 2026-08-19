@@ -9,7 +9,7 @@ Documents indexed: **1151**
 | Domain | Purpose | Files |
 | --- | --- | ---: |
 | [governance/](governance/) | Decisions, policies, controls, standards, and document lifecycle rules. | 6 |
-| [strategy/](strategy/) | Product, market, channel, roadmap, and implementation plans. | 173 |
+| [strategy/](strategy/) | Product, market, channel, roadmap, and implementation plans. | 172 |
 | [engineering/](engineering/) | Technical plans, migration notes, architecture, and development references. | 2 |
 | [evidence/](evidence/) | Validation artifacts, readiness records, source-rights evidence, and proof cases. | 34 |
 | [status/](status/) | Generated or dated operational summaries, checkpoints, and phase closeouts. | 148 |
