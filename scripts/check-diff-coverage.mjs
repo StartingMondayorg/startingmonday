@@ -3,6 +3,7 @@
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
+import { isUnitCoverageSourceFile } from './lib/coverage-scope.mjs'
 
 function parseArgs(argv) {
   const args = {
@@ -88,25 +89,6 @@ function normalizePath(input) {
   return input.replace(/\\/g, '/').replace(/^\.\//, '')
 }
 
-// UI-rendering files are validated by dedicated gates (landing-standard audit,
-// luxury static gates, rubric contract, visual smoke, auth UX, Playwright E2E)
-// rather than unit-test line coverage. The diff gate focuses on logic files
-// (src/lib, API routes, hooks) where unit coverage is the right instrument.
-const UI_SHELL_PATTERNS = [
-  // Any non-API .tsx under src/app is UI (pages, layouts, colocated client
-  // components) exercised by E2E rather than unit tests.
-  /^src\/app\/(?!api\/).*\.tsx$/,
-  /^src\/components\//,
-  // Test files are excluded from lcov by vitest config, so they can never be
-  // "covered" - excluding them here keeps the gate focused on shipped code.
-  /\.test\.(ts|tsx)$/,
-  /\/__tests__\//,
-]
-
-function isUiShellFile(filePath) {
-  return UI_SHELL_PATTERNS.some((re) => re.test(filePath))
-}
-
 function parseUnifiedZeroDiff(diffText, includePrefix) {
   const changed = new Map()
   let currentFile = ''
@@ -119,7 +101,7 @@ function parseUnifiedZeroDiff(diffText, includePrefix) {
       continue
     }
 
-    if (!currentFile || !currentFile.startsWith(includePrefix) || isUiShellFile(currentFile)) continue
+    if (!currentFile || !currentFile.startsWith(includePrefix) || !isUnitCoverageSourceFile(currentFile)) continue
 
     if (!/^@@ /.test(line)) continue
 

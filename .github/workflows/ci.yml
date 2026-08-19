@@ -14,51 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  playwright-browser-cache:
-    name: Playwright browser cache
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-
-      - name: Resolve lockfile Playwright version
-        id: playwright
-        shell: bash
-        run: |
-          version="$(node -p 'require("./package-lock.json").packages["node_modules/playwright"].version')"
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-
-      - name: Cache Playwright browser
-        id: browser-cache
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-
-      - name: Download Chromium with bounded retries
-        if: steps.browser-cache.outputs.cache-hit != 'true'
-        shell: bash
-        env:
-          PLAYWRIGHT_VERSION: ${{ steps.playwright.outputs.version }}
-        run: |
-          for attempt in 1 2 3; do
-            echo "Chromium download attempt ${attempt}/3"
-            if timeout --kill-after=15s 300s npx --yes "playwright@${PLAYWRIGHT_VERSION}" install chromium; then
-              echo "Chromium download completed on attempt ${attempt}"
-              exit 0
-            else
-              status=$?
-              echo "::warning::Chromium download attempt ${attempt}/3 failed with status ${status}"
-            fi
-          done
-          echo "::error::Chromium download failed after 3 bounded attempts"
-          exit 1
-
   ux-ui-rubric-contract:
     name: ux-ui-rubric-contract
     runs-on: ubuntu-latest
@@ -386,9 +341,11 @@ jobs:
   playwright:
     name: Playwright E2E
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
-    if: always() && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
-    needs: [playwright-browser-cache]
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -400,16 +357,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Restore Playwright browser
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        run: bash scripts/install-playwright-os-deps.sh
 
       - name: Wait for deployment of this commit
         run: bash scripts/wait-for-deployed-commit.sh
@@ -437,9 +384,11 @@ jobs:
   playwright-merge-queue-full:
     name: Playwright merge-queue full suite
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 45
-    if: always() && github.event_name == 'merge_group'
-    needs: [playwright-browser-cache]
+    if: github.event_name == 'merge_group'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -451,16 +400,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Restore Playwright browser
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        run: bash scripts/install-playwright-os-deps.sh
 
       - name: Run merge-queue expanded Playwright suites
         run: npx playwright test --project=setup --project=smoke --project=monitor-generated --project=synthetics
@@ -577,9 +516,12 @@ jobs:
   playwright-pr:
     name: Playwright E2E (PR)
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
-    if: always() && github.event_name == 'pull_request'
-    needs: [playwright-pr-plan, playwright-browser-cache]
+    if: github.event_name == 'pull_request'
+    needs: [playwright-pr-plan]
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
     strategy:
       fail-fast: false
       matrix:
@@ -595,16 +537,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Restore Playwright browser
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        run: bash scripts/install-playwright-os-deps.sh
 
       # Render-only suites run against the PR's own build so failures reflect
       # this change, not the current state of the staging deployment.
@@ -661,9 +593,11 @@ jobs:
   first-value-synthetic-gate:
     name: First-value synthetic gate
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 20
-    if: always() && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
-    needs: [playwright-browser-cache]
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -675,16 +609,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Restore Playwright browser
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        run: bash scripts/install-playwright-os-deps.sh
 
       - name: Validate synthetic gate credentials
         env:
@@ -718,11 +642,13 @@ jobs:
   mobile-visual-smoke:
     name: Mobile visual smoke
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     # Push runs may wait up to 15 minutes for the Railway deploy of this
     # commit before screenshotting, so the budget covers wait + tests.
     timeout-minutes: 30
-    if: always() && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
-    needs: [playwright-browser-cache]
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -755,18 +681,6 @@ jobs:
       - name: Install dependencies
         if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
         run: npm ci
-
-      - name: Restore Playwright browser
-        if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
-        run: bash scripts/install-playwright-os-deps.sh
 
       # On PRs, test the PR's own build (not the deployed staging site) so the
       # check reflects this change, not whatever staging happens to be serving.
@@ -839,11 +753,13 @@ jobs:
   auth-ux-guard:
     name: Auth UX guard
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     # Push runs may wait up to 15 minutes for the Railway deploy of this
     # commit before screenshotting, so the budget covers wait + tests.
     timeout-minutes: 30
-    if: always() && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
-    needs: [playwright-browser-cache]
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -855,16 +771,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Restore Playwright browser
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        run: bash scripts/install-playwright-os-deps.sh
 
       # On PRs, test the PR's own build (not the deployed staging site).
       - name: Generate guide artifacts (PR local run)
@@ -925,9 +831,11 @@ jobs:
   accessibility-tier0:
     name: Tier-0 accessibility gate
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
-    if: always() && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
-    needs: [playwright-browser-cache]
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -935,20 +843,10 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-          cache: npm
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Restore Playwright browser
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - name: Install Playwright OS dependencies
-        run: bash scripts/install-playwright-os-deps.sh
 
       - name: Build PR branch for local accessibility run
         if: github.event_name == 'pull_request'
