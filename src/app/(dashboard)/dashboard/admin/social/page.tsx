@@ -97,7 +97,7 @@ export default async function SocialAdminPage() {
                 Connect Google Calendar to sync the posting reminder schedule directly instead of relying on manual .ics imports.
               </p>
               <p className="text-[13px] text-slate-500 mt-1.5">
-                Source calendar: <span className="font-semibold text-slate-700">startingmonday-posting-reminders.ics</span>
+                Source calendar: <span className="font-semibold text-slate-700">docs/operations/reminders/startingmonday-posting-reminders.ics</span>
               </p>
             </div>
 

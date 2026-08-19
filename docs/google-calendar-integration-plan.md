@@ -7,7 +7,7 @@ This document captures the current reminder workflow and the recommended path to
 Today, calendar reminders are generated as `.ics` files and imported into Google Calendar manually.
 
 - [public/calendar/starting-monday-outreach-reminders.ics](../public/calendar/starting-monday-outreach-reminders.ics)
-- [startingmonday-posting-reminders.ics](../startingmonday-posting-reminders.ics)
+- [startingmonday-posting-reminders.ics](operations/reminders/startingmonday-posting-reminders.ics)
 
 This is reliable, low-risk, and works well for one-off or quarterly schedules.
 

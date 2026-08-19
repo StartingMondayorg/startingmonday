@@ -19,7 +19,7 @@
 ## 1. COGNITIVE LOAD ANALYSIS
 
 ### Framework Applied
-From LANDING_PAGE_AUDIT_REPORT.md cognitive load standards:
+From [landing-page-audit-report.md](../strategy/landing-page/landing-page-audit-report.md) cognitive load standards:
 - **Optimal:** 3-4 primary decision points above fold
 - **Peak Executive Attention:** 3-5 seconds to grasp value
 - **Maximum Information Density:** 40% of screen above fold (rest scrollable)
@@ -184,7 +184,7 @@ Cognitive load: MEDIUM-HIGH ⚠️
 ## 2. LUXURY / EDITORIAL ASSESSMENT
 
 ### Framework Applied
-From LANDING_PAGE_AUDIT_REPORT.md luxury standards:
+From [landing-page-audit-report.md](../strategy/landing-page/landing-page-audit-report.md) luxury standards:
 - **Color & Visual Sophistication:** Dark theme, orange accents, whitespace
 - **Typography & Authority:** Refined language, proper capitalization, proof sources prominent
 - **Information Hierarchy:** Most important content emphasized, secondary details de-emphasized

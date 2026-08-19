@@ -188,6 +188,8 @@ Monitoring of monitoring is implemented via:
 
 ## Docs
 
+- [Documentation index](docs/index.md) — generated taxonomy and table of contents
+- [Documentation lifecycle](docs/LIFECYCLE.md) — placement, retention, and intake rules
 - [Architecture](docs/architecture.md) — infrastructure, schema, API patterns, environment variables
 - [Product Roadmap](docs/product-roadmap.md) — what is built and what is planned
 - [Backlog](docs/backlog.md) — validated ideas deferred from the active roadmap

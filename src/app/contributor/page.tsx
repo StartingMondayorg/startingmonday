@@ -41,7 +41,7 @@ const SECTIONS = [
       {
         title: 'Architecture',
         description: 'System topology, data model, auth/billing, AI integration, worker jobs and schedules, security posture, key files.',
-        href: `${REPO}/ARCHITECTURE.md`,
+        href: `${REPO}/docs/architecture.md`,
       },
       {
         title: 'Tech Debt - Round 2',
@@ -86,12 +86,12 @@ const SECTIONS = [
       {
         title: 'Persona Friction Analysis',
         description: 'Honest assessment of the 8 personas (CIO, CTO, CISO, CDO, CPO, COO, VP, CDO-Digital): search dynamics, friction points, critical failure modes, win conditions.',
-        href: `${REPO}/business/persona-friction-analysis.md`,
+        href: `${REPO}/docs/business/persona-friction-analysis.md`,
       },
       {
         title: 'Persona Quality Roadmap',
         description: 'Six product quality sprints (PQ1-PQ6) that take the platform from D+ to B+ by end of Q2 2026. PQ1 and PQ2 complete.',
-        href: `${REPO}/business/persona-quality-roadmap.md`,
+        href: `${REPO}/docs/business/persona-quality-roadmap.md`,
       },
       {
         title: 'Product Roadmap',

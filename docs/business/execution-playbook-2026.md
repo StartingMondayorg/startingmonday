@@ -1,6 +1,6 @@
 # Starting Monday — Execution Playbook v2 (200 by Dec 31, 2026)
 
-**Companion to:** business/sales-marketing-master-plan-2026.md (the strategy)
+**Companion to:** sales-marketing-master-plan-2026.md (the strategy)
 **This version:** reconciled against a full codebase/site/stack audit (Jul 3, 2026). Assumption-based tooling replaced with what you actually run.
 **Owner:** Founder (Richard) + sales consultant. Support: VA (hire by Jul 15).
 

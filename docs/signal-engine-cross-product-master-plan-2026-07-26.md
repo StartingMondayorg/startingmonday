@@ -75,7 +75,7 @@ recorded re-plan; it is not converted into a softer acceptance criterion.
 | --- | --- |
 | `docs/intelligence-scanner-master-plan-2026-07-05.md` | Retained as Starting Monday implementation history. E0-E3 are audited as inherited baseline; E4-E6 are reconciled into this plan before further execution. |
 | `docs/intelligence-roadmap.md` | Retained as historical product strategy. Conflicting implementation claims or schemas are non-authoritative. |
-| `business/intelligence-scanner-business-technical-brief-2026-07-26.md` | Audit input only. Its claims must be re-verified under WS0. |
+| `docs/business/intelligence-scanner-business-technical-brief-2026-07-26.md` | Audit input only. Its claims must be re-verified under WS0. |
 | MandateSignal `docs/product-plan.md` | Remains authority for product UX, pricing, and launch sequencing. Engine contract and cross-product learning sections are governed here after approval. |
 | MandateSignal `docs/readiness/ga-control-register.md` | Remains the launch authority. This program cannot downgrade or bypass its P0 controls. |
 | Signal-engine kit v17.3 | Sole proposed contract baseline and DG-02 input. It is v17.2 plus D19/D20 and the README version label; freeze only after the enumerated mechanical corrections in section 3.3. The name `v17.2.1` is retired. |

@@ -175,4 +175,4 @@ If you have 2 hours before the first sync:
 4. `docs/intelligence-roadmap.md` — full detail on E1-E8 when you are ready to work on the scanner
 5. `docs/content/council-review-process.md` — how to run a council review
 
-The persona friction analysis (`business/persona-friction-analysis.md`) and quality roadmap (`business/persona-quality-roadmap.md`) are worth reading after your first week — they give the full context behind the sprint priorities.
+The persona friction analysis (`docs/business/persona-friction-analysis.md`) and quality roadmap (`docs/business/persona-quality-roadmap.md`) are worth reading after your first week — they give the full context behind the sprint priorities.

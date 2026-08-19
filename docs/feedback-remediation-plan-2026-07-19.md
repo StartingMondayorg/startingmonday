@@ -72,7 +72,7 @@ Targets: scripts/seed-demo.ts, scripts/seed-aleksei-review.ts
 Approach:
 - Verify both seeds populate: career_history_json, star_stories, positioning_summary,
   target_titles, beyond_resume. Add any missing fields with persona-consistent content
-  (Sarah Chen; Alex Morgan from docs/Anonymized_Candidate_Profile_for_Starting_Monday_Demo.docx).
+  (Sarah Chen; Alex Morgan from docs/inbox/legacy-root-intake/Anonymized_Candidate_Profile_for_Starting_Monday_Demo.docx).
 - Re-run both seeds against production (env gotcha: real values FIRST in .env.local;
   placeholders later — set explicitly in-shell per repo memory).
 - Manual pass on the review account through Aleksei's 2.13 checklist
