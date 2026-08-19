@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { HeroPageViewTelemetry } from '@/app/components/HeroPageViewTelemetry'
 import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
 import { TrackLink } from '@/app/components/TrackLink'
 import { Button } from '@/components/ui/button'
@@ -37,7 +36,6 @@ export default async function ExamplePage() {
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100 sm:px-6 sm:py-20">
-      <HeroPageViewTelemetry event={HERO_EVENT_NAMES.exampleView} properties={{ source_page: '/example' }} />
       <div className="mx-auto max-w-4xl">
         <Link href="/" className="inline-flex min-h-[48px] items-center text-[13px] font-bold uppercase tracking-[0.14em] text-orange-200 hover:text-white">
           Starting Monday
