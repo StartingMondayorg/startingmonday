@@ -34,12 +34,6 @@ export default function Wedge30SecondDemoPage() {
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/handshake-review" className="text-[13px] text-slate-200 transition-colors hover:text-white">
-              Handshake demo
-            </Link>
-            <Link href="/alumni-networks-review" className="text-[13px] text-slate-200 transition-colors hover:text-white">
-              Alumni demo
-            </Link>
           </div>
         </div>
       </nav>

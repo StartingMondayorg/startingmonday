@@ -4,6 +4,8 @@ import { LandingPage } from '@/app/components/LandingPage'
 import type { SituationCard, FAQ } from '@/app/components/LandingPage'
 import { JsonLd } from '@/app/components/JsonLd'
 import { getBrandContextFromHosts } from '@/lib/brand'
+import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
+import { STARTING_MONDAY_HERO_CONTENT } from '@/lib/starting-monday-hero-content'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -43,9 +45,13 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   }
 
+  const heroEvidenceEnabled = isStartingMondayHeroEvidenceEnabled()
+
   return {
-    title: 'Starting Monday - Be on the shortlist before the role is posted',
-    description: 'Starting Monday helps senior leaders find likely-to-open roles early, identify the people shaping the shortlist, and take the next relationship action before the posting goes public.',
+    title: heroEvidenceEnabled ? STARTING_MONDAY_HERO_CONTENT.heading : 'Starting Monday - Be on the shortlist before the role is posted',
+    description: heroEvidenceEnabled
+      ? STARTING_MONDAY_HERO_CONTENT.subhead
+      : 'Starting Monday helps senior leaders find likely-to-open roles early, identify the people shaping the shortlist, and take the next relationship action before the posting goes public.',
     keywords: [
       'executive job search tools',
       'CIO job search',
@@ -57,15 +63,19 @@ export async function generateMetadata(): Promise<Metadata> {
       'job search CRM leaders',
     ],
     openGraph: {
-      title: 'Starting Monday - Be on the shortlist before the role is posted',
-      description: 'Find likely-to-open executive roles early, map the decision path, and act before the shortlist is crowded.',
+      title: heroEvidenceEnabled ? STARTING_MONDAY_HERO_CONTENT.heading : 'Starting Monday - Be on the shortlist before the role is posted',
+      description: heroEvidenceEnabled
+        ? STARTING_MONDAY_HERO_CONTENT.subhead
+        : 'Find likely-to-open executive roles early, map the decision path, and act before the shortlist is crowded.',
       url: 'https://startingmonday.app',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Starting Monday - Be on the shortlist before the role is posted',
-      description: 'Find likely-to-open executive roles early, map the decision path, and act before the shortlist is crowded.',
+      title: heroEvidenceEnabled ? STARTING_MONDAY_HERO_CONTENT.heading : 'Starting Monday - Be on the shortlist before the role is posted',
+      description: heroEvidenceEnabled
+        ? STARTING_MONDAY_HERO_CONTENT.subhead
+        : 'Find likely-to-open executive roles early, map the decision path, and act before the shortlist is crowded.',
     },
     alternates: {
       canonical: 'https://startingmonday.app',
@@ -231,6 +241,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const experimentVariant = variantParam === 'proof_first' ? 'proof_first' : 'control'
 
   const isMandateSignal = brand.isMandateSignal
+  const heroEvidenceEnabled = isStartingMondayHeroEvidenceEnabled()
   const jsonLd = isMandateSignal
     ? buildHomeJsonLd(
         brand.origin,
@@ -262,21 +273,25 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         trialNote: 'MandateSignal runs as a standalone product experience on mandatesignal.com. Private workspace per account.',
       }
     : {
-        eyebrow: 'Find roles before they are posted. Meet the decision-makers. Start Monday.',
+        eyebrow: heroEvidenceEnabled ? STARTING_MONDAY_HERO_CONTENT.eyebrow : 'Find roles before they are posted. Meet the decision-makers. Start Monday.',
         h1Lines: ['Be on the shortlist before the role is posted.'],
         claimMethodLabel: '',
         claimMethodHref: '',
         claimEvidenceLabel: 'Evidence Hub for leaders and their partners ->',
         claimEvidenceHref: '/evidence-hub#early-signals',
         bodyPreamble: 'For senior leaders who win through timing and relationships, not job boards.',
-        body: 'Reputation opens doors. Timing decides outcomes. Starting Monday gives you an early view of likely-to-open roles and a clear map of the people who will influence the hire.',
+        body: heroEvidenceEnabled
+          ? STARTING_MONDAY_HERO_CONTENT.subhead
+          : 'Reputation opens doors. Timing decides outcomes. Starting Monday gives you an early view of likely-to-open roles and a clear map of the people who will influence the hire.',
         competitiveEdge: '',
         steps: [
           'See likely-to-open roles before most candidates know they exist.',
           'Identify the decision-path people who shape the shortlist.',
           'Take the next relationship action while timing is still on your side.',
         ],
-        trialNote: 'Private by default: visible only to you and explicitly invited collaborators. Free for 30 days. No credit card. No employer visibility.',
+        trialNote: heroEvidenceEnabled
+          ? 'Private by default. No one knows you\'re looking until you decide they do. Free for 30 days. No credit card.'
+          : 'Private by default: visible only to you and explicitly invited collaborators. Free for 30 days. No credit card. No employer visibility.',
       }
 
   return (
@@ -294,6 +309,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           primary: brand.wordmarkPrimary,
           accent: brand.wordmarkAccent,
         }}
+        heroEvidence={
+              heroEvidenceEnabled && !isMandateSignal && STARTING_MONDAY_HERO_CONTENT.proofCase
+            ? {
+                proofCase: STARTING_MONDAY_HERO_CONTENT.proofCase,
+                timelineAlt: STARTING_MONDAY_HERO_CONTENT.timelineAlt,
+                privacy: STARTING_MONDAY_HERO_CONTENT.privacy,
+              }
+            : undefined
+        }
       />
     </>
   )

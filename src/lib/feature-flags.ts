@@ -7,6 +7,12 @@ export function isEnabledFlag(value: string | null | undefined): boolean {
 
 export const RELATIONSHIP_NETWORK_MATCHING_ENABLED_FLAG = 'NEXT_PUBLIC_RELATIONSHIP_NETWORK_MATCHING_ENABLED'
 
+export const STARTING_MONDAY_HERO_EVIDENCE_ENABLED_FLAG = 'NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED'
+
 export function isRelationshipNetworkMatchingEnabled(): boolean {
   return isEnabledFlag(process.env[RELATIONSHIP_NETWORK_MATCHING_ENABLED_FLAG])
+}
+
+export function isStartingMondayHeroEvidenceEnabled(): boolean {
+  return isEnabledFlag(process.env[STARTING_MONDAY_HERO_EVIDENCE_ENABLED_FLAG])
 }

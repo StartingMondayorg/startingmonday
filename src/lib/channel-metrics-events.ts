@@ -25,6 +25,16 @@ export const EVENT_NAMES = {
 
 export type ChannelEventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]
 
+export const HERO_EVENT_NAMES = {
+  heroView: 'hero_view',
+  getAccessClick: 'cta_get_access_click',
+  exampleClick: 'cta_example_click',
+  exampleView: 'example_page_view',
+  exampleToAccessClick: 'example_to_access_click',
+} as const
+
+export type HeroEventName = (typeof HERO_EVENT_NAMES)[keyof typeof HERO_EVENT_NAMES]
+
 export type ChannelEntryClickedProps = {
   channel: Channel
   cta_label: string

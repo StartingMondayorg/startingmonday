@@ -38,9 +38,6 @@ export default function MichaelStrategyBriefPage() {
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/mark-review" className="text-[13px] text-slate-200 hover:text-white transition-colors">
-              Back to Mark flow
-            </Link>
             <Link href="/demo/michael-dashboard" className="text-[13px] text-slate-200 hover:text-white transition-colors">
               Michael dashboard
             </Link>

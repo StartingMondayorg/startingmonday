@@ -1,5 +1,6 @@
 import { type NextRequest } from 'next/server'
 import { GET as providerQualityAuditGet } from '@/app/api/(ops)/cron/provider-quality-audit/route'
+import { validateCronRequest } from '@/lib/cron-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const runtime = 'nodejs'
@@ -117,7 +118,13 @@ async function recordCompatibilityHit(request: NextRequest): Promise<void> {
 }
 
 export async function GET(request: NextRequest) {
-  // validateCronRequest is enforced by the delegated provider-quality-audit route.
+  if (!validateCronRequest(request)) {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { 'content-type': 'application/json' },
+    })
+  }
+
   const response = await providerQualityAuditGet(request)
   const headers = new Headers(response.headers)
   headers.set('x-startingmonday-compat-route', COMPAT_ROUTE)
