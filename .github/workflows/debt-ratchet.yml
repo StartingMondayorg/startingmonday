@@ -14,9 +14,6 @@ jobs:
   ratchet:
     name: Enforce debt no-increase ratchet
     runs-on: ubuntu-latest
-    # Advisory on pull requests to reduce migration-noise; remains strict for
-    # scheduled and manual governance runs.
-    continue-on-error: ${{ github.event_name == 'pull_request' }}
     timeout-minutes: 20
 
     steps:
@@ -32,12 +29,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run debt ratchet
+      - name: Run debt ratchet (strict)
+        if: github.event_name != 'pull_request'
+        env:
+          DEBT_RATCHET_OVERRIDE: ${{ vars.DEBT_RATCHET_OVERRIDE == 'true' && 'true' || 'false' }}
+          SLACK_WEBHOOK_URL: ${{ github.event_name == 'schedule' && secrets.SLACK_WEBHOOK_URL || '' }}
+        run: node scripts/debt-ratchet-check.mjs
+
+      - name: Run debt ratchet (advisory on PR)
+        if: github.event_name == 'pull_request'
         env:
           DEBT_RATCHET_OVERRIDE: >-
             ${{ (contains(github.event.pull_request.labels.*.name, 'allow-debt-ratchet-override') || vars.DEBT_RATCHET_OVERRIDE == 'true') && 'true' || 'false' }}
-          SLACK_WEBHOOK_URL: ${{ github.event_name == 'schedule' && secrets.SLACK_WEBHOOK_URL || '' }}
-        run: node scripts/debt-ratchet-check.mjs
+        shell: bash
+        run: |
+          if node scripts/debt-ratchet-check.mjs; then
+            echo "Debt ratchet advisory: pass"
+          else
+            echo "::warning::Debt ratchet advisory failed on this PR (non-blocking). See artifact for details."
+          fi
 
       - name: Publish step summary
         if: always()

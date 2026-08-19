@@ -300,9 +300,6 @@ jobs:
   risky-change-rollout-policy:
     name: Risky change rollout policy
     runs-on: ubuntu-latest
-    # Advisory on pull requests; strict enforcement remains in process/policy
-    # without blocking merge for migration-heavy refactors.
-    continue-on-error: true
     if: github.event_name == 'pull_request'
 
     steps:
@@ -324,7 +321,7 @@ jobs:
               - 'config/feature-rollout-policy.json'
               - 'docs/engineering/pr-churn-reduction-policy.md'
 
-      - name: Enforce feature-flag-first label on risky changes
+      - name: Check feature-flag-first label on risky changes (advisory)
         if: steps.changed.outputs.risky == 'true' && github.head_ref != 'staging'
         uses: actions/github-script@v8
         env:
@@ -336,7 +333,9 @@ jobs:
             const rolloutPolicyChanged = process.env.ROLLOUT_POLICY_CHANGED === 'true'
 
             if (!hasFeatureFlagLabel && !rolloutPolicyChanged) {
-              core.setFailed('Risky PR requires feature-flagged label or rollout policy update (config/feature-rollout-policy.json).')
+              core.warning('Risky PR advisory: add feature-flagged label or update config/feature-rollout-policy.json for rollout traceability.')
+            } else {
+              core.info('Risky PR advisory: rollout policy check satisfied.')
             }
 
   playwright:
