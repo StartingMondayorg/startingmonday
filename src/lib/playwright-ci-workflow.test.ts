@@ -43,6 +43,9 @@ describe('Playwright CI browser installation', () => {
     expect(containerizedJobs).toEqual([...consumerJobs].sort())
     expect(workflow).not.toMatch(/playwright install(?:-deps|\s)/)
     expect(workflow).not.toContain('playwright-browser-cache')
+    expect(workflow).not.toMatch(/for i in \{1\.\.60\}/)
+    expect(workflow).not.toContain('seq 1 60')
+    expect(workflow.match(/while \[ "\$attempts" -lt 60 \]; do/g)).toHaveLength(5)
     for (const jobName of consumerJobs) {
       const consumer = jobBlock(workflow, jobName)
       expect(consumer).toContain(expectedImage)
