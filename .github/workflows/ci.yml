@@ -93,7 +93,7 @@ jobs:
 
       - name: Skip luxury static gate (no relevant public/shared UI changes)
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui != 'true'
-        run: echo "Skipping luxury static gate for PR: no relevant public/shared UI paths changed."
+        run: 'echo "Skipping luxury static gate for PR: no relevant public/shared UI paths changed."'
 
   predeploy-gates:
     name: Predeploy gates (lint, typecheck, build, smoke)
@@ -745,7 +745,7 @@ jobs:
 
       - name: Skip mobile visual smoke (no relevant public/shared UI changes)
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui != 'true'
-        run: echo "Skipping mobile visual smoke for PR: no relevant public/shared UI paths changed."
+        run: 'echo "Skipping mobile visual smoke for PR: no relevant public/shared UI paths changed."'
 
   # mobile-visual-regression job removed: it ran with continue-on-error (could
   # never fail) which is CI theater. Real visual regression should use a
