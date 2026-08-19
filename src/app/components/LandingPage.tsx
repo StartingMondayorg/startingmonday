@@ -329,7 +329,7 @@ export function LandingPage({
               </>
             )}
             {showHeroEvidence && heroEvidence && (
-              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center" data-hero-evidence-actions>
                 <Button
                   className="min-h-[48px] rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
                   render={

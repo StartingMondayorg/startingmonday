@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { HeroPageViewTelemetry } from '@/app/components/HeroPageViewTelemetry'
 import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
 import { TrackLink } from '@/app/components/TrackLink'
+import { Button } from '@/components/ui/button'
 import { getBrandContextFromHosts } from '@/lib/brand'
 import { HERO_EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
@@ -49,14 +50,18 @@ export default async function ExamplePage() {
           <SignalTimelineCard proofCase={proofCase} altText={STARTING_MONDAY_HERO_CONTENT.timelineAlt} expanded />
         </div>
         <div className="mt-10">
-          <TrackLink
-            href="/signup"
-            event={HERO_EVENT_NAMES.exampleToAccessClick}
-            properties={{ source_page: '/example', cta_label: 'example_get_access' }}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-orange-400 px-7 py-3 text-[14px] font-bold text-slate-950 transition-colors hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-200"
+          <Button
+            className="min-h-[48px] rounded-full px-7 py-3 text-[14px] font-bold"
+            render={
+              <TrackLink
+                href="/signup"
+                event={HERO_EVENT_NAMES.exampleToAccessClick}
+                properties={{ source_page: '/example', cta_label: 'example_get_access' }}
+              />
+            }
           >
             Get access
-          </TrackLink>
+          </Button>
         </div>
         <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-orange-200/90">
           Private by default. No one knows you&apos;re looking until you decide they do.

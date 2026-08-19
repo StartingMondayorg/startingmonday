@@ -90,6 +90,16 @@ export default defineConfig({
       },
     },
     {
+      name: 'landing-hero',
+      testMatch: /landing-hero\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: ['--host-resolver-rules=MAP mandatesignal.com 127.0.0.1'],
+        },
+      },
+    },
+    {
       name: 'luxury-desktop',
       testMatch: /luxury-(ux|public-all-pages)\.spec\.ts/,
       use: {
