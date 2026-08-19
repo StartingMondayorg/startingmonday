@@ -661,7 +661,7 @@ export default function SignupPage() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full min-h-[44px] justify-center text-[14px]"
+                    className="w-full min-h-[44px] justify-center rounded !bg-orange-500 !text-slate-950 text-[14px] hover:!bg-orange-400"
                   >
                     {loading ? 'Creating account…' : (situation && SITUATION_COPY[situation] ? `Create account and ${SITUATION_COPY[situation].cta}` : 'Start free trial')}
                   </Button>

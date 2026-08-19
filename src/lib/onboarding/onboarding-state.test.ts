@@ -53,6 +53,7 @@ describe('explicit onboarding state', () => {
     })).toEqual({
       fullName: 'Pilot User',
       searchPersona: '',
+      searchPosture: 'not_looking',
       roleFamily: '',
       roleTitle: '',
       roleTitles: [],
@@ -112,6 +113,7 @@ describe('explicit onboarding state', () => {
     })).toEqual({
       fullName: 'Restored User',
       searchPersona: 'director',
+      searchPosture: 'active',
       roleFamily: 'leadership',
       roleTitle: 'senior_director',
       roleTitles: ['senior_director'],

@@ -341,7 +341,7 @@ export default function LoginPage() {
                 name="intent"
                 value="signin"
                 disabled={authBusy}
-                className="w-full min-h-[44px] justify-center text-[14px]"
+                className="w-full min-h-[44px] justify-center rounded !bg-orange-500 !text-slate-950 text-[14px] hover:!bg-orange-400"
               >
                 {loading ? 'Signing in…' : 'Sign in'}
               </Button>
