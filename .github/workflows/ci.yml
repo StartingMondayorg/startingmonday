@@ -99,6 +99,9 @@ jobs:
     name: Predeploy gates (lint, typecheck, build, smoke)
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: read
+      pull-requests: read
 
     steps:
       - uses: actions/checkout@v5
@@ -125,7 +128,52 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
+      - name: Verify protected shadcn dependency approval
+        id: shadcn-approval
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs')
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+            const correctlyClassified = Boolean(pkg.dependencies?.shadcn) && !pkg.devDependencies?.shadcn
+            if (correctlyClassified) {
+              core.info('shadcn remains in production dependencies')
+              return
+            }
+
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            })
+            const headSha = context.payload.pull_request.head.sha
+            const approvedReview = reviews.some((review) =>
+              review.user?.login === 'richrothschild'
+              && review.state === 'APPROVED'
+              && review.commit_id === headSha
+            )
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            })
+            const approvalToken = `/approve-shadcn-change ${headSha}`
+            const approvedComment = comments.some((comment) =>
+              comment.user?.login === 'richrothschild'
+              && comment.body?.trim() === approvalToken
+            )
+            if (!approvedReview && !approvedComment) {
+              core.setFailed(`Removing or reclassifying shadcn requires a current-head approval from richrothschild: approve the review or comment "${approvalToken}".`)
+              return
+            }
+            core.setOutput('approved_by', 'richrothschild')
+
       - name: Dependency policy check
+        env:
+          SHADCN_CHANGE_APPROVED_BY: ${{ steps.shadcn-approval.outputs.approved_by }}
         run: npm run deps:check
 
       - name: Documentation command check
