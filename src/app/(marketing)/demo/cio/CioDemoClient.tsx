@@ -472,7 +472,6 @@ export function CioDemoClient() {
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/demo/presenter" className="text-[13px] text-slate-400 hover:text-white transition-colors">Presenter mode</Link>
-            <Link href="/mark-demo" className="text-[13px] font-semibold text-white bg-orange-500 px-4 py-1.5 rounded hover:bg-orange-600 transition-colors">No-gate demo</Link>
           </div>
         </div>
       </header>

@@ -38,9 +38,6 @@ export default function ShortlistSprintPage() {
             <Link href="/demo/wedge-30s" className="text-[13px] text-slate-200 transition-colors hover:text-white">
               30-second demo
             </Link>
-            <Link href="/handshake-review" className="text-[13px] text-slate-200 transition-colors hover:text-white">
-              Handshake demo
-            </Link>
           </div>
         </div>
       </header>

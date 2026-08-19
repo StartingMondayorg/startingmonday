@@ -62,9 +62,6 @@ export default function MichaelDashboardPage() {
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/alumni-networks-review" className="text-[14px] font-semibold text-slate-300 hover:text-white transition-colors">
-              Back to alumni demo
-            </Link>
             <Link href="/demo/michael-strategy-brief" className="text-[14px] font-semibold text-slate-300 hover:text-white transition-colors">
               Strategy brief
             </Link>
