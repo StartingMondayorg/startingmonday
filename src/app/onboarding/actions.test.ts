@@ -68,6 +68,7 @@ function draft(overrides: Partial<OnboardingDraft> = {}): OnboardingDraft {
   return {
     fullName: 'Pilot User',
     searchPersona: 'director',
+    searchPosture: 'exploring',
     roleFamily: 'leadership',
     roleTitle: 'director',
     roleTitles: ['director'],

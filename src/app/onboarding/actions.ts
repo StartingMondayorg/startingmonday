@@ -56,6 +56,7 @@ export async function completeOnboarding(formData: FormData) {
   if (!user) redirect('/login')
 
   const searchPersona       = (formData.get('search_persona') as string) || null
+  const searchPosture       = (formData.get('search_posture') as string) || null
   const onboardingChannel   = normalizeOnboardingChannel((formData.get('onboarding_channel') as string) || null)
   const onboardingLowEnergy = (formData.get('onboarding_low_energy') as string) === 'true'
   const onboardingStartedAt = (formData.get('onboarding_started_at') as string ?? '').trim() || null
@@ -148,6 +149,7 @@ export async function completeOnboarding(formData: FormData) {
     {
       user_id:                  user.id,
       search_persona:           resolvedRole.searchPersonaLegacy,
+      search_posture:           searchPosture,
       role_type:                resolvedRole.roleTypeLegacy,
       role_family:              resolvedRole.roleFamily,
       role_title:               resolvedRole.roleTitle,

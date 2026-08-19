@@ -2,14 +2,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { completeOnboarding, saveOnboardingProgress, skipOnboarding } from './actions'
 import { HelpQuickButton } from '@/app/components/HelpQuickButton'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import {
   type SearchPersona,
   seededCompaniesFor,
@@ -29,6 +21,7 @@ import { OnboardingDoneStep } from './onboarding-done-step'
 import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
 import type { OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 import { reportOnboardingStepCompleted, useOnboardingDraftState } from './use-onboarding-draft-state'
+import { resolveDashboardSearchPosture } from '@/lib/dashboard-posture'
 
 type ImportResult = {
   full_name?: string | null
@@ -63,7 +56,6 @@ const ROLE_TRACK_OPTIONS: RoleTrackOption[] = [
 
 const STEP_COUNT = 9
 const QUICK_PATH_STEP_COUNT = 7
-
 
 function Dots({ current, total = STEP_COUNT }: { current: number; total?: number }) {
   return (
@@ -111,7 +103,7 @@ export function OnboardingForm({
 
   const {
     advancedSetup, setAdvancedSetup, fullName, setFullName,
-    searchPersona, setSearchPersona, roleFamily, setRoleFamily,
+    searchPersona, setSearchPersona, searchPosture, setSearchPosture, roleFamily, setRoleFamily,
     roleTitle, setRoleTitle, roleTitles, setRoleTitles,
     employmentStatus, setEmploymentStatus, searchTimeline, setSearchTimeline,
     searchDriver, setSearchDriver, currentTitle, setCurrentTitle,
@@ -127,6 +119,11 @@ export function OnboardingForm({
 
   const [intelContent, setIntelContent] = useState('')
   const [intelLoading, setIntelLoading] = useState(false)
+  const resolvedSearchPosture = resolveDashboardSearchPosture({
+    searchPosture,
+    employmentStatus,
+    searchTimeline,
+  })
 
   const [scanStarted, setScanStarted] = useState(initialStep >= 6 && initialDraft.companyNames.length > 0)
   const [scanProgress, setScanProgress] = useState<ScanStatusPayload | null>(null)
@@ -633,6 +630,7 @@ export function OnboardingForm({
       <form id="onboarding-form" action={completeOnboarding} className="hidden">
         <input type="hidden" name="full_name"           value={fullName} />
         <input type="hidden" name="search_persona"      value={searchPersona} />
+        <input type="hidden" name="search_posture"      value={resolvedSearchPosture} />
         <input type="hidden" name="role_family"         value={roleFamily} />
         <input type="hidden" name="role_title"          value={roleTitle} />
         <input type="hidden" name="target_role_tracks"  value={JSON.stringify(roleTitles)} />
@@ -663,16 +661,16 @@ export function OnboardingForm({
         <input type="hidden" name="positioning_style"    value={positioningStyle.join(',')} />
       </form>
 
-      <Card variant="glass" className="w-full max-w-lg rounded-2xl border-white/10 bg-slate-900/80 p-5 shadow-[0_20px_60px_rgba(2,6,23,0.45)] sm:p-6">
+      <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 shadow-[0_20px_60px_rgba(2,6,23,0.45)] sm:p-6">
         {/* Wordmark */}
         <div className="text-center mb-10">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
         </div>
 
         {progressError && (
-          <Alert variant="destructive" className="mb-5">
-            <AlertDescription>{progressError}</AlertDescription>
-          </Alert>
+          <div role="alert" className="mb-5 rounded border border-rose-300/30 bg-rose-500/15 px-4 py-3 text-[13px] text-rose-100">
+            {progressError}
+          </div>
         )}
 
         {/* Step content */}
@@ -819,24 +817,22 @@ export function OnboardingForm({
           {/* Back / skip */}
           <div className="flex items-center gap-4">
             {step > 0 && (
-              <Button
+              <button
                 type="button"
-                variant="ghost"
                 onClick={() => goTo(prevStep())}
-                className="h-auto p-0 !bg-transparent hover:!bg-transparent text-[13px] font-normal text-slate-400 hover:text-slate-200"
+                className="text-[13px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0"
               >
                 Back
-              </Button>
+              </button>
             )}
-            <Button
+            <button
               type="submit"
-              variant="ghost"
               form="onboarding-form"
               formAction={skipOnboarding}
-              className="h-auto p-0 !bg-transparent hover:!bg-transparent text-[12px] font-normal text-slate-500 hover:text-slate-300"
+              className="text-[12px] text-slate-500 hover:text-slate-300 bg-transparent border-0 cursor-pointer p-0"
             >
               Skip setup
-            </Button>
+            </button>
           </div>
 
           {/* Dots */}
@@ -858,127 +854,124 @@ export function OnboardingForm({
           {/* Next */}
           <div>
             {step === 0 && (
-              <Button
+              <button
                 type="button"
                 onClick={() => goTo(1, false)}
-                className="px-6 min-h-[44px] text-[14px] font-semibold"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
               >
                 Start setup
-              </Button>
+              </button>
             )}
             {step === 1 && (
               <div className="flex flex-col items-end gap-2">
-                <Button
+                <button
                   type="button"
                   onClick={advance}
                   disabled={importProgress.status !== 'idle'}
-                  className="px-6 min-h-[44px] text-[14px] font-semibold"
+                  className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Continue
-                </Button>
+                </button>
                 {!importDone && importProgress.status === 'idle' && (
-                  <Button
+                  <button
                     type="button"
-                    variant="ghost"
                     onClick={advance}
-                    className="h-auto p-0 !bg-transparent hover:!bg-transparent text-[12px] font-normal text-slate-400 hover:text-slate-200"
+                    className="text-[12px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0"
                   >
                     Skip import for now
-                  </Button>
+                  </button>
                 )}
               </div>
             )}
             {step === 2 && (
               <div className="flex flex-col items-end gap-2">
-                <Button
+                <button
                   type="button"
                   onClick={() => goTo(3, false)}
                   disabled={roleTitles.length === 0}
-                  className="px-6 min-h-[44px] text-[14px] font-semibold"
+                  className="bg-orange-500 hover:bg-orange-600 disabled:opacity-30 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed"
                 >
                   Continue to shortlist
-                </Button>
-                <Button
+                </button>
+                <button
                   type="button"
-                  variant="ghost"
                   onClick={() => goTo(3, true)}
                   disabled={lowEnergyMode || roleTitles.length === 0}
-                  className="h-auto p-0 !bg-transparent hover:!bg-transparent text-[12px] font-normal text-slate-400 hover:text-slate-200"
+                  className="text-[12px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0"
                 >
                   {lowEnergyMode ? 'Context optional in low-energy mode' : 'Add search context first'}
-                </Button>
+                </button>
               </div>
             )}
             {step === 3 && (
-              <Button
+              <button
                 type="button"
                 onClick={advance}
                 disabled={!companyNames.some(n => n.trim())}
-                className="px-6 min-h-[44px] text-[14px] font-semibold"
+                className="bg-orange-500 hover:bg-orange-600 disabled:opacity-30 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed"
               >
                 Continue
-              </Button>
+              </button>
             )}
             {step === 4 && (
-              <Button
+              <button
                 type="button"
                 onClick={advance}
-                className="px-6 min-h-[44px] text-[14px] font-semibold"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
               >
                 Continue
-              </Button>
+              </button>
             )}
             {step === 5 && (
-              <Button
+              <button
                 type="button"
                 onClick={advance}
-                className="px-6 min-h-[44px] text-[14px] font-semibold"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
               >
                 Continue
-              </Button>
+              </button>
             )}
             {step === 6 && (
-              <Button
+              <button
                 type="button"
                 onClick={advance}
-                className="px-6 min-h-[44px] text-[14px] font-semibold"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
               >
                 Continue
-              </Button>
+              </button>
             )}
             {step === 7 && (
               <div className="flex flex-col items-end gap-2">
-                <Button
+                <button
                   type="button"
                   onClick={advance}
-                  className="px-6 min-h-[44px] text-[14px] font-semibold"
+                  className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
                 >
                   Continue
-                </Button>
-                <Button
+                </button>
+                <button
                   type="button"
-                  variant="ghost"
                   onClick={advance}
-                  className="h-auto p-0 !bg-transparent hover:!bg-transparent text-[12px] font-normal text-slate-400 hover:text-slate-200"
+                  className="text-[12px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0"
                 >
                   Skip context for now
-                </Button>
+                </button>
               </div>
             )}
             {step === 8 && (
-              <Button
+              <button
                 type="submit"
                 form="onboarding-form"
-                className="px-6 min-h-[44px] text-[14px] font-semibold"
+                className="bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0"
               >
                 {isPassive ? 'Start monitoring' : 'Start my search'}
-              </Button>
+              </button>
             )}
           </div>
         </div>
-      </Card>
+      </div>
 
-      <Input
+      <input
         ref={linkedinPdfRef}
         type="file"
         accept=".pdf"
@@ -1011,7 +1004,7 @@ function StepCompanies({
   onTitle?: (v: string) => void
 }) {
   const suggestions = suggestedCompaniesForProfile(persona, currentTitle, resumeText)
-  const inputCls = 'w-full !border-white/15 rounded-lg px-4 py-3 text-[15px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 !bg-slate-950/60'
+  const inputCls = 'w-full border border-white/15 rounded-lg px-4 py-3 text-[15px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60'
   const filled = names.filter(n => n.trim()).length
   const cooSignalContext = `${currentTitle} ${targetTitles}`.toLowerCase()
   const isCooTrack = /\bcoo\b|chief\s+operating\s+officer/.test(cooSignalContext)
@@ -1092,10 +1085,10 @@ function StepCompanies({
 
       {isPassive && onTitle && (
         <div>
-          <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+          <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
             Your current title
-          </Label>
-          <Input
+          </label>
+          <input
             type="text"
             value={currentTitle}
             onChange={e => onTitle(e.target.value)}
@@ -1107,7 +1100,7 @@ function StepCompanies({
 
       <div className="flex flex-col gap-2.5">
         {names.map((name, i) => (
-          <Input
+          <input
             key={i}
             type="text"
             value={name}
@@ -1121,51 +1114,39 @@ function StepCompanies({
       {suggestions.length > 0 && !discovered && (
         <div>
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-2">Great choices for you</p>
-          <ToggleGroup
-            multiple
-            value={suggestions.filter(s => names.some(n => n.trim().toLowerCase() === s.name.toLowerCase())).map(s => s.name)}
-            onValueChange={(values) => {
-              for (const s of suggestions) {
-                const pressed = values.includes(s.name)
-                const added = names.some(n => n.trim().toLowerCase() === s.name.toLowerCase())
-                if (pressed && !added) addName(s.name)
-                if (!pressed && added) removeName(s.name)
-              }
-            }}
-            className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2"
-          >
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {suggestions.map((s) => {
               const added = names.some(n => n.trim().toLowerCase() === s.name.toLowerCase())
               return (
-                <ToggleGroupItem
+                <button
                   key={s.name}
-                  value={s.name}
-                  className={`flex-col h-auto items-start justify-start text-left rounded border p-3 whitespace-normal transition-colors cursor-pointer ${
+                  type="button"
+                  onClick={() => added ? removeName(s.name) : addName(s.name)}
+                  className={`text-left rounded border p-3 transition-colors cursor-pointer ${
                     added
-                      ? '!border-orange-400/70 !bg-orange-500/20 !text-white hover:!bg-orange-500/25 hover:!border-orange-300'
-                      : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'
+                      ? 'border-orange-400/70 bg-orange-500/20 text-white hover:bg-orange-500/25 hover:border-orange-300'
+                      : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35'
                   }`}
                 >
                   <p className="text-[14px] font-semibold">{added ? '✓ ' : '+ '}{s.name}</p>
                   <p className={['mt-1 text-[12px] leading-relaxed', added ? 'text-slate-200' : 'text-slate-400'].join(' ')}>{s.roleHint}</p>
                   <p className={['mt-1 text-[12px] leading-relaxed', added ? 'text-slate-200' : 'text-slate-400'].join(' ')}>{s.why}</p>
-                </ToggleGroupItem>
+                </button>
               )
             })}
-          </ToggleGroup>
+          </div>
         </div>
       )}
 
       {/* AI Discovery */}
       {!discovered && !discovering && (
-        <Button
+        <button
           type="button"
-          variant="ghost"
           onClick={discover}
-          className="h-auto p-0 !bg-transparent hover:!bg-transparent justify-start text-left text-[13px] font-normal text-slate-400 hover:text-slate-200"
+          className="text-[13px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0 text-left transition-colors"
         >
           {discoverError ? 'Could not load suggestions - try again ->' : 'Not sure where to start? Discover companies with AI ->'}
-        </Button>
+        </button>
       )}
 
       {discovering && (
@@ -1176,45 +1157,33 @@ function StepCompanies({
         <div>
           <div className="flex items-center justify-between mb-2">
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">AI-suggested companies</p>
-            <Button
+            <button
               type="button"
-              variant="ghost"
               onClick={() => { setDiscovered(null); setDiscoverError(false) }}
-              className="h-auto p-0 !bg-transparent hover:!bg-transparent text-[11px] font-normal text-slate-400 hover:text-slate-200"
+              className="text-[11px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0 transition-colors"
             >
               Clear
-            </Button>
+            </button>
           </div>
-          <ToggleGroup
-            multiple
-            value={discovered.filter(co => names.some(n => n.trim().toLowerCase() === co.name.toLowerCase())).map(co => co.name)}
-            onValueChange={(values) => {
-              for (const co of discovered) {
-                const pressed = values.includes(co.name)
-                const added = names.some(n => n.trim().toLowerCase() === co.name.toLowerCase())
-                if (pressed && !added) addName(co.name)
-                if (!pressed && added) removeName(co.name)
-              }
-            }}
-            className="flex flex-wrap gap-2"
-          >
+          <div className="flex flex-wrap gap-2">
             {discovered.map(co => {
               const added = names.some(n => n.trim().toLowerCase() === co.name.toLowerCase())
               return (
-                <ToggleGroupItem
+                <button
                   key={co.name}
-                  value={co.name}
-                  className={`text-[13px] rounded border px-3 py-1.5 transition-colors cursor-pointer ${
+                  type="button"
+                  onClick={() => added ? removeName(co.name) : addName(co.name)}
+                  className={`text-[13px] px-3 py-1.5 rounded border transition-colors cursor-pointer ${
                     added
-                      ? '!border-orange-400/70 !bg-orange-500/20 !text-white hover:!bg-orange-500/25 hover:!border-orange-300'
-                      : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'
+                      ? 'border-orange-400/70 bg-orange-500/20 text-white hover:bg-orange-500/25 hover:border-orange-300'
+                      : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35'
                   }`}
                 >
                   {added ? '\u2713 ' : '+ '}{co.name}
-                </ToggleGroupItem>
+                </button>
               )
             })}
-          </ToggleGroup>
+          </div>
         </div>
       )}
 
@@ -1270,71 +1239,65 @@ function StepBriefingTime({
         </p>
       </div>
 
-      <ToggleGroup
-        value={value ? [value] : []}
-        onValueChange={(values) => {
-          if (values[0]) onChange(values[0])
-        }}
-        className="grid w-full grid-cols-2 gap-2.5 sm:grid-cols-3"
-      >
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
         {TIMES.map(t => (
-          <ToggleGroupItem
+          <button
             key={t.value}
-            value={t.value}
+            type="button"
+            onClick={() => onChange(t.value)}
             className={[
-              'h-auto border rounded-lg px-4 py-3.5 text-[15px] font-semibold transition-all cursor-pointer',
+              'border rounded-lg px-4 py-3.5 text-[15px] font-semibold transition-all cursor-pointer',
               value === t.value
-                ? '!border-orange-400/70 !bg-orange-500/20 !text-white'
-                : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35',
+                ? 'border-orange-400/70 bg-orange-500/20 text-white'
+                : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35',
             ].join(' ')}
           >
             {t.label}
-          </ToggleGroupItem>
+          </button>
         ))}
-      </ToggleGroup>
+      </div>
 
       <p className="text-[12px] text-slate-400">
         Delivered in {tz}. You can change this anytime from your profile.
       </p>
 
-      <Card variant="glass" className="rounded-lg border-white/15 bg-white/5 p-4">
+      <div className="rounded-lg border border-white/15 bg-white/5 p-4">
         <p className="text-[13px] font-semibold text-white mb-1">Trial tips by email - your choice</p>
         <p className="text-[12px] text-slate-400 leading-relaxed mb-3">
           Your search is private. Beyond your daily briefing, we only send occasional trial tips if you say yes here.
           You can change this anytime in Settings.
         </p>
-        <ToggleGroup
-          value={[emailNudgesOptIn ? 'yes' : 'no']}
-          onValueChange={(values) => {
-            if (values[0]) onEmailNudgesOptIn(values[0] === 'yes')
-          }}
-          aria-label="Trial tip emails"
-          className="flex w-full gap-2"
-        >
-          <ToggleGroupItem
-            value="no"
+        <div className="flex gap-2" role="radiogroup" aria-label="Trial tip emails">
+          <button
+            type="button"
+            role="radio"
+            aria-checked={!emailNudgesOptIn}
+            onClick={() => onEmailNudgesOptIn(false)}
             className={[
-              'h-auto flex-1 border rounded-lg px-4 py-3 min-h-[44px] text-[13px] font-semibold transition-all cursor-pointer',
+              'flex-1 border rounded-lg px-4 py-3 min-h-[44px] text-[13px] font-semibold transition-all cursor-pointer',
               !emailNudgesOptIn
-                ? '!border-orange-400/70 !bg-orange-500/20 !text-white'
-                : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35',
+                ? 'border-orange-400/70 bg-orange-500/20 text-white'
+                : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35',
             ].join(' ')}
           >
             No thanks - briefing only
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="yes"
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={emailNudgesOptIn}
+            onClick={() => onEmailNudgesOptIn(true)}
             className={[
-              'h-auto flex-1 border rounded-lg px-4 py-3 min-h-[44px] text-[13px] font-semibold transition-all cursor-pointer',
+              'flex-1 border rounded-lg px-4 py-3 min-h-[44px] text-[13px] font-semibold transition-all cursor-pointer',
               emailNudgesOptIn
-                ? '!border-orange-400/70 !bg-orange-500/20 !text-white'
-                : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35',
+                ? 'border-orange-400/70 bg-orange-500/20 text-white'
+                : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35',
             ].join(' ')}
           >
             Yes, send trial tips
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </Card>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1360,7 +1323,7 @@ function StepName({
           Two minutes of setup. Your first company scan starts before you finish.
         </p>
       </div>
-      <Input
+      <input
         ref={inputRef}
         type="text"
         value={value}
@@ -1368,7 +1331,7 @@ function StepName({
         onKeyDown={e => e.key === 'Enter' && onNext()}
         placeholder="Your full name"
         autoComplete="name"
-        className="w-full !border-white/15 rounded-lg px-4 py-3.5 text-[16px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 !bg-slate-950/60"
+        className="w-full border border-white/15 rounded-lg px-4 py-3.5 text-[16px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
       />
       <p className="text-[12px] text-slate-400">
         Add your name now or skip. Either way, we move straight to your target shortlist.
@@ -1397,29 +1360,20 @@ function StepLevel({
           Why this matters: we use these lanes to surface the earliest opportunities that match your next move.
         </p>
       </div>
-      <ToggleGroup
-        multiple
-        value={roleTitles}
-        onValueChange={(values) => {
-          const optAdded = ROLE_TRACK_OPTIONS.find(o => values.includes(o.value) && !roleTitles.includes(o.value))
-          const optRemoved = ROLE_TRACK_OPTIONS.find(o => !values.includes(o.value) && roleTitles.includes(o.value))
-          const changed = optAdded ?? optRemoved
-          if (changed) onToggle(changed)
-        }}
-        className="grid w-full grid-cols-2 gap-3"
-      >
+      <div className="grid grid-cols-2 gap-3">
         {ROLE_TRACK_OPTIONS.map(opt => {
           const selected = roleTitles.includes(opt.value)
           const isPrimary = roleTitles[0] === opt.value
           return (
-            <ToggleGroupItem
+            <button
               key={opt.value}
-              value={opt.value}
+              type="button"
+              onClick={() => onToggle(opt)}
               className={[
-                'h-auto text-left border rounded-lg px-5 py-4 flex items-center justify-between transition-all cursor-pointer',
+                'text-left border rounded-lg px-5 py-4 flex items-center justify-between transition-all cursor-pointer',
                 selected
-                  ? '!border-orange-400/70 !bg-orange-500/20 !text-white'
-                  : '!border-white/15 !bg-white/5 hover:!border-white/35',
+                  ? 'border-orange-400/70 bg-orange-500/20 text-white'
+                  : 'border-white/15 bg-white/5 hover:border-white/35',
               ].join(' ')}
             >
               <div>
@@ -1439,10 +1393,10 @@ function StepLevel({
                   <path d="M5 9l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )}
-            </ToggleGroupItem>
+            </button>
           )
         })}
-      </ToggleGroup>
+      </div>
     </div>
   )
 }
@@ -1462,7 +1416,7 @@ function StepSituation({
   onTimeline: (v: string) => void
   onDriver: (v: string) => void
 }) {
-  const selectTriggerCls = 'w-full !border-white/15 rounded-lg px-4 py-3.5 h-auto text-[15px] text-slate-100 focus-visible:!border-white/40 !bg-slate-950/60 cursor-pointer'
+  const selectCls = 'w-full border border-white/15 rounded-lg px-4 py-3.5 text-[15px] text-slate-100 focus:outline-none focus:border-white/40 bg-slate-950/60 appearance-none cursor-pointer'
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -1479,48 +1433,50 @@ function StepSituation({
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+            <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
               Current situation
-            </Label>
-            <Select value={status || undefined} onValueChange={(value) => onStatus(value ?? '')}>
-              <SelectTrigger title="Current situation" className={selectTriggerCls}>
-                <SelectValue placeholder="Select one" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="employed_exploring">Employed, quietly exploring</SelectItem>
-                <SelectItem value="active_search">In active search</SelectItem>
-                <SelectItem value="consulting">Consulting or interim</SelectItem>
-                <SelectItem value="between_roles">Between roles</SelectItem>
-              </SelectContent>
-            </Select>
+            </label>
+            <select
+              value={status}
+              onChange={e => onStatus(e.target.value)}
+              title="Current situation"
+              className={selectCls}
+            >
+              <option value="">Select one</option>
+              <option value="employed_exploring">Employed, quietly exploring</option>
+              <option value="active_search">In active search</option>
+              <option value="consulting">Consulting or interim</option>
+              <option value="between_roles">Between roles</option>
+            </select>
           </div>
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+            <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
               Timeline
-            </Label>
-            <Select value={timeline || undefined} onValueChange={(value) => onTimeline(value ?? '')}>
-              <SelectTrigger title="Search timeline" className={selectTriggerCls}>
-                <SelectValue placeholder="Select one" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="immediately">Need something immediately</SelectItem>
-                <SelectItem value="3_months">Within 3 months</SelectItem>
-                <SelectItem value="6_months">Within 6 months</SelectItem>
-                <SelectItem value="opportunistic">Right opportunity only</SelectItem>
-              </SelectContent>
-            </Select>
+            </label>
+            <select
+              value={timeline}
+              onChange={e => onTimeline(e.target.value)}
+              title="Search timeline"
+              className={selectCls}
+            >
+              <option value="">Select one</option>
+              <option value="immediately">Need something immediately</option>
+              <option value="3_months">Within 3 months</option>
+              <option value="6_months">Within 6 months</option>
+              <option value="opportunistic">Right opportunity only</option>
+            </select>
           </div>
         </div>
         <div>
-          <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+          <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
             What is driving this search? <span className="font-normal normal-case tracking-normal text-slate-300">(one sentence)</span>
-          </Label>
-          <Input
+          </label>
+          <input
             type="text"
             value={driver}
             onChange={e => onDriver(e.target.value)}
             placeholder="e.g. My role was eliminated. / I want to move from VP to CIO."
-            className="w-full !border-white/15 rounded-lg px-4 py-3.5 text-[15px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 !bg-slate-950/60"
+            className="w-full border border-white/15 rounded-lg px-4 py-3.5 text-[15px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
           />
         </div>
       </div>
@@ -1574,7 +1530,7 @@ function StepImport({
   onCompany: (v: string) => void
   onLinkedinUrl: (v: string) => void
 }) {
-  const inputCls = 'w-full !border-white/15 rounded-lg px-4 py-3.5 text-[15px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 !bg-slate-950/60'
+  const inputCls = 'w-full border border-white/15 rounded-lg px-4 py-3.5 text-[15px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60'
 
   if (importDone) {
     if (importThin) {
@@ -1588,22 +1544,22 @@ function StepImport({
               We saved your profile text but could not automatically extract your title and company. Add them below so briefings and prep briefs are personalized correctly.
             </p>
           </div>
-          <Alert variant="warning">
+          <div className="bg-amber-500/10 border border-amber-300/40 rounded-lg px-5 py-4 flex items-start gap-3">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="shrink-0 mt-0.5">
               <circle cx="10" cy="10" r="10" fill="#f59e0b" fillOpacity="0.2" />
               <path d="M10 6v5" stroke="#fbbf24" strokeWidth="1.8" strokeLinecap="round" />
               <circle cx="10" cy="14" r="1" fill="#fbbf24" />
             </svg>
-            <AlertDescription className="text-[13px] leading-relaxed">
+            <span className="text-[13px] text-amber-200 leading-relaxed">
               Title and company not detected. Fill them in now or update your profile later.
-            </AlertDescription>
-          </Alert>
+            </span>
+          </div>
           <div className="flex flex-col gap-4">
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+              <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                 Current or most recent title
-              </Label>
-              <Input
+              </label>
+              <input
                 type="text"
                 value={currentTitle}
                 onChange={e => onTitle(e.target.value)}
@@ -1612,10 +1568,10 @@ function StepImport({
               />
             </div>
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+              <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
                 Current or most recent company
-              </Label>
-              <Input
+              </label>
+              <input
                 type="text"
                 value={currentCompany}
                 onChange={e => onCompany(e.target.value)}
@@ -1638,20 +1594,20 @@ function StepImport({
             Your signals, briefings, and prep briefs are now personalized to your background. You can review and edit your profile anytime from settings.
           </p>
         </div>
-        <Alert variant="success">
+        <div className="bg-emerald-500/10 border border-emerald-300/40 rounded-lg px-5 py-4 flex items-center gap-3">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <circle cx="10" cy="10" r="10" fill="#10b981" fillOpacity="0.2" />
             <path d="M6 10l3 3 5-5" stroke="#34d399" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <AlertDescription className="text-[14px] font-medium">LinkedIn data extracted successfully</AlertDescription>
-        </Alert>
-        <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 px-5 py-4">
+          <span className="text-[14px] text-emerald-200 font-medium">LinkedIn data extracted successfully</span>
+        </div>
+        <div className="bg-white/5 border border-white/10 rounded-lg px-5 py-4">
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1">What we learned</p>
           <p className="text-[15px] font-semibold text-white">{currentTitle || 'Your current title'}{currentCompany ? ` at ${currentCompany}` : ''}</p>
           <p className="text-[12px] text-slate-400 mt-1.5">
             We will use this to tune your shortlist, role hypotheses, and first brief.
           </p>
-        </Card>
+        </div>
       </div>
     )
   }
@@ -1669,10 +1625,10 @@ function StepImport({
         </div>
         <div className="flex flex-col gap-4">
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+            <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
               Current or most recent title
-            </Label>
-            <Input
+            </label>
+            <input
               type="text"
               value={currentTitle}
               onChange={e => onTitle(e.target.value)}
@@ -1681,10 +1637,10 @@ function StepImport({
             />
           </div>
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+            <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
               Current or most recent company
-            </Label>
-            <Input
+            </label>
+            <input
               type="text"
               value={currentCompany}
               onChange={e => onCompany(e.target.value)}
@@ -1693,10 +1649,10 @@ function StepImport({
             />
           </div>
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+            <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
               LinkedIn URL <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span>
-            </Label>
-            <Input
+            </label>
+            <input
               type="url"
               value={linkedinUrl}
               onChange={e => onLinkedinUrl(e.target.value)}
@@ -1754,59 +1710,58 @@ function StepImport({
       </div>
 
       {importError && (
-        <Alert variant="destructive">
-          <AlertDescription className="text-[13px]">{importError}</AlertDescription>
-        </Alert>
+        <div className="bg-red-500/10 border border-red-300/40 rounded-lg px-4 py-3 text-[13px] text-red-200">
+          {importError}
+        </div>
       )}
 
       {/* PDF tile */}
-      <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 p-5">
+      <div className="border border-white/10 rounded-lg bg-white/5 p-5 flex flex-col gap-3">
         <div className="text-[14px] font-semibold text-slate-200">Upload your LinkedIn PDF</div>
         <div className="text-[13px] text-slate-400 leading-relaxed">
           On your LinkedIn profile: find the <span className="font-medium text-slate-300">More</span> or <span className="font-medium text-slate-300">Resources</span> button, then choose <span className="font-medium text-slate-300">Save to PDF</span>.
         </div>
-        <Button
+        <button
           type="button"
           onClick={onPdfClick}
           disabled={extracting || importing}
-          className="self-start px-5 min-h-[40px] text-[13px] font-semibold"
+          className="self-start bg-orange-500 hover:bg-orange-400 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:opacity-40"
         >
           {extracting ? 'Reading PDF...' : importing ? 'Extracting...' : 'Upload PDF'}
-        </Button>
-      </Card>
+        </button>
+      </div>
 
       {/* Paste tile */}
-      <Card variant="glass" className="rounded-lg border-white/10 bg-white/5 p-5">
+      <div className="border border-white/10 rounded-lg bg-white/5 p-5 flex flex-col gap-3">
         <div className="text-[14px] font-semibold text-slate-200">Paste profile text</div>
         <div className="text-[13px] text-slate-400">
           Open your LinkedIn profile, press <span className="font-medium text-slate-300">Cmd+A</span> then <span className="font-medium text-slate-300">Cmd+C</span>, and paste below.
         </div>
-        <Textarea
+        <textarea
           value={pasteText}
           onChange={e => onPasteText(e.target.value)}
           placeholder="Paste your LinkedIn profile here..."
           rows={3}
           disabled={importing}
-          className="w-full !border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 resize-none leading-relaxed !bg-slate-950/60"
+          className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 resize-none leading-relaxed disabled:opacity-50 bg-slate-950/60"
         />
-        <Button
+        <button
           type="button"
           onClick={onImport}
           disabled={importing || !pasteText.trim()}
-          className="self-start px-5 min-h-[40px] text-[13px] font-semibold"
+          className="self-start bg-orange-500 hover:bg-orange-400 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:opacity-40"
         >
           {importing ? 'Extracting...' : 'Extract profile'}
-        </Button>
-      </Card>
+        </button>
+      </div>
 
-      <Button
+      <button
         type="button"
-        variant="ghost"
         onClick={onManual}
-        className="h-auto p-0 !bg-transparent hover:!bg-transparent justify-start text-left text-[13px] font-normal text-slate-400 hover:text-slate-200"
+        className="text-[13px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer p-0 text-left"
       >
         Skip LinkedIn import. I&apos;ll enter my details manually.
-      </Button>
+      </button>
     </div>
   )
 }

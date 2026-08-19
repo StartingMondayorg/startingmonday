@@ -58,9 +58,7 @@ import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
 import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
 import { rankSignals } from "@/lib/intelligence/intelligence-quality";
 import { stripStaleRelativeTime } from "@/lib/outreach/follow-up-copy";
-import { Card } from "@/components/ui/card";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-flags";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {
@@ -159,6 +157,10 @@ export default async function DashboardPage({
     timelineSort?: string;
   }>;
 }) {
+  if (isStartingMondayDashboardSimplificationEnabled()) {
+    return <div className="p-6 text-slate-200">Dashboard simplification is enabled but not yet implemented. The legacy dashboard remains the authoritative fallback until the flagged layout passes its evidence gates.</div>;
+  }
+
   const {
     q,
     stage,
@@ -1141,19 +1143,17 @@ export default async function DashboardPage({
         />
 
         {showWeekOneBanner && (
-          <Alert variant="warning" className="mb-6 px-5 py-3">
-            <AlertDescription className="text-[13px]">
-              <span className="font-semibold">
-                Day {(daysSinceOnboard ?? 0) + 1} of your first week.
-              </span>{" "}
-              Next briefing: tomorrow at {weekOneBriefingTime}. Next career-page
-              scan: {weekOneNextScanDay}. Today&apos;s action:{" "}
-              <a href="#to-do-now" className="font-semibold underline">
-                one step in To do now
-              </a>
-              .
-            </AlertDescription>
-          </Alert>
+          <div className="mb-6 rounded border border-orange-300/30 bg-orange-500/10 px-5 py-3 text-[13px] text-slate-100">
+            <span className="font-semibold text-orange-200">
+              Day {(daysSinceOnboard ?? 0) + 1} of your first week.
+            </span>{" "}
+            Next briefing: tomorrow at {weekOneBriefingTime}. Next career-page
+            scan: {weekOneNextScanDay}. Today&apos;s action:{" "}
+            <a href="#to-do-now" className="font-semibold underline">
+              one step in To do now
+            </a>
+            .
+          </div>
         )}
 
         <DashboardCampaignFoundationSection
@@ -1185,10 +1185,7 @@ export default async function DashboardPage({
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] gap-8 items-start mb-8">
-          <Card
-            variant="glass"
-            className="hidden lg:block p-5 lg:sticky lg:top-24"
-          >
+          <aside className="hidden lg:block rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md lg:sticky lg:top-24">
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-3">
               On this page
             </p>
@@ -1212,13 +1209,12 @@ export default async function DashboardPage({
                 Briefs
               </a>
             </nav>
-          </Card>
+          </aside>
 
           <div className="space-y-5">
-            <Card
+            <section
               id="to-do-now"
-              variant="glass"
-              className="scroll-mt-24 p-5 sm:p-6"
+              className="scroll-mt-24 rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
             >
               <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-1">
                 To do now
@@ -1230,13 +1226,12 @@ export default async function DashboardPage({
               <p className="text-[12px] text-slate-400 mt-1">
                 {operatingStateLabel}
               </p>
-            </Card>
+            </section>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              <Card
+              <section
                 id="companies-panel"
-                variant="glass"
-                className="p-5"
+                className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
               >
                 <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
                   Companies
@@ -1265,12 +1260,11 @@ export default async function DashboardPage({
                 >
                   Signals
                 </Link>
-              </Card>
+              </section>
 
-              <Card
+              <section
                 id="relationships-panel"
-                variant="glass"
-                className="p-5"
+                className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
               >
                 <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
                   Relationships
@@ -1298,12 +1292,11 @@ export default async function DashboardPage({
                 >
                   Contacts
                 </Link>
-              </Card>
+              </section>
 
-              <Card
+              <section
                 id="week-tasks-panel"
-                variant="glass"
-                className="p-5"
+                className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
               >
                 <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
                   Follow-ups overdue
@@ -1338,18 +1331,19 @@ export default async function DashboardPage({
                         );
                         const cleanAction = stripStaleRelativeTime(item.action);
                         return (
-                          <li key={item.id}>
-                            <Card variant="glass" className="px-3 py-2">
-                              <p className="text-[12px] font-semibold text-white">
-                                {cleanAction || item.action}
-                              </p>
-                              <p className="text-[11px] text-slate-400 mt-0.5">
-                                {item.companies?.name ?? "General"} ·{" "}
-                                {daysOverdue > 0
-                                  ? `Due ${dueLabel}`
-                                  : "Due today"}
-                              </p>
-                            </Card>
+                          <li
+                            key={item.id}
+                            className="rounded border border-white/10 bg-white/5 px-3 py-2"
+                          >
+                            <p className="text-[12px] font-semibold text-white">
+                              {cleanAction || item.action}
+                            </p>
+                            <p className="text-[11px] text-slate-400 mt-0.5">
+                              {item.companies?.name ?? "General"} ·{" "}
+                              {daysOverdue > 0
+                                ? `Due ${dueLabel}`
+                                : "Due today"}
+                            </p>
                           </li>
                         );
                       })}
@@ -1365,7 +1359,7 @@ export default async function DashboardPage({
                 >
                   Calendar
                 </Link>
-              </Card>
+              </section>
             </div>
           </div>
         </div>
@@ -1401,22 +1395,21 @@ export default async function DashboardPage({
           />
 
           {rolesFormingCard && (
-            <Alert
-              variant="info"
-              className="mt-5 flex flex-wrap items-center justify-between gap-2 px-4 py-3"
-            >
-              <AlertDescription className="min-w-0 text-[13px]">
-                <span className="font-semibold">Roles forming:</span>{" "}
+            <div className="mt-5 rounded border border-white/10 bg-white/5 px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-[13px] text-slate-200 min-w-0">
+                <span className="font-semibold text-orange-200/90">
+                  Roles forming:
+                </span>{" "}
                 {rolesFormingHeadline ??
                   "New leverage may be opening in your tracked pipeline."}
-              </AlertDescription>
+              </p>
               <Link
                 href={rolesFormingCard.href}
                 className="text-[12px] font-semibold text-orange-300 hover:text-orange-200 shrink-0"
               >
                 Signals
               </Link>
-            </Alert>
+            </div>
           )}
 
           <div className="mt-4">
@@ -1425,7 +1418,7 @@ export default async function DashboardPage({
               title="Pipeline health and decision timeline"
               defaultOpen={focus === "health"}
             >
-              <Card variant="glass" className="mb-6 p-4 sm:p-5">
+              <section className="mb-6 rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md sm:p-5">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <h2 className="text-[13px] font-semibold text-orange-200/90">
@@ -1449,53 +1442,54 @@ export default async function DashboardPage({
                     )}
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center w-full sm:w-auto">
-                    <Card variant="glass" className="px-3 py-2">
+                    <div className="rounded border border-white/15 bg-white/5 px-3 py-2">
                       <p className="text-[13px] text-slate-300 font-semibold">
                         Cadence
                       </p>
                       <p className="text-[16px] font-bold text-white">
                         {cadenceScore}
                       </p>
-                    </Card>
-                    <Card variant="glass" className="px-3 py-2">
+                    </div>
+                    <div className="rounded border border-white/15 bg-white/5 px-3 py-2">
                       <p className="text-[13px] text-slate-300 font-semibold">
                         Follow-through
                       </p>
                       <p className="text-[16px] font-bold text-white">
                         {followThroughScore}
                       </p>
-                    </Card>
-                    <Card variant="glass" className="px-3 py-2">
+                    </div>
+                    <div className="rounded border border-white/15 bg-white/5 px-3 py-2">
                       <p className="text-[13px] text-slate-300 font-semibold">
                         Conversion
                       </p>
                       <p className="text-[16px] font-bold text-white">
                         {conversionScore}
                       </p>
-                    </Card>
+                    </div>
                   </div>
                 </div>
 
                 {topStalledCampaigns.length > 0 && (
-                  <Alert variant="warning" className="mt-4 p-3">
-                    <AlertTitle className="mb-2 text-[13px]">
+                  <div className="mt-4 rounded-lg border border-amber-300/40 bg-amber-500/10 p-3">
+                    <p className="text-[13px] font-semibold text-amber-200 mb-2">
                       Stalled alerts
-                    </AlertTitle>
-                    <AlertDescription>
-                      <ul className="space-y-1.5 text-[13px]">
-                        {topStalledCampaigns.map((item) => (
-                          <li key={item.id}>
-                            <span className="font-semibold">{item.name}</span>{" "}
-                            {item.updated_at
-                              ? `has had no stage updates since ${new Date(item.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}.`
-                              : "has had no recent stage updates."}
-                          </li>
-                        ))}
-                      </ul>
-                    </AlertDescription>
-                  </Alert>
+                    </p>
+                    <ul className="space-y-1.5">
+                      {topStalledCampaigns.map((item) => (
+                        <li
+                          key={item.id}
+                          className="text-[13px] text-amber-100"
+                        >
+                          <span className="font-semibold">{item.name}</span>{" "}
+                          {item.updated_at
+                            ? `has had no stage updates since ${new Date(item.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}.`
+                            : "has had no recent stage updates."}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
-              </Card>
+              </section>
 
               <DashboardDecisionTimelineSection
                 roleLensLabel={roleLensLabel}
@@ -1525,7 +1519,7 @@ export default async function DashboardPage({
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
             Relationships
           </h2>
-          <Card variant="glass" className="p-5 sm:p-6">
+          <div className="rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-[13px] text-slate-200">
                 {contactCount} active contact{contactCount === 1 ? "" : "s"}{" "}
@@ -1545,7 +1539,7 @@ export default async function DashboardPage({
                 signal and you know someone there, the opening appears here.
               </p>
             )}
-          </Card>
+          </div>
           {warmPaths.length > 0 && (
             <div className="mt-5">
               <DashboardDisclosureSection
@@ -1603,10 +1597,7 @@ export default async function DashboardPage({
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
             Plan
           </h2>
-          <Card
-            variant="glass"
-            className="mb-5 flex flex-wrap items-center justify-between gap-2 px-5 py-4 sm:px-6"
-          >
+          <div className="mb-5 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 sm:px-6 flex flex-wrap items-center justify-between gap-2 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
             <p className="text-[13px] text-slate-200">
               <span className="font-semibold text-white">Weekly plan.</span>{" "}
               Choose one relationships move, one opportunities move, and one
@@ -1618,7 +1609,7 @@ export default async function DashboardPage({
             >
               Open weekly plan →
             </Link>
-          </Card>
+          </div>
           <DashboardDisclosureSection
             id="advanced-modules"
             title="Weekly performance and advanced modules"
@@ -1664,30 +1655,27 @@ export default async function DashboardPage({
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
             Briefs
           </h2>
-          <Card variant="glass" className="p-5 sm:p-6">
+          <div className="rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  render={<Link href="/dashboard/briefing" />}
+                <Link
+                  href="/dashboard/briefing"
+                  className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10"
                 >
                   Briefing
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  render={<Link href="/dashboard/strategy" />}
+                </Link>
+                <Link
+                  href="/dashboard/strategy"
+                  className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10"
                 >
                   Strategy brief
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  render={<Link href="/dashboard/signals" />}
+                </Link>
+                <Link
+                  href="/dashboard/signals"
+                  className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10"
                 >
                   Signals
-                </Button>
+                </Link>
               </div>
               <p className="text-[12px] text-slate-400">
                 {signalCount > 0
@@ -1709,7 +1697,7 @@ export default async function DashboardPage({
                 next market move worth acting on.
               </p>
             )}
-          </Card>
+          </div>
         </section>
       </main>
       <HelpQuickButton source="dashboard" />
