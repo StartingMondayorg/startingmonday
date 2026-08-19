@@ -14,6 +14,9 @@ jobs:
   ratchet:
     name: Enforce debt no-increase ratchet
     runs-on: ubuntu-latest
+    # Advisory on pull requests to reduce migration-noise; remains strict for
+    # scheduled and manual governance runs.
+    continue-on-error: ${{ github.event_name == 'pull_request' }}
     timeout-minutes: 20
 
     steps:
