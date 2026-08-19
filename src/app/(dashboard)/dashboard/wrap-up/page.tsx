@@ -63,7 +63,7 @@ export default async function WrapUpPage() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-bold px-7 py-3.5"
+              className="w-full text-[14px] font-bold px-7 py-3.5"
             >
               Mark search complete
             </Button>

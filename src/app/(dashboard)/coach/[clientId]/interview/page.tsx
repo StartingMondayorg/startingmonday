@@ -50,7 +50,7 @@ export default async function CoachClientInterviewPage({
 
       {/* Coach actions */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button className="px-4 py-2 text-[13px] bg-orange-500 text-slate-900 hover:bg-orange-600">
+        <Button className="px-4 py-2 text-[13px]">
           Assign homework
         </Button>
         <Button variant="outline" className="px-4 py-2 text-[13px] border-slate-700 text-slate-300 hover:border-slate-600">

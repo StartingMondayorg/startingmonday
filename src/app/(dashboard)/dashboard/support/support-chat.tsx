@@ -167,7 +167,7 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
         <Button
           type="submit"
           disabled={loading || question.trim().length < 3}
-          className="min-h-[44px] px-6 text-[14px] bg-orange-400 text-slate-950 hover:bg-orange-300 shrink-0"
+          className="min-h-[44px] px-6 text-[14px] shrink-0"
         >
           {loading ? 'Thinking...' : 'Ask'}
         </Button>

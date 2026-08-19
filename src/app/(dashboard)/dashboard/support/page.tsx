@@ -157,7 +157,7 @@ export default function SupportPage() {
               <Button
                 type="submit"
                 disabled={status === 'submitting' || message.trim().length < 10}
-                className="mt-3 min-h-[44px] px-6 text-[14px] bg-orange-400 text-slate-950 hover:bg-orange-300"
+                className="mt-3 min-h-[44px] px-6 text-[14px]"
               >
                 {status === 'submitting' ? 'Sending...' : 'Send question'}
               </Button>

@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { usePostHog } from 'posthog-js/react'
 import { isEnabledFlag } from '@/lib/feature-flags'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 
 const INCLUDES = [
   'Everything in Executive ($499/mo) - full intelligence depth, all sources, full brief suite',
@@ -128,12 +133,9 @@ export function ConciergeWaitlist() {
             <Link href="/login" className="text-[13px] text-slate-400 hover:text-white transition-colors">
               Log in
             </Link>
-            <Link
-              href="/signup?from=concierge"
-              className="text-[13px] font-semibold text-slate-900 bg-orange-500 px-4 py-1.5 rounded hover:bg-orange-600 transition-colors"
-            >
+            <Button size="sm" render={<Link href="/signup?from=concierge" />}>
               Try free
-            </Link>
+            </Button>
           </div>
         </div>
       </nav>
@@ -212,22 +214,22 @@ export function ConciergeWaitlist() {
                 {isBetaProgram ? 'Private intake brief' : 'Request access'}
               </p>
               {submitted ? (
-                <div className={`rounded p-6 ${premiumEnabled ? 'border border-white/12 bg-white/[0.07] shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200 bg-slate-50'}`}>
+                <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 ${premiumEnabled ? 'shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'bg-slate-50'}`}>
                   <p className={`text-[15px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>Brief received.</p>
                   <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
                     We review each submission personally. You will hear from us directly.
                   </p>
-                </div>
+                </Card>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                   <div>
-                    <label
+                    <Label
                       htmlFor="c-email"
                       className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
                     >
                       Executive email
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       id="c-email"
                       type="email"
                       required
@@ -235,64 +237,64 @@ export function ConciergeWaitlist() {
                       onChange={e => setEmail(e.target.value)}
                       onBlur={(e) => markFieldInteraction('email', e.target.value)}
                       placeholder="you@company.com"
-                      className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                      className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label
+                      <Label
                         htmlFor="c-company"
                         className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
                       >
                         Current company
-                      </label>
-                      <input
+                      </Label>
+                      <Input
                         id="c-company"
                         type="text"
                         value={company}
                         onChange={e => setCompany(e.target.value)}
                         onBlur={(e) => markFieldInteraction('company', e.target.value)}
                         placeholder="Current or most recent organization"
-                        className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                        className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400"
                       />
                     </div>
                     <div>
-                      <label
+                      <Label
                         htmlFor="c-role"
                         className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
                       >
                         Target mandate
-                      </label>
-                      <input
+                      </Label>
+                      <Input
                         id="c-role"
                         type="text"
                         value={role}
                         onChange={e => setRole(e.target.value)}
                         onBlur={(e) => markFieldInteraction('role', e.target.value)}
                         placeholder="Example: CIO, CTO, VP Engineering"
-                        className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400"
+                        className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400"
                       />
                     </div>
                   </div>
                   <div>
-                    <label
+                    <Label
                       htmlFor="c-situation"
                       className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
                     >
                       Confidential transition brief
-                    </label>
-                    <textarea
+                    </Label>
+                    <Textarea
                       id="c-situation"
                       rows={4}
                       value={situation}
                       onChange={e => setSituation(e.target.value)}
                       onBlur={(e) => markFieldInteraction('situation', e.target.value)}
                       placeholder="In 3-5 lines, describe your situation, timing, and the outcome you want next."
-                      className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none"
+                      className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400 resize-none"
                     />
                   </div>
                   {isBetaProgram && (
-                    <div className={`rounded p-3 ${premiumEnabled ? 'border border-white/12 bg-slate-900/64 shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200 bg-slate-50'}`}>
+                    <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-3 ${premiumEnabled ? 'bg-slate-900/64 shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'bg-slate-50'}`}>
                       <p className={`text-[11px] font-bold tracking-[0.08em] uppercase mb-2 ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>Selection criteria and confidentiality guardrails</p>
                       <ul className={`space-y-1 text-[12px] leading-relaxed list-disc pl-4 ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
                         <li>Fit: senior operator with an active or near-term transition objective.</li>
@@ -300,16 +302,16 @@ export function ConciergeWaitlist() {
                         <li>Feedback: willing to share direct feedback and outcomes.</li>
                         <li>Privacy: intake details are reviewed by founder only and not shared externally.</li>
                       </ul>
-                    </div>
+                    </Card>
                   )}
                   {error && <p className="text-[13px] text-red-600">{error}</p>}
-                  <button
+                  <Button
                     type="submit"
                     disabled={loading || !email.trim()}
-                    className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-slate-900 text-[14px] font-semibold px-6 py-3 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed"
+                    className="w-full text-[14px] px-6 py-3"
                   >
                     {loading ? 'Sending...' : isBetaProgram ? 'Submit confidential brief' : 'Request access'}
-                  </button>
+                  </Button>
                   <p className={`text-[11px] leading-relaxed ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>
                     {isBetaProgram
                       ? 'Every brief is reviewed by the founder. If there is fit, we will follow up directly.'
@@ -335,19 +337,19 @@ export function ConciergeWaitlist() {
             </div>
           </div>
 
-          <div className={`rounded-2xl p-6 mb-12 ${premiumEnabled ? 'border border-white/12 bg-white/[0.07] shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'border border-slate-200'}`}>
+          <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 mb-12 ${premiumEnabled ? 'shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : ''}`}>
             <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-3 ${premiumEnabled ? 'text-orange-200' : 'text-slate-400'}`}>About the founder</p>
             <p className={`text-[14px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-700'}`}>
               Starting Monday was built by a founder who ran executive job searches at scale and watched colleagues waste months on reactive tactics that did not work. The sessions are direct, structured, and specific to your pipeline. Not coaching. Not cheerleading. One executive to another.
             </p>
-          </div>
+          </Card>
 
-          <div className={`rounded-2xl p-5 mb-12 ${premiumEnabled ? 'border border-white/12 bg-slate-950/64 shadow-[0_20px_62px_rgba(15,23,42,0.2)] backdrop-blur-md' : 'border border-slate-200 bg-slate-50'}`}>
+          <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-5 mb-12 ${premiumEnabled ? 'shadow-[0_20px_62px_rgba(15,23,42,0.2)]' : 'bg-slate-50'}`}>
             <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-orange-200' : 'text-slate-500'}`}>Trust and source note</p>
             <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
               Confidential intake details are used only for founder review and fit decisions. Outcome expectations on this page are informed by the pilot Evidence Hub and source-linked methodology pages.
             </p>
-          </div>
+          </Card>
 
           <div className={`pt-2 border-t ${premiumEnabled ? 'border-white/10' : 'border-slate-100'}`}>
             <p className={`text-[13px] mb-2 ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>Looking for Executive or Active instead?</p>

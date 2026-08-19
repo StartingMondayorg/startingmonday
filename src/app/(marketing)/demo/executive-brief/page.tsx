@@ -2,6 +2,10 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 function renderInline(str: string) {
   return str.split(/\*\*(.+?)\*\*/g).map((chunk, index) => (
@@ -138,8 +142,8 @@ export default function ExecutiveBriefDemoPage() {
     setTimeout(() => customRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
   }
 
-  const inputCls  = 'w-full rounded border border-white/12 bg-white/[0.04] px-3 py-2.5 text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-300/50 focus:ring-1 focus:ring-orange-300/20'
-  const labelCls  = 'block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-300 mb-1.5'
+  const inputCls  = 'border-white/12 bg-white/[0.04] text-slate-100 placeholder:text-slate-500 focus-visible:border-orange-300/50'
+  const labelCls  = 'text-[11px] font-bold tracking-[0.07em] uppercase text-slate-300 mb-1.5'
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
@@ -185,14 +189,14 @@ export default function ExecutiveBriefDemoPage() {
             ['3 layers', 'Company context, likely objections, and peer-level questions in one artifact'],
             ['0 uploads required', 'The live example below is generated without a manual brief-writing workflow'],
           ].map(([value, label]) => (
-            <div key={value} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+            <Card key={value} variant="glass" className="!border-white/10 !bg-white/[0.03] p-4">
               <p className="text-[22px] font-bold text-white mb-1">{value}</p>
               <p className="text-[12px] text-slate-300 leading-relaxed">{label}</p>
-            </div>
+            </Card>
           ))}
         </section>
 
-        <section className="mb-10 rounded-xl border border-emerald-300/25 bg-emerald-300/10 p-5">
+        <Card variant="glass" className="mb-10 !border-emerald-300/25 !bg-emerald-300/10 p-5">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-200 mb-2">Trust and use boundary</p>
           <p className="text-[13px] text-slate-200 leading-relaxed mb-2">
             This demo uses generated sample material for evaluation only. Customer searches and prep data remain private to account owners and invited collaborators.
@@ -200,7 +204,7 @@ export default function ExecutiveBriefDemoPage() {
           <p className="text-[12px] text-slate-300 leading-relaxed">
             Verification path: review this example, generate your own brief, then compare prep time before a real interview.
           </p>
-        </section>
+        </Card>
 
         {/* Pre-loaded brief: Salesforce / VP of IT */}
         <div className="mb-4">
@@ -213,7 +217,7 @@ export default function ExecutiveBriefDemoPage() {
             )}
           </div>
 
-          <div className="rounded border border-white/10 bg-white/[0.03] p-6 sm:p-8 min-h-[120px]">
+          <Card variant="glass" className="!rounded !border-white/10 !bg-white/[0.03] p-6 sm:p-8 min-h-[120px]">
             {preError ? (
               <p className="text-[14px] text-red-500">Failed to load. Refresh to try again.</p>
             ) : preContent ? (
@@ -225,16 +229,16 @@ export default function ExecutiveBriefDemoPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse inline-block [animation-delay:300ms]" />
               </div>
             )}
-          </div>
+          </Card>
         </div>
 
         {/* Context note after brief */}
         {!preLoading && preContent && !preError && (
-          <div className="mb-12 rounded border border-white/10 bg-white/[0.03] px-5 py-4">
+          <Card variant="glass" className="mb-12 !rounded !border-white/10 !bg-white/[0.03] px-5 py-4">
             <p className="text-[13px] text-slate-300 leading-relaxed">
               In a full account this brief is generated automatically for every company in the pipeline, updates as new signals come in, and feeds the daily morning briefing. The user never has to build this from scratch.
             </p>
-          </div>
+          </Card>
         )}
 
         {/* Divider */}
@@ -248,43 +252,45 @@ export default function ExecutiveBriefDemoPage() {
             Enter any target company and the role you are coaching for. The brief generates live.
           </p>
 
-          <form onSubmit={handleGenerate} className="rounded border border-white/10 bg-white/[0.03] p-6 flex flex-col gap-4 mb-8">
-            <div>
-              <label className={labelCls}>Company <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                value={company}
-                onChange={e => setCompany(e.target.value)}
-                placeholder="Microsoft, Amazon, any company"
-                required
-                disabled={loading}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Role <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                value={role}
-                onChange={e => setRole(e.target.value)}
-                placeholder="Chief Information Officer"
-                required
-                disabled={loading}
-                className={inputCls}
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={!company.trim() || !role.trim() || loading}
-              className="bg-orange-500 hover:bg-orange-600 disabled:opacity-30 text-slate-950 text-[13px] font-semibold px-6 py-2.5 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed self-start"
-            >
-              {loading ? 'Generating...' : content ? 'Regenerate' : 'Generate prep brief'}
-            </button>
-            {error && <p className="text-[13px] text-red-600">{error}</p>}
+          <form onSubmit={handleGenerate} className="mb-8">
+            <Card variant="glass" className="!rounded !border-white/10 !bg-white/[0.03] p-6 flex flex-col gap-4">
+              <div>
+                <Label className={labelCls}>Company <span className="text-red-500">*</span></Label>
+                <Input
+                  type="text"
+                  value={company}
+                  onChange={e => setCompany(e.target.value)}
+                  placeholder="Microsoft, Amazon, any company"
+                  required
+                  disabled={loading}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <Label className={labelCls}>Role <span className="text-red-500">*</span></Label>
+                <Input
+                  type="text"
+                  value={role}
+                  onChange={e => setRole(e.target.value)}
+                  placeholder="Chief Information Officer"
+                  required
+                  disabled={loading}
+                  className={inputCls}
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={!company.trim() || !role.trim() || loading}
+                className="px-6 py-2.5 h-auto text-[13px] font-semibold self-start"
+              >
+                {loading ? 'Generating...' : content ? 'Regenerate' : 'Generate prep brief'}
+              </Button>
+              {error && <p className="text-[13px] text-red-600">{error}</p>}
+            </Card>
           </form>
 
           {(content || loading) && (
-            <div className="rounded border border-white/10 bg-white/[0.03] p-6 sm:p-8 mb-8">
+            <Card variant="glass" className="!rounded !border-white/10 !bg-white/[0.03] p-6 sm:p-8 mb-8">
               {renderBrief(content, loading)}
               {loading && !content && (
                 <div className="flex items-center gap-2 py-2">
@@ -293,7 +299,7 @@ export default function ExecutiveBriefDemoPage() {
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
                 </div>
               )}
-            </div>
+            </Card>
           )}
         </div>
 

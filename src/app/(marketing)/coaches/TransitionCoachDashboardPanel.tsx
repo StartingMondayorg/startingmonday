@@ -1,6 +1,9 @@
 "use client"
 
 import { useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type TransitionSignal = {
   company: string
@@ -74,7 +77,7 @@ export function TransitionCoachDashboardPanel() {
 
   return (
     <section className="px-4 pb-14 sm:px-6 sm:pb-16">
-      <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-[linear-gradient(155deg,rgba(21,28,46,0.92),rgba(10,14,24,0.96))] p-6 shadow-[0_22px_80px_rgba(15,23,42,0.3)] backdrop-blur-sm sm:p-8">
+      <Card variant="glass" className="mx-auto max-w-5xl bg-[linear-gradient(155deg,rgba(21,28,46,0.92),rgba(10,14,24,0.96))] p-6 shadow-[0_22px_80px_rgba(15,23,42,0.3)] sm:p-8">
         <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200">Coach dashboard</p>
         <h2 className="font-serif text-[30px] leading-[1.15] text-white sm:text-[36px]">
           What transition coaches need to lead with calm authority.
@@ -84,30 +87,30 @@ export function TransitionCoachDashboardPanel() {
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+          <Card variant="glass" className="p-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Transition readiness</p>
             <p className="mt-2 text-2xl font-semibold text-white">86%</p>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
               Narrative, proof stories, and risk responses are interview-ready.
             </p>
-          </article>
-          <article className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+          </Card>
+          <Card variant="glass" className="p-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Momentum health</p>
             <p className="mt-2 text-2xl font-semibold text-white">4 of 5</p>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
               Weekly commitments are holding, with one blocked action requiring intervention.
             </p>
-          </article>
-          <article className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+          </Card>
+          <Card variant="glass" className="p-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Opportunity timing</p>
             <p className="mt-2 text-2xl font-semibold text-white">4 live signals</p>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
               Companies with near-term executive-transition pressure detected.
             </p>
-          </article>
+          </Card>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+        <Card variant="glass" className="mt-8 p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">
             Find companies likely to open executive transition opportunities
           </p>
@@ -118,14 +121,14 @@ export function TransitionCoachDashboardPanel() {
             Use intelligence signals to shape client outreach timing, then activate relationship paths that improve mandate access.
           </p>
 
-          <button
+          <Button
             type="button"
             onClick={runScanner}
             disabled={isLoading}
-            className="mt-5 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5"
           >
             {isLoading ? 'Scanning transition signals...' : 'Build sample CFO transition target list'}
-          </button>
+          </Button>
 
           {hasRun ? (
             <div className="mt-6 space-y-5">
@@ -133,17 +136,17 @@ export function TransitionCoachDashboardPanel() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">Scanner output</p>
                 <div className="mt-3 grid gap-3">
                   {topSignals.map((signal) => (
-                    <article key={signal.company} className="rounded-xl border border-white/10 bg-slate-950/55 p-4">
+                    <Card key={signal.company} variant="glass" className="p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <h4 className="text-[16px] font-semibold text-white">{signal.company}</h4>
-                        <span className="rounded-full border border-orange-300/40 px-2.5 py-1 text-[11px] font-semibold text-orange-200">
+                        <Badge className="rounded-full border-orange-300/40 px-2.5 py-1 text-[11px] font-semibold text-orange-200">
                           Confidence {signal.confidence}%
-                        </span>
+                        </Badge>
                       </div>
                       <p className="mt-2 text-[13px] leading-relaxed text-slate-200">{signal.trigger}</p>
                       <p className="mt-1 text-[12px] text-slate-300">Likely opening window: {signal.window}</p>
                       <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Coach move: {signal.coachingMove}</p>
-                    </article>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -152,17 +155,17 @@ export function TransitionCoachDashboardPanel() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">Three relationship moves to win access</p>
                 <div className="mt-3 grid gap-3 md:grid-cols-3">
                   {RELATIONSHIP_MOVES.map((item) => (
-                    <article key={item.path} className="rounded-xl border border-white/10 bg-slate-950/55 p-4">
+                    <Card key={item.path} variant="glass" className="p-4">
                       <h4 className="text-[14px] font-semibold text-white">{item.path}</h4>
                       <p className="mt-2 text-[12px] leading-relaxed text-slate-200">{item.why}</p>
-                    </article>
+                    </Card>
                   ))}
                 </div>
               </div>
             </div>
           ) : null}
-        </div>
-      </div>
+        </Card>
+      </Card>
     </section>
   )
 }

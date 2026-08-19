@@ -286,7 +286,7 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
                       {done ? 'Done' : 'Complete'}
                     </Button>
                     <Button
-                      className="h-[44px] rounded-full !bg-orange-500 px-4 text-[13px] font-semibold !text-slate-950 hover:!bg-orange-400"
+                      className="h-[44px] rounded-full px-4 text-[13px] font-semibold"
                       render={<Link href={action.href} />}
                     >
                       {action.cta}

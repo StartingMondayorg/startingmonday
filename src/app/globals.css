@@ -13,7 +13,7 @@ footer p.text-slate-500 {
   --surface-strong: rgba(17, 24, 39, 0.92);
   --surface-muted: rgba(15, 23, 42, 0.06);
   --border-muted: rgba(15, 23, 42, 0.12);
-  /* Brand tokens (restored — shadcn init overwrites these with generic neutrals) */
+  /* Brand tokens (restored - shadcn init overwrites these with generic neutrals) */
   --background: #f5f2eb;
   --foreground: #101828;
   --accent: oklch(0.97 0 0);
@@ -21,9 +21,9 @@ footer p.text-slate-500 {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Primary = brand accent (#c17f3b), used by Button/Badge/Alert "default" and Card's glass variant */
-  --primary: #c17f3b;
-  --primary-foreground: #fffaf3;
+  /* Default shadcn primary (stock neutral), not a brand accent override */
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -31,7 +31,7 @@ footer p.text-slate-500 {
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  /* Extra semantic colors — shadcn ships only default/destructive; this app needs
+  /* Extra semantic colors - shadcn ships only default/destructive; this app needs
      success/warning/info everywhere (Badge, Alert), so they're added here rather
      than left as one-off Tailwind classes per file. */
   --success: oklch(0.6 0.14 155);

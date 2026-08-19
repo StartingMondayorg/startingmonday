@@ -1,6 +1,8 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 type FullSignalBrief = {
   company: string
@@ -57,7 +59,7 @@ export function SampleOutputSection({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="border border-slate-200 rounded-2xl p-5 bg-white">
+        <Card className="rounded-2xl p-5">
           <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Morning signal brief</p>
           <p className="text-[14px] font-semibold text-slate-900 mb-3">One company moved overnight. Here is why it matters.</p>
           <ul className="space-y-2">
@@ -69,15 +71,16 @@ export function SampleOutputSection({
             ))}
           </ul>
           <p className="text-[12px] text-slate-500 leading-relaxed mt-4">Recommended action before 10am: send the reconnection note to the former operating partner already in the client&apos;s network and update the company priority to watchlist tier one. Coach view shows the company moved from Watchlist to Active Outreach and whether the note was sent.</p>
-          <button
+          <Button
             type="button"
             onClick={revealSignalBrief}
-            className="text-[12px] text-orange-600 hover:text-orange-700 font-semibold mt-4 underline underline-offset-2"
+            variant="link"
+            className="h-auto self-start p-0 text-[12px] text-orange-600 underline underline-offset-2 hover:text-orange-700 mt-4"
           >
             See full brief example -&gt;
-          </button>
-        </div>
-        <div className="border border-orange-200 rounded-2xl p-5 bg-orange-50/40">
+          </Button>
+        </Card>
+        <Card className="rounded-2xl border border-orange-200 bg-orange-50/40 p-5 ring-0">
           <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-orange-600 mb-3">Prep brief excerpt</p>
           <p className="text-[14px] font-semibold text-slate-900 mb-3">Pre-interview view for a PE-backed CIO search</p>
           <ul className="space-y-2">
@@ -89,14 +92,15 @@ export function SampleOutputSection({
             ))}
           </ul>
           <p className="text-[12px] text-slate-500 leading-relaxed mt-4">Usually ready in about a minute. Coaches review the brief before the session so the conversation stays strategic instead of reconstructive. In practice, the coach sees the same brief the client sees, plus the current pipeline stage, next follow-up date, and any fresh signal cluster tied to the company.</p>
-          <button
+          <Button
             type="button"
             onClick={revealPrepBrief}
-            className="text-[12px] text-orange-600 hover:text-orange-700 font-semibold mt-4 underline underline-offset-2"
+            variant="link"
+            className="h-auto self-start p-0 text-[12px] text-orange-600 underline underline-offset-2 hover:text-orange-700 mt-4"
           >
             See full brief example -&gt;
-          </button>
-        </div>
+          </Button>
+        </Card>
       </div>
 
       {(showFullSignal || showFullPrep) && (

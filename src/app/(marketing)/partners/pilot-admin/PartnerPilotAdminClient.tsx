@@ -1,6 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type Seat = {
   owner: string
@@ -101,22 +104,22 @@ export default function PartnerPilotAdminClient() {
   return (
     <>
       <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+        <Card variant="glass" className="rounded-xl p-4">
           <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">Seats total</p>
           <p className="mt-2 text-[24px] font-semibold text-white">{summary?.seats_total ?? 0}</p>
-        </article>
-        <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+        </Card>
+        <Card variant="glass" className="rounded-xl p-4">
           <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">Seats active rate</p>
           <p className="mt-2 text-[24px] font-semibold text-white">{summary?.seats_active_rate ?? 0}%</p>
-        </article>
-        <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+        </Card>
+        <Card variant="glass" className="rounded-xl p-4">
           <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">At-risk seats</p>
           <p className="mt-2 text-[24px] font-semibold text-white">{summary?.at_risk_seats ?? 0}</p>
-        </article>
-        <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+        </Card>
+        <Card variant="glass" className="rounded-xl p-4">
           <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">Weekly actions total</p>
           <p className="mt-2 text-[24px] font-semibold text-white">{summary?.weekly_actions_total ?? 0}</p>
-        </article>
+        </Card>
       </section>
 
       {loading ? <p className="mt-5 text-[13px] text-slate-300">Loading seat activity...</p> : null}
@@ -127,34 +130,36 @@ export default function PartnerPilotAdminClient() {
           {seats.map((seat) => {
             const isAtRisk = seat.status === 'At risk'
             return (
-              <article key={seat.owner} className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+              <Card key={seat.owner} variant="glass" className="rounded-xl p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-[14px] font-semibold text-white">{seat.owner}</h2>
-                  <span className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-orange-200">{seat.status}</span>
+                  <Badge variant="outline" className="rounded-full !border-white/15 !bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-orange-200">{seat.status}</Badge>
                 </div>
                 <p className="mt-2 text-[13px] text-slate-200">Active clients: {seat.activeClients}</p>
                 <p className="mt-1 text-[13px] text-slate-200">Weekly relationship actions: {seat.weeklyActions}</p>
                 <p className="mt-1 text-[12px] text-slate-300">Last update: {seat.lastUpdatedAt ?? 'no updates logged yet'}</p>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
                     disabled={savingSeat === seat.owner || !isAtRisk}
                     onClick={() => updateSeatStatus(seat, 'active')}
-                    className="rounded-full border border-white/20 px-3 py-1.5 text-[12px] font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-full !border-white/20 !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-slate-100 hover:!border-orange-300/70 hover:!bg-white/5"
                   >
                     {savingSeat === seat.owner ? 'Saving...' : 'Mark active'}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="outline"
                     disabled={savingSeat === seat.owner || isAtRisk}
                     onClick={() => updateSeatStatus(seat, 'at_risk')}
-                    className="rounded-full border border-white/20 px-3 py-1.5 text-[12px] font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-full !border-white/20 !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-slate-100 hover:!border-orange-300/70 hover:!bg-white/5"
                   >
                     {savingSeat === seat.owner ? 'Saving...' : 'Mark at risk'}
-                  </button>
+                  </Button>
                 </div>
-              </article>
+              </Card>
             )
           })}
         </section>

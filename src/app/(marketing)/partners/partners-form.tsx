@@ -1,5 +1,11 @@
 'use client'
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 const INTEREST_OPTIONS = [
   'Executive coaching integration',
@@ -12,7 +18,6 @@ const INTEREST_OPTIONS = [
   'Other',
 ]
 
-const INPUT_CLS = 'w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400'
 const LABEL_CLS = 'block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5'
 
 type PartnersFormProps = {
@@ -37,13 +42,14 @@ export function PartnersForm({
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [interests, setInterests] = useState(defaultInterest)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
     setError('')
     const form = e.currentTarget
-    const get = (name: string) => (form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement).value
+    const get = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value
     try {
       const res = await fetch('/api/partners', {
         method: 'POST',
@@ -53,7 +59,7 @@ export function PartnersForm({
           email: get('email'),
           company: get('company'),
           role: get('role'),
-          interests: get('interests'),
+          interests,
           how_heard: get('how_heard'),
         }),
       })
@@ -68,57 +74,60 @@ export function PartnersForm({
 
   if (submitted) {
     return (
-      <div className="border border-emerald-200 bg-emerald-50 rounded p-6">
-        <p className="text-[15px] font-semibold text-emerald-800 mb-1">Application received.</p>
-        <p className="text-[13px] text-emerald-700">Check your inbox. We will follow up within 2 business days with your partner next steps.</p>
-      </div>
+      <Alert variant="success" className="p-6">
+        <AlertDescription className="text-emerald-700">
+          <p className="text-[15px] font-semibold text-emerald-800 mb-1">Application received.</p>
+          <p className="text-[13px] text-emerald-700">Check your inbox. We will follow up within 2 business days with your partner next steps.</p>
+        </AlertDescription>
+      </Alert>
     )
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+    <Card className="rounded-2xl p-6 sm:p-8">
       <p className="mb-2 text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">{introLabel}</p>
       <p className="mb-6 text-[13px] text-slate-500">{introNote}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="p-name" className={LABEL_CLS}>Full name</label>
-            <input id="p-name" name="name" type="text" required placeholder="Jane Smith" className={INPUT_CLS} />
+            <Label htmlFor="p-name" className={LABEL_CLS}>Full name</Label>
+            <Input id="p-name" name="name" type="text" required placeholder="Jane Smith" />
           </div>
           <div>
-            <label htmlFor="p-company" className={LABEL_CLS}>Practice or company</label>
-            <input id="p-company" name="company" type="text" required placeholder={companyPlaceholder} className={INPUT_CLS} />
+            <Label htmlFor="p-company" className={LABEL_CLS}>Practice or company</Label>
+            <Input id="p-company" name="company" type="text" required placeholder={companyPlaceholder} />
           </div>
         </div>
         <div>
-          <label htmlFor="p-email" className={LABEL_CLS}>Work email</label>
-          <input id="p-email" name="email" type="email" required placeholder={emailPlaceholder} className={INPUT_CLS} />
+          <Label htmlFor="p-email" className={LABEL_CLS}>Work email</Label>
+          <Input id="p-email" name="email" type="email" required placeholder={emailPlaceholder} />
         </div>
         <div>
-          <label htmlFor="p-role" className={LABEL_CLS}>Your role</label>
-          <input id="p-role" name="role" type="text" required placeholder={rolePlaceholder} className={INPUT_CLS} />
+          <Label htmlFor="p-role" className={LABEL_CLS}>Your role</Label>
+          <Input id="p-role" name="role" type="text" required placeholder={rolePlaceholder} />
         </div>
         <div>
-          <label htmlFor="p-interests" className={LABEL_CLS}>Partnership model</label>
-          <select id="p-interests" name="interests"
-            defaultValue={defaultInterest}
-            className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 bg-white">
-            {INTEREST_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
+          <Label htmlFor="p-interests" className={LABEL_CLS}>Partnership model</Label>
+          <Select name="interests" value={interests} onValueChange={(value) => { if (value) setInterests(value) }}>
+            <SelectTrigger id="p-interests" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {INTEREST_OPTIONS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
+            </SelectContent>
+          </Select>
         </div>
         <div>
-          <label htmlFor="p-how-heard" className={LABEL_CLS}>
+          <Label htmlFor="p-how-heard" className={LABEL_CLS}>
             Anything we should know before we reply? <span className="font-normal text-slate-300">(optional)</span>
-          </label>
-          <input id="p-how-heard" name="how_heard" type="text" placeholder={notesPlaceholder}
-            className={INPUT_CLS} />
+          </Label>
+          <Input id="p-how-heard" name="how_heard" type="text" placeholder={notesPlaceholder} />
         </div>
         {error && <p className="text-[13px] text-red-600">{error}</p>}
-        <button type="submit" disabled={loading}
-          className="bg-slate-900 text-white text-[14px] font-semibold px-6 py-3 rounded cursor-pointer border-0 disabled:opacity-50 hover:bg-slate-700 transition-colors mt-2">
+        <Button type="submit" disabled={loading} className="w-full sm:w-auto mt-2">
           {loading ? 'Sending...' : 'Apply now'}
-        </button>
+        </Button>
       </form>
-    </div>
+    </Card>
   )
 }

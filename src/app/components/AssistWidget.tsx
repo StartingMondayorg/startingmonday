@@ -130,7 +130,7 @@ export function AssistWidget() {
               <Button
                 type="submit"
                 disabled={status === 'submitting' || message.trim().length < 10}
-                className="mt-3 w-full min-h-[44px] !bg-orange-400 !text-slate-950 hover:!bg-orange-300"
+                className="mt-3 w-full min-h-[44px]"
               >
                 {status === 'submitting' ? 'Sending...' : kind === 'question' ? 'Ask question' : 'Send feedback'}
               </Button>

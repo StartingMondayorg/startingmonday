@@ -1,6 +1,8 @@
 ﻿import Link from 'next/link'
 import Image from 'next/image'
 import { TrackLink } from '@/app/components/TrackLink'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { FirstMileTelemetry } from '@/app/components/FirstMileTelemetry'
 import { HomepageBriefTeaser } from '@/app/components/HomepageBriefTeaser'
 import { FirstWeekSpine, FirstWeekSpineCondensed, TrustLineCta } from '@/app/components/FirstWeekSpine'
@@ -83,24 +85,24 @@ const EXECUTIVE_LANE_BRANDS: Record<ExecutiveLaneBrand['key'], ExecutiveLaneBran
     key: 'leadership',
     label: 'Leadership lane',
     badgeClass: 'bg-amber-300/20 text-amber-100 border-amber-300/40',
-    borderClass: 'border-amber-300/35',
-    panelClass: 'bg-amber-300/10',
+    borderClass: '!border-amber-300/35',
+    panelClass: '!bg-amber-300/10',
     proofToneClass: 'text-amber-100',
   },
   'technical-leadership': {
     key: 'technical-leadership',
     label: 'Technical leadership lane',
     badgeClass: 'bg-cyan-300/20 text-cyan-100 border-cyan-300/40',
-    borderClass: 'border-cyan-300/35',
-    panelClass: 'bg-cyan-300/10',
+    borderClass: '!border-cyan-300/35',
+    panelClass: '!bg-cyan-300/10',
     proofToneClass: 'text-cyan-100',
   },
   'delivery-leadership': {
     key: 'delivery-leadership',
     label: 'Delivery leadership lane',
     badgeClass: 'bg-emerald-300/20 text-emerald-100 border-emerald-300/40',
-    borderClass: 'border-emerald-300/35',
-    panelClass: 'bg-emerald-300/10',
+    borderClass: '!border-emerald-300/35',
+    panelClass: '!bg-emerald-300/10',
     proofToneClass: 'text-emerald-100',
   },
 }
@@ -205,20 +207,24 @@ export function LandingPage({
             <span className="text-white">{wordmarkPrimary} </span><span className="text-orange-500">{wordmarkAccent}</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-5">
-            <TrackLink
-              href={isManagerToolsPage ? MANAGERTOOLS_SIGNUP_URL : '/signup'}
-              event={isHomePage ? 'homepage_cta_clicked' : EVENT_NAMES.channelEntryClicked}
-              logToUserEvents
-              properties={{
-                channel: 'executives',
-                cta_label: isManagerToolsPage ? 'nav_manager_tools_signup' : isHomePage ? 'nav_home_signup' : 'nav_signup',
-                source_page: sourcePage,
-              }}
-              className="inline-flex items-center justify-center bg-orange-500 text-slate-900 text-[13px] font-bold px-3.5 min-h-[48px] rounded hover:bg-orange-600 transition-colors"
+            <Button
+              className="min-h-[48px] rounded px-3.5 text-[13px] font-bold"
               aria-label={isManagerToolsPage ? 'Get 60 days free' : isHomePage ? 'Get access' : 'Sign up'}
+              render={
+                <TrackLink
+                  href={isManagerToolsPage ? MANAGERTOOLS_SIGNUP_URL : '/signup'}
+                  event={isHomePage ? 'homepage_cta_clicked' : EVENT_NAMES.channelEntryClicked}
+                  logToUserEvents
+                  properties={{
+                    channel: 'executives',
+                    cta_label: isManagerToolsPage ? 'nav_manager_tools_signup' : isHomePage ? 'nav_home_signup' : 'nav_signup',
+                    source_page: sourcePage,
+                  }}
+                />
+              }
             >
               {isManagerToolsPage ? 'Get 60 days free' : isHomePage ? 'Get access' : 'Sign Up'}
-            </TrackLink>
+            </Button>
             <Link href="/login" className="text-[13px] text-slate-400 hover:text-white transition-colors inline-flex items-center min-h-[48px] px-3" aria-label="Log in">
               Log in
             </Link>
@@ -241,7 +247,7 @@ export function LandingPage({
             )}
             {isHomePage ? (
               <div className="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_390px] lg:items-start">
-                <div className="rounded-[2rem] border border-white/12 bg-slate-950/82 p-6 shadow-[0_38px_130px_rgba(15,23,42,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
+                <Card variant="glass" className="rounded-[2rem] !border-white/12 !bg-slate-950/82 p-6 shadow-[0_38px_130px_rgba(15,23,42,0.3)] sm:p-8 lg:p-10">
                   <p className="max-w-3xl text-[1.15rem] font-semibold leading-[1.18] tracking-tight text-orange-200/90 sm:text-[1.35rem] lg:text-[1.55rem]">
                     {hero.eyebrow}
                   </p>
@@ -265,25 +271,29 @@ export function LandingPage({
                   )}
                   {isManagerToolsPage && (
                     <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                      <TrackLink
-                        href={heroPrimaryHref}
-                        event={EVENT_NAMES.channelEntryClicked}
-                        logToUserEvents
-                        properties={{
-                          channel: 'executives',
-                          cta_label: 'hero_manager_tools_signup',
-                          source_page: sourcePage,
-                          variant_key: `landing_${experimentVariant}`,
-                          experiment_variant: experimentVariant,
-                        }}
-                        className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-orange-300/70 bg-orange-400 px-6 py-3 text-[14px] font-bold text-slate-950 shadow-[0_10px_30px_rgba(193,127,59,0.22)] transition-transform hover:-translate-y-0.5 hover:bg-orange-300"
+                      <Button
+                        className="shrink-0 whitespace-nowrap rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
+                        render={
+                          <TrackLink
+                            href={heroPrimaryHref}
+                            event={EVENT_NAMES.channelEntryClicked}
+                            logToUserEvents
+                            properties={{
+                              channel: 'executives',
+                              cta_label: 'hero_manager_tools_signup',
+                              source_page: sourcePage,
+                              variant_key: `landing_${experimentVariant}`,
+                              experiment_variant: experimentVariant,
+                            }}
+                          />
+                        }
                       >
                         {heroPrimaryLabel}
-                      </TrackLink>
+                      </Button>
                       <p className="max-w-md text-[12px] leading-relaxed text-slate-400">{hero.trialNote}</p>
                     </div>
                   )}
-                </div>
+                </Card>
                 <div className="relative mx-auto min-h-[480px] w-full max-w-[390px] lg:mx-0 lg:mt-10 lg:justify-self-end">
                   {showHeroEvidence && heroEvidence ? (
                     <SignalTimelineCard proofCase={heroEvidence.proofCase} altText={heroEvidence.timelineAlt} />
@@ -320,52 +330,65 @@ export function LandingPage({
             )}
             {showHeroEvidence && heroEvidence && (
               <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <TrackLink
-                  href="/signup"
-                  event={HERO_EVENT_NAMES.getAccessClick}
-                  properties={{ source_page: '/', cta_label: 'hero_get_access' }}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-orange-300/70 bg-orange-400 px-6 py-3 text-[14px] font-bold text-slate-950 shadow-[0_10px_30px_rgba(193,127,59,0.22)] transition-transform hover:-translate-y-0.5 hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-200"
+                <Button
+                  className="min-h-[48px] rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
+                  render={
+                    <TrackLink
+                      href="/signup"
+                      event={HERO_EVENT_NAMES.getAccessClick}
+                      properties={{ source_page: '/', cta_label: 'hero_get_access' }}
+                    />
+                  }
                 >
                   Get access
-                </TrackLink>
-                <TrackLink
-                  href="/example"
-                  event={HERO_EVENT_NAMES.exampleClick}
-                  properties={{ source_page: '/', cta_label: 'hero_live_example' }}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-cyan-200/40 px-6 py-3 text-[14px] font-semibold text-cyan-100 transition-colors hover:border-cyan-100 hover:bg-cyan-100/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-100"
+                </Button>
+                <Button
+                  variant="outline"
+                  className="min-h-[48px] rounded-full !border-cyan-200/40 px-6 py-3 text-[14px] font-semibold !text-cyan-100 !bg-transparent hover:!border-cyan-100 hover:!bg-cyan-100/10"
+                  render={
+                    <TrackLink
+                      href="/example"
+                      event={HERO_EVENT_NAMES.exampleClick}
+                      properties={{ source_page: '/', cta_label: 'hero_live_example' }}
+                    />
+                  }
                 >
                   See a live example
-                </TrackLink>
+                </Button>
               </div>
             )}
             {experimentVariant === 'proof_first' && proofHighlights && proofHighlights.length > 0 && (
               <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3" data-emi-proof="executive_outcomes_grid">
                 {proofHighlights.map((item) => (
-                  <article key={item.metric} className="rounded-2xl border border-white/12 bg-white/[0.07] p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+                  <Card key={item.metric} variant="glass" className="p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
                     <p className="mb-2 text-[13px] font-semibold leading-snug text-orange-100">{item.metric}</p>
                     <p className="text-[13px] leading-relaxed text-slate-200/90">{item.detail}</p>
-                  </article>
+                  </Card>
                 ))}
               </div>
             )}
 
             {!isHomePage && (
               <div className="mt-8 mb-8 flex flex-col gap-3 sm:flex-row">
-                <TrackLink
-                  href={heroPrimaryHref}
-                  event={EVENT_NAMES.channelEntryClicked}
-                  logToUserEvents
-                  properties={{
-                    channel: 'executives',
-                    cta_label: 'hero_apply_beta',
-                    source_page: sourcePage,
-                    variant_key: `landing_${experimentVariant}`,
-                    experiment_variant: experimentVariant,
-                  }}
-                  className="inline-flex items-center justify-center rounded-full border border-orange-300/70 bg-orange-400 px-6 py-3 text-[14px] font-bold text-slate-950 shadow-[0_10px_30px_rgba(193,127,59,0.22)] transition-transform hover:-translate-y-0.5 hover:bg-orange-300"
+                <Button
+                  className="rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
+                  render={
+                    <TrackLink
+                      href={heroPrimaryHref}
+                      event={EVENT_NAMES.channelEntryClicked}
+                      logToUserEvents
+                      properties={{
+                        channel: 'executives',
+                        cta_label: 'hero_apply_beta',
+                        source_page: sourcePage,
+                        variant_key: `landing_${experimentVariant}`,
+                        experiment_variant: experimentVariant,
+                      }}
+                    />
+                  }
                 >
                   {heroPrimaryLabel}
-                </TrackLink>
+                </Button>
               </div>
             )}
 
@@ -381,7 +404,7 @@ export function LandingPage({
 
 
             {isExecutivesPage && (
-              <section className="mb-6 rounded-[1.75rem] border border-white/12 bg-slate-950/64 p-5 shadow-[0_24px_78px_rgba(15,23,42,0.24)] backdrop-blur-md sm:p-6" aria-labelledby="executive-differentiation-title">
+              <Card variant="glass" className="mb-6 rounded-[1.75rem] !border-white/12 !bg-slate-950/64 p-5 shadow-[0_24px_78px_rgba(15,23,42,0.24)] sm:p-6" aria-labelledby="executive-differentiation-title">
                 <div className="flex flex-col gap-2 mb-5">
                   {executiveLaneBrand && (
                     <span className={`inline-flex w-fit items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${executiveLaneBrand.badgeClass}`}>
@@ -412,16 +435,16 @@ export function LandingPage({
                       : item.whyItMatters
 
                     return (
-                    <article key={item.feature} className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                    <Card key={item.feature} variant="glass" className="p-4">
                       <p className="mb-2 text-[13px] font-semibold text-white">{featureTitle}</p>
                       <p className="mb-2 text-[12px] leading-relaxed text-slate-200/90">{whatYouGet}</p>
                       <p className="text-[12px] leading-relaxed text-emerald-100">{whyItMatters}</p>
-                    </article>
+                    </Card>
                     )
                   })}
                 </div>
 
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                <Card variant="glass" className="overflow-hidden py-0">
                   <div className="grid grid-cols-1 border-b border-white/10 text-[11px] font-bold uppercase tracking-[0.1em] sm:grid-cols-[1.2fr_1fr_1fr]">
                     <p className="px-4 py-3 text-slate-300">Decision area</p>
                     <p className="border-t border-white/10 px-4 py-3 text-emerald-100 sm:border-t-0 sm:border-l">Starting Monday</p>
@@ -434,26 +457,26 @@ export function LandingPage({
                       <p className="border-t border-white/10 px-4 py-3 text-[12px] leading-relaxed text-slate-400 sm:border-t-0 sm:border-l">{row.otherTools}</p>
                     </div>
                   ))}
-                </div>
+                </Card>
 
                 {executiveLaneBrand && (
-                  <div className={`mt-5 rounded-2xl border ${executiveLaneBrand.borderClass} ${executiveLaneBrand.panelClass} p-4 sm:p-5`}>
+                  <Card className={`mt-5 !rounded-2xl border ${executiveLaneBrand.borderClass} ${executiveLaneBrand.panelClass} p-4 sm:p-5`}>
                     <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${executiveLaneBrand.proofToneClass} mb-2`}>
                       Trust and proof guardrails
                     </p>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                      <article className="rounded-xl border border-white/15 bg-slate-950/55 p-3">
+                      <Card variant="glass" className="!rounded-xl !bg-slate-950/55 p-3">
                         <p className="text-[12px] font-semibold text-white mb-1">Confidential by design</p>
                         <p className="text-[12px] leading-relaxed text-slate-300">Your identity, targets, and activity are not shared with employers or recruiters.</p>
-                      </article>
-                      <article className="rounded-xl border border-white/15 bg-slate-950/55 p-3">
+                      </Card>
+                      <Card variant="glass" className="!rounded-xl !bg-slate-950/55 p-3">
                         <p className="text-[12px] font-semibold text-white mb-1">Claim discipline</p>
                         <p className="text-[12px] leading-relaxed text-slate-300">Numeric statements are denominator-aware and directional unless explicitly audited.</p>
-                      </article>
-                      <article className="rounded-xl border border-white/15 bg-slate-950/55 p-3">
+                      </Card>
+                      <Card variant="glass" className="!rounded-xl !bg-slate-950/55 p-3">
                         <p className="text-[12px] font-semibold text-white mb-1">Evidence path</p>
                         <p className="text-[12px] leading-relaxed text-slate-300">Review method, references, and source notes before any decision gate.</p>
-                      </article>
+                      </Card>
                     </div>
                     <p className="mt-3 text-[12px] leading-relaxed text-slate-200">
                       Source: documented methods with source notes and confidence context.{' '}
@@ -461,9 +484,9 @@ export function LandingPage({
                       {' · '}
                       <Link href="/evidence-hub" className="underline underline-offset-2 hover:text-white">Evidence hub</Link>
                     </p>
-                  </div>
+                  </Card>
                 )}
-              </section>
+              </Card>
             )}
 
 
@@ -489,19 +512,23 @@ export function LandingPage({
                   </ol>
                 )}
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                  <TrackLink
-                    href="/evidence-hub#early-signals"
-                    event="homepage_cta_clicked"
-                    logToUserEvents
-                    properties={{
-                      channel: 'executives',
-                      cta_label: 'homepage_evidence_explore',
-                      source_page: sourcePage,
-                    }}
-                    className="inline-flex items-center rounded-full bg-orange-500 px-6 py-3 text-[14px] font-semibold text-slate-950 transition-colors hover:bg-orange-600"
+                  <Button
+                    className="rounded-full px-6 py-3 text-[14px] font-semibold"
+                    render={
+                      <TrackLink
+                        href="/evidence-hub#early-signals"
+                        event="homepage_cta_clicked"
+                        logToUserEvents
+                        properties={{
+                          channel: 'executives',
+                          cta_label: 'homepage_evidence_explore',
+                          source_page: sourcePage,
+                        }}
+                      />
+                    }
                   >
                     Explore the evidence →
-                  </TrackLink>
+                  </Button>
                   <Link
                     href="/learn-more"
                     className="text-[14px] font-semibold text-orange-200 underline underline-offset-4 transition-colors hover:text-white"
@@ -509,10 +536,10 @@ export function LandingPage({
                     Read the full method
                   </Link>
                 </div>
-                <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
+                <Card variant="glass" className="mt-10 p-6 sm:p-8">
                   <OpportunityTimingGapChart className="hidden h-auto w-full sm:block" />
                   <OpportunityTimingGapChartMobile className="h-auto w-full sm:hidden" />
-                </div>
+                </Card>
               </div>
             </section>
 
@@ -538,25 +565,30 @@ export function LandingPage({
                   <p className="mb-4 max-w-3xl text-[15px] leading-relaxed text-slate-200/95">
                     The best opportunities are decided in private before they are posted in public. Starting Monday helps you act while the mandate is still forming, not after the shortlist hardens.
                   </p>
-                  <TrackLink
-                    href="/evidence-hub#early-signals"
-                    event="homepage_cta_clicked"
-                    logToUserEvents
-                    properties={{
-                      channel: 'executives',
-                      cta_label: 'homepage_evidence_explore',
-                      source_page: sourcePage,
-                    }}
+                  <Button
+                    variant={isManagerToolsPage ? 'link' : undefined}
                     className={isManagerToolsPage
-                      ? 'mb-8 inline-flex items-center text-[14px] font-semibold text-orange-200 underline underline-offset-4 transition-colors hover:text-white'
-                      : 'mb-8 inline-flex items-center rounded-full bg-orange-500 px-6 py-3 text-[14px] font-semibold text-slate-950 transition-colors hover:bg-orange-600'}
+                      ? 'mb-8 h-auto p-0 text-[14px] font-semibold underline underline-offset-4'
+                      : 'mb-8 rounded-full px-6 py-3 text-[14px] font-semibold'}
+                    render={
+                      <TrackLink
+                        href="/evidence-hub#early-signals"
+                        event="homepage_cta_clicked"
+                        logToUserEvents
+                        properties={{
+                          channel: 'executives',
+                          cta_label: 'homepage_evidence_explore',
+                          source_page: sourcePage,
+                        }}
+                      />
+                    }
                   >
                     Explore the evidence →
-                  </TrackLink>
-                  <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
+                  </Button>
+                  <Card variant="glass" className="mt-8 p-6 sm:p-8">
                     <OpportunityTimingGapChart className="hidden h-auto w-full sm:block" />
                     <OpportunityTimingGapChartMobile className="h-auto w-full sm:hidden" />
-                  </div>
+                  </Card>
                 </article>
 
                 <article className="mb-12">
@@ -603,40 +635,49 @@ export function LandingPage({
                   {faqs && faqs.length > 0 && (
                     <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {faqs.map((faq) => (
-                        <article key={faq.question} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                        <Card key={faq.question} variant="glass" className="px-4 py-3">
                           <p className="text-[13px] font-semibold text-white">{faq.question}</p>
                           <p className="mt-1 text-[12px] leading-relaxed text-slate-300">{faq.answer}</p>
-                        </article>
+                        </Card>
                       ))}
                     </div>
                   )}
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <TrackLink
-                      href={MANAGERTOOLS_SIGNUP_URL}
-                      event={EVENT_NAMES.channelEntryClicked}
-                      logToUserEvents
-                      properties={{
-                        channel: 'executives',
-                        cta_label: 'next_step_manager_tools_signup',
-                        source_page: sourcePage,
-                      }}
-                      className="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-[14px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-orange-300"
+                    <Button
+                      className="rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
+                      render={
+                        <TrackLink
+                          href={MANAGERTOOLS_SIGNUP_URL}
+                          event={EVENT_NAMES.channelEntryClicked}
+                          logToUserEvents
+                          properties={{
+                            channel: 'executives',
+                            cta_label: 'next_step_manager_tools_signup',
+                            source_page: sourcePage,
+                          }}
+                        />
+                      }
                     >
                       Get 60 days free
-                    </TrackLink>
-                    <TrackLink
-                      href="/feedback"
-                      event={EVENT_NAMES.channelEntryClicked}
-                      logToUserEvents
-                      properties={{
-                        channel: 'executives',
-                        cta_label: 'next_step_manager_tools_feedback',
-                        source_page: sourcePage,
-                      }}
-                      className="inline-flex items-center justify-center rounded-full border border-orange-300/70 px-6 py-3 text-[14px] font-bold text-orange-200 transition-colors hover:bg-orange-400/10"
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="rounded-full px-6 py-3 text-[14px] font-bold"
+                      render={
+                        <TrackLink
+                          href="/feedback"
+                          event={EVENT_NAMES.channelEntryClicked}
+                          logToUserEvents
+                          properties={{
+                            channel: 'executives',
+                            cta_label: 'next_step_manager_tools_feedback',
+                            source_page: sourcePage,
+                          }}
+                        />
+                      }
                     >
                       Submit feedback
-                    </TrackLink>
+                    </Button>
                   </div>
                 </>
               ) : isExecutivesPage ? (
@@ -649,48 +690,57 @@ export function LandingPage({
                     Use your trial to sharpen narrative quality, improve conversation conversion, and create a weekly operating cadence you can keep through offer-stage decisions.
                   </p>
                   <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                    <Card variant="glass" className="px-4 py-3">
                       <p className="text-[12px] font-semibold text-white">Week 1</p>
                       <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Mandate narrative, role filter, and priority relationship map.</p>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                    </Card>
+                    <Card variant="glass" className="px-4 py-3">
                       <p className="text-[12px] font-semibold text-white">Week 2</p>
-                    <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Signal tracking and audience-specific prep for recruiter and board conversations.</p>
+                      <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Signal tracking and audience-specific prep for recruiter and board conversations.</p>
+                    </Card>
+                    <Card variant="glass" className="px-4 py-3">
+                      <p className="text-[12px] font-semibold text-white">Week 3-4</p>
+                      <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Consistent outreach rhythm and clearer conversion into high-quality next steps.</p>
+                    </Card>
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                    <p className="text-[12px] font-semibold text-white">Week 3-4</p>
-                    <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Consistent outreach rhythm and clearer conversion into high-quality next steps.</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      className="rounded-full px-6 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5"
+                      render={
+                        <TrackLink
+                          href="/signup?utm_source=executives&utm_medium=landing&utm_campaign=executive-page"
+                          event={EVENT_NAMES.channelEntryClicked}
+                          logToUserEvents
+                          properties={{
+                            channel: 'executives',
+                            cta_label: 'next_step_executive_signup',
+                            source_page: sourcePage,
+                          }}
+                        />
+                      }
+                    >
+                      Begin your free trial
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="rounded-full px-6 py-3 text-[14px] font-bold"
+                      render={
+                        <TrackLink
+                          href="/demo/executive-brief"
+                          event={EVENT_NAMES.channelEntryClicked}
+                          logToUserEvents
+                          properties={{
+                            channel: 'executives',
+                            cta_label: 'next_step_executive_demo',
+                            source_page: sourcePage,
+                          }}
+                        />
+                      }
+                    >
+                      Preview leader brief
+                    </Button>
                   </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <TrackLink
-                    href="/signup?utm_source=executives&utm_medium=landing&utm_campaign=executive-page"
-                    event={EVENT_NAMES.channelEntryClicked}
-                    logToUserEvents
-                    properties={{
-                      channel: 'executives',
-                      cta_label: 'next_step_executive_signup',
-                      source_page: sourcePage,
-                    }}
-                    className="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-[14px] font-bold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-orange-300"
-                  >
-                    Begin your free trial
-                  </TrackLink>
-                  <TrackLink
-                    href="/demo/executive-brief"
-                    event={EVENT_NAMES.channelEntryClicked}
-                    logToUserEvents
-                    properties={{
-                      channel: 'executives',
-                      cta_label: 'next_step_executive_demo',
-                      source_page: sourcePage,
-                    }}
-                    className="inline-flex items-center justify-center rounded-full border border-orange-300/70 px-6 py-3 text-[14px] font-bold text-orange-200 transition-colors hover:bg-orange-400/10"
-                  >
-                    Preview leader brief
-                  </TrackLink>
-                </div>
-              </>
+                </>
             ) : (
               <>
                 <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">Why it feels different</p>

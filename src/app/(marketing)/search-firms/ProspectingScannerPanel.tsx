@@ -1,6 +1,9 @@
 "use client"
 
 import { useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 type CompanySignal = {
   company: string
@@ -94,30 +97,30 @@ export function ProspectingScannerPanel() {
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+          <Card variant="glass" className="p-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Mandate health</p>
             <p className="mt-2 text-2xl font-semibold text-white">84%</p>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
               Interview criteria complete, stakeholder map confirmed, and risk log current.
             </p>
-          </article>
-          <article className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+          </Card>
+          <Card variant="glass" className="p-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Sponsor alignment</p>
             <p className="mt-2 text-2xl font-semibold text-white">3 of 4</p>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
               Core decision-makers aligned; one stakeholder requires updated success criteria.
             </p>
-          </article>
-          <article className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+          </Card>
+          <Card variant="glass" className="p-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Market intelligence</p>
             <p className="mt-2 text-2xl font-semibold text-white">5 live signals</p>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
               Companies with likely CFO openings identified from financing, governance, and operating-change events.
             </p>
-          </article>
+          </Card>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+        <Card variant="glass" className="mt-8 p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">
             Find companies likely to open executive roles
           </p>
@@ -128,14 +131,14 @@ export function ProspectingScannerPanel() {
             Use the intelligence scanner to generate a focused prospect list, then start outreach through the highest-leverage relationship paths.
           </p>
 
-          <button
+          <Button
             type="button"
             onClick={runScanner}
             disabled={isLoading}
-            className="mt-5 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 rounded-full"
           >
             {isLoading ? 'Scanning signals...' : 'Build sample CFO target list'}
-          </button>
+          </Button>
 
           {hasRun ? (
             <div className="mt-6 space-y-5">
@@ -143,17 +146,17 @@ export function ProspectingScannerPanel() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">Scanner output</p>
                 <div className="mt-3 grid gap-3">
                   {topSignals.map((signal) => (
-                    <article key={signal.company} className="rounded-xl border border-white/10 bg-slate-950/55 p-4">
+                    <Card key={signal.company} variant="glass" className="rounded-xl !bg-slate-950/55 p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <h4 className="text-[16px] font-semibold text-white">{signal.company}</h4>
-                        <span className="rounded-full border border-orange-300/40 px-2.5 py-1 text-[11px] font-semibold text-orange-200">
+                        <Badge variant="outline" className="rounded-full !border-orange-300/40 px-2.5 py-1 text-[11px] font-semibold text-orange-200">
                           Confidence {signal.confidence}%
-                        </span>
+                        </Badge>
                       </div>
                       <p className="mt-2 text-[13px] leading-relaxed text-slate-200">{signal.signal}</p>
                       <p className="mt-1 text-[12px] text-slate-300">Likely opening window: {signal.openWindow}</p>
                       <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Why this matters: {signal.reason}</p>
-                    </article>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -162,16 +165,16 @@ export function ProspectingScannerPanel() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">First outreach relationships</p>
                 <div className="mt-3 grid gap-3 md:grid-cols-3">
                   {RELATIONSHIP_TARGETS.map((target) => (
-                    <article key={target.relationship} className="rounded-xl border border-white/10 bg-slate-950/55 p-4">
+                    <Card key={target.relationship} variant="glass" className="rounded-xl !bg-slate-950/55 p-4">
                       <h4 className="text-[14px] font-semibold text-white">{target.relationship}</h4>
                       <p className="mt-2 text-[12px] leading-relaxed text-slate-200">{target.action}</p>
-                    </article>
+                    </Card>
                   ))}
                 </div>
               </div>
             </div>
           ) : null}
-        </div>
+        </Card>
       </div>
     </section>
   )

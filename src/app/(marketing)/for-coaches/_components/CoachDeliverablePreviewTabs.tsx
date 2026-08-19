@@ -1,8 +1,16 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useState } from 'react'
 import type { CoachMicroProductDeliverable } from '@/app/(marketing)/for-coaches/micro-products/product-data'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 type Props = {
   deliverables: CoachMicroProductDeliverable[]
@@ -33,10 +41,6 @@ export function CoachDeliverablePreviewTabs({ deliverables }: Props) {
     setIsPreviewOpen(true)
   }
 
-  function closePreview() {
-    setIsPreviewOpen(false)
-  }
-
   function goToPrevious() {
     if (!canGoPrevious) return
     setSelectedIndex((prev) => prev - 1)
@@ -46,19 +50,6 @@ export function CoachDeliverablePreviewTabs({ deliverables }: Props) {
     if (!canGoNext) return
     setSelectedIndex((prev) => prev + 1)
   }
-
-  useEffect(() => {
-    if (!isPreviewOpen) return
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        closePreview()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isPreviewOpen])
 
   if (deliverables.length === 0) return null
 
@@ -73,96 +64,88 @@ export function CoachDeliverablePreviewTabs({ deliverables }: Props) {
           const isSelected = index === selectedIndex
 
           return (
-            <div key={item.title} className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+            <Card key={item.title} className="px-5 py-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[15px] font-semibold text-slate-900">{item.title}</p>
                   <p className="text-[12px] mt-1 text-slate-500">Open a brief filled-out example for this item.</p>
                 </div>
-                <button
+                <Button
                   type="button"
                   onClick={() => openPreview(index)}
-                  className={`inline-flex items-center rounded-full border px-3 py-1 text-[12px] font-semibold transition-colors ${
-                    isSelected
-                      ? 'border-slate-900 bg-slate-900 text-white hover:bg-slate-700'
-                      : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-100'
-                  }`}
+                  variant={isSelected ? 'default' : 'outline'}
+                  size="sm"
+                  className="rounded-full"
                 >
                   {isSelected ? 'Preview this item' : 'Show preview'}
-                </button>
+                </Button>
               </div>
-            </div>
+            </Card>
           )
         })}
       </div>
 
-      {isPreviewOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 p-4"
-          role="dialog"
-          aria-modal="true"
-          onClick={closePreview}
-        >
-          <div
-            className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-xl"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
-              <div>
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500">{selectedItem.exampleLabel}</p>
-                <h3 className="text-[18px] font-bold text-slate-900 mt-1">{selectedItem.previewTitle}</h3>
-                <p className="text-[13px] text-slate-500 mt-1">{selectedItem.title}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={goToPrevious}
-                  disabled={!canGoPrevious}
-                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1 text-[12px] font-semibold text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                <button
-                  type="button"
-                  onClick={goToNext}
-                  disabled={!canGoNext}
-                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1 text-[12px] font-semibold text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-                <button
-                  type="button"
-                  onClick={closePreview}
-                  className="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1 text-[12px] font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
-                >
-                  Close
-                </button>
-              </div>
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="max-w-2xl" showCloseButton={false}>
+          <DialogHeader className="flex-row items-center justify-between gap-4 border-b pb-4">
+            <div>
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500">{selectedItem.exampleLabel}</p>
+              <DialogTitle className="text-[18px] font-bold text-slate-900 mt-1">{selectedItem.previewTitle}</DialogTitle>
+              <p className="text-[13px] text-slate-500 mt-1">{selectedItem.title}</p>
             </div>
-
-            <div className="p-5">
-              <div className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
-                <div className="space-y-3">
-                  {selectedItem.previewLines.map((line) => {
-                    const field = splitPreviewLine(line)
-
-                    return (
-                      <div key={line} className="rounded-xl border border-slate-200 bg-white px-3 py-3">
-                        <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500 mb-1">
-                          {field.label}
-                        </label>
-                        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[13px] text-slate-700 leading-relaxed">
-                          {field.value}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                onClick={goToPrevious}
+                disabled={!canGoPrevious}
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                Previous
+              </Button>
+              <Button
+                type="button"
+                onClick={goToNext}
+                disabled={!canGoNext}
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                Next
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setIsPreviewOpen(false)}
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                Close
+              </Button>
             </div>
-          </div>
-        </div>
-      )}
+          </DialogHeader>
+
+          <Card className="bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
+            <div className="space-y-3">
+              {selectedItem.previewLines.map((line) => {
+                const field = splitPreviewLine(line)
+
+                return (
+                  <Card key={line} className="px-3 py-3">
+                    <Label className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500 mb-1">
+                      {field.label}
+                    </Label>
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[13px] text-slate-700 leading-relaxed">
+                      {field.value}
+                    </div>
+                  </Card>
+                )
+              })}
+            </div>
+          </Card>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

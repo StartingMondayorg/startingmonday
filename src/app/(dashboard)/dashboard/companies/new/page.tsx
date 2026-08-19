@@ -204,7 +204,7 @@ export default async function AddCompanyPage({
             <div className="flex items-center gap-4 pt-1">
               <Button
                 type="submit"
-                className="bg-orange-400 text-slate-950 text-[14px] px-6 hover:bg-orange-300"
+                className="text-[14px] px-6"
               >
                 Add to pipeline
               </Button>
