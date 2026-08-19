@@ -33,7 +33,7 @@ Formula guidance
 
 ## 2) HubSpot mapping
 
-Use [business/assets/notion-hubspot-property-map.csv](business/assets/notion-hubspot-property-map.csv) as source of truth.
+Use [notion-hubspot-property-map.csv](notion-hubspot-property-map.csv) as source of truth.
 
 HubSpot entities used
 - contacts
@@ -64,7 +64,7 @@ Daily sync (Mon-Fri, 7:00 local)
 
 Friday pre-review sync (16:00 local)
 - Force full refresh for all metrics
-- Export CSV snapshot to business/assets/tmp/weekly-dashboard-snapshot-YYYY-MM-DD.csv
+- Export CSV snapshot to docs/business/assets/tmp/weekly-dashboard-snapshot-YYYY-MM-DD.csv
 
 ## 4) Alert rules
 
@@ -79,7 +79,7 @@ Daily alert for data integrity
 
 ## 5) Implementation sequence
 
-1. Import [business/assets/weekly-agent-dashboard-template.csv](business/assets/weekly-agent-dashboard-template.csv) into Notion database.
+1. Import [weekly-agent-dashboard-template.csv](weekly-agent-dashboard-template.csv) into Notion database.
 2. Create/verify HubSpot properties listed above.
 3. Run the snapshot exporter using metric_key as id:
   - `npm run growth:agent-dashboard:snapshot`

@@ -355,10 +355,10 @@ All 3 gates wired to SES:
 ## Documentation
 
 **This Session:**
-- [PHASE-1-DEPLOYMENT-VALIDATION.md](PHASE-1-DEPLOYMENT-VALIDATION.md) — Deployment checklist
-- [PHASE-2-COMPLETION-SUMMARY.md](PHASE-2-COMPLETION-SUMMARY.md) — Escalation & parity
-- [PHASE-3-COMPLETION-SUMMARY.md](PHASE-3-COMPLETION-SUMMARY.md) — Accessibility & mobile
-- [PHASE-4-COMPLETION-SUMMARY.md](PHASE-4-COMPLETION-SUMMARY.md) — Trends & SLA
+- [phase-1-deployment-validation.md](phase-1-deployment-validation.md) — Deployment checklist
+- [phase-2-completion-summary.md](phase-2-completion-summary.md) — Escalation & parity
+- [phase-3-completion-summary.md](phase-3-completion-summary.md) — Accessibility & mobile
+- [phase-4-completion-summary.md](phase-4-completion-summary.md) — Trends & SLA
 
 **Configuration:**
 - [config/site-experience-standard.json](config/site-experience-standard.json) — SES definition (v1)

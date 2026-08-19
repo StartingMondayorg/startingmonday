@@ -199,7 +199,7 @@ railway deploy
 - **Deployment Checklist:** [docs/epic-e2-deployment-checklist.md](docs/epic-e2-deployment-checklist.md)
 - **Vendor Audit:** [docs/vendor-tos-audit-2026-07-05.md](docs/vendor-tos-audit-2026-07-05.md)
 - **Staging Commit:** 101d32ba (5 files, 1025 insertions)
-- **Calendar Alert:** epic-e2-validation-checkpoint.ics (import to calendar app)
+- **Calendar Alert:** docs/operations/reminders/epic-e2-validation-checkpoint.ics (import to calendar app)
 
 ---
 

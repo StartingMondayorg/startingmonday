@@ -373,17 +373,17 @@ All agents tested with clean escalation report:
 ## Documentation
 
 ### Phase Completion Summaries
-- [PHASE-1-DEPLOYMENT-VALIDATION.md](PHASE-1-DEPLOYMENT-VALIDATION.md) (300+ lines)
-- [PHASE-2-COMPLETION-SUMMARY.md](PHASE-2-COMPLETION-SUMMARY.md) (175 lines)
-- [PHASE-3-COMPLETION-SUMMARY.md](PHASE-3-COMPLETION-SUMMARY.md) (267 lines)
-- [PHASE-4-COMPLETION-SUMMARY.md](PHASE-4-COMPLETION-SUMMARY.md) (300 lines)
-- [PHASE-4A-DIRECTIONAL-SIGNALS.md](PHASE-4A-DIRECTIONAL-SIGNALS.md) (TBD)
-- [PHASE-4B-TEAM-COACHING.md](PHASE-4B-TEAM-COACHING.md) (TBD)
-- [PHASE-4C-STAKEHOLDER-DASHBOARD.md](PHASE-4C-STAKEHOLDER-DASHBOARD.md) (TBD)
+- [phase-1-deployment-validation.md](phase-1-deployment-validation.md) (300+ lines)
+- [phase-2-completion-summary.md](phase-2-completion-summary.md) (175 lines)
+- [phase-3-completion-summary.md](phase-3-completion-summary.md) (267 lines)
+- [phase-4-completion-summary.md](phase-4-completion-summary.md) (300 lines)
+- [phase-4a-directional-signals.md](phase-4a-directional-signals.md) (TBD)
+- [phase-4b-team-coaching.md](phase-4b-team-coaching.md) (TBD)
+- [phase-4c-stakeholder-dashboard.md](phase-4c-stakeholder-dashboard.md) (TBD)
 
 ### Technical Guides
-- [SES-INTEGRATION-COMPLETION-SUMMARY.md](SES-INTEGRATION-COMPLETION-SUMMARY.md) (418 lines)
-- [LANDING_PAGE_AUDIT_REPORT.md](LANDING_PAGE_AUDIT_REPORT.md)
+- [ses-integration-completion-summary.md](ses-integration-completion-summary.md) (418 lines)
+- [landing-page-audit-report.md](../../strategy/landing-page/landing-page-audit-report.md)
 - [docs/landing-page-standard.md](docs/landing-page-standard.md)
 
 ---

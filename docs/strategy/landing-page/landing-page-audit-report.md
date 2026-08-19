@@ -139,7 +139,7 @@ All proposed changes are type-safe and compatible with existing architecture.
 - Uses existing `CHANNEL_ROUTE_SPECS` library data
 - Aligns with MARKETING.md growth strategy
 
-**Implementation File:** `/LANDING_PAGE_REDESIGN_PLAN.md` (lines 130-180)
+**Implementation File:** `landing-page-redesign-plan.md` (lines 130-180)
 
 ---
 
@@ -186,7 +186,7 @@ className="...bg-orange-500 shadow-[0_8px_24px_rgba(249,115,22,0.15)]..."
 
 ## DETAILED IMPLEMENTATION PLAN
 
-See companion file: **`/LANDING_PAGE_REDESIGN_PLAN.md`**
+See companion file: **`landing-page-redesign-plan.md`**
 
 This document includes:
 1. Full code examples with exact JSX snippets
@@ -206,7 +206,7 @@ This document includes:
 ## NEXT STEPS
 
 ### Immediate (This Week)
-1. Review `/LANDING_PAGE_REDESIGN_PLAN.md` with team
+1. Review `landing-page-redesign-plan.md` with team
 2. Implement Priority 1 messaging (DONE) + Priority 2-4 changes
 3. Run `npm run typecheck && npm run build`
 4. Playwright luxury-ux tests locally
