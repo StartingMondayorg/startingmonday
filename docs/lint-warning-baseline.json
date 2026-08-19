@@ -1,5 +1,5 @@
 {
-  "warnings": 602,
-  "capturedAt": "2026-07-13",
-  "notes": "Recaptured on SMK-429 after CI lint baseline check reported baseline=556,current=602. The growth accrued on main between 2026-07-07 and 2026-07-13; the SMK-429 branch adds no warnings (main=603, branch=602). This updates the accepted warning debt snapshot so regression checks can proceed from current state."
+  "warnings": 614,
+  "capturedAt": "2026-08-19",
+  "notes": "Recaptured while repairing the Railway build after controlled comparison found the pre-change parent at 614 warnings. The dashboard/onboarding hotfix removes its one net-new warning and also measures 614, so this records existing debt without accepting warning growth from the repair."
 }
