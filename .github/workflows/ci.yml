@@ -93,7 +93,7 @@ jobs:
 
       - name: Skip luxury static gate (no relevant public/shared UI changes)
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui != 'true'
-        run: echo "Skipping luxury static gate for PR: no relevant public/shared UI paths changed."
+        run: 'echo "Skipping luxury static gate for PR: no relevant public/shared UI paths changed."'
 
   predeploy-gates:
     name: Predeploy gates (lint, typecheck, build, smoke)
@@ -218,11 +218,13 @@ jobs:
 
       - name: Wait for app readiness
         run: |
-          for i in {1..60}; do
+          attempts=0
+          while [ "$attempts" -lt 60 ]; do
             if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
               echo "App is ready"
               exit 0
             fi
+            attempts=$((attempts + 1))
             sleep 2
           done
           echo "App did not become ready in time"
@@ -341,8 +343,11 @@ jobs:
   playwright:
     name: Playwright E2E
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
     if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -354,9 +359,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
 
       - name: Wait for deployment of this commit
         run: bash scripts/wait-for-deployed-commit.sh
@@ -384,8 +386,11 @@ jobs:
   playwright-merge-queue-full:
     name: Playwright merge-queue full suite
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 45
     if: github.event_name == 'merge_group'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -397,9 +402,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
 
       - name: Run merge-queue expanded Playwright suites
         run: npx playwright test --project=setup --project=smoke --project=monitor-generated --project=synthetics
@@ -516,9 +518,12 @@ jobs:
   playwright-pr:
     name: Playwright E2E (PR)
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
     if: github.event_name == 'pull_request'
     needs: [playwright-pr-plan]
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
     strategy:
       fail-fast: false
       matrix:
@@ -534,9 +539,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
 
       # Render-only suites run against the PR's own build so failures reflect
       # this change, not the current state of the staging deployment.
@@ -555,11 +557,13 @@ jobs:
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid
-          for i in {1..60}; do
+          attempts=0
+          while [ "$attempts" -lt 60 ]; do
             if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
               echo "App is ready"
               exit 0
             fi
+            attempts=$((attempts + 1))
             sleep 2
           done
           echo "App did not become ready in time"
@@ -593,8 +597,11 @@ jobs:
   first-value-synthetic-gate:
     name: First-value synthetic gate
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 20
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -606,9 +613,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
 
       - name: Validate synthetic gate credentials
         env:
@@ -642,10 +646,13 @@ jobs:
   mobile-visual-smoke:
     name: Mobile visual smoke
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     # Push runs may wait up to 15 minutes for the Railway deploy of this
     # commit before screenshotting, so the budget covers wait + tests.
     timeout-minutes: 30
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -679,10 +686,6 @@ jobs:
         if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
         run: npm ci
 
-      - name: Install Playwright browsers
-        if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
-        run: npx playwright install chromium --with-deps
-
       # On PRs, test the PR's own build (not the deployed staging site) so the
       # check reflects this change, not whatever staging happens to be serving.
       - name: Generate guide artifacts (PR local run)
@@ -700,11 +703,13 @@ jobs:
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid
-          for i in {1..60}; do
+          attempts=0
+          while [ "$attempts" -lt 60 ]; do
             if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
               echo "App is ready"
               exit 0
             fi
+            attempts=$((attempts + 1))
             sleep 2
           done
           echo "App did not become ready in time"
@@ -745,7 +750,7 @@ jobs:
 
       - name: Skip mobile visual smoke (no relevant public/shared UI changes)
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui != 'true'
-        run: echo "Skipping mobile visual smoke for PR: no relevant public/shared UI paths changed."
+        run: 'echo "Skipping mobile visual smoke for PR: no relevant public/shared UI paths changed."'
 
   # mobile-visual-regression job removed: it ran with continue-on-error (could
   # never fail) which is CI theater. Real visual regression should use a
@@ -754,10 +759,13 @@ jobs:
   auth-ux-guard:
     name: Auth UX guard
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     # Push runs may wait up to 15 minutes for the Railway deploy of this
     # commit before screenshotting, so the budget covers wait + tests.
     timeout-minutes: 30
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
@@ -769,9 +777,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
 
       # On PRs, test the PR's own build (not the deployed staging site).
       - name: Generate guide artifacts (PR local run)
@@ -789,11 +794,13 @@ jobs:
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid
-          for i in {1..60}; do
+          attempts=0
+          while [ "$attempts" -lt 60 ]; do
             if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
               echo "App is ready"
               exit 0
             fi
+            attempts=$((attempts + 1))
             sleep 2
           done
           echo "App did not become ready in time"
@@ -832,22 +839,22 @@ jobs:
   accessibility-tier0:
     name: Tier-0 accessibility gate
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '20'
-          cache: npm
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
 
       - name: Build PR branch for local accessibility run
         if: github.event_name == 'pull_request'
@@ -858,8 +865,10 @@ jobs:
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid
-          for i in {1..60}; do
+          attempts=0
+          while [ "$attempts" -lt 60 ]; do
             if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then exit 0; fi
+            attempts=$((attempts + 1))
             sleep 2
           done
           tail -n 200 /tmp/next-start.log || true

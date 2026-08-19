@@ -222,7 +222,7 @@ export default function OptimizePage() {
           <p className="text-[15px] text-slate-500 mt-3 leading-relaxed max-w-lg mx-auto">
             Paste your LinkedIn profile for section grades, targeted rewrites, and a clear fix plan.
           </p>
-          <p className="text-[12px] text-slate-200 mt-2">Free. No account required. 3 analyses per day.</p>
+          <p className="text-[13px] text-slate-600 mt-2">Free. No account required. 3 analyses per day.</p>
         </div>
 
         {/* Input card */}

@@ -3,6 +3,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
+import { isUnitCoverageSourceFile } from './lib/coverage-scope.mjs'
 
 function parseArgs(argv) {
   const args = {
@@ -91,10 +92,7 @@ function getChangedFiles(baseRef, headRef) {
     .split('\n')
     .map((line) => normalizePath(line.trim()))
     .filter(Boolean)
-    // Test files are excluded from coverage instrumentation, so a test-only
-    // change cannot lower folder coverage — it must not trigger folder
-    // enforcement (adding a test could otherwise fail the gate it improves).
-    .filter((filePath) => !/\.(test|spec)\.(ts|tsx)$/.test(filePath) && !filePath.includes('__tests__/'))
+    .filter(isUnitCoverageSourceFile)
 }
 
 function normalizePath(input) {

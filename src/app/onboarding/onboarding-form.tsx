@@ -111,7 +111,7 @@ export function OnboardingForm({
 
   const {
     advancedSetup, setAdvancedSetup, fullName, setFullName,
-    searchPersona, setSearchPersona, searchPosture, setSearchPosture, roleFamily, setRoleFamily,
+    searchPersona, setSearchPersona, searchPosture, roleFamily, setRoleFamily,
     roleTitle, setRoleTitle, roleTitles, setRoleTitles,
     employmentStatus, setEmploymentStatus, searchTimeline, setSearchTimeline,
     searchDriver, setSearchDriver, currentTitle, setCurrentTitle,

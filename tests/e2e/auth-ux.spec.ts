@@ -19,6 +19,7 @@ test.describe('Auth UX contract and visual guard @auth-ux', () => {
     await page.goto('/login', { waitUntil: 'networkidle' })
 
     await expect(page.getByRole('heading', { name: /^Sign in$/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^Sign in$/i })).toHaveClass(/!bg-orange-500/)
     await expect(page.locator('body')).not.toContainText(/jump to section/i)
     await expect(page.locator('a[href="#login-social"]')).toHaveCount(0)
     await expect(page.locator('a[href="#login-password"]')).toHaveCount(0)
@@ -42,6 +43,7 @@ test.describe('Auth UX contract and visual guard @auth-ux', () => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.waitForTimeout(300)
 
+    await expect(page.getByRole('button', { name: /^Start free trial$/i })).toHaveClass(/!bg-orange-500/)
     await expect(page.locator('main > div.w-full.max-w-sm')).toHaveScreenshot('auth-signup-desktop.png', {
       animations: 'disabled',
       maxDiffPixelRatio: 0.02,
