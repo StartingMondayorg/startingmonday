@@ -1,4 +1,5 @@
 import type { RoleFamily, RoleTitle } from '@/lib/role-taxonomy'
+import { resolveDashboardSearchPosture } from '@/lib/dashboard-posture'
 
 export const ONBOARDING_FINAL_STEP = 8
 
@@ -7,6 +8,7 @@ export type OnboardingDestination = '/dashboard' | '/onboarding'
 export type OnboardingDraft = {
   fullName: string
   searchPersona: string
+  searchPosture: string
   roleFamily: RoleFamily | ''
   roleTitle: RoleTitle | ''
   roleTitles: RoleTitle[]
@@ -55,14 +57,21 @@ export function normalizeOnboardingDraft(profile: OnboardingProfileSeed | null):
     ? profile.onboarding_draft as Record<string, unknown>
     : {}
 
+  const employmentStatus = stringValue(draft.employmentStatus)
+  const searchTimeline = stringValue(draft.searchTimeline)
+
   return {
     fullName: stringValue(draft.fullName, profile?.full_name ?? ''),
     searchPersona: stringValue(draft.searchPersona),
+    searchPosture: stringValue(draft.searchPosture) || resolveDashboardSearchPosture({
+      employmentStatus,
+      searchTimeline,
+    }),
     roleFamily: stringValue(draft.roleFamily) as RoleFamily | '',
     roleTitle: stringValue(draft.roleTitle) as RoleTitle | '',
     roleTitles: stringArray(draft.roleTitles) as RoleTitle[],
-    employmentStatus: stringValue(draft.employmentStatus),
-    searchTimeline: stringValue(draft.searchTimeline),
+    employmentStatus,
+    searchTimeline,
     searchDriver: stringValue(draft.searchDriver),
     currentTitle: stringValue(draft.currentTitle, profile?.current_title ?? ''),
     currentCompany: stringValue(draft.currentCompany, profile?.current_company ?? ''),

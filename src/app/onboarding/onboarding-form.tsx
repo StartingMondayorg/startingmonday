@@ -29,6 +29,7 @@ import { OnboardingDoneStep } from './onboarding-done-step'
 import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
 import type { OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 import { reportOnboardingStepCompleted, useOnboardingDraftState } from './use-onboarding-draft-state'
+import { resolveDashboardSearchPosture } from '@/lib/dashboard-posture'
 
 type ImportResult = {
   full_name?: string | null
@@ -63,7 +64,6 @@ const ROLE_TRACK_OPTIONS: RoleTrackOption[] = [
 
 const STEP_COUNT = 9
 const QUICK_PATH_STEP_COUNT = 7
-
 
 function Dots({ current, total = STEP_COUNT }: { current: number; total?: number }) {
   return (
@@ -111,7 +111,7 @@ export function OnboardingForm({
 
   const {
     advancedSetup, setAdvancedSetup, fullName, setFullName,
-    searchPersona, setSearchPersona, roleFamily, setRoleFamily,
+    searchPersona, setSearchPersona, searchPosture, setSearchPosture, roleFamily, setRoleFamily,
     roleTitle, setRoleTitle, roleTitles, setRoleTitles,
     employmentStatus, setEmploymentStatus, searchTimeline, setSearchTimeline,
     searchDriver, setSearchDriver, currentTitle, setCurrentTitle,
@@ -127,6 +127,11 @@ export function OnboardingForm({
 
   const [intelContent, setIntelContent] = useState('')
   const [intelLoading, setIntelLoading] = useState(false)
+  const resolvedSearchPosture = resolveDashboardSearchPosture({
+    searchPosture,
+    employmentStatus,
+    searchTimeline,
+  })
 
   const [scanStarted, setScanStarted] = useState(initialStep >= 6 && initialDraft.companyNames.length > 0)
   const [scanProgress, setScanProgress] = useState<ScanStatusPayload | null>(null)
@@ -633,6 +638,7 @@ export function OnboardingForm({
       <form id="onboarding-form" action={completeOnboarding} className="hidden">
         <input type="hidden" name="full_name"           value={fullName} />
         <input type="hidden" name="search_persona"      value={searchPersona} />
+        <input type="hidden" name="search_posture"      value={resolvedSearchPosture} />
         <input type="hidden" name="role_family"         value={roleFamily} />
         <input type="hidden" name="role_title"          value={roleTitle} />
         <input type="hidden" name="target_role_tracks"  value={JSON.stringify(roleTitles)} />
