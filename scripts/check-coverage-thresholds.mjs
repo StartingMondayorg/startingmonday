@@ -239,8 +239,9 @@ function main() {
   const { effectiveBaseRef, skip, reason } = resolveDiffScope(baseRef, headRef)
 
   if (skip) {
-    console.log(`coverage-thresholds: skipping gate for stale diff scope (${reason})`)
-    process.exit(0)
+    console.error(`coverage-thresholds: cannot resolve diff scope (${reason})`)
+    console.error('Failing closed rather than silently skipping the coverage gate. If this is a legitimate infra issue (shallow clone, rebase), fix the checkout/base-ref resolution rather than bypassing this check.')
+    process.exit(1)
   }
 
   if (!fs.existsSync(lcovPath)) {

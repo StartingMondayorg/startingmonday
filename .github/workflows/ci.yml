@@ -205,7 +205,7 @@ jobs:
         run: npm ci
 
       - name: Billing readiness gate (strict)
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -708,6 +708,13 @@ jobs:
           echo "Missing dedicated Playwright signup credentials for first-value gate"
           exit 1
 
+      - name: Wait for deployment of this commit
+        if: github.event_name != 'pull_request'
+        run: bash scripts/wait-for-deployed-commit.sh
+        env:
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
+
       - name: Run signup-to-first-value synthetic (blocking)
         run: npx playwright test tests/e2e/synthetics.spec.ts --project=synthetics --grep "Synthetic-10"
         env:
@@ -1174,8 +1181,13 @@ jobs:
 
             const runs = res.data.workflow_runs ?? []
             if (runs.length === 0) {
-              core.notice('No completed production-synthetics runs found — gate is advisory, allowing deploy')
-              core.setOutput('gate_pass', 'true')
+              const msg = 'Pre-prod gate BLOCKED: no completed production-synthetics runs found. ' +
+                'This gate cannot confirm production is healthy, which is exactly the condition it exists to catch ' +
+                '(a disabled/renamed workflow or an ongoing outage both look like zero runs). ' +
+                'Check the production-synthetics.yml run history before deploying.'
+              core.setOutput('gate_pass', 'false')
+              core.setOutput('summary', msg)
+              core.setFailed(msg)
               return
             }
 
