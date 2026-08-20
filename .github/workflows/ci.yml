@@ -125,6 +125,15 @@ jobs:
             signal_engine_plan:
               - 'docs/signal-engine-cross-product-master-plan-2026-07-26.md'
               - 'AGENTS.md'
+            billing:
+              - 'supabase/migrations/**'
+              - 'src/lib/billing/**'
+              - 'src/app/[(]dashboard[)]/settings/billing/**'
+              - 'src/app/api/[(]billing[)]/**'
+              - 'src/app/api/[(]ops[)]/admin/automation/billing/**'
+              - 'src/app/api/[(]ops[)]/webhooks/stripe/**'
+              - 'scripts/check-billing-readiness.mjs'
+              - 'scripts/fix-billing-placeholder-sql.mjs'
 
       - uses: actions/setup-node@v5
         with:
@@ -206,7 +215,7 @@ jobs:
         run: npm ci
 
       - name: Billing readiness gate (strict)
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -221,7 +230,19 @@ jobs:
           STRIPE_PRICE_EXECUTIVE_ANNUAL: ${{ secrets.STRIPE_PRICE_EXECUTIVE_ANNUAL }}
           STRIPE_PRICE_PARTNER_PASSIVE: ${{ secrets.STRIPE_PRICE_PARTNER_PASSIVE }}
           STRIPE_PRICE_PARTNER_ACTIVE: ${{ secrets.STRIPE_PRICE_PARTNER_ACTIVE }}
-        run: npm run billing:readiness:strict
+        run: |
+          # Env-var presence is cheap, deterministic, and relevant to every PR
+          # (is this environment even configured to take payments). The
+          # database row-integrity check queries *live* commerce data, which
+          # is a property of production state, not of this PR's diff -- an
+          # unrelated PR shouldn't be blocked by a billing item someone else
+          # left half-configured. Only run the full check (env + rows) on
+          # pushes (about to be live) or on PRs that actually touch billing.
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ steps.scoped.outputs.billing }}" != "true" ]; then
+            npm run billing:readiness:strict -- --skip-rows
+          else
+            npm run billing:readiness:strict
+          fi
 
       - name: Generate guide artifacts
         run: npm run guide:user:sync && npm run guide:internal:sync
@@ -664,6 +685,13 @@ jobs:
           fi
           echo "Missing dedicated Playwright signup credentials for first-value gate"
           exit 1
+
+      - name: Wait for deployment of this commit
+        if: github.event_name != 'pull_request'
+        run: bash scripts/wait-for-deployed-commit.sh
+        env:
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
 
       - name: Run signup-to-first-value synthetic (blocking)
         run: npx playwright test tests/e2e/synthetics.spec.ts --project=synthetics --grep "Synthetic-10"
@@ -1131,8 +1159,13 @@ jobs:
 
             const runs = res.data.workflow_runs ?? []
             if (runs.length === 0) {
-              core.notice('No completed production-synthetics runs found — gate is advisory, allowing deploy')
-              core.setOutput('gate_pass', 'true')
+              const msg = 'Pre-prod gate BLOCKED: no completed production-synthetics runs found. ' +
+                'This gate cannot confirm production is healthy, which is exactly the condition it exists to catch ' +
+                '(a disabled/renamed workflow or an ongoing outage both look like zero runs). ' +
+                'Check the production-synthetics.yml run history before deploying.'
+              core.setOutput('gate_pass', 'false')
+              core.setOutput('summary', msg)
+              core.setFailed(msg)
               return
             }
 
