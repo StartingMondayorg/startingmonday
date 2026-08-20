@@ -61,6 +61,21 @@ export default async function HelpPage() {
           </Card>
         </Link>
 
+        <Card id="how-this-works" className="rounded px-6 py-5 mb-6 scroll-mt-20">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">How this works</p>
+          <h2 className="mt-2 text-[20px] font-bold text-slate-900">The company, people, angle loop</h2>
+          <div className="mt-3 space-y-2 text-[13px] leading-relaxed text-slate-600">
+            <p>We watch your companies for public signals.</p>
+            <p>A signal means a role may be forming before it is posted.</p>
+            <p>You reach the approximately three people who could say your name.</p>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3 text-[13px] font-semibold">
+            <Link href="/dashboard/companies/new" className="text-slate-900 hover:text-slate-700">Add a company</Link>
+            <Link href="/dashboard/signals" className="text-slate-900 hover:text-slate-700">View signals</Link>
+            <Link href="/dashboard/contacts" className="text-slate-900 hover:text-slate-700">Review relationships</Link>
+          </div>
+        </Card>
+
         {/* Setup checklist */}
         <Link href="/dashboard/start" className="group block mb-6">
           <Card className="rounded px-6 py-5 flex items-center justify-between hover:border-slate-300 hover:bg-slate-50 transition-colors">

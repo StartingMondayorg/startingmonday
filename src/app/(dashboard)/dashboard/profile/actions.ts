@@ -52,6 +52,9 @@ export async function saveProfile(formData: FormData) {
   const fullName      = (formData.get('full_name')      as string ?? '').trim() || null
   const currentTitle  = (formData.get('current_title')  as string ?? '').trim() || null
   const currentCompany = (formData.get('current_company') as string ?? '').trim() || null
+  const searchPosture = (['active', 'exploring', 'not_looking'] as const).find(
+    (value) => value === formData.get('search_posture'),
+  ) ?? null
   const briefingTime  = (formData.get('briefing_time')  as string) || null
   const briefingDays  = formData.getAll('briefing_days') as string[]
 
@@ -126,6 +129,7 @@ export async function saveProfile(formData: FormData) {
         full_name: fullName,
         current_title: currentTitle,
         current_company: currentCompany,
+        search_posture: searchPosture,
         briefing_time: briefingTime,
         briefing_days: briefingDays.length > 0 ? briefingDays : null,
         briefing_email: briefingEmail,

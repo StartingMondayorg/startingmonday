@@ -31,6 +31,9 @@ node scripts/precommit-outreach-lint.mjs
 echo "route guard tests..."
 npm run test:route-guards
 
+echo "staged diff coverage gate..."
+node scripts/precommit-diff-coverage.mjs
+
 echo "mobile-ui gate..."
 node scripts/precommit-mobile-ui-gate.mjs
 

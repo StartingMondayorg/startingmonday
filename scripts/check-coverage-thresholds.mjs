@@ -11,6 +11,7 @@ function parseArgs(argv) {
     configPath: path.join(process.cwd(), 'config', 'coverage-thresholds.json'),
     baseRef: '',
     headRef: 'HEAD',
+    staged: false,
   }
 
   for (let i = 2; i < argv.length; i += 1) {
@@ -23,6 +24,8 @@ function parseArgs(argv) {
       args.baseRef = arg.slice('--base-ref='.length)
     } else if (arg.startsWith('--head-ref=')) {
       args.headRef = arg.slice('--head-ref='.length)
+    } else if (arg === '--staged') {
+      args.staged = true
     }
   }
 
@@ -84,7 +87,18 @@ function resolveDiffScope(baseRef, headRef) {
   return { effectiveBaseRef: baseRef, skip: false }
 }
 
-function getChangedFiles(baseRef, headRef) {
+function getChangedFiles(baseRef, headRef, staged = false) {
+  if (staged) {
+    const raw = execSync('git diff --cached --name-only --no-color -- "src/**/*.ts" "src/**/*.tsx"', {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
+    return raw
+      .split('\n')
+      .map((line) => normalizePath(line.trim()))
+      .filter(Boolean)
+      .filter(isUnitCoverageSourceFile)
+  }
   const range = baseRef ? `${baseRef}...${headRef}` : headRef
   const cmd = `git diff --name-only --no-color ${range} -- "src/**/*.ts" "src/**/*.tsx"`
   const raw = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
@@ -221,7 +235,7 @@ function readConfig(configPath) {
 }
 
 function main() {
-  const { lcovPath, configPath, baseRef, headRef } = parseArgs(process.argv)
+  const { lcovPath, configPath, baseRef, headRef, staged } = parseArgs(process.argv)
   const { effectiveBaseRef, skip, reason } = resolveDiffScope(baseRef, headRef)
 
   if (skip) {
@@ -240,7 +254,7 @@ function main() {
   const config = readConfig(configPath)
   const files = parseLcov(fs.readFileSync(lcovPath, 'utf8'))
 
-  const changedFiles = getChangedFiles(effectiveBaseRef, headRef)
+  const changedFiles = getChangedFiles(effectiveBaseRef, headRef, staged)
 
   if (files.length === 0) {
     throw new Error('No file coverage records found in lcov')
@@ -257,12 +271,12 @@ function main() {
   console.log(`- global statements: ${globalResult.metrics.statements}%`) 
   console.log(`- global branches: ${globalResult.metrics.branches}%`) 
 
-  if (effectiveBaseRef) {
-    console.log(`- diff scope: ${effectiveBaseRef}...${headRef}`)
+  if (effectiveBaseRef || staged) {
+    console.log(`- diff scope: ${staged ? 'staged files' : `${effectiveBaseRef}...${headRef}`}`)
     console.log(`- changed files in scope: ${changedFiles.length}`)
   }
 
-  if (effectiveBaseRef) {
+  if (effectiveBaseRef || staged) {
     console.log('- global threshold enforcement: skipped in diff-scoped mode')
   } else {
     failures.push(...globalResult.failures)
@@ -272,7 +286,7 @@ function main() {
     let matched
     let label = folderRule.prefix
 
-    if (effectiveBaseRef) {
+    if (effectiveBaseRef || staged) {
       const changedInFolder = changedFiles.filter((filePath) => filePath.startsWith(folderRule.prefix))
       if (changedInFolder.length === 0) {
         console.log(`- ${folderRule.prefix} skipped (no changed files in diff scope)`)

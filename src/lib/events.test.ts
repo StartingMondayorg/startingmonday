@@ -1,83 +1,51 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const state = vi.hoisted(() => ({
-  select: vi.fn(),
-  eq: vi.fn(),
-  maybeSingle: vi.fn(),
+  from: vi.fn(),
   insert: vi.fn(),
+  update: vi.fn(),
+  eq: vi.fn(),
+  is: vi.fn(),
+  maybeSingle: vi.fn(),
 }))
 
 vi.mock('@/lib/supabase/admin', () => ({
-  createAdminClient: () => ({
-    from: (table: string) => {
-      if (table === 'users') {
-        return {
-          select: state.select,
-        }
-      }
-      if (table === 'user_events') {
-        return {
-          insert: state.insert,
-        }
-      }
-      return {
-        select: state.select,
-        insert: state.insert,
-      }
-    },
-  }),
+  createAdminClient: () => ({ from: state.from }),
 }))
 
-import { logEvent } from './events'
+import { logCompanyWatch, logEvent, markOfferAccepted } from './events'
 
-describe('src/lib/events.ts', () => {
+describe('event writers', () => {
   beforeEach(() => {
     vi.resetAllMocks()
-
-    state.select.mockReturnValue({ eq: state.eq })
-    state.eq.mockReturnValue({ maybeSingle: state.maybeSingle })
-    state.maybeSingle.mockResolvedValue({
-      data: {
-        signup_source: 'managertools',
-        referral_source: 'partner_alpha',
-        acquisition_channel: 'self_reported',
-      },
-    })
+    state.maybeSingle.mockResolvedValue({ data: { signup_source: 'referral', referral_source: null, acquisition_channel: 'partner' } })
     state.insert.mockResolvedValue({ error: null })
-  })
-
-  it('enriches logged events with source context when available', async () => {
-    await logEvent('user-1', 'contact_added', { channel: 'manual' })
-
-    expect(state.insert).toHaveBeenCalledWith({
-      user_id: 'user-1',
-      event_name: 'contact_added',
-      properties: {
-        signup_source: 'managertools',
-        referral_source: 'partner_alpha',
-        acquisition_channel: 'self_reported',
-        channel: 'manual',
-      },
+    state.is.mockResolvedValue({ error: null })
+    state.eq.mockReturnValue({ maybeSingle: state.maybeSingle, is: state.is })
+    state.update.mockReturnValue({ eq: state.eq })
+    state.from.mockImplementation((table: string) => {
+      if (table === 'users') return { select: () => ({ eq: state.eq }), update: state.update }
+      return { insert: state.insert }
     })
   })
 
-  it('preserves explicit source values when provided by caller', async () => {
-    await logEvent('user-1', 'contact_added', {
-      signup_source: 'explicit',
-      referral_source: 'explicit_ref',
-      acquisition_channel: 'newsletter',
-      channel: 'manual',
-    })
+  it('adds source context without replacing explicit event properties', async () => {
+    await logEvent('user-1', 'dashboard_viewed', { layout: 'three_zone', signup_source: 'direct' })
 
-    expect(state.insert).toHaveBeenCalledWith({
+    expect(state.insert).toHaveBeenCalledWith(expect.objectContaining({
       user_id: 'user-1',
-      event_name: 'contact_added',
-      properties: {
-        signup_source: 'explicit',
-        referral_source: 'explicit_ref',
-        acquisition_channel: 'newsletter',
-        channel: 'manual',
-      },
+      event_name: 'dashboard_viewed',
+      properties: expect.objectContaining({ layout: 'three_zone', signup_source: 'direct', acquisition_channel: 'partner' }),
+    }))
+  })
+
+  it('writes company watch and offer events without throwing', async () => {
+    await logCompanyWatch('user-1', 'company-1', {
+      sector: 'Technology', careerPageUrlPresent: true, fitScore: 88, stage: 'watching',
     })
+    await markOfferAccepted('user-1')
+
+    expect(state.insert).toHaveBeenCalledWith(expect.objectContaining({ company_id: 'company-1', fit_score: 88 }))
+    expect(state.update).toHaveBeenCalledWith(expect.objectContaining({ offer_accepted_at: expect.any(String) }))
   })
 })

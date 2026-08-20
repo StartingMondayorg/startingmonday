@@ -4,8 +4,8 @@ import { useEffect } from 'react'
 import { usePostHog } from 'posthog-js/react'
 
 type FirstMileTelemetryProps = {
-  eventName: 'homepage_viewed' | 'homepage_dwell_10s' | 'homepage_dwell_30s' | 'homepage_cta_clicked' | 'first_mile_section_dwell' | 'dashboard_first_run_viewed'
-  pageName: 'homepage' | 'dashboard_first_run'
+  eventName: 'homepage_viewed' | 'homepage_dwell_10s' | 'homepage_dwell_30s' | 'homepage_cta_clicked' | 'first_mile_section_dwell' | 'dashboard_first_run_viewed' | 'dashboard_viewed'
+  pageName: 'homepage' | 'dashboard_first_run' | 'dashboard'
   enabled?: boolean
   properties?: Record<string, string | number | boolean | null>
 }
@@ -36,6 +36,32 @@ export function FirstMileTelemetry({ eventName, pageName, enabled = true, proper
 
     posthog?.capture(eventName, baseProps)
     void logChannelEvent(eventName, baseProps)
+    if (eventName === 'dashboard_viewed' && properties.is_first_run === true) {
+      posthog?.capture('dashboard_first_run_viewed', baseProps)
+      void logChannelEvent('dashboard_first_run_viewed', baseProps)
+    }
+
+    const viewedAt = performance.now()
+    let firstActionRecorded = false
+    const actionHandler = (event: MouseEvent) => {
+      const target = event.target instanceof Element ? event.target : null
+      const actionElement = target?.closest<HTMLElement>('[data-dashboard-action]')
+        ?? target?.closest<HTMLElement>('[data-first-mile-section] a, [data-first-mile-section] button, [data-emi-section] a, [data-emi-section] button')
+      if (!actionElement) return
+
+      const sectionElement = actionElement.closest<HTMLElement>('[data-first-mile-section], [data-emi-section]')
+      const actionProps = {
+        ...baseProps,
+        action_id: actionElement.dataset.dashboardAction ?? 'interaction',
+        section_id: sectionElement?.dataset.firstMileSection ?? sectionElement?.dataset.emiSection ?? 'dashboard',
+        elapsed_ms: Math.round(performance.now() - viewedAt),
+        is_first_action: !firstActionRecorded,
+      }
+      firstActionRecorded = true
+      posthog?.capture('dashboard_action_clicked', actionProps)
+      void logChannelEvent('dashboard_action_clicked', actionProps)
+    }
+    document.addEventListener('click', actionHandler)
 
     const sectionElements = Array.from(document.querySelectorAll<HTMLElement>('[data-first-mile-section]'))
     const sectionVisibleSince = new Map<string, number>()
@@ -72,6 +98,7 @@ export function FirstMileTelemetry({ eventName, pageName, enabled = true, proper
 
     if (eventName !== 'homepage_viewed') {
       return () => {
+        document.removeEventListener('click', actionHandler)
         sectionObserver.disconnect()
       }
     }
@@ -95,6 +122,7 @@ export function FirstMileTelemetry({ eventName, pageName, enabled = true, proper
 
     return () => {
       handles.forEach((handle) => window.clearTimeout(handle))
+      document.removeEventListener('click', actionHandler)
       sectionObserver.disconnect()
     }
   }, [enabled, eventName, pageName, posthog, properties])
