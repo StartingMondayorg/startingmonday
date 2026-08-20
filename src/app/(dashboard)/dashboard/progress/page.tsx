@@ -19,8 +19,7 @@ export default async function DashboardProgressPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const nowMs = new Date().getTime()
-  const since70d = new Date(nowMs - 70 * 24 * 60 * 60 * 1000).toISOString()
+  const since70d = new Date(Date.now() - 70 * 24 * 60 * 60 * 1000).toISOString()
   const thisMonday = (() => {
     const date = new Date()
     const day = date.getDay()
