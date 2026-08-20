@@ -1289,9 +1289,9 @@ export default async function DashboardPage({
         <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
           <div className="mb-6">
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Dashboard</p>
-            <h1 className="mt-2 font-serif text-[30px] font-bold leading-tight text-white sm:text-[42px]">
+            <h2 className="mt-2 font-serif text-[30px] font-bold leading-tight text-white sm:text-[42px]">
               What should I do today?
-            </h1>
+            </h2>
             <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-300">
               We watch your companies for signals, then turn the strongest ones into a company, people, and angle to act on.
             </p>
