@@ -59,6 +59,7 @@ import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
 import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
 import { rankSignals } from "@/lib/intelligence/intelligence-quality";
 import { stripStaleRelativeTime } from "@/lib/outreach/follow-up-copy";
+import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-flags";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {
@@ -84,6 +85,130 @@ export function shouldRedirectToStartDashboard(opts: {
   return (
     opts.isFirstRunDashboard && !opts.hasSeenFirstRun && opts.focus !== "main"
   );
+}
+
+type DashboardPosture = "active" | "exploring" | "not_looking";
+
+type ThreeZoneNextMove = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  cta: string;
+  href: string;
+};
+
+export function resolveThreeZoneDashboardPosture(searchPath: string | null): DashboardPosture {
+  if (searchPath === "campaign") return "active";
+  if (searchPath === "watcher" || searchPath === "nurture") return "exploring";
+  return "not_looking";
+}
+
+export function formatDashboardSignalAge(signalDate: string, todayISO: string): string {
+  const signalTime = new Date(`${signalDate}T12:00:00Z`).getTime();
+  const todayTime = new Date(`${todayISO}T12:00:00Z`).getTime();
+  if (!Number.isFinite(signalTime) || !Number.isFinite(todayTime)) return "recently";
+  const days = Math.max(0, Math.floor((todayTime - signalTime) / 86400000));
+  if (days === 0) return "today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
+}
+
+export function buildThreeZoneNextMove(opts: {
+  posture: DashboardPosture;
+  offerCompanyName?: string | null;
+  interviewingCompanyName?: string | null;
+  overdueCount: number;
+  freshSignal?: { companyName: string | null; summary: string; href: string } | null;
+  stalled: boolean;
+  nextSetup?: { label: string; href: string } | null;
+  companyCount: number;
+  scanAgeLabel: string;
+  nextScanDay: string;
+}): ThreeZoneNextMove {
+  const postureTouch = opts.posture === "active"
+    ? "decide who to contact"
+    : opts.posture === "exploring"
+      ? "consider one relationship touch"
+      : "save the context for later";
+
+  if (opts.offerCompanyName) {
+    return {
+      eyebrow: "Your next move",
+      title: `${opts.offerCompanyName} needs attention today.`,
+      body: opts.posture === "active"
+        ? "Review the brief and prepare the next conversation."
+        : "Review the context before taking the next step.",
+      cta: "Review brief",
+      href: "/dashboard/briefing",
+    };
+  }
+
+  if (opts.interviewingCompanyName) {
+    return {
+      eyebrow: "Your next move",
+      title: `${opts.interviewingCompanyName} has an active conversation.`,
+      body: opts.posture === "exploring"
+        ? "Review the context before you respond."
+        : "Review the brief and prepare the next conversation.",
+      cta: "Review brief",
+      href: "/dashboard/briefing",
+    };
+  }
+
+  if (opts.overdueCount > 0) {
+    return {
+      eyebrow: "Your next move",
+      title: `${opts.overdueCount} follow-up${opts.overdueCount === 1 ? " is" : "s are"} due.`,
+      body: opts.posture === "not_looking"
+        ? "Review what is due before taking any step."
+        : "Pick the one follow-up most likely to move a relationship forward.",
+      cta: "View follow-ups",
+      href: "/dashboard/calendar",
+    };
+  }
+
+  if (opts.freshSignal) {
+    const company = opts.freshSignal.companyName ?? "A tracked company";
+    return {
+      eyebrow: "Your next move",
+      title: `${company} has a fresh signal.`,
+      body: `${opts.freshSignal.summary} Open the brief and ${postureTouch}.`,
+      cta: "Get brief",
+      href: opts.freshSignal.href,
+    };
+  }
+
+  if (opts.stalled) {
+    return {
+      eyebrow: "Your next move",
+      title: opts.posture === "active" ? "Restart with one company." : "Keep one relationship warm.",
+      body: opts.posture === "active"
+        ? "Pick one company and restart with a brief."
+        : "Pick one company for a low-pressure touch.",
+      cta: "Pick a company",
+      href: "/dashboard#companies",
+    };
+  }
+
+  if (opts.nextSetup) {
+    return {
+      eyebrow: "Your next move",
+      title: `Finish ${opts.nextSetup.label}.`,
+      body: "This keeps Monday calibrated to the companies and relationships that matter.",
+      cta: "Finish setup",
+      href: opts.nextSetup.href,
+    };
+  }
+
+  return {
+    eyebrow: "Your next move",
+    title: opts.posture === "active"
+      ? `Nothing new across your ${opts.companyCount} companies.`
+      : "Nothing needs you today.",
+    body: `Last checked ${opts.scanAgeLabel}. Next scan ${opts.nextScanDay}.`,
+    cta: "View companies",
+    href: "/dashboard#companies",
+  };
 }
 
 type ProfileRow = {
@@ -1079,6 +1204,202 @@ export default async function DashboardPage({
         isRothschildAdmin={isRothschildAdmin}
         profileNameOrEmail={profile?.full_name ?? user.email ?? ""}
       />
+    );
+  }
+
+  if (isStartingMondayDashboardSimplificationEnabled()) {
+    const dashboardPosture = resolveThreeZoneDashboardPosture(searchPath);
+    const latestSignalByCompany = new Map<string, SignalRow>();
+    for (const signal of [...signalsDeduped, ...patternAlerts]) {
+      if (!latestSignalByCompany.has(signal.company_id)) {
+        latestSignalByCompany.set(signal.company_id, signal);
+      }
+    }
+    const freshSignal = signalsDeduped[0] ?? patternAlerts[0] ?? null;
+    const freshSignalAge = freshSignal
+      ? formatDashboardSignalAge(freshSignal.signal_date, todayISO)
+      : null;
+    const threeZoneNextMove = buildThreeZoneNextMove({
+      posture: dashboardPosture,
+      offerCompanyName: offerCompany?.name ?? null,
+      interviewingCompanyName: interviewingCompany?.name ?? null,
+      overdueCount,
+      freshSignal: freshSignal
+        ? {
+            companyName: freshSignal.companies?.name ?? null,
+            summary: `${freshSignal.signal_summary} - ${freshSignalAge}.`,
+            href: `/dashboard/companies/${freshSignal.company_id}/prep`,
+          }
+        : null,
+      stalled: !!stallNudge,
+      nextSetup: activation.isComplete
+        ? null
+        : setupSteps.find((step) => !step.done) ?? null,
+      companyCount: totalCount,
+      scanAgeLabel: scannerCompletedCount > 0 ? "today" : "not yet",
+      nextScanDay: weekOneNextScanDay,
+    });
+    const targetRoles = ((profile?.target_titles as string[] | null) ?? [])
+      .filter(Boolean)
+      .slice(0, 3);
+    const sectorByCompanyId = new Map(
+      (companies ?? []).map((company) => [company.id, company.sector] as const),
+    );
+    const companyRows = [...allList]
+      .sort((a, b) => {
+        const aSignal = latestSignalByCompany.get(a.id)?.signal_date ?? "";
+        const bSignal = latestSignalByCompany.get(b.id)?.signal_date ?? "";
+        return bSignal.localeCompare(aSignal) || a.name.localeCompare(b.name);
+      })
+      .slice(0, PAGE_SIZE);
+    const nextBriefingLabel = profile?.briefing_time
+      ? `Next briefing at ${weekOneBriefingTime}`
+      : "Briefing time not set";
+
+    return (
+      <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+        {isFirstRunDashboard && (
+          <FirstMileTelemetry
+            eventName="dashboard_first_run_viewed"
+            pageName="dashboard_first_run"
+            properties={{
+              company_count: totalCount,
+              contact_count: contactCount,
+              has_advanced_stage: hasAdvancedStage,
+              onboarding_completed: true,
+              layout: "three_zone",
+            }}
+          />
+        )}
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.18),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.98)_100%)]" />
+
+        <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+          <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+            <span className="shrink-0 text-[13px] font-bold uppercase tracking-[0.16em] text-white/90">
+              <span className="text-white">Starting </span>
+              <span className="text-orange-500">Monday</span>
+            </span>
+            <Link href="/dashboard/progress" className="ml-auto text-[12px] font-semibold text-slate-300 hover:text-white">
+              Progress
+            </Link>
+            <LogoutButton label="Sign out" />
+          </div>
+        </header>
+
+        <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+          <div className="mb-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Dashboard</p>
+            <h2 className="mt-2 font-serif text-[30px] font-bold leading-tight text-white sm:text-[42px]">
+              What should I do today?
+            </h2>
+            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-300">
+              We watch your companies for signals, then turn the strongest ones into a company, people, and angle to act on.
+            </p>
+          </div>
+
+          <section aria-labelledby="next-move-heading" className="mb-6">
+            <Card variant="glass" className="p-5 sm:p-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">{threeZoneNextMove.eyebrow}</p>
+              <div className="mt-3 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+                <div>
+                  <h2 id="next-move-heading" className="text-[24px] font-bold leading-tight text-white sm:text-[30px]">
+                    {threeZoneNextMove.title}
+                  </h2>
+                  <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-slate-300">{threeZoneNextMove.body}</p>
+                  {isTrialing && (
+                    <p className="mt-3 text-[12px] font-semibold text-slate-300">
+                      Trial: day {Math.max(1, 30 - trialDaysLeft)} of 30. You keep your data when the trial ends.
+                    </p>
+                  )}
+                </div>
+                <Button className="min-h-[44px] px-5 text-[13px] font-semibold" render={<Link href={threeZoneNextMove.href} />}>
+                  {threeZoneNextMove.cta}
+                </Button>
+              </div>
+            </Card>
+          </section>
+
+          <section id="companies" aria-labelledby="companies-heading" className="mb-6 scroll-mt-24">
+            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Your companies</p>
+                <h2 id="companies-heading" className="mt-1 text-[22px] font-bold text-white">Company, people, angle.</h2>
+                <p className="mt-1 text-[12px] text-slate-400">Signals mean a role may be forming before it is posted.</p>
+              </div>
+              <Link href="/dashboard/companies/new" className="text-[13px] font-semibold text-orange-300 hover:text-orange-200">
+                Add company
+              </Link>
+            </div>
+
+            {companyRows.length === 0 ? (
+              <Card variant="glass" className="p-5">
+                <p className="text-[15px] font-semibold text-white">Add a company you would want to be shortlisted at.</p>
+                <p className="mt-1 text-[13px] text-slate-300">We start watching it today and tell you when something matters.</p>
+                <Button className="mt-4 min-h-[44px] text-[13px]" render={<Link href="/dashboard/companies/new" />}>
+                  Add company
+                </Button>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {companyRows.map((company) => {
+                  const latestSignal = latestSignalByCompany.get(company.id);
+                  const signalAge = latestSignal ? formatDashboardSignalAge(latestSignal.signal_date, todayISO) : null;
+                  return (
+                    <Card key={company.id} variant="glass" className="p-4 sm:p-5">
+                      <div className="grid gap-4 lg:grid-cols-[1.1fr_1.4fr_1.2fr_auto] lg:items-center">
+                        <div>
+                          <p className="text-[15px] font-semibold text-white">{company.name}</p>
+                          <p className="mt-0.5 text-[12px] text-slate-400">{sectorByCompanyId.get(company.id) ?? "Sector not set"}</p>
+                        </div>
+                        <div>
+                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-400">Latest signal</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-slate-200">
+                            {latestSignal ? `${latestSignal.signal_summary} - ${signalAge}` : "No fresh signal this week."}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-400">Who to know</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-slate-200">
+                            {targetRoles.length > 0 ? targetRoles.join(", ") : "Add target role titles in your profile."}
+                          </p>
+                        </div>
+                        <Link href={`/dashboard/companies/${company.id}/prep`} className="inline-flex min-h-[44px] items-center justify-center rounded border border-orange-300/30 px-4 text-[13px] font-semibold text-orange-200 hover:border-orange-200 hover:text-white">
+                          Get brief
+                        </Link>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          <section aria-labelledby="week-heading" className="mb-10">
+            <Card variant="glass" className="p-4 sm:p-5">
+              <div className="mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">This week</p>
+                <h2 id="week-heading" className="mt-1 text-[20px] font-bold text-white">Quiet operating strip.</h2>
+                <p className="mt-1 text-[12px] text-slate-400">Only the weekly numbers that change action.</p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <Link href="/dashboard/calendar" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
+                  <span className="block text-[22px] font-bold text-white">{overdueCount}</span>
+                  <span className="text-[12px] text-slate-300">follow-ups due</span>
+                </Link>
+                <Link href="/dashboard/signals" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
+                  <span className="block text-[22px] font-bold text-white">{signalCount}</span>
+                  <span className="text-[12px] text-slate-300">new signals this week</span>
+                </Link>
+                <Link href="/dashboard/profile#section-briefing" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
+                  <span className="block text-[14px] font-bold text-white">{nextBriefingLabel}</span>
+                  <span className="text-[12px] text-slate-300">briefing time</span>
+                </Link>
+              </div>
+            </Card>
+          </section>
+        </main>
+        <HelpQuickButton source="dashboard" href="/dashboard/help#how-this-works" />
+      </div>
     );
   }
 
