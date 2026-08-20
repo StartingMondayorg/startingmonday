@@ -17,7 +17,6 @@
 - scripts/prebuild-guard.mjs
 - scripts/check-clean-worktree-for-push.mjs
 - scripts/check-untracked-tests.mjs
-- scripts/check-release-ux-checklist.mjs
 - scripts/check-docs-commands.mjs
 
 ## Deployment Validation
