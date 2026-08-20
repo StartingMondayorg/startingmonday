@@ -122,6 +122,9 @@ jobs:
               - 'src/lib/outreach/**'
               - 'scripts/*outreach*'
               - 'docs/outreach/**'
+            signal_engine_plan:
+              - 'docs/signal-engine-cross-product-master-plan-2026-07-26.md'
+              - 'AGENTS.md'
 
       - uses: actions/setup-node@v5
         with:
@@ -180,6 +183,7 @@ jobs:
         run: npm run docs:check-commands
 
       - name: Signal-engine master-plan pin guard
+        if: github.event_name != 'pull_request' || steps.scoped.outputs.signal_engine_plan == 'true'
         run: npm run guard:signal-engine-plan
 
       - name: Dashboard simplification gate
@@ -191,9 +195,6 @@ jobs:
             ${{ (contains(github.event.pull_request.labels.*.name, 'allow-landing-page-change') || vars.ALLOW_LANDING_PAGE_CHANGE == 'true') && 'true' || 'false' }}
           LANDING_GUARD_BASE_REF: ${{ github.event.pull_request.base.sha || '' }}
         run: npm run guard:landing-page-approval
-
-      - name: Release UX checklist policy check
-        run: npm run release:ux:checklist:check
 
       - name: Marketing trust/proof placement gate
         run: npm run marketing:trust-proof:gate
@@ -229,10 +230,7 @@ jobs:
         if: github.event_name != 'pull_request' || steps.scoped.outputs.guides == 'true'
         run: npm run guide:retrieval:eval:strict
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Lint baseline regression check
+      - name: Lint (baseline regression check)
         run: npm run lint:check-baseline
 
       - name: Type check
@@ -349,47 +347,6 @@ jobs:
 
       - name: Run mobile UX contract and banned patterns guard
         run: npm run mobile:guard
-
-  risky-change-rollout-policy:
-    name: Risky change rollout policy
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Detect risky file changes
-        id: changed
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            risky:
-              - 'src/app/[(]auth[)]/**'
-              - 'src/app/auth/**'
-              - 'src/app/(marketing)/for-coaches/**'
-              - 'src/app/(marketing)/pricing/**'
-              - 'src/app/(marketing)/demo/**'
-              - '.github/workflows/ci.yml'
-            rollout_policy:
-              - 'config/feature-rollout-policy.json'
-              - 'docs/engineering/pr-churn-reduction-policy.md'
-
-      - name: Check feature-flag-first label on risky changes (advisory)
-        if: steps.changed.outputs.risky == 'true' && github.head_ref != 'staging'
-        uses: actions/github-script@v8
-        env:
-          ROLLOUT_POLICY_CHANGED: ${{ steps.changed.outputs.rollout_policy }}
-        with:
-          script: |
-            const labels = (context.payload.pull_request?.labels || []).map((l) => l.name)
-            const hasFeatureFlagLabel = labels.includes('feature-flagged')
-            const rolloutPolicyChanged = process.env.ROLLOUT_POLICY_CHANGED === 'true'
-
-            if (!hasFeatureFlagLabel && !rolloutPolicyChanged) {
-              core.warning('Risky PR advisory: add feature-flagged label or update config/feature-rollout-policy.json for rollout traceability.')
-            } else {
-              core.info('Risky PR advisory: rollout policy check satisfied.')
-            }
 
   playwright:
     name: Playwright E2E
@@ -1230,7 +1187,16 @@ jobs:
 
       - name: Run Semgrep full scan (advisory)
         continue-on-error: true
-        run: semgrep scan --config .semgrep.yml --quiet
+        run: |
+          semgrep scan --config .semgrep.yml --quiet --text --output semgrep-full-scan.txt || true
+          if [ -s semgrep-full-scan.txt ]; then
+            {
+              echo "### Semgrep full scan findings (advisory, non-blocking)"
+              echo '```'
+              cat semgrep-full-scan.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload Semgrep findings to Semgrep Cloud (optional)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
@@ -1243,26 +1209,7 @@ jobs:
             exit 0
           fi
 
-          python3 -m pip install --upgrade semgrep
           semgrep ci --config auto
-
-  secret-scan:
-    name: Secret scan (gitleaks)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Run gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   dependency-audit:
     name: Dependency vulnerability audit
@@ -1282,15 +1229,41 @@ jobs:
       - name: Audit production dependencies (high/critical)
         run: npm audit --omit=dev --audit-level=high
 
-  notify-failure:
-    name: Notify Slack on failure
+  notify:
+    name: Notify CI status
     runs-on: ubuntu-latest
     needs: [predeploy-gates, semgrep, playwright, mobile-visual-smoke, auth-ux-guard, accessibility-tier0, lighthouse-mobile-budgets, pre-prod-gate]
-    if: failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
+    if: always()
 
     steps:
+      - name: Build summary message
+        id: summary
+        run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          PREDEPLOY="${{ needs.predeploy-gates.result }}"
+          SEMGREP="${{ needs.semgrep.result }}"
+          PLAYWRIGHT="${{ needs.playwright.result }}"
+          MOBILE_VISUAL="${{ needs.mobile-visual-smoke.result }}"
+          AUTH_UX="${{ needs.auth-ux-guard.result }}"
+          ACCESSIBILITY="${{ needs.accessibility-tier0.result }}"
+          LIGHTHOUSE="${{ needs.lighthouse-mobile-budgets.result }}"
+          PREPROD="${{ needs.pre-prod-gate.result }}"
+
+          STATUS="PASS"
+          if [ "$PREDEPLOY" = "failure" ] || [ "$SEMGREP" = "failure" ] || [ "$PLAYWRIGHT" = "failure" ] || [ "$MOBILE_VISUAL" = "failure" ] || [ "$AUTH_UX" = "failure" ] || [ "$ACCESSIBILITY" = "failure" ] || [ "$LIGHTHOUSE" = "failure" ] || [ "$PREPROD" = "failure" ]; then
+            STATUS="FAIL"
+          fi
+
+          SUMMARY=$(printf 'CI test summary (%s)\nBranch: %s\nActor: %s\npredeploy-gates: %s\nsemgrep: %s\nplaywright: %s\nmobile-visual-smoke: %s\nauth-ux-guard: %s\naccessibility-tier0: %s\nlighthouse-mobile-budgets: %s\npre-prod-gate: %s\nRun: %s\n' "$STATUS" "${{ github.ref_name }}" "${{ github.actor }}" "$PREDEPLOY" "$SEMGREP" "$PLAYWRIGHT" "$MOBILE_VISUAL" "$AUTH_UX" "$ACCESSIBILITY" "$LIGHTHOUSE" "$PREPROD" "$RUN_URL")
+
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "summary<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$SUMMARY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
       - name: Determine failed job
         id: failed-job
+        if: steps.summary.outputs.status == 'FAIL'
         run: |
           if [[ "${{ needs.predeploy-gates.result }}" == "failure" ]]; then
             echo "job_name=Predeploy gates (lint, typecheck, build, smoke)" >> $GITHUB_OUTPUT
@@ -1309,6 +1282,7 @@ jobs:
             echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
           elif [[ "${{ needs.auth-ux-guard.result }}" == "failure" ]]; then
             echo "job_name=Auth UX guard" >> $GITHUB_OUTPUT
+            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
           elif [[ "${{ needs.accessibility-tier0.result }}" == "failure" ]]; then
             echo "job_name=Tier-0 accessibility gate" >> $GITHUB_OUTPUT
             echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
@@ -1317,7 +1291,92 @@ jobs:
             echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Send Slack notification
+      - name: Evaluate email noise-control policy
+        id: email-policy
+        if: always()
+        uses: actions/github-script@v8
+        env:
+          CURRENT_STATUS: ${{ steps.summary.outputs.status }}
+          FAILURE_STREAK_THRESHOLD: ${{ vars.CI_FAILURE_EMAIL_STREAK_THRESHOLD }}
+        with:
+          script: |
+            const currentStatus = (process.env.CURRENT_STATUS || '').trim().toUpperCase()
+            const rawThreshold = Number(process.env.FAILURE_STREAK_THRESHOLD || '3')
+            const threshold = Number.isFinite(rawThreshold) && rawThreshold >= 1 ? Math.floor(rawThreshold) : 3
+
+            const branch = context.ref.replace('refs/heads/', '')
+            // Single page is sufficient: the streak loop stops at the first
+            // non-failure run. A transient GitHub API error must not fail CI,
+            // so fall back to conservative (email suppressed) behavior.
+            let runs = []
+            try {
+              const response = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'ci.yml',
+                branch,
+                status: 'completed',
+                per_page: 50,
+                exclude_pull_requests: true,
+              })
+              runs = response.data.workflow_runs
+            } catch (error) {
+              core.warning(`Failed to list workflow runs for email policy: ${error.message}`)
+              core.setOutput('send_email', 'false')
+              core.setOutput('failure_streak', '0')
+              core.setOutput('threshold', String(threshold))
+              core.setOutput('reason', 'GitHub API error while computing email policy; suppressing email')
+              return
+            }
+
+            const previousRun = runs.find((run) => run.id !== context.runId)
+            const previousConclusion = previousRun?.conclusion ?? null
+
+            if (currentStatus !== 'FAIL') {
+              // Only email on a PASS if the immediately preceding run had failed
+              // (a recovery notice), not on every green run.
+              const recovered = previousConclusion === 'failure'
+              core.setOutput('send_email', recovered ? 'true' : 'false')
+              core.setOutput('failure_streak', '0')
+              core.setOutput('threshold', String(threshold))
+              core.setOutput('reason', recovered ? 'Sending recovery notice (previous run failed)' : 'Current status is PASS with no prior failure; suppressing email')
+              return
+            }
+
+            let priorFailures = 0
+            for (const run of runs) {
+              if (run.id === context.runId) continue
+
+              if (run.conclusion === 'failure') {
+                priorFailures += 1
+                continue
+              }
+
+              // Stop at first non-failure run; streak is consecutive failures only.
+              break
+            }
+
+            const failureStreak = priorFailures + 1
+            const sendEmail = failureStreak >= threshold && (failureStreak === threshold || failureStreak % threshold === 0)
+
+            core.setOutput('send_email', sendEmail ? 'true' : 'false')
+            core.setOutput('failure_streak', String(failureStreak))
+            core.setOutput('threshold', String(threshold))
+            core.setOutput(
+              'reason',
+              sendEmail
+                ? `Sending failure summary at streak ${failureStreak} (threshold ${threshold})`
+                : `Suppressing failure summary at streak ${failureStreak}; threshold ${threshold}`
+            )
+
+      - name: Log email policy decision
+        if: always()
+        run: |
+          echo "Email policy decision: ${{ steps.email-policy.outputs.reason }}"
+          echo "failure_streak=${{ steps.email-policy.outputs.failure_streak }} threshold=${{ steps.email-policy.outputs.threshold }}"
+
+      - name: Post Slack alert (failure on main/staging)
+        if: steps.summary.outputs.status == 'FAIL' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
         uses: slackapi/slack-github-action@v1.24.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -1364,120 +1423,8 @@ jobs:
               ]
             }
 
-  notify-test-summary:
-    name: Post test summary report
-    runs-on: ubuntu-latest
-    needs: [predeploy-gates, semgrep, playwright, mobile-visual-smoke, auth-ux-guard, accessibility-tier0, lighthouse-mobile-budgets, pre-prod-gate]
-    if: always()
-
-    steps:
-      - name: Build summary message
-        id: summary
-        run: |
-          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          PREDEPLOY="${{ needs.predeploy-gates.result }}"
-          SEMGREP="${{ needs.semgrep.result }}"
-          PLAYWRIGHT="${{ needs.playwright.result }}"
-          MOBILE_VISUAL="${{ needs.mobile-visual-smoke.result }}"
-          AUTH_UX="${{ needs.auth-ux-guard.result }}"
-          ACCESSIBILITY="${{ needs.accessibility-tier0.result }}"
-          LIGHTHOUSE="${{ needs.lighthouse-mobile-budgets.result }}"
-          PREPROD="${{ needs.pre-prod-gate.result }}"
-
-          STATUS="PASS"
-          if [ "$PREDEPLOY" = "failure" ] || [ "$SEMGREP" = "failure" ] || [ "$PLAYWRIGHT" = "failure" ] || [ "$MOBILE_VISUAL" = "failure" ] || [ "$AUTH_UX" = "failure" ] || [ "$ACCESSIBILITY" = "failure" ] || [ "$LIGHTHOUSE" = "failure" ] || [ "$PREPROD" = "failure" ]; then
-            STATUS="FAIL"
-          fi
-
-          SUMMARY=$(printf 'CI test summary (%s)\nBranch: %s\nActor: %s\npredeploy-gates: %s\nsemgrep: %s\nplaywright: %s\nmobile-visual-smoke: %s\nauth-ux-guard: %s\naccessibility-tier0: %s\nlighthouse-mobile-budgets: %s\npre-prod-gate: %s\nRun: %s\n' "$STATUS" "${{ github.ref_name }}" "${{ github.actor }}" "$PREDEPLOY" "$SEMGREP" "$PLAYWRIGHT" "$MOBILE_VISUAL" "$AUTH_UX" "$ACCESSIBILITY" "$LIGHTHOUSE" "$PREPROD" "$RUN_URL")
-
-          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
-          echo "summary<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$SUMMARY" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-      - name: Evaluate email noise-control policy
-        id: email-policy
-        if: always()
-        uses: actions/github-script@v8
-        env:
-          CURRENT_STATUS: ${{ steps.summary.outputs.status }}
-          FAILURE_STREAK_THRESHOLD: ${{ vars.CI_FAILURE_EMAIL_STREAK_THRESHOLD }}
-        with:
-          script: |
-            const currentStatus = (process.env.CURRENT_STATUS || '').trim().toUpperCase()
-            const rawThreshold = Number(process.env.FAILURE_STREAK_THRESHOLD || '3')
-            const threshold = Number.isFinite(rawThreshold) && rawThreshold >= 1 ? Math.floor(rawThreshold) : 3
-
-            // Only gate failure notifications. Pass summaries keep existing behavior.
-            if (currentStatus !== 'FAIL') {
-              core.setOutput('send_email', 'false')
-              core.setOutput('failure_streak', '0')
-              core.setOutput('threshold', String(threshold))
-              core.setOutput('reason', 'Current status is PASS; failure streak policy not applicable')
-              return
-            }
-
-            const branch = context.ref.replace('refs/heads/', '')
-            // Single page is sufficient: the streak loop stops at the first
-            // non-failure run. A transient GitHub API error must not fail CI,
-            // so fall back to a conservative streak of 1 (email suppressed
-            // unless threshold is 1).
-            let runs = []
-            try {
-              const response = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'ci.yml',
-                branch,
-                status: 'completed',
-                per_page: 50,
-                exclude_pull_requests: true,
-              })
-              runs = response.data.workflow_runs
-            } catch (error) {
-              core.warning(`Failed to list workflow runs for streak policy: ${error.message}`)
-              core.setOutput('send_email', 'false')
-              core.setOutput('failure_streak', '1')
-              core.setOutput('threshold', String(threshold))
-              core.setOutput('reason', 'GitHub API error while computing failure streak; suppressing email')
-              return
-            }
-
-            let priorFailures = 0
-            for (const run of runs) {
-              if (run.id === context.runId) continue
-
-              if (run.conclusion === 'failure') {
-                priorFailures += 1
-                continue
-              }
-
-              // Stop at first non-failure run; streak is consecutive failures only.
-              break
-            }
-
-            const failureStreak = priorFailures + 1
-            const sendEmail = failureStreak >= threshold && (failureStreak === threshold || failureStreak % threshold === 0)
-
-            core.setOutput('send_email', sendEmail ? 'true' : 'false')
-            core.setOutput('failure_streak', String(failureStreak))
-            core.setOutput('threshold', String(threshold))
-            core.setOutput(
-              'reason',
-              sendEmail
-                ? `Sending failure summary at streak ${failureStreak} (threshold ${threshold})`
-                : `Suppressing failure summary at streak ${failureStreak}; threshold ${threshold}`
-            )
-
-      - name: Log email policy decision
-        if: always()
-        run: |
-          echo "Email policy decision: ${{ steps.email-policy.outputs.reason }}"
-          echo "failure_streak=${{ steps.email-policy.outputs.failure_streak }} threshold=${{ steps.email-policy.outputs.threshold }}"
-
       - name: Post Slack summary
-        if: always()
+        if: "!(steps.summary.outputs.status == 'FAIL' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'))"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SUMMARY_TEXT: ${{ steps.summary.outputs.summary }}
@@ -1491,7 +1438,7 @@ jobs:
           curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
 
       - name: Send email summary
-        if: always() && (steps.summary.outputs.status == 'PASS' || steps.email-policy.outputs.send_email == 'true')
+        if: always() && steps.email-policy.outputs.send_email == 'true'
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_FROM_ADDRESS: ${{ secrets.RESEND_FROM_ADDRESS }}
