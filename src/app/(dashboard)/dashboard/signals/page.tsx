@@ -1,20 +1,32 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from '../logout-button'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
 import { addSignalFollowUp, generateSignalOutreach, requestSignalRefresh } from './actions'
-import { DraftPanel } from '@/components/DraftPanel'
-import { SignalOutreachGate } from '@/components/SignalOutreachGate'
+import { DraftPanel } from '@/app/(dashboard)/dashboard/_components/DraftPanel'
+import { SignalOutreachGate } from '@/app/(dashboard)/dashboard/_components/SignalOutreachGate'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { logEvent } from '@/lib/events'
-import { rankSignals } from '@/lib/intelligence-quality'
+import { rankSignals } from '@/lib/intelligence/intelligence-quality'
 import { buildSignalTranslation } from '../signal-orientation'
 import {
   applyDashboardSignalContract,
   DASHBOARD_COMPANY_SIGNAL_LIMIT,
   DASHBOARD_PATTERN_ALERT_LIMIT,
-} from '@/lib/dashboard-signal-contract'
+} from '@/lib/intelligence/dashboard-signal-contract'
+import { SignalFilterBar } from './filter-bar'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 
 const PAGE_SIZE = 25
 
@@ -192,12 +204,9 @@ export default async function SignalsPage({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
           <div className="flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-slate-700 px-3 text-[13px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
-            >
+            <Button variant="outline" render={<Link href="/dashboard" />}>
               Dashboard
-            </Link>
+            </Button>
             <LogoutButton label="Sign out" />
           </div>
         </div>
@@ -224,95 +233,67 @@ export default async function SignalsPage({
         </div>
 
         {rolesFormingSignal && (
-          <div className="mb-6 rounded-xl border border-orange-300/35 bg-orange-500/10 px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.22)] backdrop-blur-sm">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-orange-200 mb-1">Roles forming now</p>
-            <p className="text-[15px] font-semibold text-white">
-              {rolesFormingSignal.companies ? `${Array.isArray(rolesFormingSignal.companies) ? rolesFormingSignal.companies[0]?.name : rolesFormingSignal.companies.name} may be opening a role window.` : 'A role window may be opening.'}
-            </p>
-            <p className="text-[12px] text-slate-200 mt-1.5 leading-relaxed">
-              {rolesFormingSignal.signal_summary}
-            </p>
-            <p className="text-[12px] text-slate-300 mt-1.5">
-              Use this as a hypothesis, then move through a relationship before the posting becomes public.
-            </p>
-          </div>
+          <Alert variant="warning" className="mb-6">
+            <AlertDescription className="text-current">
+              <p className="text-[11px] font-bold tracking-[0.08em] uppercase mb-1">Roles forming now</p>
+              <p className="text-[15px] font-semibold text-white">
+                {rolesFormingSignal.companies ? `${Array.isArray(rolesFormingSignal.companies) ? rolesFormingSignal.companies[0]?.name : rolesFormingSignal.companies.name} may be opening a role window.` : 'A role window may be opening.'}
+              </p>
+              <p className="text-[12px] mt-1.5 leading-relaxed">
+                {rolesFormingSignal.signal_summary}
+              </p>
+              <p className="text-[12px] mt-1.5">
+                Use this as a hypothesis, then move through a relationship before the posting becomes public.
+              </p>
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-6">
-        <form method="GET" className="flex flex-wrap gap-3">
-          <label className="sr-only">Filter by company</label>
-          <select
-            name="company"
-            aria-label="Filter by company"
-            defaultValue={companyFilter ?? ''}
-            className="text-[13px] border border-white/20 rounded px-3 py-1.5 bg-white/5 text-slate-100 focus:outline-none focus:border-orange-300/50"
-          >
-            <option value="">All companies</option>
-            {companyFilterOptions.map((companyOption) => (
-              <option key={companyOption.id} value={companyOption.id}>{companyOption.name}</option>
-            ))}
-          </select>
-
-          <label className="sr-only">Filter by type</label>
-          <select
-            name="type"
-            aria-label="Filter by type"
-            defaultValue={typeFilter ?? ''}
-            className="text-[13px] border border-white/20 rounded px-3 py-1.5 bg-white/5 text-slate-100 focus:outline-none focus:border-orange-300/50"
-          >
-            <option value="">All types</option>
-            {typeFilterOptions.map((typeOption) => (
-              <option key={typeOption.value} value={typeOption.value}>{typeOption.label}</option>
-            ))}
-          </select>
-
-          <button
-            type="submit"
-            className="text-[13px] font-semibold text-slate-100 border border-white/20 bg-white/5 rounded px-3 py-1.5 hover:bg-white/10 cursor-pointer transition-colors"
-          >
-            Filter
-          </button>
-
-          {hasFilters && (
-            <Link
-              href="/dashboard/signals"
-              className="text-[13px] text-slate-400 hover:text-slate-200 py-1.5 transition-colors"
-            >
-              Clear
-            </Link>
-          )}
-        </form>
+        <div className="flex flex-wrap items-start gap-3 mb-6">
+          <SignalFilterBar
+            companyFilter={companyFilter}
+            typeFilter={typeFilter}
+            companyFilterOptions={companyFilterOptions}
+            typeFilterOptions={typeFilterOptions}
+          />
 
           <form action={requestSignalRefresh}>
-          <input
-            type="hidden"
-            name="return_to"
-            value={buildUrl({ company: companyFilter, type: typeFilter, page: String(safePage) })}
-          />
-          <button
-            type="submit"
-            className="text-[13px] font-semibold text-orange-100 border border-orange-300/40 bg-orange-500/20 rounded px-3 py-1.5 hover:bg-orange-500/30 cursor-pointer transition-colors"
-          >
-            Run signal scan now
-          </button>
+            <input
+              type="hidden"
+              name="return_to"
+              value={buildUrl({ company: companyFilter, type: typeFilter, page: String(safePage) })}
+            />
+            <Button
+              type="submit"
+              variant="outline"
+              className="border-orange-300/40 bg-orange-500/20 text-orange-100 hover:bg-orange-500/30"
+            >
+              Run signal scan now
+            </Button>
           </form>
         </div>
 
         {scanStatus === 'started' && (
-          <p className="mb-5 rounded-md border border-emerald-300/35 bg-emerald-500/12 px-3 py-2 text-[13px] text-emerald-100">
-            Signal scan started. This can take a couple of minutes; refresh this page to see the newest results.
-          </p>
+          <Alert variant="success" className="mb-5">
+            <AlertDescription>
+              Signal scan started. This can take a couple of minutes; refresh this page to see the newest results.
+            </AlertDescription>
+          </Alert>
         )}
         {scanStatus === 'unavailable' && (
-          <p className="mb-5 rounded-md border border-amber-300/35 bg-amber-500/12 px-3 py-2 text-[13px] text-amber-100">
-            On-demand scans are not configured in this environment yet. Set WORKER_URL and WORKER_SECRET to enable this button.
-          </p>
+          <Alert variant="warning" className="mb-5">
+            <AlertDescription>
+              On-demand scans are not configured in this environment yet. Set WORKER_URL and WORKER_SECRET to enable this button.
+            </AlertDescription>
+          </Alert>
         )}
         {scanStatus === 'failed' && (
-          <p className="mb-5 rounded-md border border-rose-300/35 bg-rose-500/12 px-3 py-2 text-[13px] text-rose-100">
-            Could not start a scan right now. Please try again in a moment.
-          </p>
+          <Alert variant="destructive" className="mb-5">
+            <AlertDescription>
+              Could not start a scan right now. Please try again in a moment.
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Signal list */}
@@ -329,13 +310,13 @@ export default async function SignalsPage({
           </div>
         )}
         {signalList.length === 0 ? (
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-10 text-center shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card variant="glass" className="p-10 text-center">
             <p className="text-[14px] text-slate-300">
               {hasFilters ? 'No signals match your filters.' : 'No signals yet. Signals are detected when the scanner runs (Mon, Wed, Fri).'}
             </p>
-          </div>
+          </Card>
         ) : (
-          <div className="rounded-2xl border border-white/15 bg-white/5 overflow-hidden mb-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card variant="glass" className="overflow-hidden mb-6">
             <div className="divide-y divide-white/10">
               {signalList.map(sig => {
                 const co = Array.isArray(sig.companies) ? (sig.companies[0] ?? null) : sig.companies
@@ -370,57 +351,43 @@ export default async function SignalsPage({
                           {co.name}
                         </Link>
                       )}
-                      <span className="inline-block px-2 py-0.5 rounded-full text-[13px] font-bold bg-orange-500/20 text-orange-100 border border-orange-300/35">
-                        {typeLabel}
-                      </span>
+                      <Badge variant="default">{typeLabel}</Badge>
                       <span className="text-[13px] text-slate-400 ml-auto">{dateLabel}</span>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap mb-2">
-                      <span className="inline-block px-2 py-0.5 rounded-full text-[13px] font-bold bg-white/10 text-slate-200 border border-white/15">
-                        Confidence {sig._confidence}
-                      </span>
-                      <span className="inline-block px-2 py-0.5 rounded-full text-[13px] font-bold bg-blue-500/20 text-blue-100 border border-blue-300/35">
-                        Relevance {sig._relevance}
-                      </span>
+                      <Badge variant="secondary">Confidence {sig._confidence}</Badge>
+                      <Badge variant="info">Relevance {sig._relevance}</Badge>
                       {sig.source_kind && (
-                        <span className="inline-block px-2 py-0.5 rounded-full text-[13px] font-bold bg-emerald-500/20 text-emerald-100 border border-emerald-300/35">
-                          {sig.source_kind}
-                        </span>
+                        <Badge variant="success">{sig.source_kind}</Badge>
                       )}
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1.5fr_0.8fr] gap-3 mt-4">
-                      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                      <Card variant="glass" className="p-4">
                         <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">What happened</p>
                         <p className="text-[13px] text-slate-200 leading-relaxed">{translation.whatHappened}</p>
-                      </div>
-                      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                      </Card>
+                      <Card variant="glass" className="p-4">
                         <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Why it may matter for your search</p>
                         <p className="text-[13px] text-slate-200 leading-relaxed">{translation.whyItMatters}</p>
-                      </div>
-                      <div className="rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
+                      </Card>
+                      <Card variant="glass" className="p-4 flex flex-col gap-3">
                         <div>
                           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">What to do next</p>
                           <p className="text-[13px] text-slate-200 leading-relaxed">{translation.nextStepLabel}</p>
                         </div>
                         <div className="flex flex-col gap-2">
-                          <Link
-                            href={translation.nextStepHref}
-                            className="text-[13px] font-semibold text-orange-100 hover:text-white bg-orange-500/20 hover:bg-orange-500/30 border border-orange-300/35 px-3 py-1.5 rounded transition-colors text-center"
-                          >
+                          <Button render={<Link href={translation.nextStepHref} />}>
                             Open {translation.nextStepVerb}
-                          </Link>
+                          </Button>
                           <form action={addSignalFollowUp}>
                             <input type="hidden" name="company_name" value={co?.name ?? ''} />
                             <input type="hidden" name="signal_summary" value={sig.signal_summary} />
-                            <button
-                              type="submit"
-                              className="w-full text-[13px] font-semibold text-slate-200 hover:text-white border border-white/20 hover:border-white/35 bg-white/5 px-3 py-1.5 rounded transition-colors cursor-pointer"
-                            >
+                            <Button type="submit" variant="outline" className="w-full">
                               + Follow up in 5 days
-                            </button>
+                            </Button>
                           </form>
                         </div>
-                      </div>
+                      </Card>
                     </div>
                     {sig.outreach_angle && (
                       <p className="text-[12px] text-slate-400 italic mt-3 leading-relaxed">Original angle: {sig.outreach_angle}</p>
@@ -429,39 +396,32 @@ export default async function SignalsPage({
                       <div className="mt-3"><DraftPanel draft={sig.outreach_draft} /></div>
                     )}
                     {sig.source_url && (
-                      <a
-                        href={sig.source_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-3 text-[13px] text-slate-400 hover:text-slate-200 underline transition-colors"
+                      <Button
+                        variant="link"
+                        className="mt-3 h-auto p-0 text-[13px] text-slate-400 hover:text-slate-200"
+                        render={<a href={sig.source_url} target="_blank" rel="noopener noreferrer" />}
                       >
                         Source link
-                      </a>
+                      </Button>
                     )}
                     {!sig.outreach_draft && !contact && co ? (
                       <div className="mt-3 flex items-center gap-3 flex-wrap">
-                        <Link
-                          href={`/dashboard/contacts?company_id=${co.id}`}
-                          className="text-[13px] font-semibold text-slate-200 hover:text-white border border-white/20 hover:border-white/35 bg-white/5 px-3 py-1.5 rounded transition-colors"
-                        >
+                        <Button variant="outline" render={<Link href={`/dashboard/contacts?company_id=${co.id}`} />}>
                           + Add contact at {co.name}
-                        </Link>
-                        <Link
-                          href={`/dashboard/companies/${co.id}/prep?stage=informal_meeting`}
-                          className="text-[13px] font-semibold text-slate-300 hover:text-white border border-white/20 hover:border-white/35 bg-white/5 px-3 py-1.5 rounded transition-colors"
-                        >
+                        </Button>
+                        <Button variant="outline" render={<Link href={`/dashboard/companies/${co.id}/prep?stage=informal_meeting`} />}>
                           Prep a conversation
-                        </Link>
+                        </Button>
                       </div>
                     ) : null}
                     {contact && !sig.outreach_draft && (
                       <div className="mt-3 flex items-center gap-3 flex-wrap">
-                        <Link
-                          href={`/dashboard/contacts/${contact.id}/outreach`}
-                          className="text-[13px] font-semibold text-emerald-100 hover:text-white bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-300/35 px-3 py-1.5 rounded transition-colors"
+                        <Button
+                          className="bg-emerald-500/20 text-emerald-100 hover:bg-emerald-500/30 border-emerald-300/35"
+                          render={<Link href={`/dashboard/contacts/${contact.id}/outreach`} />}
                         >
                           Draft outreach to {contact.name}
-                        </Link>
+                        </Button>
                       </div>
                     )}
                     {!sig.outreach_draft && (
@@ -477,31 +437,34 @@ export default async function SignalsPage({
                 )
               })}
             </div>
-          </div>
+          </Card>
         )}
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between">
-            <Link
-              href={safePage > 0 ? buildUrl({ company: companyFilter, type: typeFilter, page: String(safePage - 1) }) : '#'}
-              className={`text-[13px] font-semibold px-4 py-2 rounded border border-white/20 bg-white/5 hover:bg-white/10 ${safePage === 0 ? 'opacity-40 pointer-events-none' : ''}`}
-            >
-              Previous
-            </Link>
+          <Pagination className="justify-between">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href={safePage > 0 ? buildUrl({ company: companyFilter, type: typeFilter, page: String(safePage - 1) }) : '#'}
+                  className={safePage === 0 ? 'opacity-40 pointer-events-none' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
             <span className="text-[13px] text-slate-300">
               Page {safePage + 1} of {totalPages}
             </span>
-            <Link
-              href={safePage < totalPages - 1 ? buildUrl({ company: companyFilter, type: typeFilter, page: String(safePage + 1) }) : '#'}
-              className={`text-[13px] font-semibold px-4 py-2 rounded border border-white/20 bg-white/5 hover:bg-white/10 ${safePage >= totalPages - 1 ? 'opacity-40 pointer-events-none' : ''}`}
-            >
-              Next
-            </Link>
-          </div>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationNext
+                  href={safePage < totalPages - 1 ? buildUrl({ company: companyFilter, type: typeFilter, page: String(safePage + 1) }) : '#'}
+                  className={safePage >= totalPages - 1 ? 'opacity-40 pointer-events-none' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
       </main>
     </div>
   )
 }
-

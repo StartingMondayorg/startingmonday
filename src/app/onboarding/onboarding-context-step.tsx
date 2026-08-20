@@ -1,5 +1,7 @@
 'use client'
 
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+
 type ContextOption = {
   key: string
   label: string
@@ -47,6 +49,10 @@ const BRIEFING_OPTIONS: ContextOption[] = [
   { key: '09:00', label: '9:00 AM', hint: 'Start-of-day review' },
 ]
 
+const OPTION_ITEM_BASE = 'flex-col h-auto items-start justify-start text-left rounded border px-4 py-3 whitespace-normal transition-colors cursor-pointer'
+const OPTION_ITEM_ACTIVE = '!border-orange-400/70 !bg-orange-500/20 !text-white'
+const OPTION_ITEM_INACTIVE = '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'
+
 function OptionGroup({
   title,
   options,
@@ -57,34 +63,33 @@ function OptionGroup({
   title: string
   options: ContextOption[]
   selected: string[]
-  onToggle: (key: string) => void
+  onToggle: (v: string[]) => void
   multi: boolean
 }) {
   return (
     <div className="flex flex-col gap-2.5">
       <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">{title}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <ToggleGroup
+        value={selected}
+        onValueChange={onToggle}
+        multiple={multi}
+        className="grid w-full grid-cols-1 gap-2.5 sm:grid-cols-2"
+      >
         {options.map((opt) => {
           const active = selected.includes(opt.key)
           return (
-            <button
+            <ToggleGroupItem
               key={opt.key}
-              type="button"
-              onClick={() => onToggle(opt.key)}
-              className={[
-                'text-left rounded border px-4 py-3 transition-colors cursor-pointer',
-                active
-                  ? 'border-orange-400/70 bg-orange-500/20 text-white'
-                  : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35',
-              ].join(' ')}
+              value={opt.key}
+              className={[OPTION_ITEM_BASE, active ? OPTION_ITEM_ACTIVE : OPTION_ITEM_INACTIVE].join(' ')}
             >
               <p className="text-[13px] font-semibold">{active ? '✓ ' : ''}{opt.label}</p>
               <p className={['text-[12px] mt-1', active ? 'text-slate-200' : 'text-slate-400'].join(' ')}>{opt.hint}</p>
               {!multi && active && <p className="text-[10px] mt-1 text-orange-200 uppercase tracking-[0.12em]">Selected</p>}
-            </button>
+            </ToggleGroupItem>
           )
         })}
-      </div>
+      </ToggleGroup>
     </div>
   )
 }
@@ -112,18 +117,6 @@ export function OnboardingContextStep({
   onPositioning: (v: string[]) => void
   onBriefingTime: (v: string) => void
 }) {
-  const toggleMulti = (items: string[], key: string, setter: (v: string[]) => void) => {
-    if (items.includes(key)) {
-      setter(items.filter((item) => item !== key))
-      return
-    }
-    setter([...items, key])
-  }
-
-  const toggleSingle = (items: string[], key: string, setter: (v: string[]) => void) => {
-    setter(items[0] === key ? [] : [key])
-  }
-
   const completedCount = [
     targetLocations.length > 0,
     sectors.length > 0,
@@ -199,7 +192,7 @@ export function OnboardingContextStep({
           title="Target locations"
           options={LOCATION_OPTIONS}
           selected={targetLocations}
-          onToggle={(key) => toggleMulti(targetLocations, key, onTargetLocations)}
+          onToggle={onTargetLocations}
           multi
         />
       </section>
@@ -209,7 +202,7 @@ export function OnboardingContextStep({
           title="Preferred sectors"
           options={SECTOR_OPTIONS}
           selected={sectors}
-          onToggle={(key) => toggleMulti(sectors, key, onSectors)}
+          onToggle={onSectors}
           multi
         />
       </section>
@@ -219,34 +212,37 @@ export function OnboardingContextStep({
           title="Compensation preference"
           options={COMP_OPTIONS}
           selected={compensation}
-          onToggle={(key) => toggleSingle(compensation, key, onCompensation)}
+          onToggle={onCompensation}
           multi={false}
         />
       </section>
 
       <section id="briefing-time" className="flex flex-col gap-2.5">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">Briefing time</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <ToggleGroup
+          value={briefingTime ? [briefingTime] : []}
+          onValueChange={(values) => {
+            if (values[0]) onBriefingTime(values[0])
+          }}
+          className="grid w-full grid-cols-2 gap-2.5 sm:grid-cols-4"
+        >
           {BRIEFING_OPTIONS.map((opt) => {
             const active = briefingTime === opt.key
             return (
-              <button
+              <ToggleGroupItem
                 key={opt.key}
-                type="button"
-                onClick={() => onBriefingTime(opt.key)}
+                value={opt.key}
                 className={[
-                  'text-left rounded border px-3 py-3 transition-colors cursor-pointer',
-                  active
-                    ? 'border-orange-400/70 bg-orange-500/20 text-white'
-                    : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35',
+                  'flex-col h-auto items-start justify-start text-left rounded border px-3 py-3 whitespace-normal transition-colors cursor-pointer',
+                  active ? OPTION_ITEM_ACTIVE : OPTION_ITEM_INACTIVE,
                 ].join(' ')}
               >
                 <p className="text-[13px] font-semibold">{opt.label}</p>
                 <p className={['text-[11px] mt-1', active ? 'text-slate-200' : 'text-slate-400'].join(' ')}>{opt.hint}</p>
-              </button>
+              </ToggleGroupItem>
             )
           })}
-        </div>
+        </ToggleGroup>
       </section>
 
       <section id="positioning-style">
@@ -254,7 +250,7 @@ export function OnboardingContextStep({
           title="Positioning style"
           options={POSITIONING_OPTIONS}
           selected={positioning}
-          onToggle={(key) => toggleSingle(positioning, key, onPositioning)}
+          onToggle={onPositioning}
           multi={false}
         />
       </section>

@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import StageSelect from './stage-select'
+import { Card } from '@/components/ui/card'
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 export const metadata = { title: 'B2B Sales Pipeline - Starting Monday Admin' }
 
@@ -101,67 +103,67 @@ export default async function B2BPipelinePage() {
         {/* Stage summary */}
         <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
           {STAGES.map(s => (
-            <div key={s.key} className="bg-white border border-slate-200 rounded p-3 text-center">
+            <Card key={s.key} className="p-3 text-center">
               <div className="text-[20px] font-bold text-slate-900">{stageCounts[s.key] ?? 0}</div>
               <div className={`text-[10px] font-bold tracking-[0.06em] uppercase mt-1 ${s.cls.split(' ')[1]}`}>
                 {s.label}
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
         {/* Prospect list */}
         {rows.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded p-12 text-center">
+          <Card className="p-12 text-center">
             <p className="text-[14px] text-slate-400">No prospects yet.</p>
             <Link href="/dashboard/admin/b2b/new" className="mt-3 inline-block text-[13px] font-semibold text-slate-900 underline">
               Add your first prospect
             </Link>
-          </div>
+          </Card>
         ) : (
-          <div className="bg-white border border-slate-200 rounded overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-left">
-                  <th className="px-5 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">Prospect</th>
-                  <th className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell">Type</th>
-                  <th className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">Stage</th>
-                  <th className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell text-right">ARR</th>
-                  <th className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden md:table-cell">Next action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r, i) => {
+          <Card className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="px-5 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">Prospect</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell">Type</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">Stage</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell text-right">ARR</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden md:table-cell">Next action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rows.map((r) => {
                   const stage = STAGES.find(s => s.key === r.stage)
                   const activities = r.b2b_activities ?? []
                   const latestWithAction = activities.find(a => a.next_action && a.next_action_due)
                   const nextActionDue = latestWithAction?.next_action_due
                   const isOverdue = nextActionDue && nextActionDue < today
                   return (
-                    <tr key={r.id} className={i < rows.length - 1 ? 'border-b border-slate-50' : ''}>
-                      <td className="px-5 py-3.5">
+                    <TableRow key={r.id}>
+                      <TableCell className="px-5 py-3.5 whitespace-normal">
                         <Link href={`/dashboard/admin/b2b/${r.id}`} className="text-[14px] font-semibold text-slate-900 hover:text-slate-600">
                           {r.name}
                         </Link>
                         {r.notes && (
                           <p className="text-[12px] text-slate-400 mt-0.5 truncate max-w-[240px]">{r.notes}</p>
                         )}
-                      </td>
-                      <td className="px-4 py-3.5 hidden sm:table-cell text-[13px] text-slate-500">
+                      </TableCell>
+                      <TableCell className="px-4 py-3.5 hidden sm:table-cell text-[13px] text-slate-500">
                         {TYPE_LABELS[r.type] ?? r.type}
-                      </td>
-                      <td className="px-4 py-3.5">
+                      </TableCell>
+                      <TableCell className="px-4 py-3.5">
                         <StageSelect
                           id={r.id}
                           stage={r.stage}
                           stages={STAGES}
                           cls={stage?.cls ?? 'bg-slate-100 text-slate-500'}
                         />
-                      </td>
-                      <td className="px-4 py-3.5 hidden sm:table-cell text-right text-[13px] font-semibold text-slate-700">
+                      </TableCell>
+                      <TableCell className="px-4 py-3.5 hidden sm:table-cell text-right text-[13px] font-semibold text-slate-700">
                         {r.estimated_arr ? fmt(r.estimated_arr) : <span className="text-slate-300">-</span>}
-                      </td>
-                      <td className="px-4 py-3.5 hidden md:table-cell">
+                      </TableCell>
+                      <TableCell className="px-4 py-3.5 hidden md:table-cell whitespace-normal">
                         {latestWithAction ? (
                           <div>
                             <p className="text-[12px] text-slate-700 truncate max-w-[180px]">{latestWithAction.next_action}</p>
@@ -174,13 +176,13 @@ export default async function B2BPipelinePage() {
                         ) : (
                           <span className="text-[12px] text-slate-300">None set</span>
                         )}
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )
                 })}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </Card>
         )}
 
       </main>

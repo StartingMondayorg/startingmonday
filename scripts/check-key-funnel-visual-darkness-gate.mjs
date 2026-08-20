@@ -13,11 +13,11 @@ const visualDiscipline = ses?.visualDiscipline ?? {}
 
 /** @type {RouteSpec[]} */
 const SPECS = [
-  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/page.tsx', 'src/components/LandingPage.tsx'] },
-  { id: 'pricing-visual-darkness', route: '/pricing', files: ['src/app/pricing/page.tsx', 'src/app/pricing/pricing-cards.tsx'] },
-  { id: 'demo-visual-darkness', route: '/demo', files: ['src/app/demo/page.tsx'] },
-  { id: 'blog-visual-darkness', route: '/blog', files: ['src/app/blog/page.tsx'] },
-  { id: 'method-evidence-visual-darkness', route: '/method-and-evidence', files: ['src/app/method-and-evidence/page.tsx'] },
+  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/(marketing)/page.tsx', 'src/app/components/LandingPage.tsx'] },
+  { id: 'pricing-visual-darkness', route: '/pricing', files: ['src/app/(marketing)/pricing/page.tsx', 'src/app/(marketing)/pricing/pricing-cards.tsx'] },
+  { id: 'demo-visual-darkness', route: '/demo', files: ['src/app/(marketing)/demo/page.tsx'] },
+  { id: 'blog-visual-darkness', route: '/blog', files: ['src/app/(marketing)/blog/page.tsx'] },
+  { id: 'method-evidence-visual-darkness', route: '/method-and-evidence', files: ['src/app/(marketing)/method-and-evidence/page.tsx'] },
   { id: 'signup-visual-darkness', route: '/signup', files: ['src/app/(auth)/signup/page.tsx'] },
 ]
 
@@ -92,6 +92,15 @@ function collectScaleTokens(content, kind) {
     const black = (content.match(/bg-black/g) || []).length
     for (let i = 0; i < white; i++) lums.push(1)
     for (let i = 0; i < black; i++) lums.push(0)
+
+    // The shadcn migration moved what used to be repeated inline
+    // `bg-white`/`bg-white/5`/`bg-slate-*` classes per card panel into the shared
+    // `Card` component (src/components/ui/card.tsx, "default" and "glass"
+    // variants are both light/translucent surfaces). Count each `<Card` call site
+    // the same way an inline light-background class used to be counted, so this
+    // proxy still reflects how many light/translucent panels a page renders.
+    const cardTags = (content.match(/<Card\b/g) || []).length
+    for (let i = 0; i < cardTags; i++) lums.push(1)
   } else {
     const white = (content.match(/text-white/g) || []).length
     const black = (content.match(/text-black/g) || []).length

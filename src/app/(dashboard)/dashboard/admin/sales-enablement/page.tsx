@@ -3,9 +3,16 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
 import { SalesEnablementWorkspace } from './SalesEnablementWorkspace'
-import { ADMIN_DARK_PAGE_BG, adminRoleBadgeClass } from '../admin-dark-theme'
+import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
+import { Badge } from '@/components/ui/badge'
 
 export const metadata = { title: 'Sales Enablement - Admin' }
+
+function roleBadgeVariant(role: string): 'warning' | 'info' | 'secondary' {
+  if (role === 'owner') return 'warning'
+  if (role === 'admin') return 'info'
+  return 'secondary'
+}
 
 export default async function AdminSalesEnablementPage() {
   const supabase = await createClient()
@@ -35,7 +42,7 @@ export default async function AdminSalesEnablementPage() {
           <p className="text-[13px] text-slate-300 mt-1.5">Evaluate proposals, set checkpoint targets, and track the best path to more qualified meetings.</p>
           <p className="text-[13px] text-slate-300 mt-1">
             Signed in as <span className="font-semibold text-slate-200">{user.email}</span>
-            <span className={`ml-2 text-[11px] font-bold px-2 py-0.5 rounded ${adminRoleBadgeClass(staff.role)}`}>{staff.role}</span>
+            <Badge variant={roleBadgeVariant(staff.role)} className="ml-2">{staff.role}</Badge>
           </p>
         </div>
 

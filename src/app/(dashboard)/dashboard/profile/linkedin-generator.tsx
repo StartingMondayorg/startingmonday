@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 interface Props {
   positioning: string
@@ -57,14 +58,15 @@ export function LinkedInGenerator({ positioning, targetTitles, roleType, current
     <div className="mt-4 pt-4 border-t border-slate-100">
       <div className="flex items-center justify-between mb-3">
         <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">LinkedIn content</p>
-        <button
+        <Button
           type="button"
+          variant="link"
           onClick={handleGenerate}
           disabled={loading}
-          className="text-[11px] font-semibold text-orange-600 hover:text-orange-700 disabled:opacity-50 transition-colors cursor-pointer border-0 bg-transparent p-0"
+          className="h-auto p-0 text-[11px] font-semibold text-orange-600 hover:text-orange-700"
         >
           {loading ? 'Generating...' : headline ? 'Regenerate' : 'Generate from positioning'}
-        </button>
+        </Button>
       </div>
 
       {error && <p className="text-[12px] text-red-600 mb-3">{error}</p>}

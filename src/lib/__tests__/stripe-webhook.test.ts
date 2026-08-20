@@ -12,11 +12,11 @@ const state = vi.hoisted(() => ({
 }))
 
 // ── Module mocks ───────────────────────────────────────────────────────────
-vi.mock('@/lib/stripe', () => ({
+vi.mock('@/lib/billing/stripe', () => ({
   getStripe: () => ({ webhooks: { constructEvent: state.constructEvent } }),
 }))
 
-vi.mock('@/lib/email', () => ({ sendEmail: state.sendEmail }))
+vi.mock('@/lib/email/email', () => ({ sendEmail: state.sendEmail }))
 vi.mock('@/lib/config', () => ({ APP_URL: 'https://startingmonday.app' }))
 
 vi.mock('@supabase/supabase-js', () => ({
@@ -50,7 +50,7 @@ vi.mock('@supabase/supabase-js', () => ({
   }),
 }))
 
-import { POST } from '@/app/api/webhooks/stripe/route'
+import { POST } from '@/app/api/(ops)/webhooks/stripe/route'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function makeRequest(body = '{}', sig: string | null = 'valid-sig') {

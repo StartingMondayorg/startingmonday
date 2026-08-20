@@ -31,7 +31,7 @@ const SPECS = [
 	{
 		id: 'homepage',
 		route: '/',
-		files: ['src/app/page.tsx', 'src/components/LandingPage.tsx'],
+		files: ['src/app/(marketing)/page.tsx', 'src/app/components/LandingPage.tsx'],
 		rules: [
 			{
 				id: 'clarity-shortlist-frame',
@@ -73,7 +73,7 @@ const SPECS = [
 	{
 		id: 'pricing',
 		route: '/pricing',
-		files: ['src/app/pricing/page.tsx', 'src/app/pricing/pricing-cards.tsx'],
+		files: ['src/app/(marketing)/pricing/page.tsx', 'src/app/(marketing)/pricing/pricing-cards.tsx'],
 		rules: [
 			{
 				id: 'conversion-cta-copy',
@@ -100,7 +100,7 @@ const SPECS = [
 	{
 		id: 'demo',
 		route: '/demo',
-		files: ['src/app/demo/page.tsx'],
+		files: ['src/app/(marketing)/demo/page.tsx'],
 		rules: [
 			{
 				id: 'cognitive-load-preset-company',
@@ -122,7 +122,7 @@ const SPECS = [
 	{
 		id: 'blog-index',
 		route: '/blog',
-		files: ['src/app/blog/page.tsx', 'src/app/blog/blog-chat.tsx'],
+		files: ['src/app/(marketing)/blog/page.tsx', 'src/app/(marketing)/blog/blog-chat.tsx'],
 		rules: [
 			{
 				id: 'information-scent-demo-cta',
@@ -144,7 +144,7 @@ const SPECS = [
 	{
 		id: 'blog-role-signals',
 		route: '/blog/how-we-estimate-early-role-signals',
-		files: ['src/app/blog/how-we-estimate-early-role-signals/page.tsx'],
+		files: ['src/app/(marketing)/blog/how-we-estimate-early-role-signals/page.tsx'],
 		rules: [
 			{
 				id: 'ip-protection-language',
@@ -166,7 +166,7 @@ const SPECS = [
 	{
 		id: 'method-and-evidence',
 		route: '/method-and-evidence',
-		files: ['src/app/method-and-evidence/page.tsx'],
+		files: ['src/app/(marketing)/method-and-evidence/page.tsx'],
 		rules: [
 			{
 				id: 'dig-deeper-box',

@@ -2,7 +2,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { str } from '@/lib/form-utils'
-import { upsertDecisionOwnerInNotes } from './dashboard-decision-timeline-utils'
+import { upsertDecisionOwnerInNotes } from './_utils/decision-timeline-utils'
 
 export async function markFollowUpDone(formData: FormData) {
   const id = str(formData, 'id')

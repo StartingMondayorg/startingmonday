@@ -1,5 +1,10 @@
 ﻿import { addInterviewLog, deleteInterviewLog } from './actions'
 import type { InterviewLog } from './company-detail-constants'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 type Props = {
   companyId: string
@@ -24,18 +29,20 @@ export function InterviewSessionsPanel(props: Props) {
                   <div className="flex items-center gap-3 flex-wrap">
                     {dateLabel && <span className="text-[13px] text-slate-400">{dateLabel}</span>}
                     {log.interview_stage && (
-                      <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-300">
+                      <Badge className="bg-blue-500/10 text-blue-300">
                         {log.interview_stage}
-                      </span>
+                      </Badge>
                     )}
                   </div>
                   <form action={deleteInterviewLog.bind(null, log.id, companyId)}>
-                    <button
+                    <Button
                       type="submit"
-                      className="text-[11px] text-slate-300 hover:text-red-500 cursor-pointer bg-transparent border-0 p-0"
+                      variant="ghost"
+                      size="sm"
+                      className="text-[11px] text-slate-300 hover:text-red-500"
                     >
                       Delete
-                    </button>
+                    </Button>
                   </form>
                 </div>
                 {log.questions_asked && (
@@ -73,68 +80,65 @@ export function InterviewSessionsPanel(props: Props) {
         <form action={addInterviewLog.bind(null, companyId)} className="flex flex-col gap-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Date</label>
-              <input
+              <Label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Date</Label>
+              <Input
                 name="interview_date"
                 type="date"
                 aria-label="Interview date"
                 defaultValue={todayISO}
-                className="w-full border border-white/10 rounded px-3 py-2 text-[13px] text-white focus:outline-none focus:border-slate-400 bg-white/5"
+                className="w-full text-[13px] text-white focus-visible:border-slate-400 bg-white/5"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Stage</label>
-              <input
+              <Label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Stage</Label>
+              <Input
                 name="interview_stage"
                 type="text"
                 placeholder="Recruiter screen, Hiring manager, Panel..."
-                className="w-full border border-white/10 rounded px-3 py-2 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 bg-white/5"
+                className="w-full text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 bg-white/5"
               />
             </div>
           </div>
           <div>
-            <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Questions asked</label>
-            <textarea
+            <Label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Questions asked</Label>
+            <Textarea
               name="questions_asked"
               rows={2}
               placeholder="What were you asked?"
-              className="w-full border border-white/10 rounded px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none bg-white/5"
+              className="w-full text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none bg-white/5"
             />
           </div>
           <div>
-            <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">What landed</label>
-            <textarea
+            <Label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">What landed</Label>
+            <Textarea
               name="what_landed"
               rows={2}
               placeholder="What resonated, what got them nodding..."
-              className="w-full border border-white/10 rounded px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none bg-white/5"
+              className="w-full text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none bg-white/5"
             />
           </div>
           <div>
-            <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">What surprised me</label>
-            <textarea
+            <Label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">What surprised me</Label>
+            <Textarea
               name="what_surprised"
               rows={2}
               placeholder="Unexpected questions, tone shifts, things you did not anticipate..."
-              className="w-full border border-white/10 rounded px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none bg-white/5"
+              className="w-full text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none bg-white/5"
             />
           </div>
           <div>
-            <label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Follow-up needed</label>
-            <textarea
+            <Label className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Follow-up needed</Label>
+            <Textarea
               name="follow_up_needed"
               rows={2}
               placeholder="What to prep differently, what to send, what to address next time..."
-              className="w-full border border-white/10 rounded px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none bg-white/5"
+              className="w-full text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none bg-white/5"
             />
           </div>
           <div>
-            <button
-              type="submit"
-              className="bg-orange-500 text-slate-950 text-[13px] font-semibold px-5 py-2 rounded cursor-pointer border-0"
-            >
+            <Button type="submit" className="text-[13px] font-semibold px-5">
               Save session
-            </button>
+            </Button>
           </div>
         </form>
       </div>

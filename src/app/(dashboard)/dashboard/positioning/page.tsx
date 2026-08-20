@@ -1,9 +1,11 @@
 ﻿import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { LogoutButton } from '../logout-button'
 import { PositioningCoach } from './positioning-coach'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default async function PositioningPage() {
   const supabase = await createClient()
@@ -60,7 +62,7 @@ export default async function PositioningPage() {
         </div>
 
         {!canAccess ? (
-          <div className="bg-slate-900 rounded p-6 sm:p-8 text-center">
+          <Card className="bg-slate-900 p-6 sm:p-8 text-center">
             <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Search plan required</p>
             <h2 className="text-[20px] font-bold text-white leading-tight mb-3">
               Positioning Coach is a Search feature.
@@ -68,13 +70,10 @@ export default async function PositioningPage() {
             <p className="text-[14px] text-slate-400 leading-relaxed mb-6 max-w-sm mx-auto">
               Upgrade to Search to work with a coach on your positioning statement, pivot framing, and executive narrative.
             </p>
-            <Link
-              href="/settings/billing"
-              className="inline-block text-[14px] font-semibold text-slate-900 bg-white hover:bg-slate-100 px-6 py-3 rounded transition-colors"
-            >
+            <Button render={<Link href="/settings/billing" />} variant="secondary">
               Upgrade to Search
-            </Link>
-          </div>
+            </Button>
+          </Card>
         ) : (
           <PositioningCoach
             currentPositioning={profile?.positioning_summary ?? ''}

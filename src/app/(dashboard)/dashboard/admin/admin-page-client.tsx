@@ -1,7 +1,13 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { FunnelChart, EventVolumeChart } from './admin-charts'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
+import { Table, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 type ScoreStatus = 'green' | 'yellow' | 'red' | 'gray'
 type PageGroup = {
@@ -66,11 +72,26 @@ type AdminPageProps = {
   b2bAccounts: Array<{ id: string; email: string; tier: string; total: number; accepted: number }>
 }
 
+function roleBadgeVariant(role: string): 'warning' | 'info' | 'secondary' {
+  if (role === 'owner') return 'warning'
+  if (role === 'admin') return 'info'
+  return 'secondary'
+}
+
+function statusBadgeVariant(status: ScoreStatus): 'success' | 'warning' | 'destructive' | 'secondary' {
+  if (status === 'green') return 'success'
+  if (status === 'yellow') return 'warning'
+  if (status === 'red') return 'destructive'
+  return 'secondary'
+}
+
+function alertLevelBadgeVariant(level: 'normal' | 'watch' | 'risk'): 'success' | 'warning' | 'destructive' {
+  if (level === 'risk') return 'destructive'
+  if (level === 'watch') return 'warning'
+  return 'success'
+}
+
 export function AdminPageClient(props: AdminPageProps) {
-  const roleBadge = (role: string) =>
-    role === 'owner' ? 'bg-amber-500/15 text-amber-100 border-amber-300/20' :
-    role === 'admin' ? 'bg-blue-500/15 text-blue-100 border-blue-300/20' :
-    'bg-white/10 text-slate-300 border-white/10'
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,146,60,0.18),_transparent_28%),linear-gradient(180deg,#0f172a_0%,#111827_45%,#020617_100%)] font-sans text-slate-100">
       <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
@@ -93,12 +114,12 @@ export function AdminPageClient(props: AdminPageProps) {
             <h1 className="text-[26px] font-bold text-white leading-tight">Admin</h1>
             <p className="text-[13px] text-slate-300 mt-1.5">
               Signed in as <span className="font-semibold">{props.userEmail ?? '-'}</span>
-              <span className={`ml-2 text-[11px] font-bold px-2 py-0.5 rounded border ${roleBadge(props.staffRole)}`}>{props.staffRole}</span>
+              <Badge variant={roleBadgeVariant(props.staffRole)} className="ml-2">{props.staffRole}</Badge>
             </p>
           </div>
         </div>
 
-        <section className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="mb-8 p-4">
           <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Jump to section</h2>
           <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
             <a href="#subscriber-summary" className="text-slate-300 hover:text-white underline underline-offset-2">Subscribers</a>
@@ -106,7 +127,7 @@ export function AdminPageClient(props: AdminPageProps) {
             <a href="#internal-pages" className="text-slate-300 hover:text-white underline underline-offset-2">Internal pages</a>
             <a href="#partners" className="text-slate-300 hover:text-white underline underline-offset-2">Partners</a>
           </div>
-        </section>
+        </Card>
 
         <div className="mb-8">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Operating Areas</p>
@@ -115,14 +136,14 @@ export function AdminPageClient(props: AdminPageProps) {
               const corePages = group.pages.filter((page) => page.priority === 'core')
               const advancedCount = group.pages.filter((page) => page.priority === 'advanced').length
               return (
-                <div key={group.id} className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+                <Card key={group.id} variant="glass" className="p-4">
                   <p className="text-[14px] font-bold text-white">{group.label}</p>
                   <p className="text-[12px] text-slate-300 mt-1 leading-relaxed">{group.purpose}</p>
                   <div className="mt-3 space-y-1.5">
                     {corePages.map((page) => <Link key={page.path} href={page.path} className="block text-[12px] font-semibold text-slate-200 hover:text-white hover:underline">{page.label}</Link>)}
                     {advancedCount > 0 && <p className="text-[11px] text-slate-400 mt-2">+ {advancedCount} advanced pages</p>}
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -138,10 +159,10 @@ export function AdminPageClient(props: AdminPageProps) {
               { label: 'Set follow-up', value: props.usersWithFollowUp24h },
               { label: 'Viewed briefing', value: props.usersWithBriefingView24h },
             ].map((card) => (
-              <div key={card.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+              <Card key={card.label} variant="glass" className="p-4">
                 <div className="text-[24px] font-bold text-white leading-none">{card.value}</div>
                 <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
-              </div>
+              </Card>
             ))}
           </div>
           <div className="mt-3">
@@ -160,67 +181,272 @@ export function AdminPageClient(props: AdminPageProps) {
               { label: 'Net paused', value: props.netPaused7d },
               { label: 'Pause/Resume ratio', value: props.pauseResumeRatio7d ?? 'N/A' },
             ].map((card) => (
-              <div key={card.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+              <Card key={card.label} variant="glass" className="p-4">
                 <div className="text-[24px] font-bold text-white leading-none">{card.value}</div>
                 <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
-              </div>
+              </Card>
             ))}
           </div>
-          <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="mt-4 p-4">
             <div className="flex items-center justify-between gap-3 mb-3">
               <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Daily trend</p>
-              <span className={`text-[10px] font-bold px-2 py-1 rounded border ${props.telemetryAlertLevel === 'risk' ? 'text-red-100 bg-red-500/15 border-red-300/20' : props.telemetryAlertLevel === 'watch' ? 'text-amber-100 bg-amber-500/15 border-amber-300/20' : 'text-emerald-100 bg-emerald-500/15 border-emerald-300/20'}`}>
+              <Badge variant={alertLevelBadgeVariant(props.telemetryAlertLevel)}>
                 {props.telemetryAlertLevel === 'risk' ? 'At risk' : props.telemetryAlertLevel === 'watch' ? 'Watch' : 'Healthy'}
-              </span>
+              </Badge>
             </div>
             <p className="text-[11px] text-slate-300 mb-3">Last 3d net: <span className="font-semibold text-white">{props.netPausedLast3d > 0 ? `+${props.netPausedLast3d}` : props.netPausedLast3d}</span> ({props.positiveNetDaysLast3d}/3 days net positive)</p>
             <div className="space-y-2">
               {props.pauseResumeTrend7d.map((row) => (
                 <div key={row.dayKey} className="grid grid-cols-[84px_1fr_44px] items-center gap-3 text-[11px]">
                   <span className="text-slate-400">{row.label}</span>
-                  <div className="grid grid-cols-2 gap-2"><progress max={props.trendPeak} value={row.paused} className="w-full h-2" /><progress max={props.trendPeak} value={row.resumed} className="w-full h-2" /></div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Progress value={row.paused} max={props.trendPeak} className="w-full" />
+                    <Progress value={row.resumed} max={props.trendPeak} className="w-full" />
+                  </div>
                   <span className={`text-right font-semibold ${row.net > 0 ? 'text-amber-200' : row.net < 0 ? 'text-emerald-200' : 'text-slate-400'}`}>{row.net > 0 ? `+${row.net}` : row.net}</span>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
 
-        <section id="go-no-go" className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" id="go-no-go" className="p-6 mb-6">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Go/No-Go Scorecard</h2><p className="text-[12px] text-slate-300 mt-1">Auto-evaluated from current measurable thresholds.</p></div>
-            <div className={`text-[12px] font-bold px-3 py-1.5 rounded border ${props.decision.status === 'green' ? 'text-green-100 bg-green-500/15 border-green-300/20' : props.decision.status === 'yellow' ? 'text-amber-100 bg-amber-500/15 border-amber-300/20' : 'text-red-100 bg-red-500/15 border-red-300/20'}`}>{props.decision.label}</div>
+            <Badge variant={statusBadgeVariant(props.decision.status)} className="text-[12px] px-3 py-1.5">{props.decision.label}</Badge>
           </div>
           <p className="text-[12px] text-slate-300 mb-4">{props.decision.reason}</p>
-          <div className="space-y-2">{props.scoreRows.map((row) => <div key={row.label} className="border border-white/10 rounded px-4 py-3 bg-white/5"><div className="flex items-center justify-between gap-3"><div className="min-w-0"><p className="text-[13px] font-semibold text-white truncate">{row.label}</p><p className="text-[11px] text-slate-400">Threshold: {row.threshold}</p></div><span className={`text-[11px] font-bold px-2.5 py-1 rounded border shrink-0 ${row.status === 'green' ? 'text-green-100 bg-green-500/15 border-green-300/20' : row.status === 'yellow' ? 'text-amber-100 bg-amber-500/15 border-amber-300/20' : row.status === 'red' ? 'text-red-100 bg-red-500/15 border-red-300/20' : 'text-slate-300 bg-white/10 border-white/10'}`}>{row.value}</span></div>{row.note && <p className="text-[11px] text-slate-400 mt-1.5">{row.note}</p>}</div>)}</div>
+          <div className="space-y-2">
+            {props.scoreRows.map((row) => (
+              <div key={row.label} className="border border-white/10 rounded px-4 py-3 bg-white/5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-semibold text-white truncate">{row.label}</p>
+                    <p className="text-[11px] text-slate-400">Threshold: {row.threshold}</p>
+                  </div>
+                  <Badge variant={statusBadgeVariant(row.status)} className="shrink-0">{row.value}</Badge>
+                </div>
+                {row.note && <p className="text-[11px] text-slate-400 mt-1.5">{row.note}</p>}
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <section id="subscriber-summary" className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          {[{ label: 'Total users', value: props.totalUsers }, { label: 'Active (paid)', value: props.paidUsers }, { label: 'Trialing', value: props.trialingUsers }, { label: 'Placed', value: props.placements.length }].map(({ label, value }) => (
+            <Card key={label} variant="glass" className="p-5">
+              <div className="text-[28px] font-bold text-white">{value}</div>
+              <div className="text-[12px] text-slate-400 mt-1">{label}</div>
+            </Card>
+          ))}
         </section>
 
-        <section id="subscriber-summary" className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">{[{ label: 'Total users', value: props.totalUsers }, { label: 'Active (paid)', value: props.paidUsers }, { label: 'Trialing', value: props.trialingUsers }, { label: 'Placed', value: props.placements.length }].map(({ label, value }) => <div key={label} className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><div className="text-[28px] font-bold text-white">{value}</div><div className="text-[12px] text-slate-400 mt-1">{label}</div></div>)}</section>
+        <Card variant="glass" id="system-health" className="p-5 mb-6">
+          <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">System Health</div>
+          <div className="flex items-center gap-3">
+            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${props.briefingStale ? 'bg-red-400' : props.briefingConfiguredProfilesCount === 0 ? 'bg-slate-400' : 'bg-emerald-400'}`} />
+            <span className="text-[13px] text-slate-200">Briefing worker {props.briefingConfiguredProfilesCount === 0 ? '-- no users configured' : props.briefingHoursAgo !== null ? `-- last sent ${props.briefingHoursAgo}h ago` : '-- never sent'}</span>
+            {props.briefingStale && <Badge variant="destructive">STALE</Badge>}
+          </div>
+        </Card>
 
-        <section id="system-health" className="rounded-2xl border border-white/10 bg-white/5 p-5 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">System Health</div><div className="flex items-center gap-3"><span className={`w-2 h-2 rounded-full flex-shrink-0 ${props.briefingStale ? 'bg-red-400' : props.briefingConfiguredProfilesCount === 0 ? 'bg-slate-400' : 'bg-emerald-400'}`} /><span className="text-[13px] text-slate-200">Briefing worker {props.briefingConfiguredProfilesCount === 0 ? '-- no users configured' : props.briefingHoursAgo !== null ? `-- last sent ${props.briefingHoursAgo}h ago` : '-- never sent'}</span>{props.briefingStale && <span className="text-[11px] font-bold text-red-100 bg-red-500/15 px-2 py-0.5 rounded border border-red-300/20">STALE</span>}</div></section>
+        <Card variant="glass" id="team-summary" className="p-0 mb-6">
+          <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+            <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Team</h2>
+          </div>
+          <div className="divide-y divide-white/10">
+            {props.teamMembers.map(m => (
+              <div key={m.id} className="px-6 py-3 flex items-center justify-between">
+                <span className="text-[13px] text-slate-100">{m.email}</span>
+                <Badge variant={roleBadgeVariant(m.role)}>{m.role}</Badge>
+              </div>
+            ))}
+          </div>
+        </Card>
 
-        <section id="team-summary" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between"><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Team</h2></div><div className="divide-y divide-white/10">{props.teamMembers.map(m => <div key={m.id} className="px-6 py-3 flex items-center justify-between"><span className="text-[13px] text-slate-100">{m.email}</span><span className={`text-[11px] font-bold px-2 py-0.5 rounded border ${roleBadge(m.role)}`}>{m.role}</span></div>)}</div></section>
+        <Accordion id="internal-pages" className="mb-6">
+          <AccordionItem value="internal-pages" className="border-b-0">
+            <AccordionTrigger className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+              Internal pages + permissions
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-4">
+                {props.pages.map((group) => (
+                  <Card key={group.id} variant="glass" className="p-0">
+                    <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between gap-3">
+                      <div>
+                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">{group.label}</span>
+                        <p className="text-[12px] text-slate-300 mt-1">{group.purpose}</p>
+                      </div>
+                      <span className="text-[11px] text-slate-400">{group.pages.length} pages</span>
+                    </div>
+                    <Table className="text-[12px]">
+                      <TableBody className="divide-y divide-white/10">
+                        {group.pages.map((page, i) => (
+                          <TableRow key={`${group.id}-${i}`} className="border-0 hover:bg-transparent">
+                            <TableCell className="px-6 py-3 whitespace-normal">
+                              <Link href={page.path} className="text-slate-100 font-semibold hover:text-white">{page.label}</Link>
+                              <span className="ml-2 text-slate-400 font-mono text-[11px]">{page.path}</span>
+                            </TableCell>
+                            <TableCell className="px-4 py-3 text-center font-bold text-amber-200">{page.owner}</TableCell>
+                            <TableCell className="px-4 py-3 text-center font-bold text-blue-200">{page.admin}</TableCell>
+                            <TableCell className="px-4 py-3 text-center text-slate-400">{page.viewer}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
-        <details id="internal-pages" className="space-y-4 mb-6"><summary className="cursor-pointer text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Internal pages + permissions</summary><div className="pt-4 space-y-4">{props.pages.map((group) => <div key={group.id} className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between gap-3"><div><span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">{group.label}</span><p className="text-[12px] text-slate-300 mt-1">{group.purpose}</p></div><span className="text-[11px] text-slate-400">{group.pages.length} pages</span></div><table className="w-full text-[12px]"><tbody className="divide-y divide-white/10">{group.pages.map((page, i) => <tr key={`${group.id}-${i}`}><td className="px-6 py-3"><Link href={page.path} className="text-slate-100 font-semibold hover:text-white">{page.label}</Link><span className="ml-2 text-slate-400 font-mono text-[11px]">{page.path}</span></td><td className="px-4 py-3 text-center font-bold text-amber-200">{page.owner}</td><td className="px-4 py-3 text-center font-bold text-blue-200">{page.admin}</td><td className="px-4 py-3 text-center text-slate-400">{page.viewer}</td></tr>)}</tbody></table></div>)}</div></details>
+        <Card variant="glass" id="internal-apis" className="p-0 mb-6">
+          <Accordion>
+            <AccordionItem value="internal-apis" className="border-b-0">
+              <AccordionTrigger className="px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                Internal APIs + permissions
+              </AccordionTrigger>
+              <AccordionContent className="pt-0">
+                <Table className="text-[12px]">
+                  <TableBody className="divide-y divide-white/10">
+                    {props.internalApis.map((p, i) => (
+                      <TableRow key={i} className="border-0 hover:bg-transparent">
+                        <TableCell className="px-6 py-3">
+                          <span className="text-slate-100 font-semibold">{p.label}</span>
+                          <span className="ml-2 text-slate-400 font-mono text-[11px]">{p.path}</span>
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-center font-bold text-amber-200">{p.owner}</TableCell>
+                        <TableCell className="px-4 py-3 text-center font-bold text-blue-200">{p.admin}</TableCell>
+                        <TableCell className="px-4 py-3 text-center text-slate-400">{p.viewer}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
 
-        <details id="internal-apis" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 border-b border-white/10">Internal APIs + permissions</summary><div><table className="w-full text-[12px]"><tbody className="divide-y divide-white/10">{props.internalApis.map((p, i) => <tr key={i}><td className="px-6 py-3"><span className="text-slate-100 font-semibold">{p.label}</span><span className="ml-2 text-slate-400 font-mono text-[11px]">{p.path}</span></td><td className="px-4 py-3 text-center font-bold text-amber-200">{p.owner}</td><td className="px-4 py-3 text-center font-bold text-blue-200">{p.admin}</td><td className="px-4 py-3 text-center text-slate-400">{p.viewer}</td></tr>)}</tbody></table></div></details>
+        <Card variant="glass" id="six-actions-funnel" className="p-6 mb-6">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Six-Actions Funnel</h2>
+          <p className="text-[12px] text-slate-300 mb-6">Trialing + active users (n={props.activeUserCount})</p>
+          <FunnelChart data={props.funnelData} />
+        </Card>
 
-        <section id="six-actions-funnel" className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Six-Actions Funnel</h2><p className="text-[12px] text-slate-300 mb-6">Trialing + active users (n={props.activeUserCount})</p><FunnelChart data={props.funnelData} /></section>
+        <Card variant="glass" id="event-volume" className="p-6 mb-6">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Event Volume (30d)</h2>
+          <p className="text-[12px] text-slate-300 mb-6">7d counts in right column</p>
+          <EventVolumeChart data={props.eventVolumeData} />
+        </Card>
 
-        <section id="event-volume" className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Event Volume (30d)</h2><p className="text-[12px] text-slate-300 mb-6">7d counts in right column</p><EventVolumeChart data={props.eventVolumeData} /></section>
+        <Card variant="glass" id="trial-conversion" className="p-6 mb-6">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Trial Conversion</h2>
+          <p className="text-[12px] text-slate-300 mb-5">Users whose 30-day trial window has closed</p>
+          <Alert variant={props.linkedInAdsGatePass ? 'success' : 'warning'} className="mb-5 block">
+            <div className="flex items-center justify-between gap-3 mb-1">
+              <AlertTitle className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">LinkedIn Ads Gate</AlertTitle>
+              <Badge variant={props.linkedInAdsGatePass ? 'success' : 'warning'}>{props.linkedInAdsDecision}</Badge>
+            </div>
+            <AlertDescription className="text-[12px] text-slate-300">Requires trial-to-paid conversion of at least {props.linkedInAdsThreshold}%. Current: {props.conversionRate !== null ? `${props.conversionRate}%` : 'N/A'}.</AlertDescription>
+          </Alert>
+          <div className="grid grid-cols-3 gap-6 mb-6">
+            <div><div className="text-[28px] font-bold text-white">{props.totalEnded}</div><div className="text-[12px] text-slate-400 mt-1">Trials ended</div></div>
+            <div><div className="text-[28px] font-bold text-white">{props.totalConverted}</div><div className="text-[12px] text-slate-400 mt-1">Converted to paid</div></div>
+            <div><div className="text-[28px] font-bold text-white">{props.conversionRate !== null ? `${props.conversionRate}%` : '-'}</div><div className="text-[12px] text-slate-400 mt-1">Conversion rate</div></div>
+          </div>
+        </Card>
 
-        <section id="trial-conversion" className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Trial Conversion</h2><p className="text-[12px] text-slate-300 mb-5">Users whose 30-day trial window has closed</p><div className={`mb-5 border rounded p-4 ${props.linkedInAdsGatePass ? 'border-green-300/20 bg-green-500/10' : 'border-amber-300/20 bg-amber-500/10'}`}><div className="flex items-center justify-between gap-3 mb-1"><p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">LinkedIn Ads Gate</p><span className={`text-[11px] font-bold px-2 py-0.5 rounded border ${props.linkedInAdsGatePass ? 'bg-green-500/15 text-green-100 border-green-300/20' : 'bg-amber-500/15 text-amber-100 border-amber-300/20'}`}>{props.linkedInAdsDecision}</span></div><p className="text-[12px] text-slate-300">Requires trial-to-paid conversion of at least {props.linkedInAdsThreshold}%. Current: {props.conversionRate !== null ? `${props.conversionRate}%` : 'N/A'}.</p></div><div className="grid grid-cols-3 gap-6 mb-6"><div><div className="text-[28px] font-bold text-white">{props.totalEnded}</div><div className="text-[12px] text-slate-400 mt-1">Trials ended</div></div><div><div className="text-[28px] font-bold text-white">{props.totalConverted}</div><div className="text-[12px] text-slate-400 mt-1">Converted to paid</div></div><div><div className="text-[28px] font-bold text-white">{props.conversionRate !== null ? `${props.conversionRate}%` : '-'}</div><div className="text-[12px] text-slate-400 mt-1">Conversion rate</div></div></div></section>
+        <Card variant="glass" id="active-trials" className="p-0 mb-6">
+          <Accordion>
+            <AccordionItem value="active-trials" className="border-b-0">
+              <AccordionTrigger className="px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                Active Trials ({props.trialUsers.length})
+              </AccordionTrigger>
+              <AccordionContent className="pt-0">
+                {props.trialUsers.length === 0 ? <p className="px-6 py-5 text-[13px] text-slate-300">No active trials.</p> : null}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
 
-        <details id="active-trials" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 border-b border-white/10">Active Trials ({props.trialUsers.length})</summary><div>{props.trialUsers.length === 0 ? <p className="px-6 py-5 text-[13px] text-slate-300">No active trials.</p> : null}</div></details>
+        <Card variant="glass" id="signal-action-rate" className="p-6 mb-6">
+          <Accordion>
+            <AccordionItem value="signal-action-rate" className="border-b-0">
+              <AccordionTrigger className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                Signal &rarr; Action Rate
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="pt-4">
+                  <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Signal {'->'} Action Rate</h2>
+                  <p className="text-[12px] text-slate-300 mb-5">Signals that triggered outreach, brief gen, or contact add within 48h</p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
 
-        <details id="signal-action-rate" className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Signal &rarr; Action Rate</summary><div className="pt-4"><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Signal {'->'} Action Rate</h2><p className="text-[12px] text-slate-300 mb-5">Signals that triggered outreach, brief gen, or contact add within 48h</p></div></details>
+        <Card variant="glass" id="partners" className="p-0 mb-6">
+          <Accordion>
+            <AccordionItem value="partners" className="border-b-0">
+              <AccordionTrigger className="px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                Partners ({props.partners.length})
+              </AccordionTrigger>
+              <AccordionContent className="pt-0">
+                {props.partners.length === 0 ? <p className="px-6 py-5 text-[13px] text-slate-300">No partners yet.</p> : null}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
 
-        <details id="partners" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 border-b border-white/10">Partners ({props.partners.length})</summary><div>{props.partners.length === 0 ? <p className="px-6 py-5 text-[13px] text-slate-300">No partners yet.</p> : null}</div></details>
+        {props.b2bAccounts.length > 0 && (
+          <Card variant="glass" id="b2b-accounts" className="p-0 mb-6">
+            <Accordion>
+              <AccordionItem value="b2b-accounts" className="border-b-0">
+                <AccordionTrigger className="px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                  B2B Accounts ({props.b2bAccounts.length})
+                </AccordionTrigger>
+                <AccordionContent className="pt-0" />
+              </AccordionItem>
+            </Accordion>
+          </Card>
+        )}
+        {props.placements.length > 0 && (
+          <Card variant="glass" id="placements" className="p-0 mb-6">
+            <Accordion>
+              <AccordionItem value="placements" className="border-b-0">
+                <AccordionTrigger className="px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                  Placements ({props.placements.length})
+                </AccordionTrigger>
+                <AccordionContent className="pt-0" />
+              </AccordionItem>
+            </Accordion>
+          </Card>
+        )}
 
-        {props.b2bAccounts.length > 0 && <details id="b2b-accounts" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 border-b border-white/10">B2B Accounts ({props.b2bAccounts.length})</summary><div /></details>}
-        {props.placements.length > 0 && <details id="placements" className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer px-6 py-[18px] text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 border-b border-white/10">Placements ({props.placements.length})</summary><div /></details>}
-
-        <details id="brief-quality" className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md"><summary className="cursor-pointer text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Brief Quality (30d)</summary><div className="pt-4"><h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Brief Quality (30d)</h2><p className="text-[12px] text-slate-300 mb-5">Context richness at generation time (n={props.logsLength})</p><div className="grid grid-cols-2 sm:grid-cols-5 gap-5"><div><div className="text-[22px] font-bold text-white">{props.avgContextScore !== null ? `${props.avgContextScore}/100` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">Avg context score</div></div><div><div className="text-[22px] font-bold text-white">{props.pctResume !== null ? `${props.pctResume}%` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">% with resume</div></div><div><div className="text-[22px] font-bold text-white">{props.pctScan !== null ? `${props.pctScan}%` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">% with scan</div></div><div><div className="text-[22px] font-bold text-white">{props.pctContacts !== null ? `${props.pctContacts}%` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">% with contacts</div></div><div><div className="text-[22px] font-bold text-white">{props.avgWords !== null ? props.avgWords.toLocaleString() : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">Avg word count</div></div></div></div></details>
+        <Card variant="glass" id="brief-quality" className="p-6">
+          <Accordion>
+            <AccordionItem value="brief-quality" className="border-b-0">
+              <AccordionTrigger className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:no-underline">
+                Brief Quality (30d)
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="pt-4">
+                  <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">Brief Quality (30d)</h2>
+                  <p className="text-[12px] text-slate-300 mb-5">Context richness at generation time (n={props.logsLength})</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-5">
+                    <div><div className="text-[22px] font-bold text-white">{props.avgContextScore !== null ? `${props.avgContextScore}/100` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">Avg context score</div></div>
+                    <div><div className="text-[22px] font-bold text-white">{props.pctResume !== null ? `${props.pctResume}%` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">% with resume</div></div>
+                    <div><div className="text-[22px] font-bold text-white">{props.pctScan !== null ? `${props.pctScan}%` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">% with scan</div></div>
+                    <div><div className="text-[22px] font-bold text-white">{props.pctContacts !== null ? `${props.pctContacts}%` : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">% with contacts</div></div>
+                    <div><div className="text-[22px] font-bold text-white">{props.avgWords !== null ? props.avgWords.toLocaleString() : '-'}</div><div className="text-[11px] text-slate-400 mt-1 leading-snug">Avg word count</div></div>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Card>
       </main>
     </div>
   )

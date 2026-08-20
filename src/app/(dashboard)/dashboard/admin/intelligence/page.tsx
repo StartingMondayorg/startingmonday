@@ -3,6 +3,16 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { IntelligenceAdminClient } from './client'
 import { SearchLagContextPanel } from './SearchLagContextPanel'
 
@@ -340,221 +350,243 @@ export default async function AdminIntelligencePage() {
           companyCohortCount={companyLagStats.length}
           lastUpdatedAt={lagUpdatedAt}
         />
-        <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 mb-5">
+        <Card className="p-5 sm:p-6 mb-5">
           <h2 className="text-[15px] font-bold text-slate-900 mb-3">Campaign health monitor</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Health Score</div>
               <div className="text-[18px] font-bold text-slate-900">{adminCampaignHealthScore}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Active Campaigns</div>
               <div className="text-[18px] font-bold text-slate-900">{activeCampaigns}</div>
-            </div>
-            <div className="rounded-lg border border-amber-200 px-3 py-2.5 bg-amber-50">
+            </Card>
+            <Card className="px-3 py-2.5 border-amber-200 bg-amber-50">
               <div className="text-[10px] tracking-[0.08em] text-amber-700 font-bold">Stalled 14+ Days</div>
               <div className="text-[18px] font-bold text-amber-900">{stalledCampaigns}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Overdue Follow-ups</div>
               <div className="text-[18px] font-bold text-slate-900">{dueFollowUps}</div>
-            </div>
+            </Card>
           </div>
           <p className="text-[12px] text-slate-500 mt-3">Monitor stalled campaign count daily and trigger outreach triage when stalled campaigns increase week over week.</p>
-        </div>
+        </Card>
 
-        <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6">
+        <Card className="p-5 sm:p-6">
           <h2 className="text-[15px] font-bold text-slate-900 mb-4">Discover conversion + quality (last 30 days)</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-3">
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Generated</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.generatedEvents30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Runs</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.runCreatedEvents30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Opened</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.openedEvents30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Contact Adds</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.recommendedContactsAdded30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Outreach Starts</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.outreachStarts30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Added</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.addedCompanies30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Avg Fit</div>
               <div className="text-[18px] font-bold text-slate-900">{discoverSummary.avgFit30d.toFixed(1)}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">People Coverage</div>
               <div className="text-[18px] font-bold text-slate-900">{Math.round(discoverSummary.peopleCoverage30d * 100)}%</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">High-Conf People</div>
               <div className="text-[18px] font-bold text-slate-900">{Math.round(discoverSummary.highConfidencePeopleCoverage30d * 100)}%</div>
-            </div>
+            </Card>
           </div>
 
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className={`rounded-lg border px-3 py-2.5 ${discoverSummary.narrativeOpenRate30d >= 0.35 ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Narrative Open Rate</div>
-              <div className="text-[16px] font-bold text-slate-900">{Math.round(discoverSummary.narrativeOpenRate30d * 100)}%</div>
-              <div className="text-[11px] text-slate-600">Target: 35%+</div>
-            </div>
-            <div className={`rounded-lg border px-3 py-2.5 ${discoverSummary.outreachStartRate30d >= 0.2 ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
-              <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Outreach Start Rate</div>
-              <div className="text-[16px] font-bold text-slate-900">{Math.round(discoverSummary.outreachStartRate30d * 100)}%</div>
-              <div className="text-[11px] text-slate-600">Target: 20%+</div>
-            </div>
-            <div className={`rounded-lg border px-3 py-2.5 ${discoverSummary.suggestedPeopleAcceptanceRate30d >= 0.15 ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
-              <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Suggested People Acceptance</div>
-              <div className="text-[16px] font-bold text-slate-900">{Math.round(discoverSummary.suggestedPeopleAcceptanceRate30d * 100)}%</div>
-              <div className="text-[11px] text-slate-600">Target: 15%+</div>
-            </div>
-            <div className={`rounded-lg border px-3 py-2.5 ${discoverSummary.watchlistLiftVsBaselinePct !== null && discoverSummary.watchlistLiftVsBaselinePct >= 25 ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
-              <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Add-to-Watchlist Lift</div>
-              <div className="text-[16px] font-bold text-slate-900">
-                {discoverSummary.watchlistLiftVsBaselinePct === null ? 'N/A' : `${Math.round(discoverSummary.watchlistLiftVsBaselinePct)}%`}
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[16px] font-bold text-slate-900">{Math.round(discoverSummary.narrativeOpenRate30d * 100)}%</span>
+                <Badge variant={discoverSummary.narrativeOpenRate30d >= 0.35 ? 'success' : 'warning'}>
+                  {discoverSummary.narrativeOpenRate30d >= 0.35 ? 'On target' : 'Below target'}
+                </Badge>
               </div>
-              <div className="text-[11px] text-slate-600">Target: +25% vs baseline</div>
-            </div>
+              <div className="text-[11px] text-slate-600 mt-1">Target: 35%+</div>
+            </Card>
+            <Card className="px-3 py-2.5">
+              <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Outreach Start Rate</div>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[16px] font-bold text-slate-900">{Math.round(discoverSummary.outreachStartRate30d * 100)}%</span>
+                <Badge variant={discoverSummary.outreachStartRate30d >= 0.2 ? 'success' : 'warning'}>
+                  {discoverSummary.outreachStartRate30d >= 0.2 ? 'On target' : 'Below target'}
+                </Badge>
+              </div>
+              <div className="text-[11px] text-slate-600 mt-1">Target: 20%+</div>
+            </Card>
+            <Card className="px-3 py-2.5">
+              <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Suggested People Acceptance</div>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[16px] font-bold text-slate-900">{Math.round(discoverSummary.suggestedPeopleAcceptanceRate30d * 100)}%</span>
+                <Badge variant={discoverSummary.suggestedPeopleAcceptanceRate30d >= 0.15 ? 'success' : 'warning'}>
+                  {discoverSummary.suggestedPeopleAcceptanceRate30d >= 0.15 ? 'On target' : 'Below target'}
+                </Badge>
+              </div>
+              <div className="text-[11px] text-slate-600 mt-1">Target: 15%+</div>
+            </Card>
+            <Card className="px-3 py-2.5">
+              <div className="text-[10px] tracking-[0.08em] text-slate-500 font-bold">Add-to-Watchlist Lift</div>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[16px] font-bold text-slate-900">
+                  {discoverSummary.watchlistLiftVsBaselinePct === null ? 'N/A' : `${Math.round(discoverSummary.watchlistLiftVsBaselinePct)}%`}
+                </span>
+                {discoverSummary.watchlistLiftVsBaselinePct !== null && (
+                  <Badge variant={discoverSummary.watchlistLiftVsBaselinePct >= 25 ? 'success' : 'warning'}>
+                    {discoverSummary.watchlistLiftVsBaselinePct >= 25 ? 'On target' : 'Below target'}
+                  </Badge>
+                )}
+              </div>
+              <div className="text-[11px] text-slate-600 mt-1">Target: +25% vs baseline</div>
+            </Card>
           </div>
 
           <p className="text-[12px] text-slate-500 mt-3">
             Open-to-add conversion: {discoverSummary.openedEvents30d > 0 ? Math.round((discoverSummary.addedCompanies30d / discoverSummary.openedEvents30d) * 100) : 0}%
             {discoverSummary.watchlistLiftVsBaselinePct === null ? ' (set DISCOVER_ADD_TO_WATCHLIST_BASELINE_RATE to enable lift calculation)' : ''}
           </p>
-        </div>
+        </Card>
 
-        <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 mt-5">
+        <Card className="p-5 sm:p-6 mt-5">
           <h2 className="text-[15px] font-bold text-slate-900 mb-4">Signal pipeline health (last 30 days)</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Canonical Events</div>
               <div className="text-[18px] font-bold text-slate-900">{events30d}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Dedup Merge Rate</div>
               <div className="text-[18px] font-bold text-slate-900">{Math.round(dedupMergeRate * 100)}%</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Corroborated Events</div>
               <div className="text-[18px] font-bold text-slate-900">{Math.round(corroborationRate * 100)}%</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Signals Written</div>
               <div className="text-[18px] font-bold text-slate-900">{pipelineTotals.signalsWritten}</div>
-            </div>
-            <div className={`rounded-lg border px-3 py-2.5 ${classifyFailureRate <= 0.03 ? 'border-slate-200 bg-slate-50' : 'border-amber-200 bg-amber-50'}`}>
+            </Card>
+            <Card className={`px-3 py-2.5 ${classifyFailureRate <= 0.03 ? '' : 'border-amber-200 bg-amber-50'}`}>
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Classify Failure Rate</div>
               <div className="text-[18px] font-bold text-slate-900">{(classifyFailureRate * 100).toFixed(1)}%</div>
-            </div>
-            <div className={`rounded-lg border px-3 py-2.5 ${dlqDepth <= 50 ? 'border-slate-200 bg-slate-50' : 'border-amber-200 bg-amber-50'}`}>
+            </Card>
+            <Card className={`px-3 py-2.5 ${dlqDepth <= 50 ? '' : 'border-amber-200 bg-amber-50'}`}>
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">DLQ Depth</div>
               <div className="text-[18px] font-bold text-slate-900">{dlqDepth}</div>
-            </div>
+            </Card>
           </div>
 
           {pipelineSources.length > 0 ? (
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Source</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Classified</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Written</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Skipped</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Events New</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Events Merged</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <div className="mt-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Source</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Classified</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Written</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Skipped</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Events New</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Events Merged</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {pipelineSources.slice(0, 12).map(row => (
-                    <tr key={row.source_key} className="border-b border-slate-100">
-                      <td className="py-2 pr-4 text-[12px] font-semibold text-slate-900">{row.source_key}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.classify_calls}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.signals_written}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.signals_skipped}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.events_created}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.events_merged}</td>
-                    </tr>
+                    <TableRow key={row.source_key}>
+                      <TableCell className="text-[12px] font-semibold text-slate-900">{row.source_key}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.classify_calls}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.signals_written}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.signals_skipped}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.events_created}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.events_merged}</TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           ) : (
             <p className="text-[12px] text-slate-500 mt-3">No pipeline runs recorded yet. Metrics appear after the next signal-job run on the canonical event layer.</p>
           )}
-        </div>
+        </Card>
 
-        <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 mt-5">
+        <Card className="p-5 sm:p-6 mt-5">
           <h2 className="text-[15px] font-bold text-slate-900 mb-4">Outcome labels (prediction loop)</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Role Openings</div>
               <div className="text-[18px] font-bold text-slate-900">{openingRows.length}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Label Coverage</div>
               <div className="text-[18px] font-bold text-slate-900">{Math.round(labelCoverage * 100)}%</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Labeled Events</div>
               <div className="text-[18px] font-bold text-slate-900">{labeledEventCount}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Career Scan</div>
               <div className="text-[18px] font-bold text-slate-900">{openingsBySource.career_scan ?? 0}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Exec Hire</div>
               <div className="text-[18px] font-bold text-slate-900">{openingsBySource.exec_hire ?? 0}</div>
-            </div>
-            <div className="rounded-lg border border-slate-200 px-3 py-2.5 bg-slate-50">
+            </Card>
+            <Card className="px-3 py-2.5">
               <div className="text-[10px] tracking-[0.08em] text-slate-400 font-bold">Proxy Diff</div>
               <div className="text-[18px] font-bold text-slate-900">{openingsBySource.proxy_diff ?? 0}</div>
-            </div>
+            </Card>
           </div>
 
           {topPrecursors.length > 0 ? (
-            <div className="mt-4 overflow-x-auto">
+            <div className="mt-4">
               <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-2">Top precursors (90-day window, n ≥ 5), internal only</p>
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Event Type</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">N</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Preceded</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Hit Rate</th>
-                    <th className="py-2 pr-4 text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Median Days</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Event Type</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">N</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Preceded</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Hit Rate</TableHead>
+                    <TableHead className="text-[10px] tracking-[0.08em] text-slate-400 font-bold uppercase">Median Days</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {topPrecursors.map(row => (
-                    <tr key={row.event_type} className="border-b border-slate-100">
-                      <td className="py-2 pr-4 text-[12px] font-semibold text-slate-900">{row.event_type}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.n_events}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.n_preceded}</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{(row.hit_rate * 100).toFixed(1)}%</td>
-                      <td className="py-2 pr-4 text-[12px] text-slate-600 tabular-nums">{row.median_days_to_opening ?? '—'}</td>
-                    </tr>
+                    <TableRow key={row.event_type}>
+                      <TableCell className="text-[12px] font-semibold text-slate-900">{row.event_type}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.n_events}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.n_preceded}</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{(row.hit_rate * 100).toFixed(1)}%</TableCell>
+                      <TableCell className="text-[12px] text-slate-600 tabular-nums">{row.median_days_to_opening ?? '—'}</TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           ) : (
             <p className="text-[12px] text-slate-500 mt-3">No precursor stats yet. Aggregates appear after the nightly precursor-stats job runs with closed-window labeled events.</p>
           )}
-        </div>
+        </Card>
       </section>
 
       <IntelligenceAdminClient

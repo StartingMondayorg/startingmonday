@@ -2,6 +2,11 @@
 
 import { useRef, useState } from 'react'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type Source = {
   title: string
@@ -70,7 +75,7 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
   }
 
   return (
-    <div className="bg-white/5 border border-white/15 rounded-xl p-5 sm:p-8 shadow-[0_18px_40px_rgba(15,23,42,0.18)] backdrop-blur-md">
+    <Card variant="glass" className="p-5 sm:p-8 shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
       <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-300 mb-1">Instant answers</p>
       <h2 className="text-[18px] font-bold text-white leading-tight mb-1.5">Ask the support assistant</h2>
       <p className="text-[13px] text-slate-300 leading-relaxed mb-4 max-w-[58ch]">
@@ -81,27 +86,32 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
       {turns.length === 0 && (
         <div className="mb-4 flex flex-wrap gap-2">
           {SUGGESTED_QUESTIONS.map((s) => (
-            <button
+            <Button
               key={s}
               type="button"
+              variant="outline"
               onClick={() => { void ask(s) }}
-              className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 min-h-[44px] text-left text-[13px] text-slate-200 hover:border-orange-300/60 hover:bg-white/10 transition-colors cursor-pointer"
+              className="h-auto min-h-[44px] whitespace-normal border-white/15 bg-white/5 px-3 py-2 text-left text-[13px] font-normal text-slate-200 hover:border-orange-300/60 hover:bg-white/10"
             >
               {s}
-            </button>
+            </Button>
           ))}
         </div>
       )}
 
       {turns.length > 0 && (
-        <div className="mb-4 space-y-3 max-h-[26rem] overflow-y-auto pr-1" aria-live="polite">
+        <ScrollArea className="mb-4 max-h-[26rem] pr-1">
+          <div className="space-y-3" aria-live="polite">
           {turns.map((turn, i) => (
             <div key={i} className={turn.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
-              <div className={
-                turn.role === 'user'
-                  ? 'max-w-[85%] rounded-xl bg-orange-400/15 border border-orange-300/25 px-4 py-2.5'
-                  : 'max-w-[92%] rounded-xl bg-white/5 border border-white/10 px-4 py-3'
-              }>
+              <Card
+                variant="glass"
+                className={
+                  turn.role === 'user'
+                    ? 'max-w-[85%] rounded-xl bg-orange-400/15 border-orange-300/25 px-4 py-2.5'
+                    : 'max-w-[92%] rounded-xl px-4 py-3'
+                }
+              >
                 <p className="text-[13px] text-slate-100 leading-relaxed whitespace-pre-line">{turn.text}</p>
                 {turn.role === 'assistant' && (turn.sources?.length ?? 0) > 0 && (
                   <div className="mt-2.5 border-t border-white/10 pt-2.5">
@@ -118,15 +128,16 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
                   </div>
                 )}
                 {turn.role === 'assistant' && turn.conservative && (
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
                     onClick={() => onEscalate(lastQuestionRef.current)}
-                    className="mt-2.5 min-h-[44px] rounded-lg border border-orange-300/40 bg-orange-400/10 px-4 text-[12px] font-semibold text-orange-200 hover:bg-orange-400/20 transition-colors cursor-pointer"
+                    className="mt-2.5 min-h-[44px] border-orange-300/40 bg-orange-400/10 text-[12px] text-orange-200 hover:bg-orange-400/20"
                   >
                     Send this to the founder for a personal reply &rarr;
-                  </button>
+                  </Button>
                 )}
-              </div>
+              </Card>
             </div>
           ))}
           {loading && (
@@ -135,31 +146,32 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
               Finding the answer...
             </div>
           )}
-        </div>
+          </div>
+        </ScrollArea>
       )}
 
       <form
         onSubmit={(e) => { e.preventDefault(); void ask() }}
         className="flex flex-col sm:flex-row gap-2"
       >
-        <label htmlFor="support-chat-question" className="sr-only">Your question</label>
-        <input
+        <Label htmlFor="support-chat-question" className="sr-only">Your question</Label>
+        <Input
           id="support-chat-question"
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           maxLength={500}
           placeholder="Ask anything about Starting Monday..."
-          className="flex-1 rounded-lg border border-white/15 bg-slate-900/70 px-3 py-2.5 min-h-[44px] text-[14px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-orange-300"
+          className="flex-1 min-h-[44px] border-white/15 bg-slate-900/70 text-[14px] text-slate-100 placeholder:text-slate-500 focus-visible:border-orange-300"
         />
-        <button
+        <Button
           type="submit"
           disabled={loading || question.trim().length < 3}
-          className="min-h-[44px] rounded-lg bg-orange-400 px-6 text-[14px] font-semibold text-slate-950 hover:bg-orange-300 transition-colors cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="min-h-[44px] px-6 text-[14px] shrink-0"
         >
           {loading ? 'Thinking...' : 'Ask'}
-        </button>
+        </Button>
       </form>
-    </div>
+    </Card>
   )
 }

@@ -16,22 +16,40 @@ function tryDiff(ref) {
   }
 }
 
+function getUncommittedFiles() {
+  try {
+    return execSync('git status --porcelain=v1 --untracked-files=all', {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+      .split('\n')
+      .map((line) => line.slice(3).trim())
+      .filter(Boolean)
+  } catch {
+    return []
+  }
+}
+
+function includeUncommitted(files) {
+  return [...new Set([...files, ...getUncommittedFiles()])]
+}
+
 function getChangedFiles() {
   const baseRef = process.env.LANDING_GUARD_BASE_REF
 
   // Try explicit base SHA first (provided by CI as PR base commit).
   if (baseRef) {
     const result = tryDiff(`${baseRef}...HEAD`)
-    if (result !== null) return result
+    if (result !== null) return includeUncommitted(result)
   }
 
   // Try origin/main (works locally and in full-depth clones).
   const fromOriginMain = tryDiff('origin/main...HEAD')
-  if (fromOriginMain !== null) return fromOriginMain
+  if (fromOriginMain !== null) return includeUncommitted(fromOriginMain)
 
   // Fallback: single-parent diff — works in shallow clones with fetch-depth: 2.
   const fromParent = tryDiff('HEAD^1..HEAD')
-  if (fromParent !== null) return fromParent
+  if (fromParent !== null) return includeUncommitted(fromParent)
 
   // Cannot determine changed files — fail safe (pass).
   console.warn('landing-page-guard: could not determine changed files; skipping check')
@@ -39,8 +57,14 @@ function getChangedFiles() {
 }
 
 const guardedFiles = new Set([
-  'src/app/page.tsx',
-  'src/components/LandingPage.tsx',
+  'src/app/(marketing)/page.tsx',
+  'src/app/(marketing)/example/page.tsx',
+  'src/app/components/LandingPage.tsx',
+  'src/app/components/SignalTimelineCard.tsx',
+  'src/app/components/HeroPageViewTelemetry.tsx',
+  'src/lib/starting-monday-hero-content.ts',
+  'src/lib/channel-metrics-events.ts',
+  'src/lib/feature-flags.ts',
 ])
 
 const changedFiles = getChangedFiles()

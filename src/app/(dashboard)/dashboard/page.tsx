@@ -3,10 +3,11 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getActivationStatus } from "@/lib/activation";
+import { getActivationStatus } from "@/lib/onboarding/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
 import { LogoutButton } from "./logout-button";
-import { HelpQuickButton } from "@/components/HelpQuickButton";
+import { HelpQuickButton } from "@/app/components/HelpQuickButton";
+import { Alert, AlertTitle, AlertDescription, Button, Card } from "@/components/ui";
 import {
   saveQuickProfile,
   saveWeeklyGoal,
@@ -14,50 +15,51 @@ import {
 } from "./profile/actions";
 import { markPlaced } from "./placed/actions";
 import { OpportunityRadar } from "./opportunity-radar";
-import { ActivityChart, type WeekActivity } from "@/components/ActivityChart";
+import { ActivityChart, type WeekActivity } from "@/app/components/ActivityChart";
 import {
   PipelineVelocity,
   type VelocityRow,
-} from "@/components/PipelineVelocity";
+} from "@/app/components/PipelineVelocity";
 import {
   DailyMomentumPlan,
   type DailyMomentumAction,
-} from "@/components/DailyMomentumPlan";
+} from "@/app/components/DailyMomentumPlan";
 import { getStaffMember, hasAdminHeaderAccess } from "@/lib/staff";
-import { DashboardPipelineSection } from "./dashboard-pipeline-section";
-import { DashboardDisclosureSection } from "./dashboard-disclosure-section";
-import { DashboardStatusBanners } from "./dashboard-status-banners";
-import { DashboardProfileIntelligenceSection } from "./dashboard-profile-intelligence-section";
-import { DashboardWelcomeNudgeSection } from "./dashboard-welcome-nudge-section";
-import { DashboardAdvancedModulesSection } from "./dashboard-advanced-modules-section";
-import { DashboardTopShellSection } from "./dashboard-top-shell-section";
-import { DashboardCampaignFoundationSection } from "./dashboard-campaign-foundation-section";
-import { DashboardProgressFeedSection } from "./dashboard-progress-feed-section";
-import { buildExecutiveRiskModel } from "./dashboard-executive-risk-utils";
-import { buildDailyMomentumActions } from "./dashboard-momentum-actions";
+import { DashboardPipelineSection } from "./_components/pipeline-section";
+import { DashboardDisclosureSection } from "./_components/disclosure-section";
+import { DashboardStatusBanners } from "./_components/status-banners";
+import { DashboardProfileIntelligenceSection } from "./_components/profile-intelligence-section";
+import { DashboardWelcomeNudgeSection } from "./_components/welcome-nudge-section";
+import { DashboardAdvancedModulesSection } from "./_components/advanced-modules-section";
+import { DashboardTopShellSection } from "./_components/top-shell-section";
+import { DashboardCampaignFoundationSection } from "./_components/campaign-foundation-section";
+import { DashboardProgressFeedSection } from "./_components/progress-feed-section";
+import { buildExecutiveRiskModel } from "./_utils/executive-risk-utils";
+import { buildDailyMomentumActions } from "./_utils/momentum-actions";
 import {
   WarmPathsSection,
   PatternAlertsSection,
   CompanySignalsSection,
-} from "./dashboard-signal-sections";
-import { DashboardPostPlacementView } from "./dashboard-post-placement-view";
-import { DashboardDecisionTimelineSection } from "./dashboard-decision-timeline-section";
+} from "./_components/signal-sections";
+import { DashboardPostPlacementView } from "./_components/post-placement-view";
+import { DashboardDecisionTimelineSection } from "./_components/decision-timeline-section";
 import {
   OnDemandScanButton,
   OnDemandEnrichButton,
-} from "./dashboard-on-demand-actions";
+} from "./_components/on-demand-actions";
 import { updateDecisionOwner } from "./actions";
 import {
   decisionMarkerForStage,
   extractDecisionOwnerFromNotes,
-} from "./dashboard-decision-timeline-utils";
-import { bumpWeek, getWeekMonday, weekLabel } from "./dashboard-week-utils";
-import { canAccessFeature, getUserSubscription } from "@/lib/subscription";
+} from "./_utils/decision-timeline-utils";
+import { bumpWeek, getWeekMonday, weekLabel } from "./_utils/week-utils";
+import { canAccessFeature, getUserSubscription } from "@/lib/billing/subscription";
 import { greetingInTz, fullDateInTz } from "@/lib/date";
-import { FirstMileTelemetry } from "@/components/FirstMileTelemetry";
-import { applyDashboardSignalContract } from "@/lib/dashboard-signal-contract";
-import { rankSignals } from "@/lib/intelligence-quality";
-import { stripStaleRelativeTime } from "@/lib/follow-up-copy";
+import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
+import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
+import { rankSignals } from "@/lib/intelligence/intelligence-quality";
+import { stripStaleRelativeTime } from "@/lib/outreach/follow-up-copy";
+import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-flags";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {
@@ -83,6 +85,130 @@ export function shouldRedirectToStartDashboard(opts: {
   return (
     opts.isFirstRunDashboard && !opts.hasSeenFirstRun && opts.focus !== "main"
   );
+}
+
+type DashboardPosture = "active" | "exploring" | "not_looking";
+
+type ThreeZoneNextMove = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  cta: string;
+  href: string;
+};
+
+export function resolveThreeZoneDashboardPosture(searchPath: string | null): DashboardPosture {
+  if (searchPath === "campaign") return "active";
+  if (searchPath === "watcher" || searchPath === "nurture") return "exploring";
+  return "not_looking";
+}
+
+export function formatDashboardSignalAge(signalDate: string, todayISO: string): string {
+  const signalTime = new Date(`${signalDate}T12:00:00Z`).getTime();
+  const todayTime = new Date(`${todayISO}T12:00:00Z`).getTime();
+  if (!Number.isFinite(signalTime) || !Number.isFinite(todayTime)) return "recently";
+  const days = Math.max(0, Math.floor((todayTime - signalTime) / 86400000));
+  if (days === 0) return "today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
+}
+
+export function buildThreeZoneNextMove(opts: {
+  posture: DashboardPosture;
+  offerCompanyName?: string | null;
+  interviewingCompanyName?: string | null;
+  overdueCount: number;
+  freshSignal?: { companyName: string | null; summary: string; href: string } | null;
+  stalled: boolean;
+  nextSetup?: { label: string; href: string } | null;
+  companyCount: number;
+  scanAgeLabel: string;
+  nextScanDay: string;
+}): ThreeZoneNextMove {
+  const postureTouch = opts.posture === "active"
+    ? "decide who to contact"
+    : opts.posture === "exploring"
+      ? "consider one relationship touch"
+      : "save the context for later";
+
+  if (opts.offerCompanyName) {
+    return {
+      eyebrow: "Your next move",
+      title: `${opts.offerCompanyName} needs attention today.`,
+      body: opts.posture === "active"
+        ? "Review the brief and prepare the next conversation."
+        : "Review the context before taking the next step.",
+      cta: "Review brief",
+      href: "/dashboard/briefing",
+    };
+  }
+
+  if (opts.interviewingCompanyName) {
+    return {
+      eyebrow: "Your next move",
+      title: `${opts.interviewingCompanyName} has an active conversation.`,
+      body: opts.posture === "exploring"
+        ? "Review the context before you respond."
+        : "Review the brief and prepare the next conversation.",
+      cta: "Review brief",
+      href: "/dashboard/briefing",
+    };
+  }
+
+  if (opts.overdueCount > 0) {
+    return {
+      eyebrow: "Your next move",
+      title: `${opts.overdueCount} follow-up${opts.overdueCount === 1 ? " is" : "s are"} due.`,
+      body: opts.posture === "not_looking"
+        ? "Review what is due before taking any step."
+        : "Pick the one follow-up most likely to move a relationship forward.",
+      cta: "View follow-ups",
+      href: "/dashboard/calendar",
+    };
+  }
+
+  if (opts.freshSignal) {
+    const company = opts.freshSignal.companyName ?? "A tracked company";
+    return {
+      eyebrow: "Your next move",
+      title: `${company} has a fresh signal.`,
+      body: `${opts.freshSignal.summary} Open the brief and ${postureTouch}.`,
+      cta: "Get brief",
+      href: opts.freshSignal.href,
+    };
+  }
+
+  if (opts.stalled) {
+    return {
+      eyebrow: "Your next move",
+      title: opts.posture === "active" ? "Restart with one company." : "Keep one relationship warm.",
+      body: opts.posture === "active"
+        ? "Pick one company and restart with a brief."
+        : "Pick one company for a low-pressure touch.",
+      cta: "Pick a company",
+      href: "/dashboard#companies",
+    };
+  }
+
+  if (opts.nextSetup) {
+    return {
+      eyebrow: "Your next move",
+      title: `Finish ${opts.nextSetup.label}.`,
+      body: "This keeps Monday calibrated to the companies and relationships that matter.",
+      cta: "Finish setup",
+      href: opts.nextSetup.href,
+    };
+  }
+
+  return {
+    eyebrow: "Your next move",
+    title: opts.posture === "active"
+      ? `Nothing new across your ${opts.companyCount} companies.`
+      : "Nothing needs you today.",
+    body: `Last checked ${opts.scanAgeLabel}. Next scan ${opts.nextScanDay}.`,
+    cta: "View companies",
+    href: "/dashboard#companies",
+  };
 }
 
 type ProfileRow = {
@@ -1081,6 +1207,202 @@ export default async function DashboardPage({
     );
   }
 
+  if (isStartingMondayDashboardSimplificationEnabled()) {
+    const dashboardPosture = resolveThreeZoneDashboardPosture(searchPath);
+    const latestSignalByCompany = new Map<string, SignalRow>();
+    for (const signal of [...signalsDeduped, ...patternAlerts]) {
+      if (!latestSignalByCompany.has(signal.company_id)) {
+        latestSignalByCompany.set(signal.company_id, signal);
+      }
+    }
+    const freshSignal = signalsDeduped[0] ?? patternAlerts[0] ?? null;
+    const freshSignalAge = freshSignal
+      ? formatDashboardSignalAge(freshSignal.signal_date, todayISO)
+      : null;
+    const threeZoneNextMove = buildThreeZoneNextMove({
+      posture: dashboardPosture,
+      offerCompanyName: offerCompany?.name ?? null,
+      interviewingCompanyName: interviewingCompany?.name ?? null,
+      overdueCount,
+      freshSignal: freshSignal
+        ? {
+            companyName: freshSignal.companies?.name ?? null,
+            summary: `${freshSignal.signal_summary} - ${freshSignalAge}.`,
+            href: `/dashboard/companies/${freshSignal.company_id}/prep`,
+          }
+        : null,
+      stalled: !!stallNudge,
+      nextSetup: activation.isComplete
+        ? null
+        : setupSteps.find((step) => !step.done) ?? null,
+      companyCount: totalCount,
+      scanAgeLabel: scannerCompletedCount > 0 ? "today" : "not yet",
+      nextScanDay: weekOneNextScanDay,
+    });
+    const targetRoles = ((profile?.target_titles as string[] | null) ?? [])
+      .filter(Boolean)
+      .slice(0, 3);
+    const sectorByCompanyId = new Map(
+      (companies ?? []).map((company) => [company.id, company.sector] as const),
+    );
+    const companyRows = [...allList]
+      .sort((a, b) => {
+        const aSignal = latestSignalByCompany.get(a.id)?.signal_date ?? "";
+        const bSignal = latestSignalByCompany.get(b.id)?.signal_date ?? "";
+        return bSignal.localeCompare(aSignal) || a.name.localeCompare(b.name);
+      })
+      .slice(0, PAGE_SIZE);
+    const nextBriefingLabel = profile?.briefing_time
+      ? `Next briefing at ${weekOneBriefingTime}`
+      : "Briefing time not set";
+
+    return (
+      <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+        {isFirstRunDashboard && (
+          <FirstMileTelemetry
+            eventName="dashboard_first_run_viewed"
+            pageName="dashboard_first_run"
+            properties={{
+              company_count: totalCount,
+              contact_count: contactCount,
+              has_advanced_stage: hasAdvancedStage,
+              onboarding_completed: true,
+              layout: "three_zone",
+            }}
+          />
+        )}
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.18),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.98)_100%)]" />
+
+        <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+          <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+            <span className="shrink-0 text-[13px] font-bold uppercase tracking-[0.16em] text-white/90">
+              <span className="text-white">Starting </span>
+              <span className="text-orange-500">Monday</span>
+            </span>
+            <Link href="/dashboard/progress" className="ml-auto text-[12px] font-semibold text-slate-300 hover:text-white">
+              Progress
+            </Link>
+            <LogoutButton label="Sign out" />
+          </div>
+        </header>
+
+        <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+          <div className="mb-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Dashboard</p>
+            <h2 className="mt-2 font-serif text-[30px] font-bold leading-tight text-white sm:text-[42px]">
+              What should I do today?
+            </h2>
+            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-300">
+              We watch your companies for signals, then turn the strongest ones into a company, people, and angle to act on.
+            </p>
+          </div>
+
+          <section aria-labelledby="next-move-heading" className="mb-6">
+            <Card variant="glass" className="p-5 sm:p-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">{threeZoneNextMove.eyebrow}</p>
+              <div className="mt-3 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+                <div>
+                  <h2 id="next-move-heading" className="text-[24px] font-bold leading-tight text-white sm:text-[30px]">
+                    {threeZoneNextMove.title}
+                  </h2>
+                  <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-slate-300">{threeZoneNextMove.body}</p>
+                  {isTrialing && (
+                    <p className="mt-3 text-[12px] font-semibold text-slate-300">
+                      Trial: day {Math.max(1, 30 - trialDaysLeft)} of 30. You keep your data when the trial ends.
+                    </p>
+                  )}
+                </div>
+                <Button className="min-h-[44px] px-5 text-[13px] font-semibold" render={<Link href={threeZoneNextMove.href} />}>
+                  {threeZoneNextMove.cta}
+                </Button>
+              </div>
+            </Card>
+          </section>
+
+          <section id="companies" aria-labelledby="companies-heading" className="mb-6 scroll-mt-24">
+            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Your companies</p>
+                <h2 id="companies-heading" className="mt-1 text-[22px] font-bold text-white">Company, people, angle.</h2>
+                <p className="mt-1 text-[12px] text-slate-400">Signals mean a role may be forming before it is posted.</p>
+              </div>
+              <Link href="/dashboard/companies/new" className="text-[13px] font-semibold text-orange-300 hover:text-orange-200">
+                Add company
+              </Link>
+            </div>
+
+            {companyRows.length === 0 ? (
+              <Card variant="glass" className="p-5">
+                <p className="text-[15px] font-semibold text-white">Add a company you would want to be shortlisted at.</p>
+                <p className="mt-1 text-[13px] text-slate-300">We start watching it today and tell you when something matters.</p>
+                <Button className="mt-4 min-h-[44px] text-[13px]" render={<Link href="/dashboard/companies/new" />}>
+                  Add company
+                </Button>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {companyRows.map((company) => {
+                  const latestSignal = latestSignalByCompany.get(company.id);
+                  const signalAge = latestSignal ? formatDashboardSignalAge(latestSignal.signal_date, todayISO) : null;
+                  return (
+                    <Card key={company.id} variant="glass" className="p-4 sm:p-5">
+                      <div className="grid gap-4 lg:grid-cols-[1.1fr_1.4fr_1.2fr_auto] lg:items-center">
+                        <div>
+                          <p className="text-[15px] font-semibold text-white">{company.name}</p>
+                          <p className="mt-0.5 text-[12px] text-slate-400">{sectorByCompanyId.get(company.id) ?? "Sector not set"}</p>
+                        </div>
+                        <div>
+                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-400">Latest signal</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-slate-200">
+                            {latestSignal ? `${latestSignal.signal_summary} - ${signalAge}` : "No fresh signal this week."}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-400">Who to know</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-slate-200">
+                            {targetRoles.length > 0 ? targetRoles.join(", ") : "Add target role titles in your profile."}
+                          </p>
+                        </div>
+                        <Link href={`/dashboard/companies/${company.id}/prep`} className="inline-flex min-h-[44px] items-center justify-center rounded border border-orange-300/30 px-4 text-[13px] font-semibold text-orange-200 hover:border-orange-200 hover:text-white">
+                          Get brief
+                        </Link>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          <section aria-labelledby="week-heading" className="mb-10">
+            <Card variant="glass" className="p-4 sm:p-5">
+              <div className="mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">This week</p>
+                <h2 id="week-heading" className="mt-1 text-[20px] font-bold text-white">Quiet operating strip.</h2>
+                <p className="mt-1 text-[12px] text-slate-400">Only the weekly numbers that change action.</p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <Link href="/dashboard/calendar" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
+                  <span className="block text-[22px] font-bold text-white">{overdueCount}</span>
+                  <span className="text-[12px] text-slate-300">follow-ups due</span>
+                </Link>
+                <Link href="/dashboard/signals" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
+                  <span className="block text-[22px] font-bold text-white">{signalCount}</span>
+                  <span className="text-[12px] text-slate-300">new signals this week</span>
+                </Link>
+                <Link href="/dashboard/profile#section-briefing" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
+                  <span className="block text-[14px] font-bold text-white">{nextBriefingLabel}</span>
+                  <span className="text-[12px] text-slate-300">briefing time</span>
+                </Link>
+              </div>
+            </Card>
+          </section>
+        </main>
+        <HelpQuickButton source="dashboard" href="/dashboard/help#how-this-works" />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
       {isFirstRunDashboard && (
@@ -1138,17 +1460,19 @@ export default async function DashboardPage({
         />
 
         {showWeekOneBanner && (
-          <div className="mb-6 rounded border border-orange-300/30 bg-orange-500/10 px-5 py-3 text-[13px] text-slate-100">
-            <span className="font-semibold text-orange-200">
-              Day {(daysSinceOnboard ?? 0) + 1} of your first week.
-            </span>{" "}
-            Next briefing: tomorrow at {weekOneBriefingTime}. Next career-page
-            scan: {weekOneNextScanDay}. Today&apos;s action:{" "}
-            <a href="#to-do-now" className="font-semibold underline">
-              one step in To do now
-            </a>
-            .
-          </div>
+          <Alert variant="warning" className="mb-6 px-5 py-3">
+            <AlertDescription className="text-[13px]">
+              <span className="font-semibold">
+                Day {(daysSinceOnboard ?? 0) + 1} of your first week.
+              </span>{" "}
+              Next briefing: tomorrow at {weekOneBriefingTime}. Next career-page
+              scan: {weekOneNextScanDay}. Today&apos;s action:{" "}
+              <a href="#to-do-now" className="font-semibold underline">
+                one step in To do now
+              </a>
+              .
+            </AlertDescription>
+          </Alert>
         )}
 
         <DashboardCampaignFoundationSection
@@ -1180,7 +1504,10 @@ export default async function DashboardPage({
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] gap-8 items-start mb-8">
-          <aside className="hidden lg:block rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md lg:sticky lg:top-24">
+          <Card
+            variant="glass"
+            className="hidden lg:block p-5 lg:sticky lg:top-24"
+          >
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-3">
               On this page
             </p>
@@ -1204,12 +1531,13 @@ export default async function DashboardPage({
                 Briefs
               </a>
             </nav>
-          </aside>
+          </Card>
 
           <div className="space-y-5">
-            <section
+            <Card
               id="to-do-now"
-              className="scroll-mt-24 rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
+              variant="glass"
+              className="scroll-mt-24 p-5 sm:p-6"
             >
               <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-1">
                 To do now
@@ -1221,12 +1549,13 @@ export default async function DashboardPage({
               <p className="text-[12px] text-slate-400 mt-1">
                 {operatingStateLabel}
               </p>
-            </section>
+            </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              <section
+              <Card
                 id="companies-panel"
-                className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
+                variant="glass"
+                className="p-5"
               >
                 <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
                   Companies
@@ -1255,11 +1584,12 @@ export default async function DashboardPage({
                 >
                   Signals
                 </Link>
-              </section>
+              </Card>
 
-              <section
+              <Card
                 id="relationships-panel"
-                className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
+                variant="glass"
+                className="p-5"
               >
                 <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
                   Relationships
@@ -1287,11 +1617,12 @@ export default async function DashboardPage({
                 >
                   Contacts
                 </Link>
-              </section>
+              </Card>
 
-              <section
+              <Card
                 id="week-tasks-panel"
-                className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md"
+                variant="glass"
+                className="p-5"
               >
                 <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
                   Follow-ups overdue
@@ -1326,19 +1657,18 @@ export default async function DashboardPage({
                         );
                         const cleanAction = stripStaleRelativeTime(item.action);
                         return (
-                          <li
-                            key={item.id}
-                            className="rounded border border-white/10 bg-white/5 px-3 py-2"
-                          >
-                            <p className="text-[12px] font-semibold text-white">
-                              {cleanAction || item.action}
-                            </p>
-                            <p className="text-[11px] text-slate-400 mt-0.5">
-                              {item.companies?.name ?? "General"} ·{" "}
-                              {daysOverdue > 0
-                                ? `Due ${dueLabel}`
-                                : "Due today"}
-                            </p>
+                          <li key={item.id}>
+                            <Card variant="glass" className="px-3 py-2">
+                              <p className="text-[12px] font-semibold text-white">
+                                {cleanAction || item.action}
+                              </p>
+                              <p className="text-[11px] text-slate-400 mt-0.5">
+                                {item.companies?.name ?? "General"} ·{" "}
+                                {daysOverdue > 0
+                                  ? `Due ${dueLabel}`
+                                  : "Due today"}
+                              </p>
+                            </Card>
                           </li>
                         );
                       })}
@@ -1354,7 +1684,7 @@ export default async function DashboardPage({
                 >
                   Calendar
                 </Link>
-              </section>
+              </Card>
             </div>
           </div>
         </div>
@@ -1390,21 +1720,22 @@ export default async function DashboardPage({
           />
 
           {rolesFormingCard && (
-            <div className="mt-5 rounded border border-white/10 bg-white/5 px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-[13px] text-slate-200 min-w-0">
-                <span className="font-semibold text-orange-200/90">
-                  Roles forming:
-                </span>{" "}
+            <Alert
+              variant="info"
+              className="mt-5 flex flex-wrap items-center justify-between gap-2 px-4 py-3"
+            >
+              <AlertDescription className="min-w-0 text-[13px]">
+                <span className="font-semibold">Roles forming:</span>{" "}
                 {rolesFormingHeadline ??
                   "New leverage may be opening in your tracked pipeline."}
-              </p>
+              </AlertDescription>
               <Link
                 href={rolesFormingCard.href}
                 className="text-[12px] font-semibold text-orange-300 hover:text-orange-200 shrink-0"
               >
                 Signals
               </Link>
-            </div>
+            </Alert>
           )}
 
           <div className="mt-4">
@@ -1413,7 +1744,7 @@ export default async function DashboardPage({
               title="Pipeline health and decision timeline"
               defaultOpen={focus === "health"}
             >
-              <section className="mb-6 rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md sm:p-5">
+              <Card variant="glass" className="mb-6 p-4 sm:p-5">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <h2 className="text-[13px] font-semibold text-orange-200/90">
@@ -1437,54 +1768,53 @@ export default async function DashboardPage({
                     )}
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center w-full sm:w-auto">
-                    <div className="rounded border border-white/15 bg-white/5 px-3 py-2">
+                    <Card variant="glass" className="px-3 py-2">
                       <p className="text-[13px] text-slate-300 font-semibold">
                         Cadence
                       </p>
                       <p className="text-[16px] font-bold text-white">
                         {cadenceScore}
                       </p>
-                    </div>
-                    <div className="rounded border border-white/15 bg-white/5 px-3 py-2">
+                    </Card>
+                    <Card variant="glass" className="px-3 py-2">
                       <p className="text-[13px] text-slate-300 font-semibold">
                         Follow-through
                       </p>
                       <p className="text-[16px] font-bold text-white">
                         {followThroughScore}
                       </p>
-                    </div>
-                    <div className="rounded border border-white/15 bg-white/5 px-3 py-2">
+                    </Card>
+                    <Card variant="glass" className="px-3 py-2">
                       <p className="text-[13px] text-slate-300 font-semibold">
                         Conversion
                       </p>
                       <p className="text-[16px] font-bold text-white">
                         {conversionScore}
                       </p>
-                    </div>
+                    </Card>
                   </div>
                 </div>
 
                 {topStalledCampaigns.length > 0 && (
-                  <div className="mt-4 rounded-lg border border-amber-300/40 bg-amber-500/10 p-3">
-                    <p className="text-[13px] font-semibold text-amber-200 mb-2">
+                  <Alert variant="warning" className="mt-4 p-3">
+                    <AlertTitle className="mb-2 text-[13px]">
                       Stalled alerts
-                    </p>
-                    <ul className="space-y-1.5">
-                      {topStalledCampaigns.map((item) => (
-                        <li
-                          key={item.id}
-                          className="text-[13px] text-amber-100"
-                        >
-                          <span className="font-semibold">{item.name}</span>{" "}
-                          {item.updated_at
-                            ? `has had no stage updates since ${new Date(item.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}.`
-                            : "has had no recent stage updates."}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    </AlertTitle>
+                    <AlertDescription>
+                      <ul className="space-y-1.5 text-[13px]">
+                        {topStalledCampaigns.map((item) => (
+                          <li key={item.id}>
+                            <span className="font-semibold">{item.name}</span>{" "}
+                            {item.updated_at
+                              ? `has had no stage updates since ${new Date(item.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}.`
+                              : "has had no recent stage updates."}
+                          </li>
+                        ))}
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
                 )}
-              </section>
+              </Card>
 
               <DashboardDecisionTimelineSection
                 roleLensLabel={roleLensLabel}
@@ -1514,7 +1844,7 @@ export default async function DashboardPage({
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
             Relationships
           </h2>
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card variant="glass" className="p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-[13px] text-slate-200">
                 {contactCount} active contact{contactCount === 1 ? "" : "s"}{" "}
@@ -1534,7 +1864,7 @@ export default async function DashboardPage({
                 signal and you know someone there, the opening appears here.
               </p>
             )}
-          </div>
+          </Card>
           {warmPaths.length > 0 && (
             <div className="mt-5">
               <DashboardDisclosureSection
@@ -1592,7 +1922,10 @@ export default async function DashboardPage({
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
             Plan
           </h2>
-          <div className="mb-5 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 sm:px-6 flex flex-wrap items-center justify-between gap-2 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card
+            variant="glass"
+            className="mb-5 flex flex-wrap items-center justify-between gap-2 px-5 py-4 sm:px-6"
+          >
             <p className="text-[13px] text-slate-200">
               <span className="font-semibold text-white">Weekly plan.</span>{" "}
               Choose one relationships move, one opportunities move, and one
@@ -1604,7 +1937,7 @@ export default async function DashboardPage({
             >
               Open weekly plan →
             </Link>
-          </div>
+          </Card>
           <DashboardDisclosureSection
             id="advanced-modules"
             title="Weekly performance and advanced modules"
@@ -1650,27 +1983,30 @@ export default async function DashboardPage({
           <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
             Briefs
           </h2>
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card variant="glass" className="p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div className="flex flex-wrap gap-2">
-                <Link
-                  href="/dashboard/briefing"
-                  className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10"
+                <Button
+                  variant="outline"
+                  size="lg"
+                  render={<Link href="/dashboard/briefing" />}
                 >
                   Briefing
-                </Link>
-                <Link
-                  href="/dashboard/strategy"
-                  className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10"
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  render={<Link href="/dashboard/strategy" />}
                 >
                   Strategy brief
-                </Link>
-                <Link
-                  href="/dashboard/signals"
-                  className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10"
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  render={<Link href="/dashboard/signals" />}
                 >
                   Signals
-                </Link>
+                </Button>
               </div>
               <p className="text-[12px] text-slate-400">
                 {signalCount > 0
@@ -1692,7 +2028,7 @@ export default async function DashboardPage({
                 next market move worth acting on.
               </p>
             )}
-          </div>
+          </Card>
         </section>
       </main>
       <HelpQuickButton source="dashboard" />

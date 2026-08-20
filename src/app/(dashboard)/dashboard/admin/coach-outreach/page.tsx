@@ -3,6 +3,10 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 export const metadata: Metadata = {
   title: 'Coach Outreach - Admin',
@@ -145,7 +149,7 @@ export default async function CoachOutreachPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 {/* Overview */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Channel Overview</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[13px] text-slate-600 leading-relaxed">
             <div>
@@ -161,10 +165,10 @@ export default async function CoachOutreachPage() {
               <p>Target: 15-20% response rate. High NPS potential because coaches already know when executives are in motion.</p>
             </div>
           </div>
-        </section>
+        </Card>
 
         {/* Sales Navigator Filters */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Sales Navigator Search Filters</h2>
           <p className="text-[13px] text-slate-600">Use these exact filters to build your prospect list:</p>
           {filters.map((filterSet, i) => (
@@ -180,10 +184,10 @@ export default async function CoachOutreachPage() {
               </ul>
             </div>
           ))}
-        </section>
+        </Card>
 
         {/* Outreach Steps */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">6-Step Outreach Process</h2>
           <p className="text-[13px] text-slate-600">Execute these steps in order. Track everything in a spreadsheet (see template below).</p>
           <div className="space-y-4 pt-4">
@@ -194,36 +198,36 @@ export default async function CoachOutreachPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
 
         {/* Follow-Up Sequence */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Follow-Up Sequence & Decision Tree</h2>
           <p className="text-[13px] text-slate-600">Use this sequence to manage responses and non-responses:</p>
-          <div className="overflow-x-auto mt-4">
-            <table className="w-full text-[12px] text-left">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-4 py-2.5 font-semibold text-slate-900">Timeline</th>
-                  <th className="px-4 py-2.5 font-semibold text-slate-900">Event</th>
-                  <th className="px-4 py-2.5 font-semibold text-slate-900">Your Next Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
+          <div className="mt-4">
+            <Table className="text-[12px] text-left">
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-900">Timeline</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-900">Event</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-slate-900">Your Next Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {followUpSequence.map((seq, i) => (
-                  <tr key={i} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 text-slate-600 font-mono text-[11px]">Day {seq.day}</td>
-                    <td className="px-4 py-3 text-slate-700">{seq.action}</td>
-                    <td className="px-4 py-3 text-slate-700">{seq.condition}</td>
-                  </tr>
+                  <TableRow key={i}>
+                    <TableCell className="px-4 py-3 text-slate-600 font-mono text-[11px] whitespace-normal">Day {seq.day}</TableCell>
+                    <TableCell className="px-4 py-3 text-slate-700 whitespace-normal">{seq.action}</TableCell>
+                    <TableCell className="px-4 py-3 text-slate-700 whitespace-normal">{seq.condition}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
-        </section>
+        </Card>
 
         {/* Message Templates */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-6">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Message Templates</h2>
           <p className="text-[13px] text-slate-600">
             Do not use these verbatim. Personalize each message with details from their profile, recent posts, or conference talks. Generic templates get lower response rates.
@@ -235,89 +239,91 @@ export default async function CoachOutreachPage() {
                 <p className="text-[12px] text-slate-500 mb-4">{template.context}</p>
                 <ul className="space-y-4">
                   {template.body.map((line, j) => (
-                    <li key={j} className="bg-slate-50 border border-slate-200 rounded p-3.5 text-[13px] text-slate-700 leading-relaxed">
-                      "{line}"
+                    <li key={j}>
+                      <Card className="p-3.5 text-[13px] text-slate-700 leading-relaxed">
+                        "{line}"
+                      </Card>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-        </section>
+        </Card>
 
         {/* Tracking Setup */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Lead Tracking Spreadsheet</h2>
           <p className="text-[13px] text-slate-600 mb-4">
             Create a simple Google Sheet with these columns to track every prospect:
           </p>
           <div className="space-y-3 text-[13px] text-slate-600">
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">1</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">1</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Coach Name</p>
                 <p className="text-[12px]">First and last name</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">2</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">2</Badge>
               <div>
                 <p className="font-semibold text-slate-900">LinkedIn URL</p>
                 <p className="text-[12px]">Link to their profile</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">3</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">3</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Connection Request Sent</p>
                 <p className="text-[12px]">Date (YYYY-MM-DD)</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">4</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">4</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Connection Request Note</p>
                 <p className="text-[12px]">First 50 characters of what you said</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">5</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">5</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Status</p>
                 <p className="text-[12px]">Pending | Connected | Responded | Demo Scheduled | Demo Completed | Passed</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">6</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">6</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Response Date</p>
                 <p className="text-[12px]">When they responded (if applicable)</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">7</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">7</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Response Type</p>
                 <p className="text-[12px]">Positive | Neutral | Declined | Silent</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <span className="shrink-0 font-mono bg-slate-100 text-slate-900 w-6 h-6 rounded flex items-center justify-center font-bold">8</span>
+              <Badge className="shrink-0 font-mono w-6 h-6 rounded-full p-0 justify-center">8</Badge>
               <div>
                 <p className="font-semibold text-slate-900">Notes</p>
                 <p className="text-[12px]">What they said, follow-up needed, anything relevant</p>
               </div>
             </div>
           </div>
-          <div className="bg-orange-50 border border-orange-200 rounded p-4 mt-6">
-            <p className="text-[12px] text-orange-900 leading-relaxed">
+          <Alert className="mt-6">
+            <AlertDescription className="text-[12px] text-orange-900 leading-relaxed">
               <span className="font-semibold">Key insight:</span> Update the spreadsheet immediately after each touch. Do not rely on memory. This becomes your lead database and follow-up system.
-            </p>
-          </div>
-        </section>
+            </AlertDescription>
+          </Alert>
+        </Card>
 
         {/* Success Metrics */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Success Metrics</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
             <div className="border-t border-slate-100 pt-4">
@@ -336,18 +342,18 @@ export default async function CoachOutreachPage() {
               <p className="text-[12px] text-slate-500 mt-1">should sign up after seeing a demo</p>
             </div>
           </div>
-          <div className="bg-slate-50 border border-slate-200 rounded p-4 mt-6">
-            <p className="text-[12px] text-slate-700 leading-relaxed mb-3">
+          <Alert className="mt-6">
+            <AlertDescription className="text-[12px] text-slate-700 leading-relaxed">
               <span className="font-semibold">If your response rate is below 15%:</span> The messaging is likely the issue, not the effort level. Pause new outreach, review responses from the past 10 contacts, and refine your message before continuing. Generic language and product-focused openings perform poorly.
-            </p>
-            <p className="text-[12px] text-slate-700 leading-relaxed">
+            </AlertDescription>
+            <AlertDescription className="text-[12px] text-slate-700 leading-relaxed">
               <span className="font-semibold">Target outreach volume:</span> 10-15 new connection requests per day. This is sustainable, high-personalization outreach, not spray-and-pray.
-            </p>
-          </div>
-        </section>
+            </AlertDescription>
+          </Alert>
+        </Card>
 
         {/* Link Strategy */}
-        <section className="bg-orange-50 border border-orange-200 rounded-lg p-6 space-y-4">
+        <Card className="border border-orange-200 bg-orange-50 p-6">
           <h2 className="text-[18px] font-bold text-orange-900">Should You Include Links in Outreach Messages?</h2>
           <div className="space-y-4 text-[13px] text-orange-900">
             <div>
@@ -380,10 +386,10 @@ export default async function CoachOutreachPage() {
               </p>
             </div>
           </div>
-        </section>
+        </Card>
 
         {/* Resources */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <Card className="p-6">
           <h2 className="text-[18px] font-bold text-slate-900">Related Resources</h2>
           <div className="space-y-2">
             <Link href="/for-coaches" className="flex items-center gap-2 text-[13px] font-semibold text-orange-600 hover:text-orange-700 transition-colors">
@@ -403,7 +409,7 @@ export default async function CoachOutreachPage() {
               <span className="text-[10px]">→</span>
             </Link>
           </div>
-        </section>
+        </Card>
 
       </main>
     </div>

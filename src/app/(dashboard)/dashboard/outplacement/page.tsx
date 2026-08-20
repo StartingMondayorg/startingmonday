@@ -1,4 +1,6 @@
 ﻿import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default function OutplacementLanding() {
   return (
@@ -10,7 +12,7 @@ export default function OutplacementLanding() {
           </Link>
         </div>
       </header>
-      <main className="w-full max-w-2xl bg-white border border-slate-200 rounded-lg shadow p-8 flex flex-col items-center">
+      <Card className="w-full max-w-2xl p-8 flex flex-col items-center shadow">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Outplacement by Starting Monday</h1>
         <p className="text-lg text-slate-600 mb-6 text-center">
           Modern, executive-focused outplacement for high-performing leaders.<br />
@@ -23,9 +25,11 @@ export default function OutplacementLanding() {
             { href: '/dashboard/outplacement/enterprise', label: 'Enterprise view', desc: 'Sponsor-safe reporting and governance gates.' },
             { href: '/dashboard/outplacement/operator', label: 'Operator console', desc: 'Cohort health, exceptions, and interventions.' },
           ].map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-lg border border-slate-200 p-4 text-left hover:border-orange-300 transition-colors">
-              <p className="text-[14px] font-semibold text-slate-900">{item.label}</p>
-              <p className="text-[12px] text-slate-500 mt-1">{item.desc}</p>
+            <Link key={item.href} href={item.href}>
+              <Card className="p-4 text-left hover:border-orange-300 transition-colors">
+                <p className="text-[14px] font-semibold text-slate-900">{item.label}</p>
+                <p className="text-[12px] text-slate-500 mt-1">{item.desc}</p>
+              </Card>
             </Link>
           ))}
         </div>
@@ -36,9 +40,9 @@ export default function OutplacementLanding() {
           <li>Weekly progress tracking and reporting for HR/partners</li>
           <li>Seamless white-label experience for your brand</li>
         </ul>
-        <a href="mailto:outplacement@startingmonday.com" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded text-lg transition-colors mb-2">Request a Demo</a>
+        <Button render={<a href="mailto:outplacement@startingmonday.com" />} size="lg" className="text-lg px-8 py-3 h-auto mb-2">Request a Demo</Button>
         <p className="text-xs text-slate-400 mt-4">For partners: Custom landing and onboarding available. Contact us to white-label for your firm.</p>
-      </main>
+      </Card>
     </div>
   )
 }

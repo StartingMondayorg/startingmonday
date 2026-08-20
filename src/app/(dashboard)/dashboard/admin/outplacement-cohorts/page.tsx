@@ -2,6 +2,20 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 type Cohort = {
   cohortId: string
@@ -123,20 +137,20 @@ export default function OutplacementCohortsAdminPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/dashboard/admin" className="text-[13px] text-slate-700 hover:text-slate-900">← Admin</Link>
           <h1 className="text-[16px] font-bold text-slate-900">Outplacement Cohorts</h1>
-          <button
-            type="button"
-            onClick={() => void loadCohorts()}
-            className="text-[13px] font-semibold text-slate-700 border border-slate-300 rounded px-3 py-1.5"
-          >
+          <Button type="button" variant="outline" onClick={() => void loadCohorts()}>
             Refresh
-          </button>
+          </Button>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {message && <div className="text-[13px] text-slate-700 bg-white border border-slate-200 rounded p-3">{message}</div>}
+        {message && (
+          <Alert>
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        )}
 
-        <section className="bg-white border border-slate-200 rounded p-4 grid sm:grid-cols-5 gap-3">
+        <Card variant="default" className="p-4 grid sm:grid-cols-5 gap-3">
           <div>
             <p className="text-[13px] tracking-[0.08em] text-slate-400">Cohorts</p>
             <p className="text-[24px] font-bold text-slate-900">{data?.summary.cohort_count ?? 0}</p>
@@ -157,90 +171,97 @@ export default function OutplacementCohortsAdminPage() {
             <p className="text-[13px] tracking-[0.08em] text-slate-400">At risk</p>
             <p className="text-[24px] font-bold text-red-700">{data?.summary.at_risk ?? 0}</p>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded p-4">
+        <Card variant="default" className="p-4">
           <h2 className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-3">Create cohort</h2>
           <form className="grid sm:grid-cols-4 gap-3" onSubmit={createCohort}>
-            <input
-              value={cohortForm.partnerId}
-              onChange={(event) => setCohortForm((current) => ({ ...current, partnerId: event.target.value }))}
-              placeholder="partner_id"
-              className="border border-slate-200 rounded px-3 py-2 text-[13px]"
-            />
-            <input
-              value={cohortForm.partnerName}
-              onChange={(event) => setCohortForm((current) => ({ ...current, partnerName: event.target.value }))}
-              placeholder="partner_name"
-              className="border border-slate-200 rounded px-3 py-2 text-[13px]"
-            />
-            <input
-              value={cohortForm.cohortKey}
-              onChange={(event) => setCohortForm((current) => ({ ...current, cohortKey: event.target.value }))}
-              placeholder="YYYY-MM"
-              className="border border-slate-200 rounded px-3 py-2 text-[13px]"
-            />
-            <button
-              type="submit"
-              disabled={creating}
-              className="bg-slate-900 text-white text-[13px] font-semibold rounded px-3 py-2 disabled:opacity-40"
-            >
+            <div className="grid gap-1.5">
+              <Label htmlFor="cohort-partner-id">partner_id</Label>
+              <Input
+                id="cohort-partner-id"
+                value={cohortForm.partnerId}
+                onChange={(event) => setCohortForm((current) => ({ ...current, partnerId: event.target.value }))}
+                placeholder="partner_id"
+              />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="cohort-partner-name">partner_name</Label>
+              <Input
+                id="cohort-partner-name"
+                value={cohortForm.partnerName}
+                onChange={(event) => setCohortForm((current) => ({ ...current, partnerName: event.target.value }))}
+                placeholder="partner_name"
+              />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="cohort-key">YYYY-MM</Label>
+              <Input
+                id="cohort-key"
+                value={cohortForm.cohortKey}
+                onChange={(event) => setCohortForm((current) => ({ ...current, cohortKey: event.target.value }))}
+                placeholder="YYYY-MM"
+              />
+            </div>
+            <Button type="submit" disabled={creating} className="self-end">
               {creating ? 'Creating...' : 'Create cohort'}
-            </button>
+            </Button>
           </form>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded overflow-hidden">
+        <Card variant="default" className="overflow-hidden">
           {loading ? (
             <div className="px-4 py-8 text-[13px] text-slate-500 text-center">Loading cohorts...</div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
-                  <th className="px-4 py-2 text-left text-[13px] tracking-[0.08em] text-slate-500">Cohort</th>
-                  <th className="px-4 py-2 text-left text-[13px] tracking-[0.08em] text-slate-500">Program</th>
-                  <th className="px-4 py-2 text-center text-[13px] tracking-[0.08em] text-slate-500">Roster</th>
-                  <th className="px-4 py-2 text-center text-[13px] tracking-[0.08em] text-slate-500">Completion</th>
-                  <th className="px-4 py-2 text-center text-[13px] tracking-[0.08em] text-slate-500">Status</th>
-                  <th className="px-4 py-2 text-right text-[13px] tracking-[0.08em] text-slate-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="text-[13px] tracking-[0.08em] text-slate-500">Cohort</TableHead>
+                  <TableHead className="text-[13px] tracking-[0.08em] text-slate-500">Program</TableHead>
+                  <TableHead className="text-center text-[13px] tracking-[0.08em] text-slate-500">Roster</TableHead>
+                  <TableHead className="text-center text-[13px] tracking-[0.08em] text-slate-500">Completion</TableHead>
+                  <TableHead className="text-center text-[13px] tracking-[0.08em] text-slate-500">Status</TableHead>
+                  <TableHead className="text-right text-[13px] tracking-[0.08em] text-slate-500">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {(data?.cohorts ?? []).map((cohort) => (
-                  <tr key={cohort.cohortId} className="border-b border-slate-100">
-                    <td className="px-4 py-3">
+                  <TableRow key={cohort.cohortId}>
+                    <TableCell>
                       <p className="text-[13px] font-semibold text-slate-900">{cohort.partnerName}</p>
                       <p className="text-[13px] text-slate-500">{cohort.cohortKey}</p>
-                    </td>
-                    <td className="px-4 py-3 text-[13px] text-slate-700">{cohort.program}</td>
-                    <td className="px-4 py-3 text-center text-[13px] font-semibold text-slate-900 tabular-nums">{cohort.rosterSize}</td>
-                    <td className="px-4 py-3 text-center text-[13px] font-semibold text-slate-900 tabular-nums">{cohort.sponsorSnapshot.fields.milestone_completion_rate.toFixed(2)}%</td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`text-[13px] tracking-[0.08em] px-2 py-0.5 rounded border ${
-                        cohort.sponsorSnapshot.status === 'on_track'
-                          ? 'text-green-700 border-green-200 bg-green-50'
-                          : cohort.sponsorSnapshot.status === 'needs_attention'
-                            ? 'text-amber-700 border-amber-200 bg-amber-50'
-                            : 'text-red-700 border-red-200 bg-red-50'
-                      }`}>
+                    </TableCell>
+                    <TableCell className="text-[13px] text-slate-700">{cohort.program}</TableCell>
+                    <TableCell className="text-center text-[13px] font-semibold text-slate-900 tabular-nums">{cohort.rosterSize}</TableCell>
+                    <TableCell className="text-center text-[13px] font-semibold text-slate-900 tabular-nums">{cohort.sponsorSnapshot.fields.milestone_completion_rate.toFixed(2)}%</TableCell>
+                    <TableCell className="text-center">
+                      <Badge
+                        variant={
+                          cohort.sponsorSnapshot.status === 'on_track'
+                            ? 'success'
+                            : cohort.sponsorSnapshot.status === 'needs_attention'
+                              ? 'warning'
+                              : 'destructive'
+                        }
+                      >
                         {cohort.sponsorSnapshot.status.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <button
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
                         type="button"
+                        variant="link"
                         onClick={() => void markMilestone(cohort, 'prep_ready')}
-                        className="text-[13px] font-semibold text-slate-700 underline underline-offset-2"
                       >
                         Mark prep ready
-                      </button>
-                    </td>
-                  </tr>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
-        </section>
+        </Card>
       </main>
     </div>
   )

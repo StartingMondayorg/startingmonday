@@ -1,7 +1,8 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/components/LinkedinImportProgress'
+import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
+import { Button } from '@/components/ui/button'
 
 export default function ProfileLinkedinUpload() {
   const router = useRouter()
@@ -43,10 +44,8 @@ export default function ProfileLinkedinUpload() {
 
   return (
     <div className="mb-2">
-      <label className="inline-flex items-center gap-2 cursor-pointer">
-        <span className="text-[12px] text-slate-500 border border-slate-200 rounded px-3 py-1.5 hover:border-slate-400 transition-colors">
-          {status === 'uploading' ? 'Extracting…' : 'Upload LinkedIn PDF'}
-        </span>
+      <Button variant="outline" render={<label className="cursor-pointer" />}>
+        {status === 'uploading' ? 'Extracting…' : 'Upload LinkedIn PDF'}
         <input
           ref={inputRef}
           type="file"
@@ -55,7 +54,7 @@ export default function ProfileLinkedinUpload() {
           disabled={status === 'uploading'}
           onChange={handleChange}
         />
-      </label>
+      </Button>
       {progress.status !== 'idle' && (
         <div className="mt-2 max-w-md">
           <LinkedinImportProgress

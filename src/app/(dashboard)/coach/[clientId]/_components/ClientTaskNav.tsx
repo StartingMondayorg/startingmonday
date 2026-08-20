@@ -1,0 +1,45 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
+const COACH_TASKS = [
+  { href: 'interview', label: 'Interview', id: 'interview' },
+  { href: 'companies', label: 'Companies', id: 'companies' },
+  { href: 'meetings', label: 'Meetings', id: 'meetings' },
+  { href: 'communications', label: 'Communications', id: 'communications' },
+]
+
+export function ClientTaskNav({ clientId }: { clientId: string }) {
+  const pathname = usePathname()
+
+  return (
+    <nav className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/95 backdrop-blur-sm">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+          {COACH_TASKS.map((task) => {
+            const href = `/coach/${clientId}/${task.href}`
+            const isActive = pathname.startsWith(href)
+            return (
+              <Button
+                key={task.id}
+                variant="ghost"
+                render={<Link href={href} />}
+                className={cn(
+                  'h-auto flex-shrink-0 rounded-none border-b-2 px-4 py-3 text-[13px] font-medium whitespace-nowrap hover:bg-transparent',
+                  isActive
+                    ? 'border-orange-400 text-orange-300 hover:text-orange-300'
+                    : 'border-transparent text-slate-400 hover:text-slate-300'
+                )}
+              >
+                {task.label}
+              </Button>
+            )
+          })}
+        </div>
+      </div>
+    </nav>
+  )
+}

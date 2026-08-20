@@ -1,12 +1,20 @@
 ﻿import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
-import { signalLabel, SIGNAL_COLORS } from '@/lib/intelligence'
-import { FollowUpItem } from '@/components/FollowUpItem'
-import { ContactStatusStepper } from '@/components/ContactStatusStepper'
+import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
+import { signalLabel, SIGNAL_COLORS } from '@/lib/intelligence/intelligence'
+import { FollowUpItem } from '@/app/(dashboard)/dashboard/_components/FollowUpItem'
+import { ContactStatusStepper } from '@/app/(dashboard)/dashboard/_components/ContactStatusStepper'
 import { markContactSentForm, scheduleMeetingFollowUp } from '../actions'
 import { addContactFollowUp, logOutreach } from './actions'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const CHANNEL: Record<string, { label: string; cls: string }> = {
   linkedin:  { label: 'LinkedIn',  cls: 'bg-blue-500/15 text-blue-200' },
@@ -163,12 +171,14 @@ export default async function ContactDetailPage({
           ]}
         />
         {/* Contact header */}
-        <section className="bg-white/5 border border-white/15 rounded-lg p-6 mb-5">
+        <Card variant="glass" className="p-6 mb-5">
           <div className="flex items-start gap-4 mb-4">
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white text-[16px] font-bold shrink-0">
-                {contact.name[0].toUpperCase()}
-              </div>
+              <Avatar size="lg" className="w-12 h-12 bg-white/10 border border-white/15 shrink-0">
+                <AvatarFallback className="bg-transparent text-white text-[16px] font-bold">
+                  {contact.name[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
               <div className="min-w-0">
                 <h1 className="text-[22px] font-bold text-white leading-tight truncate">{contact.name}</h1>
                 {(contact.title || companyName) && (
@@ -180,16 +190,17 @@ export default async function ContactDetailPage({
             </div>
             <div className="flex flex-col items-end gap-2 shrink-0">
               {ch && (
-                <span className={`text-[13px] font-bold tracking-[0.06em] uppercase px-2.5 py-1 rounded-full ${ch.cls}`}>
+                <Badge className={`h-auto text-[13px] font-bold tracking-[0.06em] uppercase px-2.5 py-1 ${ch.cls}`}>
                   {ch.label}
-                </span>
+                </Badge>
               )}
-              <Link
-                href={`/dashboard/contacts/${id}/edit`}
-                className="text-[13px] font-semibold text-slate-400 hover:text-white border border-white/15 hover:border-white/40 rounded px-3 py-1.5 transition-colors min-h-[32px] flex items-center"
+              <Button
+                variant="outline"
+                className="text-[13px] font-semibold text-slate-400 hover:text-white border-white/15 hover:border-white/40 px-3 py-1.5"
+                render={<Link href={`/dashboard/contacts/${id}/edit`} />}
               >
                 Edit
-              </Link>
+              </Button>
             </div>
           </div>
 
@@ -217,9 +228,12 @@ export default async function ContactDetailPage({
               <span className="text-slate-400">Never contacted</span>
             )}
             {isRecruiterContact && (
-              <span className={`text-[13px] font-bold px-2 py-0.5 rounded-full ${warmth === 'warm' ? 'bg-emerald-500/15 text-emerald-200' : 'bg-white/10 text-slate-400'}`}>
+              <Badge
+                variant={warmth === 'warm' ? 'success' : 'secondary'}
+                className={`h-auto text-[13px] font-bold px-2 py-0.5 ${warmth === 'warm' ? '' : 'bg-white/10 text-slate-400'}`}
+              >
                 {warmth === 'warm' ? 'Warm' : 'Cold'}
-              </span>
+              </Badge>
             )}
           </div>
 
@@ -248,43 +262,44 @@ export default async function ContactDetailPage({
 
           {/* Action buttons */}
           <div className="flex items-center gap-3 flex-wrap">
-            <Link
-              href={`/dashboard/contacts/${id}/outreach`}
-              className="bg-orange-500 hover:bg-orange-400 text-slate-950 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors"
+            <Button
+              className="text-[13px] font-semibold px-5 py-2.5"
+              render={<Link href={`/dashboard/contacts/${id}/outreach`} />}
             >
               Draft outreach
-            </Link>
+            </Button>
             <form action={markContactSentForm.bind(null, id, contact.name)}>
-              <button
+              <Button
                 type="submit"
-                className="border border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer bg-white/5"
+                variant="outline"
+                className="border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 bg-white/5"
               >
                 Mark contacted
-              </button>
+              </Button>
             </form>
             <form action={scheduleMeetingFollowUp.bind(null, id, contact.name)}>
-              <button
+              <Button
                 type="submit"
-                className="border border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors cursor-pointer bg-white/5"
+                variant="outline"
+                className="border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 bg-white/5"
               >
                 Schedule meeting
-              </button>
+              </Button>
             </form>
             {contact.linkedin_url && (
-              <a
-                href={contact.linkedin_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 rounded transition-colors"
+              <Button
+                variant="outline"
+                className="border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5"
+                render={<a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer" />}
               >
                 View LinkedIn
-              </a>
+              </Button>
             )}
           </div>
-        </section>
+        </Card>
 
         {linkedCompany && (
-          <section className="bg-white/5 border border-white/15 rounded-lg p-5 mb-5">
+          <Card variant="glass" className="p-5 mb-5">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Linked company</h2>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
@@ -301,56 +316,60 @@ export default async function ContactDetailPage({
                 </p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <Link
-                  href={`/dashboard/companies/${linkedCompany.id}`}
-                  className="text-[13px] font-semibold text-slate-200 border border-white/15 hover:border-white/40 px-3 py-1.5 rounded transition-colors"
+                <Button
+                  variant="outline"
+                  className="text-[13px] font-semibold text-slate-200 border-white/15 hover:border-white/40 px-3 py-1.5"
+                  render={<Link href={`/dashboard/companies/${linkedCompany.id}`} />}
                 >
                   Open company
-                </Link>
-                <Link
-                  href={`/dashboard/companies/${linkedCompany.id}/prep`}
-                  className="text-[13px] font-semibold bg-orange-500 hover:bg-orange-400 text-slate-950 px-3 py-1.5 rounded transition-colors"
+                </Button>
+                <Button
+                  className="text-[13px] font-semibold px-3 py-1.5"
+                  render={<Link href={`/dashboard/companies/${linkedCompany.id}/prep`} />}
                 >
                   Prep
-                </Link>
+                </Button>
               </div>
             </div>
-          </section>
+          </Card>
         )}
 
         {/* Mark contacted confirmation */}
         {sent === '1' && (
-          <div className="bg-emerald-500/10 border border-emerald-300/30 rounded-lg px-5 py-3 mb-5 text-[13px] text-emerald-200 font-medium">
-            Marked as contacted. Follow-up scheduled for next week.
-          </div>
+          <Alert variant="success" className="px-5 py-3 mb-5">
+            <AlertDescription className="text-[13px] text-emerald-200 font-medium">
+              Marked as contacted. Follow-up scheduled for next week.
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Log outreach confirmation */}
         {logged === '1' && (
-          <div className="bg-emerald-500/10 border border-emerald-300/30 rounded-lg px-5 py-3 mb-5 text-[13px] text-emerald-200 font-medium">
-            Outreach logged.
-          </div>
+          <Alert variant="success" className="px-5 py-3 mb-5">
+            <AlertDescription className="text-[13px] text-emerald-200 font-medium">
+              Outreach logged.
+            </AlertDescription>
+          </Alert>
         )}
 
         {meeting === '1' && (
-          <div className="bg-emerald-500/10 border border-emerald-300/30 rounded-lg px-5 py-3 mb-5 text-[13px] text-emerald-200 font-medium">
-            Meeting follow-up scheduled.
-          </div>
+          <Alert variant="success" className="px-5 py-3 mb-5">
+            <AlertDescription className="text-[13px] text-emerald-200 font-medium">
+              Meeting follow-up scheduled.
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Warm path alert */}
         {mostRecentSignal && (
-          <section className="bg-amber-500/10 border border-amber-300/30 rounded-lg px-5 py-4 mb-5">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-amber-200 mb-2">
+          <Alert variant="warning" className="px-5 py-4 mb-5">
+            <AlertTitle className="text-[13px] font-bold tracking-[0.12em] uppercase text-amber-200 mb-2">
               Timing signal at {companyName}
-            </h2>
+            </AlertTitle>
             <div className="flex items-start gap-3">
-              <span className={[
-                'shrink-0 text-[13px] font-bold tracking-[0.06em] uppercase px-2.5 py-1 rounded-full mt-0.5',
-                normalizeSignalClass(SIGNAL_COLORS[mostRecentSignal.signal_type] ?? 'bg-white/10 text-slate-300'),
-              ].join(' ')}>
+              <Badge className={`shrink-0 h-auto text-[13px] font-bold tracking-[0.06em] uppercase px-2.5 py-1 mt-0.5 ${normalizeSignalClass(SIGNAL_COLORS[mostRecentSignal.signal_type] ?? 'bg-white/10 text-slate-300')}`}>
                 {signalLabel(mostRecentSignal.signal_type)}
-              </span>
+              </Badge>
               <div>
                 <p className="text-[14px] text-slate-200 leading-relaxed">{mostRecentSignal.signal_summary}</p>
                 <p className="text-[13px] text-amber-300 mt-1 font-medium">
@@ -364,13 +383,13 @@ export default async function ContactDetailPage({
             >
               Draft a message using this signal
             </Link>
-          </section>
+          </Alert>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
           {/* Follow-ups */}
-          <section className="bg-white/5 border border-white/15 rounded-lg overflow-hidden">
+          <Card variant="glass" className="gap-0 p-0 overflow-hidden">
             <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Follow-ups</h2>
               {pendingFollowUps.length > 0 && (
@@ -403,9 +422,9 @@ export default async function ContactDetailPage({
               <div className="divide-y divide-white/5 border-t border-white/10">
                 {doneFollowUps.slice(0, 3).map(fu => (
                   <div key={fu.id} className="px-5 py-3 flex items-center gap-3 opacity-60">
-                    <span className="text-[13px] font-bold tracking-[0.06em] uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 shrink-0">
+                    <Badge variant="success" className="h-auto text-[13px] font-bold tracking-[0.06em] uppercase px-2 py-0.5 shrink-0">
                       Done
-                    </span>
+                    </Badge>
                     <p className="text-[13px] text-slate-400 truncate">{fu.action}</p>
                   </div>
                 ))}
@@ -422,27 +441,27 @@ export default async function ContactDetailPage({
             <div className="border-t border-white/10 px-5 py-4">
               <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2.5">Add follow-up</p>
               <form action={addContactFollowUp.bind(null, id)} className="flex flex-col gap-2">
-                <input
+                <Input
                   name="action"
                   required
                   placeholder="Send follow-up email"
-                  className="w-full border border-white/15 bg-slate-950/70 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40"
+                  className="w-full bg-slate-950/70 text-[13px] text-slate-100"
                 />
                 <div className="flex items-center gap-2">
-                  <input
+                  <Input
                     name="due_date"
                     type="date"
                     required
                     aria-label="Due date"
                     defaultValue={tomorrowISO}
-                    className="border border-white/15 bg-slate-950/70 rounded px-3 py-1.5 text-[13px] text-slate-200 focus:outline-none focus:border-white/40"
+                    className="w-auto bg-slate-950/70 text-[13px] text-slate-200"
                   />
-                  <button
+                  <Button
                     type="submit"
-                    className="ml-auto text-[13px] font-semibold text-slate-950 bg-orange-500 hover:bg-orange-400 rounded px-3 py-1.5 cursor-pointer border-0 transition-colors"
+                    className="ml-auto text-[13px] font-semibold px-3 py-1.5"
                   >
                     Add
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>
@@ -451,38 +470,37 @@ export default async function ContactDetailPage({
             <div className="border-t border-white/10 px-5 py-4">
               <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2.5">Log outreach sent</p>
               <form action={logOutreach.bind(null, id)} className="flex flex-col gap-2">
-                <select
-                  name="channel"
-                  required
-                  aria-label="Channel"
-                  className="border border-white/15 rounded px-3 py-2 text-[13px] text-slate-200 focus:outline-none focus:border-white/40 bg-slate-900"
-                >
-                  <option value="">Select channel</option>
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="email">Email</option>
-                  <option value="phone">Phone</option>
-                  <option value="other">Other</option>
-                </select>
-                <textarea
+                <Select name="channel" required>
+                  <SelectTrigger aria-label="Channel" className="border-white/15 text-slate-200 bg-slate-900">
+                    <SelectValue placeholder="Select channel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="linkedin">LinkedIn</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="phone">Phone</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Textarea
                   name="message_preview"
                   placeholder="Paste first lines of your message (optional, 200 chars max)"
                   maxLength={200}
                   rows={2}
-                  className="w-full border border-white/15 bg-slate-950/70 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 resize-none"
+                  className="w-full bg-slate-950/70 text-[13px] text-slate-100 resize-none"
                 />
-                <button
+                <Button
                   type="submit"
-                  className="self-end text-[13px] font-semibold text-slate-950 bg-orange-500 hover:bg-orange-400 rounded px-3 py-1.5 cursor-pointer border-0 transition-colors"
+                  className="self-end text-[13px] font-semibold px-3 py-1.5"
                 >
                   Log sent
-                </button>
+                </Button>
               </form>
             </div>
-          </section>
+          </Card>
 
           {/* Company signals */}
           {contact.company_id && (
-            <section className="bg-white/5 border border-white/15 rounded-lg overflow-hidden">
+            <Card variant="glass" className="gap-0 p-0 overflow-hidden">
               <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
                 <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
                   {companyName} signals
@@ -501,12 +519,9 @@ export default async function ContactDetailPage({
                   {companySignals.map(sig => (
                     <div key={sig.id} className="px-5 py-3">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={[
-                          'text-[13px] font-bold tracking-[0.06em] uppercase px-2 py-0.5 rounded-full',
-                          normalizeSignalClass(SIGNAL_COLORS[sig.signal_type] ?? 'bg-white/10 text-slate-300'),
-                        ].join(' ')}>
+                        <Badge className={`h-auto tracking-[0.06em] uppercase px-2 py-0.5 ${normalizeSignalClass(SIGNAL_COLORS[sig.signal_type] ?? 'bg-white/10 text-slate-300')}`}>
                           {signalLabel(sig.signal_type)}
-                        </span>
+                        </Badge>
                         <span className="text-[13px] text-slate-400">{fmtDate(sig.signal_date)}</span>
                       </div>
                       <p className="text-[13px] text-slate-200 leading-relaxed">{sig.signal_summary}</p>
@@ -518,14 +533,14 @@ export default async function ContactDetailPage({
                   No signals in the last 30 days.
                 </div>
               )}
-            </section>
+            </Card>
           )}
 
         </div>
 
         {/* Recent outreach drafts */}
         {recentBriefs && recentBriefs.length > 0 && (
-          <section className="bg-white/5 border border-white/15 rounded-lg overflow-hidden mt-5">
+          <Card variant="glass" className="gap-0 p-0 overflow-hidden mt-5">
             <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
               <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent drafts</h2>
               <Link href={`/dashboard/contacts/${id}/outreach`} className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">
@@ -540,7 +555,7 @@ export default async function ContactDetailPage({
                 </div>
               ))}
             </div>
-          </section>
+          </Card>
         )}
 
       </main>

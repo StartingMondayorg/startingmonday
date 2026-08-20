@@ -3,6 +3,11 @@
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type GuideSection = {
   id: string
@@ -290,7 +295,7 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
           <p className="text-[13px] text-slate-500 mt-1">Find features fast with two levels: section summaries first, then function-level items when you select a section.</p>
         </div>
 
-        <section className="sticky top-4 z-20 bg-slate-950 text-slate-100 border border-slate-800 rounded-xl p-4 mb-6 shadow-lg">
+        <Card className="sticky top-4 z-20 !bg-slate-950 !text-slate-100 p-4 mb-6 shadow-lg">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
               <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">You are here</p>
@@ -303,34 +308,43 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                 <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">Mini map</p>
                 <div className="space-y-2">
                   {activeSection.functions.map((entry) => (
-                    <button key={entry.functionKey} type="button" onClick={() => updateSelection(activeSection.section.id, entry.functionKey)} className={`w-full rounded-lg border px-3 py-2 text-left text-[12px] ${activeFunction?.functionKey === entry.functionKey ? 'border-orange-400 bg-orange-500/10 text-white' : 'border-slate-800 bg-slate-900 text-slate-200 hover:border-slate-700'}`}>
+                    <Button
+                      key={entry.functionKey}
+                      type="button"
+                      onClick={() => updateSelection(activeSection.section.id, entry.functionKey)}
+                      className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left text-[12px] ${activeFunction?.functionKey === entry.functionKey ? '!border-orange-400 !bg-orange-500/10 !text-white' : '!border-slate-800 !bg-slate-900 !text-slate-200 hover:!border-slate-700'}`}
+                    >
                       <p className="font-semibold">{entry.functionKey}</p>
                       <p className="mt-1 text-[11px] text-slate-300">Covers {entry.summary}.</p>
                       <p className="mt-1 text-[11px] text-slate-400">Why: this is the next drill-down when the section alone is too broad.</p>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
             ) : null}
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded p-4 mb-5">
-          <label htmlFor="guide-search" className="block text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Search all guide sections</label>
-          <input id="guide-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search features, onboarding steps, APIs, and articles..." className="w-full text-[14px] border border-slate-300 rounded px-3 py-2 bg-white text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-300" />
+        <Card className="p-4 mb-5">
+          <Label htmlFor="guide-search" className="block text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Search all guide sections</Label>
+          <Input id="guide-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search features, onboarding steps, APIs, and articles..." className="w-full text-[14px]" />
           <p className="text-[12px] text-slate-400 mt-2">Showing {filtered.length} of {sections.length} sections.</p>
-        </section>
+        </Card>
 
-        <div className="bg-slate-900 border border-slate-800 rounded p-4 sm:p-5 mb-6">
+        <Card className="!bg-slate-900 p-4 sm:p-5 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Career Guide Chat</p>
           <p className="text-[13px] text-slate-300 mb-3">Ask anything about features, setup, workflows, or articles. You will get an answer plus source links.</p>
           <div className="flex flex-col sm:flex-row gap-2">
-            <input id="guide-chat" type="text" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); void askGuideChat() } }} placeholder="Example: How do I get started and set up my profile?" className="w-full text-[14px] border border-slate-700 rounded px-3 py-2 bg-slate-950 text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-slate-500" />
-            <button type="button" onClick={() => { void askGuideChat() }} disabled={chatLoading || !question.trim()} className="sm:w-auto px-4 py-2 text-[13px] font-semibold rounded bg-orange-500 text-black hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed">
+            <Input id="guide-chat" type="text" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); void askGuideChat() } }} placeholder="Example: How do I get started and set up my profile?" className="w-full text-[14px] !border-slate-700 !bg-slate-950 !text-slate-100 placeholder:!text-slate-500" />
+            <Button type="button" onClick={() => { void askGuideChat() }} disabled={chatLoading || !question.trim()} className="sm:w-auto">
               {chatLoading ? 'Searching...' : 'Ask'}
-            </button>
+            </Button>
           </div>
-          {chatError ? <p className="text-[12px] text-rose-300 mt-3">{chatError}</p> : null}
+          {chatError ? (
+            <Alert variant="destructive" className="mt-3">
+              <AlertDescription>{chatError}</AlertDescription>
+            </Alert>
+          ) : null}
           {chatResult ? (
             <div className="mt-4 p-4 rounded border border-slate-700 bg-slate-950">
               <p className="text-[13px] text-slate-200 whitespace-pre-wrap">{chatResult.answer}</p>
@@ -354,9 +368,9 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                 <div className="mt-4 pt-3 border-t border-slate-800">
                   <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">Was this helpful?</p>
                   <div className="flex flex-wrap items-center gap-2">
-                    <button type="button" onClick={() => { void sendFeedback('helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="px-3 py-1.5 text-[12px] font-semibold rounded bg-emerald-500 text-black hover:bg-emerald-400 disabled:opacity-60">Helpful</button>
-                    <button type="button" onClick={() => { void sendFeedback('not_helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="px-3 py-1.5 text-[12px] font-semibold rounded bg-slate-700 text-slate-100 hover:bg-slate-600 disabled:opacity-60">Not helpful</button>
-                    <input type="text" value={feedbackNote} onChange={(event) => setFeedbackNote(event.target.value)} placeholder="Optional: what was missing?" className="min-w-[240px] flex-1 text-[12px] border border-slate-700 rounded px-2.5 py-1.5 bg-slate-900 text-slate-100 placeholder:text-slate-500" />
+                    <Button type="button" size="sm" onClick={() => { void sendFeedback('helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="!bg-emerald-500 !text-black hover:!bg-emerald-400">Helpful</Button>
+                    <Button type="button" size="sm" variant="secondary" onClick={() => { void sendFeedback('not_helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="!bg-slate-700 !text-slate-100 hover:!bg-slate-600">Not helpful</Button>
+                    <Input type="text" value={feedbackNote} onChange={(event) => setFeedbackNote(event.target.value)} placeholder="Optional: what was missing?" className="min-w-[240px] flex-1 text-[12px] !border-slate-700 !bg-slate-900 !text-slate-100 placeholder:!text-slate-500" />
                   </div>
                   {feedbackState === 'sent' ? <p className="text-[11px] text-emerald-300 mt-2">Thanks. Feedback captured.</p> : null}
                   {feedbackState === 'error' ? <p className="text-[11px] text-rose-300 mt-2">Could not save feedback right now.</p> : null}
@@ -364,72 +378,96 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
               ) : null}
             </div>
           ) : null}
-        </div>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded p-4 mb-6">
+        <Card className="p-4 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Audit shortcuts</p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <p className="text-[12px] font-semibold text-slate-900 mb-2">Most reviewed</p>
               <div className="space-y-2">
                 {mostReviewed.map((entry) => (
-                  <button key={`${entry.sectionId}-${entry.functionKey}`} type="button" onClick={() => updateSelection(entry.sectionId, entry.functionKey)} className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-left hover:border-slate-400">
+                  <Button
+                    key={`${entry.sectionId}-${entry.functionKey}`}
+                    type="button"
+                    variant="outline"
+                    onClick={() => updateSelection(entry.sectionId, entry.functionKey)}
+                    className="h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left !border-slate-300 !bg-slate-50 hover:!border-slate-400"
+                  >
                     <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
                     <p className="text-[11px] text-slate-600 mt-1">Covers {entry.summary}.</p>
                     <p className="text-[11px] text-slate-500 mt-1">Why: this is one of the highest-signal places to inspect first.</p>
-                    </button>
-                  ))}
+                  </Button>
+                ))}
                 </div>
             </div>
             <div>
               <p className="text-[12px] font-semibold text-slate-900 mb-2">Recently changed</p>
               <div className="space-y-2">
                 {recentlyChanged.map((entry) => (
-                  <button key={`${entry.sectionId}-${entry.functionKey}-recent`} type="button" onClick={() => updateSelection(entry.sectionId, entry.functionKey)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-left hover:border-slate-400">
+                  <Button
+                    key={`${entry.sectionId}-${entry.functionKey}-recent`}
+                    type="button"
+                    variant="outline"
+                    onClick={() => updateSelection(entry.sectionId, entry.functionKey)}
+                    className="h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left !border-slate-300 !bg-white hover:!border-slate-400"
+                  >
                     <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
                     <p className="text-[11px] text-slate-600 mt-1">Covers {entry.summary}.</p>
                     <p className="text-[11px] text-slate-500 mt-1">Why: updated {formatDate(entry.lastModifiedAt)}, so it is the freshest area to inspect.</p>
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
           </div>
-        </section>
+        </Card>
 
-        <section className="bg-white border border-slate-200 rounded p-4 mb-6">
+        <Card className="p-4 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Level 1: Sections</p>
           {sectionRollup.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {sectionRollup.map((entry) => (
-                <button key={entry.id} type="button" onClick={() => updateSelection(entry.id, sectionDetails.find((detail) => detail.section.id === entry.id)?.functions[0]?.functionKey ?? null)} className={`text-left rounded border px-3 py-2 ${activeSection?.section.id === entry.id ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}>
+                <Button
+                  key={entry.id}
+                  type="button"
+                  variant="outline"
+                  onClick={() => updateSelection(entry.id, sectionDetails.find((detail) => detail.section.id === entry.id)?.functions[0]?.functionKey ?? null)}
+                  className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded px-3 py-2 text-left ${activeSection?.section.id === entry.id ? '!border-orange-400 !bg-orange-50' : '!border-slate-200 hover:!border-slate-300 !bg-white'}`}
+                >
                   <p className="text-[12px] font-semibold text-slate-900">{entry.title}</p>
                   <p className="text-[12px] text-slate-500 mt-1">Covers {entry.sectionSummary}.</p>
                   <p className="text-[11px] text-slate-500 mt-1">Why: use this when you want the broad overview before drilling into functions.</p>
                   <p className="text-[11px] text-slate-500 mt-1">{entry.functionCount} functions · {entry.itemCount} items</p>
-                </button>
+                </Button>
               ))}
             </div>
           ) : <p className="text-[12px] text-slate-500">No sections match this search yet. Clear search to browse all guide sections.</p>}
-        </section>
+        </Card>
 
         {activeSection ? (
-          <section className="bg-white border border-slate-200 rounded p-4 mb-6">
+          <Card className="p-4 mb-6">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Level 2: Functions in {activeSection.section.title}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {activeSection.functions.map((entry) => (
-                <button key={entry.functionKey} type="button" onClick={() => updateSelection(activeSection.section.id, entry.functionKey)} className={`text-left rounded border px-3 py-2 ${activeFunction?.functionKey === entry.functionKey ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}>
+                <Button
+                  key={entry.functionKey}
+                  type="button"
+                  variant="outline"
+                  onClick={() => updateSelection(activeSection.section.id, entry.functionKey)}
+                  className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded px-3 py-2 text-left ${activeFunction?.functionKey === entry.functionKey ? '!border-orange-400 !bg-orange-50' : '!border-slate-200 hover:!border-slate-300 !bg-white'}`}
+                >
                   <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
                   <p className="text-[12px] text-slate-500 mt-1">Covers {entry.summary}.</p>
                   <p className="text-[11px] text-slate-500 mt-1">Why: this groups the related items you would usually review together.</p>
                   <p className="text-[11px] text-slate-500 mt-1">{entry.items.length} items{entry.lastModifiedAt ? ` · updated ${formatDate(entry.lastModifiedAt)}` : ''}</p>
-                </button>
+                </Button>
               ))}
             </div>
-          </section>
+          </Card>
         ) : null}
 
         {activeSection && activeFunction ? (
-          <section className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <h2 className="text-[18px] font-bold text-slate-900 mb-2">{activeSection.section.title}</h2>
             <p className="text-[13px] text-slate-600 mb-4">{activeFunction.functionKey} · {activeFunction.items.length} items</p>
             <div className="space-y-3">
@@ -444,12 +482,12 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                 </article>
               ))}
             </div>
-          </section>
+          </Card>
         ) : (
-          <div className="bg-white border border-slate-200 rounded p-5">
+          <Card className="p-5">
             <p className="text-[14px] font-semibold text-slate-900">No guide sections found for this search.</p>
             <p className="text-[13px] text-slate-600 mt-1">Try a broader keyword like onboarding, profile, companies, briefing, or outreach.</p>
-          </div>
+          </Card>
         )}
       </main>
     </div>

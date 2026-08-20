@@ -8,7 +8,7 @@ const GOOGLE_AUTH_BASE = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token'
 const GOOGLE_CALENDAR_API_BASE = 'https://www.googleapis.com/calendar/v3'
 const DEFAULT_CALENDAR_ID = 'primary'
-const POSTING_REMINDER_ICS_PATH = resolve(process.cwd(), 'startingmonday-posting-reminders.ics')
+const POSTING_REMINDER_ICS_PATH = resolve(process.cwd(), 'docs/operations/reminders/startingmonday-posting-reminders.ics')
 const GOOGLE_CALENDAR_SCOPES = 'https://www.googleapis.com/auth/calendar.events'
 
 export type GoogleCalendarIntegrationRow = {

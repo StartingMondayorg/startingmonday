@@ -7,6 +7,25 @@ import {
   suggestFirstPrinciples,
   type FirstPrinciple,
 } from '@/lib/executive-brief-knowledge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export type ExecutiveBriefHubData = {
   userName: string | null
@@ -639,27 +658,32 @@ export function ExecutiveBriefHub({
               : 'This page turns scattered prep into one focused workflow so you stop reworking briefs and missing follow-ups.'}
           </p>
 
-          <div className="mt-5 flex flex-wrap gap-3 items-center">
-            <button
-              type="button"
-              onClick={() => setShowHowToUse(current => !current)}
-              className="inline-flex min-h-[40px] items-center rounded border border-slate-500 bg-slate-800 px-3 py-2 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-300"
-            >
-              {showHowToUse ? 'Hide how to use' : 'How to use this page'}
-            </button>
-            <p className="text-[12px] text-slate-400">Outcome: stronger interview performance with less prep stress.</p>
-          </div>
-
-          {showHowToUse && (
-            <div className="mt-4 rounded border border-slate-700 bg-slate-950/60 p-4">
-              <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-orange-300 mb-2">How to use</p>
-              <ol className="space-y-1.5 text-[12px] text-slate-300 list-decimal pl-4">
-                <li>Pick a brief summary to open full content and align your thesis.</li>
-                <li>Use Interview Pressure Lab to practice one question at a time and capture improvements.</li>
-                <li>Use notes/transcript analysis to surface risks and actions before your next round.</li>
-              </ol>
+          <Collapsible open={showHowToUse} onOpenChange={setShowHowToUse}>
+            <div className="mt-5 flex flex-wrap gap-3 items-center">
+              <CollapsibleTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    className="border-slate-500 bg-slate-800 text-slate-200 hover:text-white hover:border-slate-300"
+                  />
+                }
+              >
+                {showHowToUse ? 'Hide how to use' : 'How to use this page'}
+              </CollapsibleTrigger>
+              <p className="text-[12px] text-slate-400">Outcome: stronger interview performance with less prep stress.</p>
             </div>
-          )}
+
+            <CollapsibleContent>
+              <div className="mt-4 rounded border border-slate-700 bg-slate-950/60 p-4">
+                <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-orange-300 mb-2">How to use</p>
+                <ol className="space-y-1.5 text-[12px] text-slate-300 list-decimal pl-4">
+                  <li>Pick a brief summary to open full content and align your thesis.</li>
+                  <li>Use Interview Pressure Lab to practice one question at a time and capture improvements.</li>
+                  <li>Use notes/transcript analysis to surface risks and actions before your next round.</li>
+                </ol>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
 
           <div className="mt-5 flex flex-wrap gap-2 text-[12px]">
             <Link href="/dashboard/briefing" className="rounded border border-slate-600 px-2.5 py-1.5 text-slate-300 hover:text-white hover:border-slate-400">Daily briefing</Link>

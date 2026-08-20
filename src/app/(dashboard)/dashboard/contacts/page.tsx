@@ -1,16 +1,35 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { addContact } from './actions'
-import { ContactsList, type ContactListItem } from '@/components/ContactsList'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
-import { summarizeRelationshipNetwork, CONTACT_TYPE_LABELS } from '@/lib/relationship-infrastructure'
+import { ContactsList, type ContactListItem } from '@/app/(dashboard)/dashboard/_components/ContactsList'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
+import { summarizeRelationshipNetwork, CONTACT_TYPE_LABELS } from '@/lib/outreach/relationship-infrastructure'
 import { RelationshipMatchPanel } from './relationship-match-panel'
 import { LinkedInImportManager } from './linkedin-import-manager'
 import { LogoutButton } from '../logout-button'
 import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const metadata = { title: 'Contacts' }
+
+// shadcn Select can't have an item with value "" — use this sentinel for the
+// "unset" option and strip it back to an empty string before calling the
+// addContact server action below.
+const NONE = '__none__'
+
+const selectTriggerCls = 'w-full border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/30 bg-slate-950/70'
 
 type UploadRow = {
   id: string
@@ -147,6 +166,14 @@ export default async function ContactsPage({
       label: `${upload.source_file_name ?? 'LinkedIn export'} · ${(upload.processed_count ?? upload.row_count ?? 0)} connections`,
     }))
 
+  async function addContactForm(formData: FormData) {
+    'use server'
+    for (const key of ['channel', 'contact_type', 'company_id']) {
+      if (formData.get(key) === NONE) formData.set(key, '')
+    }
+    await addContact(formData)
+  }
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
 
@@ -156,47 +183,50 @@ export default async function ContactsPage({
             <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
           </span>
           <div className="flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-slate-700 px-3 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
+            <Button
+              variant="outline"
+              className="min-h-[44px] border-slate-700 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
+              render={<Link href="/dashboard" />}
             >
               Dashboard
-            </Link>
+            </Button>
             <LogoutButton label="Sign out" />
           </div>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-5 sm:py-10">
-<div className="mb-8 rounded-2xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="mb-8 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Contacts</p>
           <h1 className="mt-1 text-[26px] font-bold text-white leading-tight">Relationship network</h1>
           <p className="text-[13px] text-slate-200 mt-1.5">
             Recruiters, hiring managers, and warm connections.
           </p>
-        </div>
+        </Card>
 
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card variant="glass" className="px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
             <p className="text-[13px] uppercase tracking-[0.12em] text-slate-400 mb-1">Network health</p>
             <p className="text-[24px] font-semibold text-white">{relationshipSummary.coverageScore}</p>
-          </div>
-          <div className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
             <p className="text-[13px] uppercase tracking-[0.12em] text-slate-400 mb-1">Covered types</p>
             <p className="text-[24px] font-semibold text-white">{relationshipSummary.coveredTypes}/{Object.keys(CONTACT_TYPE_LABELS).length}</p>
-          </div>
-          <div className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
             <p className="text-[13px] uppercase tracking-[0.12em] text-slate-400 mb-1">Gap</p>
             <p className="text-[14px] font-semibold text-slate-100 leading-snug">{relationshipSummary.coverageGapLabel}</p>
-          </div>
+          </Card>
         </div>
 
         {relationshipMatchingEnabled ? (
           <LinkedInImportManager sessions={importSessions} />
         ) : (
-          <div className="mb-6 rounded-2xl border border-amber-300/30 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-200">
-            Relationship matching and LinkedIn import are currently limited to enabled pilot access.
-          </div>
+          <Alert variant="warning" className="mb-6 px-4 py-3">
+            <AlertDescription className="text-[13px]">
+              Relationship matching and LinkedIn import are currently limited to enabled pilot access.
+            </AlertDescription>
+          </Alert>
         )}
 
         {relationshipMatchingEnabled && companyList.length > 0 && (
@@ -208,172 +238,173 @@ export default async function ContactsPage({
           <ContactsList contacts={contacts} isLeader={isExecutive} />
 
           {/* Add contact form */}
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+          <Card variant="glass" className="p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
             <div className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-4">
               Add contact
             </div>
 
             {saved && (
-              <div className="mb-4 px-3 py-2 bg-emerald-500/10 border border-emerald-300/30 rounded text-[13px] text-emerald-200">
-                Contact saved.
-              </div>
+              <Alert variant="success" className="mb-4 px-3 py-2">
+                <AlertDescription className="text-[13px]">Contact saved.</AlertDescription>
+              </Alert>
             )}
             {saveError && (
-              <div className="mb-4 px-3 py-2 bg-rose-500/10 border border-rose-300/30 rounded text-[13px] text-rose-200">
-                Could not save contact. Please try again.
-              </div>
+              <Alert variant="destructive" className="mb-4 px-3 py-2">
+                <AlertDescription className="text-[13px]">Could not save contact. Please try again.</AlertDescription>
+              </Alert>
             )}
 
-            <form action={addContact} className="flex flex-col gap-3">
+            <form action={addContactForm} className="flex flex-col gap-3">
 
               <div>
-                <label htmlFor="contact-name" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-name" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Name <span className="text-red-500">*</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   id="contact-name"
                   name="name"
                   type="text"
                   required
                   placeholder="Jane Smith"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-title" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-title" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Title
-                </label>
-                <input
+                </Label>
+                <Input
                   id="contact-title"
                   name="title"
                   type="text"
                   placeholder="VP of Engineering"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-firm" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-firm" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Firm
-                </label>
-                <input
+                </Label>
+                <Input
                   id="contact-firm"
                   name="firm"
                   type="text"
                   placeholder="Korn Ferry"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Channel
-                </label>
-                <select
-                  id="contact-channel"
-                  name="channel"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/30 bg-slate-950/70"
-                >
-                  <option value="">-</option>
-                  <option value="recruiter">Recruiter</option>
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="referral">Referral</option>
-                  <option value="cold">Cold</option>
-                  <option value="inbound">Inbound</option>
-                  <option value="event">Event</option>
-                </select>
+                </Label>
+                <Select name="channel" defaultValue={NONE}>
+                  <SelectTrigger id="contact-channel" className={selectTriggerCls}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE}>-</SelectItem>
+                    <SelectItem value="recruiter">Recruiter</SelectItem>
+                    <SelectItem value="linkedin">LinkedIn</SelectItem>
+                    <SelectItem value="referral">Referral</SelectItem>
+                    <SelectItem value="cold">Cold</SelectItem>
+                    <SelectItem value="inbound">Inbound</SelectItem>
+                    <SelectItem value="event">Event</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
-                <label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Relationship type
-                </label>
-                <select
-                  id="contact-type"
-                  name="contact_type"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/30 bg-slate-950/70"
-                >
-                  <option value="">-</option>
-                  <option value="recruiter">Recruiter</option>
-                  <option value="hiring_manager">Hiring Manager</option>
-                  <option value="peer">Peer</option>
-                  <option value="coach">Coach</option>
-                  <option value="board">Board</option>
-                </select>
+                </Label>
+                <Select name="contact_type" defaultValue={NONE}>
+                  <SelectTrigger id="contact-type" className={selectTriggerCls}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE}>-</SelectItem>
+                    <SelectItem value="recruiter">Recruiter</SelectItem>
+                    <SelectItem value="hiring_manager">Hiring Manager</SelectItem>
+                    <SelectItem value="peer">Peer</SelectItem>
+                    <SelectItem value="coach">Coach</SelectItem>
+                    <SelectItem value="board">Board</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {companyList.length > 0 && (
                 <div>
-                  <label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                  <Label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                     Company <span className="text-slate-300 font-normal">(optional)</span>
-                  </label>
-                  <select
-                    id="contact-company"
+                  </Label>
+                  <Select
                     name="company_id"
-                    defaultValue={companyList.some(co => co.id === preselectedCompanyId) ? preselectedCompanyId : ''}
-                    className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/30 bg-slate-950/70"
+                    defaultValue={companyList.some(co => co.id === preselectedCompanyId) ? preselectedCompanyId : NONE}
                   >
-                    <option value="">- No company -</option>
-                    {companyList.map(co => (
-                      <option key={co.id} value={co.id}>{co.name}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger id="contact-company" className={selectTriggerCls}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NONE}>- No company -</SelectItem>
+                      {companyList.map(co => (
+                        <SelectItem key={co.id} value={co.id}>{co.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 
               <div>
-                <label htmlFor="contact-email" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-email" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Email
-                </label>
-                <input
+                </Label>
+                <Input
                   id="contact-email"
                   name="email"
                   type="text"
                   placeholder="jane@company.com"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-linkedin" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-linkedin" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   LinkedIn URL
-                </label>
-                <input
+                </Label>
+                <Input
                   id="contact-linkedin"
                   name="linkedin_url"
                   type="text"
                   placeholder="https://linkedin.com/in/jane"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-notes" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-notes" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
                   Notes
-                </label>
-                <input
+                </Label>
+                <Input
                   id="contact-notes"
                   name="notes"
                   type="text"
                   placeholder="Met at SaaStr, warm connection…"
-                  className="w-full border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-orange-500 text-slate-950 text-[13px] font-semibold py-2 rounded cursor-pointer border-0 mt-1 hover:bg-orange-400"
-              >
+              <Button type="submit" className="w-full mt-1 text-[13px] font-semibold">
                 Add contact
-              </button>
+              </Button>
 
             </form>
-          </div>
+          </Card>
 
         </div>
       </main>
     </div>
   )
 }
-

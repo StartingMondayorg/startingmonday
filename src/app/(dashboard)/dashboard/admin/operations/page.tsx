@@ -3,14 +3,10 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { BOT_SCORE_THRESHOLD } from '@/lib/bot-signals'
-import {
-  ADMIN_DARK_ACTION_CARD,
-  ADMIN_DARK_PAGE_BG,
-  ADMIN_DARK_SECTION_CARD,
-  ADMIN_DARK_STAT_CARD,
-  ADMIN_DARK_TABLE_PANEL,
-} from '../admin-dark-theme'
+import { BOT_SCORE_THRESHOLD } from '@/lib/bot-detection/bot-signals'
+import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 const OPS_ALERT_SOURCES = [
   'ci_check_runs',
@@ -24,10 +20,10 @@ const OPS_ALERT_SOURCES = [
   'bot_traffic_runs',
 ]
 
-function roleBadge(role: string): string {
-  if (role === 'owner') return 'bg-amber-500/15 text-amber-100 border border-amber-300/25'
-  if (role === 'admin') return 'bg-sky-500/15 text-sky-100 border border-sky-300/25'
-  return 'bg-white/10 text-slate-300 border border-white/10'
+function roleBadgeVariant(role: string): 'warning' | 'info' | 'secondary' {
+  if (role === 'owner') return 'warning'
+  if (role === 'admin') return 'info'
+  return 'secondary'
 }
 
 export default async function AdminOperationsPage() {
@@ -98,7 +94,7 @@ export default async function AdminOperationsPage() {
           <p className="text-[13px] text-slate-300 mt-1.5">Reliability, release quality, and monitoring operations.</p>
           <p className="text-[13px] text-slate-300 mt-1">
             Signed in as <span className="font-semibold text-slate-100">{user.email}</span>
-            <span className={`ml-2 text-[13px] font-bold px-2 py-0.5 rounded ${roleBadge(staff.role)}`}>{staff.role}</span>
+            <Badge variant={roleBadgeVariant(staff.role)} className="ml-2">{staff.role}</Badge>
           </p>
         </div>
 
@@ -110,26 +106,28 @@ export default async function AdminOperationsPage() {
             { label: 'Last job status', value: latestJobStatus },
             { label: 'Suspected bot req (24h)', value: suspectedBotRequests ?? 0 },
           ].map((card) => (
-            <div key={card.label} className={ADMIN_DARK_STAT_CARD}>
+            <Card key={card.label} variant="glass" className="p-4">
               <div className="text-[24px] font-bold text-white leading-none capitalize">{card.value}</div>
               <div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
-            </div>
+            </Card>
           ))}
         </div>
 
-        <div className={ADMIN_DARK_SECTION_CARD}>
+        <Card variant="glass" className="p-5 mb-6">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Role-based quick actions</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {quickActions.map((action) => (
-              <Link key={action.href} href={action.href} className={ADMIN_DARK_ACTION_CARD}>
-                <p className="text-[13px] font-semibold text-white">{action.label}</p>
-                <p className="text-[13px] text-slate-300 mt-1.5 leading-relaxed">{action.description}</p>
+              <Link key={action.href} href={action.href}>
+                <Card variant="glass" className="p-4 border-white/10 bg-slate-950/40 hover:border-white/30 transition-colors">
+                  <p className="text-[13px] font-semibold text-white">{action.label}</p>
+                  <p className="text-[13px] text-slate-300 mt-1.5 leading-relaxed">{action.description}</p>
+                </Card>
               </Link>
             ))}
           </div>
-        </div>
+        </Card>
 
-        <div className={ADMIN_DARK_TABLE_PANEL}>
+        <Card variant="glass" className="overflow-hidden mb-6">
           <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
             <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Operations alert panel</p>
             <Link href="/guide" className="text-[13px] text-slate-300 hover:text-white">Runbook {'->'}</Link>
@@ -142,16 +140,16 @@ export default async function AdminOperationsPage() {
                 <div key={alert.id} className="px-5 py-3">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-[13px] font-semibold text-white">{alert.message}</p>
-                    <span className={`text-[13px] font-bold px-2 py-0.5 rounded ${
-                      alert.severity === 'high' ? 'bg-red-500/15 text-red-100 border border-red-300/25' : alert.severity === 'medium' ? 'bg-amber-500/15 text-amber-100 border border-amber-300/25' : 'bg-white/10 text-slate-300 border border-white/10'
-                    }`}>{alert.severity}</span>
+                    <Badge variant={alert.severity === 'high' ? 'destructive' : alert.severity === 'medium' ? 'warning' : 'secondary'}>
+                      {alert.severity}
+                    </Badge>
                   </div>
                   <p className="text-[13px] text-slate-400 mt-1 font-mono">{alert.source_table} - {new Date(alert.created_at).toLocaleString()}</p>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </main>
     </div>
   )

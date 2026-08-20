@@ -9,14 +9,14 @@ type RouteExpectation = {
 }
 
 const COVERAGE_EXPECTATIONS: RouteExpectation[] = [
-  { file: 'src/app/for-cio/page.tsx', route: '/for-cio', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
-  { file: 'src/app/for-coaches/page.tsx', route: '/for-coaches', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
-  { file: 'src/app/for-cdo/page.tsx', route: '/for-cdo', requiredSnippets: ['LandingPage', 'sourcePage="/for-cdo"'] },
-  { file: 'src/app/for-ciso/page.tsx', route: '/for-ciso', requiredSnippets: ['LandingPage', 'sourcePage="/for-ciso"'] },
-  { file: 'src/app/for-cpo/page.tsx', route: '/for-cpo', requiredSnippets: ['LandingPage', 'sourcePage="/for-cpo"'] },
-  { file: 'src/app/executives/page.tsx', route: '/executives', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
-  { file: 'src/app/executives/active/page.tsx', route: '/executives/active', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
-  { file: 'src/app/executives/passive/page.tsx', route: '/executives/passive', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
+  { file: 'src/app/(marketing)/for-cio/page.tsx', route: '/for-cio', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
+  { file: 'src/app/(marketing)/for-coaches/page.tsx', route: '/for-coaches', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
+  { file: 'src/app/(marketing)/for-cdo/page.tsx', route: '/for-cdo', requiredSnippets: ['LandingPage', 'sourcePage="/for-cdo"'] },
+  { file: 'src/app/(marketing)/for-ciso/page.tsx', route: '/for-ciso', requiredSnippets: ['LandingPage', 'sourcePage="/for-ciso"'] },
+  { file: 'src/app/(marketing)/for-cpo/page.tsx', route: '/for-cpo', requiredSnippets: ['LandingPage', 'sourcePage="/for-cpo"'] },
+  { file: 'src/app/(marketing)/executives/page.tsx', route: '/executives', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
+  { file: 'src/app/(marketing)/executives/active/page.tsx', route: '/executives/active', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
+  { file: 'src/app/(marketing)/executives/passive/page.tsx', route: '/executives/passive', requiredSnippets: ['TrackLink', 'EVENT_NAMES'] },
 ]
 
 describe('experiment route coverage guard', () => {

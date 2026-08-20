@@ -1,6 +1,10 @@
 ﻿'use client'
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { Textarea } from '@/components/ui/textarea'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
@@ -52,13 +56,14 @@ function AssistantMessage({ content }: { content: string }) {
         const match = part.match(/^\[ACTION:(.+)\]$/)
         if (match) {
           return (
-            <span
+            <Badge
               key={i}
-              className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold px-2.5 py-1 rounded-full mx-0.5 align-middle"
+              variant="warning"
+              className="mx-0.5 gap-1.5 px-2.5 py-1 align-middle text-[11px]"
             >
               <span className="text-amber-500">&#10003;</span>
               {match[1]}
-            </span>
+            </Badge>
           )
         }
         return <span key={i} className="whitespace-pre-wrap">{part}</span>
@@ -243,13 +248,14 @@ export default function ChatPage() {
           </span>
           <div className="flex items-center gap-2 sm:gap-6">
             {messages.length > 0 && !loading && !loadingHistory && (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={clearConversation}
-                className="hidden sm:inline-flex text-[12px] text-slate-400 hover:text-slate-300 transition-colors bg-transparent border-0 cursor-pointer"
+                className="hidden sm:inline-flex h-auto p-0 text-[12px] text-slate-400 hover:text-slate-300 hover:bg-transparent"
               >
                 Clear
-              </button>
+              </Button>
             )}
             <span className="hidden sm:inline text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">
               Chat
@@ -284,14 +290,15 @@ export default function ChatPage() {
                 <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Ask</h2>
                 <div className="flex flex-col gap-2">
                   {ASK_PROMPTS.map(prompt => (
-                    <button
+                    <Button
                       key={prompt}
                       type="button"
+                      variant="outline"
                       onClick={() => { setInput(prompt); textareaRef.current?.focus() }}
-                      className="text-left text-[13px] text-slate-500 border border-slate-200 rounded-lg px-4 py-3 hover:border-slate-400 hover:text-slate-700 bg-transparent cursor-pointer transition-colors"
+                      className="h-auto justify-start whitespace-normal text-left text-[13px] font-normal text-slate-500 border-slate-200 px-4 py-3 hover:border-slate-400 hover:text-slate-700"
                     >
                       {prompt}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -299,14 +306,15 @@ export default function ChatPage() {
                 <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Tell me to</h2>
                 <div className="flex flex-col gap-2">
                   {DO_PROMPTS.map(prompt => (
-                    <button
+                    <Button
                       key={prompt}
                       type="button"
+                      variant="outline"
                       onClick={() => { setInput(prompt); textareaRef.current?.focus() }}
-                      className="text-left text-[13px] text-slate-500 border border-slate-200 rounded-lg px-4 py-3 hover:border-slate-400 hover:text-slate-700 bg-transparent cursor-pointer transition-colors"
+                      className="h-auto justify-start whitespace-normal text-left text-[13px] font-normal text-slate-500 border-slate-200 px-4 py-3 hover:border-slate-400 hover:text-slate-700"
                     >
                       {prompt}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -320,9 +328,9 @@ export default function ChatPage() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.role === 'user' ? (
-                  <div className="bg-slate-900 text-white text-[14px] px-4 py-3 rounded-2xl rounded-br-sm max-w-[95%] sm:max-w-[85%] sm:max-w-[70%] whitespace-pre-wrap leading-relaxed">
+                  <Card variant="glass" className="gap-0 border-transparent bg-slate-900 py-3 text-white text-[14px] px-4 rounded-2xl rounded-br-sm max-w-[95%] sm:max-w-[85%] sm:max-w-[70%] whitespace-pre-wrap leading-relaxed">
                     {msg.content}
-                  </div>
+                  </Card>
                 ) : (
                   <div className="text-[14px] text-slate-800 leading-relaxed max-w-[95%] sm:max-w-[85%]">
                     {msg.content ? (
@@ -345,23 +353,23 @@ export default function ChatPage() {
 
       <div id="chat-composer" className="shrink-0 border-t border-slate-200 bg-white px-6 py-4">
         <div className="max-w-3xl mx-auto px-4 sm:px-0 flex gap-3 items-end">
-          <textarea
+          <Textarea
             ref={textareaRef}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder="Ask anything about your search…"
             rows={1}
-            className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none max-h-[140px]"
+            className="flex-1 min-h-0 rounded-xl px-4 py-3 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400 focus-visible:ring-0 resize-none max-h-[140px]"
           />
-          <button
+          <Button
             type="button"
             onClick={send}
             disabled={loading || !input.trim()}
-            className="bg-slate-900 text-white text-[13px] font-semibold px-5 py-3 rounded-xl cursor-pointer border-0 disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+            className="h-auto bg-slate-900 text-white text-[13px] font-semibold px-5 py-3 rounded-xl shrink-0"
           >
             Send
-          </button>
+          </Button>
         </div>
         <p className="max-w-3xl mx-auto mt-2 text-[11px] text-slate-300">
           Enter to send · Shift+Enter for new line

@@ -3,6 +3,24 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { addCompany } from './actions'
 import { CompanySearchInput } from './company-search-input'
+import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+// shadcn Select can't have an item with value "" — use this sentinel for the
+// "Unknown" company-size option. addCompany() already treats any value outside
+// the valid size set as null, so no server-side normalization is needed.
+const NONE = '__none__'
 
 const STAGES = [
   { value: 'watching',     label: 'Watching' },
@@ -53,57 +71,62 @@ export default async function AddCompanyPage({
           <p className="text-[13px] text-slate-300 mt-1.5">Add a company to your pipeline to track and monitor.</p>
         </div>
 
-        <div className="mb-4 max-w-xl bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between gap-3 backdrop-blur-md">
-          <p className="text-[12px] text-slate-300">Need examples for targeting and pipeline setup?</p>
-          <Link href="/guide?q=Where+do+I+add+companies+to+my+target+list%3F" className="text-[12px] font-semibold text-orange-200 hover:text-orange-100 hover:underline">
+        <Alert className="mb-4 max-w-xl px-4 py-3 flex items-center justify-between gap-3 backdrop-blur-md">
+          <AlertDescription className="text-[12px] text-slate-300">Need examples for targeting and pipeline setup?</AlertDescription>
+          <Button
+            variant="link"
+            className="text-[12px] font-semibold text-orange-200 hover:text-orange-100"
+            render={<Link href="/guide?q=Where+do+I+add+companies+to+my+target+list%3F" />}
+          >
             Open Guide
-          </Link>
-        </div>
+          </Button>
+        </Alert>
 
-        <div className="bg-white/5 border border-white/15 rounded-xl p-5 sm:p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="rounded-xl p-5 sm:p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
 
           {errorMsg && (
-            <div className="mb-6 px-4 py-3 bg-rose-500/15 border border-rose-300/30 rounded text-[13px] text-rose-100">
-              {errorMsg}
-            </div>
+            <Alert variant="destructive" className="mb-6 px-4 py-3">
+              <AlertDescription className="text-[13px]">{errorMsg}</AlertDescription>
+            </Alert>
           )}
 
           <form action={addCompany} className="flex flex-col gap-5">
 
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                 Company name <span className="text-rose-300">*</span>
-              </label>
+              </Label>
               <CompanySearchInput defaultValue={prefillName} />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                   Stage
-                </label>
-                <select
-                  name="stage"
-                  defaultValue="watching"
-                  className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 focus:outline-none focus:border-orange-300 bg-slate-900/70"
-                >
-                  {STAGES.map(s => (
-                    <option key={s.value} value={s.value}>{s.label}</option>
-                  ))}
-                </select>
+                </Label>
+                <Select name="stage" defaultValue="watching">
+                  <SelectTrigger className="w-full text-[14px] text-slate-100 focus-visible:border-orange-300 bg-slate-900/70">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STAGES.map(s => (
+                      <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                   Fit score <span className="text-slate-500 font-normal">(1–10)</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   name="fit_score"
                   type="number"
                   min="1"
                   max="10"
                   placeholder="-"
-                  className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300"
+                  className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
                 />
                 <p className="mt-1.5 text-[12px] text-slate-400">1 = weak fit &middot; 10 = dream company</p>
               </div>
@@ -111,79 +134,80 @@ export default async function AddCompanyPage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                   Sector
-                </label>
-                <input
+                </Label>
+                <Input
                   name="sector"
                   type="text"
                   placeholder="e.g. Healthcare, Fintech"
-                  className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300"
+                  className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
                 />
               </div>
               <div>
-                <label htmlFor="company_size" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label htmlFor="company_size" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                   Company size
-                </label>
-                <select
-                  id="company_size"
-                  name="company_size"
-                  className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 focus:outline-none focus:border-orange-300 bg-slate-900/70"
-                >
-                  <option value="">Unknown</option>
-                  <option value="startup">Startup (under 200)</option>
-                  <option value="midmarket">Mid-Market (200-2,000)</option>
-                  <option value="enterprise">Enterprise (2,000+)</option>
-                </select>
+                </Label>
+                <Select name="company_size" defaultValue={NONE}>
+                  <SelectTrigger id="company_size" className="w-full text-[14px] text-slate-100 focus-visible:border-orange-300 bg-slate-900/70">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE}>Unknown</SelectItem>
+                    <SelectItem value="startup">Startup (under 200)</SelectItem>
+                    <SelectItem value="midmarket">Mid-Market (200-2,000)</SelectItem>
+                    <SelectItem value="enterprise">Enterprise (2,000+)</SelectItem>
+                  </SelectContent>
+                </Select>
                 <p className="mt-1.5 text-[12px] text-slate-400">Used to calibrate CTO prep briefs</p>
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                 Company website
-              </label>
-              <input
+              </Label>
+              <Input
                 name="company_url"
                 type="text"
                 placeholder="acme.com or https://acme.com"
-                className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300"
+                className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
               />
               <p className="mt-1.5 text-[12px] text-slate-400">Main URL - used to discover press room and leadership page</p>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                 Career page URL
-              </label>
-              <input
+              </Label>
+              <Input
                 name="career_page_url"
                 type="text"
                 placeholder="acme.com/careers or https://acme.com/careers"
-                className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300"
+                className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
               />
               <p className="mt-1.5 text-[12px] text-slate-400">Used in job scans - runs Mon / Wed / Fri</p>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
                 Notes
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 name="notes"
                 rows={3}
                 placeholder="Warm intro through Sarah, strong culture fit…"
-                className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300 resize-none"
+                className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300 resize-none"
               />
             </div>
 
             <div className="flex items-center gap-4 pt-1">
-              <button
+              <Button
                 type="submit"
-                className="bg-orange-400 text-slate-950 text-[14px] font-semibold px-6 py-2.5 rounded cursor-pointer border-0 hover:bg-orange-300 transition-colors"
+                className="text-[14px] px-6"
               >
                 Add to pipeline
-              </button>
+              </Button>
               <Link
                 href="/dashboard"
                 className="text-[14px] text-slate-300 hover:text-white transition-colors"
@@ -193,7 +217,7 @@ export default async function AddCompanyPage({
             </div>
 
           </form>
-        </div>
+        </Card>
       </main>
     </div>
   )

@@ -1,5 +1,9 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
@@ -166,45 +170,47 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
     <div className="flex flex-col gap-6">
 
       {/* Current positioning card */}
-      <div className="bg-white border border-slate-200 rounded overflow-hidden">
+      <Card className="py-0 overflow-hidden">
         <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between gap-4">
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Your Current Positioning</span>
           {!editingPositioning && (
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => { setEditingPositioning(true); setPositioningDraft(positioning) }}
-              className="text-[12px] font-semibold text-slate-500 hover:text-slate-700 transition-colors cursor-pointer bg-transparent border-0"
             >
               Edit
-            </button>
+            </Button>
           )}
         </div>
         <div className="px-6 py-5">
           {editingPositioning ? (
             <>
-              <textarea
+              <Textarea
                 value={positioningDraft}
                 onChange={e => setPositioningDraft(e.target.value)}
                 rows={4}
-                className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none leading-relaxed mb-3"
+                className="mb-3"
                 placeholder="2-3 sentences: your title + years of experience, what you're known for, and what you're targeting next."
               />
               <div className="flex items-center gap-3">
-                <button
+                <Button
                   type="button"
                   onClick={() => savePositioning(positioningDraft)}
                   disabled={saving || !positioningDraft.trim()}
-                  className="text-[13px] font-semibold text-white bg-orange-500 hover:bg-orange-600 disabled:opacity-40 px-4 py-2 rounded transition-colors cursor-pointer border-0"
+                  size="sm"
                 >
                   {saving ? 'Saving...' : 'Save'}
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => { setEditingPositioning(false); setPositioningDraft(positioning) }}
-                  className="text-[13px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer bg-transparent border-0"
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             </>
           ) : positioning ? (
@@ -215,39 +221,40 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
           {saveError && <p className="mt-2 text-[12px] text-red-600">{saveError}</p>}
           {saved && <p className="mt-2 text-[12px] text-green-600">Saved.</p>}
         </div>
-      </div>
+      </Card>
 
       {/* Suggested positioning from AI */}
       {suggestedPositioning && (
-        <div className="bg-orange-50 border border-orange-200 rounded overflow-hidden">
+        <Card className="bg-orange-50 border-orange-200 py-0 overflow-hidden">
           <div className="px-6 py-[18px] border-b border-orange-200 flex items-center justify-between gap-4">
             <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500">Suggested Positioning</span>
           </div>
           <div className="px-6 py-5">
             <p className="text-[14px] text-slate-800 leading-relaxed mb-4">{suggestedPositioning}</p>
             <div className="flex items-center gap-3">
-              <button
+              <Button
                 type="button"
                 onClick={() => savePositioning(suggestedPositioning)}
                 disabled={saving}
-                className="text-[13px] font-semibold text-white bg-orange-500 hover:bg-orange-600 disabled:opacity-40 px-4 py-2 rounded transition-colors cursor-pointer border-0"
+                size="sm"
               >
                 {saving ? 'Saving...' : 'Use this'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => setSuggestedPositioning(null)}
-                className="text-[13px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer bg-transparent border-0"
               >
                 Dismiss
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Chat */}
-      <div className="bg-white border border-slate-200 rounded overflow-hidden">
+      <Card className="py-0 overflow-hidden">
         <div className="px-6 py-[18px] border-b border-slate-200">
           <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Positioning Coach</span>
         </div>
@@ -258,14 +265,16 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
             <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-3">Start here</p>
             <div className="flex flex-wrap gap-2">
               {STARTER_PROMPTS.map(prompt => (
-                <button
+                <Button
                   key={prompt}
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => sendMessage(prompt)}
-                  className="text-[13px] text-slate-600 border border-slate-200 rounded px-3 py-1.5 hover:border-orange-400 hover:text-orange-600 transition-colors cursor-pointer bg-white"
+                  className="hover:border-orange-400 hover:text-orange-600"
                 >
                   {prompt}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -297,15 +306,17 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
         )}
 
         {error && (
-          <div className="mx-6 mb-4 bg-red-50 border border-red-200 rounded px-4 py-3">
-            <p className="text-[13px] text-red-700">{error}</p>
+          <div className="mx-6 mb-4">
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           </div>
         )}
 
         {/* Input */}
         <div className="px-6 pb-5 pt-3 border-t border-slate-100">
           <div className="flex gap-3 items-end">
-            <textarea
+            <Textarea
               ref={textareaRef}
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -313,20 +324,20 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
               disabled={loading}
               placeholder="Ask about your positioning..."
               rows={2}
-              className="flex-1 border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none leading-relaxed disabled:opacity-60"
+              className="flex-1"
             />
-            <button
+            <Button
               type="button"
               onClick={() => sendMessage(input)}
               disabled={!input.trim() || loading}
-              className="shrink-0 text-[13px] font-semibold text-white bg-slate-900 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed px-4 py-2.5 rounded transition-colors cursor-pointer border-0"
+              className="shrink-0"
             >
               {loading ? '...' : 'Send'}
-            </button>
+            </Button>
           </div>
           <p className="mt-2 text-[11px] text-slate-400">Press Enter to send, Shift+Enter for a new line.</p>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

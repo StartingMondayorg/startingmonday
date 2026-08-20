@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const PREP_TASKS = [
   { href: '/prep/interview', label: 'Interview', id: 'interview' },
@@ -26,17 +28,19 @@ export default function PrepLayout({
             {PREP_TASKS.map((task) => {
               const isActive = pathname.startsWith(task.href)
               return (
-                <Link
+                <Button
                   key={task.id}
-                  href={task.href}
-                  className={`flex-shrink-0 px-4 py-3 text-[13px] font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  variant="ghost"
+                  render={<Link href={task.href} />}
+                  className={cn(
+                    'h-auto flex-shrink-0 rounded-none border-b-2 px-4 py-3 text-[13px] font-medium whitespace-nowrap hover:bg-transparent',
                     isActive
-                      ? 'border-orange-400 text-orange-300'
+                      ? 'border-orange-400 text-orange-300 hover:text-orange-300'
                       : 'border-transparent text-slate-400 hover:text-slate-300'
-                  }`}
+                  )}
                 >
                   {task.label}
-                </Link>
+                </Button>
               )
             })}
           </div>

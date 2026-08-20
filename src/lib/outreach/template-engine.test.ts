@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { evaluateEmailCouncilQuality } from '../email-council'
+import { evaluateEmailCouncilQuality } from '../email/email-council'
 import templateEngine from './template-engine.cjs'
 
 type DraftInput = {

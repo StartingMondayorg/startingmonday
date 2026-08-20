@@ -1,6 +1,14 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from '@/components/ui/command'
 
 type RefCompany = {
   id: number
@@ -16,7 +24,6 @@ export function CompanySearchInput({ defaultValue }: { defaultValue?: string }) 
   const [query, setQuery] = useState(defaultValue ?? '')
   const [results, setResults] = useState<RefCompany[]>([])
   const [open, setOpen] = useState(false)
-  const [activeIdx, setActiveIdx] = useState(-1)
   const containerRef = useRef<HTMLDivElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -30,7 +37,6 @@ export function CompanySearchInput({ defaultValue }: { defaultValue?: string }) 
         const data: RefCompany[] = await res.json()
         setResults(data)
         setOpen(data.length > 0)
-        setActiveIdx(-1)
       } catch {}
     }, 200)
   }, [])
@@ -56,52 +62,48 @@ export function CompanySearchInput({ defaultValue }: { defaultValue?: string }) 
     setResults([])
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (!open) return
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setActiveIdx(i => Math.min(i + 1, results.length - 1))
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setActiveIdx(i => Math.max(i - 1, -1))
-    } else if (e.key === 'Enter' && activeIdx >= 0) {
-      e.preventDefault()
-      selectCompany(results[activeIdx])
-    } else if (e.key === 'Escape') {
-      setOpen(false)
-    }
-  }
-
   return (
     <div ref={containerRef} className="relative">
-      <input
-        name="name"
-        type="text"
-        required
-        autoFocus
-        autoComplete="off"
-        value={query}
-        onChange={e => { setQuery(e.target.value); search(e.target.value) }}
-        onKeyDown={handleKeyDown}
-        placeholder="Search or type a company name"
-        className="w-full border border-white/15 rounded px-3 py-2.5 text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus:outline-none focus:border-orange-300"
-      />
-      {open && (
-        <ul className="absolute z-50 left-0 right-0 mt-1 bg-slate-950 border border-white/15 rounded shadow-lg max-h-60 overflow-auto">
-          {results.map((c, i) => (
-            <li
-              key={c.id}
-              onMouseDown={() => selectCompany(c)}
-              className={`px-3 py-2.5 cursor-pointer ${i === activeIdx ? 'bg-white/10' : 'hover:bg-white/5'}`}
-            >
-              <div className="text-[13px] font-semibold text-slate-100">{c.name}</div>
-              {c.hq_location && (
-                <div className="text-[11px] text-slate-400 mt-0.5">{c.hq_location}</div>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+      <Command
+        shouldFilter={false}
+        className="overflow-visible bg-transparent p-0"
+        onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false) }}
+      >
+        <CommandInput
+          name="name"
+          required
+          autoFocus
+          value={query}
+          onValueChange={(value) => { setQuery(value); search(value); if (value.length >= 2) setOpen(true) }}
+          onFocus={() => { if (results.length > 0) setOpen(true) }}
+          placeholder="Search or type a company name"
+          className="text-slate-100 placeholder:text-slate-500"
+        />
+        {open && (
+          <div className="relative">
+            <CommandList className="absolute z-50 left-0 right-0 mt-1 bg-slate-950 border border-white/15 rounded shadow-lg max-h-60">
+              <CommandEmpty className="px-3 py-2.5 text-[13px] text-slate-400">No matches</CommandEmpty>
+              <CommandGroup>
+                {results.map((c) => (
+                  <CommandItem
+                    key={c.id}
+                    value={`${c.id}`}
+                    onSelect={() => selectCompany(c)}
+                    className="px-3 py-2.5"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[13px] font-semibold text-slate-100">{c.name}</div>
+                      {c.hq_location && (
+                        <div className="text-[11px] text-slate-400 mt-0.5">{c.hq_location}</div>
+                      )}
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </div>
+        )}
+      </Command>
     </div>
   )
 }

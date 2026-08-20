@@ -4,6 +4,11 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { SocialClient } from './social-client'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 const PILLAR_LABELS: Record<string, string> = {
   search_craft:  'Search Craft',
@@ -80,16 +85,13 @@ export default async function SocialAdminPage() {
             Daily weekday draft by audience - review, edit, copy, and mark posted.
           </p>
           <div className="mt-3">
-            <a
-              href="#content-checker"
-              className="inline-flex items-center text-[13px] font-semibold text-slate-700 border border-slate-300 rounded px-3 py-1.5 hover:border-slate-500 hover:text-slate-900 transition-colors"
-            >
+            <Button render={<a href="#content-checker" />} variant="outline" size="sm">
               Content Checker
-            </a>
+            </Button>
           </div>
         </div>
 
-        <section id="google-calendar" className="mb-6 bg-white border border-slate-200 rounded p-6">
+        <Card id="google-calendar" className="mb-6 p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="text-[16px] font-bold text-slate-900">Google Calendar sync</h2>
@@ -97,36 +99,26 @@ export default async function SocialAdminPage() {
                 Connect Google Calendar to sync the posting reminder schedule directly instead of relying on manual .ics imports.
               </p>
               <p className="text-[13px] text-slate-500 mt-1.5">
-                Source calendar: <span className="font-semibold text-slate-700">startingmonday-posting-reminders.ics</span>
+                Source calendar: <span className="font-semibold text-slate-700">docs/operations/reminders/startingmonday-posting-reminders.ics</span>
               </p>
             </div>
 
             <div className="flex flex-col sm:items-end gap-2">
               {googleCalendarIntegration?.active ? (
-                <span className="inline-flex w-fit text-[13px] font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded">
-                  Connected
-                </span>
+                <Badge variant="success">Connected</Badge>
               ) : (
-                <span className="inline-flex w-fit text-[13px] font-bold bg-slate-100 text-slate-500 px-2.5 py-1 rounded">
-                  Not connected
-                </span>
+                <Badge variant="secondary">Not connected</Badge>
               )}
               <div className="flex flex-wrap gap-2">
-                <a
-                  href="/api/google-calendar/connect?returnTo=/dashboard/admin/social"
-                  className="inline-flex items-center justify-center text-[13px] font-semibold bg-slate-900 text-white px-3.5 py-2 rounded hover:bg-slate-800 transition-colors"
-                >
+                <Button render={<a href="/api/google-calendar/connect?returnTo=/dashboard/admin/social" />}>
                   {googleCalendarIntegration?.active ? 'Reconnect' : 'Connect Google Calendar'}
-                </a>
+                </Button>
                 {googleCalendarIntegration?.active && (
                   <form action="/api/google-calendar/disconnect" method="post">
                     <input type="hidden" name="returnTo" value="/dashboard/admin/social" />
-                    <button
-                      type="submit"
-                      className="inline-flex items-center justify-center text-[13px] font-semibold border border-slate-300 text-slate-700 px-3.5 py-2 rounded hover:border-slate-400 hover:text-slate-900 transition-colors"
-                    >
+                    <Button type="submit" variant="outline">
                       Disconnect
-                    </button>
+                    </Button>
                   </form>
                 )}
               </div>
@@ -134,20 +126,20 @@ export default async function SocialAdminPage() {
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3 text-[13px] text-slate-600">
-            <div className="rounded bg-slate-50 border border-slate-200 p-3">
+            <Card className="p-3">
               <p className="font-semibold text-slate-800 mb-1">Calendar</p>
               <p>{googleCalendarIntegration?.calendar_id ?? 'primary'}</p>
-            </div>
-            <div className="rounded bg-slate-50 border border-slate-200 p-3">
+            </Card>
+            <Card className="p-3">
               <p className="font-semibold text-slate-800 mb-1">Last sync</p>
               <p>{googleCalendarIntegration?.last_synced_at ? new Date(googleCalendarIntegration.last_synced_at).toLocaleString() : 'Not synced yet'}</p>
-            </div>
-            <div className="rounded bg-slate-50 border border-slate-200 p-3">
+            </Card>
+            <Card className="p-3">
               <p className="font-semibold text-slate-800 mb-1">Notes</p>
               <p>Refreshes on the cron schedule and after the first OAuth connection.</p>
-            </div>
+            </Card>
           </div>
-        </section>
+        </Card>
 
         <SocialClient />
 
@@ -155,93 +147,97 @@ export default async function SocialAdminPage() {
         {posts.length > 0 && (
           <section id="post-history" className="mt-10">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Post History (30 days)</h2>
-            <div className="bg-white border border-slate-200 rounded overflow-hidden">
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="bg-slate-50 border-b border-slate-100 text-left">
-                    <th className="px-5 py-3 font-semibold text-slate-400">Date</th>
-                    <th className="px-4 py-3 font-semibold text-slate-400">Pillar</th>
-                    <th className="px-4 py-3 font-semibold text-slate-400">Status</th>
-                    <th className="px-4 py-3 font-semibold text-slate-400">Council</th>
-                    <th className="px-4 py-3 font-semibold text-slate-400 hidden sm:table-cell">Preview</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
+            <Card className="p-0">
+              <Table className="text-[13px]">
+                <TableHeader>
+                  <TableRow className="bg-slate-50">
+                    <TableHead className="px-5 py-3 font-semibold text-slate-400">Date</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-slate-400">Pillar</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-slate-400">Status</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-slate-400">Council</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-slate-400 hidden sm:table-cell">Preview</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {posts.map(p => {
                     const councilPass = getNoteToken(p.notes, 'council_pass') === 'true'
                     const emotionalAngle = getNoteToken(p.notes, 'emotional_angle')
 
                     return (
-                    <tr key={p.id}>
-                      <td className="px-5 py-3 font-semibold text-slate-900 whitespace-nowrap">
+                    <TableRow key={p.id}>
+                      <TableCell className="px-5 py-3 font-semibold text-slate-900 whitespace-nowrap">
                         {new Date(p.post_date + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                      </td>
-                      <td className="px-4 py-3 text-slate-500">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-500">
                         {PILLAR_LABELS[p.pillar] ?? p.pillar}
-                      </td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
                         {p.is_posted ? (
-                          <span className="text-[13px] font-bold bg-green-50 text-green-700 px-2 py-0.5 rounded">Posted</span>
+                          <Badge variant="success">Posted</Badge>
                         ) : p.buffer_scheduled_at ? (
-                          <span className="text-[13px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">Queued</span>
+                          <Badge variant="info">Queued</Badge>
                         ) : (
-                          <span className="text-[13px] font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded">Draft</span>
+                          <Badge variant="secondary">Draft</Badge>
                         )}
-                      </td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
                         <div className="flex flex-col gap-1">
-                          <span className={`inline-block text-[13px] font-bold px-2 py-0.5 rounded w-fit ${
-                            councilPass ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
-                          }`}>
+                          <Badge variant={councilPass ? 'success' : 'destructive'} className="w-fit">
                             {councilPass ? 'Pass' : 'Fail'}
-                          </span>
+                          </Badge>
                           <span className="text-[13px] text-slate-500">
                             {emotionalAngle ? emotionalAngle.replace('_', ' ') : 'No angle'}
                           </span>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 text-slate-400 hidden sm:table-cell max-w-xs truncate">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-slate-400 hidden sm:table-cell max-w-xs truncate">
                         {p.draft_text.split('\n')[0].slice(0, 80)}
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                     )
                   })}
-                </tbody>
-              </table>
-            </div>
+                </TableBody>
+              </Table>
+            </Card>
           </section>
         )}
 
         {/* Liz instructions */}
-        <section id="daily-workflow" className="mt-10 bg-white border border-slate-200 rounded p-6">
+        <section id="daily-workflow" className="mt-10">
+        <Card className="p-6">
           <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Daily Workflow -- Monday Through Friday</h2>
 
-          <div className="mb-6 border border-blue-200 bg-blue-50/40 rounded p-4">
-            <h3 className="text-[13px] font-bold tracking-[0.08em] uppercase text-blue-700 mb-2">Executive Coach Outreach Guide For Liz</h3>
-            <p className="text-[13px] text-slate-700 leading-relaxed mb-3">
-              The full step-by-step guide, coach-finding criteria, and message options are in:
-              {' '}
-              <span className="font-mono text-slate-800">docs/liz-executive-coach-linkedin-guide.md</span>
-            </p>
-            <p className="text-[13px] text-slate-600 mb-2">Send-ready email draft:</p>
-            <div className="bg-white border border-blue-100 rounded p-3 text-[13px] text-slate-700 leading-relaxed">
-              <p><span className="font-semibold text-slate-900">Subject:</span> Executive coach outreach guide now live</p>
-              <p className="mt-2">Hi Liz,</p>
-              <p className="mt-1">
-                I published the daily executive coach outreach guide. It mirrors the Social page operating style and includes: coach-finding filters, persona criteria, objection tags, connection note options, and the 7-touch follow-up sequence.
+          <Alert variant="info" className="mb-6 p-4">
+            <AlertDescription>
+              <h3 className="text-[13px] font-bold tracking-[0.08em] uppercase text-blue-700 mb-2">Executive Coach Outreach Guide For Liz</h3>
+              <p className="text-[13px] text-slate-700 leading-relaxed mb-3">
+                The full step-by-step guide, coach-finding criteria, and message options are in:
+                {' '}
+                <span className="font-mono text-slate-800">docs/liz-executive-coach-linkedin-guide.md</span>
               </p>
-              <p className="mt-1">
-                Please start with this file: docs/liz-executive-coach-linkedin-guide.md
-              </p>
-              <p className="mt-1">Thanks, Rich</p>
-            </div>
-            <a
-              href="mailto:?subject=Executive%20coach%20outreach%20guide%20now%20live&body=Hi%20Liz%2C%0A%0AI%20published%20the%20daily%20executive%20coach%20outreach%20guide.%20It%20mirrors%20the%20Social%20page%20operating%20style%20and%20includes%3A%20coach-finding%20filters%2C%20persona%20criteria%2C%20objection%20tags%2C%20connection%20note%20options%2C%20and%20the%207-touch%20follow-up%20sequence.%0A%0APlease%20start%20with%20this%20file%3A%20docs%2Fliz-executive-coach-linkedin-guide.md%0A%0AThanks%2C%0ARich"
-              className="inline-block mt-3 text-[13px] font-semibold text-blue-700 border border-blue-200 rounded px-3 py-2 hover:border-blue-400 hover:text-blue-800 transition-colors"
-            >
-              Open email draft
-            </a>
-          </div>
+              <p className="text-[13px] text-slate-600 mb-2">Send-ready email draft:</p>
+              <Card className="p-3 text-[13px] text-slate-700 leading-relaxed">
+                <p><span className="font-semibold text-slate-900">Subject:</span> Executive coach outreach guide now live</p>
+                <p className="mt-2">Hi Liz,</p>
+                <p className="mt-1">
+                  I published the daily executive coach outreach guide. It mirrors the Social page operating style and includes: coach-finding filters, persona criteria, objection tags, connection note options, and the 7-touch follow-up sequence.
+                </p>
+                <p className="mt-1">
+                  Please start with this file: docs/liz-executive-coach-linkedin-guide.md
+                </p>
+                <p className="mt-1">Thanks, Rich</p>
+              </Card>
+              <Button
+                render={
+                  <a href="mailto:?subject=Executive%20coach%20outreach%20guide%20now%20live&body=Hi%20Liz%2C%0A%0AI%20published%20the%20daily%20executive%20coach%20outreach%20guide.%20It%20mirrors%20the%20Social%20page%20operating%20style%20and%20includes%3A%20coach-finding%20filters%2C%20persona%20criteria%2C%20objection%20tags%2C%20connection%20note%20options%2C%20and%20the%207-touch%20follow-up%20sequence.%0A%0APlease%20start%20with%20this%20file%3A%20docs%2Fliz-executive-coach-linkedin-guide.md%0A%0AThanks%2C%0ARich" />
+                }
+                variant="outline"
+                className="mt-3"
+              >
+                Open email draft
+              </Button>
+            </AlertDescription>
+          </Alert>
 
           <ol className="flex flex-col gap-5">
             {[
@@ -281,20 +277,20 @@ export default async function SocialAdminPage() {
           <div className="mt-6 pt-5 border-t border-slate-100">
             <h3 id="cio-outreach" className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">CIO Outreach - Accepted Connection Follow-Up</h3>
             <p className="text-[13px] text-slate-500 mb-3">Use these when a CIO accepts the connection request. Pick one subject and one two-sentence body, then send same day.</p>
-            <div className="bg-slate-50 border border-slate-200 rounded p-4">
+            <Card className="p-4">
               <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">Version A - Direct And Memorable</p>
               <p className="text-[13px] text-slate-800 mb-2"><span className="font-semibold">Subject:</span> Most CIO searches stall between sessions.</p>
               <p className="text-[13px] text-slate-700 leading-relaxed">
                 [Name], thanks for connecting. Most CIO searches lose momentum between sessions, so we built Starting Monday to keep execution tight with company signals, prep briefs, and a live pipeline view; open to a 15-minute walkthrough?
               </p>
-            </div>
-            <div className="mt-3 bg-slate-50 border border-slate-200 rounded p-4">
+            </Card>
+            <Card className="mt-3 p-4">
               <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">Version B - Relationship First</p>
               <p className="text-[13px] text-slate-800 mb-2"><span className="font-semibold">Subject:</span> You run strategy. We handle the between-session execution.</p>
               <p className="text-[13px] text-slate-700 leading-relaxed">
                 [Name], appreciate the connection. The quiet middle of a CIO transition is where searches drift, so Starting Monday gives candidates a daily operating rhythm that keeps research, outreach, and interview prep moving; open to a short 15-minute walkthrough?
               </p>
-            </div>
+            </Card>
             <div className="mt-3 text-[13px] text-slate-600 leading-relaxed">
               <p><span className="font-semibold text-slate-800">If no response after 3 days:</span> Happy to send a short demo video if that is easier than a live call.</p>
               <p className="mt-1"><span className="font-semibold text-slate-800">If no response after 7 days:</span> No pressure if timing is not right. If priorities shift, I am happy to reconnect.</p>
@@ -316,44 +312,44 @@ export default async function SocialAdminPage() {
 
             <div id="council-review" className="mt-5 pt-4 border-t border-slate-100">
               <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Synthetic Council Review - Sales Marketing And Pricing</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-[13px] text-left border border-slate-200 rounded overflow-hidden">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200">
-                      <th className="px-3 py-2 font-semibold text-slate-900">Member</th>
-                      <th className="px-3 py-2 font-semibold text-slate-900">Feedback</th>
-                      <th className="px-3 py-2 font-semibold text-slate-900">Grade</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    <tr>
-                      <td className="px-3 py-2 text-slate-800 font-semibold">Dave Gerhardt</td>
-                      <td className="px-3 py-2 text-slate-700">Strong opener and good founder-style directness. Version A is punchier and more likely to get a reply.</td>
-                      <td className="px-3 py-2 text-slate-900 font-semibold">A-</td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 text-slate-800 font-semibold">April Dunford</td>
-                      <td className="px-3 py-2 text-slate-700">Clear who this is for: CIO-level transitions. Positioning is cleaner when centered on the execution gap between sessions.</td>
-                      <td className="px-3 py-2 text-slate-900 font-semibold">A</td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 text-slate-800 font-semibold">John McMahon</td>
-                      <td className="px-3 py-2 text-slate-700">Pain and urgency are visible. Keep CTA specific at 15 minutes and avoid adding extra links in first follow-up.</td>
-                      <td className="px-3 py-2 text-slate-900 font-semibold">A-</td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 text-slate-800 font-semibold">Katelyn Bourgoin</td>
-                      <td className="px-3 py-2 text-slate-700">Version B lands emotional reality better. "Quiet middle" language is memorable and human.</td>
-                      <td className="px-3 py-2 text-slate-900 font-semibold">A</td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 text-slate-800 font-semibold">Patrick Campbell</td>
-                      <td className="px-3 py-2 text-slate-700">Value framing is stronger when outcomes are explicit: sharper conversations and faster search velocity. Good premium signal without pricing friction.</td>
-                      <td className="px-3 py-2 text-slate-900 font-semibold">A-</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <Card className="p-0 overflow-x-auto">
+                <Table className="text-[13px] text-left">
+                  <TableHeader>
+                    <TableRow className="bg-slate-50">
+                      <TableHead className="px-3 py-2 font-semibold text-slate-900">Member</TableHead>
+                      <TableHead className="px-3 py-2 font-semibold text-slate-900">Feedback</TableHead>
+                      <TableHead className="px-3 py-2 font-semibold text-slate-900">Grade</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">Dave Gerhardt</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Strong opener and good founder-style directness. Version A is punchier and more likely to get a reply.</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A-</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">April Dunford</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Clear who this is for: CIO-level transitions. Positioning is cleaner when centered on the execution gap between sessions.</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">John McMahon</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Pain and urgency are visible. Keep CTA specific at 15 minutes and avoid adding extra links in first follow-up.</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A-</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">Katelyn Bourgoin</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Version B lands emotional reality better. "Quiet middle" language is memorable and human.</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">Patrick Campbell</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Value framing is stronger when outcomes are explicit: sharper conversations and faster search velocity. Good premium signal without pricing friction.</TableCell>
+                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A-</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Card>
             </div>
           </div>
 
@@ -369,7 +365,7 @@ export default async function SocialAdminPage() {
                 { label: 'Engagement', desc: 'Questions and conversation-starters for the audience' },
               ].map(p => (
                 <div key={p.label} className="flex gap-2 items-start">
-                  <span className="text-[13px] font-bold bg-orange-50 text-orange-600 px-2 py-0.5 rounded shrink-0">{p.label}</span>
+                  <Badge className="shrink-0">{p.label}</Badge>
                   <span className="text-[13px] text-slate-500 mt-0.5">{p.desc}</span>
                 </div>
               ))}
@@ -381,6 +377,7 @@ export default async function SocialAdminPage() {
               This page: <span className="font-mono text-slate-600">https://startingmonday.app/dashboard/admin/social</span>
             </p>
           </div>
+        </Card>
         </section>
 
       </main>

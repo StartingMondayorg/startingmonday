@@ -1,6 +1,26 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 type MarketingMotion = 'direct_paid_sprint' | 'partner_pilot' | 'other'
 type PartnerCommercialEvent = 'pilot_fee_collected' | 'expansion_proposal_sent' | 'expansion_accepted' | 'expansion_rejected'
@@ -202,170 +222,196 @@ export default function WedgeEconomicsClient() {
 
   return (
     <>
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Ledger controls</p>
-          <label className="text-[12px] text-slate-300">
+          <Label className="text-[12px] text-slate-300">
             Lookback days
-            <input
+            <Input
               type="number"
               min={7}
               max={120}
               value={lookbackDays}
               onChange={(event) => setLookbackDays(Math.max(7, Math.min(120, Number(event.target.value) || 30)))}
-              className="ml-2 w-20 rounded border border-white/15 bg-slate-950/50 px-2 py-1 text-[12px] text-slate-100"
+              className="ml-2 w-20"
             />
-          </label>
+          </Label>
         </div>
 
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
+          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Marketing rows</p>
             <p className="mt-1 text-[18px] font-semibold text-white">{payload?.marketing_spend_entries.length ?? 0}</p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
+          </Card>
+          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Marketing total</p>
             <p className="mt-1 text-[18px] font-semibold text-white">{money(marketingTotal)}</p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
+          </Card>
+          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Partner events</p>
             <p className="mt-1 text-[18px] font-semibold text-white">{payload?.partner_commercial_events.length ?? 0}</p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
+          </Card>
+          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
             <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Pilot fees</p>
             <p className="mt-1 text-[18px] font-semibold text-white">{money(partnerFeesTotal)}</p>
-          </div>
+          </Card>
         </div>
 
-        {submitError ? <p className="mt-3 text-[13px] text-rose-300">{submitError}</p> : null}
-        {submitMessage ? <p className="mt-3 text-[13px] text-emerald-200">{submitMessage}</p> : null}
-        {loadState === 'error' && loadError ? <p className="mt-3 text-[13px] text-rose-300">{loadError}</p> : null}
-      </section>
+        {submitError ? (
+          <Alert variant="destructive" className="mt-3">
+            <AlertDescription>{submitError}</AlertDescription>
+          </Alert>
+        ) : null}
+        {submitMessage ? (
+          <Alert variant="success" className="mt-3">
+            <AlertDescription>{submitMessage}</AlertDescription>
+          </Alert>
+        ) : null}
+        {loadState === 'error' && loadError ? (
+          <Alert variant="destructive" className="mt-3">
+            <AlertDescription>{loadError}</AlertDescription>
+          </Alert>
+        ) : null}
+      </Card>
 
       <section className="mt-5 grid gap-5 lg:grid-cols-2">
-        <form onSubmit={submitMarketingEntry} className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <form onSubmit={submitMarketingEntry}>
+        <Card variant="glass" className="p-5">
           <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Add marketing spend</p>
           <div className="mt-3 space-y-3 text-[13px] text-slate-200">
-            <label className="block">
-              Motion
-              <select value={marketingMotion} onChange={(event) => setMarketingMotion(event.target.value as MarketingMotion)} className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100">
-                <option value="direct_paid_sprint">direct_paid_sprint</option>
-                <option value="partner_pilot">partner_pilot</option>
-                <option value="other">other</option>
-              </select>
-            </label>
-            <label className="block">
-              Channel
-              <input value={marketingChannel} onChange={(event) => setMarketingChannel(event.target.value)} placeholder="paid_social" className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
-            <label className="block">
-              Amount USD
-              <input value={marketingAmount} onChange={(event) => setMarketingAmount(event.target.value)} type="number" min={0} step="0.01" required className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
-            <label className="block">
-              Effective at
-              <input value={marketingEffectiveAt} onChange={(event) => setMarketingEffectiveAt(event.target.value)} type="datetime-local" className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
-            <label className="block">
-              Notes
-              <input value={marketingNotes} onChange={(event) => setMarketingNotes(event.target.value)} placeholder="optional context" className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
+            <div>
+              <Label className="block">Motion</Label>
+              <Select value={marketingMotion} onValueChange={(value) => setMarketingMotion(value as MarketingMotion)}>
+                <SelectTrigger className="mt-1 w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="direct_paid_sprint">direct_paid_sprint</SelectItem>
+                  <SelectItem value="partner_pilot">partner_pilot</SelectItem>
+                  <SelectItem value="other">other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="block">Channel</Label>
+              <Input value={marketingChannel} onChange={(event) => setMarketingChannel(event.target.value)} placeholder="paid_social" className="mt-1 w-full" />
+            </div>
+            <div>
+              <Label className="block">Amount USD</Label>
+              <Input value={marketingAmount} onChange={(event) => setMarketingAmount(event.target.value)} type="number" min={0} step="0.01" required className="mt-1 w-full" />
+            </div>
+            <div>
+              <Label className="block">Effective at</Label>
+              <Input value={marketingEffectiveAt} onChange={(event) => setMarketingEffectiveAt(event.target.value)} type="datetime-local" className="mt-1 w-full" />
+            </div>
+            <div>
+              <Label className="block">Notes</Label>
+              <Input value={marketingNotes} onChange={(event) => setMarketingNotes(event.target.value)} placeholder="optional context" className="mt-1 w-full" />
+            </div>
           </div>
-          <button disabled={submitState === 'saving'} type="submit" className="mt-4 rounded border border-white/20 px-3 py-2 text-[13px] font-semibold text-slate-100 hover:border-orange-300/70 hover:bg-white/5 disabled:opacity-60">
+          <Button disabled={submitState === 'saving'} type="submit" variant="outline" className="mt-4">
             {submitState === 'saving' ? 'Saving...' : 'Save marketing row'}
-          </button>
+          </Button>
+        </Card>
         </form>
 
-        <form onSubmit={submitPartnerEvent} className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <form onSubmit={submitPartnerEvent}>
+        <Card variant="glass" className="p-5">
           <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Add partner commercial event</p>
           <div className="mt-3 space-y-3 text-[13px] text-slate-200">
-            <label className="block">
-              Partner ID
-              <input value={partnerId} onChange={(event) => setPartnerId(event.target.value)} placeholder="UUID" required className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
-            <label className="block">
-              Event type
-              <select value={partnerEventType} onChange={(event) => setPartnerEventType(event.target.value as PartnerCommercialEvent)} className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100">
-                <option value="pilot_fee_collected">pilot_fee_collected</option>
-                <option value="expansion_proposal_sent">expansion_proposal_sent</option>
-                <option value="expansion_accepted">expansion_accepted</option>
-                <option value="expansion_rejected">expansion_rejected</option>
-              </select>
-            </label>
-            <label className="block">
-              Amount USD (optional)
-              <input value={partnerAmount} onChange={(event) => setPartnerAmount(event.target.value)} type="number" min={0} step="0.01" className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
-            <label className="block">
-              Effective at
-              <input value={partnerEffectiveAt} onChange={(event) => setPartnerEffectiveAt(event.target.value)} type="datetime-local" className="mt-1 w-full rounded border border-white/15 bg-slate-950/50 px-2 py-2 text-[13px] text-slate-100" />
-            </label>
+            <div>
+              <Label className="block">Partner ID</Label>
+              <Input value={partnerId} onChange={(event) => setPartnerId(event.target.value)} placeholder="UUID" required className="mt-1 w-full" />
+            </div>
+            <div>
+              <Label className="block">Event type</Label>
+              <Select value={partnerEventType} onValueChange={(value) => setPartnerEventType(value as PartnerCommercialEvent)}>
+                <SelectTrigger className="mt-1 w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pilot_fee_collected">pilot_fee_collected</SelectItem>
+                  <SelectItem value="expansion_proposal_sent">expansion_proposal_sent</SelectItem>
+                  <SelectItem value="expansion_accepted">expansion_accepted</SelectItem>
+                  <SelectItem value="expansion_rejected">expansion_rejected</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="block">Amount USD (optional)</Label>
+              <Input value={partnerAmount} onChange={(event) => setPartnerAmount(event.target.value)} type="number" min={0} step="0.01" className="mt-1 w-full" />
+            </div>
+            <div>
+              <Label className="block">Effective at</Label>
+              <Input value={partnerEffectiveAt} onChange={(event) => setPartnerEffectiveAt(event.target.value)} type="datetime-local" className="mt-1 w-full" />
+            </div>
           </div>
-          <button disabled={submitState === 'saving'} type="submit" className="mt-4 rounded border border-white/20 px-3 py-2 text-[13px] font-semibold text-slate-100 hover:border-orange-300/70 hover:bg-white/5 disabled:opacity-60">
+          <Button disabled={submitState === 'saving'} type="submit" variant="outline" className="mt-4">
             {submitState === 'saving' ? 'Saving...' : 'Save partner event'}
-          </button>
+          </Button>
+        </Card>
         </form>
       </section>
 
-      <section className="mt-5 rounded-2xl border border-white/10 bg-white/5 overflow-hidden shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="mt-5 overflow-hidden">
         <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent marketing spend rows</p>
           <span className="text-[12px] text-slate-400">{loadState === 'loading' ? 'Loading...' : `Rows: ${payload?.marketing_spend_entries.length ?? 0}`}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-[12px] text-slate-200">
-            <thead>
-              <tr className="border-b border-white/10 text-slate-400">
-                <th className="px-5 py-2 pr-4">Effective</th>
-                <th className="py-2 pr-4">Motion</th>
-                <th className="py-2 pr-4">Channel</th>
-                <th className="py-2 pr-4">Amount</th>
-                <th className="py-2 pr-4">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="text-[12px] text-slate-200">
+            <TableHeader>
+              <TableRow className="text-slate-400">
+                <TableHead className="px-5 pr-4">Effective</TableHead>
+                <TableHead className="pr-4">Motion</TableHead>
+                <TableHead className="pr-4">Channel</TableHead>
+                <TableHead className="pr-4">Amount</TableHead>
+                <TableHead className="pr-4">Notes</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {(payload?.marketing_spend_entries ?? []).map((row) => (
-                <tr key={row.id} className="border-b border-white/5">
-                  <td className="px-5 py-2 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.effective_at).toISOString()}</td>
-                  <td className="py-2 pr-4">{row.motion}</td>
-                  <td className="py-2 pr-4">{row.channel ?? '--'}</td>
-                  <td className="py-2 pr-4">{money(row.amount_usd)}</td>
-                  <td className="py-2 pr-4 max-w-[260px] truncate" title={row.notes ?? '--'}>{row.notes ?? '--'}</td>
-                </tr>
+                <TableRow key={row.id}>
+                  <TableCell className="px-5 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.effective_at).toISOString()}</TableCell>
+                  <TableCell className="pr-4">{row.motion}</TableCell>
+                  <TableCell className="pr-4">{row.channel ?? '--'}</TableCell>
+                  <TableCell className="pr-4">{money(row.amount_usd)}</TableCell>
+                  <TableCell className="pr-4 max-w-[260px] truncate" title={row.notes ?? '--'}>{row.notes ?? '--'}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
-      </section>
+      </Card>
 
-      <section className="mt-5 rounded-2xl border border-white/10 bg-white/5 overflow-hidden shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+      <Card variant="glass" className="mt-5 overflow-hidden">
         <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent partner commercial events</p>
           <span className="text-[12px] text-slate-400">{loadState === 'loading' ? 'Loading...' : `Rows: ${payload?.partner_commercial_events.length ?? 0}`}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-[12px] text-slate-200">
-            <thead>
-              <tr className="border-b border-white/10 text-slate-400">
-                <th className="px-5 py-2 pr-4">Effective</th>
-                <th className="py-2 pr-4">Partner</th>
-                <th className="py-2 pr-4">Event</th>
-                <th className="py-2 pr-4">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="text-[12px] text-slate-200">
+            <TableHeader>
+              <TableRow className="text-slate-400">
+                <TableHead className="px-5 pr-4">Effective</TableHead>
+                <TableHead className="pr-4">Partner</TableHead>
+                <TableHead className="pr-4">Event</TableHead>
+                <TableHead className="pr-4">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {(payload?.partner_commercial_events ?? []).map((row) => (
-                <tr key={row.id} className="border-b border-white/5">
-                  <td className="px-5 py-2 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.effective_at).toISOString()}</td>
-                  <td className="py-2 pr-4 font-mono text-[11px] text-slate-300">{row.partner_id}</td>
-                  <td className="py-2 pr-4">{row.event_type}</td>
-                  <td className="py-2 pr-4">{money(row.amount_usd)}</td>
-                </tr>
+                <TableRow key={row.id}>
+                  <TableCell className="px-5 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.effective_at).toISOString()}</TableCell>
+                  <TableCell className="pr-4 font-mono text-[11px] text-slate-300">{row.partner_id}</TableCell>
+                  <TableCell className="pr-4">{row.event_type}</TableCell>
+                  <TableCell className="pr-4">{money(row.amount_usd)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
-      </section>
+      </Card>
     </>
   )
 }

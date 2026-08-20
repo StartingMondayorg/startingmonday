@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { DemoBanner } from '@/components/DemoBanner'
-import { PersonalEmailNudge } from '@/components/PersonalEmailNudge'
-import { WatermarkOverlay } from '@/components/WatermarkOverlay'
-import { BottomNav } from '@/components/BottomNav'
-import { CommandPalette } from '@/components/CommandPalette'
-import { ToastProvider } from '@/lib/toast'
-import { DashboardFooter } from '@/components/DashboardFooter'
-import { BackToTop } from '@/components/BackToTop'
+import { DemoBanner } from '@/app/(dashboard)/_components/DemoBanner'
+import { PersonalEmailNudge } from '@/app/(dashboard)/_components/PersonalEmailNudge'
+import { WatermarkOverlay } from '@/app/(dashboard)/_components/WatermarkOverlay'
+import { BottomNav } from '@/app/(dashboard)/_components/BottomNav'
+import { CommandPalette } from '@/app/(dashboard)/_components/CommandPalette'
+import { Toaster } from '@/components/ui/sonner'
+import { DashboardFooter } from '@/app/(dashboard)/_components/DashboardFooter'
+import { BackToTop } from '@/app/(dashboard)/_components/BackToTop'
 import { resolveOrgScopeForUser } from '@/lib/org-scope'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const isDemo = !!(user?.id && demoId && user.id === demoId)
 
   return (
-    <ToastProvider>
+    <>
       {/* PostHog is provided by the root layout. */}
       {isDemo && <DemoBanner />}
       {!isDemo && user?.email && <WatermarkOverlay email={user.email} />}
@@ -40,6 +40,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <BottomNav />
       <BackToTop />
       <CommandPalette />
-    </ToastProvider>
+      <Toaster />
+    </>
   )
 }

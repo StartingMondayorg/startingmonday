@@ -31,5 +31,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "monitoring-coverage-matrix"]
+  "exclude": ["node_modules", "monitoring-coverage-matrix", "tmp"]
 }

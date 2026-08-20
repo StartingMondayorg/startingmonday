@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
 import { StrategyClient } from './strategy-client'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 
 export const metadata = {
   title: 'Search Strategy Brief - Starting Monday',
@@ -42,22 +44,22 @@ export default async function StrategyPage() {
       />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 mb-4">
         {hasIntake ? (
-          <div className="rounded-2xl border border-slate-200 bg-white px-5 py-3 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[13px] text-slate-600">Strategy intake saved. Your brief uses those decision rules.</p>
+          <Alert className="flex flex-wrap items-center justify-between gap-3 [&>svg]:hidden">
+            <AlertDescription className="text-[13px] text-slate-600">Strategy intake saved. Your brief uses those decision rules.</AlertDescription>
             <Link href="/dashboard/strategy/intake" className="text-[13px] font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-slate-900 transition-colors">
               Edit intake
             </Link>
-          </div>
+          </Alert>
         ) : (
-          <div className="rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Alert variant="warning" className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between [&>svg]:hidden">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-600">Sharpen your brief</p>
-              <p className="text-[14px] text-slate-700 mt-1">Complete the strategy intake so your brief reflects your decision rules, red flags, and constraints. Answers from onboarding are pre-filled.</p>
+              <AlertTitle className="text-[11px] font-bold tracking-[0.16em] uppercase">Sharpen your brief</AlertTitle>
+              <AlertDescription className="text-[14px] mt-1">Complete the strategy intake so your brief reflects your decision rules, red flags, and constraints. Answers from onboarding are pre-filled.</AlertDescription>
             </div>
-            <Link href="/dashboard/strategy/intake" className="shrink-0 rounded-full bg-slate-900 px-4 py-2 text-[13px] font-semibold text-white hover:bg-slate-800 transition-colors">
+            <Button size="sm" className="shrink-0 rounded-full" render={<Link href="/dashboard/strategy/intake" />}>
               Complete intake
-            </Link>
-          </div>
+            </Button>
+          </Alert>
         )}
       </div>
       <h1 className="sr-only">Search Strategy Brief</h1>

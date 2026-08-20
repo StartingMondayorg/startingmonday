@@ -1,9 +1,11 @@
 ﻿import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
-import { ResumeTailor } from '@/components/ResumeTailor'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
+import { ResumeTailor } from '@/app/(dashboard)/dashboard/_components/ResumeTailor'
 import { LogoutButton } from '../../logout-button'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default async function TailorPage({
   searchParams,
@@ -91,7 +93,7 @@ export default async function TailorPage({
 
         {/* Upgrade gate */}
         {!canTailor && (
-          <div className="bg-slate-900 rounded p-6 sm:p-8 text-center">
+          <Card className="bg-slate-900 ring-0 rounded p-6 sm:p-8 text-center">
             <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Search plan required</p>
             <h2 className="text-[20px] font-bold text-white leading-tight mb-3">
               Resume tailoring is a Search feature.
@@ -99,29 +101,23 @@ export default async function TailorPage({
             <p className="text-[14px] text-slate-400 leading-relaxed mb-6 max-w-sm mx-auto">
               Upgrade to Search to tailor your resume for any role, with keyword analysis and .docx export.
             </p>
-            <Link
-              href="/settings/billing"
-              className="inline-block text-[14px] font-semibold text-slate-900 bg-white hover:bg-slate-100 px-6 py-3 rounded transition-colors"
-            >
+            <Button render={<Link href="/settings/billing" />}>
               Upgrade to Search
-            </Link>
-          </div>
+            </Button>
+          </Card>
         )}
 
         {/* No resume */}
         {canTailor && !hasResume && (
-          <div className="bg-white border border-slate-200 rounded p-8 text-center">
+          <Card className="rounded p-8 text-center">
             <p className="text-[15px] font-semibold text-slate-900 mb-2">No resume on file</p>
             <p className="text-[13px] text-slate-500 leading-relaxed mb-5">
               Upload your resume in your profile first. It takes about 30 seconds.
             </p>
-            <Link
-              href="/dashboard/profile"
-              className="inline-block text-[13px] font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded transition-colors"
-            >
+            <Button render={<Link href="/dashboard/profile" />}>
               Go to profile
-            </Link>
-          </div>
+            </Button>
+          </Card>
         )}
 
         {/* Main tailor UI */}

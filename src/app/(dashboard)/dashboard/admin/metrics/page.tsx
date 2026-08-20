@@ -9,6 +9,17 @@ import {
   GROUP_LABELS,
   type ScoreGroup,
 } from '@/lib/action-scores'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { MetricsCharts, type WeekRow, type EventDetail } from './metrics-charts'
 
 function weekOf(isoDate: string): string {
@@ -35,9 +46,9 @@ function ScoreBadge({ value, highGood }: { value: number; highGood: boolean }) {
   const good = highGood ? value >= 8 : value <= 3
   const mid  = highGood ? value >= 5 : value <= 6
   return (
-    <span className={`font-bold ${good ? 'text-green-600' : mid ? 'text-amber-600' : 'text-red-500'}`}>
+    <Badge variant={good ? 'success' : mid ? 'warning' : 'destructive'}>
       {value}
-    </span>
+    </Badge>
   )
 }
 
@@ -161,30 +172,40 @@ export default async function MetricsPage() {
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <h2 className="sr-only">Quick actions</h2>
-          <Link href="/dashboard/admin/crm" className="bg-white border border-slate-200 rounded p-4 hover:border-slate-400 transition-colors">
-            <p className="text-[13px] font-semibold text-slate-900">Open CRM</p>
-            <p className="text-[13px] text-slate-500 mt-1">Compare lead routing against score movement.</p>
+          <Link href="/dashboard/admin/crm">
+            <Card className="p-4 hover:border-slate-400 transition-colors">
+              <p className="text-[13px] font-semibold text-slate-900">Open CRM</p>
+              <p className="text-[13px] text-slate-500 mt-1">Compare lead routing against score movement.</p>
+            </Card>
           </Link>
-          <Link href="/dashboard/admin/onboarding/qa" className="bg-white border border-slate-200 rounded p-4 hover:border-slate-400 transition-colors">
-            <p className="text-[13px] font-semibold text-slate-900">Open onboarding QA scorecard</p>
-            <p className="text-[13px] text-slate-500 mt-1">Review Sprint 6 implementation speed and low-energy mode adoption.</p>
+          <Link href="/dashboard/admin/onboarding/qa">
+            <Card className="p-4 hover:border-slate-400 transition-colors">
+              <p className="text-[13px] font-semibold text-slate-900">Open onboarding QA scorecard</p>
+              <p className="text-[13px] text-slate-500 mt-1">Review Sprint 6 implementation speed and low-energy mode adoption.</p>
+            </Card>
           </Link>
-          <Link href="/dashboard/admin/channel-benchmarks" className="bg-white border border-slate-200 rounded p-4 hover:border-slate-400 transition-colors">
-            <p className="text-[13px] font-semibold text-slate-900">Open channel benchmarks</p>
-            <p className="text-[13px] text-slate-500 mt-1">Review channel entry and persona routing by segment.</p>
+          <Link href="/dashboard/admin/channel-benchmarks">
+            <Card className="p-4 hover:border-slate-400 transition-colors">
+              <p className="text-[13px] font-semibold text-slate-900">Open channel benchmarks</p>
+              <p className="text-[13px] text-slate-500 mt-1">Review channel entry and persona routing by segment.</p>
+            </Card>
           </Link>
-          <Link href="/dashboard/admin/outreach-analytics" className="bg-white border border-slate-200 rounded p-4 hover:border-slate-400 transition-colors">
-            <p className="text-[13px] font-semibold text-slate-900">Open outreach analytics</p>
-            <p className="text-[13px] text-slate-500 mt-1">Review channel outcomes and delivery quality.</p>
+          <Link href="/dashboard/admin/outreach-analytics">
+            <Card className="p-4 hover:border-slate-400 transition-colors">
+              <p className="text-[13px] font-semibold text-slate-900">Open outreach analytics</p>
+              <p className="text-[13px] text-slate-500 mt-1">Review channel outcomes and delivery quality.</p>
+            </Card>
           </Link>
-          <Link href="/dashboard/admin" className="bg-white border border-slate-200 rounded p-4 hover:border-slate-400 transition-colors sm:col-span-3">
-            <p className="text-[13px] font-semibold text-slate-900">Back to admin</p>
-            <p className="text-[13px] text-slate-500 mt-1">Return to operational dashboard controls.</p>
+          <Link href="/dashboard/admin" className="sm:col-span-3">
+            <Card className="p-4 hover:border-slate-400 transition-colors">
+              <p className="text-[13px] font-semibold text-slate-900">Back to admin</p>
+              <p className="text-[13px] text-slate-500 mt-1">Return to operational dashboard controls.</p>
+            </Card>
           </Link>
         </section>
 
         {/* Score methodology */}
-        <section id="metrics-definitions" className="bg-white border border-slate-200 rounded p-5 mb-6">
+        <Card id="metrics-definitions" className="p-5 mb-6">
           <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Score definitions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
@@ -198,34 +219,40 @@ export default async function MetricsPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
 
         {/* Top and bottom */}
         <section id="metrics-high-low" className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div className="bg-white border border-green-200 rounded p-5">
+          <Card className="border-green-200 p-5">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-green-600 mb-3">Highest composite</h2>
-            {top3.map(row => (
-              <div key={row.event_name} className="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
-                <div>
-                  <p className="text-[13px] font-semibold text-slate-900">{row.label}</p>
-                  <p className="text-[13px] text-slate-400">{GROUP_LABELS[row.group as ScoreGroup]} &middot; {row.count30d} last 30d</p>
+            {top3.map((row, index) => (
+              <div key={row.event_name}>
+                <div className="flex items-center justify-between py-2.5">
+                  <div>
+                    <p className="text-[13px] font-semibold text-slate-900">{row.label}</p>
+                    <p className="text-[13px] text-slate-400">{GROUP_LABELS[row.group as ScoreGroup]} &middot; {row.count30d} last 30d</p>
+                  </div>
+                  <span className="text-[22px] font-bold text-green-600 ml-4 shrink-0">{row.composite}</span>
                 </div>
-                <span className="text-[22px] font-bold text-green-600 ml-4 shrink-0">{row.composite}</span>
+                {index < top3.length - 1 && <Separator />}
               </div>
             ))}
-          </div>
-          <div className="bg-white border border-red-100 rounded p-5">
+          </Card>
+          <Card className="border-red-100 p-5">
             <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-red-500 mb-3">Lowest composite - review for friction or low impact</h2>
-            {bottom3.map(row => (
-              <div key={row.event_name} className="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
-                <div>
-                  <p className="text-[13px] font-semibold text-slate-900">{row.label}</p>
-                  <p className="text-[13px] text-slate-400">{GROUP_LABELS[row.group as ScoreGroup]} &middot; {row.count30d} last 30d</p>
+            {bottom3.map((row, index) => (
+              <div key={row.event_name}>
+                <div className="flex items-center justify-between py-2.5">
+                  <div>
+                    <p className="text-[13px] font-semibold text-slate-900">{row.label}</p>
+                    <p className="text-[13px] text-slate-400">{GROUP_LABELS[row.group as ScoreGroup]} &middot; {row.count30d} last 30d</p>
+                  </div>
+                  <span className="text-[22px] font-bold text-red-500 ml-4 shrink-0">{row.composite}</span>
                 </div>
-                <span className="text-[22px] font-bold text-red-500 ml-4 shrink-0">{row.composite}</span>
+                {index < bottom3.length - 1 && <Separator />}
               </div>
             ))}
-          </div>
+          </Card>
         </section>
 
         {/* Full report by group */}
@@ -235,45 +262,45 @@ export default async function MetricsPage() {
           if (!items) return null
           const sorted = [...items].sort((a, b) => b.composite - a.composite)
           return (
-            <div key={group} className="bg-white border border-slate-200 rounded overflow-hidden mb-4">
+            <Card key={group} className="overflow-hidden mb-4">
               <div className="px-6 py-[14px] border-b border-slate-200">
                 <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
                   {GROUP_LABELS[group]}
                 </h2>
               </div>
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="text-left bg-slate-50 border-b border-slate-100">
-                    <th className="px-6 py-2 font-semibold text-slate-400">Action</th>
-                    <th className="px-4 py-2 font-semibold text-slate-400 text-right">30d</th>
-                    <th className="px-4 py-2 font-semibold text-slate-400 text-right">7d</th>
-                    <th className="px-4 py-2 font-semibold text-slate-400 text-right">Emotion</th>
-                    <th className="px-4 py-2 font-semibold text-slate-400 text-right">Cog load</th>
-                    <th className="px-4 py-2 font-semibold text-slate-400 text-right">Retention</th>
-                    <th className="px-4 py-2 font-semibold text-slate-400 text-right">Composite</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
+              <Table className="text-[13px]">
+                <TableHeader>
+                  <TableRow className="bg-slate-50">
+                    <TableHead className="px-6 font-semibold text-slate-400">Action</TableHead>
+                    <TableHead className="px-4 font-semibold text-slate-400 text-right">30d</TableHead>
+                    <TableHead className="px-4 font-semibold text-slate-400 text-right">7d</TableHead>
+                    <TableHead className="px-4 font-semibold text-slate-400 text-right">Emotion</TableHead>
+                    <TableHead className="px-4 font-semibold text-slate-400 text-right">Cog load</TableHead>
+                    <TableHead className="px-4 font-semibold text-slate-400 text-right">Retention</TableHead>
+                    <TableHead className="px-4 font-semibold text-slate-400 text-right">Composite</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {sorted.map(row => (
-                    <tr key={row.event_name} className={row.count30d === 0 ? 'opacity-40' : ''}>
-                      <td className="px-6 py-3 text-slate-700 font-medium">{row.label}</td>
-                      <td className="px-4 py-3 text-right font-semibold text-slate-900">{row.count30d}</td>
-                      <td className="px-4 py-3 text-right text-slate-400">{row.count7d}</td>
-                      <td className="px-4 py-3 text-right"><ScoreBadge value={row.emotion} highGood /></td>
-                      <td className="px-4 py-3 text-right"><ScoreBadge value={row.cognitive_load} highGood={false} /></td>
-                      <td className="px-4 py-3 text-right"><ScoreBadge value={row.retention} highGood /></td>
-                      <td className="px-4 py-3 text-right font-bold text-slate-900">{row.composite}</td>
-                    </tr>
+                    <TableRow key={row.event_name} className={row.count30d === 0 ? 'opacity-40' : ''}>
+                      <TableCell className="px-6 py-3 text-slate-700 font-medium">{row.label}</TableCell>
+                      <TableCell className="px-4 py-3 text-right font-semibold text-slate-900">{row.count30d}</TableCell>
+                      <TableCell className="px-4 py-3 text-right text-slate-400">{row.count7d}</TableCell>
+                      <TableCell className="px-4 py-3 text-right"><ScoreBadge value={row.emotion} highGood /></TableCell>
+                      <TableCell className="px-4 py-3 text-right"><ScoreBadge value={row.cognitive_load} highGood={false} /></TableCell>
+                      <TableCell className="px-4 py-3 text-right"><ScoreBadge value={row.retention} highGood /></TableCell>
+                      <TableCell className="px-4 py-3 text-right font-bold text-slate-900">{row.composite}</TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </TableBody>
+              </Table>
+            </Card>
           )
         })}
         </section>
 
         {/* Trend dashboard */}
-        <section id="metrics-trends" className="bg-white border border-slate-200 rounded p-6 mt-6">
+        <Card id="metrics-trends" className="p-6 mt-6">
           <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-1">
             Weekly Event Volume by Group (12 weeks)
           </h2>
@@ -281,7 +308,7 @@ export default async function MetricsPage() {
             Click a group button below the chart to drill into event-level detail.
           </p>
           <MetricsCharts weeklyData={weeklyData} groupDetails={groupDetails} />
-        </section>
+        </Card>
 
       </main>
     </div>

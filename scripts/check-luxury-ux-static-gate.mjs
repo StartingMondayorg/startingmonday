@@ -89,6 +89,7 @@ function listTargetFiles() {
     .map((line) => line.trim())
     .filter(Boolean)
     .filter((relativePath) => PAGE_FILE_RE.test(relativePath))
+    .filter((relativePath) => fs.existsSync(path.join(ROOT, relativePath)))
 }
 
 function walk(dirPath) {

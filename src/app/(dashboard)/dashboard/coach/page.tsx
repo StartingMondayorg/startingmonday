@@ -2,6 +2,27 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from '@/components/ui/pagination'
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
 
 type CommandCenterClient = {
   user_id: string
@@ -157,10 +178,10 @@ export default function CoachDashboard() {
   }
   const narrativeDriftCount = reviewsWithState.filter((review) => review.narrative_drift).length
 
-  function urgencyClass(urgency: 'high' | 'medium' | 'low') {
-    if (urgency === 'high') return 'text-red-700 bg-red-50 border-red-200'
-    if (urgency === 'medium') return 'text-amber-700 bg-amber-50 border-amber-200'
-    return 'text-green-700 bg-green-50 border-green-200'
+  function urgencyBadgeVariant(urgency: 'high' | 'medium' | 'low'): 'destructive' | 'warning' | 'success' {
+    if (urgency === 'high') return 'destructive'
+    if (urgency === 'medium') return 'warning'
+    return 'success'
   }
 
   return (
@@ -235,29 +256,29 @@ export default function CoachDashboard() {
         )}
 
         {!loading && (atRisk.length > 0 || overdue.length > 0) && (
-          <div className="rounded-2xl border border-amber-300/20 bg-amber-500/10 p-4 mb-6 backdrop-blur-md">
+          <Alert variant="warning" className="mb-6 backdrop-blur-md">
             <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-amber-200 mb-2">Needs Attention</h2>
             {atRisk.length > 0 && (
-              <p className="text-[13px] text-slate-100 mb-1">
+              <AlertDescription className="text-slate-100 mb-1">
                 <span className="font-semibold">{atRisk.length}</span> client{atRisk.length !== 1 ? 's' : ''} in high-risk status.
-              </p>
+              </AlertDescription>
             )}
             {overdue.length > 0 && (
-              <p className="text-[13px] text-slate-100">
+              <AlertDescription className="text-slate-100">
                 <span className="font-semibold">{overdue.length}</span> client{overdue.length !== 1 ? 's' : ''} with overdue actions.
-              </p>
+              </AlertDescription>
             )}
-          </div>
+          </Alert>
         )}
 
         {!loading && commandCenter && (
           <div className="grid lg:grid-cols-3 gap-4 mb-6">
-            <details className="rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md group">
-              <summary className="cursor-pointer text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3 list-none">
-                <span className="group-open:hidden">▶ Upcoming sessions</span>
-                <span className="hidden group-open:inline">▼ Upcoming sessions</span>
-              </summary>
-              <div className="mt-3">
+            <Collapsible className="rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+              <CollapsibleTrigger className="group flex w-full items-center cursor-pointer text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">
+                <span className="group-data-panel-open:hidden">▶ Upcoming sessions</span>
+                <span className="hidden group-data-panel-open:inline">▼ Upcoming sessions</span>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-3">
                 {commandCenter.upcoming_sessions.length === 0 ? (
                   <p className="text-[13px] text-slate-300">No upcoming sessions or due touchpoints in the current window.</p>
                 ) : (
@@ -266,7 +287,7 @@ export default function CoachDashboard() {
                       <div key={`${session.user_id}-${session.scheduled_for}`} className="border border-white/10 rounded-lg bg-slate-950/30 p-3">
                         <div className="flex items-center justify-between gap-3">
                           <p className="text-[13px] font-semibold text-white truncate">{session.name ?? session.email ?? 'Client'}</p>
-                          <span className={`text-[13px] font-bold uppercase tracking-[0.08em] border rounded px-2 py-0.5 ${urgencyClass(session.urgency)}`}>{session.urgency}</span>
+                          <Badge variant={urgencyBadgeVariant(session.urgency)} className="uppercase tracking-[0.08em]">{session.urgency}</Badge>
                         </div>
                         <p className="text-[13px] text-slate-300 mt-0.5">Due {session.scheduled_for ?? 'TBD'}{session.owner ? ` · Owner: ${session.owner}` : ''}</p>
                         {session.action && <p className="text-[13px] text-slate-100 mt-1">{session.action}</p>}
@@ -274,8 +295,8 @@ export default function CoachDashboard() {
                     ))}
                   </div>
                 )}
-              </div>
-            </details>
+              </CollapsibleContent>
+            </Collapsible>
 
             <div className="rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
               <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">Priority action queue</h2>
@@ -287,7 +308,7 @@ export default function CoachDashboard() {
                     <div key={client.user_id} className="border border-white/10 rounded-lg bg-slate-950/30 p-3">
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-[13px] font-semibold text-white truncate">{client.name ?? client.email ?? 'Client'}</p>
-                        <span className={`text-[13px] font-bold uppercase tracking-[0.08em] border rounded px-2 py-0.5 ${urgencyClass(client.urgency)}`}>{client.urgency}</span>
+                        <Badge variant={urgencyBadgeVariant(client.urgency)} className="uppercase tracking-[0.08em]">{client.urgency}</Badge>
                       </div>
                       <p className="text-[13px] text-slate-100 mt-1">{client.next_action?.action}</p>
                       <p className="text-[13px] text-slate-300 mt-0.5">Due {client.next_action?.due_date ?? 'TBD'}{client.next_action?.owner ? ` · Owner: ${client.next_action.owner}` : ''}</p>
@@ -332,7 +353,7 @@ export default function CoachDashboard() {
           </div>
         )}
 
-        <div className="rounded-2xl border border-white/15 bg-white/5 overflow-hidden mb-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="gap-0 overflow-hidden mb-8 py-0 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           {loading ? (
             <div className="px-6 py-10 text-center text-[13px] text-slate-300">Loading clients...</div>
           ) : error ? (
@@ -343,41 +364,41 @@ export default function CoachDashboard() {
               <p className="text-[13px] text-slate-400">Invite a client below to get started.</p>
             </div>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-6 py-3">Client</th>
-                  <th className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Level</th>
-                  <th className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Risk</th>
-                  <th className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Urgency</th>
-                  <th className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Overdue</th>
-                  <th className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Next action + activity</th>
-                  <th className="text-right text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-white/10 hover:bg-transparent">
+                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-6 py-3">Client</TableHead>
+                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Level</TableHead>
+                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Risk</TableHead>
+                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Urgency</TableHead>
+                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Overdue</TableHead>
+                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Next action + activity</TableHead>
+                  <TableHead className="text-right text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-6 py-3">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-white/10">
                 {clients.map(client => (
-                  <tr key={client.user_id} className={client.urgency === 'high' || client.risk_inputs.overdue_actions > 0 ? 'bg-amber-500/10' : 'bg-slate-950/20'}>
-                    <td className="px-6 py-4">
+                  <TableRow key={client.user_id} className={`border-white/10 hover:bg-white/5 ${client.urgency === 'high' || client.risk_inputs.overdue_actions > 0 ? 'bg-amber-500/10' : 'bg-slate-950/20'}`}>
+                    <TableCell className="whitespace-normal px-6 py-4">
                       <p className="text-[14px] font-semibold text-white">{client.name ?? '(not onboarded)'}</p>
                       <p className="text-[13px] text-slate-400">{client.email ?? '-'}</p>
-                    </td>
-                    <td className="px-4 py-4">
+                    </TableCell>
+                    <TableCell className="px-4 py-4">
                       <span className="text-[13px] text-slate-300">{client.persona ? (PERSONA_LABELS[client.persona] ?? client.persona) : '-'}</span>
-                    </td>
-                    <td className="px-4 py-4 text-center">
+                    </TableCell>
+                    <TableCell className="px-4 py-4 text-center">
                       <span className="text-[13px] font-bold text-white tabular-nums">{client.risk_score}</span>
-                    </td>
-                    <td className="px-4 py-4 text-center">
-                      <span className={`text-[13px] font-bold uppercase tracking-[0.08em] border rounded px-2 py-0.5 ${urgencyClass(client.urgency)}`}>{client.urgency}</span>
-                    </td>
-                    <td className="px-4 py-4 text-center">
+                    </TableCell>
+                    <TableCell className="px-4 py-4 text-center">
+                      <Badge variant={urgencyBadgeVariant(client.urgency)} className="uppercase tracking-[0.08em]">{client.urgency}</Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-4 text-center">
                       {client.risk_inputs.overdue_actions > 0
-                        ? <span className="text-[13px] font-bold text-red-100 bg-red-500/10 px-2 py-0.5 rounded-full tabular-nums border border-red-300/20">{client.risk_inputs.overdue_actions}</span>
+                        ? <Badge variant="destructive" className="tabular-nums">{client.risk_inputs.overdue_actions}</Badge>
                         : <span className="text-[13px] text-slate-300">-</span>
                       }
-                    </td>
-                    <td className="px-4 py-4">
+                    </TableCell>
+                    <TableCell className="whitespace-normal px-4 py-4">
                       {client.next_action?.action ? (
                         <div className="space-y-0.5">
                           <p className="text-[13px] font-semibold text-white truncate max-w-[220px]">{client.next_action.action}</p>
@@ -394,8 +415,8 @@ export default function CoachDashboard() {
                       ) : (
                         <span className="text-[13px] text-slate-300">-</span>
                       )}
-                    </td>
-                    <td className="px-6 py-4 text-right">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right">
                       {client.user_id ? (
                         <Link
                           href={`/dashboard/coach/${client.user_id}`}
@@ -406,11 +427,11 @@ export default function CoachDashboard() {
                       ) : (
                         <span className="text-[13px] text-slate-300">-</span>
                       )}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
 
           {!loading && commandCenter?.pagination && commandCenter.pagination.total_pages > 1 && (
@@ -418,56 +439,62 @@ export default function CoachDashboard() {
               <p className="text-[13px] text-slate-300">
                 Page {commandCenter.pagination.page} of {commandCenter.pagination.total_pages} · {commandCenter.pagination.total_clients} clients
               </p>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-                  disabled={!commandCenter.pagination.has_previous}
-                  className="text-[13px] font-semibold px-3 py-1.5 rounded border border-white/15 bg-white/5 text-slate-200 disabled:opacity-40"
-                >
-                  Previous
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((prev) => prev + 1)}
-                  disabled={!commandCenter.pagination.has_next}
-                  className="text-[13px] font-semibold px-3 py-1.5 rounded border border-white/15 bg-white/5 text-slate-200 disabled:opacity-40"
-                >
-                  Next
-                </button>
-              </div>
+              <Pagination className="mx-0 w-auto justify-end">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => { e.preventDefault(); if (commandCenter.pagination.has_previous) setPage((prev) => Math.max(1, prev - 1)) }}
+                      aria-disabled={!commandCenter.pagination.has_previous}
+                      className={`text-slate-200 border-white/15 hover:border-white/30 ${!commandCenter.pagination.has_previous ? 'pointer-events-none opacity-40' : ''}`}
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => { e.preventDefault(); if (commandCenter.pagination.has_next) setPage((prev) => prev + 1) }}
+                      aria-disabled={!commandCenter.pagination.has_next}
+                      className={`text-slate-200 border-white/15 hover:border-white/30 ${!commandCenter.pagination.has_next ? 'pointer-events-none opacity-40' : ''}`}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-2xl border border-white/15 bg-white/5 p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">Invite a client</p>
           <form onSubmit={sendInvite} className="flex gap-3 items-start">
-            <input
+            <Input
               type="email"
               value={inviteEmail}
               onChange={e => setInviteEmail(e.target.value)}
               placeholder="client@email.com"
-              className="flex-1 border border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70 focus:outline-none focus:border-white/30"
+              className="flex-1 border-white/15 text-slate-100 bg-slate-950/70"
             />
-            <button
+            <Button
               type="submit"
               disabled={inviting || !inviteEmail.trim()}
-              className="bg-orange-500 hover:bg-orange-400 disabled:opacity-40 text-slate-950 text-[13px] font-semibold px-4 py-2 rounded transition-colors cursor-pointer border-0 shrink-0"
+              className="shrink-0"
             >
               {inviting ? 'Sending...' : 'Send invite'}
-            </button>
+            </Button>
           </form>
           {inviteSent && (
-            <p className="text-[13px] text-emerald-200 mt-2">Invite sent to {inviteSent}.</p>
+            <Alert variant="success" className="mt-2">
+              <AlertDescription>Invite sent to {inviteSent}.</AlertDescription>
+            </Alert>
           )}
           {inviteError && (
-            <p className="text-[13px] text-red-200 mt-2">{inviteError}</p>
+            <Alert variant="destructive" className="mt-2">
+              <AlertDescription>{inviteError}</AlertDescription>
+            </Alert>
           )}
           <p className="text-[13px] text-slate-300 mt-3">
             Your client will receive an email to create their account under your coaching relationship. Up to {Math.max(0, 10 - clients.length)} seat{Math.max(0, 10 - clients.length) !== 1 ? 's' : ''} remaining.
           </p>
-        </div>
+        </Card>
 
       </main>
     </div>

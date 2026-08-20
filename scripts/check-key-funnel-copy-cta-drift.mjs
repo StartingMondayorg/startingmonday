@@ -31,12 +31,16 @@ const SPECS = [
   {
     id: 'homepage-copy-cta',
     route: '/',
-    files: ['src/app/page.tsx', 'src/components/LandingPage.tsx'],
+    files: [
+      'src/app/(marketing)/page.tsx',
+      'src/app/components/LandingPage.tsx',
+      'src/lib/starting-monday-hero-content.ts',
+    ],
     rules: [
       {
         id: 'home-hero-claim',
-        description: 'Homepage hero keeps timing-and-outcomes claim.',
-        matcher: 'Reputation opens doors. Timing decides outcomes.',
+        description: 'Homepage hero keeps the approved evidence-led eyebrow.',
+        matcher: 'Career intelligence for managers and executives.',
       },
       {
         id: 'home-method-section',
@@ -48,12 +52,40 @@ const SPECS = [
         description: 'Homepage evidence CTA points to early-signals evidence anchor.',
         matcher: 'href="/evidence-hub#early-signals"',
       },
+      {
+        id: 'home-example-cta',
+        description: 'Homepage hero includes the approved live example destination.',
+        matcher: 'See a live example',
+      },
+    ],
+  },
+  {
+    id: 'example-copy-cta',
+    route: '/example',
+    files: ['src/app/(marketing)/example/page.tsx', 'src/lib/starting-monday-hero-content.ts'],
+    rules: [
+      {
+        id: 'example-heading',
+        description: 'Example page keeps its approved heading.',
+        matcher: 'What a forming role looks like.',
+      },
+      {
+        id: 'example-access-cta',
+        description: 'Example page keeps a signup CTA.',
+        matcher: /href="\/signup"/,
+      },
+      {
+        id: 'example-no-generalized-timing-claim',
+        description: 'Example page does not ship the rejected generalized timing claim.',
+        matcher: 'usually appear weeks before',
+        kind: 'forbid',
+      },
     ],
   },
   {
     id: 'pricing-copy-cta',
     route: '/pricing',
-    files: ['src/app/pricing/pricing-cards.tsx'],
+    files: ['src/app/(marketing)/pricing/pricing-cards.tsx'],
     rules: [
       {
         id: 'pricing-primary-cta',
@@ -70,7 +102,7 @@ const SPECS = [
   {
     id: 'demo-copy-cta',
     route: '/demo',
-    files: ['src/app/demo/page.tsx'],
+    files: ['src/app/(marketing)/demo/page.tsx'],
     rules: [
       {
         id: 'demo-run-anchor',
@@ -87,7 +119,7 @@ const SPECS = [
   {
     id: 'blog-copy-cta',
     route: '/blog',
-    files: ['src/app/blog/page.tsx'],
+    files: ['src/app/(marketing)/blog/page.tsx'],
     rules: [
       {
         id: 'blog-demo-cta',
@@ -99,7 +131,7 @@ const SPECS = [
   {
     id: 'method-evidence-copy-cta',
     route: '/method-and-evidence',
-    files: ['src/app/method-and-evidence/page.tsx'],
+    files: ['src/app/(marketing)/method-and-evidence/page.tsx'],
     rules: [
       {
         id: 'method-dig-deeper',

@@ -1,7 +1,7 @@
 import { type NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
 import { createClient } from '@/lib/supabase/server'
-import { getUserSubscription, canAccessFeature } from '@/lib/subscription'
+import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { isRateLimited } from '@/lib/api-usage'
 import { checkBurstLimit } from '@/lib/burst-limit'
 import { type SupabaseClient } from '@supabase/supabase-js'

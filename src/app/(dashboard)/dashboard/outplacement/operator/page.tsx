@@ -2,6 +2,10 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 type PartnerRow = { id: string; name: string }
 type AttributionRow = { partner_id: string; signup_user_id: string; attributed_at: string }
@@ -268,10 +272,10 @@ export default async function OutplacementOperatorConsolePage() {
     },
   ]
 
-  const STATUS_STYLE = {
-    on_track: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    watch: 'text-amber-700 bg-amber-50 border-amber-200',
-    needs_attention: 'text-red-700 bg-red-50 border-red-200',
+  const STATUS_ALERT_VARIANT = {
+    on_track: 'success',
+    watch: 'warning',
+    needs_attention: 'destructive',
   } as const
 
   const EXCEPTION_QUEUE = [
@@ -282,10 +286,16 @@ export default async function OutplacementOperatorConsolePage() {
     { participant: 'Exec E', issue: 'No brief review in 14 days', severity: 'low', owner: 'Unassigned' },
   ]
 
-  const SEVERITY_STYLE = {
-    high: 'border-red-300 bg-red-50',
-    medium: 'border-amber-200 bg-amber-50',
-    low: 'border-slate-200 bg-white',
+  const SEVERITY_ALERT_VARIANT = {
+    high: 'destructive',
+    medium: 'warning',
+    low: 'default',
+  } as const
+
+  const SEVERITY_BADGE_VARIANT = {
+    high: 'destructive',
+    medium: 'warning',
+    low: 'secondary',
   } as const
 
   return (
@@ -304,24 +314,24 @@ export default async function OutplacementOperatorConsolePage() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {/* Header */}
-        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-5">
+        <Card className="px-6 py-5">
           <p className="text-[13px] font-semibold text-orange-500 mb-1">Outplacement operator console</p>
           <h1 className="text-[22px] font-bold text-slate-900 leading-tight">Program operations overview</h1>
           <p className="text-[13px] text-slate-500 mt-1">
             Cohort health, exceptions, and intervention queue for the current program cycle.
           </p>
-        </div>
+        </Card>
 
         {/* Cohort health KPIs */}
         <div>
           <h2 className="text-[13px] font-semibold text-slate-600 mb-3">Cohort health - current cycle</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {LIVE_COHORT_HEALTH.map((item) => (
-              <div key={item.label} className={`rounded-xl border p-4 ${STATUS_STYLE[item.status as keyof typeof STATUS_STYLE]}`}>
-                <p className="text-[13px] font-semibold text-slate-500 mb-1">{item.label}</p>
+              <Alert key={item.label} variant={STATUS_ALERT_VARIANT[item.status as keyof typeof STATUS_ALERT_VARIANT]} className="p-4 block">
+                <p className="text-[13px] font-semibold mb-1">{item.label}</p>
                 <p className="text-[22px] font-bold leading-none">{item.value}</p>
-                <p className="text-[13px] mt-1 text-slate-400">Benchmark: {item.benchmark}</p>
-              </div>
+                <p className="text-[13px] mt-1 opacity-70">Benchmark: {item.benchmark}</p>
+              </Alert>
             ))}
           </div>
         </div>
@@ -334,24 +344,20 @@ export default async function OutplacementOperatorConsolePage() {
           </div>
           <div className="space-y-2">
             {exceptionQueue.length === 0 ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-[13px] text-emerald-800">
-                No active exceptions in your scoped partner cohorts.
-              </div>
+              <Alert variant="success">
+                <AlertDescription>No active exceptions in your scoped partner cohorts.</AlertDescription>
+              </Alert>
             ) : exceptionQueue.map((item) => (
-              <div key={item.participant} className={`rounded-xl border px-4 py-3 flex items-start gap-4 ${SEVERITY_STYLE[item.severity as keyof typeof SEVERITY_STYLE]}`}>
+              <Alert key={item.participant} variant={SEVERITY_ALERT_VARIANT[item.severity as keyof typeof SEVERITY_ALERT_VARIANT]} className="flex items-start gap-4 py-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-semibold text-slate-900">{item.participant}</p>
-                  <p className="text-[13px] text-slate-600 mt-0.5">{item.issue}</p>
+                  <AlertTitle className="text-slate-900">{item.participant}</AlertTitle>
+                  <AlertDescription className="mt-0.5">{item.issue}</AlertDescription>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <span className={`inline-block px-2 py-0.5 rounded-full text-[13px] font-semibold ${
-                    item.severity === 'high' ? 'bg-red-100 text-red-700' :
-                    item.severity === 'medium' ? 'bg-amber-100 text-amber-700' :
-                    'bg-slate-100 text-slate-500'
-                  }`}>{item.severity}</span>
+                  <Badge variant={SEVERITY_BADGE_VARIANT[item.severity as keyof typeof SEVERITY_BADGE_VARIANT]}>{item.severity}</Badge>
                   <p className="text-[13px] text-slate-400 mt-1">Owner: {item.owner}</p>
                 </div>
-              </div>
+              </Alert>
             ))}
           </div>
         </div>
@@ -359,41 +365,37 @@ export default async function OutplacementOperatorConsolePage() {
         {/* Cohort efficiency summary */}
         <div>
           <h2 className="text-[13px] font-semibold text-slate-600 mb-3">Cohort efficiency</h2>
-          <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-            <table className="w-full text-[13px]">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
+          <Card className="py-0 overflow-hidden">
+            <Table className="text-[13px]">
+              <TableHeader className="bg-slate-50">
+                <TableRow>
                   {['Cohort', 'Participants', 'Activation rate', 'Overdue actions', 'Stall flags', 'Status'].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-[13px] font-semibold text-slate-500">{h}</th>
+                    <TableHead key={h} className="px-4 py-3 text-[13px] font-semibold text-slate-500">{h}</TableHead>
                   ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {cohortRows.length === 0 ? (
-                  <tr>
-                    <td className="px-4 py-4 text-slate-500" colSpan={6}>No attributed cohorts found for your partner scope yet.</td>
-                  </tr>
+                  <TableRow>
+                    <TableCell className="px-4 py-4 text-slate-500" colSpan={6}>No attributed cohorts found for your partner scope yet.</TableCell>
+                  </TableRow>
                 ) : cohortRows.map((c) => (
-                  <tr key={c.name} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-800">{c.name}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.participants}</td>
-                    <td className="px-4 py-3 text-slate-600">{Math.round(c.activationRate)}%</td>
-                    <td className={`px-4 py-3 font-semibold ${c.overdue > 0 ? 'text-red-600' : 'text-slate-400'}`}>{c.overdue}</td>
-                    <td className={`px-4 py-3 font-semibold ${c.stalls > 0 ? 'text-amber-600' : 'text-slate-400'}`}>{c.stalls}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-[13px] font-semibold ${
-                        c.status === 'on_track'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : c.status === 'watch'
-                            ? 'bg-amber-100 text-amber-700'
-                            : 'bg-red-100 text-red-700'
-                      }`}>{c.status.replace('_', ' ')}</span>
-                    </td>
-                  </tr>
+                  <TableRow key={c.name}>
+                    <TableCell className="px-4 py-3 font-medium text-slate-800">{c.name}</TableCell>
+                    <TableCell className="px-4 py-3 text-slate-600">{c.participants}</TableCell>
+                    <TableCell className="px-4 py-3 text-slate-600">{Math.round(c.activationRate)}%</TableCell>
+                    <TableCell className={`px-4 py-3 font-semibold ${c.overdue > 0 ? 'text-red-600' : 'text-slate-400'}`}>{c.overdue}</TableCell>
+                    <TableCell className={`px-4 py-3 font-semibold ${c.stalls > 0 ? 'text-amber-600' : 'text-slate-400'}`}>{c.stalls}</TableCell>
+                    <TableCell className="px-4 py-3">
+                      <Badge variant={c.status === 'on_track' ? 'success' : c.status === 'watch' ? 'warning' : 'destructive'}>
+                        {c.status.replace('_', ' ')}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </Card>
         </div>
 
         {/* Quick links */}
@@ -406,9 +408,11 @@ export default async function OutplacementOperatorConsolePage() {
             { href: '/for-outplacement/trust-pack', label: 'Trust pack', desc: 'Governance and procurement materials' },
             { href: '/for-outplacement/runbook', label: 'Runbook', desc: 'Operational runbook and escalation rules' },
           ].map(({ href, label, desc }) => (
-            <Link key={href} href={href} className="rounded-xl border border-slate-200 bg-white px-4 py-4 hover:border-orange-300 transition-colors group">
-              <p className="text-[13px] font-semibold text-slate-900 group-hover:text-orange-700 transition-colors">{label}</p>
-              <p className="text-[12px] text-slate-500 mt-0.5">{desc}</p>
+            <Link key={href} href={href} className="group">
+              <Card className="px-4 py-4 hover:border-orange-300 transition-colors">
+                <p className="text-[13px] font-semibold text-slate-900 group-hover:text-orange-700 transition-colors">{label}</p>
+                <p className="text-[12px] text-slate-500 mt-0.5">{desc}</p>
+              </Card>
             </Link>
           ))}
         </div>

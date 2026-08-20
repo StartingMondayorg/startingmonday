@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
+import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
   title: 'Counselor View | Starting Monday',
@@ -42,13 +43,13 @@ export default async function CounselorViewPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        <section className="rounded-2xl border border-slate-200 bg-white px-6 py-5">
+        <Card className="px-6 py-5">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Counselor view</p>
           <h1 className="text-[24px] font-bold text-slate-900 leading-tight">What changed, what is stuck, what to do next</h1>
           <p className="text-[13px] text-slate-500 mt-1">
             This view is built for the session floor: fast prep, clear intervention priorities, and a consistent opening sequence.
           </p>
-        </section>
+        </Card>
 
         <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
@@ -57,14 +58,14 @@ export default async function CounselorViewPage() {
             { label: 'Overdue actions', value: '7' },
             { label: 'Stalled lanes', value: '3' },
           ].map((card) => (
-            <div key={card.label} className="rounded-xl border border-slate-200 bg-white p-4">
+            <Card key={card.label} className="p-4">
               <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">{card.label}</p>
               <p className="mt-1 text-[28px] font-bold text-slate-900">{card.value}</p>
-            </div>
+            </Card>
           ))}
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+        <Card className="overflow-hidden gap-0 py-0">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Pre-session checklist</h2>
           </div>
@@ -73,9 +74,9 @@ export default async function CounselorViewPage() {
               <li key={item} className="px-5 py-4 text-[13px] text-slate-700">{item}</li>
             ))}
           </ul>
-        </section>
+        </Card>
 
-        <section className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+        <Card className="overflow-hidden gap-0 py-0">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Intervention queue</h2>
           </div>
@@ -91,7 +92,7 @@ export default async function CounselorViewPage() {
               </div>
             ))}
           </div>
-        </section>
+        </Card>
       </main>
     </div>
   )

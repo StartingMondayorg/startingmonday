@@ -4,11 +4,11 @@ import { createClient } from '@/lib/supabase/server'
 import { OnboardingFormSchema } from '@/lib/schemas'
 import { captureServerEvent } from '@/lib/posthog-server'
 import { logEvent } from '@/lib/events'
-import { computeElapsedSeconds, isTransitionFirstCohort, normalizeOnboardingChannel } from '@/lib/onboarding-speed'
-import { sendEmail } from '@/lib/email'
-import { getNotifyEmails } from '@/lib/owner-email'
+import { computeElapsedSeconds, isTransitionFirstCohort, normalizeOnboardingChannel } from '@/lib/onboarding/onboarding-speed'
+import { sendEmail } from '@/lib/email/email'
+import { getNotifyEmails } from '@/lib/email/owner-email'
 import { resolveRoleProfile } from '@/lib/role-taxonomy'
-import { ONBOARDING_FINAL_STEP, type OnboardingDraft } from '@/lib/onboarding-state'
+import { ONBOARDING_FINAL_STEP, type OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 
 function parseCsv(raw: string) {
   return raw.split(',').map(s => s.trim()).filter(Boolean)
@@ -56,6 +56,7 @@ export async function completeOnboarding(formData: FormData) {
   if (!user) redirect('/login')
 
   const searchPersona       = (formData.get('search_persona') as string) || null
+  const searchPosture       = (formData.get('search_posture') as string) || null
   const onboardingChannel   = normalizeOnboardingChannel((formData.get('onboarding_channel') as string) || null)
   const onboardingLowEnergy = (formData.get('onboarding_low_energy') as string) === 'true'
   const onboardingStartedAt = (formData.get('onboarding_started_at') as string ?? '').trim() || null
@@ -148,6 +149,7 @@ export async function completeOnboarding(formData: FormData) {
     {
       user_id:                  user.id,
       search_persona:           resolvedRole.searchPersonaLegacy,
+      search_posture:           searchPosture,
       role_type:                resolvedRole.roleTypeLegacy,
       role_family:              resolvedRole.roleFamily,
       role_title:               resolvedRole.roleTitle,

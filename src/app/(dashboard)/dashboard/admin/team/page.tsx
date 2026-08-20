@@ -3,7 +3,9 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, getAllStaff } from '@/lib/staff'
 import { TeamClient } from './team-client'
-import { ADMIN_DARK_PAGE_BG, ADMIN_DARK_SECTION_CARD, adminRoleBadgeClass } from '../admin-dark-theme'
+import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default async function TeamPage() {
   const supabase = await createClient()
@@ -31,14 +33,19 @@ export default async function TeamPage() {
           <h1 className="text-[26px] font-bold text-white leading-tight">Team Management</h1>
           <p className="text-[13px] text-slate-300 mt-1.5">
             Signed in as <span className="font-semibold text-slate-100">{user.email}</span>
-            <span className={`ml-2 text-[11px] font-bold px-2 py-0.5 rounded ${adminRoleBadgeClass(staff.role)}`}>{staff.role}</span>
+            <Badge
+              variant={staff.role === 'owner' ? 'warning' : staff.role === 'admin' ? 'info' : 'secondary'}
+              className="ml-2"
+            >
+              {staff.role}
+            </Badge>
           </p>
         </div>
 
         {staff.role === 'viewer' && (
-          <div className={`${ADMIN_DARK_SECTION_CARD} px-5 py-4`}>
-            <p className="text-[13px] text-slate-300">You have view-only access. Contact the owner to make changes.</p>
-          </div>
+          <Alert variant="info" className="mb-6">
+            <AlertDescription>You have view-only access. Contact the owner to make changes.</AlertDescription>
+          </Alert>
         )}
 
         <TeamClient members={members} currentRole={staff.role} />

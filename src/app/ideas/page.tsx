@@ -2,6 +2,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type Category = 'feature_request' | 'ui_ux' | 'bug' | 'performance' | 'other'
 
@@ -111,7 +119,6 @@ export default function IdeasPage() {
     }
   }
 
-  const inputCls = 'w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-200 focus:outline-none focus:border-slate-400 bg-white'
   const labelCls = 'block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-200 mb-1.5'
 
   return (
@@ -125,17 +132,17 @@ export default function IdeasPage() {
           </Link>
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
-              <Link href="/dashboard" className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-4 py-2 rounded transition-colors">
+              <Button size="sm" render={<Link href="/dashboard" />}>
                 Dashboard
-              </Link>
+              </Button>
             ) : (
               <>
                 <Link href="/login" className="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">
                   Log in
                 </Link>
-                <Link href="/signup" className="bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-semibold px-4 py-2 rounded transition-colors">
+                <Button size="sm" render={<Link href="/signup" />}>
                   Get started
-                </Link>
+                </Button>
               </>
             )}
           </div>
@@ -153,7 +160,7 @@ export default function IdeasPage() {
         </div>
 
         {/* Submit form */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
+        <Card className="p-6">
           <h2 className="text-[15px] font-bold text-slate-900 mb-4">Share your idea</h2>
 
           {submitState === 'success' ? (
@@ -162,57 +169,53 @@ export default function IdeasPage() {
               <p className="text-[14px] text-slate-500 leading-relaxed mb-4">
                 Your idea has been submitted. You are entered in this month&apos;s gift card drawing.
               </p>
-              <button
-                onClick={() => setSubmitState('idle')}
-                className="text-[13px] text-orange-500 hover:text-orange-600 font-semibold transition-colors"
-              >
+              <Button variant="link" onClick={() => setSubmitState('idle')} className="text-[13px]">
                 Submit another idea
-              </button>
+              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelCls}>Name <span className="text-slate-200 font-normal normal-case tracking-normal">optional</span></label>
-                  <input
+                  <Label className={labelCls}>Name <span className="text-slate-200 font-normal normal-case tracking-normal">optional</span></Label>
+                  <Input
                     type="text"
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Jane Smith"
-                    className={inputCls}
+                    className="w-full"
                   />
                 </div>
                 <div>
-                  <label className={labelCls}>Email <span className="text-red-400">*</span></label>
-                  <input
+                  <Label className={labelCls}>Email <span className="text-red-400">*</span></Label>
+                  <Input
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className={inputCls}
+                    className="w-full"
                   />
                 </div>
               </div>
 
               <div>
-                <label className={labelCls}>Category <span className="text-red-400">*</span></label>
-                <select
-                  value={formCategory}
-                  onChange={e => setFormCategory(e.target.value as Category)}
-                  required
-                  className="w-full border border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 focus:outline-none focus:border-slate-400 bg-white"
-                >
-                  <option value="">Select a category...</option>
-                  {CATEGORIES.filter(c => c.value !== '').map(c => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
-                  ))}
-                </select>
+                <Label className={labelCls}>Category <span className="text-red-400">*</span></Label>
+                <Select value={formCategory || undefined} onValueChange={(value) => setFormCategory(value as Category)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a category..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.filter(c => c.value !== '').map(c => (
+                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
-                <label className={labelCls}>Your idea <span className="text-red-400">*</span></label>
-                <textarea
+                <Label className={labelCls}>Your idea <span className="text-red-400">*</span></Label>
+                <Textarea
                   value={body}
                   onChange={e => setBody(e.target.value)}
                   placeholder="I'd love it if Starting Monday could..."
@@ -220,30 +223,32 @@ export default function IdeasPage() {
                   required
                   minLength={10}
                   maxLength={2000}
-                  className={`${inputCls} resize-none`}
+                  className="w-full resize-none"
                 />
                 <p className="text-[11px] text-slate-200 mt-1 text-right">{body.length} / 2000</p>
               </div>
 
               {submitState === 'error' && (
-                <p className="text-[13px] text-red-600">{submitError}</p>
+                <Alert variant="destructive">
+                  <AlertDescription>{submitError}</AlertDescription>
+                </Alert>
               )}
 
               <div className="flex items-center justify-between">
                 <p className="text-[11px] text-slate-200 leading-relaxed max-w-xs">
                   Your email is private and only used to contact you if you win the monthly gift card.
                 </p>
-                <button
+                <Button
                   type="submit"
                   disabled={submitting || !email || !formCategory || !body}
-                  className="bg-orange-500 hover:bg-orange-600 disabled:opacity-30 disabled:cursor-not-allowed text-white text-[13px] font-semibold px-5 py-2.5 rounded transition-colors shrink-0"
+                  className="shrink-0"
                 >
                   {submitting ? 'Submitting...' : 'Submit idea'}
-                </button>
+                </Button>
               </div>
             </form>
           )}
-        </div>
+        </Card>
 
         {/* Browse ideas */}
         <div>
@@ -251,32 +256,33 @@ export default function IdeasPage() {
             <h2 className="text-[15px] font-bold text-slate-900 mr-auto">Recent ideas</h2>
 
             {/* Sort */}
-            <select
-              value={sortBy}
-              onChange={e => setSortBy(e.target.value as 'recent' | 'rated')}
-              className="border border-slate-200 rounded px-3 py-1.5 text-[12px] text-slate-700 bg-white focus:outline-none focus:border-slate-400"
-            >
-              <option value="recent">Most recent</option>
-              <option value="rated">Highest rated</option>
-            </select>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'recent' | 'rated')}>
+              <SelectTrigger size="sm" className="text-[12px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Most recent</SelectItem>
+                <SelectItem value="rated">Highest rated</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Category tabs */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <ToggleGroup
+            value={category ? [category] : ['']}
+            onValueChange={(values) => { if (values[0] !== undefined) setCategory(values[0] as Category | '') }}
+            className="flex-wrap gap-1.5 mb-4"
+          >
             {CATEGORIES.map(cat => (
-              <button
+              <ToggleGroupItem
                 key={cat.value}
-                onClick={() => setCategory(cat.value)}
-                className={`px-3 py-1.5 rounded text-[12px] font-semibold transition-colors ${
-                  category === cat.value
-                    ? 'bg-slate-950 text-white'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-400'
-                }`}
+                value={cat.value}
+                className="rounded px-3 py-1.5 text-[12px] font-semibold data-[state=on]:bg-slate-950 data-[state=on]:text-white"
               >
                 {cat.label}
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
+          </ToggleGroup>
 
           {isLoading ? (
             <div className="flex flex-col gap-3">
@@ -294,13 +300,13 @@ export default function IdeasPage() {
               ))}
             </div>
           ) : ideas.length === 0 ? (
-            <div className="text-center py-12 bg-white border border-slate-200 rounded-lg">
+            <Card className="text-center py-12">
               <p className="text-[14px] text-slate-200">No ideas yet in this category. Be the first!</p>
-            </div>
+            </Card>
           ) : (
             <div className="flex flex-col gap-3">
               {ideas.map(idea => (
-                <div key={idea.id} className="bg-white border border-slate-200 rounded-lg p-5">
+                <Card key={idea.id} className="p-5">
                   <div className="flex gap-4">
 
                     {/* Avatar */}
@@ -330,7 +336,7 @@ export default function IdeasPage() {
                       <p className="text-[14px] text-slate-700 leading-relaxed">{idea.body}</p>
                     </div>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}

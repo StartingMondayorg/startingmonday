@@ -1,8 +1,9 @@
+import { Card } from '@/components/ui/card'
 import type { CompanyFitSummary } from '../../signal-orientation'
 
 export function CompanyFitCard({ fitSummary }: { fitSummary: CompanyFitSummary }) {
   return (
-    <div className="mb-6 rounded-xl border border-amber-300/20 bg-amber-500/5 p-5">
+    <Card variant="glass" className="mb-6 rounded-xl border-amber-300/20 bg-amber-500/5 p-5">
       <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-amber-200 mb-3">Company fit</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
@@ -24,6 +25,6 @@ export function CompanyFitCard({ fitSummary }: { fitSummary: CompanyFitSummary }
           </ul>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

@@ -1,4 +1,4 @@
-import { SkeletonCard, Skeleton } from '@/components/Skeleton'
+import { SkeletonCard, Skeleton } from '@/app/(dashboard)/dashboard/_components/Skeleton'
 
 export default function SignalsLoading() {
   return (

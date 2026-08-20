@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 interface AgendaItem {
   topic: string
@@ -42,7 +44,7 @@ export default async function ConciergeDashboardPage() {
   if (!profile?.is_concierge) {
     return (
       <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] px-4 py-16 sm:py-24 text-slate-100">
-        <div className="max-w-2xl mx-auto rounded-2xl border border-white/15 bg-white/5 p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="max-w-2xl mx-auto p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
         <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-300 mb-3">
           Executive Concierge
         </p>
@@ -52,19 +54,20 @@ export default async function ConciergeDashboardPage() {
         <p className="text-[15px] text-slate-200 leading-relaxed mb-8 max-w-lg">
           Monthly 45-minute sessions with Rich Rothschild. Starting Monday prepares the agenda from your live pipeline before every call. Notes and recommendations are stored after each session. Limited to 10 seats.
         </p>
-        <a
-          href="mailto:concierge@startingmonday.app?subject=Executive%20Concierge%20%E2%80%94%20Access%20Request"
-          className="inline-block bg-orange-500 text-slate-950 text-[14px] font-bold px-7 py-3.5 rounded hover:bg-orange-400 transition-colors"
+        <Button
+          size="lg"
+          className="px-7 text-[14px]"
+          render={<a href="mailto:concierge@startingmonday.app?subject=Executive%20Concierge%20%E2%80%94%20Access%20Request" />}
         >
           Apply for access &rarr;
-        </a>
+        </Button>
         <p className="text-[12px] text-slate-300 mt-3">$499/mo or $4,990/yr (2 months free). Currently accepting applications.</p>
         <p className="mt-6">
           <Link href="/concierge" className="text-[13px] text-slate-300 hover:text-white underline transition-colors">
             Learn more about Executive Concierge &rarr;
           </Link>
         </p>
-        </div>
+        </Card>
       </div>
     )
   }
@@ -95,7 +98,7 @@ export default async function ConciergeDashboardPage() {
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] px-4 py-10 sm:py-14 text-slate-100">
       <div className="max-w-3xl mx-auto">
 
-      <div className="mb-8 rounded-2xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md flex items-center justify-between">
+      <Card variant="glass" className="mb-8 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] flex items-center justify-between">
         <div>
           <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-300 mb-1">
             Executive Concierge
@@ -110,13 +113,13 @@ export default async function ConciergeDashboardPage() {
         >
           Schedule next call &rarr;
         </a>
-      </div>
+      </Card>
 
       {/* Next call */}
       {nextCall ? (
         <section className="mb-10">
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Upcoming call</p>
-          <div className="border border-orange-300/20 bg-orange-500/10 rounded-2xl p-5 sm:p-6 backdrop-blur-md">
+          <Card variant="glass" className="border-orange-300/20 bg-orange-500/10 p-5 sm:p-6">
             <p className="text-[13px] font-semibold text-white mb-1">{formatDate(nextCall.scheduled_at)}</p>
             <p className="text-[12px] text-slate-300 mb-5">45 minutes with Rich Rothschild</p>
 
@@ -142,11 +145,11 @@ export default async function ConciergeDashboardPage() {
                 Agenda will be prepared the day before your call from your live pipeline.
               </p>
             )}
-          </div>
+          </Card>
         </section>
       ) : (
         <section className="mb-10">
-          <div className="border border-white/15 rounded-2xl p-5 text-center bg-white/5 backdrop-blur-md">
+          <Card variant="glass" className="p-5 text-center">
             <p className="text-[14px] text-slate-200 mb-3">No call scheduled yet.</p>
             <a
               href="mailto:concierge@startingmonday.app?subject=Schedule%20next%20call"
@@ -154,7 +157,7 @@ export default async function ConciergeDashboardPage() {
             >
               Schedule your next session &rarr;
             </a>
-          </div>
+          </Card>
         </section>
       )}
 
@@ -164,7 +167,7 @@ export default async function ConciergeDashboardPage() {
           <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Past calls</p>
           <div className="space-y-4">
             {pastCalls.map(call => (
-              <div key={call.id} className="border border-white/15 rounded-2xl p-5 bg-white/5 backdrop-blur-md">
+              <Card key={call.id} variant="glass" className="p-5">
                 <p className="text-[13px] font-semibold text-white mb-3">{formatDate(call.scheduled_at)}</p>
                 {call.call_notes ? (
                   <div>
@@ -174,7 +177,7 @@ export default async function ConciergeDashboardPage() {
                 ) : (
                   <p className="text-[12px] text-slate-400">No notes recorded for this session.</p>
                 )}
-              </div>
+              </Card>
             ))}
           </div>
         </section>

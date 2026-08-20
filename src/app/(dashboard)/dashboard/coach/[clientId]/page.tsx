@@ -1,9 +1,10 @@
 ﻿import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { CoachClientDataView } from '@/components/coach/client-data-view'
-import { ClientAlertPreferences } from '@/components/coach/client-alert-preferences'
+import { CoachClientDataView } from '@/app/(dashboard)/dashboard/_components/client-data-view'
+import { ClientAlertPreferences } from '@/app/(dashboard)/dashboard/_components/client-alert-preferences'
 import { verifyCoachAccess } from '@/lib/coach-access'
+import { Card } from '@/components/ui/card'
 
 export default async function CoachClientPage({ params }: { params: Promise<{ clientId: string }> }) {
   const { clientId } = await params
@@ -47,7 +48,7 @@ export default async function CoachClientPage({ params }: { params: Promise<{ cl
 
           <div className="space-y-4">
             <ClientAlertPreferences clientId={clientId} />
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+            <Card className="bg-slate-50 p-4">
               <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-2">Access Controls</p>
               <p className="text-[12px] text-slate-600 leading-relaxed">
                 The executive controls this access and can disable it anytime in Team settings.
@@ -56,7 +57,7 @@ export default async function CoachClientPage({ params }: { params: Promise<{ cl
               <Link href="/settings/team" className="inline-block mt-3 text-[12px] text-slate-700 hover:text-slate-900 underline underline-offset-2">
                 Open team access settings
               </Link>
-            </div>
+            </Card>
           </div>
         </div>
       </main>

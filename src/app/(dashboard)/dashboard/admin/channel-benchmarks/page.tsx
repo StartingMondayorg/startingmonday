@@ -3,6 +3,9 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
 
 type EventRow = {
   event_name: string
@@ -178,48 +181,48 @@ export default async function ChannelBenchmarksPage() {
         </p>
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 mb-6">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-4">
             <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300">Entry clicks</p>
             <p className="text-[22px] font-bold text-white mt-1">{totalEntry}</p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300">Persona selections</p>
             <p className="text-[22px] font-bold text-white mt-1">{totalPersona}</p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300">Persona per entry</p>
             <p className="text-[22px] font-bold text-white mt-1">{pct(totalPersona, totalEntry)}</p>
-          </div>
+          </Card>
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden mb-6 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <Card variant="glass" className="p-0 mb-6">
           <div className="px-5 py-3 border-b border-white/10">
             <h2 className="text-[13px] font-semibold text-white">Channel funnel benchmark</h2>
           </div>
-          <table className="w-full text-[13px]">
-            <thead className="bg-white/5 border-b border-white/10 text-slate-300">
-              <tr>
-                <th className="px-5 py-2 text-left">Channel</th>
-                <th className="px-4 py-2 text-right">Entry clicks</th>
-                <th className="px-4 py-2 text-right">Persona selections</th>
-                <th className="px-5 py-2 text-right">Persona per entry</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="text-[13px]">
+            <TableHeader>
+              <TableRow className="bg-white/5 text-slate-300 hover:bg-white/5">
+                <TableHead className="px-5 py-2 text-left text-slate-300">Channel</TableHead>
+                <TableHead className="px-4 py-2 text-right text-slate-300">Entry clicks</TableHead>
+                <TableHead className="px-4 py-2 text-right text-slate-300">Persona selections</TableHead>
+                <TableHead className="px-5 py-2 text-right text-slate-300">Persona per entry</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {benchmarkRows.map((row) => (
-                <tr key={row.channel} className="border-t border-white/10">
-                  <td className="px-5 py-2 font-semibold text-slate-100">{row.channel}</td>
-                  <td className="px-4 py-2 text-right text-slate-200">{row.entryClicks}</td>
-                  <td className="px-4 py-2 text-right text-slate-200">{row.personaSelections}</td>
-                  <td className="px-5 py-2 text-right text-slate-200">{pct(row.personaSelections, row.entryClicks)}</td>
-                </tr>
+                <TableRow key={row.channel} className="border-white/10 hover:bg-white/5">
+                  <TableCell className="px-5 py-2 font-semibold text-slate-100">{row.channel}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-200">{row.entryClicks}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-slate-200">{row.personaSelections}</TableCell>
+                  <TableCell className="px-5 py-2 text-right text-slate-200">{pct(row.personaSelections, row.entryClicks)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </section>
+            </TableBody>
+          </Table>
+        </Card>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <h2 className="text-[13px] font-semibold text-white mb-3">Source page segments</h2>
             <div className="space-y-2 text-[13px]">
               {sourceRows.length === 0 && <p className="text-slate-300">No events yet.</p>}
@@ -230,9 +233,9 @@ export default async function ChannelBenchmarksPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <h2 className="text-[13px] font-semibold text-white mb-3">A/B variant segments</h2>
             <div className="space-y-2 text-[13px]">
               {variantRows.length === 0 && <p className="text-slate-300">No events yet.</p>}
@@ -243,11 +246,11 @@ export default async function ChannelBenchmarksPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <h2 className="text-[13px] font-semibold text-white mb-3">Persona segment distribution</h2>
             <div className="space-y-2 text-[13px]">
               {personaRows.length === 0 && <p className="text-slate-300">No persona events yet.</p>}
@@ -258,27 +261,27 @@ export default async function ChannelBenchmarksPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-md">
+          <Card variant="glass" className="p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-[13px] font-semibold text-white">Telemetry QA</h2>
-              <span className={`text-[13px] font-semibold px-2 py-1 rounded ${qaPass ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              <Badge variant={qaPass ? 'success' : 'destructive'}>
                 {qaPass ? 'PASS' : 'FAIL'}
-              </span>
+              </Badge>
             </div>
             <p className="text-[13px] text-slate-300 mb-3">Target: less than 2% missing required telemetry fields.</p>
             <div className="space-y-2 text-[13px]">
               {qaRows.map((row) => (
                 <div key={row.label} className="flex items-center justify-between border-b border-white/10 pb-1">
                   <span className="text-slate-200">{row.label}</span>
-                  <span className={`font-semibold ${row.missingRate < 0.02 ? 'text-green-700' : 'text-red-700'}`}>
+                  <Badge variant={row.missingRate < 0.02 ? 'success' : 'destructive'}>
                     {(row.missingRate * 100).toFixed(1)}%
-                  </span>
+                  </Badge>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </section>
       </main>
     </div>

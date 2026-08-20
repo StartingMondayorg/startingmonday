@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
-import { ADMIN_DARK_PAGE_BG, ADMIN_DARK_SECTION_CARD } from '../admin-dark-theme'
+import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'QA - Admin' }
 
@@ -33,26 +35,20 @@ export default async function AdminQaLandingPage() {
 			</header>
 
 			<main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
-				<section className={ADMIN_DARK_SECTION_CARD}>
+				<Card variant="glass" className="p-5 mb-6">
 					<h1 className="text-[26px] font-bold leading-tight text-white">Admin QA</h1>
 					<p className="mt-2 text-[13px] leading-relaxed text-slate-300">
 						QA operations are consolidated in the onboarding scorecard and automation reporting surfaces.
 					</p>
 					<div className="mt-5 flex flex-wrap gap-3">
-						<Link
-							href="/dashboard/admin/onboarding/qa"
-							className="inline-flex min-h-[40px] items-center rounded border border-white/20 bg-white/10 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/20"
-						>
+						<Button render={<Link href="/dashboard/admin/onboarding/qa" />}>
 							Open Onboarding QA Scorecard
-						</Link>
-						<Link
-							href="/dashboard/admin/metrics"
-							className="inline-flex min-h-[40px] items-center rounded border border-white/20 bg-slate-950/50 px-4 py-2 text-[13px] font-semibold text-slate-200 transition-colors hover:border-white/35 hover:text-white"
-						>
+						</Button>
+						<Button variant="outline" render={<Link href="/dashboard/admin/metrics" />}>
 							Open Metrics
-						</Link>
+						</Button>
 					</div>
-				</section>
+				</Card>
 			</main>
 		</div>
 	)

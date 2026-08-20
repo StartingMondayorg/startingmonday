@@ -1,5 +1,8 @@
 'use client'
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type OfferInput = {
   name: string
@@ -41,33 +44,29 @@ export function OfferSynthesis({ offers }: { offers: OfferInput[] }) {
   if (offers.length === 0) return null
 
   return (
-    <div className="mt-6 bg-white border border-slate-200 rounded overflow-hidden">
+    <Card className="mt-6 py-0">
       <div className="px-6 py-[18px] border-b border-slate-100 flex items-center justify-between">
         <div>
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Decision synthesis</p>
           <p className="text-[12px] text-slate-400 mt-0.5">Claude reads your offer data and decision factors and tells you where the real tension is.</p>
         </div>
         {!synthesis && (
-          <button
-            onClick={generate}
-            disabled={loading}
-            className="shrink-0 text-[12px] font-semibold text-white bg-slate-900 hover:bg-slate-700 disabled:opacity-40 px-4 py-2 rounded transition-colors cursor-pointer border-0 disabled:cursor-not-allowed"
-          >
+          <Button onClick={generate} disabled={loading} className="shrink-0">
             {loading ? 'Thinking...' : 'Help me decide'}
-          </button>
+          </Button>
         )}
         {synthesis && (
-          <button
-            onClick={generate}
-            disabled={loading}
-            className="shrink-0 text-[11px] font-semibold text-slate-400 hover:text-slate-600 border border-slate-200 hover:border-slate-400 px-3 py-1.5 rounded transition-colors cursor-pointer bg-white border-0"
-          >
+          <Button onClick={generate} disabled={loading} variant="ghost" size="sm" className="shrink-0">
             {loading ? 'Thinking...' : 'Refresh'}
-          </button>
+          </Button>
         )}
       </div>
       {error && (
-        <div className="px-6 py-4 text-[13px] text-red-600">{error}</div>
+        <div className="px-6 py-4">
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </div>
       )}
       {loading && !synthesis && (
         <div className="px-6 py-6 flex items-center gap-2">
@@ -81,6 +80,6 @@ export function OfferSynthesis({ offers }: { offers: OfferInput[] }) {
           <p className="text-[14px] text-slate-800 leading-relaxed">{synthesis}</p>
         </div>
       )}
-    </div>
+    </Card>
   )
 }

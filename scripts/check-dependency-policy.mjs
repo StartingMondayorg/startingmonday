@@ -1,5 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const SHADCN_APPROVER = 'richrothschild'
 
 const root = process.cwd()
 const packageJsonPath = path.join(root, 'package.json')
@@ -124,6 +127,25 @@ function checkNextSentryCompatibility(lock) {
   return issues
 }
 
+export function checkProtectedDependencies(pkg, approvedBy = '') {
+  const shadcnRuntimeSpec = pkg.dependencies?.shadcn
+  const shadcnDevSpec = pkg.devDependencies?.shadcn
+  const explicitlyApproved = approvedBy === SHADCN_APPROVER
+
+  if (shadcnRuntimeSpec && !shadcnDevSpec) return []
+  if (explicitlyApproved) return []
+
+  if (shadcnDevSpec) {
+    return [
+      `Protected dependency shadcn must remain in dependencies, not devDependencies. Removal or reclassification requires a current-head approving review from ${SHADCN_APPROVER}.`,
+    ]
+  }
+
+  return [
+    `Protected dependency shadcn is missing from dependencies. Removal requires a current-head approving review from ${SHADCN_APPROVER}.`,
+  ]
+}
+
 function main() {
   if (!fs.existsSync(packageJsonPath)) {
     fail(['package.json not found.'])
@@ -140,6 +162,7 @@ function main() {
   const issues = [
     ...compareManifestWithLock(pkg, lock),
     ...checkNextSentryCompatibility(lock),
+    ...checkProtectedDependencies(pkg, process.env.SHADCN_CHANGE_APPROVED_BY),
   ]
 
   if (issues.length > 0) {
@@ -152,7 +175,8 @@ function main() {
     return
   }
 
-  console.log('Dependency policy check passed (lockfile consistency and Next/Sentry compatibility).')
+  console.log('Dependency policy check passed (lockfile consistency, Next/Sentry compatibility, and protected dependencies).')
 }
 
-main()
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+if (isMain) main()

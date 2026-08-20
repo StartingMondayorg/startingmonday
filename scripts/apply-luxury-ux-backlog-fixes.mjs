@@ -71,7 +71,7 @@ for (const result of report.results) {
     uppercaseFixedFiles += 1
   }
 
-  if (hasRepeatedCtaIssue && filePath === 'src/app/intelligence/[slug]/page.tsx') {
+  if (hasRepeatedCtaIssue && filePath === 'src/app/(marketing)/intelligence/[slug]/page.tsx') {
     // Keep first CTA label, diversify following duplicates to avoid repeated-label overload.
     content = replaceNth(content, 'Get started now', 'Start free trial', 2)
     content = replaceNth(content, 'Get started now', 'Create free account', 3)

@@ -1,7 +1,10 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-import { PRICING } from '@/lib/pricing'
+import { PRICING } from '@/lib/billing/pricing'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 type Plan = 'passive' | 'active'
 
@@ -47,7 +50,7 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
   if (seatsPurchased > 0) {
     const seatsRemaining = seatsPurchased - seatsUsed
     return (
-      <div className="bg-white border border-slate-200 rounded p-6 mb-6">
+      <Card variant="default" className="p-6 mb-6">
         <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Client Seats</p>
         <div className="flex items-center gap-6 mb-4">
           <div>
@@ -64,13 +67,10 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
             </p>
           )}
         </div>
-        <Link
-          href="/settings/team"
-          className="inline-block text-[13px] font-semibold text-slate-700 border border-slate-200 rounded px-4 py-2 hover:bg-slate-50 transition-colors"
-        >
+        <Button variant="outline" render={<Link href="/settings/team" />}>
           Manage client invites
-        </Link>
-      </div>
+        </Button>
+      </Card>
     )
   }
 
@@ -78,52 +78,59 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
   const monthlyTotal = selectedPlan.pricePerSeat * quantity
 
   return (
-    <div className="bg-white border border-slate-200 rounded p-6 mb-6">
+    <Card variant="default" className="p-6 mb-6">
       <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Coach Seats</p>
       <p className="text-[13px] text-slate-500 mb-5 leading-relaxed">
         Purchase seats to activate Starting Monday for your clients. You pay monthly. Clients log in to their own account.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+      <RadioGroup
+        value={plan}
+        onValueChange={(value) => setPlan(value as Plan)}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5"
+      >
         {(Object.entries(SEAT_PLANS) as [Plan, typeof SEAT_PLANS[Plan]][]).map(([key, p]) => (
-          <button
+          <label
             key={key}
-            type="button"
-            onClick={() => setPlan(key)}
-            className={`text-left p-4 rounded border transition-colors cursor-pointer ${plan === key ? 'border-slate-900 bg-slate-50' : 'border-slate-200 hover:bg-slate-50'}`}
+            className={`flex items-start gap-3 text-left p-4 rounded border transition-colors cursor-pointer ${plan === key ? 'border-slate-900 bg-slate-50' : 'border-slate-200 hover:bg-slate-50'}`}
           >
-            <p className="text-[14px] font-bold text-slate-900">{p.name} <span className="text-[13px] font-normal text-slate-500">${p.pricePerSeat}/seat/mo</span></p>
-            <p className="text-[12px] text-slate-500 mt-0.5">{p.description}</p>
-          </button>
+            <RadioGroupItem value={key} className="mt-1" />
+            <span>
+              <p className="text-[14px] font-bold text-slate-900">{p.name} <span className="text-[13px] font-normal text-slate-500">${p.pricePerSeat}/seat/mo</span></p>
+              <p className="text-[12px] text-slate-500 mt-0.5">{p.description}</p>
+            </span>
+          </label>
         ))}
-      </div>
+      </RadioGroup>
 
       <div className="flex items-center gap-4 mb-5">
         <label className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Seats</label>
         <div className="flex items-center gap-2">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="icon"
             onClick={() => setQuantity(q => Math.max(1, q - 1))}
-            className="w-8 h-8 rounded border border-slate-200 text-slate-500 hover:bg-slate-50 text-[16px] font-bold cursor-pointer flex items-center justify-center"
-          >-</button>
+          >-</Button>
           <span className="text-[18px] font-bold text-slate-900 w-8 text-center">{quantity}</span>
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="icon"
             onClick={() => setQuantity(q => Math.min(20, q + 1))}
-            className="w-8 h-8 rounded border border-slate-200 text-slate-500 hover:bg-slate-50 text-[16px] font-bold cursor-pointer flex items-center justify-center"
-          >+</button>
+          >+</Button>
         </div>
         <p className="text-[15px] font-bold text-slate-900 ml-auto">${monthlyTotal}/mo</p>
       </div>
 
-      <button
+      <Button
         type="button"
         onClick={handleCheckout}
         disabled={loading}
-        className="w-full bg-slate-900 text-white text-[14px] font-bold py-3 rounded border-0 cursor-pointer disabled:opacity-50 hover:bg-slate-700 transition-colors"
+        className="w-full py-3"
       >
         {loading ? 'Redirecting...' : `Purchase ${quantity} ${selectedPlan.name} seat${quantity !== 1 ? 's' : ''}`}
-      </button>
-    </div>
+      </Button>
+    </Card>
   )
 }

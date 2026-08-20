@@ -1,8 +1,9 @@
-﻿import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from '../logout-button'
 import { InviteClient } from './invite-client'
+import { Card } from '@/components/ui/card'
 
 export const metadata = { title: 'Invite - Starting Monday' }
 
@@ -57,7 +58,7 @@ export default async function InvitePage() {
           firstName={profile?.full_name?.split(' ')[0] ?? null}
         />
 
-        <div className="mt-10 bg-white border border-slate-200 rounded p-6">
+        <Card className="mt-10 p-6">
           <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Why invite people?</p>
           <div className="flex flex-col gap-3">
             {[
@@ -71,9 +72,8 @@ export default async function InvitePage() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </main>
     </div>
   )
 }
-

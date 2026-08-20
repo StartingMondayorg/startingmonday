@@ -5,10 +5,16 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { usePostHog } from 'posthog-js/react'
-import TurnstileWidget from '@/components/turnstile-widget'
+import TurnstileWidget from '@/app/components/turnstile-widget'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
 import { reportAttributionFailure } from '@/lib/attribution-failure'
 import firstWeekSpine from '@/content/first-week-spine.json'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 
 const TURNSTILE_ENABLED = process.env.NEXT_PUBLIC_TURNSTILE_ENABLED === '1'
 
@@ -438,7 +444,7 @@ export default function SignupPage() {
                 <p className="text-[13px] text-slate-100 mt-1">Most emails arrive in under 2 minutes.</p>
                 <p className="text-[13px] text-slate-100 mt-1">{firstWeekSpine.confirmationLine}</p>
               </section>
-              <div className="rounded border border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
+              <Card variant="glass" className="border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
                 <p className="text-[14px] text-slate-100 leading-relaxed">
                   Open the email, click the link, and finish setup. If it is not there after a few minutes, check spam or promotions.
                 </p>
@@ -448,7 +454,7 @@ export default function SignupPage() {
                 <Link href="/demo" className="inline-block mt-3 text-[13px] font-semibold text-orange-200 underline hover:text-orange-100">
                   Explore the demo while waiting &rarr;
                 </Link>
-              </div>
+              </Card>
               <p className="text-center text-[13px] text-slate-100 mt-5">
                 Already confirmed?{' '}
                 <Link href="/login" className="text-orange-200 font-semibold hover:text-orange-100">
@@ -491,18 +497,21 @@ export default function SignupPage() {
                 )}
               </section>
 
-              <div className="rounded border border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
+              <Card variant="glass" className="border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
 
                 <section id="social-signin" className="mb-5">
                 <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-200 mb-3">Social sign-in</h2>
                 {socialError && (
-                  <p role="alert" className="mb-3 rounded border border-red-300/50 bg-red-500/10 px-3 py-2 text-[13px] text-red-200">{socialError}</p>
+                  <Alert variant="destructive" className="mb-3">
+                    <AlertDescription>{socialError}</AlertDescription>
+                  </Alert>
                 )}
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={handleGoogle}
                   disabled={authBusy}
-                  className="w-full flex items-center justify-center gap-2.5 border border-white/15 rounded px-4 py-2.5 min-h-[44px] text-[14px] font-semibold text-slate-100 hover:border-white/35 hover:bg-white/10 transition-colors cursor-pointer bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed mb-5"
+                  className="w-full min-h-[44px] justify-center gap-2.5 !border-white/15 !bg-white/5 !text-slate-100 mb-5 hover:!border-white/35 hover:!bg-white/10"
                 >
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.658 14.252 17.64 11.927 17.64 9.2z" fill="#4285F4"/>
@@ -511,19 +520,19 @@ export default function SignupPage() {
                     <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
                   </svg>
                   {googleLoading ? 'Redirecting…' : 'Continue with Google'}
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
                   onClick={handleApple}
                   disabled={authBusy}
-                  className="w-full flex items-center justify-center gap-2.5 rounded px-4 py-2.5 min-h-[44px] text-[14px] font-semibold text-white bg-black hover:bg-slate-800 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mb-5"
+                  className="w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-black !text-white mb-5 hover:!bg-slate-800"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M16.365 1.43c0 1.14-.425 2.13-1.273 2.97-.852.84-1.88 1.31-3.084 1.21-.077-1.11.39-2.12 1.16-2.89.85-.85 1.99-1.35 3.197-1.29zM20.93 17.19c-.36.83-.79 1.6-1.29 2.31-.68.97-1.23 1.64-1.65 2.01-.65.6-1.34.91-2.07.93-.52 0-1.15-.15-1.89-.45-.74-.3-1.42-.45-2.04-.45-.65 0-1.35.15-2.1.45-.75.3-1.36.46-1.83.48-.7.03-1.41-.29-2.13-.96-.46-.4-1.04-1.1-1.74-2.1-.75-1.07-1.37-2.31-1.85-3.72-.51-1.52-.77-2.99-.77-4.41 0-1.63.35-3.04 1.06-4.23.56-.96 1.3-1.72 2.24-2.28.94-.56 1.96-.84 3.05-.86.57 0 1.31.18 2.22.53.91.35 1.49.53 1.74.53.19 0 .84-.2 1.95-.6 1.05-.37 1.93-.53 2.65-.48 1.95.16 3.42.93 4.4 2.31-1.75 1.06-2.62 2.55-2.6 4.47.02 1.5.56 2.75 1.64 3.74.49.46 1.04.81 1.64 1.04-.13.38-.27.75-.42 1.12z" />
                   </svg>
                   {appleLoading ? 'Redirecting…' : 'Continue with Apple'}
-                </button>
+                </Button>
                 <p className="text-[12px] text-slate-200 leading-relaxed">
                   By continuing, you agree to our <Link href="/terms" className="underline hover:text-slate-200">Terms and Conditions</Link> and <Link href="/privacy" className="underline hover:text-slate-200">Privacy Policy</Link>.
                 </p>
@@ -539,52 +548,54 @@ export default function SignupPage() {
                   <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-200">Email signup</h2>
 
                   <div>
-                    <label htmlFor="email" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="email" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
                       Email
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       id="email"
                       type="email"
                       required
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full border border-white/15 rounded px-3 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="password" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
                       Password
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       id="password"
                       type="password"
                       required
                       minLength={8}
                       value={password}
                       onChange={e => setPassword(e.target.value)}
-                      className="w-full border border-white/15 rounded px-3 py-2.5 text-base text-slate-100 focus:outline-none focus:border-white/40 bg-slate-950/60"
+                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 focus-visible:!border-white/40"
                     />
                     <p className="mt-1.5 text-[13px] text-slate-200">At least 8 characters.</p>
                   </div>
 
                   <div>
-                    <label htmlFor="heard-about" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="heard-about" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
                       How did you hear about Starting Monday?
-                    </label>
-                    <select
-                      id="heard-about"
-                      value={heardAbout}
-                      onChange={(e) => setHeardAbout(e.target.value as HeardAboutOption | '')}
+                    </Label>
+                    <Select
+                      value={heardAbout || undefined}
+                      onValueChange={(value) => setHeardAbout(value as HeardAboutOption)}
                       disabled={heardAboutLocked}
-                      className="w-full border border-white/15 rounded px-3 py-2.5 text-base text-slate-100 focus:outline-none focus:border-white/40 disabled:bg-slate-900 disabled:text-slate-500 bg-slate-950/60"
                     >
-                      <option value="">Select (optional)</option>
-                      {HEARD_ABOUT_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                      ))}
-                    </select>
+                      <SelectTrigger id="heard-about" className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 disabled:!bg-slate-900 disabled:!text-slate-500">
+                        <SelectValue placeholder="Select (optional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {HEARD_ABOUT_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {heardAboutLocked ? (
                       <p className="mt-1.5 text-[13px] text-slate-200">Auto-selected from the Manager Tools link.</p>
                     ) : (
@@ -594,64 +605,66 @@ export default function SignupPage() {
 
                   {heardAbout === 'other' && !heardAboutLocked ? (
                     <div>
-                      <label htmlFor="heard-about-other" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                      <Label htmlFor="heard-about-other" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
                         Other source
-                      </label>
-                      <input
+                      </Label>
+                      <Input
                         id="heard-about-other"
                         type="text"
                         value={heardAboutOther}
                         onChange={(e) => setHeardAboutOther(e.target.value)}
                         placeholder="Please specify"
-                        className="w-full border border-white/15 rounded px-3 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+                        className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
                       />
                     </div>
                   ) : null}
 
                   <div>
-                    <label htmlFor="referrer-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="referrer-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
                       Referrer name (optional)
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       id="referrer-name"
                       type="text"
                       value={referrerName}
                       onChange={(e) => setReferrerName(e.target.value)}
                       placeholder="Who referred you?"
-                      className="w-full border border-white/15 rounded px-3 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="referrer-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="referrer-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
                       Referrer company (optional)
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       id="referrer-company"
                       type="text"
                       value={referrerCompany}
                       onChange={(e) => setReferrerCompany(e.target.value)}
                       placeholder="Company or firm name"
-                      className="w-full border border-white/15 rounded px-3 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-white/40 bg-slate-950/60"
+                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
                     />
                     <p className="mt-1.5 text-[13px] text-slate-200">Used for partner referral fee and commission tracking.</p>
                   </div>
 
                   {error && (
-                    <p className="text-[13px] text-red-600">{error}</p>
+                    <Alert variant="destructive">
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
                   )}
 
                   <div ref={captchaSectionRef}>
                     {TURNSTILE_ENABLED ? <TurnstileWidget onTokenChange={setCaptchaToken} /> : null}
                   </div>
 
-                  <button
+                  <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-400 text-slate-950 text-[14px] font-semibold min-h-[44px] rounded cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full min-h-[44px] justify-center rounded !bg-orange-500 !text-slate-950 text-[14px] hover:!bg-orange-400"
                   >
                     {loading ? 'Creating account…' : (situation && SITUATION_COPY[situation] ? `Create account and ${SITUATION_COPY[situation].cta}` : 'Start free trial')}
-                  </button>
+                  </Button>
                   <p className="text-[12px] text-slate-200 leading-relaxed text-center">
                     By creating an account, you agree to our <Link href="/terms" className="underline hover:text-slate-200">Terms and Conditions</Link> and <Link href="/privacy" className="underline hover:text-slate-200">Privacy Policy</Link>.
                   </p>
@@ -662,7 +675,7 @@ export default function SignupPage() {
                   <p className="text-center text-[13px] font-semibold text-slate-100">{firstWeekSpine.guaranteeLine}</p>
 
                 </form>
-              </div>
+              </Card>
 
               <div className="flex flex-col items-center mt-5">
                 <span className="text-[13px] text-slate-200">Already have an account?</span>

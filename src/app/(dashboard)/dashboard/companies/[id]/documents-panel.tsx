@@ -1,5 +1,16 @@
 ﻿import { addDocument, removeDocument } from './actions'
 import { DOC_LABELS } from './company-detail-constants'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type DocumentRow = {
   id: string
@@ -26,21 +37,23 @@ export function DocumentsPanel(props: Props) {
               <div key={doc.id} className="px-6 py-4 flex items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-[0.04em] ${dl.cls}`}>
+                    <Badge className={`tracking-[0.04em] ${dl.cls}`}>
                       {dl.label}
-                    </span>
+                    </Badge>
                   </div>
                   <p className="text-[12px] text-slate-400 leading-relaxed line-clamp-2">
                     {doc.content.slice(0, previewChars)}{doc.content.length > previewChars ? '...' : ''}
                   </p>
                 </div>
                 <form action={removeDocument.bind(null, doc.id, companyId)}>
-                  <button
+                  <Button
                     type="submit"
-                    className="text-[11px] text-slate-300 hover:text-red-500 cursor-pointer bg-transparent border-0 p-0 shrink-0"
+                    variant="ghost"
+                    size="sm"
+                    className="text-[11px] text-slate-300 hover:text-red-500 shrink-0"
                   >
                     Remove
-                  </button>
+                  </Button>
                 </form>
               </div>
             )
@@ -52,36 +65,37 @@ export function DocumentsPanel(props: Props) {
         <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Add document</div>
         <form action={addDocument.bind(null, companyId)} className="flex flex-col gap-3">
           <div>
-            <label htmlFor="doc-label" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Type</label>
-            <select
-              id="doc-label"
-              name="label"
-              className="w-full border border-white/10 rounded px-3 py-2 text-[13px] text-white focus:outline-none focus:border-slate-400 bg-white/5"
-            >
-              <option value="job_description">Job Description</option>
-              <option value="news">News & Press</option>
-              <option value="annual_report">Annual Report</option>
-              <option value="org_notes">Org Notes</option>
-              <option value="other">Other</option>
-            </select>
+            <Label htmlFor="doc-label" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Type</Label>
+            <Select name="label" defaultValue="job_description">
+              <SelectTrigger id="doc-label" className="w-full text-[13px] text-white focus-visible:border-slate-400 bg-white/5">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="job_description">Job Description</SelectItem>
+                <SelectItem value="news">News & Press</SelectItem>
+                <SelectItem value="annual_report">Annual Report</SelectItem>
+                <SelectItem value="org_notes">Org Notes</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div>
-            <label htmlFor="doc-content" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+            <Label htmlFor="doc-content" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
               Content <span className="text-red-500">*</span>
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               id="doc-content"
               name="content"
               required
               rows={7}
               placeholder="Paste a job description, news article, annual report excerpt, or org notes..."
-              className="w-full border border-white/10 rounded px-3 py-2.5 text-[13px] text-white placeholder:text-slate-300 focus:outline-none focus:border-slate-400 resize-none bg-white/5 leading-relaxed"
+              className="w-full text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none bg-white/5 leading-relaxed"
             />
           </div>
           <div>
-            <button type="submit" className="bg-orange-500 text-slate-950 text-[13px] font-semibold px-5 py-2 rounded cursor-pointer border-0">
+            <Button type="submit" className="text-[13px] font-semibold px-5">
               Save document
-            </button>
+            </Button>
           </div>
         </form>
       </div>

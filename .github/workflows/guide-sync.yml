@@ -29,6 +29,9 @@ jobs:
       - name: Generate internal guide artifacts
         run: npm run guide:internal:sync
 
+      - name: Generate documentation index
+        run: npm run docs:index
+
       - name: Evaluate retrieval quality
         run: npm run guide:retrieval:eval:strict
 
@@ -63,5 +66,6 @@ jobs:
             docs/internal-guide.index.json
             docs/internal-guide.manifest.json
             docs/internal-system-summary.md
+            docs/index.md
             docs/guide-retrieval-eval.latest.json
             docs/guide-retrieval-eval.latest.md

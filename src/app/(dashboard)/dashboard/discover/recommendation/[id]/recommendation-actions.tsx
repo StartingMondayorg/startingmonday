@@ -4,6 +4,16 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { SuggestedPerson } from '@/lib/enrichment'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type Props = {
   companyName: string
@@ -66,56 +76,61 @@ export function RecommendationActions({ companyName, sector, suggestedPeople }: 
   return (
     <div className="flex flex-col gap-3">
       {suggestedPeople.length > 0 && (
-        <div className="rounded border border-slate-200 bg-slate-50 p-3">
+        <Card variant="default" className="bg-slate-50 p-3">
           <p className="text-[12px] font-semibold text-slate-700 mb-2">Add each recommended person, then paste their LinkedIn URL.</p>
-          <label htmlFor="discover-person-picker" className="text-[12px] text-slate-500">Suggested person</label>
-          <select
-            id="discover-person-picker"
-            value={selectedPersonIndex}
-            onChange={(event) => setSelectedPersonIndex(Number(event.target.value))}
-            className="mt-1 w-full rounded border border-slate-300 bg-white px-2.5 py-2 text-[13px] text-slate-700"
+          <Label htmlFor="discover-person-picker" className="text-[12px] text-slate-500 font-normal">Suggested person</Label>
+          <Select
+            value={String(selectedPersonIndex)}
+            onValueChange={(value) => setSelectedPersonIndex(Number(value))}
           >
-            {suggestedPeople.map((person, index) => (
-              <option key={`${person.name}-${person.title}-${index}`} value={index}>
-                {person.name} - {person.title}
-              </option>
-            ))}
-          </select>
-        </div>
+            <SelectTrigger id="discover-person-picker" className="mt-1 w-full bg-white text-slate-700">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {suggestedPeople.map((person, index) => (
+                <SelectItem key={`${person.name}-${person.title}-${index}`} value={String(index)}>
+                  {person.name} - {person.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Card>
       )}
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Link
-          href="/dashboard/discover"
-          className="text-center text-[13px] font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded transition-colors"
-        >
+        <Button size="lg" variant="secondary" className="flex-1" render={<Link href="/dashboard/discover" />}>
           Back to recommendations
-        </Link>
-        <Link
-          href={`/dashboard/companies/new?name=${encodeURIComponent(companyName)}&sector=${encodeURIComponent(sector ?? '')}&source=discover_recommendation_detail`}
-          className="text-center text-[13px] font-semibold text-white bg-slate-900 hover:bg-slate-700 px-4 py-2.5 rounded transition-colors"
+        </Button>
+        <Button
+          size="lg"
+          variant="secondary"
+          className="flex-1"
+          render={<Link href={`/dashboard/companies/new?name=${encodeURIComponent(companyName)}&sector=${encodeURIComponent(sector ?? '')}&source=discover_recommendation_detail`} />}
         >
           Add company to watchlist
-        </Link>
+        </Button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
+        <Button
           type="button"
+          size="lg"
+          variant="outline"
+          className="flex-1"
           onClick={() => createContactAndMaybeRoute('contact')}
           disabled={!selectedPerson || busyAction !== null}
-          className="text-center text-[13px] font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 px-4 py-2.5 rounded transition-colors"
         >
           {busyAction === 'contact' ? 'Adding contact...' : 'Add selected contact + LinkedIn URL'}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          size="lg"
+          className="flex-1"
           onClick={() => createContactAndMaybeRoute('outreach')}
           disabled={!selectedPerson || busyAction !== null}
-          className="text-center text-[13px] font-semibold text-white bg-orange-500 hover:bg-orange-600 disabled:opacity-50 px-4 py-2.5 rounded transition-colors"
         >
           {busyAction === 'outreach' ? 'Preparing draft...' : 'Start outreach draft'}
-        </button>
+        </Button>
       </div>
 
       {message && <p className="text-[12px] text-slate-500">{message}</p>}

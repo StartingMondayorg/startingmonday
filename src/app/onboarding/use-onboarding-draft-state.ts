@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import type { OnboardingChannel } from '@/lib/onboarding-speed'
-import { computeElapsedSeconds } from '@/lib/onboarding-speed'
-import type { OnboardingDraft } from '@/lib/onboarding-state'
+import type { OnboardingChannel } from '@/lib/onboarding/onboarding-speed'
+import { computeElapsedSeconds } from '@/lib/onboarding/onboarding-speed'
+import type { OnboardingDraft } from '@/lib/onboarding/onboarding-state'
 import type { RoleFamily, RoleTitle } from '@/lib/role-taxonomy'
 import type { SearchPersona } from './onboarding-helpers'
 
@@ -11,6 +11,7 @@ export function useOnboardingDraftState(initialDraft: OnboardingDraft) {
   const [advancedSetup, setAdvancedSetup] = useState(initialDraft.advancedSetup)
   const [fullName, setFullName] = useState(initialDraft.fullName)
   const [searchPersona, setSearchPersona] = useState<SearchPersona | ''>(initialDraft.searchPersona as SearchPersona | '')
+  const [searchPosture, setSearchPosture] = useState(initialDraft.searchPosture)
   const [roleFamily, setRoleFamily] = useState<RoleFamily | ''>(initialDraft.roleFamily)
   const [roleTitle, setRoleTitle] = useState<RoleTitle | ''>(initialDraft.roleTitle)
   const [roleTitles, setRoleTitles] = useState<RoleTitle[]>(initialDraft.roleTitles)
@@ -39,6 +40,7 @@ export function useOnboardingDraftState(initialDraft: OnboardingDraft) {
     return {
       fullName,
       searchPersona,
+      searchPosture,
       roleFamily,
       roleTitle,
       roleTitles,
@@ -66,7 +68,7 @@ export function useOnboardingDraftState(initialDraft: OnboardingDraft) {
 
   return {
     advancedSetup, setAdvancedSetup, fullName, setFullName,
-    searchPersona, setSearchPersona, roleFamily, setRoleFamily,
+    searchPersona, setSearchPersona, searchPosture, setSearchPosture, roleFamily, setRoleFamily,
     roleTitle, setRoleTitle, roleTitles, setRoleTitles,
     employmentStatus, setEmploymentStatus, searchTimeline, setSearchTimeline,
     searchDriver, setSearchDriver, currentTitle, setCurrentTitle,

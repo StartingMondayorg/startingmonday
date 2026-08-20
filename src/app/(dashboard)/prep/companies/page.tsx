@@ -3,6 +3,11 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { Card } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 
 interface Company {
   id: string
@@ -71,18 +76,18 @@ export default function CompaniesPrepPage() {
       </div>
 
       {/* Research insight card */}
-      <div className="rounded-2xl border border-orange-400/30 bg-orange-500/5 p-6 sm:p-8">
+      <Card className="border-orange-400/30 bg-orange-500/5 p-6 sm:p-8">
         <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-orange-300 mb-3">
           From coaching research
         </p>
         <p className="text-[15px] leading-relaxed text-slate-100">
           "The leaders who closed offers fastest spent the first 4-5 weeks researching: 40-60 target companies, signals that precede a search, and the pattern of demand. They didn't rush into outreach. They moved when the pattern was clear."
         </p>
-      </div>
+      </Card>
 
       {/* Featured companies section */}
       {!loading && featuredCompanies.length > 0 && (
-        <div className="rounded-2xl border border-teal-400/30 bg-teal-500/5 p-6 sm:p-8">
+        <Card className="border-teal-400/30 bg-teal-500/5 p-6 sm:p-8">
           <div className="mb-4">
             <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-teal-300 mb-2">
               ✓ Featured companies for this week ({featuredCompanies.length})
@@ -91,12 +96,12 @@ export default function CompaniesPrepPage() {
               Based on signals and alignment with your search. Consider these as priority targets.
             </p>
           </div>
-          
+
           <div className="grid gap-3 sm:grid-cols-2">
             {featuredCompanies.map((company) => (
-              <div
+              <Card
                 key={company.id}
-                className="rounded-lg px-4 py-3 border border-teal-400/30 bg-teal-950/40 flex items-start justify-between"
+                className="px-4 py-3 border-teal-400/30 bg-teal-950/40 flex-row items-start justify-between"
               >
                 <div>
                   <p className="font-semibold text-[14px] text-teal-100">{company.name}</p>
@@ -108,193 +113,188 @@ export default function CompaniesPrepPage() {
                 >
                   View →
                 </Link>
-              </div>
+              </Card>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Form sections */}
       <form className="space-y-8">
         {/* Market research */}
-        <fieldset className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
-          <legend className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
+        <Card className="border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
             Market Research
-          </legend>
+          </p>
 
           <div>
-            <label htmlFor="market-focus" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="market-focus" className="block text-[13px] font-semibold text-slate-200 mb-2">
               Markets or verticals you're targeting
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               E.g., "Fintech for SMB", "Enterprise AI infrastructure", "Healthcare SaaS"
             </p>
-            <textarea
+            <Textarea
               id="market-focus"
               placeholder="Your market focus or verticals..."
               rows={3}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
 
           <div>
-            <label htmlFor="market-dynamics" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="market-dynamics" className="block text-[13px] font-semibold text-slate-200 mb-2">
               What's happening in these markets right now?
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               Consolidation, new entrants, talent wars, funding shifts?
             </p>
-            <textarea
+            <Textarea
               id="market-dynamics"
               placeholder="Market trends, consolidation, funding activity, talent dynamics..."
               rows={4}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
-        </fieldset>
+        </Card>
 
         {/* Target companies */}
-        <fieldset className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
-          <legend className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
+        <Card className="border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
             Your Full Target List
-          </legend>
+          </p>
 
           <div>
-            <label htmlFor="company-list" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="company-list" className="block text-[13px] font-semibold text-slate-200 mb-2">
               Add companies beyond this week's featured list
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               Build your 40-60 target company list. One per line or comma-separated. Include the featured companies above plus any others you're tracking.
             </p>
-            <textarea
+            <Textarea
               id="company-list"
               placeholder="Add more companies:&#10;Notion&#10;Monday.com&#10;Asana&#10;Or: Company1, Company2, Company3"
               rows={8}
               value={customCompanies}
               onChange={(e) => setCustomCompanies(e.target.value)}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 font-mono text-[12px] focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 font-mono text-[12px] focus-visible:border-orange-400/50"
             />
           </div>
 
           <div>
-            <label htmlFor="company-criteria" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="company-criteria" className="block text-[13px] font-semibold text-slate-200 mb-2">
               Selection criteria
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               Why you picked these companies. Size, growth rate, geography, industry?
             </p>
-            <textarea
+            <Textarea
               id="company-criteria"
               placeholder="Company size, funding stage, growth rate, industry factors..."
               rows={3}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
-        </fieldset>
+        </Card>
 
         {/* Signals */}
-        <fieldset className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
-          <legend className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
+        <Card className="border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
             Signals You're Watching For
-          </legend>
+          </p>
 
           <div>
-            <label htmlFor="key-signals" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="key-signals" className="block text-[13px] font-semibold text-slate-200 mb-2">
               What precedes a search in your market?
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               Executive departures, board changes, funding announcements, product launches?
             </p>
-            <textarea
+            <Textarea
               id="key-signals"
               placeholder="E.g., executive departures, funding rounds, board changes, product announcements, acquisition activity..."
               rows={4}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
 
           <div>
-            <label htmlFor="signal-sources" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="signal-sources" className="block text-[13px] font-semibold text-slate-200 mb-2">
               Where you'll find these signals
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               News feeds, LinkedIn, company career pages, press releases, your network?
             </p>
-            <textarea
+            <Textarea
               id="signal-sources"
               placeholder="News sources, LinkedIn updates, press releases, career pages, your network..."
               rows={3}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
-        </fieldset>
+        </Card>
 
         {/* Outreach readiness */}
-        <fieldset className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
-          <legend className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
+        <Card className="border-white/10 bg-slate-900/40 p-6 sm:p-8 space-y-6">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-slate-300 mb-4">
             Outreach Readiness
-          </legend>
+          </p>
 
           <div>
-            <label htmlFor="outreach-timing" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="outreach-timing" className="block text-[13px] font-semibold text-slate-200 mb-2">
               When will you start outreach?
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               After weeks of company research and signal-watching.
             </p>
-            <input
+            <Input
               id="outreach-timing"
               type="date"
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
 
           <div>
-            <label htmlFor="outreach-channels" className="block text-[13px] font-semibold text-slate-200 mb-2">
+            <Label htmlFor="outreach-channels" className="block text-[13px] font-semibold text-slate-200 mb-2">
               Your outreach channels
-            </label>
+            </Label>
             <p className="text-[12px] text-slate-400 mb-3">
               LinkedIn, email, referrals, recruiters, network connections?
             </p>
-            <textarea
+            <Textarea
               id="outreach-channels"
               placeholder="Primary channels: LinkedIn, email, recruiters, referrals, warm introductions..."
               rows={2}
-              className="w-full rounded-lg bg-slate-950/50 border border-slate-700/50 px-4 py-3 text-[14px] text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none focus:ring-1 focus:ring-orange-400/30"
+              className="bg-slate-950/50 border-slate-700/50 text-white placeholder-slate-500 focus-visible:border-orange-400/50"
             />
           </div>
-        </fieldset>
+        </Card>
 
         {/* Actions */}
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-between pt-4">
-          <button
+          <Button
             type="button"
-            className="px-6 py-3 text-[13px] font-semibold text-slate-300 hover:text-white border border-slate-700 rounded-lg hover:border-slate-600 transition-colors"
+            variant="outline"
+            className="border-slate-700 text-slate-300 hover:text-white hover:border-slate-600"
           >
             Save as draft
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-3 text-[13px] font-semibold bg-orange-500 text-slate-900 rounded-lg hover:bg-orange-600 transition-colors"
-          >
+          </Button>
+          <Button type="submit">
             Save companies research
-          </button>
+          </Button>
         </div>
       </form>
 
       {/* Next steps */}
-      <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 sm:p-8">
+      <Card className="border-white/10 bg-slate-900/40 p-6 sm:p-8">
         <p className="text-[13px] font-semibold text-slate-300 mb-3">Next: Plan your conversation flow</p>
         <p className="text-[14px] leading-relaxed text-slate-100 mb-4">
           With your target list confirmed, plan how you'll move from introduction through offer. Meetings Prep will walk you through each conversation phase.
         </p>
-        <Link
-          href="/prep/meetings"
-          className="inline-flex px-4 py-2 text-[13px] font-semibold text-orange-300 hover:text-orange-200 transition-colors"
-        >
+        <Button variant="link" className="px-0" render={<Link href="/prep/meetings" />}>
           Plan your meetings →
-        </Link>
-      </div>
+        </Button>
+      </Card>
     </div>
   )
 }

@@ -2,10 +2,13 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { postSearchDigestFrequency, resolveCareerMode } from '@/lib/career-mode'
-import { buildRelationshipMaintenancePlan } from '@/lib/post-search-relationship-loop'
-import { summarizeRelationshipNetwork } from '@/lib/relationship-infrastructure'
+import { buildRelationshipMaintenancePlan } from '@/lib/outreach/post-search-relationship-loop'
+import { summarizeRelationshipNetwork } from '@/lib/outreach/relationship-infrastructure'
 import { evaluateNarrativeHealth } from '@/lib/narrative-health'
-import { buildAlwaysOnIntelligencePulse } from '@/lib/always-on-intelligence'
+import { buildAlwaysOnIntelligencePulse } from '@/lib/intelligence/always-on-intelligence'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Career Intelligence Mode - Starting Monday' }
 
@@ -102,56 +105,56 @@ export default async function PostSearchDashboardPage() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+          <Card variant="glass" className="p-4">
             <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Tracked companies</p>
             <p className="text-[26px] font-semibold">{trackedCompanyCount ?? 0}</p>
-          </div>
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Active contacts</p>
             <p className="text-[26px] font-semibold">{activeContactCount ?? 0}</p>
-          </div>
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+          </Card>
+          <Card variant="glass" className="p-4">
             <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Digest cadence</p>
             <p className="text-[26px] font-semibold capitalize">{digestFrequency}</p>
-          </div>
+          </Card>
         </div>
 
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-5 mb-8">
+        <Card variant="glass" className="p-5 mb-8">
           <h2 className="text-[13px] font-semibold text-slate-200 mb-3">Relationship network health</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Coverage score</p>
               <p className="text-[24px] font-semibold text-slate-100">{relationshipSummary.coverageScore}</p>
-            </div>
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            </Card>
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Covered types</p>
               <p className="text-[24px] font-semibold text-slate-100">{relationshipSummary.coveredTypes}/5</p>
-            </div>
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            </Card>
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Gap</p>
               <p className="text-[14px] font-semibold text-slate-100 leading-snug">{relationshipSummary.coverageGapLabel}</p>
-            </div>
+            </Card>
           </div>
-        </div>
+        </Card>
 
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-5 mb-8">
+        <Card variant="glass" className="p-5 mb-8">
           <div className="flex items-start justify-between gap-3 mb-3">
             <h2 className="text-[13px] font-semibold text-slate-200">Narrative health</h2>
             <p className="text-[13px] tracking-[0.12em] text-slate-400">OS Sprint 3</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Narrative score</p>
               <p className="text-[24px] font-semibold text-slate-100">{narrativeHealth.score}</p>
-            </div>
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            </Card>
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Health band</p>
               <p className="text-[18px] font-semibold capitalize text-slate-100">{narrativeHealth.band}</p>
-            </div>
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            </Card>
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Versions captured</p>
               <p className="text-[24px] font-semibold text-slate-100">{narrativeVersionCount ?? 0}</p>
-            </div>
+            </Card>
           </div>
           {narrativeHealth.gaps.length > 0 && (
             <ul className="space-y-2 mb-4">
@@ -161,39 +164,39 @@ export default async function PostSearchDashboardPage() {
             </ul>
           )}
           <div className="flex flex-wrap gap-3">
-            <Link href="/dashboard/profile" className="px-4 py-2 rounded bg-orange-500 text-slate-900 text-[13px] font-semibold hover:bg-orange-400">
+            <Button render={<Link href="/dashboard/profile" />}>
               Update positioning narrative
-            </Link>
-            <Link href="/dashboard/positioning" className="px-4 py-2 rounded border border-slate-700 text-[13px] font-semibold text-slate-300 hover:border-slate-500">
+            </Button>
+            <Button render={<Link href="/dashboard/positioning" />} variant="outline">
               Open positioning workspace
-            </Link>
+            </Button>
           </div>
-        </div>
+        </Card>
 
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-5 mb-8">
+        <Card variant="glass" className="p-5 mb-8">
           <div className="flex items-start justify-between gap-3 mb-3">
             <h2 className="text-[13px] font-semibold text-slate-200">Always-on intelligence pulse</h2>
             <p className="text-[13px] tracking-[0.12em] text-slate-400">OS Sprint 4</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3">
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Signals (30d)</p>
               <p className="text-[24px] font-semibold text-slate-100">{intelligencePulse.signalsLast30Days}</p>
-            </div>
-            <div className="rounded border border-slate-800 bg-slate-950/50 px-4 py-3 sm:col-span-2">
+            </Card>
+            <Card variant="glass" className="bg-slate-950/50 px-4 py-3 sm:col-span-2">
               <p className="text-[13px] tracking-[0.12em] text-slate-500 mb-1">Top signal clusters</p>
               {intelligencePulse.topSignalTypes.length === 0 ? (
                 <p className="text-[13px] text-slate-400">No meaningful signal clusters in the last 30 days yet.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {intelligencePulse.topSignalTypes.map((item) => (
-                    <span key={item.type} className="px-2 py-1 rounded bg-cyan-950/50 border border-cyan-900 text-[13px] text-cyan-200">
+                    <Badge key={item.type} variant="outline" className="bg-cyan-950/50 border-cyan-900 text-cyan-200">
                       {item.label}: {item.count}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               )}
-            </div>
+            </Card>
           </div>
           {intelligencePulse.topCompanies.length > 0 && (
             <ul className="space-y-2 mb-4">
@@ -205,16 +208,16 @@ export default async function PostSearchDashboardPage() {
             </ul>
           )}
           <div className="flex flex-wrap gap-3">
-            <Link href="/dashboard/signals" className="px-4 py-2 rounded border border-slate-700 text-[13px] font-semibold text-slate-300 hover:border-slate-500">
+            <Button render={<Link href="/dashboard/signals" />} variant="outline">
               Open full signal stream
-            </Link>
-            <Link href="/dashboard/companies" className="px-4 py-2 rounded border border-slate-700 text-[13px] font-semibold text-slate-300 hover:border-slate-500">
+            </Button>
+            <Button render={<Link href="/dashboard/companies" />} variant="outline">
               Re-rank tracked companies
-            </Link>
+            </Button>
           </div>
-        </div>
+        </Card>
 
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-5 mb-8">
+        <Card variant="glass" className="p-5 mb-8">
           <p className="text-[13px] font-semibold text-slate-200 mb-3">Recent intelligence signals</p>
           {recentSignals.length === 0 ? (
             <p className="text-[13px] text-slate-400">No recent signals yet. Keep your target list active and we will keep monitoring.</p>
@@ -228,9 +231,9 @@ export default async function PostSearchDashboardPage() {
               ))}
             </ul>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-5 mb-8">
+        <Card variant="glass" className="p-5 mb-8">
           <p className="text-[13px] font-semibold text-slate-200 mb-3">Relationship maintenance cadence</p>
           <ul className="space-y-3">
             {relationshipPlan.map((item) => (
@@ -243,18 +246,18 @@ export default async function PostSearchDashboardPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         <div className="flex flex-wrap gap-3">
-          <Link href="/dashboard/contacts" className="px-4 py-2 rounded bg-orange-500 text-slate-900 text-[13px] font-semibold hover:bg-orange-400">
+          <Button render={<Link href="/dashboard/contacts" />}>
             Maintain key relationships
-          </Link>
-          <Link href="/dashboard/companies" className="px-4 py-2 rounded border border-slate-700 text-[13px] font-semibold text-slate-300 hover:border-slate-500">
+          </Button>
+          <Button render={<Link href="/dashboard/companies" />} variant="outline">
             Review tracked companies
-          </Link>
-          <Link href="/settings/billing" className="px-4 py-2 rounded border border-slate-700 text-[13px] font-semibold text-slate-300 hover:border-slate-500">
+          </Button>
+          <Button render={<Link href="/settings/billing" />} variant="outline">
             Manage Monitor plan
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { SearchControlsPanel } from '@/components/SearchControlsPanel'
-import { EmailPreferencesPanel } from '@/components/EmailPreferencesPanel'
-import { DashboardActivitySnooze } from '../dashboard/dashboard-activity-snooze'
+import { SearchControlsPanel } from '@/app/(dashboard)/settings/_components/SearchControlsPanel'
+import { EmailPreferencesPanel } from '@/app/(dashboard)/settings/_components/EmailPreferencesPanel'
+import { DashboardActivitySnooze } from '../dashboard/_components/activity-snooze'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata = { title: 'Settings' }
 
@@ -41,15 +43,15 @@ export default async function SettingsPage() {
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-10">
-        <div className="mb-6 rounded-2xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="mb-6 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-1">Settings</p>
           <h1 className="text-[26px] font-bold leading-tight text-white">Your search, on your terms</h1>
           <p className="mt-2 text-[13px] text-slate-200">
             Briefing schedule, pause controls, and activity nudges all live here.
           </p>
-        </div>
+        </Card>
 
-        <section className="mb-6 rounded-2xl border border-white/15 bg-white/5 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <Card variant="glass" className="mb-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
           <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Account</h2>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -57,15 +59,15 @@ export default async function SettingsPage() {
               <p className="text-[13px] text-slate-300 mt-0.5">Briefing email: {user.email}</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link href="/dashboard/profile" className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10">Profile</Link>
-              <Link href="/settings/billing" className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10">Billing</Link>
-              <Link href="/settings/security" className="inline-flex min-h-[36px] items-center rounded border border-white/15 bg-white/5 px-3 text-[13px] font-semibold text-slate-100 transition-colors hover:border-white/30 hover:bg-white/10">Security</Link>
+              <Button variant="outline" render={<Link href="/dashboard/profile" />}>Profile</Button>
+              <Button variant="outline" render={<Link href="/settings/billing" />}>Billing</Button>
+              <Button variant="outline" render={<Link href="/settings/security" />}>Security</Button>
             </div>
           </div>
           <p className="mt-3 text-[12px] text-slate-400">
             To change the email address briefings are sent to, update your login email under Security.
           </p>
-        </section>
+        </Card>
 
         <SearchControlsPanel
           initialFrequency={profile?.briefing_frequency === 'weekly' ? 'weekly' : 'daily'}

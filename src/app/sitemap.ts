@@ -1,5 +1,6 @@
 ﻿import type { MetadataRoute } from 'next'
 import { BLOG_POSTS } from '@/lib/blog-posts'
+import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
 
 const BASE = 'https://startingmonday.app'
 const STATIC_LAST_MODIFIED = new Date('2026-07-03T00:00:00.000Z')
@@ -82,7 +83,11 @@ const PARTNER_AND_RESOURCE_PAGES = [
 const STATIC_PAGES = [...CORE_PAGES, ...ROLE_PAGES, ...PARTNER_AND_RESOURCE_PAGES]
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages: MetadataRoute.Sitemap = STATIC_PAGES.map(page => ({
+  const pages = isStartingMondayHeroEvidenceEnabled()
+    ? [...STATIC_PAGES, { path: '/example', changeFrequency: 'monthly' as const, priority: 0.8 }]
+    : STATIC_PAGES
+
+  const staticPages: MetadataRoute.Sitemap = pages.map(page => ({
     url: `${BASE}${page.path}`,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: page.changeFrequency,
