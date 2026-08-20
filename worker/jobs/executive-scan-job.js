@@ -4,13 +4,16 @@ import { trackUsage } from '../lib/usage-tracker.js'
 import { createLimiter } from '../lib/concurrency.js'
 import { writeScanFailureDeadLetter } from '../lib/scan-dead-letter.js'
 import { scanCompany } from '../scanner/scan-company.js'
+import { RESCAN_WINDOW_DAILY_HOURS } from '../scanner/deduplicate.js'
 import { sendRoleFitAlert } from '../lib/signal-alert.js'
 
 const MAX_CONCURRENT_SCANS = 5
 
 async function scanWithRetry(supabase, company, profile) {
+  // Executive tier is scheduled at 08:00 and 20:00 UTC -- 12h apart.
+  const options = { rescanWindowHours: RESCAN_WINDOW_DAILY_HOURS }
   try {
-    return await scanCompany(supabase, company, profile)
+    return await scanCompany(supabase, company, profile, options)
   } catch (err) {
     const isTransient = (
       err.message?.includes('timeout') ||
@@ -22,7 +25,7 @@ async function scanWithRetry(supabase, company, profile) {
     if (!isTransient) throw err
     logger.warn(`executive-scan-job: transient error for ${company.name}, retrying in 3s`, { error: err.message })
     await new Promise(r => setTimeout(r, 3000))
-    return scanCompany(supabase, company, profile)
+    return scanCompany(supabase, company, profile, options)
   }
 }
 
