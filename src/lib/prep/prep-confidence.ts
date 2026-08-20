@@ -11,6 +11,22 @@ export type PrepConfidenceResult = {
   remediation: string[]
 }
 
+export function formatPrepConfidenceForUser(result: PrepConfidenceResult) {
+  const confidenceLabel = result.band === 'high'
+    ? 'High confidence'
+    : result.band === 'medium'
+      ? 'Medium confidence'
+      : 'Needs more evidence'
+  const evidenceLabel = result.factors.inferredSharePenalty > 9
+    ? 'Add more evidence before relying on this brief.'
+    : 'Evidence coverage looks usable.'
+
+  return {
+    confidenceLabel,
+    detail: `Sections present: ${result.factors.structuredSections}/5. ${evidenceLabel}`,
+  }
+}
+
 const REQUIRED_SECTIONS = [
   'Bottom Line',
   'The Situation',

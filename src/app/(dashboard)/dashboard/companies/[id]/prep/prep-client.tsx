@@ -8,7 +8,7 @@ import {
   buildPrepClaimProvenance,
   type ClaimOriginClass,
 } from '@/lib/prep/prep-provenance'
-import { scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
+import { formatPrepConfidenceForUser, scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
 import { PMF_EVENTS } from '@/lib/pmf-event-taxonomy'
 import { type PrepRoleMode } from '@/lib/prep/prep-role-modes'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
@@ -993,6 +993,10 @@ export function PrepClient({
     if (!brief) return null
     return scorePrepBriefConfidence(brief)
   }, [brief])
+  const briefConfidenceCopy = useMemo(() => {
+    if (!briefConfidence) return null
+    return formatPrepConfidenceForUser(briefConfidence)
+  }, [briefConfidence])
   const displayedBrief = useMemo(() => {
     if (!brief) return ''
     return briefViewMode === 'tonight' ? buildTonightView(brief) : brief
@@ -1349,11 +1353,11 @@ export function PrepClient({
               <div>
                 <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Brief confidence</p>
                 <p className="text-[14px] font-semibold text-white mt-1">
-                  Score: {briefConfidence.score}/100 ({briefConfidence.band})
+                  {briefConfidenceCopy?.confidenceLabel}
                 </p>
               </div>
               <div className="text-[12px] text-slate-300">
-                Sections: {briefConfidence.factors.structuredSections}/5 · Inferred penalty: -{briefConfidence.factors.inferredSharePenalty}
+                {briefConfidenceCopy?.detail}
               </div>
             </div>
             {isLowConfidence && (
