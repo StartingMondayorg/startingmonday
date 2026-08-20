@@ -18,5 +18,7 @@ if (coveredSource.length === 0) {
 }
 
 console.log(`staged diff coverage: checking ${coveredSource.length} production source file(s)`)
-execFileSync('npm', ['run', 'test:coverage'], { stdio: 'inherit' })
-execFileSync('npm', ['run', 'coverage:folders:check', '--', '--staged'], { stdio: 'inherit' })
+// On Windows `npm` is npm.cmd, which execFileSync cannot spawn without a shell.
+const npmOpts = { stdio: 'inherit', shell: process.platform === 'win32' }
+execFileSync('npm', ['run', 'test:coverage'], npmOpts)
+execFileSync('npm', ['run', 'coverage:folders:check', '--', '--staged'], npmOpts)

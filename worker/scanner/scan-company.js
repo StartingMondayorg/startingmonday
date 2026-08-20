@@ -35,7 +35,7 @@ export async function scanCompany(supabase, company, userProfile) {
 
     // 3. Get job text. Prefer a structured ATS JSON feed (Greenhouse, Lever,
     //    SmartRecruiters, BambooHR) — reliable and cheap. Fall back to fetching and
-    //    extracting the career page (with Browserless render) for non-ATS boards.
+    //    extracting the career page (with browserless.io render) for non-ATS boards.
     let text
     const atsFeed = await fetchAtsJobs(career_page_url)
     if (atsFeed && atsFeed.jobs.length) {

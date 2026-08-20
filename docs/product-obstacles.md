@@ -44,7 +44,7 @@ you have failed at the one thing you promised. Trust is gone. Churn follows.
 - Build an admin alerting system: "Flexport scan returned 0 results for 3 consecutive runs — check it"
 - Plan 4-8 hours/week of scraper maintenance at steady state, more during any major career
   platform migration wave
-- Consider using a third-party scraping API (Firecrawl, Apify, Browserless) that handles
+- Consider using a third-party scraping API (Firecrawl, Apify, browserless.io) that handles
   anti-bot and layout changes, accepting the cost as a support contract, not infrastructure
 
 ---
@@ -136,7 +136,7 @@ will start blocking scans.
 fails its most important function.
 
 **What needs to happen:**
-- Use Browserless.io or Apify with residential proxy rotation — reduces block rate significantly
+- Use browserless.io or Apify with residential proxy rotation — reduces block rate significantly
 - Detect blocks (HTTP 403, Cloudflare challenge page) and notify users rather than silently failing
 - Build a fallback: "We can't scan this page automatically — we'll alert you to check it manually"
 - Accept that 5-15% of career pages will be unscannable; be transparent about it

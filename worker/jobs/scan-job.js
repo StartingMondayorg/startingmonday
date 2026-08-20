@@ -8,7 +8,7 @@ import { notify } from '../lib/notify.js'
 
 const MAX_CONCURRENT_SCANS = 10
 
-// Retry a scan once on transient errors (network timeouts, Browserless blips).
+// Retry a scan once on transient errors (network timeouts, browserless.io blips).
 // Does not retry robots.txt blocks or deliberate skips.
 async function scanWithRetry(supabase, company, profile) {
   try {

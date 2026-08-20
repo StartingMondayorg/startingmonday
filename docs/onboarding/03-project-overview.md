@@ -67,7 +67,7 @@ This list drives the Phase 1 roadmap. Every product decision right now should as
 
 **What's live and working:**
 - Full pipeline tracking (5 stages)
-- Career page scanning (3x/week via Browserless)
+- Career page scanning (3x/week via browserless.io)
 - Company intelligence and signals
 - AI prep briefs (all streaming)
 - Search Strategy Brief (Opus model)
