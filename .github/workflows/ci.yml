@@ -125,6 +125,15 @@ jobs:
             signal_engine_plan:
               - 'docs/signal-engine-cross-product-master-plan-2026-07-26.md'
               - 'AGENTS.md'
+            billing:
+              - 'supabase/migrations/**'
+              - 'src/lib/billing/**'
+              - 'src/app/[(]dashboard[)]/settings/billing/**'
+              - 'src/app/api/[(]billing[)]/**'
+              - 'src/app/api/[(]ops[)]/admin/automation/billing/**'
+              - 'src/app/api/[(]ops[)]/webhooks/stripe/**'
+              - 'scripts/check-billing-readiness.mjs'
+              - 'scripts/fix-billing-placeholder-sql.mjs'
 
       - uses: actions/setup-node@v5
         with:
@@ -221,7 +230,19 @@ jobs:
           STRIPE_PRICE_EXECUTIVE_ANNUAL: ${{ secrets.STRIPE_PRICE_EXECUTIVE_ANNUAL }}
           STRIPE_PRICE_PARTNER_PASSIVE: ${{ secrets.STRIPE_PRICE_PARTNER_PASSIVE }}
           STRIPE_PRICE_PARTNER_ACTIVE: ${{ secrets.STRIPE_PRICE_PARTNER_ACTIVE }}
-        run: npm run billing:readiness:strict
+        run: |
+          # Env-var presence is cheap, deterministic, and relevant to every PR
+          # (is this environment even configured to take payments). The
+          # database row-integrity check queries *live* commerce data, which
+          # is a property of production state, not of this PR's diff -- an
+          # unrelated PR shouldn't be blocked by a billing item someone else
+          # left half-configured. Only run the full check (env + rows) on
+          # pushes (about to be live) or on PRs that actually touch billing.
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ steps.scoped.outputs.billing }}" != "true" ]; then
+            npm run billing:readiness:strict -- --skip-rows
+          else
+            npm run billing:readiness:strict
+          fi
 
       - name: Generate guide artifacts
         run: npm run guide:user:sync && npm run guide:internal:sync
