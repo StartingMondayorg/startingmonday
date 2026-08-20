@@ -25,6 +25,7 @@ describe('client instrumentation', () => {
   it('initializes PostHog before application components execute', async () => {
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', 'phc_test')
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_HOST', 'https://posthog.example.test')
+    vi.stubEnv('NODE_ENV', 'production')
 
     await import('./instrumentation-client')
 
@@ -38,6 +39,16 @@ describe('client instrumentation', () => {
 
   it('does not initialize PostHog without a public project key', async () => {
     vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', '')
+    vi.stubEnv('NODE_ENV', 'production')
+
+    await import('./instrumentation-client')
+
+    expect(state.init).not.toHaveBeenCalled()
+  })
+
+  it('does not initialize PostHog outside production', async () => {
+    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', 'phc_test')
+    vi.stubEnv('NODE_ENV', 'development')
 
     await import('./instrumentation-client')
 
