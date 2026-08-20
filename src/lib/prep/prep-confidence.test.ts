@@ -1,5 +1,29 @@
 import { describe, expect, it } from 'vitest'
-import { scorePrepBriefConfidence } from '@/lib/prep/prep-confidence'
+import { formatPrepConfidenceForUser, scorePrepBriefConfidence, type PrepConfidenceResult } from './prep-confidence'
+
+describe('formatPrepConfidenceForUser', () => {
+  it('keeps internal scoring language out of user-facing prep confidence copy', () => {
+    const result: PrepConfidenceResult = {
+      score: 57,
+      band: 'low',
+      factors: {
+        structuredSections: 3,
+        provenanceCoverage: 1,
+        inferredSharePenalty: 14,
+      },
+      remediation: [],
+    }
+
+    const copy = formatPrepConfidenceForUser(result)
+    const rendered = `${copy.confidenceLabel} ${copy.detail}`.toLowerCase()
+
+    expect(rendered).not.toContain('inferred penalty')
+    expect(rendered).not.toContain('score')
+    expect(rendered).not.toContain('57/100')
+    expect(rendered).toContain('needs more evidence')
+    expect(rendered).toContain('sections present: 3/5')
+  })
+})
 
 describe('prep confidence scoring', () => {
   it('returns high/medium confidence for well-structured briefs', () => {
