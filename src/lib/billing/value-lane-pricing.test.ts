@@ -5,12 +5,6 @@ import {
   RELATIONSHIP_NETWORK_MATCHING_ENABLED_FLAG,
 } from '../feature-flags'
 
-describe('src/lib/value-lane-pricing.ts placeholder coverage', () => {
-  it('marks module as covered for council traceability', () => {
-    expect(true).toBe(true)
-  })
-})
-
 describe('isEnabledFlag', () => {
   it('accepts common truthy flag values', () => {
     expect(isEnabledFlag('1')).toBe(true)

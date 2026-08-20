@@ -49,6 +49,23 @@ jobs:
           npm run ux:rubric:pages
           npm run test
 
+      - name: Billing readiness gate (strict)
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_PRICE_MONITOR: ${{ secrets.STRIPE_PRICE_MONITOR }}
+          STRIPE_PRICE_MONITOR_ANNUAL: ${{ secrets.STRIPE_PRICE_MONITOR_ANNUAL }}
+          STRIPE_PRICE_ACTIVE: ${{ secrets.STRIPE_PRICE_ACTIVE }}
+          STRIPE_PRICE_ACTIVE_ANNUAL: ${{ secrets.STRIPE_PRICE_ACTIVE_ANNUAL }}
+          STRIPE_PRICE_EXECUTIVE: ${{ secrets.STRIPE_PRICE_EXECUTIVE }}
+          STRIPE_PRICE_EXECUTIVE_ANNUAL: ${{ secrets.STRIPE_PRICE_EXECUTIVE_ANNUAL }}
+          STRIPE_PRICE_PARTNER_PASSIVE: ${{ secrets.STRIPE_PRICE_PARTNER_PASSIVE }}
+          STRIPE_PRICE_PARTNER_ACTIVE: ${{ secrets.STRIPE_PRICE_PARTNER_ACTIVE }}
+        run: npm run billing:readiness:strict
+
       - name: Run luxury sentinel on staging (report-only)
         env:
           SENTINEL_BASE_URL: https://starting-monday-staging.up.railway.app

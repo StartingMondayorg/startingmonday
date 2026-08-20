@@ -9,6 +9,7 @@ if (typeof globalThis.WebSocket === 'undefined') {
 
 const asJson = process.argv.includes('--json')
 const strict = process.argv.includes('--strict')
+const skipRows = process.argv.includes('--skip-rows')
 
 const REQUIRED_ENV_VARS = [
   'STRIPE_SECRET_KEY',
@@ -217,7 +218,9 @@ async function checkStripeBackedRows() {
 
 async function main() {
   const env = checkEnvVars()
-  const rowChecks = await checkStripeBackedRows()
+  const rowChecks = skipRows
+    ? { skipped: true, reason: 'row checks skipped (--skip-rows)', issues: [] }
+    : await checkStripeBackedRows()
 
   const failures = []
 

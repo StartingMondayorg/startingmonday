@@ -51,9 +51,13 @@ function getChangedFiles() {
   const fromParent = tryDiff('HEAD^1..HEAD')
   if (fromParent !== null) return includeUncommitted(fromParent)
 
-  // Cannot determine changed files — fail safe (pass).
-  console.warn('landing-page-guard: could not determine changed files; skipping check')
-  return []
+  // Cannot determine changed files via any strategy — fail closed rather than
+  // silently treating an unresolvable diff as "no changes." A shallow clone,
+  // force-push, or rebase edge case here should block the merge with a clear
+  // diagnostic, not pass unnoticed.
+  console.error('landing-page-guard: could not determine changed files (base ref, origin/main, and HEAD^1 diffs all failed)')
+  console.error('This usually means the checkout is too shallow or the base ref is unavailable. Ensure `fetch-depth: 0` (or at least enough history) in the checkout step.')
+  process.exit(1)
 }
 
 const guardedFiles = new Set([

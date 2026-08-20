@@ -61,6 +61,12 @@ CLAUDE.md
 # Claude Code project-local settings (personal, not shared)
 .claude/settings.local.json
 
+# Codex CLI local session config (personal, not shared)
+.codex/
+
+# Supabase CLI version cache, rewritten on every CLI run
+supabase/.temp/
+
 # Local dev scripts
 StartingMonday-Dev.bat
 
