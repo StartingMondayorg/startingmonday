@@ -14,6 +14,8 @@ const ALLOWED_EVENTS: readonly UserEventName[] = [
   'homepage_cta_clicked',
   'first_mile_section_dwell',
   'dashboard_first_run_viewed',
+  'dashboard_viewed',
+  'dashboard_action_clicked',
   'shortlist_sprint_viewed',
   'shortlist_sprint_cta_clicked',
   'shortlist_sprint_checkout_started',

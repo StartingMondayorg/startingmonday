@@ -182,6 +182,9 @@ jobs:
       - name: Signal-engine master-plan pin guard
         run: npm run guard:signal-engine-plan
 
+      - name: Dashboard simplification gate
+        run: npm run guard:dashboard-simplification && npm run test:dashboard-simplification-gate
+
       - name: Landing page change approval guard
         env:
           ALLOW_LANDING_PAGE_CHANGE: >-
