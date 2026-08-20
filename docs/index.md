@@ -163,7 +163,7 @@ Documents indexed: **1156**
 - [strategy/luxury-reference-benchmark-snapshot-2026-06-13.md](strategy/luxury-reference-benchmark-snapshot-2026-06-13.md) — Luxury Reference Benchmark Snapshot (Notion, Lucid, Atlassian, Slack)
 - [strategy/mark-horstman-review.md](strategy/mark-horstman-review.md) — Mark Horstman Product Review
 - [strategy/marketing.md](strategy/marketing.md) — Starting Monday — Marketing & Growth Plan
-- [strategy/mo-live-brief-plan-r2-2026-08-18.md](strategy/mo-live-brief-plan-r2-2026-08-18.md) — Mo Live Brief Plan — Revision 2
+- [strategy/mo-live-brief-plan-r2-2026-08-18.md](strategy/mo-live-brief-plan-r2-2026-08-18.md) — Mo Live Brief Plan — Revision 2.1
 - [strategy/onboarding-agent-implementation-tickets-2026-07-06.md](strategy/onboarding-agent-implementation-tickets-2026-07-06.md) — Onboarding Agent Implementation Tickets
 - [strategy/onboarding-agent-program-plan-2026-07-06.md](strategy/onboarding-agent-program-plan-2026-07-06.md) — Onboarding Agent Program Plan
 - [strategy/onboarding-alert-reporting-agent-spec-2026-07-06.md](strategy/onboarding-alert-reporting-agent-spec-2026-07-06.md) — Onboarding Alert and Reporting Agent Spec
