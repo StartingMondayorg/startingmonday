@@ -35,6 +35,43 @@ Method: deterministic source scan of the dashboard route for JSX surfaces, actio
 | Trust integrity | Existing route includes many advisory/status panels and internal intelligence surfaces. | Internal scoring, mode, tier, and provenance implementation labels must not render to users. |
 | Hidden-tier consistency | Existing feature access remains subscription/role gated. | Three-zone UI must not reveal unavailable tier surfaces or MandateSignal variants. |
 
+## Founder Approval Record
+
+Approved by Rich Rothschild in Copilot chat on 2026-08-19:
+
+- Word budgets in this document are ratified for the flagged dashboard build.
+- Zone 1 state x posture copy below is approved for implementation, subject to the claims manifest and live data guards.
+
+## Ratified Word Budgets
+
+| Surface | Budget |
+| --- | ---: |
+| Zone 1 card in any state | <=40 words |
+| Zone 2 heading and purpose line | <=20 words |
+| Per-row rendered text excluding company name | <=25 words |
+| Zone 3 strip | <=15 words |
+| Purpose line under each zone heading | <=12 words |
+| Route total above the fold excluding row data | <=120 words |
+| Primary CTAs on route | <=6 |
+
+## Approved Zone 1 State x Posture Copy
+
+Copy rules:
+
+- Operational state wins first; posture only changes verb intensity.
+- Every state has exactly one primary CTA.
+- Variables such as `{company}`, `{signal}`, `{scanAge}`, `{nextScanDay}`, and `{setupStep}` must come from product-local data.
+- If required evidence is missing, render the evidenced quiet state unless stale-data rules apply.
+
+| State | Active search | Exploring / relationship building | Not looking yet | CTA |
+| --- | --- | --- | --- | --- |
+| Interview or offer due action | `{company} needs attention today. Review the brief and prepare the next conversation.` | `{company} needs a light touch. Review the context before you respond.` | `{company} needs a decision. Review the context before taking any step.` | `Review brief` |
+| Stale or unhealthy data | `We have not scanned your companies since {scanAge}. Do not act on stale signals yet.` | `Your watchlist is stale. Wait for the next clean scan before reaching out.` | `Your watchlist is stale. Nothing needs you until scanning is healthy.` | `View scan status` |
+| Due follow-up or fresh supported signal | `{company} has a fresh signal: {signal}. Check the brief and decide who to contact.` | `{company} has a fresh signal: {signal}. Consider one relationship touch this week.` | `{company} changed: {signal}. Save the context for later.` | `Get brief` |
+| Stalled for 14 days | `Your search has been quiet for 14 days. Pick one company and restart with a brief.` | `Your relationship pipeline has been quiet. Pick one company for a low-pressure touch.` | `Nothing is urgent. If you want to stay warm, pick one company to watch closer.` | `Pick a company` |
+| Week One activation need | `Finish {setupStep} so Monday can brief you on the right companies.` | `Finish {setupStep} so your watchlist matches the relationships you want to build.` | `Finish {setupStep} so we only alert you when something matters.` | `Finish setup` |
+| Evidenced quiet state | `Nothing new across your {companyCount} companies - last checked {scanAge}. Next scan {nextScanDay}.` | `Nothing needs you today across {companyCount} companies. Next scan {nextScanDay}.` | `Nothing needs you today. Your {companyCount} companies are still being watched.` | `View companies` |
+
 ## Human Evidence Still Required
 
 D-A from the Sol brief is not complete. Before any dashboard simplification flag flip, run 3-5 actual executive walkthroughs on the current dashboard cold, screen-shared, and without narration. Record verbatim:
@@ -50,7 +87,8 @@ This baseline cannot be reconstructed from code and cannot be replaced by automa
 ## Gate State
 
 - Prep-brief internal-text leak: fixed in `src/lib/prep/prep-confidence.ts` and guarded by `src/lib/prep/prep-confidence.test.ts`.
-- Word budgets: pending Rich ratification from this measured baseline.
+- Word budgets: ratified by Rich on 2026-08-19 and recorded above.
+- Zone 1 state x posture copy: approved by Rich on 2026-08-19 and recorded above.
 - Claims/lexicon/element/product-isolation/A-grade gates: pending implementation after budget ratification.
 - Three-zone flagged layout: not implemented.
 - Dashboard flag flip: blocked until D-A baseline, new-layout walkthrough evidence, and all product-local gates pass.
