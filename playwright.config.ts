@@ -11,7 +11,7 @@ export default defineConfig({
   timeout: 45_000,
   globalTimeout: 20 * 60 * 1000,
   retries: 1,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never' }], ['./tests/e2e/skip-rate-reporter.ts']],
   snapshotPathTemplate: 'tests/e2e/__screenshots__/{arg}{ext}',
   use: {
     baseURL: configuredBaseURL || 'https://startingmonday.app',
