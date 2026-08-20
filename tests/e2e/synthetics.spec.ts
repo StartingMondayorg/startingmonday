@@ -523,7 +523,10 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
   // Two acceptable auth outcomes in this environment:
   // 1) session established immediately -> onboarding/dashboard
   // 2) confirmation required -> fallback to login with same credentials
-  await page.waitForTimeout(1500)
+  await Promise.race([
+    page.waitForURL(/\/(dashboard|onboarding)(?:$|[/?#])/, { timeout: 15_000 }),
+    page.getByRole('heading', { name: /Check your email/i }).waitFor({ state: 'visible', timeout: 15_000 }),
+  ]).catch(() => null)
   const immediateAuth = /\/(dashboard|onboarding)(?:$|[/?#])/.test(new URL(page.url()).pathname)
   const needsConfirmation = await page.getByRole('heading', { name: /Check your email/i }).isVisible().catch(() => false)
 
@@ -619,7 +622,7 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
   const landedOnErrorRoute = createResultPath === '/dashboard/companies/new' && !!createError
 
   const createHeading = (await page.locator('h1').first().textContent().catch(() => null))?.trim() ?? null
-  const createAlertText = (await page.locator('.bg-red-50, [role="alert"]').first().textContent().catch(() => null))?.trim() ?? null
+  const createAlertText = (await page.locator('[role="alert"]').first().textContent().catch(() => null))?.trim() ?? null
   console.log('Synthetic-10:create-company-state', {
     url: page.url(),
     path: createResultPath,
@@ -669,8 +672,8 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
     await generateButton.click()
   }
 
-  await page.locator('h2, .bg-red-50').first().waitFor({ state: 'visible', timeout: 90_000 })
-  const prepError = page.locator('.bg-red-50')
+  await page.locator('h2, [role="alert"]').first().waitFor({ state: 'visible', timeout: 90_000 })
+  const prepError = page.locator('[role="alert"]')
   const hasPrepError = await prepError.isVisible().catch(() => false)
   expect(hasPrepError, 'Synthetic-10 should not hit prep error state').toBe(false)
 
