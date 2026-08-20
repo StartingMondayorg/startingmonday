@@ -59,7 +59,6 @@ import { FirstMileTelemetry } from "@/app/components/FirstMileTelemetry";
 import { applyDashboardSignalContract } from "@/lib/intelligence/dashboard-signal-contract";
 import { rankSignals } from "@/lib/intelligence/intelligence-quality";
 import { stripStaleRelativeTime } from "@/lib/outreach/follow-up-copy";
-import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-flags";
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {
@@ -158,10 +157,6 @@ export default async function DashboardPage({
     timelineSort?: string;
   }>;
 }) {
-  if (isStartingMondayDashboardSimplificationEnabled()) {
-    return <div className="p-6 text-slate-200">Dashboard simplification is enabled but not yet implemented. The legacy dashboard remains the authoritative fallback until the flagged layout passes its evidence gates.</div>;
-  }
-
   const {
     q,
     stage,
