@@ -261,7 +261,7 @@
         "docs:drive:sync:dry-run": "node scripts/sync-docs-to-gdrive.mjs --dry-run",
         "test:outreach-templates": "vitest run src/lib/outreach/template-engine.test.ts",
         "test:experiment-coverage-guard": "vitest run src/lib/experiment-route-coverage-guard.test.ts",
-        "test:coverage": "vitest run --coverage",
+        "test:coverage": "node scripts/run-unit-coverage.mjs",
         "coverage:folders:check": "node scripts/check-coverage-thresholds.mjs",
         "coverage:folders:check:staged": "node scripts/check-coverage-thresholds.mjs --staged",
         "coverage:diff:check": "node scripts/check-diff-coverage.mjs --min-coverage=90",

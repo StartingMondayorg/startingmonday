@@ -12,6 +12,13 @@ const coveredSource = stagedSource.filter((file) =>
   file.startsWith('src/lib/') || file.startsWith('src/app/api/') || file.startsWith('src/app/'),
 )
 
+function gitIdentity() {
+  return {
+    head: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+    branch: execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim(),
+  }
+}
+
 if (coveredSource.length === 0) {
   console.log('staged diff coverage: skipped (no unit-covered production source files)')
   process.exit(0)
@@ -29,5 +36,10 @@ function runNpm(args) {
 // This test creates temporary Git repositories. It is run by the normal test
 // suite, but excluded from coverage instrumentation because Vitest workers can
 // share mutable Git process state on Windows.
-runNpm(['run', 'test:coverage', '--', '--exclude=src/lib/check-coverage-thresholds.test.ts'])
+const before = gitIdentity()
+runNpm(['run', 'test:coverage'])
 runNpm(['run', 'coverage:folders:check', '--', '--staged'])
+const after = gitIdentity()
+if (before.head !== after.head || before.branch !== after.branch) {
+  throw new Error(`Coverage hook changed Git identity: ${before.branch}@${before.head} -> ${after.branch}@${after.head}`)
+}

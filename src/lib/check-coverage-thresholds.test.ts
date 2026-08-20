@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 const repositoryRoot = path.resolve(import.meta.dirname, '..', '..')
 const scriptPath = path.join(repositoryRoot, 'scripts', 'check-coverage-thresholds.mjs')
 const temporaryDirectories: string[] = []
+const describeFixture = process.env.SKIP_GIT_FIXTURE_TEST === '1' ? describe.skip : describe
 
 function writeFile(root: string, relativePath: string, content: string) {
   const filePath = path.join(root, relativePath)
@@ -76,7 +77,7 @@ afterEach(() => {
   }
 })
 
-describe('coverage folder thresholds', () => {
+describeFixture('coverage folder thresholds', () => {
   it('evaluates only changed production files in diff-scoped mode', () => {
     const { root, baseRef } = createFixture()
 
