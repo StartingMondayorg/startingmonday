@@ -18,5 +18,16 @@ if (coveredSource.length === 0) {
 }
 
 console.log(`staged diff coverage: checking ${coveredSource.length} production source file(s)`)
-execFileSync('npm', ['run', 'test:coverage'], { stdio: 'inherit' })
-execFileSync('npm', ['run', 'coverage:folders:check', '--', '--staged'], { stdio: 'inherit' })
+function runNpm(args) {
+  if (process.platform === 'win32') {
+    execFileSync('cmd.exe', ['/d', '/s', '/c', `npm ${args.join(' ')}`], { stdio: 'inherit' })
+    return
+  }
+  execFileSync('npm', args, { stdio: 'inherit' })
+}
+
+// This test creates temporary Git repositories. It is run by the normal test
+// suite, but excluded from coverage instrumentation because Vitest workers can
+// share mutable Git process state on Windows.
+runNpm(['run', 'test:coverage', '--', '--exclude=src/lib/check-coverage-thresholds.test.ts'])
+runNpm(['run', 'coverage:folders:check', '--', '--staged'])
