@@ -3,8 +3,16 @@
 Date: 2026-08-18 (r2); amended 2026-08-20 (r2.1)
 Products and systems: Starting Monday (v1 product), HubSpot (CRM/workflow), LinkedIn Sales Navigator (manual research), MandateSignal (future reuse subject to separate approval)
 Owner: Rich + Mo + Engineering
-Status: Proposed implementation plan; no code changes authorized by this document
+Status: Approved execution baseline for Starting Monday Phase 1; Phase 2/3 and all MandateSignal work remain separately gated
 Supersedes: molivelinkedinbriefplan20260818.md (r1)
+
+## Authorization record
+
+Approved by Rich Rothschild on 2026-08-20 for Starting Monday Phase 1 implementation.
+
+Authorization includes product-local contract verification, shared PDF parser extraction, HubSpot-linked staff intake, consent and profile review, product-local shortlist, bounded scan orchestration, evidence-labeled brief composition, human finalization, expiring private delivery, and minimized HubSpot milestone synchronization.
+
+Authorization does not waive the integration prerequisites, retention/deletion approval, source-rights controls, staff/recent-auth controls, tests, calibration review, or go-live gates in this plan. It does not authorize a synchronous MandateSignal dependency, cross-product prospect data transfer, shared tables, automated email/LinkedIn sending, Phase 2 promotion, or Phase 3 experimentation.
 
 ## Revision 2.1 amendment record
 
@@ -97,9 +105,11 @@ Reuse `worker/scanner/scan-company.js` (robots enforcement, ATS adapters, Browse
 
 ### Sample brief workflow
 
-Extend the existing admin sample-brief request/approval/finalization patterns (`src/app/admin/sample-brief-requests/...`, `sample-brief-finalization-panel.tsx`). They already model staff review before generation, private prospect/run creation, human finalization, and no automatic send.
+Starting Monday does not contain the MandateSignal admin sample-brief request/approval/finalization workflow. Do not import or call MandateSignal code, tables, or routes. Reuse only product-local Starting Monday patterns for staff authorization, append-only events, evidence rendering, brief QA, and no automatic send.
 
-**Decided (2026-08-18):** extend the sample-brief tables with a `brief_type` discriminator, subject to the contract-compatibility check. The narrow new tables below are the documented fallback only if that check fails.
+**Compatibility decision (verified 2026-08-20):** Starting Monday's existing `public.briefs` table is a user-owned generated-output log. Its `type` constraint is limited to `strategy`, `prep`, `prep_section`, and `outreach`; its RLS is user-self-scoped; and it has no staff prospect intake, consent provenance, scan-run, immutable artifact, private-delivery, expiry, or revocation model. Extending it with `brief_type` would mix incompatible ownership and lifecycle contracts. The narrow Starting Monday-local tables below are therefore the required Phase 1 path.
+
+Starting Monday has a `staff_members` role model and fail-closed admin route patterns. It does not yet have a reusable recent-auth mutation guard equivalent to this plan's requirement. Phase 1 must add and test that guard before scan, release, revoke, or delete mutations are enabled.
 
 ### HubSpot CRM and Meetings
 
@@ -211,7 +221,7 @@ No HubSpot or other third-party tracking script runs on the prospect page. The b
 
 ## Data model
 
-Default: extend existing Starting Monday sample-brief records with a `brief_type` discriminator (`starting_monday_candidate`). Do not reserve or render a MandateSignal type in Starting Monday. A future MandateSignal-local implementation defines its own product-local discriminator and migration. If the Starting Monday contract is incompatible, use narrow new tables:
+Required: create narrow Starting Monday-local tables for the staff prospect workflow. Do not alter the ownership or lifecycle semantics of `public.briefs`, and do not reserve or render a MandateSignal type in Starting Monday. A future MandateSignal-local implementation defines its own product-local discriminator and migration.
 
 ### `live_brief_requests`
 
@@ -317,7 +327,7 @@ Added: calibration schedule agreed and Rich's review of briefs 1–15 scheduled;
 
 ## Decisions (resolved by Rich, 2026-08-18)
 
-1. **Storage:** Extend the existing sample-brief tables with a `brief_type` discriminator. Contingent on the contract-compatibility check passing; if it fails, fall back to the narrow new tables above — but that is now the exception path, not an open question.
+1. **Storage amended 2026-08-20:** the compatibility check failed because Starting Monday's `public.briefs` table has incompatible user ownership, RLS, type, and lifecycle semantics. Phase 1 uses the narrow Starting Monday-local live-brief tables above; `public.briefs` remains unchanged.
 2. **Product topology amended 2026-08-20:** no synchronous Starting Monday-to-MandateSignal internal API. Phase 1 and Phase 2 are Starting Monday-local. Future MandateSignal reuse requires a separately approved canonical-plan story and independent product-local implementation.
 3. **Scheduling link amended 2026-08-20:** the CTA resolves to Rich's HubSpot Meetings page synchronized with his Google Calendar. HubSpot supplies normal booking association; Mo manually corrects unmatched bookings.
 4. **Legal review:** The brief footer's access-logging disclosure does not require legal review. The retention/deletion policy itself still requires explicit approval before production use (unchanged go-live gate); only the footer-disclosure review is waived.
