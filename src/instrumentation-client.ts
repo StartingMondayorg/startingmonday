@@ -5,7 +5,7 @@ export const onRouterTransitionStart = Sentry.captureRouterTransitionStart
 
 const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
 
-if (key) {
+if (key && process.env.NODE_ENV === 'production') {
   try {
     posthog.init(key, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim() || 'https://us.i.posthog.com',
