@@ -14,6 +14,8 @@ export type UserEventName =
   | 'homepage_cta_clicked'
   | 'first_mile_section_dwell'
   | 'dashboard_first_run_viewed'
+  | 'dashboard_viewed'
+  | 'dashboard_action_clicked'
   | 'prep_brief_generated'
   | 'strategy_brief_generated'
   | 'outreach_draft_generated'

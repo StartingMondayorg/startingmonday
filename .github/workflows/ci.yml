@@ -182,6 +182,9 @@ jobs:
       - name: Signal-engine master-plan pin guard
         run: npm run guard:signal-engine-plan
 
+      - name: Dashboard simplification gate
+        run: npm run guard:dashboard-simplification && npm run test:dashboard-simplification-gate
+
       - name: Landing page change approval guard
         env:
           ALLOW_LANDING_PAGE_CHANGE: >-
@@ -796,7 +799,7 @@ jobs:
           exit 1
 
       - name: Wait for deployment of this commit
-        if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
+        if: github.event_name != 'pull_request'
         run: bash scripts/wait-for-deployed-commit.sh
         env:
           BASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || 'https://starting-monday-staging.up.railway.app' }}

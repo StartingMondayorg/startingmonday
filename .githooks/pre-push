@@ -17,4 +17,7 @@ npm run ux:rubric:pages
 echo "public asset tracking guard..."
 npm run guard:public-assets
 
+echo "Linux mobile visual smoke for visual scope changes..."
+node scripts/prepush-mobile-visual-smoke.mjs
+
 echo "ok"

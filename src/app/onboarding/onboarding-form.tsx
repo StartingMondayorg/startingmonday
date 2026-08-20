@@ -111,7 +111,7 @@ export function OnboardingForm({
 
   const {
     advancedSetup, setAdvancedSetup, fullName, setFullName,
-    searchPersona, setSearchPersona, searchPosture, roleFamily, setRoleFamily,
+    searchPersona, setSearchPersona, searchPosture, setSearchPosture, roleFamily, setRoleFamily,
     roleTitle, setRoleTitle, roleTitles, setRoleTitles,
     employmentStatus, setEmploymentStatus, searchTimeline, setSearchTimeline,
     searchDriver, setSearchDriver, currentTitle, setCurrentTitle,
@@ -638,7 +638,7 @@ export function OnboardingForm({
       <form id="onboarding-form" action={completeOnboarding} className="hidden">
         <input type="hidden" name="full_name"           value={fullName} />
         <input type="hidden" name="search_persona"      value={searchPersona} />
-        <input type="hidden" name="search_posture"      value={resolvedSearchPosture} />
+        <input type="hidden" name="search_posture"      value={searchPosture || resolvedSearchPosture} />
         <input type="hidden" name="role_family"         value={roleFamily} />
         <input type="hidden" name="role_title"          value={roleTitle} />
         <input type="hidden" name="target_role_tracks"  value={JSON.stringify(roleTitles)} />
@@ -747,9 +747,11 @@ export function OnboardingForm({
               status={employmentStatus}
               timeline={searchTimeline}
               driver={searchDriver}
+              posture={searchPosture || resolvedSearchPosture}
               onStatus={setEmploymentStatus}
               onTimeline={setSearchTimeline}
               onDriver={setSearchDriver}
+              onPosture={setSearchPosture}
             />
           )}
 
@@ -1457,16 +1459,20 @@ function StepSituation({
   status,
   timeline,
   driver,
+  posture,
   onStatus,
   onTimeline,
   onDriver,
+  onPosture,
 }: {
   status: string
   timeline: string
   driver: string
+  posture: string
   onStatus: (v: string) => void
   onTimeline: (v: string) => void
   onDriver: (v: string) => void
+  onPosture: (v: string) => void
 }) {
   const selectTriggerCls = 'w-full !border-white/15 rounded-lg px-4 py-3.5 h-auto text-[15px] text-slate-100 focus-visible:!border-white/40 !bg-slate-950/60 cursor-pointer'
   return (
@@ -1528,6 +1534,30 @@ function StepSituation({
             placeholder="e.g. My role was eliminated. / I want to move from VP to CIO."
             className="w-full !border-white/15 rounded-lg px-4 py-3.5 text-[15px] text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40 !bg-slate-950/60"
           />
+        </div>
+        <div>
+          <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+            Your current posture
+          </Label>
+          <p className="mb-2 text-[12px] leading-relaxed text-slate-400">
+            This changes the tone of your daily recommendation, not what we watch.
+          </p>
+          <ToggleGroup
+            value={[posture]}
+            onValueChange={(values) => { if (values[0]) onPosture(values[0]) }}
+            aria-label="Search posture"
+            className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3"
+          >
+            <ToggleGroupItem value="active" className={`h-auto min-h-[44px] rounded-lg border px-3 py-3 text-left text-[13px] font-semibold ${posture === 'active' ? '!border-orange-400/70 !bg-orange-500/20 !text-white' : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'}`}>
+              Actively searching
+            </ToggleGroupItem>
+            <ToggleGroupItem value="exploring" className={`h-auto min-h-[44px] rounded-lg border px-3 py-3 text-left text-[13px] font-semibold ${posture === 'exploring' ? '!border-orange-400/70 !bg-orange-500/20 !text-white' : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'}`}>
+              Building relationships
+            </ToggleGroupItem>
+            <ToggleGroupItem value="not_looking" className={`h-auto min-h-[44px] rounded-lg border px-3 py-3 text-left text-[13px] font-semibold ${posture === 'not_looking' ? '!border-orange-400/70 !bg-orange-500/20 !text-white' : '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'}`}>
+              Not looking now
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
       </div>
       <p className="text-[12px] text-slate-400">
