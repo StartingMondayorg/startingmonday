@@ -90,7 +90,6 @@ test.describe('Starting Monday evidence hero @landing-hero', () => {
     await getAccess.focus()
     await expect(getAccess).toBeFocused()
     await expect(page).toHaveScreenshot('landing-hero-mobile.png', {
-      fullPage: true,
       animations: 'disabled',
       maxDiffPixelRatio: 0.02,
     })

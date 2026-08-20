@@ -1,0 +1,37 @@
+{
+  "source": "src/app/(dashboard)/dashboard/page.tsx",
+  "zones": [
+    "dashboard_next_move",
+    "dashboard_companies",
+    "dashboard_this_week"
+  ],
+  "primaryActionMarkers": [
+    "next_move",
+    "company_brief"
+  ],
+  "claimTemplates": [
+    {
+      "id": "signal-formation-gloss",
+      "pattern": "Signals mean a role may be forming before it is posted\\."
+    },
+    {
+      "id": "quiet-signal-state",
+      "pattern": "No fresh signal this week\\."
+    },
+    {
+      "id": "evidenced-quiet-state",
+      "pattern": "Nothing new across your \\$\\{opts\\.companyCount\\} companies"
+    }
+  ],
+  "forbiddenPatterns": [
+    "\\bmandatesignal\\b",
+    "\\binferred\\s+penalt(?:y|ies)\\b",
+    "\\bscore:\\s*[^\\n]{0,80}/100\\b"
+  ],
+  "stateBoundaries": [
+    "src/app/(dashboard)/dashboard/loading.tsx",
+    "src/app/(dashboard)/dashboard/error.tsx",
+    "src/app/(dashboard)/dashboard/signals/loading.tsx",
+    "src/app/(dashboard)/dashboard/signals/error.tsx"
+  ]
+}

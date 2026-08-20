@@ -50,6 +50,7 @@ export default async function ProfilePage({
     linkedin_headline: string | null
     linkedin_about: string | null
     search_persona: string | null
+    search_posture: string | null
     role_type: string | null
     role_context: Record<string, unknown> | null
     star_stories: unknown[] | null
@@ -58,7 +59,7 @@ export default async function ProfilePage({
   const [{ data: rawProfile }, activation] = await Promise.all([
     supabase
       .from('user_profiles')
-      .select('full_name, current_title, current_company, briefing_time, briefing_days, briefing_timezone, briefing_email, target_titles, target_sectors, target_locations, positioning_summary, resume_text, beyond_resume, linkedin_url, linkedin_headline, linkedin_about, search_persona, role_type, role_context, star_stories')
+      .select('full_name, current_title, current_company, briefing_time, briefing_days, briefing_timezone, briefing_email, target_titles, target_sectors, target_locations, positioning_summary, resume_text, beyond_resume, linkedin_url, linkedin_headline, linkedin_about, search_persona, search_posture, role_type, role_context, star_stories')
       .eq('user_id', user.id)
       .single(),
     getActivationStatus(user.id),
@@ -177,6 +178,22 @@ export default async function ProfilePage({
                   <TagInput id="target_locations" name="target_locations" defaultValue={targetLocations} placeholder="New York, Remote, Dallas..." />
                 </div>
               </div>
+            </section>
+
+            <section id="section-posture">
+              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Search posture</h2>
+              <label htmlFor="search_posture" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">How should your dashboard frame the next move?</label>
+              <select
+                id="search_posture"
+                name="search_posture"
+                defaultValue={profile?.search_posture ?? 'exploring'}
+                className="w-full rounded-lg border border-white/15 bg-slate-900/70 px-4 py-3 text-[15px] text-slate-100 focus:border-orange-300 focus:outline-none"
+              >
+                <option value="active">Actively searching</option>
+                <option value="exploring">Exploring and building relationships</option>
+                <option value="not_looking">Not looking right now</option>
+              </select>
+              <p className="mt-2 text-[12px] leading-relaxed text-slate-400">This changes the tone of your recommendation, not what we watch.</p>
             </section>
 
             <section id="section-positioning">

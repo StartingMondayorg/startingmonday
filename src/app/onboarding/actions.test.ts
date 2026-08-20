@@ -146,6 +146,20 @@ describe('onboarding persistence actions', () => {
     )
   })
 
+  it('persists an explicit dashboard posture instead of replacing it with inferred search state', async () => {
+    const formData = validFormData()
+    formData.set('search_posture', 'exploring')
+    formData.set('employment_status', 'between_roles')
+    formData.set('search_timeline', 'immediately')
+
+    await expect(completeOnboarding(formData)).rejects.toThrow('NEXT_REDIRECT:/dashboard/start')
+
+    expect(state.profileUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ search_posture: 'exploring' }),
+      { onConflict: 'user_id' },
+    )
+  })
+
   it('does not emit completion telemetry or leave onboarding when the marker write fails', async () => {
     state.completionSelect.mockResolvedValueOnce({ data: null, error: { message: 'marker unavailable', code: 'PGRST500' } })
 

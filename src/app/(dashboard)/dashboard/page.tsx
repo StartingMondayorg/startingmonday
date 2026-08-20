@@ -1258,19 +1258,19 @@ export default async function DashboardPage({
 
     return (
       <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
-        {isFirstRunDashboard && (
-          <FirstMileTelemetry
-            eventName="dashboard_first_run_viewed"
-            pageName="dashboard_first_run"
-            properties={{
-              company_count: totalCount,
-              contact_count: contactCount,
-              has_advanced_stage: hasAdvancedStage,
-              onboarding_completed: true,
-              layout: "three_zone",
-            }}
-          />
-        )}
+        <FirstMileTelemetry
+          eventName="dashboard_viewed"
+          pageName="dashboard"
+          properties={{
+            company_count: totalCount,
+            contact_count: contactCount,
+            has_advanced_stage: hasAdvancedStage,
+            onboarding_completed: true,
+            is_first_run: isFirstRunDashboard,
+            layout: "three_zone",
+            posture: dashboardPosture,
+          }}
+        />
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.18),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.98)_100%)]" />
 
         <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
@@ -1297,7 +1297,7 @@ export default async function DashboardPage({
             </p>
           </div>
 
-          <section aria-labelledby="next-move-heading" className="mb-6">
+          <section aria-labelledby="next-move-heading" data-first-mile-section="dashboard_next_move" className="mb-6">
             <Card variant="glass" className="p-5 sm:p-6">
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">{threeZoneNextMove.eyebrow}</p>
               <div className="mt-3 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -1312,14 +1312,14 @@ export default async function DashboardPage({
                     </p>
                   )}
                 </div>
-                <Button className="min-h-[44px] px-5 text-[13px] font-semibold" render={<Link href={threeZoneNextMove.href} />}>
+                <Button className="min-h-[44px] px-5 text-[13px] font-semibold" render={<Link href={threeZoneNextMove.href} data-dashboard-action="next_move" />}>
                   {threeZoneNextMove.cta}
                 </Button>
               </div>
             </Card>
           </section>
 
-          <section id="companies" aria-labelledby="companies-heading" className="mb-6 scroll-mt-24">
+          <section id="companies" aria-labelledby="companies-heading" data-first-mile-section="dashboard_companies" className="mb-6 scroll-mt-24">
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Your companies</p>
@@ -1363,7 +1363,7 @@ export default async function DashboardPage({
                             {targetRoles.length > 0 ? targetRoles.join(", ") : "Add target role titles in your profile."}
                           </p>
                         </div>
-                        <Link href={`/dashboard/companies/${company.id}/prep`} className="inline-flex min-h-[44px] items-center justify-center rounded border border-orange-300/30 px-4 text-[13px] font-semibold text-orange-200 hover:border-orange-200 hover:text-white">
+                        <Link href={`/dashboard/companies/${company.id}/prep`} data-dashboard-action="company_brief" className="inline-flex min-h-[44px] items-center justify-center rounded border border-orange-300/30 px-4 text-[13px] font-semibold text-orange-200 hover:border-orange-200 hover:text-white">
                           Get brief
                         </Link>
                       </div>
@@ -1374,7 +1374,7 @@ export default async function DashboardPage({
             )}
           </section>
 
-          <section aria-labelledby="week-heading" className="mb-10">
+          <section aria-labelledby="week-heading" data-first-mile-section="dashboard_this_week" className="mb-10">
             <Card variant="glass" className="p-4 sm:p-5">
               <div className="mb-3">
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">This week</p>
@@ -1405,18 +1405,18 @@ export default async function DashboardPage({
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
-      {isFirstRunDashboard && (
         <FirstMileTelemetry
-          eventName="dashboard_first_run_viewed"
-          pageName="dashboard_first_run"
+          eventName="dashboard_viewed"
+          pageName="dashboard"
           properties={{
             company_count: totalCount,
             contact_count: contactCount,
             has_advanced_stage: hasAdvancedStage,
             onboarding_completed: true,
+            is_first_run: isFirstRunDashboard,
+            layout: "legacy",
           }}
         />
-      )}
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
 
       {/* Nav */}
@@ -1432,7 +1432,7 @@ export default async function DashboardPage({
         </div>
       </header>
 
-      <main className="dashboard-landing-theme max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-10">
+      <main data-first-mile-section="dashboard_legacy" className="dashboard-landing-theme max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-10">
         <h1 className="sr-only">Dashboard</h1>
         <DashboardTopShellSection
           firstName={firstName}
