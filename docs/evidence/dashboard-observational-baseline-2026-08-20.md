@@ -4,7 +4,7 @@ Date received: 2026-08-19
 Source document: `docs/inbox/dashboard-observational-baseline-2026-08-19.docx`
 Dashboard version observed: current pre-simplification `/dashboard?focus=main`
 Flag state: `NEXT_PUBLIC_SM_DASHBOARD_SIMPLIFICATION_ENABLED=off`
-Status: partial observational baseline recorded; does not yet satisfy the full 3-5 executive session requirement
+Status: partial observational baseline recorded; remaining live-session and zero-narration walkthrough requirements waived by Rich on 2026-08-19
 
 ## Intake
 
@@ -20,7 +20,20 @@ The document contains three observations:
 | Observation 2 | Claude LLM cold-reader probe | No | Useful floor for comprehension defects; not a human substitute. |
 | Observation 3 | VP of IT, first exposure to test account | Yes | One real executive-style observation with first action, trust issues, and stall points. |
 
-Result: 1 of the required 3-5 executive observations is currently satisfied. At least two more live executive sessions are still required before a dashboard flag flip.
+Result before waiver: 1 of the required 3-5 executive observations was satisfied. Rich waived the remaining two live executive baseline sessions on 2026-08-19.
+
+## Waiver Record
+
+Approved by Rich Rothschild in Copilot chat on 2026-08-19:
+
+- Waive the remaining two live executive observational baseline sessions.
+- Waive the zero-narration walkthrough evidence requirement on the flagged layout.
+
+Risk accepted:
+
+- The baseline evidence is thinner than the original D-A requirement.
+- The flagged layout can proceed to staged validation without additional live walkthrough evidence.
+- Product owner review and product-local technical gates remain required before any production flag flip.
 
 ## Cross-Observation Findings
 
@@ -63,13 +76,11 @@ Observation 3, from a VP of IT, reported that the page was overwhelming, that th
 
 ## Gate Impact
 
-This evidence supports the three-zone direction but does not permit a flag flip.
+This evidence supports the three-zone direction. The human-session and zero-narration walkthrough requirements are waived as recorded above, but technical and product-local gate evidence remains required before a flag flip.
 
 Still required before `NEXT_PUBLIC_SM_DASHBOARD_SIMPLIFICATION_ENABLED` can be enabled:
 
-- at least two additional live executive observations on the current dashboard, cold and without narration;
 - staged authenticated desktop/mobile validation of the flagged layout;
-- 2-3 zero-narration walkthroughs on the flagged layout;
 - final WS7/DG-09 product-local gate review; and
 - production flag approval after staged evidence passes.
 

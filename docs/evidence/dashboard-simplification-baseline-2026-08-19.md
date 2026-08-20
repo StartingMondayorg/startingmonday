@@ -41,6 +41,8 @@ Approved by Rich Rothschild in Copilot chat on 2026-08-19:
 
 - Word budgets in this document are ratified for the flagged dashboard build.
 - Zone 1 state x posture copy below is approved for implementation, subject to the claims manifest and live data guards.
+- The remaining two live executive observational baseline sessions are waived.
+- The zero-narration walkthrough evidence requirement on the flagged layout is waived.
 
 ## Ratified Word Budgets
 
@@ -72,9 +74,11 @@ Copy rules:
 | Week One activation need | `Finish {setupStep} so Monday can brief you on the right companies.` | `Finish {setupStep} so your watchlist matches the relationships you want to build.` | `Finish {setupStep} so we only alert you when something matters.` | `Finish setup` |
 | Evidenced quiet state | `Nothing new across your {companyCount} companies - last checked {scanAge}. Next scan {nextScanDay}.` | `Nothing needs you today across {companyCount} companies. Next scan {nextScanDay}.` | `Nothing needs you today. Your {companyCount} companies are still being watched.` | `View companies` |
 
-## Human Evidence Still Required
+## Human Evidence Waiver
 
-D-A from the Sol brief is not complete. Before any dashboard simplification flag flip, run 3-5 actual executive walkthroughs on the current dashboard cold, screen-shared, and without narration. Record verbatim:
+D-A from the Sol brief is partially complete and partially waived. The recorded observational baseline contains one live executive-style observation plus two heuristic/non-human observations. Rich waived the remaining two live executive sessions and the zero-narration flagged-layout walkthrough requirement on 2026-08-19.
+
+Original D-A fields remain useful if additional walkthroughs are later run:
 
 - what each user thinks the page wants them to do;
 - where each user stalls;
@@ -82,13 +86,15 @@ D-A from the Sol brief is not complete. Before any dashboard simplification flag
 - time to first action, if any; and
 - whether the user can explain the company -> people-to-know -> angle loop.
 
-This baseline cannot be reconstructed from code and cannot be replaced by automated tests.
+This waiver does not waive staged authenticated desktop/mobile validation, product-local technical gates, or final production flag approval.
 
 ## Gate State
 
 - Prep-brief internal-text leak: fixed in `src/lib/prep/prep-confidence.ts` and guarded by `src/lib/prep/prep-confidence.test.ts`.
 - Word budgets: ratified by Rich on 2026-08-19 and recorded above.
 - Zone 1 state x posture copy: approved by Rich on 2026-08-19 and recorded above.
+- Remaining live executive baseline sessions: waived by Rich on 2026-08-19.
+- Zero-narration walkthrough evidence: waived by Rich on 2026-08-19.
 - Claims/lexicon/element/product-isolation/A-grade gates: pending implementation after budget ratification.
 - Three-zone flagged layout: not implemented.
-- Dashboard flag flip: blocked until D-A baseline, new-layout walkthrough evidence, and all product-local gates pass.
+- Dashboard flag flip: blocked until staged authenticated validation, final WS7/DG-09 product-local gate review, and production flag approval.
