@@ -799,7 +799,7 @@ jobs:
           exit 1
 
       - name: Wait for deployment of this commit
-        if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
+        if: github.event_name != 'pull_request'
         run: bash scripts/wait-for-deployed-commit.sh
         env:
           BASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || 'https://starting-monday-staging.up.railway.app' }}
