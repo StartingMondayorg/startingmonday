@@ -2,6 +2,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+import { execFileSync } from 'node:child_process'
 
 const ROOT = process.cwd()
 const DOCS_DIR = path.join(ROOT, 'docs')
@@ -59,6 +60,43 @@ function walk(dir) {
   return files
 }
 
+// Generated artifacts that are gitignored to avoid merge conflicts but are
+// rebuilt in CI and belong in the index. These stay listed even though git
+// reports them as ignored.
+const ALWAYS_INDEX = new Set([
+  'user-guide.md',
+  'user-guide.index.json',
+  'user-guide.manifest.json',
+  'internal-guide.md',
+  'internal-guide.index.json',
+  'internal-guide.manifest.json',
+  'internal-system-summary.md',
+])
+
+// Local-only files under docs/ (Office exports, PDFs, personal drafts) are
+// gitignored but still sit on disk, so a filesystem walk indexes files that
+// will never be committed and leaves docs/index.md permanently stale on that
+// machine. Ask git which paths are ignored and drop them.
+function ignoredPaths(repoRelativePaths) {
+  if (!repoRelativePaths.length) return new Set()
+
+  try {
+    const stdout = execFileSync('git', ['check-ignore', '--stdin'], {
+      cwd: ROOT,
+      input: repoRelativePaths.join('\n'),
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'ignore'],
+    })
+    return new Set(stdout.split('\n').filter(Boolean))
+  } catch (error) {
+    // git exits 1 when nothing matched. Any other failure (git missing, not a
+    // repository) falls back to indexing everything so CI and exported
+    // checkouts still generate the same file they always did.
+    if (error.status === 1) return new Set()
+    return new Set()
+  }
+}
+
 function domainFor(relativePath) {
   const first = relativePath.split('/')[0]
   return DOMAIN_ORDER.includes(first) ? first : 'other'
@@ -78,10 +116,14 @@ function linkFor(relativePath) {
 }
 
 function generate() {
-  const files = walk(DOCS_DIR)
+  const walked = walk(DOCS_DIR)
     .map((filePath) => path.relative(DOCS_DIR, filePath).replace(/\\/g, '/'))
     .filter((relativePath) => relativePath !== 'index.md')
     .sort((a, b) => a.localeCompare(b))
+
+  const candidates = walked.filter((relativePath) => !ALWAYS_INDEX.has(relativePath))
+  const ignored = ignoredPaths(candidates.map((relativePath) => `docs/${relativePath}`))
+  const files = walked.filter((relativePath) => !ignored.has(`docs/${relativePath}`))
 
   const grouped = new Map(DOMAIN_ORDER.map((domain) => [domain, []]))
   for (const file of files) grouped.get(domainFor(file)).push(file)
