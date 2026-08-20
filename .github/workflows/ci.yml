@@ -282,24 +282,7 @@ jobs:
         run: node scripts/check-executive-fit-criteria.mjs
 
       - name: Start app for smoke checks
-        run: |
-          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
-          echo $! > /tmp/next-start.pid
-
-      - name: Wait for app readiness
-        run: |
-          attempts=0
-          while [ "$attempts" -lt 60 ]; do
-            if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
-              echo "App is ready"
-              exit 0
-            fi
-            attempts=$((attempts + 1))
-            sleep 2
-          done
-          echo "App did not become ready in time"
-          tail -n 200 /tmp/next-start.log || true
-          exit 1
+        uses: ./.github/actions/start-local-app
 
       - name: Smoke checks
         env:
@@ -309,11 +292,7 @@ jobs:
 
       - name: Stop app
         if: always()
-        run: |
-          if [ -f /tmp/next-start.pid ]; then
-            kill "$(cat /tmp/next-start.pid)" || true
-          fi
-          tail -n 200 /tmp/next-start.log || true
+        uses: ./.github/actions/stop-local-app
 
       - name: Run tests
         run: npm test
@@ -369,12 +348,77 @@ jobs:
       - name: Run mobile UX contract and banned patterns guard
         run: npm run mobile:guard
 
+  risky-change-rollout-policy:
+    name: Risky change rollout policy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Detect risky file changes
+        id: changed
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            risky:
+              - 'src/app/[(]auth[)]/**'
+              - 'src/app/auth/**'
+              - 'src/app/(marketing)/for-coaches/**'
+              - 'src/app/(marketing)/pricing/**'
+              - 'src/app/(marketing)/demo/**'
+              - '.github/workflows/ci.yml'
+            rollout_policy:
+              - 'config/feature-rollout-policy.json'
+              - 'docs/engineering/pr-churn-reduction-policy.md'
+
+      - name: Check feature-flag-first label on risky changes (advisory)
+        if: steps.changed.outputs.risky == 'true' && github.head_ref != 'staging'
+        uses: actions/github-script@v8
+        env:
+          ROLLOUT_POLICY_CHANGED: ${{ steps.changed.outputs.rollout_policy }}
+        with:
+          script: |
+            const labels = (context.payload.pull_request?.labels || []).map((l) => l.name)
+            const hasFeatureFlagLabel = labels.includes('feature-flagged')
+            const rolloutPolicyChanged = process.env.ROLLOUT_POLICY_CHANGED === 'true'
+
+            if (!hasFeatureFlagLabel && !rolloutPolicyChanged) {
+              core.warning('Risky PR advisory: add feature-flagged label or update config/feature-rollout-policy.json for rollout traceability.')
+            } else {
+              core.info('Risky PR advisory: rollout policy check satisfied.')
+            }
+
+  # Single shared wait for the Railway deploy of this commit, consumed by
+  # every job below that tests the live staging/main deployment. Previously
+  # each of those jobs polled scripts/wait-for-deployed-commit.sh
+  # independently against the same URL — 4x redundant polling and 4
+  # independent timeout/flake surfaces for what is fundamentally one fact
+  # ("is this commit live yet?"). Only runs on the pushes that actually
+  # trigger a deploy; PR runs test a local build instead and don't need it,
+  # so this job is intentionally skipped there (see `if:` on the jobs below
+  # for how they treat a skipped dependency as "no wait needed").
+  deploy-ready:
+    name: Wait for deployment of this commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Wait for deployment of this commit
+        run: bash scripts/wait-for-deployed-commit.sh
+        env:
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
+
   playwright:
     name: Playwright E2E
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
-    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    needs: [deploy-ready]
+    if: (needs.deploy-ready.result == 'success' || needs.deploy-ready.result == 'skipped') && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
@@ -388,12 +432,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Wait for deployment of this commit
-        run: bash scripts/wait-for-deployed-commit.sh
-        env:
-          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
-          EXPECTED_SHA: ${{ github.sha }}
 
       - name: Run E2E tests
         run: npm run test:e2e
@@ -611,23 +649,9 @@ jobs:
 
       - name: Start app for local E2E
         if: matrix.local
+        uses: ./.github/actions/start-local-app
         env:
           NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: ${{ matrix.hero_evidence && '1' || '0' }}
-        run: |
-          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
-          echo $! > /tmp/next-start.pid
-          attempts=0
-          while [ "$attempts" -lt 60 ]; do
-            if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
-              echo "App is ready"
-              exit 0
-            fi
-            attempts=$((attempts + 1))
-            sleep 2
-          done
-          echo "App did not become ready in time"
-          tail -n 200 /tmp/next-start.log || true
-          exit 1
 
       - name: Run E2E tests (${{ matrix.name }})
         run: ${{ matrix.command }}
@@ -641,10 +665,7 @@ jobs:
 
       - name: Stop local app
         if: always() && matrix.local
-        run: |
-          if [ -f /tmp/next-start.pid ]; then
-            kill "$(cat /tmp/next-start.pid)" || true
-          fi
+        uses: ./.github/actions/stop-local-app
 
       - name: Upload Playwright report
         if: always()
@@ -714,10 +735,11 @@ jobs:
     name: Mobile visual smoke
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.62.1-noble
-    # Push runs may wait up to 15 minutes for the Railway deploy of this
-    # commit before screenshotting, so the budget covers wait + tests.
+    # Push runs wait on the shared deploy-ready job before screenshotting,
+    # so the budget covers wait + tests.
     timeout-minutes: 30
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    needs: [deploy-ready]
+    if: (needs.deploy-ready.result == 'success' || needs.deploy-ready.result == 'skipped') && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
@@ -767,28 +789,7 @@ jobs:
 
       - name: Start app for local E2E
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui == 'true'
-        run: |
-          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
-          echo $! > /tmp/next-start.pid
-          attempts=0
-          while [ "$attempts" -lt 60 ]; do
-            if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
-              echo "App is ready"
-              exit 0
-            fi
-            attempts=$((attempts + 1))
-            sleep 2
-          done
-          echo "App did not become ready in time"
-          tail -n 200 /tmp/next-start.log || true
-          exit 1
-
-      - name: Wait for deployment of this commit
-        if: github.event_name != 'pull_request'
-        run: bash scripts/wait-for-deployed-commit.sh
-        env:
-          BASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || 'https://starting-monday-staging.up.railway.app' }}
-          EXPECTED_SHA: ${{ github.sha }}
+        uses: ./.github/actions/start-local-app
 
       - name: Run mobile visual smoke snapshots
         if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
@@ -800,10 +801,7 @@ jobs:
 
       - name: Stop local app
         if: always() && github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui == 'true'
-        run: |
-          if [ -f /tmp/next-start.pid ]; then
-            kill "$(cat /tmp/next-start.pid)" || true
-          fi
+        uses: ./.github/actions/stop-local-app
 
       - name: Upload mobile visual smoke artifacts
         if: always() && (github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true')
@@ -827,10 +825,11 @@ jobs:
     name: Auth UX guard
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.62.1-noble
-    # Push runs may wait up to 15 minutes for the Railway deploy of this
-    # commit before screenshotting, so the budget covers wait + tests.
+    # Push runs wait on the shared deploy-ready job before screenshotting,
+    # so the budget covers wait + tests.
     timeout-minutes: 30
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    needs: [deploy-ready]
+    if: (needs.deploy-ready.result == 'success' || needs.deploy-ready.result == 'skipped') && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
@@ -858,28 +857,7 @@ jobs:
 
       - name: Start app for local E2E
         if: github.event_name == 'pull_request'
-        run: |
-          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
-          echo $! > /tmp/next-start.pid
-          attempts=0
-          while [ "$attempts" -lt 60 ]; do
-            if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
-              echo "App is ready"
-              exit 0
-            fi
-            attempts=$((attempts + 1))
-            sleep 2
-          done
-          echo "App did not become ready in time"
-          tail -n 200 /tmp/next-start.log || true
-          exit 1
-
-      - name: Wait for deployment of this commit
-        if: github.event_name != 'pull_request'
-        run: bash scripts/wait-for-deployed-commit.sh
-        env:
-          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
-          EXPECTED_SHA: ${{ github.sha }}
+        uses: ./.github/actions/start-local-app
 
       - name: Run auth UX guard suite
         run: npm run test:e2e:auth-ux
@@ -888,10 +866,7 @@ jobs:
 
       - name: Stop local app
         if: always() && github.event_name == 'pull_request'
-        run: |
-          if [ -f /tmp/next-start.pid ]; then
-            kill "$(cat /tmp/next-start.pid)" || true
-          fi
+        uses: ./.github/actions/stop-local-app
 
       - name: Upload auth UX artifacts
         if: always()
@@ -908,7 +883,8 @@ jobs:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.62.1-noble
     timeout-minutes: 30
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    needs: [deploy-ready]
+    if: (needs.deploy-ready.result == 'success' || needs.deploy-ready.result == 'skipped') && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
 
@@ -931,26 +907,9 @@ jobs:
 
       - name: Start local app for PR accessibility run
         if: github.event_name == 'pull_request'
+        uses: ./.github/actions/start-local-app
         env:
           NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
-        run: |
-          npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
-          echo $! > /tmp/next-start.pid
-          attempts=0
-          while [ "$attempts" -lt 60 ]; do
-            if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then exit 0; fi
-            attempts=$((attempts + 1))
-            sleep 2
-          done
-          tail -n 200 /tmp/next-start.log || true
-          exit 1
-
-      - name: Wait for deployment of this commit
-        if: github.event_name != 'pull_request'
-        run: bash scripts/wait-for-deployed-commit.sh
-        env:
-          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
-          EXPECTED_SHA: ${{ github.sha }}
 
       - name: Run tier-0 accessibility suite
         run: npx playwright test tests/e2e/accessibility-tier0.spec.ts --project=accessibility-tier0
@@ -960,8 +919,7 @@ jobs:
 
       - name: Stop local app
         if: always() && github.event_name == 'pull_request'
-        run: |
-          if [ -f /tmp/next-start.pid ]; then kill "$(cat /tmp/next-start.pid)" || true; fi
+        uses: ./.github/actions/stop-local-app
 
       - name: Upload accessibility artifacts
         if: always()
@@ -1253,8 +1211,8 @@ jobs:
   notify:
     name: Notify CI status
     runs-on: ubuntu-latest
-    needs: [predeploy-gates, semgrep, playwright, mobile-visual-smoke, auth-ux-guard, accessibility-tier0, lighthouse-mobile-budgets, pre-prod-gate]
-    if: always()
+    needs: [deploy-ready, predeploy-gates, semgrep, playwright, mobile-visual-smoke, auth-ux-guard, accessibility-tier0, lighthouse-mobile-budgets, pre-prod-gate]
+    if: failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
 
     steps:
       - name: Build summary message
@@ -1286,7 +1244,10 @@ jobs:
         id: failed-job
         if: steps.summary.outputs.status == 'FAIL'
         run: |
-          if [[ "${{ needs.predeploy-gates.result }}" == "failure" ]]; then
+          if [[ "${{ needs.deploy-ready.result }}" == "failure" ]]; then
+            echo "job_name=Wait for deployment of this commit" >> $GITHUB_OUTPUT
+            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ needs.predeploy-gates.result }}" == "failure" ]]; then
             echo "job_name=Predeploy gates (lint, typecheck, build, smoke)" >> $GITHUB_OUTPUT
             echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
           elif [[ "${{ needs.pre-prod-gate.result }}" == "failure" ]]; then
@@ -1311,6 +1272,86 @@ jobs:
             echo "job_name=Lighthouse mobile budgets" >> $GITHUB_OUTPUT
             echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
           fi
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          payload: |
+            {
+              "text": "❌ CI Build Failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "❌ CI Build Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Failed Job:*\n${{ steps.failed-job.outputs.job_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<${{ steps.failed-job.outputs.job_link }}|View full build logs →>"
+                  }
+                }
+              ]
+            }
+
+  notify-test-summary:
+    name: Post test summary report
+    runs-on: ubuntu-latest
+    needs: [deploy-ready, predeploy-gates, semgrep, playwright, mobile-visual-smoke, auth-ux-guard, accessibility-tier0, lighthouse-mobile-budgets, pre-prod-gate]
+    if: always()
+
+    steps:
+      - name: Build summary message
+        id: summary
+        run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          DEPLOY_READY="${{ needs.deploy-ready.result }}"
+          PREDEPLOY="${{ needs.predeploy-gates.result }}"
+          SEMGREP="${{ needs.semgrep.result }}"
+          PLAYWRIGHT="${{ needs.playwright.result }}"
+          MOBILE_VISUAL="${{ needs.mobile-visual-smoke.result }}"
+          AUTH_UX="${{ needs.auth-ux-guard.result }}"
+          ACCESSIBILITY="${{ needs.accessibility-tier0.result }}"
+          LIGHTHOUSE="${{ needs.lighthouse-mobile-budgets.result }}"
+          PREPROD="${{ needs.pre-prod-gate.result }}"
+
+          STATUS="PASS"
+          if [ "$DEPLOY_READY" = "failure" ] || [ "$PREDEPLOY" = "failure" ] || [ "$SEMGREP" = "failure" ] || [ "$PLAYWRIGHT" = "failure" ] || [ "$MOBILE_VISUAL" = "failure" ] || [ "$AUTH_UX" = "failure" ] || [ "$ACCESSIBILITY" = "failure" ] || [ "$LIGHTHOUSE" = "failure" ] || [ "$PREPROD" = "failure" ]; then
+            STATUS="FAIL"
+          fi
+
+          SUMMARY=$(printf 'CI test summary (%s)\nBranch: %s\nActor: %s\ndeploy-ready: %s\npredeploy-gates: %s\nsemgrep: %s\nplaywright: %s\nmobile-visual-smoke: %s\nauth-ux-guard: %s\naccessibility-tier0: %s\nlighthouse-mobile-budgets: %s\npre-prod-gate: %s\nRun: %s\n' "$STATUS" "${{ github.ref_name }}" "${{ github.actor }}" "$DEPLOY_READY" "$PREDEPLOY" "$SEMGREP" "$PLAYWRIGHT" "$MOBILE_VISUAL" "$AUTH_UX" "$ACCESSIBILITY" "$LIGHTHOUSE" "$PREPROD" "$RUN_URL")
+
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "summary<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$SUMMARY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Evaluate email noise-control policy
         id: email-policy

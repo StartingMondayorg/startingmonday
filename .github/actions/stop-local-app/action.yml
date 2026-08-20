@@ -1,0 +1,13 @@
+name: Stop local app
+description: Kills the background app process started by the start-local-app action, if running.
+
+runs:
+  using: composite
+  steps:
+    - name: Stop app
+      shell: bash
+      run: |
+        if [ -f /tmp/next-start.pid ]; then
+          kill "$(cat /tmp/next-start.pid)" || true
+        fi
+        tail -n 200 /tmp/next-start.log || true
