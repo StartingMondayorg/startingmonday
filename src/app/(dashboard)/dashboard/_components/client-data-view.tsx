@@ -733,9 +733,9 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </div>
 
           {/* Part 1: Strategic Decision */}
-          <Card className="border-info/30 bg-info/30 p-5 space-y-3">
+          <Card className="border-info/30 bg-info/10 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-info p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">1</Badge>
+              <Badge className="h-6 w-6 rounded-full bg-info p-0 text-info-foreground text-[11px] font-bold justify-center flex-shrink-0">1</Badge>
               <p className="text-[13px] font-bold text-info">Strategic decision this session</p>
             </div>
             <p className="text-[12px] text-info leading-relaxed">
@@ -751,9 +751,9 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           {/* Part 2: Risk */}
-          <Card className="border-destructive/30 bg-destructive/30 p-5 space-y-3">
+          <Card className="border-destructive/30 bg-destructive/10 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-destructive p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">2</Badge>
+              <Badge className="h-6 w-6 rounded-full bg-destructive p-0 text-destructive-foreground text-[11px] font-bold justify-center flex-shrink-0">2</Badge>
               <p className="text-[13px] font-bold text-destructive">Risk and blockers</p>
             </div>
             <p className="text-[12px] text-destructive leading-relaxed">
@@ -791,9 +791,9 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           {/* Part 3: Narrative Shift */}
-          <Card className="border-warning/30 bg-warning/30 p-5 space-y-3">
+          <Card className="border-warning/30 bg-warning/10 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-warning p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">3</Badge>
+              <Badge className="h-6 w-6 rounded-full bg-warning p-0 text-warning-foreground text-[11px] font-bold justify-center flex-shrink-0">3</Badge>
               <p className="text-[13px] font-bold text-warning">Narrative adjustment</p>
             </div>
             <p className="text-[12px] text-warning leading-relaxed">
@@ -888,9 +888,9 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           {/* Part 4: Next Action */}
-          <Card className="border-success/30 bg-success/30 p-5 space-y-3">
+          <Card className="border-success/30 bg-success/10 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-success p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">5</Badge>
+              <Badge className="h-6 w-6 rounded-full bg-success p-0 text-success-foreground text-[11px] font-bold justify-center flex-shrink-0">5</Badge>
               <p className="text-[13px] font-bold text-success">Committed next action</p>
             </div>
             <p className="text-[12px] text-success leading-relaxed">

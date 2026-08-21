@@ -22,7 +22,7 @@ export function ProofStrip({ metric, label, source, caveat }: ProofStripProps) {
   return (
     <div
       data-emi-proof="role_proof_strip"
-      className="rounded-xl border border-success/50 bg-success/20 px-5 py-4 my-6"
+      className="rounded-xl border border-success/50 bg-success/10 px-5 py-4 my-6"
     >
       <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">
         Pilot evidence

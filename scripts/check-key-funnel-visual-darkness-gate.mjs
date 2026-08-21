@@ -103,15 +103,6 @@ function read(relativePath) {
   return fs.readFileSync(fullPath, 'utf8')
 }
 
-function median(values) {
-  if (values.length === 0) return null
-  const sorted = [...values].sort((a, b) => a - b)
-  const mid = Math.floor(sorted.length / 2)
-  if (sorted.length % 2 === 0) {
-    return (sorted[mid - 1] + sorted[mid]) / 2
-  }
-  return sorted[mid]
-}
 
 function percentile(values, p) {
   if (values.length === 0) return null
@@ -130,10 +121,6 @@ function contrastRatio(lightL, darkL) {
   return (y(lightL) + 0.05) / (y(darkL) + 0.05)
 }
 
-function apcaProxy(textLum, bgLum) {
-  // Absolute delta: dark-on-light and light-on-dark are both legitimate.
-  return Math.abs(textLum - bgLum) * 100
-}
 
 function collectScaleTokens(content, kind, theme) {
   const lums = []

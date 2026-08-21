@@ -61,17 +61,17 @@ const CONTEXT_LINKS = [
 
 export default function ReferencesPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground hover:text-muted-foreground transition-colors">
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground hover:text-primary-foreground transition-colors">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/security" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+            <Link href="/security" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Security
             </Link>
-            <Link href="/privacy" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+            <Link href="/privacy" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Privacy
             </Link>
             <Link href="/signup" className="text-[13px] font-semibold text-foreground bg-card px-4 py-1.5 rounded hover:bg-muted transition-colors">

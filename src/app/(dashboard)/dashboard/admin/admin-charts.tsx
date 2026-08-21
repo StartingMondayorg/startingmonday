@@ -49,7 +49,7 @@ export function EventVolumeChart({ data }: { data: EventRow[] }) {
           itemStyle={{ color: '#f8fafc' }}
           cursor={{ fill: 'rgba(255,255,255,0.05)' }}
         />
-        <Bar dataKey="count" fill="#fb923c" radius={[0, 3, 3, 0]} />
+        <Bar dataKey="count" fill="var(--primary)" radius={[0, 3, 3, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

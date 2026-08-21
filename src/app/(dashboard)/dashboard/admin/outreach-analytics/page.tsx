@@ -253,11 +253,11 @@ export default async function OutreachAnalyticsPage() {
     <div className="min-h-screen bg-muted font-sans">
       <header className="bg-primary">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground transition-colors">Admin</Link>
+            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-primary-foreground transition-colors">Admin</Link>
           </div>
         </div>
       </header>
@@ -449,14 +449,14 @@ export default async function OutreachAnalyticsPage() {
                       <g key={p.post_date}>
                         {barH > 0 && (
                           <>
-                            <rect x={x} y={72 - likeH} width={16} height={likeH} fill="#6366f1" rx={2} />
-                            <rect x={x} y={72 - likeH - commentH} width={16} height={commentH} fill="#f97316" rx={2} />
+                            <rect x={x} y={72 - likeH} width={16} height={likeH} fill="var(--info)" rx={2} />
+                            <rect x={x} y={72 - likeH - commentH} width={16} height={commentH} fill="var(--primary)" rx={2} />
                           </>
                         )}
                         {barH === 0 && (
-                          <rect x={x} y={71} width={16} height={1} fill="#e2e8f0" />
+                          <rect x={x} y={71} width={16} height={1} fill="var(--border)" />
                         )}
-                        <text x={x + 8} y={80} textAnchor="middle" fontSize={7} fill="#94a3b8">
+                        <text x={x + 8} y={80} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">
                           {p.post_date.slice(5)}
                         </text>
                       </g>

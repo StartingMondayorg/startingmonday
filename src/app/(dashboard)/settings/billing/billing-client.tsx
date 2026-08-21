@@ -161,9 +161,9 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
     <div className="min-h-screen bg-muted font-sans">
       <header className="bg-primary">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground"><span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+            <Link href="/dashboard" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Dashboard
             </Link>
             {canSeeAdminHeader && (
@@ -435,7 +435,7 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
             {MICRO_PRODUCT_DEFINITIONS.filter((item) => item.channel === 'executives').map((item) => {
               const highlighted = highlightedAddOn === item.slug
               return (
-                <Card key={item.slug} className={`p-4 ${highlighted ? 'ring-2 ring-primary/30 bg-primary/40' : 'bg-muted'}`}>
+                <Card key={item.slug} className={`p-4 ${highlighted ? 'ring-2 ring-primary/30 bg-primary/10' : 'bg-muted'}`}>
                   <p className="text-[14px] font-semibold text-foreground">{item.name}</p>
                   <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{item.summary}</p>
                   <p className="text-[13px] font-semibold text-foreground mt-3">{formatMicroProductPrice(item.amountCents, item.defaultInterval)}</p>

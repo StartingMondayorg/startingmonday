@@ -126,8 +126,8 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
         <div className="px-6 py-12 text-center">
           <div className="w-10 h-10 rounded-full bg-muted/40 border border-border flex items-center justify-center mx-auto mb-3">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <circle cx="10" cy="7" r="4" stroke="#94a3b8" strokeWidth="1.5"/>
-              <path d="M3 18c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="10" cy="7" r="4" stroke="var(--muted-foreground)" strokeWidth="1.5"/>
+              <path d="M3 18c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </div>
           <p className="text-[14px] font-semibold text-foreground mb-1">No contacts yet</p>

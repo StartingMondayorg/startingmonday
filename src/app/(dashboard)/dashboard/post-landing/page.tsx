@@ -196,11 +196,11 @@ export default async function PostLandingPage() {
           >
             {PHASES.map((phase) => (
               <AccordionItem key={phase.id} value={phase.id} className="px-5">
-                <AccordionTrigger className={`py-4 hover:no-underline ${phase.id === currentPhase ? 'bg-success/50' : ''}`}>
+                <AccordionTrigger className={`py-4 hover:no-underline ${phase.id === currentPhase ? 'bg-success/10' : ''}`}>
                   <div className="flex items-center gap-3">
                     <span className={`h-7 w-7 rounded-full flex items-center justify-center text-[13px] font-bold ${
                       phase.id === currentPhase
-                        ? 'bg-success text-primary-foreground'
+                        ? 'bg-success text-success-foreground'
                         : 'bg-muted text-success-foreground'
                     }`}>{phase.id}</span>
                     <div>
@@ -237,7 +237,7 @@ export default async function PostLandingPage() {
                   </div>
                   {/* Early win planner */}
                   {phase.id === '30' && (
-                    <div className="rounded-lg border border-success/30 bg-success/30 p-4 space-y-2">
+                    <div className="rounded-lg border border-success/30 bg-success/10 p-4 space-y-2">
                       <p className="text-[11px] font-bold text-success uppercase tracking-wider">Early win planner</p>
                       {[
                         { label: 'Situation', placeholder: 'What problem or opportunity is visible now?' },

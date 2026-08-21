@@ -123,14 +123,14 @@ const OBJECTIONS = [
 
 export default function OutplacementFaqPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/for-outplacement" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+            <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Back to outplacement page
             </Link>
           </div>
@@ -145,7 +145,7 @@ export default function OutplacementFaqPage() {
           <h1 className="text-[32px] sm:text-[42px] font-bold text-primary-foreground leading-[1.15] tracking-tight mb-4">
             Questions, objections, and rollout clarity for partner firms.
           </h1>
-          <p className="text-[15px] text-muted-foreground leading-relaxed">
+          <p className="text-[15px] text-primary-foreground leading-relaxed">
             If you cannot find your question here, contact us at contact@startingmonday.app.
           </p>
         </div>
@@ -194,7 +194,7 @@ export default function OutplacementFaqPage() {
             <h2 className="text-[20px] font-bold text-foreground mb-6">Common objections</h2>
             <div className="space-y-6">
               {OBJECTIONS.map((item) => (
-                <div key={item.objection} className="border-l-4 border-primary/30 bg-primary/40 rounded-r-lg p-5">
+                <div key={item.objection} className="border-l-4 border-primary/30 bg-primary/10 rounded-r-lg p-5">
                   <p className="text-[14px] font-semibold text-foreground mb-3">{item.objection}</p>
                   <div className="bg-card border border-primary/30 rounded-lg p-4">
                     <p className="text-[13px] text-muted-foreground leading-relaxed">{item.response}</p>

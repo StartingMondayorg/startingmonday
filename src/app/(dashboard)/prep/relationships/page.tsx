@@ -95,7 +95,7 @@ export default function RelationshipsPage() {
               <Card
                 key={person.id}
                 variant="glass"
-                className="rounded-lg border-success/30 bg-success/40 px-4 py-3"
+                className="rounded-lg border-success/30 bg-success/10 px-4 py-3"
               >
                 <p className="font-semibold text-[14px] text-success">
                   {person.first_name} {person.last_name}
@@ -132,7 +132,7 @@ export default function RelationshipsPage() {
             onClick={() => setShowForm(!showForm)}
             variant="outline"
             size="sm"
-            className="border-primary/30 bg-primary/20 text-primary hover:bg-primary/30"
+            className="border-primary/30 bg-primary/10 text-primary hover:bg-primary/30"
           >
             {showForm ? 'Cancel' : '+ Add person'}
           </Button>
@@ -225,7 +225,7 @@ export default function RelationshipsPage() {
               <Card
                 key={person.id}
                 variant="glass"
-                className="rounded-lg border-primary/30 bg-primary/40 flex-row items-start justify-between px-4 py-3"
+                className="rounded-lg border-primary/30 bg-primary/10 flex-row items-start justify-between px-4 py-3"
               >
                 <div>
                   <p className="font-semibold text-[14px] text-primary">

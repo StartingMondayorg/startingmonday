@@ -46,7 +46,7 @@ const COACH_BUNDLE_PACKS = [
 
 export default function CoachMicroProductsPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="dark bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
@@ -80,7 +80,7 @@ export default function CoachMicroProductsPage() {
           />
         </section>
 
-        <section id="bundle-packs" className="border border-success/30 rounded-2xl p-6 bg-success/40 mb-8">
+        <section id="bundle-packs" className="border border-success/30 rounded-2xl p-6 bg-success/10 mb-8">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-3">Bundle packs</p>
           <h2 className="text-[24px] font-bold text-foreground leading-tight mb-3">Save more with 1-3 product bundles</h2>
           <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">

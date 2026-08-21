@@ -177,7 +177,7 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
                     const flow = String(run.input_payload?.tutorial_flow ?? '--')
                     const eventName = String(run.input_payload?.event_name ?? run.trigger_source)
                     return (
-                      <TableRow key={run.id} className={selectedRun?.id === run.id ? 'bg-primary/40' : ''}>
+                      <TableRow key={run.id} className={selectedRun?.id === run.id ? 'bg-primary/10' : ''}>
                         <TableCell className="px-4">
                           <Link href={`/dashboard/admin/onboarding/video?runId=${run.id}`}>
                             <Badge variant={statusBadgeVariant(run.status)}>{run.status}</Badge>

@@ -38,13 +38,13 @@ export default async function CoachMicroProductDetailPage({ params }: { params: 
   if (!product) notFound()
 
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/for-coaches/micro-products" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+          <Link href="/for-coaches/micro-products" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
             Back to catalog
           </Link>
         </div>
@@ -64,7 +64,7 @@ export default async function CoachMicroProductDetailPage({ params }: { params: 
           <p className="text-[14px] text-muted-foreground leading-relaxed">{product.pain}</p>
         </section>
 
-        <section className="border border-success/30 rounded-2xl p-6 bg-success/40 mb-6">
+        <section className="border border-success/30 rounded-2xl p-6 bg-success/10 mb-6">
           <h2 className="text-[18px] font-bold text-foreground mb-2">Outcome promise</h2>
           <p className="text-[14px] text-muted-foreground leading-relaxed">{product.promise}</p>
         </section>
@@ -85,7 +85,7 @@ export default async function CoachMicroProductDetailPage({ params }: { params: 
           <CoachDeliverablePreviewTabs deliverables={product.deliverables} />
         </section>
 
-        <section className="border border-primary/30 rounded-2xl p-6 bg-primary/40 mb-6">
+        <section className="border border-primary/30 rounded-2xl p-6 bg-primary/10 mb-6">
           <h2 className="text-[18px] font-bold text-foreground mb-3">Checkout copy</h2>
           <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">{product.checkoutCopy.headline}</p>
           <ul className="list-disc pl-5 space-y-1 text-[13px] text-muted-foreground leading-relaxed mb-3">
@@ -96,7 +96,7 @@ export default async function CoachMicroProductDetailPage({ params }: { params: 
           <p className="text-[13px] text-muted-foreground leading-relaxed font-semibold">{product.checkoutCopy.guarantee}</p>
         </section>
 
-        <section className="border border-success/30 rounded-2xl p-6 bg-success/40 mb-6">
+        <section className="border border-success/30 rounded-2xl p-6 bg-success/10 mb-6">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">{product.appBridge.eyebrow}</p>
           <h2 className="text-[18px] font-bold text-foreground mb-2">{product.appBridge.headline}</h2>
           <p className="text-[14px] text-muted-foreground leading-relaxed mb-4">{product.appBridge.body}</p>

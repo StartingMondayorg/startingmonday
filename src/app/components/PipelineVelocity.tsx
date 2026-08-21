@@ -10,10 +10,10 @@ const STAGE_LABELS: Record<string, string> = {
 
 const STAGE_CLS: Record<string, string> = {
   watching:     'bg-muted/60 text-muted-foreground',
-  researching:  'bg-info/15 text-info',
-  applied:      'bg-info/15 text-info',
-  interviewing: 'bg-warning/15 text-warning',
-  offer:        'bg-success/15 text-success',
+  researching:  'bg-info/10 text-info',
+  applied:      'bg-info/10 text-info',
+  interviewing: 'bg-warning/10 text-warning',
+  offer:        'bg-success/10 text-success',
 }
 
 export type VelocityRow = { id: string; name: string; stage: string; updated_at: string | null }

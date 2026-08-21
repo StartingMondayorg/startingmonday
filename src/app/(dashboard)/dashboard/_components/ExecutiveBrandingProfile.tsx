@@ -141,7 +141,7 @@ export function ExecutiveBrandingProfile({
             rows={2}
             disabled={readOnly}
             placeholder="e.g. I build operating platforms in high-complexity PE transitions and am ready for my next CTO mandate."
-            className="w-full border border-primary/30 rounded-lg px-3 py-2 text-[13px] text-foreground focus:outline-none resize-none bg-primary/20 disabled:bg-muted"
+            className="w-full border border-primary/30 rounded-lg px-3 py-2 text-[13px] text-foreground focus:outline-none resize-none bg-primary/10 disabled:bg-muted"
           />
         </div>
       </Card>

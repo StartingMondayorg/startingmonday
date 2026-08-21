@@ -58,9 +58,12 @@ export function ContactStatusStepper({
             disabled={pending}
             className={[
               'text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors disabled:opacity-50',
+              // three states, as before: current, already passed, still ahead
               isActive
-                ? 'bg-primary text-primary-foreground hover:bg-primary'
-                : 'bg-muted text-muted-foreground hover:bg-muted',
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                : isPast
+                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80',
             ].join(' ')}
           >
             {step.label}

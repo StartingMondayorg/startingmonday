@@ -35,21 +35,21 @@ export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: bool
       <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Email preferences</h2>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="max-w-[46ch]">
-          <p className="text-[14px] font-semibold text-primary-foreground">Trial tips and nudge emails</p>
+          <p className="text-[14px] font-semibold text-foreground">Trial tips and nudge emails</p>
           <p className="text-[13px] text-muted-foreground mt-0.5 leading-relaxed">
             Occasional emails with setup tips during your trial. Your search is private - turn these off anytime with one click.
             Daily briefings are separate and unaffected.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2.5">
-          <span className={`text-[13px] font-semibold ${!enabled ? 'text-primary-foreground' : 'text-muted-foreground'}`}>Off</span>
+          <span className={`text-[13px] font-semibold ${!enabled ? 'text-foreground' : 'text-muted-foreground'}`}>Off</span>
           <Switch
             checked={enabled}
             onCheckedChange={toggle}
             disabled={saving}
             aria-label="Trial tip emails"
           />
-          <span className={`text-[13px] font-semibold ${enabled ? 'text-primary-foreground' : 'text-muted-foreground'}`}>On</span>
+          <span className={`text-[13px] font-semibold ${enabled ? 'text-foreground' : 'text-muted-foreground'}`}>On</span>
         </div>
       </div>
       {message && (

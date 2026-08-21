@@ -56,7 +56,7 @@ export default async function FeatureDocPage({ params }: FeatureDocPageProps) {
   const related = FEATURE_DOCS.filter((entry) => entry.slug !== doc.slug && entry.persona === doc.persona).slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-card/85 text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
@@ -74,7 +74,7 @@ export default async function FeatureDocPage({ params }: FeatureDocPageProps) {
           <div className="mb-5 border-b border-border pb-4">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-muted px-2 py-1 text-[11px] font-semibold text-foreground">{categoryLabel(doc.category)}</span>
-              <span className="rounded-full bg-primary/15 px-2 py-1 text-[11px] font-semibold text-primary">{personaLabel(doc.persona)}</span>
+              <span className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">{personaLabel(doc.persona)}</span>
             </div>
             <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground">{doc.title}</h1>
             <p className="mt-2 text-[14px] text-muted-foreground">{doc.summary}</p>

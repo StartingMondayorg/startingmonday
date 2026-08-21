@@ -146,7 +146,7 @@ export function DashboardStatusBanners({
       {offerCompanyName && !isExecutiveMode && (
         <Card variant="glass" className="gap-4 mb-4 flex-col justify-between border-transparent bg-success px-5 py-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-[14px] font-bold text-foreground">Did you accept the offer?</p>
+            <p className="text-[14px] font-bold text-success-foreground">Did you accept the offer?</p>
             <p className="text-[12px] text-success mt-0.5">Mark your search complete and we will take care of the rest.</p>
           </div>
           <form action={onMarkPlaced} className="flex items-center gap-2 shrink-0">
@@ -154,7 +154,7 @@ export function DashboardStatusBanners({
             <Button
               type="submit"
               variant="secondary"
-              className="h-auto whitespace-nowrap border border-border bg-muted/60 px-5 py-2 text-[13px] font-bold text-foreground hover:bg-muted/80"
+              className="h-auto whitespace-nowrap border border-border bg-muted/60 px-5 py-2 text-[13px] font-bold text-success-foreground hover:bg-muted/80"
             >
               Yes, I accepted
             </Button>

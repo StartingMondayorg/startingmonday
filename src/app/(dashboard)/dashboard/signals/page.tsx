@@ -255,7 +255,7 @@ export default async function SignalsPage({
             <Button
               type="submit"
               variant="outline"
-              className="border-primary/40 bg-primary/20 text-primary hover:bg-primary/30"
+              className="border-primary/40 bg-primary/10 text-primary hover:bg-primary/30"
             >
               Run signal scan now
             </Button>
@@ -405,7 +405,7 @@ export default async function SignalsPage({
                     {contact && !sig.outreach_draft && (
                       <div className="mt-3 flex items-center gap-3 flex-wrap">
                         <Button
-                          className="bg-success/20 text-success hover:bg-success/30 border-success/35"
+                          className="bg-success/10 text-success hover:bg-success/30 border-success/35"
                           render={<Link href={`/dashboard/contacts/${contact.id}/outreach`} />}
                         >
                           Draft outreach to {contact.name}

@@ -87,7 +87,7 @@ function alertLevelBadgeVariant(level: 'normal' | 'watch' | 'risk'): 'success' |
 
 export function AdminPageClient(props: AdminPageProps) {
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
       <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>

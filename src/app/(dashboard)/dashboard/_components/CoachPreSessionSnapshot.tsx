@@ -82,7 +82,7 @@ export function CoachPreSessionSnapshot({
   return (
     <div className="space-y-4">
       {/* Header strip */}
-      <Card className="border-primary/30 bg-primary/40 px-5 py-4">
+      <Card className="border-primary/30 bg-primary/10 px-5 py-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-1">
@@ -108,7 +108,7 @@ export function CoachPreSessionSnapshot({
         ].map(({ label, value, warn }) => (
           <Card
             key={label}
-            className={`p-4 text-center ${warn ? 'border-warning/30 bg-warning/30' : ''}`}
+            className={`p-4 text-center ${warn ? 'border-warning/30 bg-warning/10' : ''}`}
           >
             <p className={`text-[24px] font-bold ${warn ? 'text-warning' : 'text-foreground'}`}>
               {value}

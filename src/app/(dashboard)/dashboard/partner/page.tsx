@@ -309,7 +309,7 @@ export default async function PartnerDashboardPage({
     <div className="min-h-screen bg-muted font-sans">
       <header className="bg-primary">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground transition-colors">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
         </div>

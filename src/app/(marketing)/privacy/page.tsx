@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <header className="dark bg-background">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground">
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
       <footer className="border-t border-border px-6 py-6 mt-12">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
-            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Link href="/" className="text-[12px] text-muted-foreground transition-colors">
             Back to home

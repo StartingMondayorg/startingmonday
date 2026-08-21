@@ -110,12 +110,12 @@ export default async function AdminMicroProductCatalogPage() {
     <div className="min-h-screen bg-muted font-sans">
       <header className="bg-primary">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin/product" className="text-[12px] font-semibold text-muted-foreground hover:text-primary-foreground">Product Hub</Link>
-            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-muted-foreground">Admin</Link>
+            <Link href="/dashboard/admin/product" className="text-[12px] font-semibold text-primary-foreground hover:text-primary-foreground">Product Hub</Link>
+            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-primary-foreground">Admin</Link>
           </div>
         </div>
       </header>

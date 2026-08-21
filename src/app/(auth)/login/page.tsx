@@ -196,7 +196,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
       <header className="border-b border-border bg-background/80 backdrop-blur">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
@@ -241,7 +241,7 @@ export default function LoginPage() {
             </Button>
 
             <Button
-              className={`w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-primary !text-primary-foreground mb-5 hover:!bg-muted ${authBusy ? '!opacity-50 !pointer-events-none' : ''}`}
+              className={`w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-primary !text-primary-foreground mb-5 hover:!bg-primary/90 ${authBusy ? '!opacity-50 !pointer-events-none' : ''}`}
               render={
                 <a
                   href={appleFallbackHref}

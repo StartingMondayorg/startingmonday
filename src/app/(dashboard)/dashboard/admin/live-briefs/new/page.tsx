@@ -56,10 +56,10 @@ export default function NewLiveBriefPage() {
     <div className="min-h-screen bg-muted font-sans">
       <header className="bg-primary">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted-foreground sm:text-[14px]">
+          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-primary-foreground sm:text-[14px]">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/admin/live-briefs" className="text-[12px] font-semibold text-muted-foreground">Live briefs</Link>
+          <Link href="/dashboard/admin/live-briefs" className="text-[12px] font-semibold text-primary-foreground">Live briefs</Link>
         </div>
       </header>
 

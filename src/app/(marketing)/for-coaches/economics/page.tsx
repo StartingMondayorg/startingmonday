@@ -44,7 +44,7 @@ const PARTNER_MECHANICS = [
 
 export default function CoachEconomicsPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="dark bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
@@ -80,7 +80,7 @@ export default function CoachEconomicsPage() {
           />
         </section>
 
-        <section className="border border-success/30 bg-success/40 rounded-2xl p-6 sm:p-7 mb-10">
+        <section className="border border-success/30 bg-success/10 rounded-2xl p-6 sm:p-7 mb-10">
           <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-3">
             Preview structure
           </h2>
@@ -91,7 +91,7 @@ export default function CoachEconomicsPage() {
           </div>
         </section>
 
-        <section className="mb-10 border border-primary/30 bg-primary/40 rounded-2xl p-6 sm:p-7">
+        <section className="mb-10 border border-primary/30 bg-primary/10 rounded-2xl p-6 sm:p-7">
           <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">
             Pilot success criteria
           </h2>
@@ -154,7 +154,7 @@ export default function CoachEconomicsPage() {
                 </li>
               ))}
             </ul>
-            <div className="border border-primary/30 bg-primary/50 rounded-xl p-4">
+            <div className="border border-primary/30 bg-primary/10 rounded-xl p-4">
               <h3 className="text-[12px] font-semibold text-foreground mb-1">Illustrative example</h3>
               <p className="text-[14px] text-muted-foreground leading-relaxed">10 active client referrals on Search at $199/mo is about $398/mo in recurring partner revenue while those clients keep a structured execution layer between sessions.</p>
               <p className="text-[12px] text-muted-foreground leading-relaxed mt-2">Outcome metric: track 30-day readiness lift, first interview pace, and prep-brief usage before scaling your lane.</p>

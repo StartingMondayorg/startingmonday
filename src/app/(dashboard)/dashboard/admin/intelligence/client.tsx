@@ -134,10 +134,10 @@ export function IntelligenceAdminClient({
       <header className="bg-primary">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/dashboard/admin" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground hover:text-primary-foreground">
+            <Link href="/dashboard/admin" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground hover:text-primary-foreground">
               Admin
             </Link>
-            <span className="text-muted-foreground">/</span>
+            <span className="text-primary-foreground">/</span>
             <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-primary">
               Intelligence
             </span>

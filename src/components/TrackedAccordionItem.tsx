@@ -53,8 +53,8 @@ export function TrackedAccordionItem({ title, summary, detail, href, channel, ro
         <span>{title}</span>
         <span className="text-[11px] text-primary shrink-0">Learn more</span>
       </summary>
-      <p className="text-[12px] text-muted-foreground mt-2 [text-wrap:pretty]">{summary}</p>
-      <p className="text-[12px] text-muted-foreground mt-2 [text-wrap:pretty]">{detail}</p>
+      <p className="text-[12px] text-primary-foreground mt-2 [text-wrap:pretty]">{summary}</p>
+      <p className="text-[12px] text-primary-foreground mt-2 [text-wrap:pretty]">{detail}</p>
       <Link href={href} className="inline-flex mt-2 text-[12px] text-primary transition-colors">
         Open related article
       </Link>

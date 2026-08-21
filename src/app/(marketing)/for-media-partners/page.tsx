@@ -66,7 +66,7 @@ const MEDIA_PARTNER_PROOF_STORIES = [
 
 export default function ForMediaPartnersPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
       <nav className="dark bg-background sticky top-0 z-10">
@@ -139,7 +139,7 @@ export default function ForMediaPartnersPage() {
               ))}
             </section>
 
-            <section className="border border-success/30 rounded-xl p-5 bg-success/40">
+            <section className="border border-success/30 rounded-xl p-5 bg-success/10">
               <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and methodology</p>
               <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
                 Research partnerships are built on original monitoring, explicit attribution, and clear methodology notes. We do not ask you to publish recycled job-board data or sponsor copy disguised as reporting.

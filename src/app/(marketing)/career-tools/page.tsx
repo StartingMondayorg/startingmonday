@@ -33,7 +33,7 @@ const WHAT_CHANGES = [
 
 export default function CareerToolsPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
       <nav className="dark bg-background sticky top-0 z-10">

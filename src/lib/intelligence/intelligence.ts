@@ -157,20 +157,20 @@ export function signalLabel(type: string): string {
   express and call sites no longer have to know which surface they are on.
 */
 export const SIGNAL_COLORS: Record<string, string> = {
-  funding:           'bg-success/15 text-success',
-  exec_departure:    'bg-warning/15 text-warning',
-  exec_hire:         'bg-info/15 text-info',
-  acquisition:       'bg-info/15 text-info',
-  expansion:         'bg-success/15 text-success',
-  layoffs:           'bg-destructive/15 text-destructive',
-  ipo:               'bg-primary/15 text-primary',
-  new_product:       'bg-info/15 text-info',
-  award:             'bg-warning/15 text-warning',
+  funding:           'bg-success/10 text-success',
+  exec_departure:    'bg-warning/10 text-warning',
+  exec_hire:         'bg-info/10 text-info',
+  acquisition:       'bg-info/10 text-info',
+  expansion:         'bg-success/10 text-success',
+  layoffs:           'bg-destructive/10 text-destructive',
+  ipo:               'bg-primary/10 text-primary',
+  new_product:       'bg-info/10 text-info',
+  award:             'bg-warning/10 text-warning',
   filing_trend:      'bg-muted/60 text-muted-foreground',
-  partnership:       'bg-info/15 text-info',
-  board_change:      'bg-info/15 text-info',
-  regulatory_change: 'bg-destructive/15 text-destructive',
-  activist_entry:    'bg-destructive/15 text-destructive',
+  partnership:       'bg-info/10 text-info',
+  board_change:      'bg-info/10 text-info',
+  regulatory_change: 'bg-destructive/10 text-destructive',
+  activist_entry:    'bg-destructive/10 text-destructive',
   insider_sale:      'bg-muted/60 text-muted-foreground',
 }
 

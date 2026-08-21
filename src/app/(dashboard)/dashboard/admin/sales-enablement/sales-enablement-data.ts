@@ -136,7 +136,7 @@ export function weightedScore(option: VendorOption): number {
 }
 
 export function scoreClass(score: number): string {
-  if (score >= 80) return 'text-success bg-success/15 border-success/25'
-  if (score >= 60) return 'text-warning bg-warning/15 border-warning/25'
+  if (score >= 80) return 'text-success bg-success/10 border-success/25'
+  if (score >= 60) return 'text-warning bg-warning/10 border-warning/25'
   return 'text-muted-foreground bg-muted/60 border-border'
 }

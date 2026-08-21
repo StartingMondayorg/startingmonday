@@ -34,7 +34,7 @@ export function BotTrafficChart({ data }: { data: Point[] }) {
   return (
     <ResponsiveContainer width="100%" height={240}>
       <AreaChart data={points} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-        <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
+        <CartesianGrid stroke="var(--border)" vertical={false} />
         <XAxis
           dataKey="label"
           tick={{ fontSize: 11, fill: '#cbd5e1' }}
@@ -55,8 +55,8 @@ export function BotTrafficChart({ data }: { data: Point[] }) {
           dataKey="human"
           name="Human"
           stackId="traffic"
-          stroke="#64748b"
-          fill="#475569"
+          stroke="var(--muted-foreground)"
+          fill="var(--muted-foreground)"
           fillOpacity={0.5}
         />
         <Area
@@ -64,8 +64,8 @@ export function BotTrafficChart({ data }: { data: Point[] }) {
           dataKey="bot"
           name="Suspected bot"
           stackId="traffic"
-          stroke="#fb923c"
-          fill="#fb923c"
+          stroke="var(--primary)"
+          fill="var(--primary)"
           fillOpacity={0.55}
         />
       </AreaChart>

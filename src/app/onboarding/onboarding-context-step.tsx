@@ -176,7 +176,7 @@ export function OnboardingContextStep({
             className={[
               'rounded border px-4 py-3 transition-colors',
               card.complete
-                ? 'border-primary/70 bg-primary/20 text-foreground'
+                ? 'border-primary/70 bg-primary/10 text-foreground'
                 : 'border-border bg-muted/40 text-foreground hover:border-border',
             ].join(' ')}
           >

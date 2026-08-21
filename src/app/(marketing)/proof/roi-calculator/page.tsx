@@ -33,8 +33,8 @@ export default function RoiCalculatorPage() {
         <RoiCalculatorClient />
 
         <section className="mt-6 bg-primary border border-border rounded-lg p-4">
-          <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground mb-2">Method note</p>
-          <p className="text-[12px] text-muted-foreground leading-relaxed">
+          <p className="text-[11px] uppercase tracking-[0.08em] text-primary-foreground mb-2">Method note</p>
+          <p className="text-[12px] text-primary-foreground leading-relaxed">
             This calculator is a planning model, not a guarantee. Validate assumptions with observed cohort performance and attach final values
             to your board-safe claims policy before external reporting.
           </p>

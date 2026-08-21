@@ -61,7 +61,7 @@ const FINANCIAL_ADVISOR_PROOF_STORIES = [
 
 export default function ForFinancialAdvisorsPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
       <nav className="dark bg-background sticky top-0 z-10">
@@ -135,7 +135,7 @@ export default function ForFinancialAdvisorsPage() {
               ))}
             </section>
 
-            <section className="border border-success/30 rounded-xl p-5 bg-success/40">
+            <section className="border border-success/30 rounded-xl p-5 bg-success/10">
               <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and confidentiality</p>
               <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
                 The client controls who sees their pipeline. Advisor visibility is shared intentionally, and confidential search materials stay inside the user account rather than being forwarded across email threads.

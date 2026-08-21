@@ -97,7 +97,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
   }
 
   return (
-    <div className="min-h-screen bg-card/85 text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
@@ -232,7 +232,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
             <Card key={doc.slug} variant="glass" className="bg-background/45 p-4 shadow-lg">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="bg-muted px-2 py-1 text-[11px] font-semibold text-foreground">{CATEGORY_LABELS[doc.category]}</Badge>
-                <Badge className="bg-primary/15 px-2 py-1 text-[11px] font-semibold text-primary">{PERSONA_LABELS[doc.persona]}</Badge>
+                <Badge className="bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">{PERSONA_LABELS[doc.persona]}</Badge>
               </div>
               <h2 className="mt-2 text-lg font-bold text-foreground">
                 <Link href={`/features/${doc.slug}`} className="hover:text-primary hover:underline">{doc.title}</Link>

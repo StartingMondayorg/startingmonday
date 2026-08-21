@@ -35,13 +35,13 @@ export default async function ExamplePage() {
   const proofCase = STARTING_MONDAY_HERO_CONTENT.proofCase
 
   return (
-    <main className="min-h-screen bg-primary px-4 py-12 text-primary-foreground sm:px-6 sm:py-20">
+    <main className="min-h-screen bg-background px-4 py-12 text-foreground sm:px-6 sm:py-20">
       <div className="mx-auto max-w-4xl">
-        <Link href="/" className="inline-flex min-h-[48px] items-center text-[13px] font-bold uppercase tracking-[0.14em] text-primary hover:text-primary-foreground">
+        <Link href="/" className="inline-flex min-h-[48px] items-center text-[13px] font-bold uppercase tracking-[0.14em] text-primary hover:text-foreground">
           Starting Monday
         </Link>
         <p className="mt-12 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Public signal example</p>
-        <h1 className="mt-4 max-w-3xl font-display text-[2.4rem] font-semibold leading-[1.04] text-primary-foreground sm:text-[4rem]">
+        <h1 className="mt-4 max-w-3xl font-display text-[2.4rem] font-semibold leading-[1.04] text-foreground sm:text-[4rem]">
           What a forming role looks like.
         </h1>
         <div className="mt-10">

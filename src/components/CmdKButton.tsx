@@ -10,7 +10,7 @@ export function CmdKButton() {
     <button
       type="button"
       onClick={open}
-      className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-semibold text-primary-foreground bg-primary hover:bg-muted border border-border cursor-pointer transition-colors"
+      className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-semibold text-primary-foreground bg-primary hover:bg-primary/90 border border-border cursor-pointer transition-colors"
       aria-label="Open command palette"
     >
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

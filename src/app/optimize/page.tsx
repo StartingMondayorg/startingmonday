@@ -199,7 +199,7 @@ export default function OptimizePage() {
             <Link href="/login" className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">Sign in</Link>
             <Button
               size="sm"
-              className="!bg-muted hover:!bg-muted/90"
+              variant="secondary"
               render={<Link href="/signup" />}
             >
               Get started free
@@ -269,8 +269,8 @@ export default function OptimizePage() {
                 </span>
                 <Button
                   type="submit"
+                  variant="secondary"
                   disabled={!canSubmit}
-                  className="!bg-background hover:!bg-muted"
                 >
                   {status === 'streaming' ? 'Analyzing…' : 'Analyze my profile'}
                 </Button>
@@ -351,7 +351,7 @@ export default function OptimizePage() {
             </p>
             <Button
               size="lg"
-              className="!bg-primary !text-primary-foreground hover:!bg-muted"
+              className="!bg-primary !text-primary-foreground hover:!bg-primary/90"
               render={<Link href="/signup" />}
             >
               Start your free 30-day trial &rarr;

@@ -64,13 +64,13 @@ import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-fl
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {
   watching: { label: "Watching", cls: "bg-muted/60 text-muted-foreground" },
-  researching: { label: "Researching", cls: "bg-info/15 text-info" },
-  applied: { label: "In Process", cls: "bg-info/15 text-info" },
+  researching: { label: "Researching", cls: "bg-info/10 text-info" },
+  applied: { label: "In Process", cls: "bg-info/10 text-info" },
   interviewing: {
     label: "Interviewing",
-    cls: "bg-warning/15 text-warning",
+    cls: "bg-warning/10 text-warning",
   },
-  offer: { label: "Offer", cls: "bg-success/15 text-success" },
+  offer: { label: "Offer", cls: "bg-success/10 text-success" },
 };
 
 const PAGE_SIZE = 50;

@@ -103,7 +103,7 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
                 variant="glass"
                 className={
                   turn.role === 'user'
-                    ? 'max-w-[85%] rounded-xl bg-primary/15 border-primary/25 px-4 py-2.5'
+                    ? 'max-w-[85%] rounded-xl bg-primary/10 border-primary/25 px-4 py-2.5'
                     : 'max-w-[92%] rounded-xl px-4 py-3'
                 }
               >

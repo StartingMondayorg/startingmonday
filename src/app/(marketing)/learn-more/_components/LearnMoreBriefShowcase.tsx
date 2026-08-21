@@ -53,7 +53,7 @@ export function LearnMoreBriefShowcase() {
   const [open, setOpen] = useState(false)
 
   return (
-    <section className="mt-12 rounded-3xl border border-border bg-primary/15 p-5 sm:p-8">
+    <section className="mt-12 rounded-3xl border border-border bg-primary/10 p-5 sm:p-8">
       <div className="max-w-4xl">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Sample prep brief</p>
         <h2 className="mt-3 text-[1.6rem] font-serif leading-tight text-foreground sm:text-[2rem]">
@@ -70,7 +70,7 @@ export function LearnMoreBriefShowcase() {
         <ol className="mt-4 space-y-3">
           {BRIEF.bottomLine.map((sentence, i) => (
             <li key={i} className="flex gap-3">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[11px] font-bold text-primary">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
                 {i + 1}
               </span>
               <p className="text-[14px] leading-relaxed text-foreground">{sentence}</p>

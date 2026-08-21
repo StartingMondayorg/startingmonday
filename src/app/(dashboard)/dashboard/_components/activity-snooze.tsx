@@ -139,7 +139,7 @@ export function DashboardActivitySnooze() {
                 type="button"
                 variant="outline"
                 onClick={clearSnooze}
-                className="min-h-[44px] border-primary/50 bg-primary/20 text-[12px] font-semibold text-primary hover:text-foreground"
+                className="min-h-[44px] border-primary/50 bg-primary/10 text-[12px] font-semibold text-primary hover:text-foreground"
               >
                 Resume activity
               </Button>
@@ -196,7 +196,7 @@ export function DashboardActivitySnooze() {
               variant="outline"
               disabled={!customRangeValid}
               onClick={applyCustomRange}
-              className="min-h-[44px] justify-center border-primary/40 bg-primary/20 text-[12px] font-semibold text-primary hover:text-foreground disabled:opacity-50"
+              className="min-h-[44px] justify-center border-primary/40 bg-primary/10 text-[12px] font-semibold text-primary hover:text-foreground disabled:opacity-50"
             >
               Apply range
             </Button>

@@ -295,7 +295,7 @@ export default async function FirmAdminViewPage() {
           <Link href="/dashboard/outplacement" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
+          <div className="flex items-center gap-4 text-[13px] text-primary-foreground">
             <Link href="/dashboard/outplacement/operator" className="hover:text-primary-foreground transition-colors">Operator console</Link>
             <Link href="/dashboard/outplacement/counselor" className="hover:text-primary-foreground transition-colors">Counselor view</Link>
             <Link href="/dashboard/outplacement/enterprise" className="hover:text-primary-foreground transition-colors">Enterprise view</Link>

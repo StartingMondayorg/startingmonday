@@ -30,7 +30,7 @@ export default function OutplacementChannelPage() {
           Starting Monday gives outplacement programs a practical operating layer for signals, prep, accountability, and day-30 decision quality without custom rollout complexity.
         </p>
 
-        <div className="rounded-lg border border-success/70 bg-success/36 p-4 mb-8 shadow-lg">
+        <div className="rounded-lg border border-success/70 bg-success/10 p-4 mb-8 shadow-lg">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-1">Trust and procurement readiness</p>
           <p className="text-[13px] text-success leading-relaxed">
             Board-safe claims, KPI definitions for day 30, 60, and 90, and explicit role boundaries for counselors and program operators.

@@ -216,7 +216,7 @@ export default function ChatPage() {
         <ActionToast message={actionToast} onDismiss={() => setActionToast(null)} />
       )}
       {retryError && (
-        <div data-testid="chat-retry-banner" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-destructive text-primary-foreground text-[13px] font-medium px-5 py-3 rounded-full shadow-lg">
+        <div data-testid="chat-retry-banner" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-destructive text-destructive-foreground text-[13px] font-medium px-5 py-3 rounded-full shadow-lg">
           <span className="text-destructive">&#9888;</span>
           <span>{retryError}</span>
           <button
@@ -229,7 +229,7 @@ export default function ChatPage() {
           <button
             type="button"
             onClick={() => setRetryError(null)}
-            className="text-muted-foreground hover:text-primary-foreground bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
+            className="text-muted-foreground hover:text-destructive-foreground bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
             aria-label="Dismiss"
           >
             &times;

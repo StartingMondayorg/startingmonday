@@ -80,13 +80,13 @@ const DOWNLOADS = [
 
 export default function OutplacementRunbookPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/for-outplacement" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+          <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
             Back to outplacement page
           </Link>
         </div>

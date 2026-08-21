@@ -64,7 +64,7 @@ export function DashboardTopShellSection(props: DashboardTopShellSectionProps) {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-[13px] font-semibold text-primary">Executive mode</span>
               {props.isExecutivePreview && (
-                <Badge className="h-auto px-2 py-0.5 text-[13px] font-semibold text-info bg-info/20 border-info/30">
+                <Badge className="h-auto px-2 py-0.5 text-[13px] font-semibold text-info bg-info/10 border-info/30">
                   Preview mode
                 </Badge>
               )}

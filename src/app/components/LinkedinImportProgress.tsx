@@ -106,8 +106,8 @@ export function LinkedinImportProgress({
         <div className="flex items-center gap-2.5 min-w-0">
           {done ? (
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" className="shrink-0">
-              <circle cx="10" cy="10" r="10" fill="#10b981" fillOpacity="0.2" />
-              <path d="M6 10l3 3 5-5" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="10" cy="10" r="10" fill="var(--success)" fillOpacity="0.2" />
+              <path d="M6 10l3 3 5-5" stroke="var(--success)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           ) : (
             <span className={`w-[18px] h-[18px] border-2 rounded-full animate-spin shrink-0 ${t.spinner}`} />

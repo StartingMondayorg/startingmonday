@@ -80,8 +80,8 @@ export default async function CoachClientsPage() {
                 {/* Avatar & Name */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <Avatar size="lg" className="bg-primary/20 text-[14px] font-semibold text-primary">
-                      <AvatarFallback className="bg-primary/20 text-primary">{client.avatar}</AvatarFallback>
+                    <Avatar size="lg" className="bg-primary/10 text-[14px] font-semibold text-primary">
+                      <AvatarFallback className="bg-primary/10 text-primary">{client.avatar}</AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="text-[14px] font-semibold text-foreground group-hover:text-primary transition-colors">

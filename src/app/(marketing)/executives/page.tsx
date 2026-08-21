@@ -56,7 +56,7 @@ export default function ExecutivesChannelPage() {
           </div>
         </details>
 
-        <div className="rounded-lg border border-success/50 bg-success/20 p-4 mb-8">
+        <div className="rounded-lg border border-success/50 bg-success/10 p-4 mb-8">
           <h3 className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and confidentiality</h3>
           <p className="text-[13px] text-success leading-relaxed">
             Confidential by default. We do not sell leads or share your activity with employers. You can permanently delete your data.

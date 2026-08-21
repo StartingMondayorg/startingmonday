@@ -471,7 +471,7 @@ export function CioDemoClient() {
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/demo/presenter" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">Presenter mode</Link>
+            <Link href="/demo/presenter" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">Presenter mode</Link>
           </div>
         </div>
       </header>

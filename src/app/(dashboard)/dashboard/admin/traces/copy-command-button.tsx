@@ -21,7 +21,7 @@ export function CopyCommandButton({ command }: { command: string }) {
       onClick={handleCopy}
       variant="outline"
       size="sm"
-      className="text-[11px] font-semibold border-success/30 bg-success/15 text-success"
+      className="text-[11px] font-semibold border-success/30 bg-success/10 text-success"
     >
       {copied ? 'Copied' : 'Copy command'}
     </Button>

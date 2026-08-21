@@ -37,7 +37,7 @@ export function CoachPreviewActions() {
           data-emi-to="/partners#apply"
           event={EVENT_NAME}
           properties={EVENT_PROPERTIES}
-          className="inline-flex items-center justify-center rounded border border-border px-6 py-3 text-[13px] font-semibold text-muted-foreground transition-colors hover:text-primary-foreground"
+          className="inline-flex items-center justify-center rounded border border-border px-6 py-3 text-[13px] font-semibold text-muted-foreground transition-colors hover:text-foreground"
         >
           Start coach partner pilot
         </TrackLink>

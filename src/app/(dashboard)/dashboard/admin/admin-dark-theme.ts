@@ -34,7 +34,7 @@ export const ADMIN_DARK_MUTED_ACTION =
   'text-[12px] text-muted-foreground hover:text-foreground cursor-pointer bg-transparent border-0'
 
 export function adminRoleBadgeClass(role: string): string {
-  if (role === 'owner') return 'bg-warning/15 text-warning border border-warning/25'
-  if (role === 'admin') return 'bg-info/15 text-info border border-info/25'
+  if (role === 'owner') return 'bg-warning/10 text-warning border border-warning/25'
+  if (role === 'admin') return 'bg-info/10 text-info border border-info/25'
   return 'bg-muted/60 text-muted-foreground border border-border'
 }

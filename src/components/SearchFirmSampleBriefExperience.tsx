@@ -195,7 +195,7 @@ export default function SearchFirmSampleBriefExperience() {
         <div className="mt-4">{renderSection('Candidate Positioning Narrative', sampleBrief.candidateSummary)}</div>
 
         {showGenerated && (
-          <div className="mt-6 rounded-lg border border-primary/30 bg-primary/30 p-6">
+          <div className="mt-6 rounded-lg border border-primary/30 bg-primary/10 p-6">
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Draft output from your intake</p>
             <h4 className="mt-2 text-xl font-bold text-foreground">{generated.title}</h4>
             <p className="mt-1 text-sm text-muted-foreground">{generated.candidateHeadline}</p>

@@ -41,7 +41,7 @@ export default async function ConciergeDashboardPage() {
 
   if (!profile?.is_concierge) {
     return (
-      <div className="min-h-screen bg-card/85 px-4 py-16 sm:py-24 text-foreground">
+      <div className="min-h-screen bg-background px-4 py-16 sm:py-24 text-foreground">
         <Card variant="glass" className="max-w-2xl mx-auto p-6 shadow-xl">
         <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
           Executive Concierge
@@ -93,7 +93,7 @@ export default async function ConciergeDashboardPage() {
   const pastCalls = (past ?? []) as ConciergeCall[]
 
   return (
-    <div className="min-h-screen bg-card/85 px-4 py-10 sm:py-14 text-foreground">
+    <div className="min-h-screen bg-background px-4 py-10 sm:py-14 text-foreground">
       <div className="max-w-3xl mx-auto">
 
       <Card variant="glass" className="mb-8 px-5 py-5 shadow-xl flex items-center justify-between">

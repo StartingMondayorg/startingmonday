@@ -627,7 +627,7 @@ export function OnboardingForm({
     : 'opacity-100 translate-x-0'
 
   return (
-    <div className="min-h-screen bg-card/85 flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-12">
       <form id="onboarding-form" action={completeOnboarding} className="hidden">
         <input type="hidden" name="full_name"           value={fullName} />
         <input type="hidden" name="search_persona"      value={searchPersona} />
@@ -1619,9 +1619,9 @@ function StepImport({
           </div>
           <Alert variant="warning">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="shrink-0 mt-0.5">
-              <circle cx="10" cy="10" r="10" fill="#f59e0b" fillOpacity="0.2" />
-              <path d="M10 6v5" stroke="#fbbf24" strokeWidth="1.8" strokeLinecap="round" />
-              <circle cx="10" cy="14" r="1" fill="#fbbf24" />
+              <circle cx="10" cy="10" r="10" fill="var(--warning)" fillOpacity="0.2" />
+              <path d="M10 6v5" stroke="var(--warning)" strokeWidth="1.8" strokeLinecap="round" />
+              <circle cx="10" cy="14" r="1" fill="var(--warning)" />
             </svg>
             <AlertDescription className="text-[13px] leading-relaxed">
               Title and company not detected. Fill them in now or update your profile later.
@@ -1669,8 +1669,8 @@ function StepImport({
         </div>
         <Alert variant="success">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="10" fill="#10b981" fillOpacity="0.2" />
-            <path d="M6 10l3 3 5-5" stroke="#34d399" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="10" cy="10" r="10" fill="var(--success)" fillOpacity="0.2" />
+            <path d="M6 10l3 3 5-5" stroke="var(--success)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <AlertDescription className="text-[14px] font-medium">LinkedIn data extracted successfully</AlertDescription>
         </Alert>

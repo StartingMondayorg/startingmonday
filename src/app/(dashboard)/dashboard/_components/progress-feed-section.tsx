@@ -61,7 +61,7 @@ function buildFeedItems(props: Props): FeedItem[] {
     id: `follow-up-${followUp.id}`,
     badge: followUp.due_date === props.todayISO ? 'Due Today' : 'Follow-up',
     badgeClassName: followUp.due_date === props.todayISO
-      ? 'bg-destructive/15 text-destructive'
+      ? 'bg-destructive/10 text-destructive'
       : 'bg-muted/60 text-muted-foreground',
     title: followUp.action,
     body: followUp.companies?.name
@@ -75,7 +75,7 @@ function buildFeedItems(props: Props): FeedItem[] {
   const warmPathItems = props.warmPaths.slice(0, props.isExecutiveMode ? 1 : 2).map((warmPath) => ({
     id: `warm-path-${warmPath.contactId}-${warmPath.signal.id}`,
     badge: 'Warm Path',
-    badgeClassName: 'bg-success/15 text-success',
+    badgeClassName: 'bg-success/10 text-success',
     title: `${warmPath.contactName} at ${warmPath.companyName}`,
     body: warmPath.signal.signal_summary,
     meta: formatDateLabel(warmPath.signal.signal_date),
@@ -90,7 +90,7 @@ function buildFeedItems(props: Props): FeedItem[] {
     return {
       id: `pattern-${signal.id}`,
       badge: patternName,
-      badgeClassName: 'bg-primary/20 text-primary',
+      badgeClassName: 'bg-primary/10 text-primary',
       title: signal.companies?.name ?? 'Market pattern detected',
       body: patternBody,
       meta: formatDateLabel(signal.signal_date),
@@ -102,7 +102,7 @@ function buildFeedItems(props: Props): FeedItem[] {
   const signalItems = props.signals.slice(0, props.isExecutiveMode ? 1 : 3).map((signal) => ({
     id: `signal-${signal.id}`,
     badge: signalLabel(signal.signal_type),
-    badgeClassName: SIGNAL_COLORS[signal.signal_type] ?? 'bg-warning/15 text-warning',
+    badgeClassName: SIGNAL_COLORS[signal.signal_type] ?? 'bg-warning/10 text-warning',
     title: signal.companies?.name ?? 'Company signal',
     body: signal.signal_summary,
     meta: formatDateLabel(signal.signal_date),

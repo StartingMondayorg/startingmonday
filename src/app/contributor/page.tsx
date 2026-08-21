@@ -160,7 +160,7 @@ export default async function ContributorPage() {
           ))}
         </section>
 
-        <section className="mb-8 rounded-xl border border-success/30 bg-success/50 p-5">
+        <section className="mb-8 rounded-xl border border-success/30 bg-success/10 p-5">
           <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-success mb-2">Operating note</p>
           <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
             This hub includes internal architecture, security, workflow, and contributor materials. Keep it inside the contributor circle and use the linked documentation as the verified source before making changes.

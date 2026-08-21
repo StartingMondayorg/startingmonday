@@ -61,7 +61,7 @@ const RELOCATION_PROOF_STORIES = [
 
 export default function ForRelocationPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
       <nav className="dark bg-background sticky top-0 z-10">
@@ -135,7 +135,7 @@ export default function ForRelocationPage() {
               ))}
             </section>
 
-            <section className="border border-success/30 rounded-xl p-5 bg-success/40">
+            <section className="border border-success/30 rounded-xl p-5 bg-success/10">
               <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and confidentiality</p>
               <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
                 Relocation searches are often confidential, time-bound, and emotionally loaded. Search notes, prep materials, and pipeline activity stay private to the executive unless they choose to share access.

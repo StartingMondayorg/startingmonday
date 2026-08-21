@@ -60,7 +60,7 @@ export function BlogPost({ title, description, date, readTime, url, slug, cta, c
   }
 
   return (
-    <div className="min-h-screen bg-primary font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <JsonLd data={articleJsonLd} />
 
       {/* Nav */}

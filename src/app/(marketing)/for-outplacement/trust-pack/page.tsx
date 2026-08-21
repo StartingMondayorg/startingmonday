@@ -173,14 +173,14 @@ const SLA_ATTESTATION_MAP = [
 
 export default function OutplacementTrustPackPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/for-outplacement" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
+            <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Back to outplacement page
             </Link>
           </div>
@@ -399,7 +399,7 @@ export default function OutplacementTrustPackPage() {
           <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">
             Next step
           </h2>
-          <div className="border border-primary/30 rounded-lg p-4 bg-primary/50 mb-5">
+          <div className="border border-primary/30 rounded-lg p-4 bg-primary/10 mb-5">
             <p className="text-[12px] font-semibold text-foreground mb-1">Short objection response</p>
             <p className="text-[12px] text-muted-foreground leading-relaxed">Concerned this expands governance burden? The trust pack is designed to reduce uncertainty with explicit artifacts and clear decision gates.</p>
           </div>

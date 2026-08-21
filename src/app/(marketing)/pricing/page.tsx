@@ -28,7 +28,7 @@ export default function PricingPage() {
   const premiumEnabled = isEnabledFlag(process.env.NEXT_PUBLIC_LUXURY_PHASE3_ENABLED)
 
   return (
-    <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-background' : 'bg-primary'}`}>
+    <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-background' : 'bg-background'}`}>
       <EmiMarketingTelemetry pageSlug="/pricing" personaSegment="executives" />
       <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'bg-background sticky top-0 z-10'}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -71,8 +71,8 @@ export default function PricingPage() {
         <PricingCards />
 
         <section className={`mt-10 rounded-2xl p-6 sm:p-7 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border bg-primary'}`}>
-          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>First-week outcomes by plan</p>
-          <p className={`text-[13px] leading-relaxed mb-4 ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-primary-foreground'}`}>First-week outcomes by plan</p>
+          <p className={`text-[13px] leading-relaxed mb-4 ${premiumEnabled ? 'text-primary-foreground' : 'text-primary-foreground'}`}>
             Pick the plan that matches urgency this week. Each path defines what &quot;good&quot; looks like in seven days.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

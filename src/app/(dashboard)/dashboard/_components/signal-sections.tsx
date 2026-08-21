@@ -49,7 +49,7 @@ export function WarmPathsSection({ warmPaths }: { warmPaths: WarmPath[] }) {
           return (
             <div key={`${wp.contactId}-${wp.signal.id}`} className="px-6 py-4 flex items-start gap-4">
               <Avatar className="shrink-0 mt-0.5">
-                <AvatarFallback className="bg-success/15 text-success text-[12px] font-bold">
+                <AvatarFallback className="bg-success/10 text-success text-[12px] font-bold">
                   {wp.contactName[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -76,7 +76,7 @@ export function WarmPathsSection({ warmPaths }: { warmPaths: WarmPath[] }) {
               <Button
                 variant="secondary"
                 render={<Link href={`/dashboard/contacts/${wp.contactId}/outreach`} />}
-                className="shrink-0 h-auto text-success hover:text-foreground bg-success/20 hover:bg-success/30 px-3 py-1.5"
+                className="shrink-0 h-auto text-success hover:text-foreground bg-success/10 hover:bg-success/30 px-3 py-1.5"
               >
                 Draft
               </Button>
@@ -118,7 +118,7 @@ export function PatternAlertsSection({ patternAlerts }: { patternAlerts: SignalR
                         {co.name}
                       </span>
                     )}
-                    <Badge className="h-auto px-2 py-0.5 font-bold bg-primary/20 text-primary">
+                    <Badge className="h-auto px-2 py-0.5 font-bold bg-primary/10 text-primary">
                       {patternName}
                     </Badge>
                   </div>
@@ -175,7 +175,7 @@ export function CompanySignalsSection({ signals }: { signals: SignalRow[] }) {
                       {co.name}
                     </span>
                   )}
-                  <Badge className="h-auto px-2 py-0.5 font-bold bg-warning/15 text-warning">
+                  <Badge className="h-auto px-2 py-0.5 font-bold bg-warning/10 text-warning">
                     {typeLabel}
                   </Badge>
                   <span className="text-[12px] text-muted-foreground ml-auto">{dateLabel}</span>

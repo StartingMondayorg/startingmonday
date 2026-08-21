@@ -129,7 +129,7 @@ export default function EvidenceRoomPage() {
                         return (
                           <div key={source.id} className="rounded-lg border border-border bg-muted/[0.02] p-3">
                             <div className="flex gap-2">
-                              <span className="mt-0.5 inline-flex shrink-0 rounded-full bg-primary/20 px-2 py-1 text-[11px] font-semibold text-primary">
+                              <span className="mt-0.5 inline-flex shrink-0 rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
                                 {source.type === 'academic' ? 'Peer-reviewed' : source.type === 'business' ? 'Industry' : source.type === 'book' ? 'Book' : 'Internal'}
                               </span>
                             </div>

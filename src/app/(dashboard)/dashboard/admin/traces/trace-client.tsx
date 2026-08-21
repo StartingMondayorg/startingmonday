@@ -119,7 +119,7 @@ function TraceRow({
   return (
     <div
       ref={rowRef}
-      className={`border-b border-border ${evalPass === true ? 'bg-success/30' : evalPass === false ? 'bg-destructive/30' : ''} ${enableShortcuts ? 'ring-1 ring-border ring-inset' : ''}`}
+      className={`border-b border-border ${evalPass === true ? 'bg-success/10' : evalPass === false ? 'bg-destructive/10' : ''} ${enableShortcuts ? 'ring-1 ring-border ring-inset' : ''}`}
       onMouseDown={() => onActivate?.(trace.id)}
     >
       <div className="px-5 py-4 flex items-start gap-4">
@@ -922,7 +922,7 @@ export function TraceViewer({
                   type="button"
                   variant="outline"
                   onClick={() => setTrimForSlack(true)}
-                  className="h-auto text-[10px] font-semibold rounded border-warning/30 bg-warning/15 text-warning px-2 py-1"
+                  className="h-auto text-[10px] font-semibold rounded border-warning/30 bg-warning/10 text-warning px-2 py-1"
                 >
                   Enable trim
                 </Button>

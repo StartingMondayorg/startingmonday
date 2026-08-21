@@ -66,7 +66,7 @@ export function DashboardCampaignFoundationSection({
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-1">
             Campaign foundation
           </p>
-          <h2 id="campaign-foundation-heading" className="text-[18px] sm:text-[20px] font-serif font-bold text-primary-foreground leading-tight">
+          <h2 id="campaign-foundation-heading" className="text-[18px] sm:text-[20px] font-serif font-bold text-foreground leading-tight">
             What we understood about your search
           </h2>
         </div>

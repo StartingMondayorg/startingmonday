@@ -285,7 +285,7 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
                   ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3'
                   : 'text-primary-foreground'
                 }`}>
-                  <p className={`text-[14px] leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-primary-foreground' : 'text-foreground'}`}>
+                  <p className={`text-[14px] leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-primary-foreground' : 'text-primary-foreground'}`}>
                     {msg.content || (loading && i === messages.length - 1 ? (
                       <span className="inline-flex gap-1">
                         <span className="animate-pulse">.</span>

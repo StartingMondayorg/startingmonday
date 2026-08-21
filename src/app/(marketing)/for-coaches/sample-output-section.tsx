@@ -78,7 +78,7 @@ export function SampleOutputSection({
             See full brief example -&gt;
           </Button>
         </Card>
-        <Card className="rounded-2xl border border-primary/30 bg-primary/40 p-5 ring-0">
+        <Card className="rounded-2xl border border-primary/30 bg-primary/10 p-5 ring-0">
           <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-primary mb-3">Prep brief excerpt</p>
           <p className="text-[14px] font-semibold text-foreground mb-3">Pre-interview view for a PE-backed CIO search</p>
           <ul className="space-y-2">

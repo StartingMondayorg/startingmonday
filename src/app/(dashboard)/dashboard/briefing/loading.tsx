@@ -1,6 +1,6 @@
 ﻿export default function BriefingLoading() {
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
 
       <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -49,9 +49,9 @@
           <div className="mb-8">
             <div className="h-2 w-28 bg-muted/60 rounded animate-pulse mb-4 pb-3 border-b border-border" />
             <div className="p-4 bg-warning/10 border border-warning/20 rounded-r space-y-2 backdrop-blur-md">
-              <div className="h-4 w-32 bg-warning/20 rounded animate-pulse" />
-              <div className="h-3.5 w-full bg-warning/20 rounded animate-pulse" />
-              <div className="h-3.5 w-3/4 bg-warning/20 rounded animate-pulse" />
+              <div className="h-4 w-32 bg-warning/10 rounded animate-pulse" />
+              <div className="h-3.5 w-full bg-warning/10 rounded animate-pulse" />
+              <div className="h-3.5 w-3/4 bg-warning/10 rounded animate-pulse" />
             </div>
           </div>
 

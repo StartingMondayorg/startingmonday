@@ -97,7 +97,7 @@ function OnDemandActionButton({ label, runningLabel, doneLabel, triggerUrl, poll
         variant="outline"
         onClick={trigger}
         disabled={state === 'running'}
-        className="text-primary border-primary/40 bg-primary/20 hover:bg-primary/30"
+        className="text-primary border-primary/40 bg-primary/10 hover:bg-primary/30"
       >
         {state === 'running' ? runningLabel : label}
       </Button>

@@ -96,7 +96,7 @@ export default function CompaniesPrepPage() {
             {featuredCompanies.map((company) => (
               <Card
                 key={company.id}
-                className="px-4 py-3 border-success/30 bg-success/40 flex-row items-start justify-between"
+                className="px-4 py-3 border-success/30 bg-success/10 flex-row items-start justify-between"
               >
                 <div>
                   <p className="font-semibold text-[14px] text-success">{company.name}</p>

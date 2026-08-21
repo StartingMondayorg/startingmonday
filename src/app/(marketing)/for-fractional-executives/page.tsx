@@ -42,7 +42,7 @@ const FEATURES = [
 
 export default function ForFractionalExecutivesPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
       <nav className="dark bg-background sticky top-0 z-10">
@@ -98,7 +98,7 @@ export default function ForFractionalExecutivesPage() {
               ))}
             </section>
 
-            <section className="border border-success/30 rounded-xl p-5 bg-success/40">
+            <section className="border border-success/30 rounded-xl p-5 bg-success/10">
               <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and operating boundary</p>
               <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
                 Member pipelines, prep materials, and search notes stay private to each account unless the member intentionally shares access. The network gets a partner program, not a hidden backdoor into confidential deal flow.

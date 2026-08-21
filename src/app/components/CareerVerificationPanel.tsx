@@ -110,7 +110,7 @@ function EditCard({ draft, onChange, onSave, onCancel }: {
             type="button"
             size="sm"
             onClick={onSave}
-            className="!bg-primary hover:!bg-muted"
+            className="!bg-primary hover:!bg-primary/90"
           >
             Save entry
           </Button>

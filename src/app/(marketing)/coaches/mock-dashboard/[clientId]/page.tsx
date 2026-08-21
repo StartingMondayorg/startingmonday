@@ -198,7 +198,7 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
           </div>
         </section>
 
-        <section className="rounded-2xl border border-success/30 bg-success/40 p-5">
+        <section className="rounded-2xl border border-success/30 bg-success/10 p-5">
           <h2 className="mb-2 text-[11px] font-bold tracking-[0.12em] text-success">Trust and next action</h2>
           <p className="text-[13px] leading-relaxed text-foreground">
             This coach workspace is confidential and intended for private session preparation only. Teams using this workflow report clearer weekly decisions and faster follow-through on overdue commitments.

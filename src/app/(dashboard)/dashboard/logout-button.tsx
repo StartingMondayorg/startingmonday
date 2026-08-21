@@ -16,7 +16,7 @@ export function LogoutButton({ label }: { label: string }) {
     <Button
       variant="ghost"
       onClick={handleLogout}
-      className="min-h-[44px] px-2 text-[12px] text-muted-foreground hover:text-primary-foreground hover:bg-transparent whitespace-nowrap"
+      className="min-h-[44px] px-2 text-[12px] text-muted-foreground hover:text-foreground hover:bg-transparent whitespace-nowrap"
     >
       {label}
     </Button>

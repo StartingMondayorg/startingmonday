@@ -84,7 +84,7 @@ const SCORE_DIMENSIONS = [
 
 export default function CoachPrepWorksheetPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="dark bg-background sticky top-0 z-10 print:hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
@@ -104,10 +104,10 @@ export default function CoachPrepWorksheetPage() {
 
       <header className="bg-primary px-4 sm:px-6 pt-10 pb-12 print:bg-card print:pt-0 print:pb-6">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3 print:text-muted-foreground">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3 print:text-primary-foreground">
             Executive Coaching Operating Worksheet
           </p>
-          <h1 className="mb-4 font-bold tracking-tight leading-[1.02] text-primary-foreground print:text-foreground">
+          <h1 className="mb-4 font-bold tracking-tight leading-[1.02] text-primary-foreground print:text-primary-foreground">
             <span className="block text-[26px] sm:text-[32px]">
               Coach in strategy mode.
             </span>
@@ -115,10 +115,10 @@ export default function CoachPrepWorksheetPage() {
               Execute with measurable follow-through.
             </span>
           </h1>
-          <p className="max-w-3xl text-[15px] leading-relaxed text-muted-foreground print:text-muted-foreground">
+          <p className="max-w-3xl text-[15px] leading-relaxed text-primary-foreground print:text-primary-foreground">
             Built for executive-transition coaching, where clear mandate, sharper narrative, and seven-day follow-through matter most.
           </p>
-          <div className="mt-5 rounded-lg border border-border bg-primary/60 p-4 print:border-border print:bg-card">
+          <div className="mt-5 rounded-lg border border-border bg-primary/10 p-4 print:border-border print:bg-card">
             <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-primary print:text-muted-foreground">BLUF</p>
             <p className="text-[13px] text-muted-foreground mt-2 leading-relaxed print:text-muted-foreground">
               Use one worksheet per session. Define one strategic outcome, rehearse one high-stakes exchange, and leave
@@ -168,7 +168,7 @@ export default function CoachPrepWorksheetPage() {
           ))}
         </div>
 
-        <section className="border border-primary/30 rounded-2xl p-5 sm:p-6 bg-primary/40 mt-8">
+        <section className="border border-primary/30 rounded-2xl p-5 sm:p-6 bg-primary/10 mt-8">
           <h2 className="text-[17px] font-semibold text-foreground mb-3">Session Quality Scorecard (1-5)</h2>
           <p className="text-[13px] text-muted-foreground mb-4">
             Score quickly at close. Any dimension below 3 becomes a required focus area in the next prep cycle.

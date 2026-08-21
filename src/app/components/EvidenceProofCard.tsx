@@ -21,12 +21,12 @@ export function EvidenceProofCard({
     <section className={className ?? ''}>
       <div className="rounded-2xl border border-success/25 bg-success/10 p-5 sm:p-6">
         <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-success">Proof snapshot</p>
-        <p className="mt-2 text-[15px] font-semibold leading-relaxed text-primary-foreground">{claim}</p>
+        <p className="mt-2 text-[15px] font-semibold leading-relaxed text-foreground">{claim}</p>
         <div className="mt-3 flex flex-wrap gap-3 text-[12px]">
-          <Link href={sourceHref} className="underline underline-offset-2 text-success hover:text-primary-foreground transition-colors">
+          <Link href={sourceHref} className="underline underline-offset-2 text-success hover:text-foreground transition-colors">
             {sourceLabel}
           </Link>
-          <Link href={evidenceHref} className="underline underline-offset-2 text-success hover:text-primary-foreground transition-colors">
+          <Link href={evidenceHref} className="underline underline-offset-2 text-success hover:text-foreground transition-colors">
             Evidence Hub
           </Link>
         </div>

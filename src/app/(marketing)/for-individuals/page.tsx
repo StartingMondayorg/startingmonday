@@ -65,7 +65,7 @@ export default async function ForIndividualsPage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/for-executives"
-                  className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/15 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
+                  className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/10 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
                 >
                   Executives
                 </Link>
@@ -98,7 +98,7 @@ export default async function ForIndividualsPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/demo/executive-brief"
-                className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/15 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
+                className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/10 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
               >
                 Demo Brief
               </Link>
@@ -110,7 +110,7 @@ export default async function ForIndividualsPage() {
               </Link>
               <Link
                 href="/demo/cio/notes"
-                className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/15 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
+                className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/10 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
               >
                 Target Companies + Key People
               </Link>

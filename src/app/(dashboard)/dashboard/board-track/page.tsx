@@ -44,7 +44,7 @@ export default async function BoardGovernancePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
       <header className="sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] font-semibold text-muted-foreground">

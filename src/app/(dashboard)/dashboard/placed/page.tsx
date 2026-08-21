@@ -23,7 +23,7 @@ export default async function PlacedPage() {
   const proofActions = getPlacedProofActions()
 
   return (
-    <div className="min-h-screen bg-card font-sans flex flex-col">
+    <div className="min-h-screen bg-background font-sans flex flex-col">
       <header className="px-6 h-14 flex items-center justify-between">
         <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
           <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

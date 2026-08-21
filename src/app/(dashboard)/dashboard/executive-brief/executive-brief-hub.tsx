@@ -624,7 +624,7 @@ export function ExecutiveBriefHub({
             <Link href="/dashboard" className="inline-flex items-center justify-center bg-primary text-primary-foreground text-[13px] font-bold px-3.5 py-1.5 rounded hover:bg-primary/90 transition-colors">
               Dashboard
             </Link>
-            <Link href="/login" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">Log in</Link>
+            <Link href="/login" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">Log in</Link>
           </div>
         </div>
       </nav>
@@ -633,7 +633,7 @@ export function ExecutiveBriefHub({
         <section className="mb-6 rounded-xl bg-primary px-6 py-6 sm:px-8 sm:py-8 border border-border">
           <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-2">Executive Brief Hub</p>
           <h1 className="text-[30px] leading-tight font-bold text-primary-foreground">Walk into interviews with clear evidence, sharper answers, and next steps.</h1>
-          <p className="text-[14px] text-muted-foreground mt-3 max-w-3xl">
+          <p className="text-[14px] text-primary-foreground mt-3 max-w-3xl">
             {data.userName
               ? `${data.userName}, this page turns scattered prep into one focused workflow so you stop reworking briefs and missing follow-ups.`
               : 'This page turns scattered prep into one focused workflow so you stop reworking briefs and missing follow-ups.'}
@@ -651,13 +651,13 @@ export function ExecutiveBriefHub({
               >
                 {showHowToUse ? 'Hide how to use' : 'How to use this page'}
               </CollapsibleTrigger>
-              <p className="text-[12px] text-muted-foreground">Outcome: stronger interview performance with less prep stress.</p>
+              <p className="text-[12px] text-primary-foreground">Outcome: stronger interview performance with less prep stress.</p>
             </div>
 
             <CollapsibleContent>
-              <div className="mt-4 rounded border border-border bg-primary/60 p-4">
+              <div className="mt-4 rounded border border-border bg-primary/10 p-4">
                 <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-primary mb-2">How to use</p>
-                <ol className="space-y-1.5 text-[12px] text-muted-foreground list-decimal pl-4">
+                <ol className="space-y-1.5 text-[12px] text-primary-foreground list-decimal pl-4">
                   <li>Pick a brief summary to open full content and align your thesis.</li>
                   <li>Use Interview Pressure Lab to practice one question at a time and capture improvements.</li>
                   <li>Use notes/transcript analysis to surface risks and actions before your next round.</li>
@@ -667,15 +667,15 @@ export function ExecutiveBriefHub({
           </Collapsible>
 
           <div className="mt-5 flex flex-wrap gap-2 text-[12px]">
-            <Link href="/dashboard/briefing" className="rounded border border-border px-2.5 py-1.5 text-muted-foreground hover:text-primary-foreground">Daily briefing</Link>
-            <Link href="/dashboard/contacts" className="rounded border border-border px-2.5 py-1.5 text-muted-foreground hover:text-primary-foreground">Relationships</Link>
-            <Link href="/onboarding" className="rounded border border-border px-2.5 py-1.5 text-muted-foreground hover:text-primary-foreground">Onboarding</Link>
-            <Link href="/dashboard/companies/new" className="rounded border border-border px-2.5 py-1.5 text-muted-foreground hover:text-primary-foreground">Company intel</Link>
+            <Link href="/dashboard/briefing" className="rounded border border-border px-2.5 py-1.5 text-primary-foreground hover:text-primary-foreground">Daily briefing</Link>
+            <Link href="/dashboard/contacts" className="rounded border border-border px-2.5 py-1.5 text-primary-foreground hover:text-primary-foreground">Relationships</Link>
+            <Link href="/onboarding" className="rounded border border-border px-2.5 py-1.5 text-primary-foreground hover:text-primary-foreground">Onboarding</Link>
+            <Link href="/dashboard/companies/new" className="rounded border border-border px-2.5 py-1.5 text-primary-foreground hover:text-primary-foreground">Company intel</Link>
           </div>
         </section>
 
         <section className="grid grid-cols-1 xl:grid-cols-[1.3fr_0.7fr] gap-6 mb-6">
-          <div className="bg-warning/50 border border-warning/30 rounded-xl p-5 sm:p-6">
+          <div className="bg-warning/10 border border-warning/30 rounded-xl p-5 sm:p-6">
             <div className="flex items-center justify-between gap-3 mb-4">
               <h2 className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Brief Repository</h2>
               <p className="text-[12px] text-muted-foreground">{data.briefs.length > 0 ? `${data.briefs.length} briefs indexed` : '263 briefs indexed'}</p>
@@ -709,7 +709,7 @@ export function ExecutiveBriefHub({
             </div>
           </div>
 
-          <div className="bg-info/50 border border-info/30 rounded-xl p-5 sm:p-6">
+          <div className="bg-info/10 border border-info/30 rounded-xl p-5 sm:p-6">
             <h2 className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-4">People To Reach Out To</h2>
             <p className="text-[12px] text-muted-foreground mb-3">Combined view: contacts you entered plus suggestions from LinkedIn context and target companies/roles.</p>
             <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Your contacts</p>
@@ -737,7 +737,7 @@ export function ExecutiveBriefHub({
         </section>
 
         <section className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6 mb-6">
-          <div className="bg-success/40 border border-success/30 rounded-xl p-5 sm:p-6">
+          <div className="bg-success/10 border border-success/30 rounded-xl p-5 sm:p-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 <h2 className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Executive Pressure Lab</h2>
@@ -920,7 +920,7 @@ export function ExecutiveBriefHub({
             )}
           </div>
 
-          <div className="bg-destructive/40 border border-destructive/30 rounded-xl p-5 sm:p-6">
+          <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-5 sm:p-6">
             <h2 className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Recent Interview Signal Log</h2>
             <div className="space-y-3 max-h-[380px] overflow-auto pr-1 mb-4">
               {displayedSignals.slice(0, 14).map(signal => (
@@ -1164,14 +1164,14 @@ export function ExecutiveBriefHub({
               <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
             </p>
             <div className="flex flex-wrap gap-4 text-[12px]">
-              <Link href="/privacy" className="text-muted-foreground hover:text-primary-foreground">Privacy policy</Link>
-              <Link href="/evidence-hub" className="text-muted-foreground hover:text-primary-foreground">Evidence Hub</Link>
-              <Link href="/dashboard" className="text-muted-foreground hover:text-primary-foreground">Dashboard</Link>
-              <Link href="/login" className="text-muted-foreground hover:text-primary-foreground">Sign in</Link>
+              <Link href="/privacy" className="text-primary-foreground hover:text-primary-foreground">Privacy policy</Link>
+              <Link href="/evidence-hub" className="text-primary-foreground hover:text-primary-foreground">Evidence Hub</Link>
+              <Link href="/dashboard" className="text-primary-foreground hover:text-primary-foreground">Dashboard</Link>
+              <Link href="/login" className="text-primary-foreground hover:text-primary-foreground">Sign in</Link>
             </div>
           </div>
-          <p className="text-[12px] text-muted-foreground">Private by default. Built for disciplined executive search execution with early signal and low-noise workflows.</p>
-          <p className="text-[12px] text-muted-foreground mt-2">© 2026 Starting Monday. All rights reserved.</p>
+          <p className="text-[12px] text-primary-foreground">Private by default. Built for disciplined executive search execution with early signal and low-noise workflows.</p>
+          <p className="text-[12px] text-primary-foreground mt-2">© 2026 Starting Monday. All rights reserved.</p>
         </footer>
       </main>
     </div>

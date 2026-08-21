@@ -61,7 +61,7 @@ export default async function InvitePage({
 
           <Button
             size="lg"
-            className="!bg-primary !text-primary-foreground text-[14px] font-bold px-7 py-3.5 h-auto hover:!bg-muted"
+            className="!bg-primary !text-primary-foreground text-[14px] font-bold px-7 py-3.5 h-auto hover:!bg-primary/90"
             render={<Link href={`/signup?ref=${code}`} />}
           >
             Get started now &rarr;

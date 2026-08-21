@@ -187,7 +187,7 @@ export default async function PostSearchDashboardPage() {
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {intelligencePulse.topSignalTypes.map((item) => (
-                    <Badge key={item.type} variant="outline" className="bg-info/50 border-info/30 text-info">
+                    <Badge key={item.type} variant="outline" className="bg-info/10 border-info/30 text-info">
                       {item.label}: {item.count}
                     </Badge>
                   ))}

@@ -202,7 +202,7 @@ export default function DashboardPlanPage() {
   }
 
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
       <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex h-12 max-w-4xl items-center justify-between px-4 sm:h-14 sm:px-6">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">

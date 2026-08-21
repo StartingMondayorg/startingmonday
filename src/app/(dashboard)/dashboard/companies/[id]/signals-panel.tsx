@@ -62,7 +62,7 @@ export function SignalsPanel(props: Props) {
                   <p className="text-[13px] text-foreground leading-relaxed">{translation.nextStepLabel}</p>
                 </div>
                 <Button
-                  className="text-primary hover:text-foreground bg-primary/20 hover:bg-primary/30 border-primary/35"
+                  className="text-primary hover:text-foreground bg-primary/10 hover:bg-primary/30 border-primary/35"
                   render={<Link href={translation.nextStepHref} />}
                 >
                   Open {translation.nextStepVerb}

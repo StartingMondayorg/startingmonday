@@ -346,7 +346,7 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
               <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
                 <span className="px-2 py-1 rounded bg-muted text-muted-foreground">intent: {chatResult.intent ?? 'general'}</span>
                 <span className="px-2 py-1 rounded bg-muted text-muted-foreground">confidence: {Math.round((chatResult.confidence ?? 0) * 100)}%</span>
-                {chatResult.conservative ? <span className="px-2 py-1 rounded bg-warning/30 text-warning">source-first mode</span> : null}
+                {chatResult.conservative ? <span className="px-2 py-1 rounded bg-warning/10 text-warning">source-first mode</span> : null}
               </div>
               {chatResult.sources.length > 0 ? (
                 <div className="mt-3 space-y-1">

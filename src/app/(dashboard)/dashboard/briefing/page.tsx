@@ -598,9 +598,9 @@ function BriefingBodySkeleton() {
       <div className="mb-8">
         <Skeleton className="h-2 w-28 rounded mb-4 bg-muted/60" />
         <Card variant="glass" className="p-4 bg-warning/10 border-warning/20 rounded-r space-y-2">
-          <Skeleton className="h-4 w-32 rounded bg-warning/20" />
-          <Skeleton className="h-3.5 w-full rounded bg-warning/20" />
-          <Skeleton className="h-3.5 w-3/4 rounded bg-warning/20" />
+          <Skeleton className="h-4 w-32 rounded bg-warning/10" />
+          <Skeleton className="h-3.5 w-full rounded bg-warning/10" />
+          <Skeleton className="h-3.5 w-3/4 rounded bg-warning/10" />
         </Card>
       </div>
       <div className="mb-8">
@@ -1016,7 +1016,7 @@ export default async function BriefingPage({
   const pulse = buildWeeklyPulse(context, firstName, todayLabel)
 
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
 
       <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">

@@ -160,7 +160,7 @@ export default function SearchStrategyIntakePreviewPage() {
                 'Optional context only when it sharpens the brief',
               ].map(item => (
                 <div key={item} className="flex items-center gap-3 rounded-2xl border border-border bg-muted/[0.04] px-4 py-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[11px] font-bold text-primary">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
                     ✓
                   </span>
                   <span className="text-[13px] text-foreground">{item}</span>

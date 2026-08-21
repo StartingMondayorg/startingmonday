@@ -66,7 +66,7 @@ const REVIEW_TIMELINE = [
 
 export default function ChroSponsorPage() {
   return (
-    <div className="min-h-screen bg-card font-sans">
+    <div className="min-h-screen bg-background font-sans">
       <nav className="sticky top-0 z-10 border-b border-border bg-muted/95 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] transition-opacity hover:opacity-80">
@@ -92,7 +92,7 @@ export default function ChroSponsorPage() {
           <h1 className="mb-4 text-[28px] font-bold leading-[1.1] tracking-tight text-primary-foreground sm:text-[38px] max-w-3xl">
             Transition programs that earn sponsor confidence - not just participant engagement.
           </h1>
-          <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
+          <p className="text-[15px] text-primary-foreground leading-relaxed max-w-2xl">
             Starting Monday gives you board-safe reporting, visible program health, and governance-first pilot design.
             You see evidence before committing to expansion.
           </p>
@@ -178,7 +178,7 @@ export default function ChroSponsorPage() {
         </section>
 
         {/* CTA */}
-        <section className="rounded-2xl border border-primary/30 bg-primary/40 p-8 text-center">
+        <section className="rounded-2xl border border-primary/30 bg-primary/10 p-8 text-center">
           <h2 className="text-[20px] font-bold text-foreground mb-2">Ready to see the program in detail?</h2>
           <p className="text-[14px] text-muted-foreground mb-6 max-w-lg mx-auto">
             We walk you through the governance model, reporting pack, and pilot scope in one conversation.

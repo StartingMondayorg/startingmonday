@@ -16,7 +16,7 @@ export function HomepageBriefTeaser({ ctaAsTextLink = false }: { ctaAsTextLink?:
           <Link
             href="/demo"
             className={ctaAsTextLink
-              ? 'inline-flex items-center min-h-[44px] text-[14px] font-semibold text-primary-foreground underline underline-offset-4 transition-colors hover:text-foreground'
+              ? 'inline-flex items-center min-h-[44px] text-[14px] font-semibold text-primary-foreground underline underline-offset-4 transition-colors hover:text-primary-foreground'
               : 'inline-flex items-center min-h-[44px] rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground transition-colors hover:bg-primary'}
           >
             Open full example brief

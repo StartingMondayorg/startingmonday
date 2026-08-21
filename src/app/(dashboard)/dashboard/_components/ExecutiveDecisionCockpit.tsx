@@ -170,7 +170,7 @@ export function ExecutiveDecisionCockpit({
                 key={result.targetId}
                 className={`p-4 cursor-pointer transition-colors ${
                   result.isDisqualified
-                    ? 'border-destructive/30 bg-destructive/30'
+                    ? 'border-destructive/30 bg-destructive/10'
                     : 'hover:border-primary/30'
                 }`}
                 onClick={() => { setActiveTargetId(result.targetId); setView('detail') }}
@@ -245,7 +245,7 @@ export function ExecutiveDecisionCockpit({
           <div className="space-y-2">
             {criteria.map((c) => (
               <Card key={c.id} className={`flex-row px-4 py-3 items-center gap-3 ${
-                c.isHardConstraint ? 'border-destructive/30 bg-destructive/20' : ''
+                c.isHardConstraint ? 'border-destructive/30 bg-destructive/10' : ''
               }`}>
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] font-medium text-foreground truncate">{c.label}</p>
@@ -345,12 +345,12 @@ export function ExecutiveDecisionCockpit({
                   {/* Score summary */}
                   {!activeScoringResult.isDisqualified && (
                     <div className="grid grid-cols-2 gap-3">
-                      <Card className="border-success/30 bg-success/30 p-4 text-center">
+                      <Card className="border-success/30 bg-success/10 p-4 text-center">
                         <p className="text-[10px] uppercase tracking-widest text-success mb-1">Fit score</p>
                         <p className="text-[32px] font-bold text-success">{activeScoringResult.weightedFitScore}</p>
                         <ScoreBar score={activeScoringResult.weightedFitScore} color="bg-success" />
                       </Card>
-                      <Card className="border-destructive/30 bg-destructive/30 p-4 text-center">
+                      <Card className="border-destructive/30 bg-destructive/10 p-4 text-center">
                         <p className="text-[10px] uppercase tracking-widest text-destructive mb-1">Risk score</p>
                         <p className="text-[32px] font-bold text-destructive">{activeScoringResult.weightedRiskScore}</p>
                         <ScoreBar score={activeScoringResult.weightedRiskScore} color="bg-destructive" />
@@ -388,7 +388,7 @@ export function ExecutiveDecisionCockpit({
                   </Card>
 
                   {/* Interview reflections */}
-                  <Card className="border-info/30 bg-info/20 p-5 space-y-4">
+                  <Card className="border-info/30 bg-info/10 p-5 space-y-4">
                     <h4 className="text-[12px] font-bold text-info">Interview reflections</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>

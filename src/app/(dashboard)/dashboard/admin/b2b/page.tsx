@@ -92,7 +92,7 @@ export default async function B2BPipelinePage() {
           </div>
           <Link
             href="/dashboard/admin/b2b/new"
-            className="text-[13px] font-semibold text-primary-foreground bg-primary hover:bg-muted px-4 py-2 rounded transition-colors shrink-0"
+            className="text-[13px] font-semibold text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-2 rounded transition-colors shrink-0"
           >
             + Add prospect
           </Link>

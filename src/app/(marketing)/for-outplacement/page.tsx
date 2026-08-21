@@ -428,7 +428,7 @@ export default function ForOutplacementPage() {
               </div>
             </section>
 
-            <section className="border border-success/20 bg-success/20 rounded-2xl p-6 backdrop-blur-sm">
+            <section className="border border-success/20 bg-success/10 rounded-2xl p-6 backdrop-blur-sm">
               <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-success mb-3">Trust and governance</p>
               <p className="text-[14px] text-foreground leading-relaxed mb-3">
                 You get trust-pack documentation, permission boundaries, and procurement-ready pilot governance.

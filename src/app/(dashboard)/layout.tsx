@@ -32,7 +32,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* PostHog is provided by the root layout. */}
       {isDemo && <DemoBanner />}
       {!isDemo && user?.email && <WatermarkOverlay email={user.email} />}
-      <div id="top" className="nav-content-spacer min-h-screen bg-primary text-primary-foreground">
+      <div id="top" className="nav-content-spacer min-h-screen bg-background text-foreground">
         {children}
         <DashboardFooter />
       </div>

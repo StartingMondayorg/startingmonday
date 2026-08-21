@@ -47,9 +47,9 @@ export function DashboardWeeklyPerformanceSection({
   offerCockpit,
 }: DashboardWeeklyPerformanceSectionProps) {
   const riskTone = {
-    low: 'border-info/20 bg-info/20 text-info shadow-md',
-    medium: 'border-warning/30 bg-warning/28 text-warning shadow-md',
-    high: 'border-destructive/20 bg-destructive/28 text-destructive shadow-md',
+    low: 'border-info/20 bg-info/10 text-info shadow-md',
+    medium: 'border-warning/30 bg-warning/10 text-warning shadow-md',
+    high: 'border-destructive/20 bg-destructive/10 text-destructive shadow-md',
   } as const
 
   return (
@@ -194,7 +194,7 @@ export function DashboardWeeklyPerformanceSection({
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {offerCockpit.contextSignals.map((signal) => (
-                <div key={signal.label} className={`rounded border px-3 py-2 ${signal.ok ? 'border-success/30 bg-success/50 text-success' : 'border-warning/30 bg-warning/40 text-warning'}`}>
+                <div key={signal.label} className={`rounded border px-3 py-2 ${signal.ok ? 'border-success/30 bg-success/10 text-success' : 'border-warning/30 bg-warning/10 text-warning'}`}>
                   <p className="text-[11px] font-semibold">{signal.label}</p>
                   <p className="text-[10px] mt-1">{signal.ok ? 'Ready' : 'Needs clarity'}</p>
                 </div>

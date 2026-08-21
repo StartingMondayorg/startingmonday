@@ -928,7 +928,7 @@ export function SocialClient() {
             type="button"
             onClick={handleApprovedHandoff}
             disabled={busy || !handoffSummary.trim()}
-            className="bg-success text-primary-foreground hover:bg-success/80"
+            className="bg-success text-success-foreground hover:bg-success/80"
           >
             {handoffSubmitting ? 'Queueing…' : 'Handoff approved article'}
           </Button>

@@ -189,7 +189,7 @@ export default async function CustomersPage({
   const sendEmailAction = sendWelcomeEmail.bind(null)
 
   return (
-    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+    <div className="min-h-screen bg-background font-sans text-foreground">
       <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
@@ -254,10 +254,10 @@ export default async function CustomersPage({
                 render={<Link href={`/dashboard/admin/customers?filter=${card.filter}`} />}
                 className="flex-col items-start rounded h-auto p-5 border border-border bg-muted/40 data-active:bg-primary data-active:border-primary/30 data-active:shadow-none"
               >
-                <div className={`text-[30px] font-bold leading-none text-foreground ${card.accent ? 'text-primary' : ''}`}>
+                <div className={`text-[30px] font-bold leading-none text-primary-foreground ${card.accent ? 'text-primary' : ''}`}>
                   {card.label}
                 </div>
-                <div className="text-[13px] mt-2 font-semibold tracking-wide text-muted-foreground">
+                <div className="text-[13px] mt-2 font-semibold tracking-wide text-primary-foreground">
                   {card.sublabel}
                 </div>
               </TabsTrigger>

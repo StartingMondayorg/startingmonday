@@ -9,11 +9,11 @@ import { markContactSentForm, scheduleMeetingFollowUp } from '../actions'
 import { addContactFollowUp, logOutreach } from './actions'
 import { Alert, AlertDescription, AlertTitle, Avatar, AvatarFallback, Badge, Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 const CHANNEL: Record<string, { label: string; cls: string }> = {
-  linkedin:  { label: 'LinkedIn',  cls: 'bg-info/15 text-info' },
-  referral:  { label: 'Referral',  cls: 'bg-success/15 text-success' },
+  linkedin:  { label: 'LinkedIn',  cls: 'bg-info/10 text-info' },
+  referral:  { label: 'Referral',  cls: 'bg-success/10 text-success' },
   cold:      { label: 'Cold',      cls: 'bg-muted/60 text-muted-foreground' },
-  inbound:   { label: 'Inbound',   cls: 'bg-info/15 text-info' },
-  event:     { label: 'Event',     cls: 'bg-warning/15 text-warning' },
+  inbound:   { label: 'Inbound',   cls: 'bg-info/10 text-info' },
+  event:     { label: 'Event',     cls: 'bg-warning/10 text-warning' },
   recruiter: { label: 'Recruiter', cls: 'bg-muted/60 text-foreground' },
 }
 

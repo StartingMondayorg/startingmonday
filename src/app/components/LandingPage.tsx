@@ -82,7 +82,7 @@ const EXECUTIVE_LANE_BRANDS: Record<ExecutiveLaneBrand['key'], ExecutiveLaneBran
   leadership: {
     key: 'leadership',
     label: 'Leadership lane',
-    badgeClass: 'bg-warning/20 text-warning border-warning/40',
+    badgeClass: 'bg-warning/10 text-warning border-warning/40',
     borderClass: '!border-warning/35',
     panelClass: '!bg-warning/10',
     proofToneClass: 'text-warning',
@@ -90,7 +90,7 @@ const EXECUTIVE_LANE_BRANDS: Record<ExecutiveLaneBrand['key'], ExecutiveLaneBran
   'technical-leadership': {
     key: 'technical-leadership',
     label: 'Technical leadership lane',
-    badgeClass: 'bg-info/20 text-info border-info/40',
+    badgeClass: 'bg-info/10 text-info border-info/40',
     borderClass: '!border-info/35',
     panelClass: '!bg-info/10',
     proofToneClass: 'text-info',
@@ -98,7 +98,7 @@ const EXECUTIVE_LANE_BRANDS: Record<ExecutiveLaneBrand['key'], ExecutiveLaneBran
   'delivery-leadership': {
     key: 'delivery-leadership',
     label: 'Delivery leadership lane',
-    badgeClass: 'bg-success/20 text-success border-success/40',
+    badgeClass: 'bg-success/10 text-success border-success/40',
     borderClass: '!border-success/35',
     panelClass: '!bg-success/10',
     proofToneClass: 'text-success',

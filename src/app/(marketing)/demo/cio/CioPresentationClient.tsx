@@ -526,7 +526,7 @@ export function CioPresentationClient() {
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/demo/cio/notes" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">Talking points page</Link>
+            <Link href="/demo/cio/notes" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">Talking points page</Link>
           </div>
         </div>
       </header>

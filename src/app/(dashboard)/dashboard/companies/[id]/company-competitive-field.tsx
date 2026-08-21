@@ -12,7 +12,7 @@ export function CompanyCompetitiveField({ competitiveContext }: Props) {
         rows={3}
         defaultValue={competitiveContext ?? ''}
         placeholder="Known candidates, internal shortlist, search firm intel, who else they're considering..."
-        className="w-full text-[14px] text-primary-foreground placeholder:text-muted-foreground focus-visible:border-border resize-none"
+        className="w-full text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-border resize-none"
       />
       <p className="mt-1.5 text-[11px] text-muted-foreground">Private. Used to sharpen your Win Thesis and pushback prep.</p>
     </div>

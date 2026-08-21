@@ -136,7 +136,7 @@ export default async function TeamJoinPage({
             <form action={acceptInvite}>
               <Button
                 type="submit"
-                className="w-full !bg-primary !text-primary-foreground hover:!bg-muted px-7 py-3.5 text-[14px] font-bold"
+                className="w-full !bg-primary !text-primary-foreground hover:!bg-primary/90 px-7 py-3.5 text-[14px] font-bold"
               >
                 Get started now
               </Button>
@@ -146,7 +146,7 @@ export default async function TeamJoinPage({
             <div className="flex flex-col gap-3">
               <Button
                 render={<Link href={`/signup?seat_token=${token}`} />}
-                className="w-full !bg-primary !text-primary-foreground hover:!bg-muted px-7 py-3.5 text-[14px] font-bold"
+                className="w-full !bg-primary !text-primary-foreground hover:!bg-primary/90 px-7 py-3.5 text-[14px] font-bold"
               >
                 Create account and join
               </Button>
