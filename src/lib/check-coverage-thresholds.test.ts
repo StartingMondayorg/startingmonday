@@ -4,8 +4,10 @@ import os from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
-const scriptPath = path.resolve(process.cwd(), 'scripts/check-coverage-thresholds.mjs')
+const repositoryRoot = path.resolve(import.meta.dirname, '..', '..')
+const scriptPath = path.join(repositoryRoot, 'scripts', 'check-coverage-thresholds.mjs')
 const temporaryDirectories: string[] = []
+const describeFixture = process.env.SKIP_GIT_FIXTURE_TEST === '1' ? describe.skip : describe
 
 function writeFile(root: string, relativePath: string, content: string) {
   const filePath = path.join(root, relativePath)
@@ -19,6 +21,10 @@ function runGit(root: string, args: string[]) {
 
 function createFixture() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'coverage-thresholds-'))
+  const fixtureRoot = path.resolve(root)
+  if (fixtureRoot === repositoryRoot || fixtureRoot.startsWith(`${repositoryRoot}${path.sep}`)) {
+    throw new Error(`Coverage fixture must not overlap the active worktree: ${fixtureRoot}`)
+  }
   temporaryDirectories.push(root)
 
   runGit(root, ['init'])
@@ -71,7 +77,7 @@ afterEach(() => {
   }
 })
 
-describe('coverage folder thresholds', () => {
+describeFixture('coverage folder thresholds', () => {
   it('evaluates only changed production files in diff-scoped mode', () => {
     const { root, baseRef } = createFixture()
 

@@ -51,6 +51,7 @@ import { runWarnIngestionJob } from './jobs/warn-ingestion-job.js'
 import { runCohortBuilderJob } from './jobs/cohort-builder-job.js'
 import { runPatternBacktestJob } from './jobs/pattern-backtest-job.js'
 import { runSearchLagStatsJob } from './jobs/search-lag-stats-job.js'
+import { runLiveBriefScanJob } from './jobs/live-brief-scan-job.js'
 import { notify } from './lib/notify.js'
 
 // ── Sentry ────────────────────────────────────────────────────────────────────
@@ -127,6 +128,40 @@ const server = http.createServer((req, res) => {
       }).catch(err => {
         logger.error('trigger-scan: failed', { companyId, error: err.message })
         Sentry.captureException(err)
+      })
+    })
+    return
+  }
+
+  // Live brief scan trigger — returns 202 and processes one bounded queued run asynchronously.
+  if (req.url === '/trigger-live-brief-scan' && req.method === 'POST') {
+    const secret = process.env.WORKER_SECRET
+    if (!secret || req.headers['x-worker-secret'] !== secret) {
+      res.writeHead(401)
+      res.end()
+      return
+    }
+
+    let body = ''
+    req.on('data', chunk => { body += chunk })
+    req.on('end', () => {
+      let parsed
+      try { parsed = JSON.parse(body || '{}') } catch {
+        res.writeHead(400, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ error: 'invalid_json' }))
+        return
+      }
+      if (!parsed?.runId) {
+        res.writeHead(400, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ error: 'missing_run_id' }))
+        return
+      }
+
+      res.writeHead(202, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ accepted: true, runId: parsed.runId }))
+      runLiveBriefScanJob(parsed.runId).catch(error => {
+        logger.error('live-brief-scan: failed', { runId: parsed.runId, error: error.message })
+        Sentry.captureException(error)
       })
     })
     return

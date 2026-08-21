@@ -79,11 +79,8 @@ ALTER POLICY coaches_access_companies ON public.companies
   WHERE ((team_seats.owner_id = companies.user_id) AND (team_seats.member_user_id = (SELECT auth.uid())) AND (team_seats.coach_access_enabled = true) AND (team_seats.status = 'accepted'::text)))));
 
 ALTER POLICY companies_own ON public.companies
-    USING (((SELECT auth.uid()) = user_id));
-
-ALTER POLICY users_own_companies ON public.companies
-    USING ((user_id = (SELECT auth.uid())))
-    WITH CHECK ((user_id = (SELECT auth.uid())));
+    USING (((SELECT auth.uid()) = user_id))
+    WITH CHECK (((SELECT auth.uid()) = user_id));
 
 ALTER POLICY coaches_access_documents ON public.company_documents
     USING ((EXISTS ( SELECT 1
@@ -117,7 +114,7 @@ ALTER POLICY coaches_access_signals ON public.company_signals
 ALTER POLICY signals_own ON public.company_signals
     USING (((SELECT auth.uid()) = user_id));
 
-ALTER POLICY users_own_signals ON public.company_signals
+ALTER POLICY "Users manage own signals" ON public.company_signals
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
@@ -132,11 +129,11 @@ ALTER POLICY coaches_access_contacts ON public.contacts
 ALTER POLICY contacts_own ON public.contacts
     USING (((SELECT auth.uid()) = user_id));
 
-ALTER POLICY users_own_contacts ON public.contacts
+ALTER POLICY contacts_own ON public.contacts
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
-ALTER POLICY users_own_convos ON public.conversations
+ALTER POLICY conversations_own ON public.conversations
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
@@ -160,7 +157,7 @@ ALTER POLICY "Users manage their own deployment validation runs" ON public.deplo
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
-ALTER POLICY users_own_drafts ON public.drafts
+ALTER POLICY drafts_own ON public.drafts
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
@@ -217,10 +214,6 @@ ALTER POLICY follow_ups_own_or_coach_access ON public.follow_ups
    FROM team_seats ts
   WHERE ((ts.owner_id = follow_ups.user_id) AND (ts.member_user_id = (SELECT auth.uid())) AND (ts.coach_access_enabled = true) AND (ts.status = 'accepted'::text))))));
 
-ALTER POLICY users_own_followups ON public.follow_ups
-    USING ((user_id = (SELECT auth.uid())))
-    WITH CHECK ((user_id = (SELECT auth.uid())));
-
 ALTER POLICY "Users manage their own help center routing logs" ON public.help_center_routing_logs
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
@@ -269,7 +262,7 @@ ALTER POLICY "Users manage their own meeting bookings" ON public.meeting_booking
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
-ALTER POLICY users_own_momentum ON public.momentum_scores
+ALTER POLICY momentum_scores_own ON public.momentum_scores
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
@@ -355,7 +348,7 @@ ALTER POLICY "Users manage their own payout matching runs" ON public.payout_matc
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
-ALTER POLICY users_read_audit_log ON public.pipeline_audit_log
+ALTER POLICY audit_log_read ON public.pipeline_audit_log
     USING ((user_id = (SELECT auth.uid())));
 
 ALTER POLICY "Users manage their own plan change requests" ON public.plan_change_requests
@@ -398,7 +391,7 @@ ALTER POLICY "Users manage their own runtime health check runs" ON public.runtim
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
-ALTER POLICY users_own_scans ON public.scan_results
+ALTER POLICY scan_results_own ON public.scan_results
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
@@ -447,11 +440,11 @@ ALTER POLICY "Users manage their own usage monitor runs" ON public.usage_monitor
 ALTER POLICY users_read_own_events ON public.user_events
     USING (((SELECT auth.uid()) = user_id));
 
-ALTER POLICY users_own_profile ON public.user_profiles
+ALTER POLICY user_profiles_own ON public.user_profiles
     USING ((user_id = (SELECT auth.uid())))
     WITH CHECK ((user_id = (SELECT auth.uid())));
 
-ALTER POLICY users_own_row ON public.users
+ALTER POLICY users_own ON public.users
     USING ((id = (SELECT auth.uid())))
     WITH CHECK ((id = (SELECT auth.uid())));
 
