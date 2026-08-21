@@ -27,6 +27,16 @@ function dateLabel(value: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value))
 }
 
+type LiveBriefListClient = {
+  from: (table: string) => {
+    select: (columns: string) => {
+      order: (column: string, options: { ascending: boolean }) => {
+        limit: (count: number) => Promise<{ data: unknown[] | null }>
+      }
+    }
+  }
+}
+
 export default async function LiveBriefsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -35,7 +45,7 @@ export default async function LiveBriefsPage() {
   const staff = await getStaffMember(user.email ?? '')
   if (!staff) notFound()
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient() as unknown as LiveBriefListClient
   const { data } = await admin
     .from('live_brief_requests')
     .select('id,prospect_name,prospect_email,request_received_at,request_source,status,consent_source,hubspot_contact_id,hubspot_sync_status')
