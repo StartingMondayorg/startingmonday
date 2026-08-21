@@ -1,7 +1,7 @@
 # Apollo Partnership Inquiry
 
 Date: 2026-08-21  
-Status: `READY_TO_SEND_BROWSER_AUTH_REQUIRED`  
+Status: `SENT`  
 Official channel verified: <partners@apollo.io> via <https://www.apollo.io/partners>  
 From: Richard Rothschild, Rothschild Investments, LLC / Starting Monday / MandateSignal
 
@@ -35,6 +35,6 @@ Rothschild Investments, LLC
 
 ## Send record
 
-2026-08-21: Send attempted through Gmail in the integrated browser. Gmail required an interactive Google sign-in; no credentials were requested or handled, and no message was sent.
+2026-08-21T19:06:48.553Z: Gmail confirmed **Message sent** from `rothschild@gmail.com` to `partners@apollo.io` with subject “Partnership inquiry: referral, technology listing, and OEM options.” No credentials were requested or handled. Provider thread ID was not exposed by the compose confirmation.
 
 Record the sent timestamp, sending mailbox, provider thread ID, and any response reference here. Do not copy credentials or private message headers into the repository.
