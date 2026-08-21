@@ -18,6 +18,13 @@ type ScanPayload = {
   companies?: unknown
 }
 
+type ParsedCompany = {
+  company_key: string
+  company_name: string
+  career_page_url: string | null
+  target_role_lane: string | null
+}
+
 function dispatchLiveBriefScan(runId: string) {
   const workerUrl = process.env.WORKER_URL
   const workerSecret = process.env.WORKER_SECRET
@@ -35,12 +42,12 @@ function text(value: unknown, maxLength: number): string | null {
   return result && result.length <= maxLength ? result : null
 }
 
-function parseCompanies(value: unknown): { companies?: Record<string, string | null>[]; error?: string } {
+function parseCompanies(value: unknown): { companies?: ParsedCompany[]; error?: string } {
   if (!Array.isArray(value) || value.length < 1 || value.length > 10) {
     return { error: 'companies must contain between 1 and 10 selected companies' }
   }
 
-  const companies: Record<string, string | null>[] = []
+  const companies: ParsedCompany[] = []
   const keys = new Set<string>()
   for (const company of value as SelectedCompany[]) {
     const companyKey = text(company?.company_key, 240)
@@ -69,7 +76,7 @@ export async function GET(
   const { id } = await params
   if (!id || id.length > 80) return NextResponse.json({ error: 'Invalid live brief request id' }, { status: 400 })
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: run, error: runError } = await admin
     .from('live_brief_scan_runs')
     .select('id,request_id,status,selected_company_count,completed_company_count,blocked_company_count,failed_company_count,accepted_partial_at,started_at,completed_at,created_at')
@@ -114,7 +121,7 @@ export async function POST(
   const parsedCompanies = parseCompanies(payload?.companies)
   if (parsedCompanies.error) return NextResponse.json({ error: parsedCompanies.error }, { status: 400 })
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: existingRun, error: existingError } = await admin
     .from('live_brief_scan_runs')
     .select('id,status')

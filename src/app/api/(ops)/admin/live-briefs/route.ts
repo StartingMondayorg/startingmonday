@@ -77,7 +77,7 @@ export async function GET() {
   const auth = await requireLiveBriefStaffAccess()
   if (!auth) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data, error } = await admin
     .from('live_brief_requests')
     .select('id,hubspot_contact_id,hubspot_deal_id,prospect_name,prospect_email,linkedin_url,consent_attested_at,consent_source,request_received_at,request_source,location_preference,target_role_lane,status,hubspot_sync_status,created_at,updated_at')
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
   const parsed = parseIntakePayload(payload)
   if ('error' in parsed) return NextResponse.json({ error: parsed.error }, { status: 400 })
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: created, error: createError } = await admin
     .from('live_brief_requests')
     .insert({ ...parsed.value, requested_by_user_id: auth.userId })

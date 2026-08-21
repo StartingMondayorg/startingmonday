@@ -22,7 +22,7 @@ export async function GET(
   const { id } = await params
   if (!id || id.length > 80) return NextResponse.json({ error: 'Invalid live brief request id' }, { status: 400 })
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data, error } = await admin
     .from('live_brief_requests')
     .select('id,hubspot_contact_id,hubspot_deal_id,prospect_name,prospect_email,linkedin_url,consent_attested_at,consent_source,request_received_at,request_source,location_preference,target_role_lane,reviewed_profile,status,hubspot_sync_status,created_at,updated_at')
@@ -54,7 +54,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'reviewed_profile must be a JSON object' }, { status: 400 })
   }
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: current, error: readError } = await admin
     .from('live_brief_requests')
     .select('reviewed_profile,status')
