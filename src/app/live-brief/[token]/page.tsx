@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { parsePeopleToKnowHandoffs } from '@/lib/people-to-know-handoff'
+import PeopleToKnowSection from './people-to-know-section'
 
 type Artifact = { version: number; brief_payload: Record<string, unknown>; content_hash: string }
 
@@ -15,6 +17,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export default function LiveBriefPublicPage({ params }: { params: Promise<{ token: string }> }) {
   const [token, setToken] = useState('')
   const [artifact, setArtifact] = useState<Artifact | null>(null)
+  const [peopleHandoffEnabled, setPeopleHandoffEnabled] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -23,10 +26,11 @@ export default function LiveBriefPublicPage({ params }: { params: Promise<{ toke
       setToken(routeToken)
       return fetch(`/api/live-brief/${routeToken}`, { cache: 'no-store' })
     }).then(async (response) => {
-      const result = await response.json() as { artifact?: Artifact; error?: string }
+      const result = await response.json() as { artifact?: Artifact; capabilities?: { people_to_know_handoff?: boolean }; error?: string }
       if (!active) return
       if (!response.ok || !result.artifact) throw new Error(result.error ?? 'This brief is no longer available.')
       setArtifact(result.artifact)
+      setPeopleHandoffEnabled(result.capabilities?.people_to_know_handoff === true)
     }).catch((cause: unknown) => {
       if (active) setError(cause instanceof Error ? cause.message : 'This brief is no longer available.')
     })
@@ -38,6 +42,15 @@ export default function LiveBriefPublicPage({ params }: { params: Promise<{ toke
     await fetch(`/api/live-brief/${token}/events`, {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ event_type: eventType, ...(section ? { section } : {}) }),
+    }).catch(() => {})
+  }
+
+  async function recordHandoff(destination: 'linkedin' | 'apollo') {
+    if (!token) return
+    await fetch(`/api/live-brief/${token}/events`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ event_type: 'delivery_handoff_clicked', destination }),
+      keepalive: true,
     }).catch(() => {})
   }
 
@@ -66,6 +79,10 @@ export default function LiveBriefPublicPage({ params }: { params: Promise<{ toke
           {sections.length > 0 ? sections.map((section, index) => {
             const content: Record<string, unknown> = isRecord(section) ? section : { content: section }
             const name = typeof content.title === 'string' ? content.title : `Section ${index + 1}`
+            const peopleEntries = peopleHandoffEnabled ? parsePeopleToKnowHandoffs(content) : []
+            if (peopleEntries.length > 0) {
+              return <PeopleToKnowSection key={`${name}-${index}`} entries={peopleEntries} onHandoff={(destination) => void recordHandoff(destination)} />
+            }
             return <section key={`${name}-${index}`} onClick={() => void record('delivery_section_viewed', name)} className="border-t border-slate-900/15 py-6"><h2 className="text-xl font-semibold text-slate-900">{name}</h2><div className="mt-3 whitespace-pre-wrap text-[15px] leading-7 text-slate-700">{typeof content.content === 'string' ? content.content : JSON.stringify(content, null, 2)}</div></section>
           }) : <section className="border-t border-slate-900/15 py-6"><h2 className="text-xl font-semibold">{sectionTitle(title)}</h2><pre className="mt-3 whitespace-pre-wrap text-[15px] leading-7 text-slate-700">{JSON.stringify(payload, null, 2)}</pre></section>}
         </div>

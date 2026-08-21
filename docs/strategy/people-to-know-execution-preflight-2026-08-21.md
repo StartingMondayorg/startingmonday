@@ -182,3 +182,26 @@ This is smaller and more falsifiable than enabling the full Appendix A source un
 | MandateSignal PTK-2/PTK-3 | `READY` | Registered as WS8-09; production enablement still needs privacy review and normal GA/release evidence |
 | MandateSignal PTK-1/PTK-4 names | `BLOCKED_EXTERNAL` | Registered as WS8-10; source rights; ENG-03/04; LEG-03/04/05; WS8 gate |
 | Cross-product runtime/data sharing | `PROHIBITED` | DG-03 and DG-11; separate products remain authoritative |
+
+## 8. WS7-10 implementation evidence
+
+Local implementation on branch `docs/people-to-know-brief-intake` is `IMPLEMENTED` and `TESTED`, default off:
+
+- Pure allowlisted LinkedIn keyword URL and fixed Apollo account destination.
+- Structured title/why-them Live Brief renderer capped at three entries.
+- Runtime capability exposed by the token API only when `LIVE_BRIEF_PEOPLE_HANDOFF_ENABLED` is explicitly enabled.
+- Count-only delivery/destination metrics with atomic RPC; no raw click rows or contact/search payload.
+- No-contact/no-provider/cross-product deliberate-red tests.
+- Migration 178 with service-role-only ACLs and rollback/forward-fix playbook.
+
+Evidence:
+
+- Focused Vitest: 5 files / 20 assertions pass.
+- TypeScript: pass.
+- Focused lint: pass, with only two pre-existing `any` warnings in Live Brief routes.
+- Production build: pass after replacing the temporary cross-worktree dependency junction with a normal `npm ci` install.
+- Rollback-contained database validation: migration 178 applied cleanly; 6/6 focused table/RLS/ACL/no-contact assertions pass; transaction rolled back.
+- Full existing Live Brief pgTAP did not run because the Starting Monday local Supabase stack was not running and the Windows CLI resolved host `db` incorrectly. The prior 20-assertion file is updated but remains pending in a migrated Starting Monday stack/Preview.
+- Strict rollback readiness remains red on the pre-existing filename mismatch for migration `1671`; migration 178 has its required playbook.
+
+State: WS7-10 is `TESTED_LOCAL`. It is not `DEPLOYED` or enabled. Preview/staging migration, full Live Brief pgTAP, browser evidence, privacy review, protected PR, and release evidence remain.
