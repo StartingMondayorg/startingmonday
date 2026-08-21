@@ -89,8 +89,8 @@ export default async function LiveBriefsPage() {
             <h1 className="mt-1 text-[26px] font-bold text-slate-900">Live briefs</h1>
             <p className="mt-1 text-[13px] text-slate-500">{requests.length} request{requests.length === 1 ? '' : 's'} received</p>
           </div>
-          <Link href="/dashboard/admin" className="shrink-0 rounded bg-slate-900 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-slate-700">
-            Admin home
+          <Link href="/dashboard/admin/live-briefs/new" className="shrink-0 rounded bg-orange-600 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-orange-700">
+            New request
           </Link>
         </div>
 
