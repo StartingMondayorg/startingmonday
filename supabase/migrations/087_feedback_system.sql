@@ -149,6 +149,21 @@ after insert or delete on public.feedback_comments
 for each row
 execute function update_feedback_comment_count();
 
+create or replace function prevent_feedback_status_change()
+returns trigger as $$
+begin
+  if old.status is distinct from new.status and coalesce(auth.role(), '') <> 'service_role' then
+    raise exception 'feedback status changes require service role access';
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger feedback_items_status_guard_trigger
+before update on public.feedback_items
+for each row
+execute function prevent_feedback_status_change();
+
 -- RLS: Enable row-level security
 alter table public.feedback_items enable row level security;
 alter table public.feedback_votes enable row level security;
@@ -177,7 +192,7 @@ on public.feedback_items
 for update
 to authenticated
 using (auth.uid() = user_id)
-with check (auth.uid() = user_id and status = old.status); -- prevent users from changing status
+with check (auth.uid() = user_id);
 
 -- Staff can update status and add staff notes
 create policy "feedback_items_staff_update"
@@ -187,13 +202,15 @@ to authenticated
 using (
   exists (
     select 1 from public.staff_members 
-    where user_id = auth.uid() and is_active = true
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+      and role in ('owner', 'admin')
   )
 )
 with check (
   exists (
     select 1 from public.staff_members 
-    where user_id = auth.uid() and is_active = true
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+      and role in ('owner', 'admin')
   )
 );
 
@@ -268,7 +285,8 @@ to authenticated
 with check (
   exists (
     select 1 from public.staff_members 
-    where user_id = auth.uid() and is_active = true
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+      and role in ('owner', 'admin')
   )
 );
 
