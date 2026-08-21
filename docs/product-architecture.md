@@ -62,7 +62,7 @@ Targeted execution, not spray-and-pray auto-apply.
 │   scan-worker.js         briefing-worker.js    followup-worker  │
 │   Mon/Thu 6am            Daily 7am user tz     Checks daily     │
 │   Playwright +           Pulls pipeline state, Finds overdue    │
-│   Browserless.io         calls Claude, sends   contacts, queues │
+│   browserless.io         calls Claude, sends   contacts, queues │
 │   Scores hits            email via Resend       reminder email   │
 │                                                                 │
 │   signal-worker.js                                              │
@@ -75,7 +75,7 @@ Targeted execution, not spray-and-pray auto-apply.
 ┌─────────────────────────────────────────────────────────────────┐
 │                   EXTERNAL SERVICES                             │
 │                                                                 │
-│   Browserless.io    Resend          Stripe        Google OAuth  │
+│   browserless.io    Resend          Stripe        Google OAuth  │
 │   (cloud browser    (transactional  (subscription  (Gmail +     │
 │    automation)       email)          billing)       Calendar)   │
 │                                                                 │
@@ -94,7 +94,7 @@ Targeted execution, not spray-and-pray auto-apply.
 | Database | PostgreSQL via Supabase | Managed, includes auth, realtime, free tier |
 | Auth | Supabase Auth | Built-in to the DB layer, handles OAuth |
 | Background jobs | Railway + node-cron | Simple, cheap, close to the existing Node.js code |
-| Browser automation | Browserless.io | Cloud Playwright — no headless Chrome on your server |
+| Browser automation | browserless.io | Cloud Playwright — no headless Chrome on your server |
 | AI | Claude API (claude-opus-4-7) | Best context window, tool use, long-form reasoning |
 | Email | Resend | Simple API, good deliverability, React Email templates |
 | Payments | Stripe | Subscription billing, customer portal |
@@ -599,7 +599,7 @@ V2: replace with Crunchbase API for funding signals (more reliable than news par
 
 | Service | Cost | At 100 users | At 1000 users |
 |---|---|---|---|
-| Browserless.io | ~$0.10/session | ~$80/month | ~$800/month |
+| browserless.io | ~$0.10/session | ~$80/month | ~$800/month |
 | Claude API (chat + briefing) | ~$0.05/user/day | ~$150/month | ~$1,500/month |
 | Supabase | $25/month base | $25/month | ~$100/month |
 | Railway (workers) | ~$20/month | $20/month | ~$80/month |

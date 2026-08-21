@@ -90,7 +90,7 @@ Both services share a single Supabase PostgreSQL database with Row Level Securit
               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  EXTERNAL SERVICES                                          │
-│  Browserless.io  — headless Chrome for career page scanning │
+│  browserless.io  — headless Chrome for career page scanning │
 │  Resend          — transactional email delivery             │
 │  Sentry          — error tracking (both services)           │
 │  PostHog         — product analytics (web app only)         │
@@ -131,7 +131,7 @@ startingmonday/
 │   ├── briefing/                 briefing assembly + generation + delivery
 │   ├── jobs/                     all cron job implementations
 │   ├── lib/                      shared worker utilities
-│   ├── scanner/                  Browserless career page scanner
+│   ├── scanner/                  browserless.io career page scanner
 │   └── signals/                  company intelligence signal classifier
 ├── supabase/
 │   └── migrations/               28 applied migrations (numbered 001–028)
@@ -176,7 +176,7 @@ Two Supabase clients:
 
 The worker uses a service role client (`worker/lib/supabase.js`) that bypasses RLS — necessary for cross-user operations like the briefing job. This client must never be exposed to user-controlled inputs.
 
-### Browserless.io
+### browserless.io
 
 Headless Chrome service for career page scanning. The scanner (`worker/scanner/scan-company.js`) navigates to a company's career page URL, extracts job listings, and runs them through Claude for relevance scoring.
 
@@ -364,7 +364,7 @@ Key log patterns to search in Railway:
 
 ### Usage monitoring
 
-`runUsageMonitorJob` runs daily at 09:00 UTC. Queries a `usage_tracking` table that records API call counts by service (Anthropic, Resend, Browserless) and date. Alerts if any service is on track to exceed monthly budget thresholds.
+`runUsageMonitorJob` runs daily at 09:00 UTC. Queries a `usage_tracking` table that records API call counts by service (Anthropic, Resend, browserless.io) and date. Alerts if any service is on track to exceed monthly budget thresholds.
 
 ---
 
@@ -516,7 +516,7 @@ Model IDs are configured via environment variables (`ANTHROPIC_CHAT_MODEL`, `ANT
 
 1. Check `scan_results` for the company: `select * from scan_results where company_id = '...' order by scanned_at desc limit 5`
 2. Look at `status` and `ai_score`. If status is `error`, look at the error message
-3. Common causes: Cloudflare blocking (403), career page moved (404), site requires JavaScript that Browserless can't execute
+3. Common causes: Cloudflare blocking (403), career page moved (404), site requires JavaScript that browserless.io can't execute
 4. Fix: update the `career_page_url` on the company to the correct direct URL, or flag the company as unscannable and notify the user
 
 ### Railway deploy broke something
