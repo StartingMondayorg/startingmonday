@@ -4,15 +4,16 @@ import { extractText } from './extract-text.js'
 import { fetchAtsJobs, jobsToText } from './ats-adapters.js'
 import { detectRoles } from './detect-roles.js'
 import { scoreHit } from './score-hit.js'
-import { wasRecentlyScanned, getPreviousHitTitles } from './deduplicate.js'
+import { wasRecentlyScanned, getPreviousHitTitles, RESCAN_WINDOW_STANDARD_HOURS } from './deduplicate.js'
 import { writeScanResult, updateCompanyScanTime, writeScanBlocked, writeScanError, checkAndAlertScanFailures } from './write-results.js'
 import { resolveCanonicalCompany } from '../lib/canonical-company.js'
 import { recordRoleOpening, inferRoleFamilyFromTitle, isLeadershipTitle } from '../lib/outcome-labels.js'
 import { logger } from '../lib/logger.js'
 
 // Scans one company's career page end-to-end and writes a single scan_results row.
+// rescanWindowHours must match the caller's cron cadence -- see deduplicate.js.
 // Returns { skipped?, blocked?, hits, matches, newHits, error? }
-export async function scanCompany(supabase, company, userProfile) {
+export async function scanCompany(supabase, company, userProfile, { rescanWindowHours = RESCAN_WINDOW_STANDARD_HOURS } = {}) {
   const { id: companyId, user_id: userId, name, career_page_url } = company
 
   if (!career_page_url) {
@@ -22,8 +23,8 @@ export async function scanCompany(supabase, company, userProfile) {
 
   try {
     // 1. Skip if scanned recently
-    if (await wasRecentlyScanned(supabase, companyId)) {
-      logger.info('scanner: scanned recently, skipping', { companyId, userId, companyName: name })
+    if (await wasRecentlyScanned(supabase, companyId, rescanWindowHours)) {
+      logger.info('scanner: scanned recently, skipping', { companyId, userId, companyName: name, rescanWindowHours })
       return { skipped: true }
     }
 

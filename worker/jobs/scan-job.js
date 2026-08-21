@@ -3,6 +3,7 @@ import { logger } from '../lib/logger.js'
 import { trackUsage } from '../lib/usage-tracker.js'
 import { createLimiter } from '../lib/concurrency.js'
 import { scanCompany } from '../scanner/scan-company.js'
+import { rescanWindowHoursForTier } from '../scanner/deduplicate.js'
 import { writeScanFailureDeadLetter } from '../lib/scan-dead-letter.js'
 import { notify } from '../lib/notify.js'
 
@@ -10,9 +11,9 @@ const MAX_CONCURRENT_SCANS = 10
 
 // Retry a scan once on transient errors (network timeouts, browserless.io blips).
 // Does not retry robots.txt blocks or deliberate skips.
-async function scanWithRetry(supabase, company, profile) {
+async function scanWithRetry(supabase, company, profile, options) {
   try {
-    return await scanCompany(supabase, company, profile)
+    return await scanCompany(supabase, company, profile, options)
   } catch (err) {
     const isTransient = (
       err.message?.includes('timeout') ||
@@ -25,7 +26,7 @@ async function scanWithRetry(supabase, company, profile) {
 
     logger.warn(`scan-job: transient error for ${company.name}, retrying in 3s`, { error: err.message })
     await new Promise(r => setTimeout(r, 3000))
-    return scanCompany(supabase, company, profile)
+    return scanCompany(supabase, company, profile, options)
   }
 }
 
@@ -68,6 +69,7 @@ export async function runScanJob() {
 
     // Executive and campaign users scan daily. All others scan Mon/Wed/Fri only.
     const DAILY_TIERS = new Set(['executive', 'campaign'])
+    const tierByUserId = Object.fromEntries((activeUsers ?? []).map(u => [u.id, u.subscription_tier]))
     const todayUtc = new Date().getUTCDay() // 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
     const isMWF = todayUtc === 1 || todayUtc === 3 || todayUtc === 5
     const eligibleUserIds = isMWF
@@ -119,8 +121,11 @@ export async function runScanJob() {
     const tasks = companies.map(company =>
       limit(async () => {
         const profile = profileByUserId[company.user_id] ?? {}
+        // Daily-tier companies are also scanned by executive-scan-job, so they
+        // need the shorter window or this run suppresses their next one.
+        const rescanWindowHours = rescanWindowHoursForTier(tierByUserId[company.user_id])
         try {
-          const result = await scanWithRetry(supabase, company, profile)
+          const result = await scanWithRetry(supabase, company, profile, { rescanWindowHours })
           if (!result.skipped && !result.blocked) {
             browserlessCalls++
             anthropicCalls += result.hits ?? 0

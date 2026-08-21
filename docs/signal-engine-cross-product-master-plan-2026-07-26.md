@@ -1190,6 +1190,8 @@ automation story blocked.
 | WS2-12 MandateSignal production assurance and trigger-gated orchestration | ENG-MS + OPS + independent reviewer | WS2-10/11, section 23 inventory, applicable GA controls | Minimal direct assurance first: daily end-to-end claims/label reconciliation, heartbeat, deliberate-red canary, planted gate-weakening detector, evidence fallback, hold/DLQ operations, and synthetic hold-flood narrowing/alert drill. Planner, dispatcher, immutable evidence index, expanded workflows/canaries/SLOs/dashboard remain trigger-deferred | Minimal controls detect missed runs, omitted labels, weakened gates, evidence outage, wrong independent coding, and hold flood with newest-first narrowing plus omitted-scope denominator. Scaled orchestration starts only for a paying SLA or measured manual coordination above declared operator capacity and cannot replace direct controls before parity evidence |
 | WS2-13 MandateSignal assurance economics and debt | AO + ENG-MS + OPS | WS2-12 minimal assurance measured; two months at at least three control-hours/week, engineer count above one, or at least three escaped defects/quarter | Raw control-cost, operator-burden, alert-budget, exception, and debt ledgers; classification and lifecycle review. Scoring formulas and complexity ceilings require separate adoption | Costs reconcile to declared denominators; P0 controls remain non-deferrable; preventive controls cannot retire from quiet history; expired exceptions fail closed |
 | WS2-14 MandateSignal governed improvement and independent reconstruction | AO + ENG-MS + DATA + independent reviewer | WS2-12 minimal assurance measured; WS2-13 trigger or accepted critical defect | Two advisory agents initially, registered blinded quality sets, proposal/shadow/promotion workflow, control-correlation review, and quarterly clean-room reconstruction. Four additional agents and long soak remain trigger-deferred | No implementer self-approves evidence or promotion; independent reviewer reconstructs one signal; recommendations are bounded and reversible; long soak begins only with representative measured load and an accepted capacity question |
+| WS2-15 Scanner page-acquisition economics | ENG-SM | WS2-01, WS2-02 | Acquisition-path decision contract plus per-scan path telemetry: authoritative-zero versus lookup-failure distinction, ATS adapter coverage, and render budget per cycle | Per-scan acquisition path recorded in `scan_results`; an ATS returning HTTP 200 with an empty list produces a zero-hit result and zero render calls; render volume per cycle measurably below the recorded pre-change baseline |
+| WS2-16 Source URL integrity | ENG-SM | WS0-03 | Normalization and validation contract for `companies.career_page_url` on write, plus a corrected backfill of existing rows | No stored career URL fails validation; no two companies under one owner silently share a career URL; corrected rows recorded with prior values |
 
 WS2-10 through WS2-14 are implemented only in the MandateSignal repository.
 They do not create a Starting Monday runtime, data, deployment, or release
@@ -1204,6 +1206,57 @@ kill behavior and must satisfy section 26.1.
 | WS2-12 | Direct required-control execution remains the fallback; disable any planner/scheduler on selection uncertainty; required evidence writes fail closed; replay is capped, audited, and independently killable. |
 | WS2-13 | Disable optimization while retaining required schedules; never erase debt or exception history; restore a retired control during its rollback window. |
 | WS2-14 | Disable advisory agents without affecting deterministic controls; revert promoted control versions while preserving proposal and review evidence; failed reconstruction opens the severity required by the affected claim. |
+
+#### 16.3.1 Re-plan note 2026-08-20 - Starting Monday scanner acquisition and source integrity
+
+Recorded by ENG-SM (Chris Goodwin) on 2026-08-20 under the AGENTS.md
+signal-engine preflight. Pending AO review.
+
+**Why a re-plan is required.** Four Starting Monday scanner defects were found
+by measurement against production between 2026-08-13 and 2026-08-20. WS2-01 and
+WS2-02 govern cadence, WS2-03 governs role observation identity, and WS2-09
+governs the operations scorecard. None of them govern how a page is acquired,
+what a render costs, or whether a stored career URL points at the company it
+claims to. WS2-15 and WS2-16 are added to close that gap. Both are Starting
+Monday stories owned by ENG-SM; they are not MandateSignal stories and create no
+cross-product dependency.
+
+**Story mapping for open work.**
+
+| Issue | Story | State |
+| --- | --- | --- |
+| SMK-471 rescan window collides with scan cadence | WS2-02 | Implemented in PR 444, awaiting review. See the deviation below. |
+| SMK-472 Browserless quota has no backoff | WS2-15 | Not started; sequenced last so its baseline is measured after SMK-476 |
+| SMK-475 career URL validation and backfill | WS2-16 | Backfill first, validation on write with SMK-476 |
+| SMK-476 ATS fall-through and acquisition telemetry | WS2-15 | Telemetry first, then authoritative-zero, then adapter coverage |
+
+**Recorded deviation.** SMK-471 was implemented before this preflight was run.
+It satisfies the WS2-02 deliverable for suppression-rule correction, and its
+tests pin the invariant that each tier's suppression window stays strictly below
+that tier's shortest scheduled gap. It does not deliver the WS2-01 prerequisite:
+there is still no single machine-readable cadence contract that cron, `scan-job`,
+the executive job, pricing copy and public documentation are all tested against.
+WS2-01 therefore remains open, and the pricing claims in `src/lib/billing/plans.ts`
+remain unverified by test. This is recorded rather than treated as satisfied.
+
+**Prerequisite ordering.** WS2-15 telemetry is a prerequisite for any claim that
+an acquisition change reduced render volume. Before it exists, no such claim may
+be promoted from provisional to measured. WS2-16 backfill precedes WS2-15
+measurement so that the recorded baseline is not distorted by rows that point at
+the wrong company.
+
+**Rollback and kill behavior.**
+
+| Story | Rollback / kill behavior |
+| --- | --- |
+| WS2-15 | Acquisition-path decisions revert to the prior render-on-any-doubt behavior by configuration without redeploy. A suspected false authoritative zero re-enables the render path for that provider while the adapter contract is re-verified; the existing consecutive zero-hit silent-failure alert remains the detecting control. Telemetry is additive and never gates a scan. |
+| WS2-16 | Validation rejects on write only; it never mutates or deletes an existing row implicitly. The backfill records prior values before change and is reversible from that record. Duplicate detection warns and never blocks company creation. |
+
+**Evidence produced so far.** Production read-only measurement, 28 and 35 day
+windows, 2026-08-20: scan-gap distribution by tier, successful scans per company
+per week against advertised cadence, scan failure causes, and 429 counts grouped
+by acquisition path. These are measured facts about the deployed system. No
+claim here establishes that a fix is deployed or that its effect is measured.
 
 ### 16.4 WS3 stories - contracts and local ledgers
 

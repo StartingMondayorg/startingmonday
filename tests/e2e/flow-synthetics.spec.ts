@@ -56,48 +56,54 @@ test('Synthetic-06: follow-up lifecycle completes correctly within budget', asyn
 
   console.log(`Synthetic-06: created contact id=${contactId}`)
 
-  // Step 2: Create 2 pending follow_ups
-  const followUpIds: string[] = []
-  for (let i = 0; i < 2; i++) {
-    const fuRes = await page.request.post('/api/follow-ups', {
-      data: { contact_id: contactId, note: `Synthetic follow-up ${i + 1}`, status: 'pending' },
-      failOnStatusCode: false,
-    })
-    if (fuRes.status() === 201 || fuRes.status() === 200) {
-      const fu = await fuRes.json()
-      const fuId = fu?.id ?? fu?.follow_up?.id
-      if (fuId) followUpIds.push(fuId)
+  // Steps 2-4 mutate the shared test account (follow-ups on a synthetic
+  // contact). Wrapped in try/finally so a failed assertion below still
+  // deletes the synthetic contact instead of orphaning it for other tests
+  // sharing this account.
+  try {
+    // Step 2: Create 2 pending follow_ups
+    const followUpIds: string[] = []
+    for (let i = 0; i < 2; i++) {
+      const fuRes = await page.request.post('/api/follow-ups', {
+        data: { contact_id: contactId, note: `Synthetic follow-up ${i + 1}`, status: 'pending' },
+        failOnStatusCode: false,
+      })
+      if (fuRes.status() === 201 || fuRes.status() === 200) {
+        const fu = await fuRes.json()
+        const fuId = fu?.id ?? fu?.follow_up?.id
+        if (fuId) followUpIds.push(fuId)
+      }
     }
+
+    console.log(`Synthetic-06: created ${followUpIds.length} follow_ups`)
+
+    // Step 3: Complete all follow_ups (close flow)
+    let completedCount = 0
+    for (const fuId of followUpIds) {
+      const completeRes = await page.request.patch(`/api/follow-ups/${fuId}`, {
+        data: { status: 'completed' },
+        failOnStatusCode: false,
+      })
+      if (completeRes.status() === 200) completedCount++
+    }
+
+    // Step 4: Verify state
+    // At minimum: all follow_ups we could create and complete are accounted for
+    const elapsed = Date.now() - t0
+    console.log(`Synthetic-06: completed ${completedCount}/${followUpIds.length} follow_ups in ${elapsed}ms`)
+
+    if (followUpIds.length > 0) {
+      expect(
+        completedCount,
+        `Should complete all created follow_ups (got ${completedCount}/${followUpIds.length})`
+      ).toBe(followUpIds.length)
+    }
+
+    expect(elapsed, `Follow-up lifecycle ${elapsed}ms exceeded budget of 10000ms`).toBeLessThanOrEqual(10_000)
+  } finally {
+    // Cleanup: delete synthetic contact (runs even if an assertion above threw)
+    await page.request.delete(`/api/contacts/${contactId}`, { failOnStatusCode: false })
   }
-
-  console.log(`Synthetic-06: created ${followUpIds.length} follow_ups`)
-
-  // Step 3: Complete all follow_ups (close flow)
-  let completedCount = 0
-  for (const fuId of followUpIds) {
-    const completeRes = await page.request.patch(`/api/follow-ups/${fuId}`, {
-      data: { status: 'completed' },
-      failOnStatusCode: false,
-    })
-    if (completeRes.status() === 200) completedCount++
-  }
-
-  // Step 4: Verify state
-  // At minimum: all follow_ups we could create and complete are accounted for
-  const elapsed = Date.now() - t0
-  console.log(`Synthetic-06: completed ${completedCount}/${followUpIds.length} follow_ups in ${elapsed}ms`)
-
-  if (followUpIds.length > 0) {
-    expect(
-      completedCount,
-      `Should complete all created follow_ups (got ${completedCount}/${followUpIds.length})`
-    ).toBe(followUpIds.length)
-  }
-
-  // Cleanup: delete synthetic contact
-  await page.request.delete(`/api/contacts/${contactId}`, { failOnStatusCode: false })
-
-  expect(elapsed, `Follow-up lifecycle ${elapsed}ms exceeded budget of 10000ms`).toBeLessThanOrEqual(10_000)
 })
 
 

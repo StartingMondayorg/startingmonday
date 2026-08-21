@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-20T05:17:33.708Z",
+  "generatedAt": "2026-08-20T19:58:23.461Z",
   "metrics": {
-    "placeholderCount": 226,
+    "placeholderCount": 0,
     "lintWarnings": 602,
-    "anyCount": 156,
+    "anyCount": 153,
     "maxFileLines": 1769,
-    "filesOver800": 18
+    "filesOver800": 16
   },
   "notes": "Auto-lowered by debt-ratchet-check.mjs after metric improvements."
 }

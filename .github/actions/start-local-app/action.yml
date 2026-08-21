@@ -1,0 +1,37 @@
+name: Start local app
+description: >
+  Starts `npm run start` in the background on the given port and blocks until
+  /api/health responds, or fails after the given number of attempts. Assumes
+  `npm run build` has already produced a build to start. Pair with the
+  stop-local-app action to tear the process down afterward.
+
+inputs:
+  port:
+    description: Port to start the app on and health-check against.
+    required: false
+    default: '3000'
+  max-attempts:
+    description: Number of 2-second polls before giving up.
+    required: false
+    default: '60'
+
+runs:
+  using: composite
+  steps:
+    - name: Start app and wait for readiness
+      shell: bash
+      run: |
+        npm run start -- --hostname 127.0.0.1 --port "${{ inputs.port }}" > /tmp/next-start.log 2>&1 &
+        echo $! > /tmp/next-start.pid
+        attempts=0
+        while [ "$attempts" -lt "${{ inputs.max-attempts }}" ]; do
+          if curl -fsS "http://127.0.0.1:${{ inputs.port }}/api/health" > /dev/null; then
+            echo "App is ready"
+            exit 0
+          fi
+          attempts=$((attempts + 1))
+          sleep 2
+        done
+        echo "App did not become ready in time"
+        tail -n 200 /tmp/next-start.log || true
+        exit 1
