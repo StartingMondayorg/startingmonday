@@ -123,7 +123,7 @@ export default async function LiveBriefsPage() {
                 {requests.map((request) => (
                   <TableRow key={request.id}>
                     <TableCell className="whitespace-normal px-5 py-3.5">
-                      <div className="text-[14px] font-semibold text-slate-900">{request.prospect_name}</div>
+                      <Link href={`/dashboard/admin/live-briefs/${request.id}`} className="text-[14px] font-semibold text-slate-900 hover:text-slate-600">{request.prospect_name}</Link>
                       <div className="mt-0.5 text-[12px] text-slate-400">{request.prospect_email}</div>
                       <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400">{label(request.request_source)}</div>
                     </TableCell>
