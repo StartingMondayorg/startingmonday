@@ -1,3 +1,5 @@
+import { getLiveBriefControls } from '@/lib/live-brief-controls'
+
 export type LiveBriefHubSpotMilestone =
   | 'request_created'
   | 'profile_reviewed'
@@ -23,7 +25,6 @@ export type LiveBriefHubSpotSyncResult =
   | { enabled: false; reason: 'feature_disabled' | 'not_configured' }
   | { enabled: true; accepted: true }
 
-const ENABLED = 'LIVE_BRIEF_HUBSPOT_SYNC_ENABLED'
 type HubSpotEnvironment = Partial<Record<'LIVE_BRIEF_HUBSPOT_SYNC_ENABLED' | 'HUBSPOT_PRIVATE_APP_TOKEN' | 'HUBSPOT_API_BASE_URL', string>>
 
 const ALLOWED_MILESTONES = new Set<LiveBriefHubSpotMilestone>([
@@ -33,7 +34,7 @@ const ALLOWED_MILESTONES = new Set<LiveBriefHubSpotMilestone>([
 ])
 
 export function liveBriefHubSpotSyncEnabled(env: HubSpotEnvironment = process.env as HubSpotEnvironment): boolean {
-  return env[ENABLED] === 'true'
+  return getLiveBriefControls(env).hubspotSyncEnabled
 }
 
 export function validateLiveBriefHubSpotPayload(payload: LiveBriefHubSpotPayload): string[] {
