@@ -6,7 +6,11 @@ import { notify } from '../lib/notify.js'
 // Configurable limits via env vars — update when you upgrade a plan.
 const LIMITS = {
   anthropic:   parseInt(process.env.ANTHROPIC_MONTHLY_TOKEN_LIMIT  ?? '1000000'),  // 1M tokens
-  browserless: parseInt(process.env.BROWSERLESS_MONTHLY_SESSION_LIMIT ?? '50'),    // free tier
+  // WARNING: BROWSERLESS_MONTHLY_SESSION_LIMIT is not set on the Railway worker, so
+  // this falls back to 50, a placeholder that has never matched the real browserless.io
+  // plan. Recorded usage is ~491 sessions/month, so this alerts at ~982% every day.
+  // Set the env var to the actual plan limit before trusting this number (SMK-472).
+  browserless: parseInt(process.env.BROWSERLESS_MONTHLY_SESSION_LIMIT ?? '50'),
   resend:      parseInt(process.env.RESEND_MONTHLY_EMAIL_LIMIT      ?? '3000'),    // free tier
 }
 

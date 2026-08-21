@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 const workflowPath = new URL('../../.github/workflows/ci.yml', import.meta.url)
 const startLocalAppActionPath = new URL('../../.github/actions/start-local-app/action.yml', import.meta.url)
 const packageLockPath = new URL('../../package-lock.json', import.meta.url)
+const waitScriptPath = new URL('../../scripts/wait-for-deployed-commit.sh', import.meta.url)
 const consumerJobs = [
   'playwright',
   'playwright-merge-queue-full',
@@ -55,6 +56,31 @@ describe('Playwright CI browser installation', () => {
       expect(consumer).toContain(expectedImage)
       expect(consumer).toContain('PLAYWRIGHT_BROWSERS_PATH: /ms-playwright')
     }
+  })
+
+  // The deploy wait used to be five open-coded `while [ "$attempts" -lt 60 ]`
+  // loops, one per job. They were consolidated into a shared deploy-ready job
+  // backed by scripts/wait-for-deployed-commit.sh. The guard that mattered was
+  // never the loop's shape -- it was that CI can never poll unbounded -- so it
+  // is asserted here against the design that actually exists now.
+  it('bounds the deploy wait and keeps it out of the workflow', async () => {
+    const workflow = await workflowSource()
+    const waitScript = (await readFile(waitScriptPath, 'utf8')).replaceAll('\r\n', '\n')
+
+    // No open-coded polling in the workflow, in any of its historical shapes.
+    expect(workflow).not.toMatch(/for i in \{1\.\.\d+\}/)
+    expect(workflow).not.toMatch(/seq 1 \d+/)
+    expect(workflow).not.toMatch(/while \[ "\$attempts"/)
+
+    // One shared waiter that every deployment-dependent job funnels through.
+    expect(workflow).toContain('  deploy-ready:\n')
+    expect(jobBlock(workflow, 'deploy-ready')).toContain('scripts/wait-for-deployed-commit.sh')
+    expect(workflow).toMatch(/needs: \[deploy-ready\]/)
+
+    // The wait itself terminates: a deadline the loop cannot outlive, and a
+    // sleep between polls so it does not spin.
+    expect(waitScript).toMatch(/while \[ "\$\(date \+%s\)" -lt "\$deadline" \]/)
+    expect(waitScript).toMatch(/sleep "\$POLL_SECS"/)
   })
 
   it('runs accessibility under the repository Node version', async () => {

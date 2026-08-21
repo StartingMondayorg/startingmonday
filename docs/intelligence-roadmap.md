@@ -42,7 +42,7 @@ The output is not a data feed. It is a ranked, personalized, time-sensitive acti
 | Crunchbase | Structured funding rounds | `fetch-crunchbase-funding.js` | Live (requires `CRUNCHBASE_API_KEY`) |
 | Company press rooms | Scraped newsroom articles | `fetch-press-room.js` | Live |
 | PR wire (Business Wire, PR Newswire, Globe Newswire) | Press releases via Google News RSS | `fetch-pr-wire.js` | Live |
-| Career pages | Job postings at tracked companies | `scan-company.js` (Browserless) | Live |
+| Career pages | Job postings at tracked companies | `scan-company.js` (browserless.io) | Live |
 | Signal correlation | Multi-signal pattern detection (60-day window) | `correlate-signals.js` | Live |
 
 ### Gaps in Current Implementation

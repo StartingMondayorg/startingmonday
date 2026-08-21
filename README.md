@@ -7,7 +7,7 @@ AI-powered career search platform for VP and C-suite executives. [startingmonday
 Starting Monday helps senior executives run a structured, intelligent job search:
 
 - **Pipeline tracking** — 5-stage pipeline (Watching, Researching, Applied, Interviewing, Offer) with company notes, fit scoring, and full audit log
-- **Career page scanning** — automated monitoring of target company career pages for relevant roles, 3x/week via Browserless
+- **Career page scanning** — automated monitoring of target company career pages for relevant roles, 3x/week via browserless.io
 - **Company intelligence** — signals on funding rounds, exec hires/departures, acquisitions, and expansions
 - **AI prep briefs** — tailored interview preparation for each company, streaming in ~60 seconds
 - **Search Strategy Brief** — one-time AI synthesis of full positioning, gaps, and recommended outreach sequence
@@ -25,7 +25,7 @@ Two Railway services: Next.js 16 web application + Node.js worker for background
 - **AI**: Anthropic Claude (Opus for strategy briefs, Sonnet for prep/chat/tailoring, Haiku for classification)
 - **Billing**: Stripe (checkout, portal, pause/resume, idempotent webhooks)
 - **Email**: Resend (`briefing@startingmonday.app`)
-- **Scanning**: Browserless (headless Chrome for career page parsing)
+- **Scanning**: browserless.io (headless Chrome for career page parsing)
 - **Monitoring**: Sentry, UptimeRobot, PostHog, Railway logs
 
 Full system architecture: [docs/architecture.md](docs/architecture.md)

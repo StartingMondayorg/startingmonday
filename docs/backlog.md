@@ -133,7 +133,7 @@ Move forward when: Before any migration that drops a column, renames a table, or
 
 Move forward when: 100+ active users or first A/B test need.
 
-**Secret management per environment** — Staging needs its own Anthropic, Resend, and Browserless keys so staging load doesn't count against production rate limits or billing.
+**Secret management per environment** — Staging needs its own Anthropic, Resend, and browserless.io keys so staging load doesn't count against production rate limits or billing.
 
 Move forward when: Railway staging environment exists.
 

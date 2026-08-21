@@ -3,7 +3,7 @@
 //
 // Why: modern ATS career boards (Greenhouse, Lever, SmartRecruiters, BambooHR,
 // Workday, ...) render their job lists client-side, often inside iframes or via
-// delayed XHR. A headless render (Browserless) returns the shell but rarely the job
+// delayed XHR. A headless render (browserless.io) returns the shell but rarely the job
 // text, so the scanner detects zero roles. Each of these ATS, however, exposes a
 // documented, unauthenticated JSON endpoint that returns clean listings — far more
 // reliable and cheaper than rendering.
@@ -11,7 +11,7 @@
 // Usage:
 //   const feed = await fetchAtsJobs(careerPageUrl)
 //   if (feed?.jobs.length) { /* use feed.jobs — [{ title, location, url }] */ }
-//   else { /* fall back to fetchPage()/Browserless */ }
+//   else { /* fall back to fetchPage()/browserless.io */ }
 
 import { logger } from '../lib/logger.js'
 
@@ -146,7 +146,7 @@ export function detectAts(url) {
 
 // Fetch + normalize an ATS job feed. Returns { ats, endpoint, jobs } on success, or
 // null when the URL is not a recognized ATS or the API call fails (caller falls back
-// to HTML/Browserless). Never throws.
+// to HTML/browserless.io). Never throws.
 export async function fetchAtsJobs(url) {
   const hit = detectAts(url)
   if (!hit) return null

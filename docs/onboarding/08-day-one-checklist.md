@@ -154,7 +154,7 @@ These are known to be live and functioning based on prior development:
 
 **Core platform:**
 - Pipeline tracking with 5 stages (watching, researching, engaged, interviewing, offer)
-- Career page scanning (Browserless, 3x/week)
+- Career page scanning (browserless.io, 3x/week)
 - Company signals from 9 sources
 - AI prep briefs (all streaming)
 - Search Strategy Brief (Opus model)
