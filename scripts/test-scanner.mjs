@@ -20,7 +20,7 @@ const supabase = createClient(
   { auth: { autoRefreshToken: false, persistSession: false } }
 )
 
-// Greenhouse boards render job listings as plain HTML — ideal for no-Browserless testing
+// Greenhouse boards render job listings as plain HTML — ideal for testing without browserless.io
 const TEST_COMPANIES = [
   { name: 'Anthropic',   career_page_url: 'https://boards.greenhouse.io/anthropic' },
   { name: 'Flexport',    career_page_url: 'https://boards.greenhouse.io/flexport' },
@@ -138,7 +138,7 @@ async function run() {
   const errors = scanResults?.filter(r => r.status === 'error') ?? []
 
   if (!successes.length) {
-    console.log('No successful scans (career pages may need JavaScript rendering — get Browserless key)')
+    console.log('No successful scans (career pages may need JavaScript rendering — get browserless.io key)')
   } else {
     console.log(`${successes.length} scan(s) written:\n`)
     for (const r of successes) {

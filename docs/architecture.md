@@ -13,7 +13,7 @@ startingmonday.app | Last updated: May 2026
 
 ## Overview
 
-Starting Monday is a Next.js 16 application deployed on Railway, backed by Supabase for data and auth, Stripe for billing, Anthropic Claude for AI, Resend for email delivery, and Browserless for career page scanning. The system runs as two Railway services: a web application (user-facing) and a worker (background jobs).
+Starting Monday is a Next.js 16 application deployed on Railway, backed by Supabase for data and auth, Stripe for billing, Anthropic Claude for AI, Resend for email delivery, and browserless.io for career page scanning. The system runs as two Railway services: a web application (user-facing) and a worker (background jobs).
 
 ---
 
@@ -38,7 +38,7 @@ Starting Monday is a Next.js 16 application deployed on Railway, backed by Supab
        │  Supabase     Anthropic    Stripe    Resend      │
        │  (DB + Auth)  (Claude AI)  (Billing) (Email)    │
        │                                                 │
-       │  Browserless  PostHog      Sentry               │
+       │  browserless.io  PostHog      Sentry               │
        │  (Scanning)   (Analytics)  (Errors)             │
        └─────────────────────────────────────────────────┘
 ```
@@ -75,7 +75,7 @@ Cron Schedule:
 
 | Job | Schedule (UTC) | Purpose |
 | --- | --- | --- |
-| Scan job | Mon/Wed/Fri 08:00 | Career page scanning via Browserless |
+| Scan job | Mon/Wed/Fri 08:00 | Career page scanning via browserless.io |
 | Signal job | Mon/Wed/Fri 08:30 | Company intelligence monitoring |
 | Briefing job | Every 5 min | Sends briefings per user timezone |
 | Follow-up reminders | Daily 06:00 | Nudges for pending action items |
@@ -215,9 +215,9 @@ Email types:
 
 ---
 
-## Career Page Scanning (Browserless)
+## Career Page Scanning (browserless.io)
 
-Worker calls Browserless API to fetch and parse target company career pages. Results stored in `scan_results` as JSONB `raw_hits`, then scored and summarized by Claude. Users are notified when a matching role is detected above their configured `alert_threshold`.
+Worker calls browserless.io API to fetch and parse target company career pages. Results stored in `scan_results` as JSONB `raw_hits`, then scored and summarized by Claude. Users are notified when a matching role is detected above their configured `alert_threshold`.
 
 ---
 

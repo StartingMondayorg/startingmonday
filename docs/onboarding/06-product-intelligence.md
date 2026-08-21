@@ -23,7 +23,7 @@ The goal is to give executives early warning of events that precede technology l
 | Crunchbase | Funding rounds | `fetch-crunchbase-funding.js` |
 | Company press rooms | Scraped newsroom articles | `fetch-press-room.js` |
 | PR wire (Business Wire, PR Newswire, Globe Newswire) | Press releases via Google News RSS | `fetch-pr-wire.js` |
-| Career pages | Job postings at tracked companies (Browserless) | `scan-company.js` |
+| Career pages | Job postings at tracked companies (browserless.io) | `scan-company.js` |
 | Signal correlation | Multi-signal pattern detection (60-day window) | `correlate-signals.js` |
 
 Signal types written to `company_signals`: `funding`, `exec_departure`, `exec_hire`, `acquisition`, `expansion`, `layoffs`, `ipo`, `new_product`, `award`.
