@@ -21,7 +21,7 @@ Documents indexed: **1160**
 | [business/](business/) | Commercial strategy, sales plans, partner materials, and business assets. | 31 |
 | [archive/](archive/) | Historical documents retained for provenance but not active operating guidance. | 3 |
 | [inbox/](inbox/) | Newly received documents awaiting review or classification. | 8 |
-| [other/](other/) | Documents that do not yet fit a maintained domain. | 582 |
+| [other/](other/) | Documents that do not yet fit a maintained domain. | 583 |
 
 ## Documents
 
@@ -683,6 +683,7 @@ Documents indexed: **1160**
 - [chris-signal-source-inventory-2026-08-14.md](chris-signal-source-inventory-2026-08-14.md) — Signal Source Inventory and Decision Quality
 - [chris-slack-summary-2026-06-08.md](chris-slack-summary-2026-06-08.md) — Starting Monday: 3-Day Summary for Chris
 - [chris-vscode-workspace-setup.md](chris-vscode-workspace-setup.md) — Chris Setup Guide: Match Rich's VS Code Workspace
+- [ci-test-reliability-cleanup-2026-08-20.md](ci-test-reliability-cleanup-2026-08-20.md) — CI & Test Reliability Cleanup — 2026-08-20
 - [coach-ai-agent-decision-gate-2026-07.md](coach-ai-agent-decision-gate-2026-07.md) — Coach AI Agent Decision Gate (No-Build Until Validation)
 - [coach-and-outplacement-persona-deep-dive-2026-06-15.md](coach-and-outplacement-persona-deep-dive-2026-06-15.md) — Coach and Outplacement Persona Deep Dive (2026-06-15)
 - [coach-council-epic.md](coach-council-epic.md) — Coach Conversion Epic
