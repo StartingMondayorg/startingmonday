@@ -10,13 +10,13 @@ const cardVariants = cva(
       variant: {
         // Solid card — settings/admin/forms and other content sitting on a white surface.
         default: "rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10",
-        // Translucent "glass" card — the immersive product-dashboard sections that sit
-        // directly on the dark (bg-slate-950) app shell. This is the single normalized
-        // replacement for the ~15 ad hoc `rounded-2xl border-white/15 bg-white/5
-        // backdrop-blur-md` variations found across dashboard/_components, signals,
-        // start, prep, concierge, contacts, executive-brief, etc.
+        // Translucent "glass" card — the immersive product-dashboard sections. This is
+        // the single normalized replacement for the ~15 ad hoc `rounded-2xl
+        // border-white/15 bg-white/5 backdrop-blur-md` variations found across
+        // dashboard/_components, signals, start, prep, concierge, contacts,
+        // executive-brief, etc. Token-based, so it reads correctly in both themes.
         glass:
-          "rounded-2xl border border-white/15 bg-white/5 text-slate-100 backdrop-blur-md",
+          "rounded-2xl border bg-card/60 text-card-foreground backdrop-blur-md",
       },
     },
     defaultVariants: {
