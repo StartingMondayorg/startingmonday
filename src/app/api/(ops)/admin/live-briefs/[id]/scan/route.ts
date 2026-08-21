@@ -18,6 +18,17 @@ type ScanPayload = {
   companies?: unknown
 }
 
+function dispatchLiveBriefScan(runId: string) {
+  const workerUrl = process.env.WORKER_URL
+  const workerSecret = process.env.WORKER_SECRET
+  if (!workerUrl || !workerSecret) return
+  void fetch(`${workerUrl.replace(/\/$/, '')}/trigger-live-brief-scan`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-worker-secret': workerSecret },
+    body: JSON.stringify({ runId }),
+  }).catch(() => {})
+}
+
 function text(value: unknown, maxLength: number): string | null {
   if (typeof value !== 'string') return null
   const result = value.trim()
@@ -167,5 +178,6 @@ export async function POST(
     return NextResponse.json({ error: 'Scan start event could not be recorded' }, { status: 500 })
   }
 
+  dispatchLiveBriefScan(run.id)
   return NextResponse.json({ run_id: run.id, status: run.status, idempotent: false }, { status: 202 })
 }
