@@ -22,7 +22,7 @@ for (const journey of publicJourneys) {
     await expectJourneyHealthy(page, guards)
 
     await expect(page.locator('body')).not.toContainText(/404/i)
-    await expect(page.locator('.bg-red-50')).toHaveCount(0)
+    await expect(page.locator('[role="alert"]')).toHaveCount(0)
   })
 }
 
@@ -97,6 +97,6 @@ test.describe('authenticated monitoring journeys', () => {
     await expect(page.locator('h1').first()).toBeVisible()
     await expect(page.getByRole('link', { name: /Interview prep|Run interview prep/i }).first()).toBeVisible()
     await expect(page.locator('body')).not.toContainText(/404/i)
-    await expect(page.locator('.bg-red-50')).toHaveCount(0)
+    await expect(page.locator('[role="alert"]')).toHaveCount(0)
   })
 })
