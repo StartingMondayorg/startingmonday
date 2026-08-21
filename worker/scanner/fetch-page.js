@@ -80,6 +80,11 @@ export class BlockedError extends Error {
 //    If it 403s, the site is actively blocking bots — no point trying browserless.io.
 //    If it returns substantial content, use it and skip the browserless.io credit.
 // 2. browserless.io (JS-rendered) — for SPA career pages or when plain fetch returns sparse HTML.
+//
+// Returns { html, via, renderMs }. `via` is 'direct_fetch' or 'render'; callers
+// record it so render spend is measurable (SMK-476). Only 'render' costs a
+// browserless.io unit — treating every scan as a render is what made the usage
+// counter meaningless.
 export async function fetchPage(url) {
   if (!isAllowedUrl(url)) {
     throw new Error(`fetchPage: blocked URL — ${url}`)
@@ -106,7 +111,7 @@ export async function fetchPage(url) {
       // escalate to browserless.io (raw length alone would wrongly accept it).
       if (!isSpaHost(url) && visibleTextLength(html) >= MIN_VISIBLE_TEXT) {
         logger.info('fetch-page: plain fetch used', { url, htmlLength: html.length })
-        return html
+        return { html, via: 'direct_fetch', renderMs: null }
       }
       logger.info('fetch-page: shell/SPA detected, escalating to browserless', {
         url, host: hostOf(url), htmlLength: html.length, visibleText: visibleTextLength(html),
@@ -125,7 +130,9 @@ export async function fetchPage(url) {
     throw new Error('No BROWSERLESS_API_KEY configured')
   }
 
-  return fetchViaBrowserless(url, apiKey)
+  const startedAt = Date.now()
+  const html = await fetchViaBrowserless(url, apiKey)
+  return { html, via: 'render', renderMs: Date.now() - startedAt }
 }
 
 async function fetchViaBrowserless(url, apiKey) {
