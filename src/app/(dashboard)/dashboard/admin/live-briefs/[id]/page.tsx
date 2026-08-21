@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card'
 import ProfileEditor from './profile-editor'
 import ActionPanel from './action-panel'
 import ShortlistEditor from './shortlist-editor'
+import ScanStatus from './scan-status'
 
 export const metadata = { title: 'Live Brief Request - Starting Monday Admin' }
 
@@ -120,6 +121,9 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
         </div>
         <div className="mt-4">
           <ShortlistEditor requestId={request.id} enabled={request.status === 'reviewing'} />
+        </div>
+        <div className="mt-4">
+          <ScanStatus requestId={request.id} />
         </div>
         <div className="mt-4">
           <ActionPanel requestId={request.id} status={request.status} reviewedProfile={request.reviewed_profile ?? {}} />
