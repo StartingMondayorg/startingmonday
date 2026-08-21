@@ -6,8 +6,11 @@ import { logger } from '../lib/logger.js'
 // ai_score: highest match score found (0-100)
 // ai_summary: plain-text summary of findings
 // status: 'success' | 'blocked' | 'error'
+// acquisition_path: 'ats_feed' | 'direct_fetch' | 'render' — only 'render' spends
+//   a browserless.io unit (SMK-476)
+// render_ms: duration of the browserless.io call; a unit is 30s of browser time
 
-export async function writeScanResult(supabase, { companyId, userId, hits, aiScore, aiSummary }) {
+export async function writeScanResult(supabase, { companyId, userId, hits, aiScore, aiSummary, acquisitionPath = null, atsProvider = null, renderMs = null }) {
   const { error } = await supabase.from('scan_results').insert({
     company_id: companyId,
     user_id: userId,
@@ -16,6 +19,9 @@ export async function writeScanResult(supabase, { companyId, userId, hits, aiSco
     raw_hits: hits,
     ai_score: aiScore,
     ai_summary: aiSummary,
+    acquisition_path: acquisitionPath,
+    ats_provider: atsProvider,
+    render_ms: renderMs,
   })
   if (error) throw new Error(`Failed to write scan result: ${error.message}`)
 }

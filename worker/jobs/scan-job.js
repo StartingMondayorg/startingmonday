@@ -127,7 +127,12 @@ export async function runScanJob() {
         try {
           const result = await scanWithRetry(supabase, company, profile, { rescanWindowHours })
           if (!result.skipped && !result.blocked) {
-            browserlessCalls++
+            // Count a browserless.io call only when a render actually happened.
+            // ATS-feed and plain-fetch scans open no browser, so counting every
+            // scan made recorded usage meaningless (SMK-476).
+            if (result.acquisitionPath === 'render') {
+              browserlessCalls++
+            }
             anthropicCalls += result.hits ?? 0
           }
           return result
