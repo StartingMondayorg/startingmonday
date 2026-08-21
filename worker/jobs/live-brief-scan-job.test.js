@@ -41,6 +41,7 @@ it('maps company scan outcomes into live-brief rows and completes the run', asyn
     .mockResolvedValueOnce({ status: 'blocked_by_source_policy', evidence: [], errorClass: 'robots_blocked' })
 
   const updates = []
+  const events = []
   const rows = {
     run: { id: 'run-1', request_id: 'request-1', status: 'queued', selected_company_count: 2 },
     request: { reviewed_profile: { title: 'COO' }, status: 'scanning' },
@@ -59,6 +60,9 @@ it('maps company scan outcomes into live-brief rows and completes the run', asyn
         select: () => ({ eq: () => ({ single: async () => ({ data: rows.request, error: null }) }) }),
         update: (value) => { updates.push(['request', value]); return { eq: async () => ({ error: null }) } },
       }
+      if (table === 'live_brief_events') return {
+        insert: (value) => { events.push(value); return Promise.resolve({ error: null }) },
+      }
       return {
         select: () => ({ eq: () => ({ order: async () => ({ data: rows.companies, error: null }) }) }),
         update: (value) => { updates.push(['company', value]); return { eq: async () => ({ error: null }) } },
@@ -73,5 +77,8 @@ it('maps company scan outcomes into live-brief rows and completes the run', asyn
   assert.equal(updates.some(([kind, value]) => kind === 'request' && value.status === 'ready_for_review'), true)
   assert.equal(updates.some(([kind, value]) => kind === 'company' && value.status === 'complete'), true)
   assert.equal(updates.some(([kind, value]) => kind === 'company' && value.status === 'blocked_by_source_policy'), true)
+  assert.equal(events.length, 1)
+  assert.equal(events[0].request_id, 'request-1')
+  assert.equal(events[0].event_type, 'scan_completed')
 })
 })

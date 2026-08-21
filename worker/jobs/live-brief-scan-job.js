@@ -56,6 +56,13 @@ export async function runLiveBriefScanJob(runId) {
     completed_at: new Date().toISOString(),
   }).eq('id', run.id)
 
+  await supabase.from('live_brief_events').insert({
+    request_id: run.request_id,
+    event_type: 'scan_completed',
+    idempotency_key: crypto.randomUUID(),
+    event_payload: { run_id: run.id, status: runStatus, completed, blocked, failed },
+  })
+
   if (runStatus === 'completed') {
     await supabase.from('live_brief_requests').update({ status: 'ready_for_review' }).eq('id', run.request_id)
   }
