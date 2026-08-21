@@ -50,7 +50,7 @@ export function ChannelFeatureMapClient() {
               <ToggleGroupItem
                 key={key}
                 value={key}
-                className="rounded-full border-border bg-transparent px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-primary-foreground hover:text-primary-foreground aria-pressed:border-border bg-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+                className="rounded-full border-border bg-transparent px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-primary-foreground hover:text-primary-foreground aria-pressed:border-border aria-pressed:bg-primary aria-pressed:text-primary-foreground"
               >
                 {CHANNEL_MAPS[key].label}
               </ToggleGroupItem>
