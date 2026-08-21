@@ -10,25 +10,25 @@ type Tone = {
 
 const CLIENT_STATUS_TONES: Record<MockClient['status'], Tone> = {
   'High risk': {
-    badge: 'bg-rose-100 text-rose-800 border border-rose-200',
-    border: 'border-l-4 border-l-rose-500',
-    surface: 'bg-rose-50/70 border-rose-200',
-    text: 'text-rose-800',
-    accent: 'text-rose-600',
+    badge: 'bg-destructive/10 text-destructive border border-destructive/30',
+    border: 'border-l-4 border-l-destructive/30',
+    surface: 'bg-destructive/70 border-destructive/30',
+    text: 'text-destructive',
+    accent: 'text-destructive',
   },
   'Needs intervention': {
-    badge: 'bg-amber-100 text-amber-900 border border-amber-200',
-    border: 'border-l-4 border-l-amber-500',
-    surface: 'bg-amber-50/80 border-amber-200',
-    text: 'text-amber-900',
-    accent: 'text-amber-600',
+    badge: 'bg-warning/10 text-warning border border-warning/30',
+    border: 'border-l-4 border-l-warning/30',
+    surface: 'bg-warning/80 border-warning/30',
+    text: 'text-warning',
+    accent: 'text-warning',
   },
   Stable: {
-    badge: 'bg-emerald-100 text-emerald-800 border border-emerald-200',
-    border: 'border-l-4 border-l-emerald-500',
-    surface: 'bg-emerald-50/70 border-emerald-200',
-    text: 'text-emerald-800',
-    accent: 'text-emerald-600',
+    badge: 'bg-success/10 text-success border border-success/30',
+    border: 'border-l-4 border-l-success/30',
+    surface: 'bg-success/70 border-success/30',
+    text: 'text-success',
+    accent: 'text-success',
   },
 }
 
@@ -37,19 +37,19 @@ const COMMITMENT_STATUS_TONES: Record<
   { badge: string; text: string; border: string }
 > = {
   'On track': {
-    badge: 'bg-emerald-100 text-emerald-800 border border-emerald-200',
-    text: 'text-emerald-800',
-    border: 'border-emerald-200',
+    badge: 'bg-success/10 text-success border border-success/30',
+    text: 'text-success',
+    border: 'border-success/30',
   },
   'At risk': {
-    badge: 'bg-amber-100 text-amber-900 border border-amber-200',
-    text: 'text-amber-900',
-    border: 'border-amber-200',
+    badge: 'bg-warning/10 text-warning border border-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/30',
   },
   Overdue: {
-    badge: 'bg-rose-100 text-rose-800 border border-rose-200',
-    text: 'text-rose-800',
-    border: 'border-rose-200',
+    badge: 'bg-destructive/10 text-destructive border border-destructive/30',
+    text: 'text-destructive',
+    border: 'border-destructive/30',
   },
 }
 
@@ -62,13 +62,13 @@ export function getCommitmentStatusTone(status: MockClient['thisWeekCommitments'
 }
 
 export function getMomentumTone(momentum: number) {
-  if (momentum < 45) return 'text-rose-700'
-  if (momentum < 65) return 'text-amber-700'
-  return 'text-emerald-700'
+  if (momentum < 45) return 'text-destructive'
+  if (momentum < 65) return 'text-warning'
+  return 'text-success'
 }
 
 export function getOverdueTone(overdueActions: number) {
-  if (overdueActions >= 4) return 'text-rose-700'
-  if (overdueActions >= 2) return 'text-amber-700'
-  return 'text-emerald-700'
+  if (overdueActions >= 4) return 'text-destructive'
+  if (overdueActions >= 2) return 'text-warning'
+  return 'text-success'
 }

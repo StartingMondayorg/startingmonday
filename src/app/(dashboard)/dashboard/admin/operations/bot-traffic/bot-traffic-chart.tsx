@@ -25,7 +25,7 @@ export function BotTrafficChart({ data }: { data: Point[] }) {
 
   if (points.length === 0) {
     return (
-      <div className="h-[240px] flex items-center justify-center text-[13px] text-slate-400">
+      <div className="h-[240px] flex items-center justify-center text-[13px] text-muted-foreground">
         No requests recorded yet.
       </div>
     )

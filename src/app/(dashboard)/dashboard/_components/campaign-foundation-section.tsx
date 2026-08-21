@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 // Campaign Foundation: "What we understood about your search."
 // Shows the strategy the platform is executing against, with edit paths.
 // Feedback source: Aleksei 2.4 - users need confidence the platform
@@ -61,14 +59,14 @@ export function DashboardCampaignFoundationSection({
       variant="glass"
       id="campaign-foundation"
       aria-labelledby="campaign-foundation-heading"
-      className="mb-5 p-5 sm:p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]"
+      className="mb-5 p-5 sm:p-6 shadow-xl"
     >
       <div className="flex items-baseline justify-between gap-4">
         <div>
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-1">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-1">
             Campaign foundation
           </p>
-          <h2 id="campaign-foundation-heading" className="text-[18px] sm:text-[20px] font-serif font-bold text-white leading-tight">
+          <h2 id="campaign-foundation-heading" className="text-[18px] sm:text-[20px] font-serif font-bold text-primary-foreground leading-tight">
             What we understood about your search
           </h2>
         </div>
@@ -84,12 +82,12 @@ export function DashboardCampaignFoundationSection({
       <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
         {rows.map(row => (
           <div key={row.key} className="min-w-0">
-            <dt className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">{row.label}</dt>
+            <dt className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">{row.label}</dt>
             <dd className="mt-0.5 text-[13px] leading-snug">
               {row.value ? (
-                <span className="text-slate-200">{row.value}</span>
+                <span className="text-muted-foreground">{row.value}</span>
               ) : (
-                <Link href="/dashboard/profile" className="text-orange-300 hover:text-orange-200 font-semibold">
+                <Link href="/dashboard/profile" className="text-primary font-semibold">
                   {row.addCta} &rarr;
                 </Link>
               )}
@@ -98,7 +96,7 @@ export function DashboardCampaignFoundationSection({
         ))}
       </dl>
 
-      <p className="mt-4 text-[12px] text-slate-400">
+      <p className="mt-4 text-[12px] text-muted-foreground">
         {setCount === rows.length
           ? `Every signal, company suggestion, and brief is calibrated to this strategy${currentTitle ? ` and your background as ${currentTitle}` : ''}.`
           : 'The more of this you set, the more precisely signals, companies, and briefs calibrate to your search.'}

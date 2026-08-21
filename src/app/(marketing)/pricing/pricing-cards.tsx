@@ -2,11 +2,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { PRICING } from '@/lib/billing/pricing'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { Badge, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 const PLANS = [
   {
     ...PRICING.passive,
@@ -58,7 +54,7 @@ const PLANS = [
 ]
 
 function Check() {
-  return <span className="text-orange-500 shrink-0 mt-0.5 font-bold text-[12px]">+</span>
+  return <span className="text-primary shrink-0 mt-0.5 font-bold text-[12px]">+</span>
 }
 
 export function PricingCards() {
@@ -67,11 +63,11 @@ export function PricingCards() {
   return (
     <>
       {/* Anchor sentence */}
-      <p className="text-center text-[14px] text-slate-500 mb-3 max-w-xl mx-auto leading-relaxed">
+      <p className="text-center text-[14px] text-muted-foreground mb-3 max-w-xl mx-auto leading-relaxed">
         One hour with an executive coach runs $300 to $500.
         Starting Monday is ${PRICING.active.monthly} a month and runs every day.
       </p>
-      <p className="text-center text-[13px] text-slate-400 mb-8 max-w-xl mx-auto leading-relaxed">
+      <p className="text-center text-[13px] text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
         Missing one signal on a company you are tracking - a leadership departure, a funding event, a quiet job posting - costs more than a year of this subscription.
       </p>
 
@@ -83,23 +79,23 @@ export function PricingCards() {
           onValueChange={(values) => {
             if (values[0]) setAnnual(values[0] === 'annual')
           }}
-          className="rounded border border-slate-200 overflow-hidden text-[12px] font-semibold"
+          className="rounded border border-border overflow-hidden text-[12px] font-semibold"
         >
           <ToggleGroupItem
             value="monthly"
-            className="rounded-none px-5 py-3 min-h-[44px] !bg-white text-slate-500 hover:!bg-slate-50 data-[state=on]:!bg-slate-900 data-[state=on]:!text-white"
+            className="rounded-none px-5 py-3 min-h-[44px] !bg-card text-muted-foreground hover:!bg-muted data-[state=on]:!bg-primary data-[state=on]:!text-card-foreground"
           >
             Monthly
           </ToggleGroupItem>
           <ToggleGroupItem
             value="annual"
-            className="rounded-none px-5 py-3 min-h-[44px] !bg-white text-slate-500 hover:!bg-slate-50 data-[state=on]:!bg-slate-900 data-[state=on]:!text-white"
+            className="rounded-none px-5 py-3 min-h-[44px] !bg-card text-muted-foreground hover:!bg-muted data-[state=on]:!bg-primary data-[state=on]:!text-card-foreground"
           >
             Annual
           </ToggleGroupItem>
         </ToggleGroup>
         {annual && (
-          <Badge variant="outline" className="rounded-full !border-green-200 !bg-green-50 px-2.5 py-1 text-[11px] font-semibold !text-green-700">
+          <Badge variant="outline" className="rounded-full !border-success/30 !bg-success/10 px-2.5 py-1 text-[11px] font-semibold !text-success">
             2 months free
           </Badge>
         )}
@@ -107,10 +103,10 @@ export function PricingCards() {
 
       {/* Privacy assurance - visible before plan cards for Arc 2 users */}
       <div className="flex items-center justify-center gap-2 mb-6">
-        <span className="text-green-600 font-bold text-[13px]">&#10003;</span>
-        <p className="text-[13px] text-slate-500">
+        <span className="text-success font-bold text-[13px]">&#10003;</span>
+        <p className="text-[13px] text-muted-foreground">
           Your employer cannot see your account or your search activity.{' '}
-          <Link href="/privacy#employer" data-emi-cta="pricing_privacy_explainer" data-emi-to="/privacy#employer" className="inline-flex items-center min-h-[44px] underline hover:text-slate-700">How we protect your privacy &rarr;</Link>
+          <Link href="/privacy#employer" data-emi-cta="pricing_privacy_explainer" data-emi-to="/privacy#employer" className="inline-flex items-center min-h-[44px] underline hover:text-muted-foreground">How we protect your privacy &rarr;</Link>
         </p>
       </div>
 
@@ -119,39 +115,39 @@ export function PricingCards() {
         {PLANS.map(plan => (
           <Card
             key={plan.key}
-            className={`rounded-lg p-6 relative flex flex-col ${plan.featured ? 'ring-2 ring-slate-900' : ''}`}
+            className={`rounded-lg p-6 relative flex flex-col ${plan.featured ? 'ring-2 ring-border' : ''}`}
           >
             {plan.featured && (
-              <Badge className="absolute top-3 right-3 rounded bg-orange-500 px-2.5 py-1 text-[10px] font-bold tracking-[0.1em] uppercase text-white">
+              <Badge className="absolute top-3 right-3 rounded bg-primary px-2.5 py-1 text-[10px] font-bold tracking-[0.1em] uppercase text-primary-foreground">
                 Most popular
               </Badge>
             )}
             <CardHeader className="gap-0 p-0">
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-2">
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-2">
                 {plan.name}
               </p>
-              <CardDescription className="text-[11px] text-slate-500 mb-2">{plan.buyerMode}</CardDescription>
-              <CardTitle className="mb-1 text-[40px] font-bold leading-none text-slate-900">
+              <CardDescription className="text-[11px] text-muted-foreground mb-2">{plan.buyerMode}</CardDescription>
+              <CardTitle className="mb-1 text-[40px] font-bold leading-none text-foreground">
                 ${annual ? plan.annualMonthly : plan.monthly}
-                <span className="text-[14px] font-normal text-slate-500 ml-1">/mo</span>
+                <span className="text-[14px] font-normal text-muted-foreground ml-1">/mo</span>
               </CardTitle>
               {annual && (
-                <p className="text-[12px] text-slate-400 mb-3">
-                  billed as ${plan.annual.toLocaleString()}/yr &middot; <span className="text-green-600">Save ${plan.monthly * 12 - plan.annual}</span>
+                <p className="text-[12px] text-muted-foreground mb-3">
+                  billed as ${plan.annual.toLocaleString()}/yr &middot; <span className="text-success">Save ${plan.monthly * 12 - plan.annual}</span>
                 </p>
               )}
             </CardHeader>
             <CardContent className="flex flex-1 flex-col p-0">
-              <p className="text-[13px] text-slate-500 leading-relaxed mb-5 mt-2 min-h-[56px]">
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-5 mt-2 min-h-[56px]">
                 {plan.description}
               </p>
-              <div className="mb-5 rounded border border-slate-200 bg-slate-50 px-3 py-2">
-                <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-1">First-week outcome</p>
-                <p className="text-[12px] text-slate-600 leading-relaxed">{plan.firstWeekOutcome}</p>
+              <div className="mb-5 rounded border border-border bg-muted px-3 py-2">
+                <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">First-week outcome</p>
+                <p className="text-[12px] text-muted-foreground leading-relaxed">{plan.firstWeekOutcome}</p>
               </div>
               <ul className="flex flex-col gap-2.5 mb-6 flex-1">
                 {plan.features.map(f => (
-                  <li key={f} className="flex items-start gap-2 text-[13px] text-slate-700">
+                  <li key={f} className="flex items-start gap-2 text-[13px] text-muted-foreground">
                     <Check />
                     {f}
                   </li>

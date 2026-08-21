@@ -3,15 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { LIFECYCLE_TEMPLATES } from '@/lib/executive-lifecycle'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
-
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Alert, AlertDescription, AlertTitle, Badge, Card, Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Post-Landing - 30/60/90 Plan | Starting Monday',
   description: 'Onboarding narrative, stakeholder trust map, early-win planner, and first-90-day milestones.',
@@ -111,13 +103,13 @@ export default async function PostLandingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-slate-900 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark bg-card sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] font-semibold text-slate-300">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] font-semibold text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             Dashboard
           </Link>
         </div>
@@ -125,28 +117,28 @@ export default async function PostLandingPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-6">
         {/* Mode header */}
-        <Card className="border-emerald-200 px-6 py-6">
-          <p className="text-[13px] font-semibold text-emerald-600 mb-2">
+        <Card className="border-success/30 px-6 py-6">
+          <p className="text-[13px] font-semibold text-success mb-2">
             Post-Landing - 30/60/90 Mode
           </p>
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">
             {firstName}&apos;s first 90 days at {company}
           </h1>
           {daysSincePlacement !== null && (
-            <p className="text-[13px] text-slate-500 mt-2">
+            <p className="text-[13px] text-muted-foreground mt-2">
               Day {daysSincePlacement} · Currently in the{' '}
-              <span className="font-semibold text-emerald-700">Days {currentPhase === '30' ? '1–30' : currentPhase === '60' ? '31–60' : '61–90'}</span> phase
+              <span className="font-semibold text-success">Days {currentPhase === '30' ? '1–30' : currentPhase === '60' ? '31–60' : '61–90'}</span> phase
             </p>
           )}
-          <p className="text-[14px] text-slate-500 mt-2 leading-relaxed max-w-xl">
+          <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed max-w-xl">
             The goal now is strong early credibility, documented wins, and laying the foundation for long-horizon optionality.
           </p>
         </Card>
 
         {/* Onboarding narrative frame */}
         <Card className="px-5 py-5">
-          <h2 className="text-[13px] font-bold text-slate-800 mb-3">Onboarding narrative</h2>
-          <p className="text-[13px] text-slate-500 mb-3">
+          <h2 className="text-[13px] font-bold text-foreground mb-3">Onboarding narrative</h2>
+          <p className="text-[13px] text-muted-foreground mb-3">
             The same three-layer structure from your search narrative applies here. Legacy from your last role → inflection into this one → what you are building now.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -155,12 +147,12 @@ export default async function PostLandingPage() {
               { label: 'Why this mandate is the right next step', placeholder: 'The scope, timing, and fit that made this the right move.' },
               { label: 'What I am building here', placeholder: 'The specific value I will add in the first 6–12 months.' },
             ].map(({ label, placeholder }) => (
-              <div key={label} className="rounded-lg bg-slate-50 border border-slate-200 p-3">
-                <Label className="text-[13px] font-semibold text-slate-500 mb-2">{label}</Label>
+              <div key={label} className="rounded-lg bg-muted border border-border p-3">
+                <Label className="text-[13px] font-semibold text-muted-foreground mb-2">{label}</Label>
                 <Textarea
                   rows={3}
                   placeholder={placeholder}
-                  className="w-full bg-white text-[13px] focus-visible:border-emerald-400 resize-none"
+                  className="w-full bg-card text-[13px] focus-visible:border-success/30 resize-none"
                 />
               </div>
             ))}
@@ -169,26 +161,26 @@ export default async function PostLandingPage() {
 
         {/* Stakeholder trust map */}
         <Card className="px-5 py-5">
-          <h2 className="text-[13px] font-bold text-slate-800 mb-1">Stakeholder trust map</h2>
-          <p className="text-[13px] text-slate-500 mb-4">
+          <h2 className="text-[13px] font-bold text-foreground mb-1">Stakeholder trust map</h2>
+          <p className="text-[13px] text-muted-foreground mb-4">
             Who are the 5–8 people whose trust determines your first-quarter success? Rate your current relationship quality (1–5) and identify what each one needs to see from you.
           </p>
-          <div className="rounded-lg border border-slate-200 overflow-hidden">
+          <div className="rounded-lg border border-border overflow-hidden">
             <Table className="text-[13px]">
-              <TableHeader className="bg-slate-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   {['Name / role', 'Trust (1–5)', 'What they need to see', 'Your next move'].map((h) => (
-                    <TableHead key={h} className="text-[13px] font-semibold text-slate-500">{h}</TableHead>
+                    <TableHead key={h} className="text-[13px] font-semibold text-muted-foreground">{h}</TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {[...Array(5)].map((_, i) => (
-                  <TableRow key={i} className="bg-white">
-                    <TableCell><Input className="w-full border-0 bg-transparent text-[13px] focus-visible:ring-0 placeholder-slate-300" placeholder="e.g. CFO" /></TableCell>
-                    <TableCell><Input type="number" min="1" max="5" title="Trust score 1-5" placeholder="3" className="w-12 text-[13px] focus-visible:border-emerald-400" /></TableCell>
-                    <TableCell><Input className="w-full border-0 bg-transparent text-[13px] focus-visible:ring-0 placeholder-slate-300" placeholder="Quick wins on cost..." /></TableCell>
-                    <TableCell><Input className="w-full border-0 bg-transparent text-[13px] focus-visible:ring-0 placeholder-slate-300" placeholder="Coffee this week" /></TableCell>
+                  <TableRow key={i} className="bg-card">
+                    <TableCell><Input className="w-full border-0 bg-transparent text-[13px] focus-visible:ring-0 placeholder:text-muted-foreground" placeholder="e.g. CFO" /></TableCell>
+                    <TableCell><Input type="number" min="1" max="5" title="Trust score 1-5" placeholder="3" className="w-12 text-[13px] focus-visible:border-success/30" /></TableCell>
+                    <TableCell><Input className="w-full border-0 bg-transparent text-[13px] focus-visible:ring-0 placeholder:text-muted-foreground" placeholder="Quick wins on cost..." /></TableCell>
+                    <TableCell><Input className="w-full border-0 bg-transparent text-[13px] focus-visible:ring-0 placeholder:text-muted-foreground" placeholder="Coffee this week" /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -197,23 +189,23 @@ export default async function PostLandingPage() {
         </Card>
 
         {/* 30/60/90 phase cards */}
-        <Card className="py-0 divide-y divide-slate-100">
+        <Card className="py-0 divide-y divide-border">
           <Accordion
             multiple
             defaultValue={currentPhase === null ? PHASES.map((p) => p.id) : [currentPhase]}
           >
             {PHASES.map((phase) => (
               <AccordionItem key={phase.id} value={phase.id} className="px-5">
-                <AccordionTrigger className={`py-4 hover:no-underline ${phase.id === currentPhase ? 'bg-emerald-50/50' : ''}`}>
+                <AccordionTrigger className={`py-4 hover:no-underline ${phase.id === currentPhase ? 'bg-success/50' : ''}`}>
                   <div className="flex items-center gap-3">
                     <span className={`h-7 w-7 rounded-full flex items-center justify-center text-[13px] font-bold ${
                       phase.id === currentPhase
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-100 text-slate-500'
+                        ? 'bg-success text-primary-foreground'
+                        : 'bg-muted text-success-foreground'
                     }`}>{phase.id}</span>
                     <div>
-                      <p className="text-[13px] font-bold text-slate-800">{phase.label}</p>
-                      <p className="text-[13px] text-slate-500">{phase.theme}</p>
+                      <p className="text-[13px] font-bold text-foreground">{phase.label}</p>
+                      <p className="text-[13px] text-muted-foreground">{phase.theme}</p>
                     </div>
                   </div>
                   {phase.id === currentPhase && (
@@ -222,22 +214,22 @@ export default async function PostLandingPage() {
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4">
                   <div>
-                    <h4 className="text-[13px] font-semibold text-slate-500 mt-4 mb-2">Goals</h4>
+                    <h4 className="text-[13px] font-semibold text-muted-foreground mt-4 mb-2">Goals</h4>
                     <ul className="space-y-1.5">
                       {phase.goals.map((g) => (
-                        <li key={g} className="flex items-start gap-2 text-[13px] text-slate-700">
-                          <span className="text-emerald-500 mt-0.5 flex-shrink-0">→</span>
+                        <li key={g} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                          <span className="text-success mt-0.5 flex-shrink-0">→</span>
                           {g}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <h4 className="text-[13px] font-semibold text-slate-500 mb-2">Artifacts to create</h4>
+                    <h4 className="text-[13px] font-semibold text-muted-foreground mb-2">Artifacts to create</h4>
                     <ul className="space-y-1.5">
                       {phase.artifacts.map((a) => (
-                        <li key={a} className="flex items-start gap-2 text-[13px] text-slate-600">
-                          <span className="text-slate-300 mt-0.5 flex-shrink-0">□</span>
+                        <li key={a} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                          <span className="text-muted-foreground mt-0.5 flex-shrink-0">□</span>
                           {a}
                         </li>
                       ))}
@@ -245,19 +237,19 @@ export default async function PostLandingPage() {
                   </div>
                   {/* Early win planner */}
                   {phase.id === '30' && (
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50/30 p-4 space-y-2">
-                      <p className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Early win planner</p>
+                    <div className="rounded-lg border border-success/30 bg-success/30 p-4 space-y-2">
+                      <p className="text-[11px] font-bold text-success uppercase tracking-wider">Early win planner</p>
                       {[
                         { label: 'Situation', placeholder: 'What problem or opportunity is visible now?' },
                         { label: 'Action', placeholder: 'What specific action can you take in 30 days?' },
                         { label: 'Measurable outcome', placeholder: 'What is the visible, specific result?' },
                       ].map(({ label, placeholder }) => (
                         <div key={label}>
-                          <Label className="block text-[10px] font-semibold text-emerald-700 mb-1">{label}</Label>
+                          <Label className="block text-[10px] font-semibold text-success mb-1">{label}</Label>
                           <Textarea
                             rows={2}
                             placeholder={placeholder}
-                            className="w-full border-emerald-200 text-[12px] focus-visible:border-emerald-400 resize-none bg-white"
+                            className="w-full border-success/30 text-[12px] resize-none bg-card"
                           />
                         </div>
                       ))}
@@ -278,12 +270,12 @@ export default async function PostLandingPage() {
         </Alert>
 
         {/* Session opening prompts */}
-        <Card className="bg-slate-50 px-5 py-5">
-          <h2 className="text-[13px] font-bold text-slate-700 mb-3">Coach session opening prompts</h2>
+        <Card className="bg-muted px-5 py-5">
+          <h2 className="text-[13px] font-bold text-muted-foreground mb-3">Coach session opening prompts</h2>
           <ul className="space-y-2">
             {template.sessionOpeningPrompts.map((p) => (
-              <li key={p} className="flex items-start gap-3 text-[13px] text-slate-600 italic">
-                <span className="text-slate-400 mt-0.5 not-italic flex-shrink-0">?</span>
+              <li key={p} className="flex items-start gap-3 text-[13px] text-muted-foreground italic">
+                <span className="text-muted-foreground mt-0.5 not-italic flex-shrink-0">?</span>
                 {p}
               </li>
             ))}

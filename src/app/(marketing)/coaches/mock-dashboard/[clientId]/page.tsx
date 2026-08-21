@@ -62,12 +62,12 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
 
   return (
     <div className={`min-h-screen ${DASHBOARD_THEME.appBg} ${DASHBOARD_THEME.inkStrong}`}>
-      <nav className="border-b border-slate-800 bg-slate-950 text-white">
+      <nav className="border-b border-border bg-background text-foreground">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[10px] font-bold tracking-[0.16em] transition-opacity hover:opacity-80">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/coaches/mock-dashboard" className="text-[13px] text-slate-300 transition-colors hover:text-white">
+          <Link href="/coaches/mock-dashboard" className="text-[13px] text-muted-foreground transition-colors hover:text-foreground">
             Back to portfolio dashboard
           </Link>
         </div>
@@ -76,7 +76,7 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
       <header className={`border-b px-4 py-8 sm:px-6 sm:py-10 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
         <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
-            <p className="text-[10px] font-semibold tracking-[0.16em] text-orange-600">Client dashboard (coach view)</p>
+            <p className="text-[10px] font-semibold tracking-[0.16em] text-primary">Client dashboard (coach view)</p>
             <h1 className={`mt-2 font-serif text-[34px] font-semibold leading-[1.08] tracking-tight sm:text-[40px] ${DASHBOARD_THEME.inkStrong}`}>{client.name} · {client.roleTrack}</h1>
             <p className={`mt-3 max-w-4xl text-[15px] leading-[1.6] ${DASHBOARD_THEME.ink}`}>{client.coachNarrative}</p>
             <div className="mt-4">
@@ -86,19 +86,19 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
             </div>
           </div>
 
-          <aside className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paperSoft}`}>
+          <aside className={`rounded-xl border p-4 shadow-md ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paperSoft}`}>
           <h2 className={`text-[11px] font-semibold tracking-[0.12em] ${DASHBOARD_THEME.metalStrong}`}>Coach Action Priority</h2>
             <div className="mt-3 space-y-3">
               <div>
-                <p className="text-[10px] font-semibold tracking-[0.1em] text-rose-700">Now</p>
+                <p className="text-[10px] font-semibold tracking-[0.1em] text-destructive">Now</p>
                 <p className={`text-[13px] leading-[1.5] ${DASHBOARD_THEME.ink}`}>{priority.now}</p>
               </div>
               <div>
-                <p className="text-[10px] font-semibold tracking-[0.1em] text-amber-700">This week</p>
+                <p className="text-[10px] font-semibold tracking-[0.1em] text-warning">This week</p>
                 <p className={`text-[13px] leading-[1.5] ${DASHBOARD_THEME.ink}`}>{priority.thisWeek}</p>
               </div>
               <div>
-                <p className="text-[10px] font-semibold tracking-[0.1em] text-emerald-700">Watch</p>
+                <p className="text-[10px] font-semibold tracking-[0.1em] text-success">Watch</p>
                 <p className={`text-[13px] leading-[1.5] ${DASHBOARD_THEME.ink}`}>{priority.watch}</p>
               </div>
             </div>
@@ -108,30 +108,30 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
 
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 sm:py-10">
         <section className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-          <article className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] lg:col-span-1 ${statusTone.surface}`}>
+          <article className={`rounded-xl border p-4 shadow-md lg:col-span-1 ${statusTone.surface}`}>
             <p className={`text-[11px] font-semibold tracking-[0.09em] ${DASHBOARD_THEME.metalStrong}`}>Status</p>
             <p className={`mt-2 text-[14px] font-semibold ${statusTone.text}`}>{client.status}</p>
           </article>
-          <article className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+          <article className={`rounded-xl border p-4 shadow-md lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
             <p className={`text-[11px] font-semibold tracking-[0.09em] ${DASHBOARD_THEME.metalStrong}`}>Momentum</p>
             <p className={`mt-2 text-[28px] font-bold leading-none ${getMomentumTone(client.momentum)}`}>{client.momentum}</p>
           </article>
-          <article className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+          <article className={`rounded-xl border p-4 shadow-md lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
             <p className={`text-[11px] font-semibold tracking-[0.09em] ${DASHBOARD_THEME.metalStrong}`}>Overdue actions</p>
             <p className={`mt-2 text-[28px] font-bold leading-none ${getOverdueTone(client.overdueActions)}`}>{client.overdueActions}</p>
           </article>
-          <article className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+          <article className={`rounded-xl border p-4 shadow-md lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
             <p className={`text-[11px] font-semibold tracking-[0.09em] ${DASHBOARD_THEME.metalStrong}`}>Last session</p>
             <p className={`mt-2 text-[14px] font-semibold ${DASHBOARD_THEME.inkStrong}`}>{client.lastSessionDate}</p>
           </article>
-          <article className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+          <article className={`rounded-xl border p-4 shadow-md lg:col-span-1 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
             <p className={`text-[11px] font-semibold tracking-[0.09em] ${DASHBOARD_THEME.metalStrong}`}>Next session</p>
             <p className={`mt-2 text-[14px] font-semibold ${DASHBOARD_THEME.inkStrong}`}>{client.nextSessionDate}</p>
           </article>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <article className={`rounded-2xl border p-5 shadow-[0_10px_28px_rgba(15,23,42,0.08)] ${DASHBOARD_THEME.paper} ${statusTone.border}`}>
+          <article className={`rounded-2xl border p-5 shadow-md ${DASHBOARD_THEME.paper} ${statusTone.border}`}>
             <p className={`mb-3 text-[11px] font-semibold tracking-[0.1em] ${DASHBOARD_THEME.metalStrong}`}>Next-session objective</p>
             <p className={`text-[14px] leading-[1.65] ${DASHBOARD_THEME.ink}`}>{client.nextSessionObjective}</p>
 
@@ -156,13 +156,13 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
             </ul>
           </article>
 
-          <article className={`rounded-2xl border p-5 shadow-[0_10px_28px_rgba(15,23,42,0.08)] ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+          <article className={`rounded-2xl border p-5 shadow-md ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
             <p className={`mb-3 text-[11px] font-semibold tracking-[0.1em] ${DASHBOARD_THEME.metalStrong}`}>This-week commitments</p>
             <div className="space-y-3">
               {client.thisWeekCommitments.map((commitment) => {
                 const commitmentTone = getCommitmentStatusTone(commitment.status)
                 return (
-                <div key={`${commitment.task}-${commitment.owner}`} className={`rounded border bg-white/[0.03] p-3 ${commitmentTone.border}`}>
+                <div key={`${commitment.task}-${commitment.owner}`} className={`rounded border bg-muted/[0.03] p-3 ${commitmentTone.border}`}>
                   <p className={`text-[13px] font-semibold ${DASHBOARD_THEME.inkStrong}`}>{commitment.task}</p>
                   <p className={`mt-1 text-[12px] ${DASHBOARD_THEME.metalStrong}`}>Owner: {commitment.owner} · Due: {commitment.due}</p>
                   <span className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-[0.08em] ${commitmentTone.badge}`}>
@@ -185,7 +185,7 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
           </article>
         </section>
 
-        <section className={`rounded-2xl border p-5 shadow-[0_10px_28px_rgba(15,23,42,0.08)] ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+        <section className={`rounded-2xl border p-5 shadow-md ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
           <h2 className={`mb-3 text-[11px] font-semibold tracking-[0.1em] ${DASHBOARD_THEME.metalStrong}`}>Recent signal activity</h2>
           <div className="space-y-3">
             {client.recentSignals.map((signal) => (
@@ -198,21 +198,21 @@ export default async function MockCoachClientDashboardPage({ params }: ClientPag
           </div>
         </section>
 
-        <section className="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-5">
-          <h2 className="mb-2 text-[11px] font-bold tracking-[0.12em] text-emerald-800">Trust and next action</h2>
-          <p className="text-[13px] leading-relaxed text-slate-700">
+        <section className="rounded-2xl border border-success/30 bg-success/40 p-5">
+          <h2 className="mb-2 text-[11px] font-bold tracking-[0.12em] text-success">Trust and next action</h2>
+          <p className="text-[13px] leading-relaxed text-foreground">
             This coach workspace is confidential and intended for private session preparation only. Teams using this workflow report clearer weekly decisions and faster follow-through on overdue commitments.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href="/coaches/mock-dashboard"
-              className="inline-flex items-center justify-center rounded bg-slate-900 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-slate-800"
+              className="inline-flex items-center justify-center rounded bg-card px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted"
             >
               Open coach portfolio dashboard
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center rounded border border-slate-300 px-4 py-2 text-[13px] font-semibold text-slate-800 transition-colors hover:border-slate-500"
+              className="inline-flex items-center justify-center rounded border border-border px-4 py-2 text-[13px] font-semibold text-foreground transition-colors"
             >
               Start coach workflow setup
             </Link>

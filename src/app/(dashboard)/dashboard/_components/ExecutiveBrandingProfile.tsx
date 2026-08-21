@@ -15,13 +15,7 @@
 import { useState } from 'react'
 import type { ExecutiveLifecycleState, ExecutivePersonaVariant } from '@/lib/executive-lifecycle'
 import { LIFECYCLE_TEMPLATES } from '@/lib/executive-lifecycle'
-import { Card } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, AlertTitle, Button, Card, Input, Label, Textarea } from '@/components/ui'
 interface AudienceVariant {
   audience: string
   headline: string
@@ -120,51 +114,51 @@ export function ExecutiveBrandingProfile({
 
       {/* Narrative architecture: 3 layers */}
       <Card className="p-5 space-y-4">
-        <h3 className="text-[13px] font-bold text-slate-800">Narrative architecture</h3>
-        <p className="text-[12px] text-slate-500">Three-layer story: what you built, why now, where your edge is strongest next.</p>
+        <h3 className="text-[13px] font-bold text-foreground">Narrative architecture</h3>
+        <p className="text-[12px] text-muted-foreground">Three-layer story: what you built, why now, where your edge is strongest next.</p>
         {[
           { label: '1. Legacy - what I built or fixed', value: legacy, setter: setLegacy, placeholder: 'e.g. Inherited a fragmented engineering org, consolidated to one platform, reduced TTM by 40%.' },
           { label: '2. Inflection - why now', value: inflection, setter: setInflection, placeholder: 'e.g. The company has been acquired. The scope I built now fits a larger stage.' },
           { label: '3. Next mandate - where my edge is strongest', value: nextMandate, setter: setNextMandate, placeholder: 'e.g. PE-backed platforms scaling from $50M to $200M where the operating complexity is highest.' },
         ].map(({ label, value, setter, placeholder }) => (
           <div key={label}>
-            <Label className="block text-[11px] font-semibold text-slate-600 mb-1">{label}</Label>
+            <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">{label}</Label>
             <Textarea
               value={value}
               onChange={(e) => setter(e.target.value)}
               rows={2}
               disabled={readOnly}
               placeholder={placeholder}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-[13px] text-slate-800 focus:outline-none focus:border-orange-400 resize-none disabled:bg-slate-50 disabled:text-slate-500"
+              className="w-full border border-border rounded-lg px-3 py-2 text-[13px] text-foreground focus:outline-none focus:border-primary/30 resize-none disabled:bg-muted disabled:text-muted-foreground"
             />
           </div>
         ))}
         <div>
-          <Label className="block text-[11px] font-semibold text-slate-600 mb-1">Master thesis (one-sentence synthesis)</Label>
+          <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">Master thesis (one-sentence synthesis)</Label>
           <Textarea
             value={narrativeThesis}
             onChange={(e) => setNarrativeThesis(e.target.value)}
             rows={2}
             disabled={readOnly}
             placeholder="e.g. I build operating platforms in high-complexity PE transitions and am ready for my next CTO mandate."
-            className="w-full border border-orange-200 rounded-lg px-3 py-2 text-[13px] text-slate-800 focus:outline-none focus:border-orange-500 resize-none bg-orange-50/20 disabled:bg-slate-50"
+            className="w-full border border-primary/30 rounded-lg px-3 py-2 text-[13px] text-foreground focus:outline-none resize-none bg-primary/20 disabled:bg-muted"
           />
         </div>
       </Card>
 
       {/* Leadership proof points */}
       <Card className="p-5 space-y-3">
-        <h3 className="text-[13px] font-bold text-slate-800">Leadership proof points</h3>
-        <p className="text-[12px] text-slate-500">Specific, quantified outcomes you can cite in any audience context.</p>
+        <h3 className="text-[13px] font-bold text-foreground">Leadership proof points</h3>
+        <p className="text-[12px] text-muted-foreground">Specific, quantified outcomes you can cite in any audience context.</p>
         {proofPoints.map((point, index) => (
           <div key={index}>
-            <Label className="block text-[10px] font-semibold text-slate-400 mb-1">Proof point {index + 1}</Label>
+            <Label className="block text-[10px] font-semibold text-muted-foreground mb-1">Proof point {index + 1}</Label>
             <Input
               value={point}
               onChange={(e) => updateProofPoint(index, e.target.value)}
               disabled={readOnly}
               placeholder="e.g. Reduced engineering headcount by 18% while increasing delivery velocity 2x over 18 months."
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-[13px] text-slate-800 focus:outline-none focus:border-orange-400 disabled:bg-slate-50"
+              className="w-full border border-border rounded-lg px-3 py-2 text-[13px] text-foreground focus:outline-none focus:border-primary/30 disabled:bg-muted"
             />
           </div>
         ))}
@@ -182,40 +176,40 @@ export function ExecutiveBrandingProfile({
 
       {/* Audience-specific variants */}
       <Card className="p-5 space-y-4">
-        <h3 className="text-[13px] font-bold text-slate-800">Audience-specific message variants</h3>
-        <p className="text-[12px] text-slate-500">Different stakeholders need different angles on the same story.</p>
+        <h3 className="text-[13px] font-bold text-foreground">Audience-specific message variants</h3>
+        <p className="text-[12px] text-muted-foreground">Different stakeholders need different angles on the same story.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {variants.map((variant, index) => (
-            <Card key={variant.audience} className="bg-slate-50 p-4 space-y-2">
-              <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">{variant.audience}</p>
+            <Card key={variant.audience} className="bg-muted p-4 space-y-2">
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{variant.audience}</p>
               <div>
-                <Label className="block text-[10px] text-slate-400 mb-0.5">Headline for this audience</Label>
+                <Label className="block text-[10px] text-muted-foreground mb-0.5">Headline for this audience</Label>
                 <Input
                   value={variant.headline}
                   onChange={(e) => updateVariant(index, 'headline', e.target.value)}
                   disabled={readOnly}
                   placeholder="The core value claim for this stakeholder"
-                  className="w-full border border-slate-200 rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-orange-400 disabled:bg-white"
+                  className="w-full border border-border rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-primary/30 disabled:bg-card"
                 />
               </div>
               <div>
-                <Label className="block text-[10px] text-slate-400 mb-0.5">Key message</Label>
+                <Label className="block text-[10px] text-muted-foreground mb-0.5">Key message</Label>
                 <Input
                   value={variant.keyMessage}
                   onChange={(e) => updateVariant(index, 'keyMessage', e.target.value)}
                   disabled={readOnly}
                   placeholder="What they most need to hear"
-                  className="w-full border border-slate-200 rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-orange-400 disabled:bg-white"
+                  className="w-full border border-border rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-primary/30 disabled:bg-card"
                 />
               </div>
               <div>
-                <Label className="block text-[10px] text-slate-400 mb-0.5">Avoid with this audience</Label>
+                <Label className="block text-[10px] text-muted-foreground mb-0.5">Avoid with this audience</Label>
                 <Input
                   value={variant.avoidLanguage}
                   onChange={(e) => updateVariant(index, 'avoidLanguage', e.target.value)}
                   disabled={readOnly}
                   placeholder="Language or framing that creates friction"
-                  className="w-full border border-slate-200 rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-orange-400 disabled:bg-white"
+                  className="w-full border border-border rounded px-2.5 py-1.5 text-[12px] focus:outline-none focus:border-primary/30 disabled:bg-card"
                 />
               </div>
             </Card>
@@ -234,7 +228,7 @@ export function ExecutiveBrandingProfile({
       )}
 
       {data.lastUpdatedAt && (
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[11px] text-muted-foreground">
           Last updated: {new Date(data.lastUpdatedAt).toLocaleDateString()}
         </p>
       )}

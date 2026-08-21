@@ -1,10 +1,7 @@
 "use client"
 
 import { useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge, Button, Card } from '@/components/ui'
 type CompanySignal = {
   company: string
   signal: string
@@ -87,47 +84,47 @@ export function ProspectingScannerPanel() {
 
   return (
     <section className="px-4 pb-14 sm:px-6 sm:pb-16">
-      <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-[linear-gradient(155deg,rgba(21,28,46,0.92),rgba(10,14,24,0.96))] p-6 shadow-[0_22px_80px_rgba(15,23,42,0.3)] backdrop-blur-sm sm:p-8">
-        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200">Client dashboard</p>
-        <h2 className="font-serif text-[30px] leading-[1.15] text-white sm:text-[36px]">
+      <div className="mx-auto max-w-5xl rounded-[2rem] border border-border bg-card/85 p-6 shadow-2xl backdrop-blur-sm sm:p-8">
+        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">Client dashboard</p>
+        <h2 className="font-serif text-[30px] leading-[1.15] text-foreground sm:text-[36px]">
           What a recruiter needs to run the mandate with confidence.
         </h2>
-        <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-slate-200">
+        <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-foreground">
           Keep your team anchored to three operational views: mandate health, sponsor alignment, and market opportunity signals.
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           <Card variant="glass" className="p-5">
-            <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Mandate health</p>
-            <p className="mt-2 text-2xl font-semibold text-white">84%</p>
-            <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
+            <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Mandate health</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">84%</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-foreground">
               Interview criteria complete, stakeholder map confirmed, and risk log current.
             </p>
           </Card>
           <Card variant="glass" className="p-5">
-            <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Sponsor alignment</p>
-            <p className="mt-2 text-2xl font-semibold text-white">3 of 4</p>
-            <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
+            <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Sponsor alignment</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">3 of 4</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-foreground">
               Core decision-makers aligned; one stakeholder requires updated success criteria.
             </p>
           </Card>
           <Card variant="glass" className="p-5">
-            <p className="text-[11px] uppercase tracking-[0.12em] text-slate-300">Market intelligence</p>
-            <p className="mt-2 text-2xl font-semibold text-white">5 live signals</p>
-            <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
+            <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Market intelligence</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">5 live signals</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-foreground">
               Companies with likely CFO openings identified from financing, governance, and operating-change events.
             </p>
           </Card>
         </div>
 
         <Card variant="glass" className="mt-8 p-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
             Find companies likely to open executive roles
           </p>
-          <h3 className="mt-2 text-[20px] font-semibold text-white">
+          <h3 className="mt-2 text-[20px] font-semibold text-foreground">
             Build a target-company list for a sample CFO search.
           </h3>
-          <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-slate-200">
+          <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-foreground">
             Use the intelligence scanner to generate a focused prospect list, then start outreach through the highest-leverage relationship paths.
           </p>
 
@@ -143,31 +140,31 @@ export function ProspectingScannerPanel() {
           {hasRun ? (
             <div className="mt-6 space-y-5">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">Scanner output</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Scanner output</p>
                 <div className="mt-3 grid gap-3">
                   {topSignals.map((signal) => (
-                    <Card key={signal.company} variant="glass" className="rounded-xl !bg-slate-950/55 p-4">
+                    <Card key={signal.company} variant="glass" className="rounded-xl !bg-background/55 p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h4 className="text-[16px] font-semibold text-white">{signal.company}</h4>
-                        <Badge variant="outline" className="rounded-full !border-orange-300/40 px-2.5 py-1 text-[11px] font-semibold text-orange-200">
+                        <h4 className="text-[16px] font-semibold text-foreground">{signal.company}</h4>
+                        <Badge variant="outline" className="rounded-full !border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary">
                           Confidence {signal.confidence}%
                         </Badge>
                       </div>
-                      <p className="mt-2 text-[13px] leading-relaxed text-slate-200">{signal.signal}</p>
-                      <p className="mt-1 text-[12px] text-slate-300">Likely opening window: {signal.openWindow}</p>
-                      <p className="mt-1 text-[12px] leading-relaxed text-slate-300">Why this matters: {signal.reason}</p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-foreground">{signal.signal}</p>
+                      <p className="mt-1 text-[12px] text-muted-foreground">Likely opening window: {signal.openWindow}</p>
+                      <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">Why this matters: {signal.reason}</p>
                     </Card>
                   ))}
                 </div>
               </div>
 
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-300">First outreach relationships</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">First outreach relationships</p>
                 <div className="mt-3 grid gap-3 md:grid-cols-3">
                   {RELATIONSHIP_TARGETS.map((target) => (
-                    <Card key={target.relationship} variant="glass" className="rounded-xl !bg-slate-950/55 p-4">
-                      <h4 className="text-[14px] font-semibold text-white">{target.relationship}</h4>
-                      <p className="mt-2 text-[12px] leading-relaxed text-slate-200">{target.action}</p>
+                    <Card key={target.relationship} variant="glass" className="rounded-xl !bg-background/55 p-4">
+                      <h4 className="text-[14px] font-semibold text-foreground">{target.relationship}</h4>
+                      <p className="mt-2 text-[12px] leading-relaxed text-foreground">{target.action}</p>
                     </Card>
                   ))}
                 </div>

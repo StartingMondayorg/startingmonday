@@ -5,8 +5,7 @@ import path from 'node:path'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { Card } from '@/components/ui/card'
-
+import { Card } from '@/components/ui'
 type GuideManifest = {
   generatedAt?: string
   sourceFileCount?: number
@@ -89,46 +88,46 @@ export default async function AdminGuidePage() {
   const topQuestionRows = [...questionMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8)
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[13px] text-slate-300 hover:text-white transition-colors">Back to Admin</Link>
-            <Link href="/guide" className="text-[13px] text-slate-300 hover:text-white transition-colors">Open Guide</Link>
+            <Link href="/dashboard/admin" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Back to Admin</Link>
+            <Link href="/guide" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Open Guide</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-6">
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Guide Reliability and Analytics</h1>
-          <p className="text-[13px] text-slate-500 mt-1.5">Guide freshness, retrieval quality, and query performance in one panel.</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Guide Reliability and Analytics</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">Guide freshness, retrieval quality, and query performance in one panel.</p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
           <Card className="p-4">
-            <div className="text-[24px] font-bold text-slate-900 leading-none">{manifest?.entryCount ?? 0}</div>
-            <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Guide entries</div>
+            <div className="text-[24px] font-bold text-foreground leading-none">{manifest?.entryCount ?? 0}</div>
+            <div className="text-[10px] text-muted-foreground mt-1.5 tracking-[0.07em] uppercase">Guide entries</div>
           </Card>
           <Card className="p-4">
-            <div className="text-[24px] font-bold text-slate-900 leading-none">{manifest?.changedEntryCount ?? 0}</div>
-            <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Changed on latest sync</div>
+            <div className="text-[24px] font-bold text-foreground leading-none">{manifest?.changedEntryCount ?? 0}</div>
+            <div className="text-[10px] text-muted-foreground mt-1.5 tracking-[0.07em] uppercase">Changed on latest sync</div>
           </Card>
           <Card className="p-4">
-            <div className="text-[24px] font-bold text-slate-900 leading-none">{toPercent(evalReport?.summary?.recallAt3)}</div>
-            <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Retrieval recall@3</div>
+            <div className="text-[24px] font-bold text-foreground leading-none">{toPercent(evalReport?.summary?.recallAt3)}</div>
+            <div className="text-[10px] text-muted-foreground mt-1.5 tracking-[0.07em] uppercase">Retrieval recall@3</div>
           </Card>
           <Card className="p-4">
-            <div className="text-[24px] font-bold text-slate-900 leading-none">{totalQueries7d}</div>
-            <div className="text-[10px] text-slate-400 mt-1.5 tracking-[0.07em] uppercase">Queries (7d)</div>
+            <div className="text-[24px] font-bold text-foreground leading-none">{totalQueries7d}</div>
+            <div className="text-[10px] text-muted-foreground mt-1.5 tracking-[0.07em] uppercase">Queries (7d)</div>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <Card className="p-5">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Freshness and quality status</h2>
-            <div className="space-y-2 text-[13px] text-slate-700">
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Freshness and quality status</h2>
+            <div className="space-y-2 text-[13px] text-muted-foreground">
               <p>Manifest generated: {manifest?.generatedAt ?? 'N/A'}</p>
               <p>Source file count: {manifest?.sourceFileCount ?? 'N/A'}</p>
               <p>Eval generated: {evalReport?.generatedAt ?? 'N/A'}</p>
@@ -139,8 +138,8 @@ export default async function AdminGuidePage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Query risk signals (7d)</h2>
-            <div className="space-y-2 text-[13px] text-slate-700">
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Query risk signals (7d)</h2>
+            <div className="space-y-2 text-[13px] text-muted-foreground">
               <p>No match: {noMatch7d}</p>
               <p>Low confidence: {lowConfidence7d}</p>
               <p>Not helpful feedback: {notHelpful7d}</p>
@@ -151,11 +150,11 @@ export default async function AdminGuidePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card className="p-5">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Top repeated queries (7d)</h2>
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Top repeated queries (7d)</h2>
             {topQuestionRows.length === 0 ? (
-              <p className="text-[13px] text-slate-500">No guide queries captured yet.</p>
+              <p className="text-[13px] text-muted-foreground">No guide queries captured yet.</p>
             ) : (
-              <ol className="space-y-2 text-[13px] text-slate-700 list-decimal list-inside">
+              <ol className="space-y-2 text-[13px] text-muted-foreground list-decimal list-inside">
                 {topQuestionRows.map(([question, count]) => (
                   <li key={question}>{question} ({count})</li>
                 ))}
@@ -164,15 +163,15 @@ export default async function AdminGuidePage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Recent low-confidence queries</h2>
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Recent low-confidence queries</h2>
             {((lowConfidenceQueries.data ?? []) as Array<{ question: string; confidence: number | null; top_source_url: string | null }>).length === 0 ? (
-              <p className="text-[13px] text-slate-500">No low-confidence queries in the last 7 days.</p>
+              <p className="text-[13px] text-muted-foreground">No low-confidence queries in the last 7 days.</p>
             ) : (
-              <ul className="space-y-2 text-[13px] text-slate-700">
+              <ul className="space-y-2 text-[13px] text-muted-foreground">
                 {((lowConfidenceQueries.data ?? []) as Array<{ question: string; confidence: number | null; top_source_url: string | null }>).map((row, index) => (
                   <li key={`${row.question}-${index}`}>
                     <p className="font-semibold">{row.question}</p>
-                    <p className="text-[12px] text-slate-500">confidence {typeof row.confidence === 'number' ? `${Math.round(row.confidence * 100)}%` : 'N/A'} | top source {row.top_source_url ?? 'none'}</p>
+                    <p className="text-[12px] text-muted-foreground">confidence {typeof row.confidence === 'number' ? `${Math.round(row.confidence * 100)}%` : 'N/A'} | top source {row.top_source_url ?? 'none'}</p>
                   </li>
                 ))}
               </ul>

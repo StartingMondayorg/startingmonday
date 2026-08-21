@@ -1,10 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Textarea } from '@/components/ui'
 type Message = { role: 'user' | 'assistant'; content: string }
 
 type Context = {
@@ -171,8 +167,8 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
 
       {/* Current positioning card */}
       <Card className="py-0 overflow-hidden">
-        <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between gap-4">
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Your Current Positioning</span>
+        <div className="px-6 py-[18px] border-b border-border flex items-center justify-between gap-4">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Your Current Positioning</span>
           {!editingPositioning && (
             <Button
               type="button"
@@ -214,23 +210,23 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
               </div>
             </>
           ) : positioning ? (
-            <p className="text-[14px] text-slate-800 leading-relaxed">{positioning}</p>
+            <p className="text-[14px] text-foreground leading-relaxed">{positioning}</p>
           ) : (
-            <p className="text-[13px] text-slate-400 italic">No positioning statement yet. Use the coach below to build one.</p>
+            <p className="text-[13px] text-muted-foreground italic">No positioning statement yet. Use the coach below to build one.</p>
           )}
-          {saveError && <p className="mt-2 text-[12px] text-red-600">{saveError}</p>}
-          {saved && <p className="mt-2 text-[12px] text-green-600">Saved.</p>}
+          {saveError && <p className="mt-2 text-[12px] text-destructive">{saveError}</p>}
+          {saved && <p className="mt-2 text-[12px] text-success">Saved.</p>}
         </div>
       </Card>
 
       {/* Suggested positioning from AI */}
       {suggestedPositioning && (
-        <Card className="bg-orange-50 border-orange-200 py-0 overflow-hidden">
-          <div className="px-6 py-[18px] border-b border-orange-200 flex items-center justify-between gap-4">
-            <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500">Suggested Positioning</span>
+        <Card className="bg-primary/10 border-primary/30 py-0 overflow-hidden">
+          <div className="px-6 py-[18px] border-b border-primary/30 flex items-center justify-between gap-4">
+            <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary">Suggested Positioning</span>
           </div>
           <div className="px-6 py-5">
-            <p className="text-[14px] text-slate-800 leading-relaxed mb-4">{suggestedPositioning}</p>
+            <p className="text-[14px] text-foreground leading-relaxed mb-4">{suggestedPositioning}</p>
             <div className="flex items-center gap-3">
               <Button
                 type="button"
@@ -255,14 +251,14 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
 
       {/* Chat */}
       <Card className="py-0 overflow-hidden">
-        <div className="px-6 py-[18px] border-b border-slate-200">
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Positioning Coach</span>
+        <div className="px-6 py-[18px] border-b border-border">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Positioning Coach</span>
         </div>
 
         {/* Starter prompts - shown only before first message */}
         {messages.length === 0 && (
           <div className="px-6 pt-5 pb-3">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-3">Start here</p>
+            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">Start here</p>
             <div className="flex flex-wrap gap-2">
               {STARTER_PROMPTS.map(prompt => (
                 <Button
@@ -271,7 +267,7 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
                   variant="outline"
                   size="sm"
                   onClick={() => sendMessage(prompt)}
-                  className="hover:border-orange-400 hover:text-orange-600"
+                  className="hover:border-primary/30 hover:text-primary"
                 >
                   {prompt}
                 </Button>
@@ -286,10 +282,10 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] ${msg.role === 'user'
-                  ? 'bg-slate-900 text-white rounded-2xl rounded-tr-sm px-4 py-3'
-                  : 'text-slate-800'
+                  ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3'
+                  : 'text-primary-foreground'
                 }`}>
-                  <p className={`text-[14px] leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-white' : 'text-slate-800'}`}>
+                  <p className={`text-[14px] leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-primary-foreground' : 'text-foreground'}`}>
                     {msg.content || (loading && i === messages.length - 1 ? (
                       <span className="inline-flex gap-1">
                         <span className="animate-pulse">.</span>
@@ -314,7 +310,7 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
         )}
 
         {/* Input */}
-        <div className="px-6 pb-5 pt-3 border-t border-slate-100">
+        <div className="px-6 pb-5 pt-3 border-t border-border">
           <div className="flex gap-3 items-end">
             <Textarea
               ref={textareaRef}
@@ -335,7 +331,7 @@ export function PositioningCoach({ currentPositioning, context }: Props) {
               {loading ? '...' : 'Send'}
             </Button>
           </div>
-          <p className="mt-2 text-[11px] text-slate-400">Press Enter to send, Shift+Enter for a new line.</p>
+          <p className="mt-2 text-[11px] text-muted-foreground">Press Enter to send, Shift+Enter for a new line.</p>
         </div>
       </Card>
     </div>

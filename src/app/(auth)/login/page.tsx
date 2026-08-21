@@ -4,12 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import TurnstileWidget from '@/app/components/turnstile-widget'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Label } from '@/components/ui'
 const TURNSTILE_ENABLED = process.env.NEXT_PUBLIC_TURNSTILE_ENABLED === '1'
 
 function getInitialQueryError(): string | null {
@@ -201,11 +196,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.12),_transparent_30%),linear-gradient(180deg,_#020617_0%,_#0f172a_48%,_#111827_100%)] font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+      <header className="border-b border-border bg-background/80 backdrop-blur">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:text-slate-300 transition-colors">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
         </div>
       </header>
@@ -214,17 +209,17 @@ export default function LoginPage() {
 <div className="w-full max-w-sm">
 
           <div className="mb-8">
-            <h1 className="text-[24px] font-bold text-white leading-tight">Sign in</h1>
-            <p className="text-[13px] text-slate-300 mt-1.5">Welcome back.</p>
+            <h1 className="text-[24px] font-bold text-foreground leading-tight">Sign in</h1>
+            <p className="text-[13px] text-muted-foreground mt-1.5">Welcome back.</p>
           </div>
 
-          <Card variant="glass" className="border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
+          <Card variant="glass" className="border-border bg-card/80 p-8 shadow-lg">
 
             <section id="login-social" className="mb-5">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Social sign-in</h2>
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Social sign-in</h2>
             <Button
               variant="outline"
-              className={`w-full min-h-[44px] justify-center gap-2.5 !border-white/15 !bg-white/5 !text-slate-100 mb-5 hover:!border-white/35 hover:!bg-white/10 ${authBusy ? '!opacity-50 !pointer-events-none' : ''}`}
+              className={`w-full min-h-[44px] justify-center gap-2.5 !border-border !bg-muted/40 !text-foreground mb-5 hover:!bg-muted/60 ${authBusy ? '!opacity-50 !pointer-events-none' : ''}`}
               render={
                 <a
                   href={googleFallbackHref}
@@ -246,7 +241,7 @@ export default function LoginPage() {
             </Button>
 
             <Button
-              className={`w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-black !text-white mb-5 hover:!bg-slate-800 ${authBusy ? '!opacity-50 !pointer-events-none' : ''}`}
+              className={`w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-primary !text-primary-foreground mb-5 hover:!bg-muted ${authBusy ? '!opacity-50 !pointer-events-none' : ''}`}
               render={
                 <a
                   href={appleFallbackHref}
@@ -266,17 +261,17 @@ export default function LoginPage() {
             </section>
 
             <div className="flex items-center gap-3 mb-5">
-              <div className="flex-1 h-px bg-white/15" />
-              <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wide">or</span>
-              <div className="flex-1 h-px bg-white/15" />
+              <div className="flex-1 h-px bg-muted/80" />
+              <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wide">or</span>
+              <div className="flex-1 h-px bg-muted/80" />
             </div>
 
             <form id="login-password" onSubmit={handleSubmit} action="/api/auth/login-submit" method="post" className="flex flex-col gap-5">
               <input type="hidden" name="next" value={safeNextPath} />
-              <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Email and password</h2>
+              <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Email and password</h2>
 
               <div>
-                <Label htmlFor="email" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="email" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Email
                 </Label>
                 <Input
@@ -288,12 +283,12 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
+                  className="w-full !border-border !bg-background/60 text-base text-foreground placeholder:text-muted-foreground"
                 />
               </div>
 
               <div>
-                <Label htmlFor="password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Password
                 </Label>
                 <Input
@@ -304,7 +299,7 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 focus-visible:!border-white/40"
+                  className="w-full !border-border !bg-background/60 text-base text-foreground"
                 />
               </div>
 
@@ -329,7 +324,7 @@ export default function LoginPage() {
                 />
               ) : null}
 
-              <p className="text-[12px] text-slate-400">
+              <p className="text-[12px] text-muted-foreground">
                 Used Google or Apple to sign up? Use that provider first, then set a password in Settings -&gt; Security.
               </p>
 
@@ -341,7 +336,7 @@ export default function LoginPage() {
                 name="intent"
                 value="signin"
                 disabled={authBusy}
-                className="w-full min-h-[44px] justify-center rounded !bg-orange-500 !text-slate-950 text-[14px] hover:!bg-orange-400"
+                className="w-full min-h-[44px] justify-center rounded !bg-primary !text-primary-foreground text-[14px] hover:!bg-primary/90"
               >
                 {loading ? 'Signing in…' : 'Sign in'}
               </Button>
@@ -350,16 +345,16 @@ export default function LoginPage() {
           </Card>
 
           <div className="flex flex-col items-center mt-5">
-            <span className="text-[13px] text-slate-400">No account?</span>
-            <Link href="/signup" className="flex items-center justify-center min-h-[44px] text-[13px] text-orange-200 font-semibold hover:text-orange-100">
+            <span className="text-[13px] text-muted-foreground">No account?</span>
+            <Link href="/signup" className="flex items-center justify-center min-h-[44px] text-[13px] text-primary font-semibold">
               Start your free trial - 30 days free, no credit card
             </Link>
           </div>
 
-          <p className="text-center text-[11px] text-slate-500 mt-8">
+          <p className="text-center text-[11px] text-muted-foreground mt-8">
             &copy; {new Date().getFullYear()} Starting Monday. All rights reserved.
           </p>
-          <p className="text-center text-[11px] text-slate-400 mt-2">
+          <p className="text-center text-[11px] text-muted-foreground mt-2">
             Private by default. We do not share your data with recruiters, employers, or third parties.
           </p>
 

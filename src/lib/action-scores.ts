@@ -70,13 +70,14 @@ export const GROUP_LABELS: Record<ScoreGroup, string> = {
   profile:       'Profile',
 }
 
+// Chart tokens rather than fixed hexes, so score charts follow the active theme.
 export const GROUP_COLORS: Record<ScoreGroup, string> = {
-  onboarding:    '#f97316',
-  pipeline:      '#0f172a',
-  intelligence:  '#3b82f6',
-  signals:       '#f59e0b',
-  communication: '#10b981',
-  profile:       '#8b5cf6',
+  onboarding:    'var(--chart-1)',
+  pipeline:      'var(--chart-2)',
+  intelligence:  'var(--chart-3)',
+  signals:       'var(--chart-4)',
+  communication: 'var(--chart-5)',
+  profile:       'var(--chart-6)',
 }
 
 export type StallLane = 'signals' | 'pipeline' | 'preparation'

@@ -1,10 +1,5 @@
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Progress } from '@/components/ui/progress'
-
+import { Alert, AlertDescription, Badge, Button, Card, Progress } from '@/components/ui'
 type DashboardStatusBannersProps = {
   isTrialing: boolean
   trialDaysLeft: number
@@ -45,17 +40,17 @@ export function DashboardStatusBanners({
       {!activationComplete && (
         <Card
           variant="glass"
-          className="gap-0 mb-4 border-orange-300/35 bg-orange-500/10 px-5 py-4 shadow-[0_18px_44px_rgba(15,23,42,0.16)]"
+          className="gap-0 mb-4 border-primary/35 bg-primary/10 px-5 py-4 shadow-lg"
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-200/90">
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary/90">
                 Getting started
               </p>
-              <p className="mt-1 text-[13px] text-slate-100">
+              <p className="mt-1 text-[13px] text-foreground">
                 {activationCompletedCount} of {setupSteps.length} steps complete.
               </p>
-              <p className="mt-1 text-[12px] text-slate-300">
+              <p className="mt-1 text-[12px] text-muted-foreground">
                 Keep this visible until the six actions are done so first-run users always see the next move.
               </p>
             </div>
@@ -76,13 +71,13 @@ export function DashboardStatusBanners({
                 key={step.label}
                 className={`flex items-start gap-3 rounded-lg border px-3 py-2 ${
                   step.done
-                    ? 'border-emerald-300/25 bg-emerald-500/10'
-                    : 'border-white/10 bg-white/5'
+                    ? 'border-success/25 bg-success/10'
+                    : 'border-border bg-muted/40'
                 }`}
               >
                 <Badge
                   className={`mt-0.5 h-5 w-5 shrink-0 justify-center rounded-full p-0 text-[10px] font-bold ${
-                    step.done ? 'bg-emerald-500 text-white' : 'bg-white/10 text-slate-200'
+                    step.done ? 'bg-success text-success-foreground' : 'bg-muted/60 text-success-foreground'
                   }`}
                 >
                   {step.done ? '✓' : index + 1}
@@ -91,8 +86,8 @@ export function DashboardStatusBanners({
                   <p
                     className={`text-[13px] font-semibold ${
                       step.done
-                        ? 'text-emerald-100 line-through decoration-emerald-200/50'
-                        : 'text-slate-100'
+                        ? 'text-success line-through decoration-success/50'
+                        : 'text-foreground'
                     }`}
                   >
                     {step.label}
@@ -100,7 +95,7 @@ export function DashboardStatusBanners({
                   {!step.done && (
                     <Link
                       href={step.href}
-                      className="mt-1 inline-flex text-[12px] font-semibold text-orange-200 hover:text-orange-100"
+                      className="mt-1 inline-flex text-[12px] font-semibold text-primary"
                     >
                       {step.cta} →
                     </Link>
@@ -116,7 +111,7 @@ export function DashboardStatusBanners({
         <Alert
           variant={trialVariant}
           className={`mb-4 flex items-center justify-between gap-4 px-5 py-3 text-[13px] ${
-            trialVariant === 'default' ? 'bg-white/5 border-white/10 text-slate-300' : ''
+            trialVariant === 'default' ? 'bg-muted/40 border-border text-muted-foreground' : ''
           }`}
         >
           <AlertDescription className="text-current">
@@ -137,7 +132,7 @@ export function DashboardStatusBanners({
       {offerCount > 0 && !isExecutiveMode && (
         <Alert variant="success" className="mb-4 flex items-center justify-between gap-4 px-5 py-3.5">
           <AlertDescription className="flex items-center gap-3 text-current">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-300 shrink-0" />
+            <span className="inline-block w-2 h-2 rounded-full bg-success shrink-0" />
             <span className="text-[13px] font-semibold">
               {offerCount === 1 ? `${offerName ?? 'Offer'} - offer in hand` : `${offerCount} offers in flight`}
             </span>
@@ -149,21 +144,21 @@ export function DashboardStatusBanners({
       )}
 
       {offerCompanyName && !isExecutiveMode && (
-        <Card variant="glass" className="gap-4 mb-4 flex-col justify-between border-transparent bg-green-900 px-5 py-4 sm:flex-row sm:items-center">
+        <Card variant="glass" className="gap-4 mb-4 flex-col justify-between border-transparent bg-success px-5 py-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-[14px] font-bold text-white">Did you accept the offer?</p>
-            <p className="text-[12px] text-green-300 mt-0.5">Mark your search complete and we will take care of the rest.</p>
+            <p className="text-[14px] font-bold text-foreground">Did you accept the offer?</p>
+            <p className="text-[12px] text-success mt-0.5">Mark your search complete and we will take care of the rest.</p>
           </div>
           <form action={onMarkPlaced} className="flex items-center gap-2 shrink-0">
             <input type="hidden" name="company" value={offerCompanyName} />
             <Button
               type="submit"
               variant="secondary"
-              className="h-auto whitespace-nowrap border border-white/15 bg-white/10 px-5 py-2 text-[13px] font-bold text-slate-100 hover:border-white/30 hover:bg-white/15"
+              className="h-auto whitespace-nowrap border border-border bg-muted/60 px-5 py-2 text-[13px] font-bold text-foreground hover:bg-muted/80"
             >
               Yes, I accepted
             </Button>
-            <Link href="/dashboard" className="text-[12px] text-green-400 hover:text-green-200 transition-colors whitespace-nowrap">
+            <Link href="/dashboard" className="text-[12px] text-success transition-colors whitespace-nowrap">
               Later
             </Link>
           </form>
@@ -177,9 +172,9 @@ export function DashboardStatusBanners({
               value={(activationCompletedCount / 6) * 100}
               className="w-24 shrink-0"
             />
-            <span className="text-[12px] text-slate-300 font-semibold shrink-0">{activationCompletedCount} of 6 steps complete</span>
+            <span className="text-[12px] text-muted-foreground font-semibold shrink-0">{activationCompletedCount} of 6 steps complete</span>
           </div>
-          <Link href="/dashboard/start" className="text-[12px] font-semibold text-orange-200 hover:underline shrink-0">
+          <Link href="/dashboard/start" className="text-[12px] font-semibold text-primary hover:underline shrink-0">
             Setup
           </Link>
         </Card>

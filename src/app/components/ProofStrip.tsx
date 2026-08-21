@@ -22,18 +22,18 @@ export function ProofStrip({ metric, label, source, caveat }: ProofStripProps) {
   return (
     <div
       data-emi-proof="role_proof_strip"
-      className="rounded-xl border border-emerald-800/50 bg-emerald-950/20 px-5 py-4 my-6"
+      className="rounded-xl border border-success/50 bg-success/20 px-5 py-4 my-6"
     >
-      <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-300 mb-2">
+      <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">
         Pilot evidence
       </p>
       <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-2">
-        <span className="text-[28px] font-bold text-emerald-200 leading-none">{metric}</span>
-        <span className="text-[14px] text-emerald-100 leading-snug">{label}</span>
+        <span className="text-[28px] font-bold text-success leading-none">{metric}</span>
+        <span className="text-[14px] text-success leading-snug">{label}</span>
       </div>
-      <p className="text-[12px] text-slate-300">
+      <p className="text-[12px] text-muted-foreground">
         {source}.{' '}
-        <a href="/evidence-hub" className="underline text-emerald-300 hover:text-emerald-200 transition-colors">
+        <a href="/evidence-hub" className="underline text-success transition-colors">
           See Evidence Hub
         </a>
         .{' '}

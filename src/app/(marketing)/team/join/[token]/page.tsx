@@ -2,9 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 export const metadata = { title: 'Accept Invite - Starting Monday' }
 
 export default async function TeamJoinPage({
@@ -23,11 +21,11 @@ export default async function TeamJoinPage({
 
   if (!seat) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100 font-sans">
+      <div className="min-h-screen flex items-center justify-center bg-muted font-sans">
         <div className="text-center px-6">
-          <h2 className="text-[20px] font-bold text-slate-900 mb-2">Invite not available</h2>
-          <p className="text-[15px] font-semibold text-slate-700 mb-3">This invite link is invalid or expired.</p>
-          <Link href="/" className="text-[13px] text-slate-500 underline underline-offset-2">Go to startingmonday.app</Link>
+          <h2 className="text-[20px] font-bold text-foreground mb-2">Invite not available</h2>
+          <p className="text-[15px] font-semibold text-muted-foreground mb-3">This invite link is invalid or expired.</p>
+          <Link href="/" className="text-[13px] text-muted-foreground underline underline-offset-2">Go to startingmonday.app</Link>
         </div>
       </div>
     )
@@ -35,11 +33,11 @@ export default async function TeamJoinPage({
 
   if (seat.status === 'accepted') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100 font-sans">
+      <div className="min-h-screen flex items-center justify-center bg-muted font-sans">
         <div className="text-center px-6">
-          <h2 className="text-[20px] font-bold text-slate-900 mb-2">Invite already accepted</h2>
-          <p className="text-[15px] font-semibold text-slate-700 mb-3">This invite has already been accepted.</p>
-          <Link href="/dashboard" className="text-[13px] font-semibold text-orange-500">Go to dashboard &rarr;</Link>
+          <h2 className="text-[20px] font-bold text-foreground mb-2">Invite already accepted</h2>
+          <p className="text-[15px] font-semibold text-muted-foreground mb-3">This invite has already been accepted.</p>
+          <Link href="/dashboard" className="text-[13px] font-semibold text-primary">Go to dashboard &rarr;</Link>
         </div>
       </div>
     )
@@ -97,65 +95,65 @@ export default async function TeamJoinPage({
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans flex flex-col">
+    <div className="dark min-h-screen bg-background font-sans flex flex-col">
       <header className="px-6 h-14 flex items-center">
         <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-          <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
         </Link>
       </header>
 
       <main className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="max-w-md w-full">
           <section id="invite-summary">
-          <h2 className="text-[13px] text-slate-500 mb-4">Team invitation</h2>
-          <h1 className="text-[32px] font-bold text-white leading-tight mb-4">
+          <h2 className="text-[13px] text-muted-foreground mb-4">Team invitation</h2>
+          <h1 className="text-[32px] font-bold text-foreground leading-tight mb-4">
             {inviterName} invited you to join their account
           </h1>
-          <p className="text-[14px] text-slate-200 leading-relaxed mb-2">
+          <p className="text-[14px] text-foreground leading-relaxed mb-2">
             Starting Monday is an AI-powered platform for senior executive searches: pipeline tracking,
             company intelligence, and interview prep briefs.
           </p>
-          <p className="text-[13px] text-slate-500 mb-8">
-            This seat is reserved for <span className="text-slate-200">{seat.member_email}</span>.
+          <p className="text-[13px] text-muted-foreground mb-8">
+            This seat is reserved for <span className="text-foreground">{seat.member_email}</span>.
           </p>
           </section>
 
-          <Card variant="glass" className="mb-8 rounded !border-slate-700 !bg-slate-800/50 p-4">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-200 mb-2">What you get</h2>
-            <ul className="text-[13px] text-slate-200 space-y-1.5 leading-relaxed">
+          <Card variant="glass" className="mb-8 rounded !border-border !bg-muted/50 p-4">
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-foreground mb-2">What you get</h2>
+            <ul className="text-[13px] text-foreground space-y-1.5 leading-relaxed">
               <li>Shared account access with full dashboard workflow.</li>
               <li>Company pipeline, briefing, and interview prep in one workspace.</li>
               <li>Seat-level access linked to your own login.</li>
             </ul>
-            <p className="text-[12px] text-slate-200 mt-3">Trust and confidentiality: invite access is secure and tied to this email seat and account authentication.</p>
-            <p className="text-[12px] text-slate-200 mt-1">Outcome metric: most members begin their first dashboard action in under 5 minutes after joining.</p>
+            <p className="text-[12px] text-foreground mt-3">Trust and confidentiality: invite access is secure and tied to this email seat and account authentication.</p>
+            <p className="text-[12px] text-foreground mt-1">Outcome metric: most members begin their first dashboard action in under 5 minutes after joining.</p>
           </Card>
 
           <section id="next-step">
           <h2 className="sr-only">Next step</h2>
-          <p className="text-[12px] text-slate-200 mb-3">CTA: get started now by accepting this invite.</p>
+          <p className="text-[12px] text-foreground mb-3">CTA: get started now by accepting this invite.</p>
           {user ? (
             <form action={acceptInvite}>
               <Button
                 type="submit"
-                className="w-full !bg-white !text-slate-900 hover:!bg-slate-100 px-7 py-3.5 text-[14px] font-bold"
+                className="w-full !bg-primary !text-primary-foreground hover:!bg-muted px-7 py-3.5 text-[14px] font-bold"
               >
                 Get started now
               </Button>
-              <p className="text-[12px] text-slate-500 mt-3">Joining as {user.email}</p>
+              <p className="text-[12px] text-muted-foreground mt-3">Joining as {user.email}</p>
             </form>
           ) : (
             <div className="flex flex-col gap-3">
               <Button
                 render={<Link href={`/signup?seat_token=${token}`} />}
-                className="w-full !bg-white !text-slate-900 hover:!bg-slate-100 px-7 py-3.5 text-[14px] font-bold"
+                className="w-full !bg-primary !text-primary-foreground hover:!bg-muted px-7 py-3.5 text-[14px] font-bold"
               >
                 Create account and join
               </Button>
               <Button
                 variant="outline"
                 render={<Link href={`/login?next=/team/join/${token}`} />}
-                className="w-full !border-slate-600 !bg-transparent !text-slate-200 hover:!border-slate-400 px-7 py-3.5 text-[14px] font-semibold"
+                className="w-full !border-border !bg-transparent !text-foreground px-7 py-3.5 text-[14px] font-semibold"
               >
                 Log in and join
               </Button>

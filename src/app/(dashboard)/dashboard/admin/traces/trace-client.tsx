@@ -16,29 +16,7 @@ import {
   type LastActionState,
   type Trace,
 } from './trace-shared'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
-import { Toggle } from '@/components/ui/toggle'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from '@/components/ui/pagination'
-
+import { Alert, AlertDescription, Badge, Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious, ScrollArea, Textarea, Toggle, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 function TraceRow({
   trace,
   enableShortcuts,
@@ -141,7 +119,7 @@ function TraceRow({
   return (
     <div
       ref={rowRef}
-      className={`border-b border-white/10 ${evalPass === true ? 'bg-emerald-50/30' : evalPass === false ? 'bg-red-50/30' : ''} ${enableShortcuts ? 'ring-1 ring-slate-300 ring-inset' : ''}`}
+      className={`border-b border-border ${evalPass === true ? 'bg-success/30' : evalPass === false ? 'bg-destructive/30' : ''} ${enableShortcuts ? 'ring-1 ring-border ring-inset' : ''}`}
       onMouseDown={() => onActivate?.(trace.id)}
     >
       <div className="px-5 py-4 flex items-start gap-4">
@@ -154,8 +132,8 @@ function TraceRow({
             aria-keyshortcuts="P"
             className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === true
-                ? 'bg-emerald-500 text-white hover:bg-emerald-500'
-                : 'bg-slate-100 text-slate-400 hover:bg-emerald-50 hover:text-emerald-700'
+                ? 'bg-success text-success-foreground hover:bg-success'
+                : 'bg-muted text-success-foreground hover:bg-success/10 hover:text-success-foreground'
             }`}
           >
             Pass
@@ -166,8 +144,8 @@ function TraceRow({
             aria-keyshortcuts="F"
             className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === false
-                ? 'bg-red-500 text-white hover:bg-red-500'
-                : 'bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-700'
+                ? 'bg-destructive text-foreground hover:bg-destructive'
+                : 'bg-muted text-muted-foreground hover:bg-destructive/10 hover:text-destructive'
             }`}
           >
             Fail
@@ -179,7 +157,7 @@ function TraceRow({
 
           {/* Metadata row */}
           <div className="flex items-center gap-3 flex-wrap mb-2.5">
-            <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300">
+            <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
               {featureLabel}
             </span>
             {enableShortcuts && (
@@ -187,15 +165,15 @@ function TraceRow({
                 Active
               </Badge>
             )}
-            <span className="text-[11px] text-slate-400">{dateStr}</span>
+            <span className="text-[11px] text-muted-foreground">{dateStr}</span>
             {trace.latency_ms != null && (
-              <Badge variant="outline" className="text-[11px] text-slate-300">{(trace.latency_ms / 1000).toFixed(1)}s</Badge>
+              <Badge variant="outline" className="text-[11px] text-muted-foreground">{(trace.latency_ms / 1000).toFixed(1)}s</Badge>
             )}
             {tokens > 0 && (
-              <Badge variant="outline" className="text-[11px] text-slate-300">{tokens.toLocaleString()} tok</Badge>
+              <Badge variant="outline" className="text-[11px] text-muted-foreground">{tokens.toLocaleString()} tok</Badge>
             )}
             {trace.user_id && (
-              <Badge variant="outline" className="text-[11px] font-mono text-slate-200">{trace.user_id.slice(0, 8)}</Badge>
+              <Badge variant="outline" className="text-[11px] font-mono text-foreground">{trace.user_id.slice(0, 8)}</Badge>
             )}
           </div>
 
@@ -203,8 +181,8 @@ function TraceRow({
           {!denseMode && trace.input_snapshot && Object.keys(trace.input_snapshot).length > 0 && (
             <div className="mb-2 flex flex-wrap gap-x-4 gap-y-0.5">
               {Object.entries(trace.input_snapshot).map(([k, v]) => (
-                <span key={k} className="text-[11px] font-mono text-slate-300">
-                  {k}: <span className="text-slate-400">{String(v)}</span>
+                <span key={k} className="text-[11px] font-mono text-muted-foreground">
+                  {k}: <span className="text-muted-foreground">{String(v)}</span>
                 </span>
               ))}
             </div>
@@ -215,22 +193,22 @@ function TraceRow({
             <Collapsible open={expanded} onOpenChange={setExpanded} className="mb-3">
               <CollapsibleTrigger
                 aria-keyshortcuts="O"
-                className="text-[11px] text-slate-400 hover:text-slate-300 bg-transparent border-0 cursor-pointer p-0 mb-1.5"
+                className="text-[11px] text-muted-foreground bg-transparent border-0 cursor-pointer p-0 mb-1.5"
               >
                 Output {expanded ? '▲' : '▼'}
               </CollapsibleTrigger>
               {!expanded && (
                 !denseMode ? (
-                  <p className="text-[12px] text-slate-300 leading-relaxed">
+                  <p className="text-[12px] text-muted-foreground leading-relaxed">
                     {trace.output_snapshot.slice(0, 220)}{trace.output_snapshot.length > 220 ? '…' : ''}
                   </p>
                 ) : (
-                  <p className="text-[11px] text-slate-400">Collapsed in dense mode. Expand output when needed.</p>
+                  <p className="text-[11px] text-muted-foreground">Collapsed in dense mode. Expand output when needed.</p>
                 )
               )}
               <CollapsibleContent>
-                <ScrollArea className="max-h-[500px] bg-slate-950/60 border border-white/10 rounded">
-                  <pre className="text-[12px] text-slate-200 whitespace-pre-wrap leading-relaxed p-3">
+                <ScrollArea className="max-h-[500px] bg-background/60 border border-border rounded">
+                  <pre className="text-[12px] text-foreground whitespace-pre-wrap leading-relaxed p-3">
                     {trace.output_snapshot}
                   </pre>
                 </ScrollArea>
@@ -254,8 +232,8 @@ function TraceRow({
                   aria-keyshortcuts={String(idx + 1)}
                   className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                     active
-                      ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                      : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                      ? 'bg-primary text-primary-foreground border-primary/30'
+                      : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
                   }`}
                 >
                   <span className="mr-1 font-semibold">{idx + 1}</span>{category}
@@ -270,9 +248,9 @@ function TraceRow({
             onBlur={saveNotes}
             placeholder="Open coding: what is wrong (or strong) about this output?"
             rows={denseMode ? 1 : 2}
-            className="w-full text-[12px] text-slate-200 border-white/10 px-3 py-2 placeholder:text-slate-400 focus-visible:border-white/30 resize-none bg-white/5"
+            className="w-full text-[12px] text-foreground border-border px-3 py-2 placeholder:text-muted-foreground resize-none bg-muted/40"
           />
-          <p className="mt-1.5 text-[10px] text-slate-400">Shortcuts: P = pass, F = fail, U = unrated, O = output, J/K = active row, 1-8 = fail tags.</p>
+          <p className="mt-1.5 text-[10px] text-muted-foreground">Shortcuts: P = pass, F = fail, U = unrated, O = output, J/K = active row, 1-8 = fail tags.</p>
         </div>
       </div>
     </div>
@@ -706,8 +684,8 @@ export function TraceViewer({
               render={<Link href={buildUrl({ feature: f || undefined, unrated: unratedOnly ? '1' : undefined })} />}
               className={`h-auto text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
                 currentFeature === f
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white/5 border border-white/10 text-slate-300 hover:border-white/30'
+                  ? 'bg-card text-foreground'
+                  : 'bg-muted/40 border border-border text-muted-foreground hover:border-border'
               }`}
             >
               {FEATURE_LABELS[f]}
@@ -720,8 +698,8 @@ export function TraceViewer({
             render={<Link href={buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? undefined : '1' })} />}
             className={`h-auto text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
               unratedOnly
-                ? 'bg-amber-500 text-white'
-                : 'bg-white/5 border border-white/10 text-slate-300 hover:border-white/30'
+                ? 'bg-warning text-warning-foreground'
+                : 'bg-muted/40 border border-border text-warning-foreground hover:border-border'
             }`}
           >
             Unrated only
@@ -729,42 +707,42 @@ export function TraceViewer({
         </div>
       </div>
 
-      <div className="mb-4 bg-white/5 border border-white/10 rounded px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-300">
-        <span className="font-semibold text-slate-200">Session labeled: {sessionTotal}</span>
+      <div className="mb-4 bg-muted/40 border border-border rounded px-3 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+        <span className="font-semibold text-foreground">Session labeled: {sessionTotal}</span>
         <span>Pass: {sessionPass}</span>
         <span>Fail: {sessionFail}</span>
         {focusMode && activeRowIndex >= 0 && (
-          <span className="text-slate-300">Active row: {activeRowIndex + 1}/{visibleTraces.length}</span>
+          <span className="text-muted-foreground">Active row: {activeRowIndex + 1}/{visibleTraces.length}</span>
         )}
         {focusMode && (
           <Toggle
             pressed={denseMode}
             onPressedChange={() => setDenseMode((v) => !v)}
             aria-keyshortcuts="D"
-            className="ml-auto h-auto text-[11px] font-semibold border border-white/10 bg-white/5 text-slate-200 hover:border-white/30 px-2 py-1 rounded transition-colors"
+            className="ml-auto h-auto text-[11px] font-semibold border border-border bg-muted/40 text-foreground px-2 py-1 rounded transition-colors"
           >
             {denseMode ? 'Dense view: on' : 'Dense view: off'}
           </Toggle>
         )}
       </div>
 
-      <div className="mb-4 bg-white/5 border border-white/10 rounded px-3 py-2">
+      <div className="mb-4 bg-muted/40 border border-border rounded px-3 py-2">
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">
               Failure tags ({failureSummaryMode === 'session' ? 'session' : 'current page'})
             </p>
             {lastAction && (
-              <p className="text-[10px] text-slate-400 mt-1">
-                Last action: <span className="text-slate-300">{lastAction.message}</span> <span className="text-slate-400">at {lastAction.at}</span>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Last action: <span className="text-muted-foreground">{lastAction.message}</span> <span className="text-muted-foreground">at {lastAction.at}</span>
               </p>
             )}
             {topFailureTheme && (
-              <p className="text-[10px] text-slate-300 mt-1">
-                Top theme: <span className="font-semibold text-slate-200">{topFailureTheme[0]}</span> ({topFailureTheme[1]})
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Top theme: <span className="font-semibold text-foreground">{topFailureTheme[0]}</span> ({topFailureTheme[1]})
               </p>
             )}
-            <p className="text-[10px] text-slate-400 mt-1">Keyboard: A = apply top tag, Z = undo last bulk apply, D = toggle dense view.</p>
+            <p className="text-[10px] text-muted-foreground mt-1">Keyboard: A = apply top tag, Z = undo last bulk apply, D = toggle dense view.</p>
           </div>
           <div className="flex items-center gap-1">
             {topFailureTheme && untaggedFailedTraces.length > 0 && (
@@ -774,7 +752,7 @@ export function TraceViewer({
                 onClick={applyTopTagToUntaggedFails}
                 disabled={isApplyingTopTag}
                 aria-keyshortcuts="A"
-                className="h-auto text-[10px] px-2 py-1 rounded border-white/10 bg-white/5 text-slate-300 hover:border-white/30"
+                className="h-auto text-[10px] px-2 py-1 rounded border-border bg-muted/40 text-muted-foreground"
               >
                 {isApplyingTopTag ? 'Applying…' : `Apply top tag to ${untaggedFailedTraces.length}`}
               </Button>
@@ -784,7 +762,7 @@ export function TraceViewer({
                 type="button"
                 variant="outline"
                 onClick={copyTopTheme}
-                className="h-auto text-[10px] px-2 py-1 rounded border-white/10 bg-white/5 text-slate-300 hover:border-white/30"
+                className="h-auto text-[10px] px-2 py-1 rounded border-border bg-muted/40 text-muted-foreground"
               >
                 Copy top theme
               </Button>
@@ -798,8 +776,8 @@ export function TraceViewer({
                       variant="outline"
                       className={`h-auto text-[10px] px-2 py-1 rounded ${
                         showCopyActions
-                          ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                          : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                          ? 'bg-primary text-primary-foreground border-primary/30'
+                          : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
                       }`}
                     />
                   }
@@ -825,8 +803,8 @@ export function TraceViewer({
                 onPressedChange={() => setShowCopyPreview((value) => !value)}
                 className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   showCopyPreview
-                    ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                    : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                    ? 'bg-primary text-primary-foreground border-primary/30'
+                    : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
                 }`}
               >
                 {showCopyPreview ? 'Hide preview' : 'Preview copy'}
@@ -837,8 +815,8 @@ export function TraceViewer({
               onPressedChange={() => setCopyFormat((value) => (value === 'list' ? 'table' : 'list'))}
               className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 copyFormat === 'table'
-                  ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                  ? 'bg-primary text-primary-foreground border-primary/30'
+                  : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
               }`}
             >
               Format: {copyFormat}
@@ -848,8 +826,8 @@ export function TraceViewer({
               onPressedChange={() => setIncludeZeroCountsInCopy((value) => !value)}
               className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 includeZeroCountsInCopy
-                  ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                  ? 'bg-primary text-primary-foreground border-primary/30'
+                  : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
               }`}
             >
               Include zeros: {includeZeroCountsInCopy ? 'on' : 'off'}
@@ -859,8 +837,8 @@ export function TraceViewer({
               onPressedChange={() => setTrimForSlack((value) => !value)}
               className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 trimForSlack
-                  ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                  ? 'bg-primary text-primary-foreground border-primary/30'
+                  : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
               }`}
             >
               Trim for Slack: {trimForSlack ? 'on' : 'off'}
@@ -872,7 +850,7 @@ export function TraceViewer({
                 onClick={undoLastBulkApplyTopTag}
                 disabled={isUndoingTopTag}
                 aria-keyshortcuts="Z"
-                className="h-auto text-[10px] px-2 py-1 rounded border-white/10 bg-white/5 text-slate-300 hover:border-white/30"
+                className="h-auto text-[10px] px-2 py-1 rounded border-border bg-muted/40 text-muted-foreground"
               >
                 {isUndoingTopTag ? 'Undoing…' : `Undo ${lastBulkApply.tag}`}
               </Button>
@@ -889,8 +867,8 @@ export function TraceViewer({
                 value="page"
                 className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   failureSummaryMode === 'page'
-                    ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                    : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                    ? 'bg-primary text-primary-foreground border-primary/30'
+                    : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
                 }`}
               >
                 Page
@@ -899,8 +877,8 @@ export function TraceViewer({
                 value="session"
                 className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   failureSummaryMode === 'session'
-                    ? 'bg-orange-400 text-slate-950 border-orange-300/30'
-                    : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                    ? 'bg-primary text-primary-foreground border-primary/30'
+                    : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
                 }`}
               >
                 Session
@@ -911,24 +889,24 @@ export function TraceViewer({
         {summaryRows.length > 0 ? (
           <div className="flex flex-wrap items-center gap-1.5">
             {summaryRows.map(([category, count]) => (
-              <span key={category} className="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-slate-300">
-                {category} <span className="font-semibold text-slate-100">{count}</span>
+              <span key={category} className="text-[10px] px-2 py-1 rounded border border-border bg-muted/40 text-muted-foreground">
+                {category} <span className="font-semibold text-foreground">{count}</span>
               </span>
             ))}
           </div>
         ) : (
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-muted-foreground">
             {failureSummaryMode === 'session'
               ? 'No session failure tags yet.'
               : 'No failed traces with category tags on this page yet.'}
           </p>
         )}
         {showCopyPreview && summaryRows.length > 0 && (
-          <div className="mt-2 border border-white/10 rounded bg-white/5 p-2">
+          <div className="mt-2 border border-border rounded bg-muted/40 p-2">
             <div className="flex items-center justify-between gap-2 mb-1">
-              <p className="text-[10px] font-semibold text-slate-300">Copy payload preview</p>
+              <p className="text-[10px] font-semibold text-muted-foreground">Copy payload preview</p>
               <div className="flex items-center gap-2">
-                <p className="text-[10px] text-slate-400">{copyPreviewChars} chars · {copyPreviewLines} lines</p>
+                <p className="text-[10px] text-muted-foreground">{copyPreviewChars} chars · {copyPreviewLines} lines</p>
                 <Badge variant={fitsSlack ? 'success' : 'warning'} className="text-[10px]">
                   {fitsSlack ? 'Fits Slack' : 'Over 4k'}
                 </Badge>
@@ -939,19 +917,19 @@ export function TraceViewer({
             </div>
             {shouldSuggestTrimForSlack && (
               <Alert variant="warning" className="mb-2 flex items-center justify-between gap-2 px-2 py-1.5">
-                <AlertDescription className="text-[10px] text-amber-100">Payload exceeds Slack-friendly length. Enable Trim for Slack?</AlertDescription>
+                <AlertDescription className="text-[10px] text-warning">Payload exceeds Slack-friendly length. Enable Trim for Slack?</AlertDescription>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setTrimForSlack(true)}
-                  className="h-auto text-[10px] font-semibold rounded border-amber-300/30 bg-amber-500/15 text-amber-100 hover:border-amber-200 px-2 py-1"
+                  className="h-auto text-[10px] font-semibold rounded border-warning/30 bg-warning/15 text-warning px-2 py-1"
                 >
                   Enable trim
                 </Button>
               </Alert>
             )}
             <ScrollArea className="max-h-40">
-              <pre className="text-[10px] text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <pre className="text-[10px] text-muted-foreground whitespace-pre-wrap leading-relaxed">
                 {copyPreviewPayload}
               </pre>
             </ScrollArea>
@@ -960,7 +938,7 @@ export function TraceViewer({
       </div>
 
       {unratedOnly && visibleTraces.length > 0 && (
-        <p className="text-[11px] text-slate-300 mb-3">
+        <p className="text-[11px] text-muted-foreground mb-3">
           Focus mode: shortcuts apply to the active trace. Use J/K to change active row, G/Shift+G for first/last row, D for dense view, and 1-8 for fail tags. Rate and it auto-advances.
         </p>
       )}
@@ -968,16 +946,16 @@ export function TraceViewer({
       {/* Trace list */}
       {totalCount === 0 ? (
         <Card variant="glass" className="p-10 text-center">
-          <p className="text-[14px] text-slate-400">
+          <p className="text-[14px] text-muted-foreground">
             No traces yet. Traces are written on every Claude API call once migration 040 is applied.
           </p>
         </Card>
       ) : visibleTraces.length === 0 ? (
         <Card variant="glass" className="p-10 text-center">
-          <p className="text-[14px] text-slate-300">This page of unrated traces is complete.</p>
+          <p className="text-[14px] text-muted-foreground">This page of unrated traces is complete.</p>
           {unratedOnly && page < totalPages - 1 ? (
             <>
-              <p className="text-[12px] text-slate-400 mt-1">Move to the next unrated page to continue labeling.</p>
+              <p className="text-[12px] text-muted-foreground mt-1">Move to the next unrated page to continue labeling.</p>
               <Button
                 variant="outline"
                 className="mt-3"
@@ -987,7 +965,7 @@ export function TraceViewer({
               </Button>
             </>
           ) : (
-            <p className="text-[12px] text-slate-400 mt-1">No more unrated traces on remaining pages for this filter.</p>
+            <p className="text-[12px] text-muted-foreground mt-1">No more unrated traces on remaining pages for this filter.</p>
           )}
         </Card>
       ) : (
@@ -1024,7 +1002,7 @@ export function TraceViewer({
               />
             </PaginationItem>
           </PaginationContent>
-          <span className="text-[12px] text-slate-400">
+          <span className="text-[12px] text-muted-foreground">
             Page {page + 1} of {totalPages} &middot; {totalCount} total
           </span>
           <PaginationContent>

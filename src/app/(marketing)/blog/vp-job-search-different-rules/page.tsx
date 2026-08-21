@@ -29,7 +29,7 @@ export default function VpJobSearchDifferentRulesPage() {
       url="https://startingmonday.app/blog/vp-job-search-different-rules"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most job search advice is built around a transparent market. Roles are posted.
           You apply. Someone reviews your resume and decides whether to call you. The process
@@ -47,7 +47,7 @@ export default function VpJobSearchDifferentRulesPage() {
           broken. The rules changed and nobody told you.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Rule one: the role was filled before it was posted</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Rule one: the role was filled before it was posted</h2>
 
         <p>
           At the VP and C-suite level, most roles are not filled through the application process.
@@ -74,7 +74,7 @@ export default function VpJobSearchDifferentRulesPage() {
           them are having conversations when the field is still open.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Rule two: the preparation standard is different</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Rule two: the preparation standard is different</h2>
 
         <p>
           At the manager and director level, interview preparation means knowing your own
@@ -108,7 +108,7 @@ export default function VpJobSearchDifferentRulesPage() {
           is usually the explanation.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Rule three: you are managing a campaign, not an application</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Rule three: you are managing a campaign, not an application</h2>
 
         <p>
           A senior executive search involves thirty to sixty target companies at various
@@ -133,7 +133,7 @@ export default function VpJobSearchDifferentRulesPage() {
           showing signals go unnoticed because nobody was watching.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Rule four: the timeline is longer than you expect</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Rule four: the timeline is longer than you expect</h2>
 
         <p>
           A well-run senior executive search takes six to nine months from the time the
@@ -156,7 +156,7 @@ export default function VpJobSearchDifferentRulesPage() {
           actually control.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What to do with this</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What to do with this</h2>
 
         <p>
           If you are at the VP level now, or approaching it, the time to understand these rules
@@ -177,7 +177,7 @@ export default function VpJobSearchDifferentRulesPage() {
           moment it matters. Starting Monday was built to operationalize it - monitoring,
           pipeline, prep briefs, daily briefing - for the executives who want to run the
           search the way it needs to be run. The{' '}
-          <a href="/blog" className="text-slate-900 font-semibold underline underline-offset-2 hover:text-orange-600 transition-colors">
+          <a href="/blog" className="text-foreground font-semibold underline underline-offset-2 hover:text-primary transition-colors">
             blog
           </a>
           {' '}covers the specific mechanics in detail.

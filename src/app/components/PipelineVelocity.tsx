@@ -9,11 +9,11 @@ const STAGE_LABELS: Record<string, string> = {
 }
 
 const STAGE_CLS: Record<string, string> = {
-  watching:     'bg-white/10 text-slate-300',
-  researching:  'bg-blue-500/15 text-blue-200',
-  applied:      'bg-indigo-500/15 text-indigo-200',
-  interviewing: 'bg-amber-500/15 text-amber-200',
-  offer:        'bg-emerald-500/15 text-emerald-200',
+  watching:     'bg-muted/60 text-muted-foreground',
+  researching:  'bg-info/15 text-info',
+  applied:      'bg-info/15 text-info',
+  interviewing: 'bg-warning/15 text-warning',
+  offer:        'bg-success/15 text-success',
 }
 
 export type VelocityRow = { id: string; name: string; stage: string; updated_at: string | null }
@@ -32,28 +32,28 @@ export function PipelineVelocity({ companies }: { companies: VelocityRow[] }) {
   if (rows.length === 0) return null
 
   return (
-    <div className="bg-white/5 border border-white/15 rounded mb-6 sm:mb-8 overflow-hidden">
-      <div className="px-5 py-[14px] border-b border-white/10 flex items-baseline justify-between">
-        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
+    <div className="bg-muted/40 border border-border rounded mb-6 sm:mb-8 overflow-hidden">
+      <div className="px-5 py-[14px] border-b border-border flex items-baseline justify-between">
+        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
           Pipeline Velocity
         </p>
-        <p className="text-[11px] text-slate-400">days since last activity</p>
+        <p className="text-[11px] text-muted-foreground">days since last activity</p>
       </div>
-      <div className="divide-y divide-white/10">
+      <div className="divide-y divide-border">
         {rows.map(row => {
           const staleCls =
-            row.daysSince >= 30 ? 'text-rose-300 font-semibold' :
-            row.daysSince >= 14 ? 'text-amber-300 font-semibold' :
-            'text-slate-400'
+            row.daysSince >= 30 ? 'text-destructive font-semibold' :
+            row.daysSince >= 14 ? 'text-warning font-semibold' :
+            'text-muted-foreground'
           return (
             <div key={row.id} className="px-5 py-3 flex items-center gap-3">
               <Link
                 href={`/dashboard/companies/${row.id}`}
-                className="flex-1 text-[13px] font-medium text-slate-100 hover:text-white truncate"
+                className="flex-1 text-[13px] font-medium text-muted-foreground hover:text-foreground truncate"
               >
                 {row.name}
               </Link>
-              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${STAGE_CLS[row.stage] ?? 'bg-white/10 text-slate-300'}`}>
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${STAGE_CLS[row.stage] ?? 'bg-muted/60 text-muted-foreground'}`}>
                 {STAGE_LABELS[row.stage] ?? row.stage}
               </span>
               <span className={`text-[12px] shrink-0 tabular-nums w-10 text-right ${staleCls}`}>

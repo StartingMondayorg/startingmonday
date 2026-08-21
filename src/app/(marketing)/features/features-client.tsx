@@ -3,19 +3,7 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import type { FeatureDocCard } from '@/lib/feature-docs'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Badge, Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 type FeatureChatSource = {
   slug: string
   title: string
@@ -109,38 +97,38 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.12),_transparent_30%),linear-gradient(180deg,_#020617_0%,_#0f172a_48%,_#111827_100%)] text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-md">
+    <div className="min-h-screen bg-card/85 text-foreground">
+      <header className="border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] text-slate-300">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 text-[13px]">
-            <Link href="/learn-more" className="text-slate-300 hover:text-white">Learn more</Link>
+            <Link href="/learn-more" className="text-muted-foreground hover:text-foreground">Learn more</Link>
 
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        <Card variant="glass" className="p-5 shadow-[0_18px_60px_rgba(2,6,23,0.42)] sm:p-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-500">Document Hub</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">Feature and onboarding docs</h1>
-          <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-slate-300">
+        <Card variant="glass" className="p-5 shadow-xl sm:p-6">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Document Hub</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">Feature and onboarding docs</h1>
+          <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-muted-foreground">
             Every one-pager is rendered from the source markdown with full section coverage. Use filters, search, and chat to find the right document quickly.
           </p>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <Card variant="glass" className="bg-slate-950/45 p-3">
-              <p className="text-[11px] uppercase tracking-[0.08em] text-slate-400">Documents</p>
-              <p className="mt-1 text-xl font-semibold text-white">{stats.totalDocs}</p>
+            <Card variant="glass" className="bg-background/45 p-3">
+              <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">Documents</p>
+              <p className="mt-1 text-xl font-semibold text-foreground">{stats.totalDocs}</p>
             </Card>
-            <Card variant="glass" className="bg-slate-950/45 p-3">
-              <p className="text-[11px] uppercase tracking-[0.08em] text-slate-400">Total lines</p>
-              <p className="mt-1 text-xl font-semibold text-white">{stats.totalLines}</p>
+            <Card variant="glass" className="bg-background/45 p-3">
+              <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">Total lines</p>
+              <p className="mt-1 text-xl font-semibold text-foreground">{stats.totalLines}</p>
             </Card>
-            <Card variant="glass" className="bg-slate-950/45 p-3">
-              <p className="text-[11px] uppercase tracking-[0.08em] text-slate-400">Headings audited</p>
-              <p className="mt-1 text-xl font-semibold text-white">{stats.totalHeadings}</p>
+            <Card variant="glass" className="bg-background/45 p-3">
+              <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">Headings audited</p>
+              <p className="mt-1 text-xl font-semibold text-foreground">{stats.totalHeadings}</p>
             </Card>
           </div>
         </Card>
@@ -152,10 +140,10 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search title, summary, or file path"
-              className="w-full rounded-lg border-white/20 bg-slate-950/50 text-[14px] text-slate-100 placeholder:text-slate-400"
+              className="w-full rounded-lg border-border bg-background/50 text-[14px] text-foreground placeholder:text-muted-foreground"
             />
             <Select value={category} onValueChange={(value) => setCategory(value as typeof category)}>
-              <SelectTrigger aria-label="Filter by document category" className="w-full rounded-lg border-white/20 bg-slate-950/50 text-[14px] text-slate-100">
+              <SelectTrigger aria-label="Filter by document category" className="w-full rounded-lg border-border bg-background/50 text-[14px] text-foreground">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -175,7 +163,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
           >
             <ToggleGroupItem
               value="all"
-              className="whitespace-nowrap rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[12px] font-semibold text-slate-700 hover:border-slate-400 data-[state=on]:border-slate-900 data-[state=on]:bg-slate-900 data-[state=on]:text-white"
+              className="whitespace-nowrap rounded-full border border-border bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground data-[state=on]:border-border data-[state=on]:bg-card data-[state=on]:text-primary-foreground"
             >
               All personas
             </ToggleGroupItem>
@@ -183,19 +171,19 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
               <ToggleGroupItem
                 key={value}
                 value={value}
-                className="whitespace-nowrap rounded-full border border-slate-300 bg-white px-3 py-1.5 text-[12px] font-semibold text-slate-700 hover:border-slate-400 data-[state=on]:border-orange-500 data-[state=on]:bg-orange-500 data-[state=on]:text-slate-950"
+                className="whitespace-nowrap rounded-full border border-border bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground data-[state=on]:border-primary/30 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
               >
                 {label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
 
-          <p className="mt-2 text-[12px] text-slate-400">Showing {filtered.length} of {docs.length} documents.</p>
+          <p className="mt-2 text-[12px] text-muted-foreground">Showing {filtered.length} of {docs.length} documents.</p>
         </Card>
 
-        <Card variant="glass" id="chat" className="mt-5 bg-slate-950 p-4 sm:p-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Find with chat</p>
-          <p className="mt-2 text-[13px] text-slate-300">Ask in plain language and get ranked docs with short summaries.</p>
+        <Card variant="glass" id="chat" className="mt-5 bg-background p-4 sm:p-5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Find with chat</p>
+          <p className="mt-2 text-[13px] text-muted-foreground">Ask in plain language and get ranked docs with short summaries.</p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <Input
               type="text"
@@ -208,7 +196,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
                 }
               }}
               placeholder="Example: show me white-label setup and pricing"
-              className="w-full rounded-lg border-slate-700 bg-slate-900 text-[14px] text-slate-100 placeholder:text-slate-500"
+              className="w-full rounded-lg border-border bg-card text-[14px] text-foreground placeholder:text-muted-foreground"
             />
             <Button
               type="button"
@@ -219,19 +207,19 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
               {chatLoading ? 'Searching...' : 'Ask'}
             </Button>
           </div>
-          {chatError ? <p className="mt-2 text-[12px] text-rose-300">{chatError}</p> : null}
+          {chatError ? <p className="mt-2 text-[12px] text-destructive">{chatError}</p> : null}
           {chatResult ? (
-            <Card variant="glass" className="mt-4 bg-slate-900 p-4">
-              <p className="text-[13px] whitespace-pre-wrap text-slate-200">{chatResult.answer}</p>
-              <p className="mt-2 text-[11px] text-slate-400">Confidence: {Math.round(chatResult.confidence * 100)}%</p>
+            <Card variant="glass" className="mt-4 bg-card p-4">
+              <p className="text-[13px] whitespace-pre-wrap text-foreground">{chatResult.answer}</p>
+              <p className="mt-2 text-[11px] text-muted-foreground">Confidence: {Math.round(chatResult.confidence * 100)}%</p>
               <div className="mt-3 space-y-2">
                 {chatResult.sources.map((source) => (
-                  <Card key={source.slug} variant="glass" className="bg-slate-950 p-3">
-                    <Link href={source.url} className="text-[13px] font-semibold text-orange-300 hover:text-orange-200 hover:underline">
+                  <Card key={source.slug} variant="glass" className="bg-background p-3">
+                    <Link href={source.url} className="text-[13px] font-semibold text-primary hover:underline">
                       {source.title}
                     </Link>
-                    <p className="mt-1 text-[12px] text-slate-300">{source.summary}</p>
-                    <p className="mt-1 text-[11px] text-slate-500">{source.snippet}</p>
+                    <p className="mt-1 text-[12px] text-muted-foreground">{source.summary}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">{source.snippet}</p>
                   </Card>
                 ))}
               </div>
@@ -241,24 +229,24 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
 
         <section className="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-2">
           {filtered.map((doc) => (
-            <Card key={doc.slug} variant="glass" className="bg-slate-950/45 p-4 shadow-[0_12px_38px_rgba(2,6,23,0.35)]">
+            <Card key={doc.slug} variant="glass" className="bg-background/45 p-4 shadow-lg">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="bg-slate-800 px-2 py-1 text-[11px] font-semibold text-slate-200">{CATEGORY_LABELS[doc.category]}</Badge>
-                <Badge className="bg-orange-500/15 px-2 py-1 text-[11px] font-semibold text-orange-300">{PERSONA_LABELS[doc.persona]}</Badge>
+                <Badge className="bg-muted px-2 py-1 text-[11px] font-semibold text-foreground">{CATEGORY_LABELS[doc.category]}</Badge>
+                <Badge className="bg-primary/15 px-2 py-1 text-[11px] font-semibold text-primary">{PERSONA_LABELS[doc.persona]}</Badge>
               </div>
-              <h2 className="mt-2 text-lg font-bold text-white">
-                <Link href={`/features/${doc.slug}`} className="hover:text-orange-200 hover:underline">{doc.title}</Link>
+              <h2 className="mt-2 text-lg font-bold text-foreground">
+                <Link href={`/features/${doc.slug}`} className="hover:text-primary hover:underline">{doc.title}</Link>
               </h2>
-              <p className="mt-1 text-[14px] leading-relaxed text-slate-300">{doc.summary}</p>
-              <div className="mt-3 flex flex-wrap gap-3 text-[11px] text-slate-400">
+              <p className="mt-1 text-[14px] leading-relaxed text-muted-foreground">{doc.summary}</p>
+              <div className="mt-3 flex flex-wrap gap-3 text-[11px] text-muted-foreground">
                 <span>{doc.lineCount} lines</span>
                 <span>{doc.headingCount} headings</span>
                 <span>Updated {formatDate(doc.updatedAt)}</span>
               </div>
-              <p className="mt-2 text-[11px] text-slate-400">Last line: {doc.lastLine}</p>
+              <p className="mt-2 text-[11px] text-muted-foreground">Last line: {doc.lastLine}</p>
               <div className="mt-3 flex flex-wrap items-center gap-3 text-[13px]">
-                <Link href={`/features/${doc.slug}`} className="font-semibold text-orange-300 hover:text-orange-200 hover:underline">Open document</Link>
-                {doc.landingHref ? <Link href={doc.landingHref} className="text-slate-300 hover:text-white hover:underline">Related page</Link> : null}
+                <Link href={`/features/${doc.slug}`} className="font-semibold text-primary hover:underline">Open document</Link>
+                {doc.landingHref ? <Link href={doc.landingHref} className="text-muted-foreground hover:text-foreground hover:underline">Related page</Link> : null}
               </div>
             </Card>
           ))}

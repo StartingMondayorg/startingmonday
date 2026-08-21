@@ -3,10 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
-
+import { Badge, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 type EventRow = {
   event_name: string
   created_at: string
@@ -162,59 +159,59 @@ export default async function ChannelBenchmarksPage() {
   const qaPass = qaRows.every((row) => row.missingRate < 0.02)
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,146,60,0.18),_transparent_28%),linear-gradient(180deg,#0f172a_0%,#111827_45%,#020617_100%)] font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
+    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+      <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-300">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">
+          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
             ← Admin
           </Link>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-<h1 className="text-[26px] font-bold text-white leading-tight">Channel Benchmarks (30d)</h1>
-        <p className="text-[13px] text-slate-300 mt-1.5 max-w-2xl">
+<h1 className="text-[26px] font-bold text-foreground leading-tight">Channel Benchmarks (30d)</h1>
+        <p className="text-[13px] text-muted-foreground mt-1.5 max-w-2xl">
           Authenticated cohort benchmark for Sprint 2 and Sprint 3 funnel telemetry. Use this to track channel entry volume, persona-route pull-through, source segmentation, and A/B variant distribution.
         </p>
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 mb-6">
           <Card variant="glass" className="p-4">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300">Entry clicks</p>
-            <p className="text-[22px] font-bold text-white mt-1">{totalEntry}</p>
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Entry clicks</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{totalEntry}</p>
           </Card>
           <Card variant="glass" className="p-4">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300">Persona selections</p>
-            <p className="text-[22px] font-bold text-white mt-1">{totalPersona}</p>
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Persona selections</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{totalPersona}</p>
           </Card>
           <Card variant="glass" className="p-4">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-300">Persona per entry</p>
-            <p className="text-[22px] font-bold text-white mt-1">{pct(totalPersona, totalEntry)}</p>
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Persona per entry</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{pct(totalPersona, totalEntry)}</p>
           </Card>
         </section>
 
         <Card variant="glass" className="p-0 mb-6">
-          <div className="px-5 py-3 border-b border-white/10">
-            <h2 className="text-[13px] font-semibold text-white">Channel funnel benchmark</h2>
+          <div className="px-5 py-3 border-b border-border">
+            <h2 className="text-[13px] font-semibold text-foreground">Channel funnel benchmark</h2>
           </div>
           <Table className="text-[13px]">
             <TableHeader>
-              <TableRow className="bg-white/5 text-slate-300 hover:bg-white/5">
-                <TableHead className="px-5 py-2 text-left text-slate-300">Channel</TableHead>
-                <TableHead className="px-4 py-2 text-right text-slate-300">Entry clicks</TableHead>
-                <TableHead className="px-4 py-2 text-right text-slate-300">Persona selections</TableHead>
-                <TableHead className="px-5 py-2 text-right text-slate-300">Persona per entry</TableHead>
+              <TableRow className="bg-muted/40 text-muted-foreground">
+                <TableHead className="px-5 py-2 text-left text-muted-foreground">Channel</TableHead>
+                <TableHead className="px-4 py-2 text-right text-muted-foreground">Entry clicks</TableHead>
+                <TableHead className="px-4 py-2 text-right text-muted-foreground">Persona selections</TableHead>
+                <TableHead className="px-5 py-2 text-right text-muted-foreground">Persona per entry</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {benchmarkRows.map((row) => (
-                <TableRow key={row.channel} className="border-white/10 hover:bg-white/5">
-                  <TableCell className="px-5 py-2 font-semibold text-slate-100">{row.channel}</TableCell>
-                  <TableCell className="px-4 py-2 text-right text-slate-200">{row.entryClicks}</TableCell>
-                  <TableCell className="px-4 py-2 text-right text-slate-200">{row.personaSelections}</TableCell>
-                  <TableCell className="px-5 py-2 text-right text-slate-200">{pct(row.personaSelections, row.entryClicks)}</TableCell>
+                <TableRow key={row.channel} className="border-border hover:bg-muted/40">
+                  <TableCell className="px-5 py-2 font-semibold text-foreground">{row.channel}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-foreground">{row.entryClicks}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-foreground">{row.personaSelections}</TableCell>
+                  <TableCell className="px-5 py-2 text-right text-foreground">{pct(row.personaSelections, row.entryClicks)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -223,26 +220,26 @@ export default async function ChannelBenchmarksPage() {
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Card variant="glass" className="p-5">
-            <h2 className="text-[13px] font-semibold text-white mb-3">Source page segments</h2>
+            <h2 className="text-[13px] font-semibold text-foreground mb-3">Source page segments</h2>
             <div className="space-y-2 text-[13px]">
-              {sourceRows.length === 0 && <p className="text-slate-300">No events yet.</p>}
+              {sourceRows.length === 0 && <p className="text-muted-foreground">No events yet.</p>}
               {sourceRows.map(([source, count]) => (
-                <div key={source} className="flex items-center justify-between border-b border-white/10 pb-1">
-                  <span className="text-slate-200">{source}</span>
-                  <span className="font-semibold text-white">{count}</span>
+                <div key={source} className="flex items-center justify-between border-b border-border pb-1">
+                  <span className="text-foreground">{source}</span>
+                  <span className="font-semibold text-foreground">{count}</span>
                 </div>
               ))}
             </div>
           </Card>
 
           <Card variant="glass" className="p-5">
-            <h2 className="text-[13px] font-semibold text-white mb-3">A/B variant segments</h2>
+            <h2 className="text-[13px] font-semibold text-foreground mb-3">A/B variant segments</h2>
             <div className="space-y-2 text-[13px]">
-              {variantRows.length === 0 && <p className="text-slate-300">No events yet.</p>}
+              {variantRows.length === 0 && <p className="text-muted-foreground">No events yet.</p>}
               {variantRows.map(([variant, count]) => (
-                <div key={variant} className="flex items-center justify-between border-b border-white/10 pb-1">
-                  <span className="text-slate-200">{variant}</span>
-                  <span className="font-semibold text-white">{count}</span>
+                <div key={variant} className="flex items-center justify-between border-b border-border pb-1">
+                  <span className="text-foreground">{variant}</span>
+                  <span className="font-semibold text-foreground">{count}</span>
                 </div>
               ))}
             </div>
@@ -251,13 +248,13 @@ export default async function ChannelBenchmarksPage() {
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <Card variant="glass" className="p-5">
-            <h2 className="text-[13px] font-semibold text-white mb-3">Persona segment distribution</h2>
+            <h2 className="text-[13px] font-semibold text-foreground mb-3">Persona segment distribution</h2>
             <div className="space-y-2 text-[13px]">
-              {personaRows.length === 0 && <p className="text-slate-300">No persona events yet.</p>}
+              {personaRows.length === 0 && <p className="text-muted-foreground">No persona events yet.</p>}
               {personaRows.map(([persona, count]) => (
-                <div key={persona} className="flex items-center justify-between border-b border-white/10 pb-1">
-                  <span className="text-slate-200">{persona}</span>
-                  <span className="font-semibold text-white">{count}</span>
+                <div key={persona} className="flex items-center justify-between border-b border-border pb-1">
+                  <span className="text-foreground">{persona}</span>
+                  <span className="font-semibold text-foreground">{count}</span>
                 </div>
               ))}
             </div>
@@ -265,16 +262,16 @@ export default async function ChannelBenchmarksPage() {
 
           <Card variant="glass" className="p-5">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[13px] font-semibold text-white">Telemetry QA</h2>
+              <h2 className="text-[13px] font-semibold text-foreground">Telemetry QA</h2>
               <Badge variant={qaPass ? 'success' : 'destructive'}>
                 {qaPass ? 'PASS' : 'FAIL'}
               </Badge>
             </div>
-            <p className="text-[13px] text-slate-300 mb-3">Target: less than 2% missing required telemetry fields.</p>
+            <p className="text-[13px] text-muted-foreground mb-3">Target: less than 2% missing required telemetry fields.</p>
             <div className="space-y-2 text-[13px]">
               {qaRows.map((row) => (
-                <div key={row.label} className="flex items-center justify-between border-b border-white/10 pb-1">
-                  <span className="text-slate-200">{row.label}</span>
+                <div key={row.label} className="flex items-center justify-between border-b border-border pb-1">
+                  <span className="text-foreground">{row.label}</span>
                   <Badge variant={row.missingRate < 0.02 ? 'success' : 'destructive'}>
                     {(row.missingRate * 100).toFixed(1)}%
                   </Badge>

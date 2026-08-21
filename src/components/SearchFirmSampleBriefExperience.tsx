@@ -77,12 +77,12 @@ function toBulletList(value: string): string[] {
 function renderSection(title: string, body: string | string[]) {
   if (Array.isArray(body)) {
     return (
-      <div className="rounded-lg border border-slate-200 p-5">
-        <h4 className="text-sm font-bold tracking-[0.08em] uppercase text-slate-500">{title}</h4>
-        <ul className="mt-3 space-y-2 text-sm text-slate-700">
+      <div className="rounded-lg border border-border p-5">
+        <h4 className="text-sm font-bold tracking-[0.08em] uppercase text-muted-foreground">{title}</h4>
+        <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
           {body.map((item) => (
             <li key={item} className="flex gap-2">
-              <span className="font-bold text-orange-500">+</span>
+              <span className="font-bold text-primary">+</span>
               <span>{item}</span>
             </li>
           ))}
@@ -92,9 +92,9 @@ function renderSection(title: string, body: string | string[]) {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 p-5">
-      <h4 className="text-sm font-bold tracking-[0.08em] uppercase text-slate-500">{title}</h4>
-      <p className="mt-3 text-sm leading-relaxed text-slate-700">{body}</p>
+    <div className="rounded-lg border border-border p-5">
+      <h4 className="text-sm font-bold tracking-[0.08em] uppercase text-muted-foreground">{title}</h4>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
     </div>
   )
 }
@@ -174,13 +174,13 @@ export default function SearchFirmSampleBriefExperience() {
 
   return (
     <section className="mt-10 space-y-8">
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-6 sm:p-8">
-        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-500">Complete example</p>
-        <h3 className="mt-2 text-2xl font-bold text-slate-900">
+      <div className="rounded-lg border border-border bg-muted p-6 sm:p-8">
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Complete example</p>
+        <h3 className="mt-2 text-2xl font-bold text-foreground">
           {sampleBrief.mandateRole} Brief: {sampleBrief.clientName}
         </h3>
-        <p className="mt-2 text-sm text-slate-600">
-          Candidate: <span className="font-semibold text-slate-900">{sampleBrief.candidateName}</span>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Candidate: <span className="font-semibold text-foreground">{sampleBrief.candidateName}</span>
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -195,10 +195,10 @@ export default function SearchFirmSampleBriefExperience() {
         <div className="mt-4">{renderSection('Candidate Positioning Narrative', sampleBrief.candidateSummary)}</div>
 
         {showGenerated && (
-          <div className="mt-6 rounded-lg border border-orange-200 bg-orange-50/30 p-6">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-600">Draft output from your intake</p>
-            <h4 className="mt-2 text-xl font-bold text-slate-900">{generated.title}</h4>
-            <p className="mt-1 text-sm text-slate-600">{generated.candidateHeadline}</p>
+          <div className="mt-6 rounded-lg border border-primary/30 bg-primary/30 p-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Draft output from your intake</p>
+            <h4 className="mt-2 text-xl font-bold text-foreground">{generated.title}</h4>
+            <p className="mt-1 text-sm text-muted-foreground">{generated.candidateHeadline}</p>
 
             <div className="mt-5 space-y-4">
               {generated.sections.map((section) => (
@@ -209,81 +209,81 @@ export default function SearchFirmSampleBriefExperience() {
         )}
       </div>
 
-      <div className="rounded-lg border border-slate-200 p-6 sm:p-8">
-        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-500">Bring your own client</p>
-        <h3 className="mt-2 text-2xl font-bold text-slate-900">Generate a draft brief from client background info</h3>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
+      <div className="rounded-lg border border-border p-6 sm:p-8">
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Bring your own client</p>
+        <h3 className="mt-2 text-2xl font-bold text-foreground">Generate a draft brief from client background info</h3>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           This is practical if you can capture enough context at intake. You only need strong inputs across mandate trigger, board expectations, must-haves, and candidate profile to produce a useful first draft.
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <input
-            className="rounded border border-slate-300 px-3 py-2 text-sm"
+            className="rounded border border-border px-3 py-2 text-sm"
             placeholder="Client company"
             value={input.clientName}
             onChange={(e) => setInput((s) => ({ ...s, clientName: e.target.value }))}
           />
           <input
-            className="rounded border border-slate-300 px-3 py-2 text-sm"
+            className="rounded border border-border px-3 py-2 text-sm"
             placeholder="Mandate role"
             value={input.mandateRole}
             onChange={(e) => setInput((s) => ({ ...s, mandateRole: e.target.value }))}
           />
           <textarea
-            className="rounded border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+            className="rounded border border-border px-3 py-2 text-sm md:col-span-2"
             rows={3}
             placeholder="Company description (size, ARR/revenue range, ownership, growth stage)"
             value={input.companyDescription}
             onChange={(e) => setInput((s) => ({ ...s, companyDescription: e.target.value }))}
           />
           <textarea
-            className="rounded border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+            className="rounded border border-border px-3 py-2 text-sm md:col-span-2"
             rows={3}
             placeholder="Trigger event (why this search now?)"
             value={input.triggerEvent}
             onChange={(e) => setInput((s) => ({ ...s, triggerEvent: e.target.value }))}
           />
           <textarea
-            className="rounded border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+            className="rounded border border-border px-3 py-2 text-sm md:col-span-2"
             rows={3}
             placeholder="Board/sponsor context"
             value={input.boardContext}
             onChange={(e) => setInput((s) => ({ ...s, boardContext: e.target.value }))}
           />
           <textarea
-            className="rounded border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+            className="rounded border border-border px-3 py-2 text-sm md:col-span-2"
             rows={3}
             placeholder="Board concerns or likely objections"
             value={input.boardConcerns}
             onChange={(e) => setInput((s) => ({ ...s, boardConcerns: e.target.value }))}
           />
           <input
-            className="rounded border border-slate-300 px-3 py-2 text-sm"
+            className="rounded border border-border px-3 py-2 text-sm"
             placeholder="Timeline"
             value={input.timeline}
             onChange={(e) => setInput((s) => ({ ...s, timeline: e.target.value }))}
           />
           <input
-            className="rounded border border-slate-300 px-3 py-2 text-sm"
+            className="rounded border border-border px-3 py-2 text-sm"
             placeholder="Compensation band"
             value={input.compensationBand}
             onChange={(e) => setInput((s) => ({ ...s, compensationBand: e.target.value }))}
           />
           <textarea
-            className="rounded border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+            className="rounded border border-border px-3 py-2 text-sm md:col-span-2"
             rows={2}
             placeholder="Must-have filters (comma, semicolon, or newline separated)"
             value={input.mustHaves}
             onChange={(e) => setInput((s) => ({ ...s, mustHaves: e.target.value }))}
           />
           <input
-            className="rounded border border-slate-300 px-3 py-2 text-sm"
+            className="rounded border border-border px-3 py-2 text-sm"
             placeholder="Candidate name"
             value={input.candidateName}
             onChange={(e) => setInput((s) => ({ ...s, candidateName: e.target.value }))}
           />
           <textarea
-            className="rounded border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+            className="rounded border border-border px-3 py-2 text-sm md:col-span-2"
             rows={3}
             placeholder="Candidate summary mapped to mandate outcomes"
             value={input.candidateSummary}
@@ -295,7 +295,7 @@ export default function SearchFirmSampleBriefExperience() {
           <button
             type="button"
             onClick={() => setShowGenerated(true)}
-            className="rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+            className="rounded bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-muted"
           >
             Generate preview brief
           </button>
@@ -305,7 +305,7 @@ export default function SearchFirmSampleBriefExperience() {
               setInput(defaultInput)
               setShowGenerated(false)
             }}
-            className="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-slate-500"
+            className="rounded border border-border px-4 py-2 text-sm font-semibold text-muted-foreground"
           >
             Reset
           </button>

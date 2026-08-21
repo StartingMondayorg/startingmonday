@@ -4,12 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { usePostHog } from 'posthog-js/react'
 import { isEnabledFlag } from '@/lib/feature-flags'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-
+import { Button, Card, Input, Label, Textarea } from '@/components/ui'
 const INCLUDES = [
   'Everything in Executive ($499/mo) - full intelligence depth, all sources, full brief suite',
   'One 45-minute strategy session each month with the founder, who has run this search from the executive side',
@@ -120,17 +115,14 @@ export function ConciergeWaitlist() {
   }
 
   return (
-    <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-slate-950' : 'bg-white'}`}>
-      {premiumEnabled && (
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.98)_100%)]" />
-      )}
-      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl' : 'bg-slate-900 sticky top-0 z-10'}>
+    <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-background' : 'bg-primary'}`}>
+      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'bg-card sticky top-0 z-10'}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/login" className="text-[13px] text-slate-400 hover:text-white transition-colors">
+            <Link href="/login" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Log in
             </Link>
             <Button size="sm" render={<Link href="/signup?from=concierge" />}>
@@ -140,12 +132,12 @@ export function ConciergeWaitlist() {
         </div>
       </nav>
 
-      <header className={premiumEnabled ? 'px-4 sm:px-6 pt-14 pb-18' : 'bg-slate-900 px-4 sm:px-6 pt-14 pb-16'}>
+      <header className={premiumEnabled ? 'px-4 sm:px-6 pt-14 pb-18' : 'bg-card px-4 sm:px-6 pt-14 pb-16'}>
         <div className="max-w-2xl mx-auto">
-          <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-4 ${premiumEnabled ? 'text-orange-300' : 'text-orange-500'}`}>
+          <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-4 ${'text-primary'}`}>
             {isBetaProgram ? 'Confidential Beta Cohort - Founder-Led, 10 Seats' : 'Executive Concierge - $499/mo'}
           </p>
-          <h1 className="text-[34px] sm:text-[42px] font-bold text-white leading-[1.05] tracking-tight mb-5">
+          <h1 className="text-[34px] sm:text-[42px] font-bold text-foreground leading-[1.05] tracking-tight mb-5">
             {isBetaProgram ? (
               <>
                 Share your transition brief.<br />
@@ -160,63 +152,63 @@ export function ConciergeWaitlist() {
               </>
             )}
           </h1>
-          <p className={`text-[15px] leading-relaxed max-w-lg ${premiumEnabled ? 'text-slate-200' : 'text-slate-400'}`}>
+          <p className={`text-[15px] leading-relaxed max-w-lg ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
             {isBetaProgram
               ? 'This is a private intake for senior leaders running high-stakes transitions. Share concise context, and we will reply personally with clear next steps.'
               : 'Executive is the full platform at full depth. Concierge adds one thing: a monthly session with the founder, who has run this search from the executive side. The program stays small because it has to.'}
           </p>
           {source === 'landing' && (
-            <p className={`text-[12px] mt-4 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}>
+            <p className={`text-[12px] mt-4 ${'text-muted-foreground'}`}>
               You came from the main landing flow. This page is the high-touch path when you want founder-reviewed direction before full self-serve onboarding.
             </p>
           )}
         </div>
       </header>
 
-      <main className={`px-4 sm:px-6 py-14 sm:py-20 ${premiumEnabled ? 'text-slate-100' : ''}`}>
+      <main className={`px-4 sm:px-6 py-14 sm:py-20 ${premiumEnabled ? 'text-foreground' : ''}`}>
         <div className="max-w-2xl mx-auto">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16 mb-16">
 
             <div>
-              <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-5 ${premiumEnabled ? 'text-orange-200' : 'text-orange-500'}`}>
+              <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-5 ${'text-primary'}`}>
                 {isBetaProgram ? 'How beta works' : 'What it includes'}
               </p>
               <ul className="space-y-4 mb-8">
                 {(isBetaProgram ? BETA_INCLUDES : INCLUDES).map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className={`font-bold shrink-0 mt-0.5 text-[12px] ${premiumEnabled ? 'text-orange-300' : 'text-orange-500'}`}>+</span>
-                    <span className={`text-[14px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-700'}`}>{item}</span>
+                    <span className={`font-bold shrink-0 mt-0.5 text-[12px] ${'text-primary'}`}>+</span>
+                    <span className={`text-[14px] leading-relaxed ${'text-foreground'}`}>{item}</span>
                   </li>
                 ))}
               </ul>
-              <div className={`border-t pt-6 ${premiumEnabled ? 'border-white/10' : 'border-slate-100'}`}>
+              <div className={`border-t pt-6 ${'border-border'}`}>
                 {isBetaProgram ? (
                   <>
-                    <p className={`text-[20px] font-bold leading-none mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>No subscription during beta</p>
-                    <p className={`text-[12px] mb-0.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>10 seats total</p>
-                    <p className={`text-[12px] ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>Selected participants get a 30-day guided rollout and give candid feedback.</p>
+                    <p className={`text-[20px] font-bold leading-none mb-1 ${'text-foreground'}`}>No subscription during beta</p>
+                    <p className={`text-[12px] mb-0.5 ${'text-muted-foreground'}`}>10 seats total</p>
+                    <p className={`text-[12px] ${'text-muted-foreground'}`}>Selected participants get a 30-day guided rollout and give candid feedback.</p>
                   </>
                 ) : (
                   <>
-                    <p className={`text-[28px] font-bold leading-none mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>
-                      $499<span className={`text-[16px] font-normal ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>/mo</span>
+                    <p className={`text-[28px] font-bold leading-none mb-1 ${'text-foreground'}`}>
+                      $499<span className={`text-[16px] font-normal ${'text-muted-foreground'}`}>/mo</span>
                     </p>
-                    <p className={`text-[12px] mb-0.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>or $4,990/yr (2 months free)</p>
-                    <p className={`text-[12px] ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>Application required. Limited to 10 concierge seats.</p>
+                    <p className={`text-[12px] mb-0.5 ${'text-muted-foreground'}`}>or $4,990/yr (2 months free)</p>
+                    <p className={`text-[12px] ${'text-muted-foreground'}`}>Application required. Limited to 10 concierge seats.</p>
                   </>
                 )}
               </div>
             </div>
 
             <div>
-              <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-5 ${premiumEnabled ? 'text-orange-200' : 'text-orange-500'}`}>
+              <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-5 ${'text-primary'}`}>
                 {isBetaProgram ? 'Private intake brief' : 'Request access'}
               </p>
               {submitted ? (
-                <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 ${premiumEnabled ? 'shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'bg-slate-50'}`}>
-                  <p className={`text-[15px] font-semibold mb-1 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>Brief received.</p>
-                  <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
+                <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 ${premiumEnabled ? 'shadow-lg' : 'bg-muted'}`}>
+                  <p className={`text-[15px] font-semibold mb-1 ${'text-foreground'}`}>Brief received.</p>
+                  <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
                     We review each submission personally. You will hear from us directly.
                   </p>
                 </Card>
@@ -225,7 +217,7 @@ export function ConciergeWaitlist() {
                   <div>
                     <Label
                       htmlFor="c-email"
-                      className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
+                      className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${'text-muted-foreground'}`}
                     >
                       Executive email
                     </Label>
@@ -237,14 +229,14 @@ export function ConciergeWaitlist() {
                       onChange={e => setEmail(e.target.value)}
                       onBlur={(e) => markFieldInteraction('email', e.target.value)}
                       placeholder="you@company.com"
-                      className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400"
+                      className="w-full border-border rounded px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <Label
                         htmlFor="c-company"
-                        className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
+                        className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${'text-muted-foreground'}`}
                       >
                         Current company
                       </Label>
@@ -255,13 +247,13 @@ export function ConciergeWaitlist() {
                         onChange={e => setCompany(e.target.value)}
                         onBlur={(e) => markFieldInteraction('company', e.target.value)}
                         placeholder="Current or most recent organization"
-                        className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400"
+                        className="w-full border-border rounded px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground"
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor="c-role"
-                        className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
+                        className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${'text-muted-foreground'}`}
                       >
                         Target mandate
                       </Label>
@@ -272,14 +264,14 @@ export function ConciergeWaitlist() {
                         onChange={e => setRole(e.target.value)}
                         onBlur={(e) => markFieldInteraction('role', e.target.value)}
                         placeholder="Example: CIO, CTO, VP Engineering"
-                        className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400"
+                        className="w-full border-border rounded px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground"
                       />
                     </div>
                   </div>
                   <div>
                     <Label
                       htmlFor="c-situation"
-                      className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}
+                      className={`block text-[11px] font-bold tracking-[0.08em] uppercase mb-1.5 ${'text-muted-foreground'}`}
                     >
                       Confidential transition brief
                     </Label>
@@ -290,13 +282,13 @@ export function ConciergeWaitlist() {
                       onChange={e => setSituation(e.target.value)}
                       onBlur={(e) => markFieldInteraction('situation', e.target.value)}
                       placeholder="In 3-5 lines, describe your situation, timing, and the outcome you want next."
-                      className="w-full border-slate-200 rounded px-3 py-2.5 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400 resize-none"
+                      className="w-full border-border rounded px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground resize-none"
                     />
                   </div>
                   {isBetaProgram && (
-                    <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-3 ${premiumEnabled ? 'bg-slate-900/64 shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : 'bg-slate-50'}`}>
-                      <p className={`text-[11px] font-bold tracking-[0.08em] uppercase mb-2 ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>Selection criteria and confidentiality guardrails</p>
-                      <ul className={`space-y-1 text-[12px] leading-relaxed list-disc pl-4 ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
+                    <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-3 ${premiumEnabled ? 'bg-card/64 shadow-lg' : 'bg-muted'}`}>
+                      <p className={`text-[11px] font-bold tracking-[0.08em] uppercase mb-2 ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>Selection criteria and confidentiality guardrails</p>
+                      <ul className={`space-y-1 text-[12px] leading-relaxed list-disc pl-4 ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
                         <li>Fit: senior operator with an active or near-term transition objective.</li>
                         <li>Commitment: able to run weekly cadence for 30 days.</li>
                         <li>Feedback: willing to share direct feedback and outcomes.</li>
@@ -304,7 +296,7 @@ export function ConciergeWaitlist() {
                       </ul>
                     </Card>
                   )}
-                  {error && <p className="text-[13px] text-red-600">{error}</p>}
+                  {error && <p className="text-[13px] text-destructive">{error}</p>}
                   <Button
                     type="submit"
                     disabled={loading || !email.trim()}
@@ -312,7 +304,7 @@ export function ConciergeWaitlist() {
                   >
                     {loading ? 'Sending...' : isBetaProgram ? 'Submit confidential brief' : 'Request access'}
                   </Button>
-                  <p className={`text-[11px] leading-relaxed ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>
+                  <p className={`text-[11px] leading-relaxed ${'text-muted-foreground'}`}>
                     {isBetaProgram
                       ? 'Every brief is reviewed by the founder. If there is fit, we will follow up directly.'
                       : 'We review each application personally. No automated response.'}
@@ -323,39 +315,39 @@ export function ConciergeWaitlist() {
 
           </div>
 
-          <div className={`border-t pt-12 mb-12 ${premiumEnabled ? 'border-white/10' : 'border-slate-100'}`}>
-            <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-6 ${premiumEnabled ? 'text-orange-200' : 'text-orange-500'}`}>
+          <div className={`border-t pt-12 mb-12 ${'border-border'}`}>
+            <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-6 ${'text-primary'}`}>
               Who this is for
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {FOR_WHO.map((item, i) => (
-                <div key={i} className={`border-t-2 pt-4 ${premiumEnabled ? 'border-white/20' : 'border-slate-200'}`}>
-                  <p className={`text-[13px] font-semibold mb-2 ${premiumEnabled ? 'text-white' : 'text-slate-900'}`}>{item.label}</p>
-                  <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{item.body}</p>
+                <div key={i} className={`border-t-2 pt-4 ${'border-border'}`}>
+                  <p className={`text-[13px] font-semibold mb-2 ${'text-foreground'}`}>{item.label}</p>
+                  <p className={`text-[13px] leading-relaxed ${'text-muted-foreground'}`}>{item.body}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 mb-12 ${premiumEnabled ? 'shadow-[0_16px_52px_rgba(15,23,42,0.16)]' : ''}`}>
-            <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-3 ${premiumEnabled ? 'text-orange-200' : 'text-slate-400'}`}>About the founder</p>
-            <p className={`text-[14px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-700'}`}>
+          <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 mb-12 ${premiumEnabled ? 'shadow-lg' : ''}`}>
+            <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>About the founder</p>
+            <p className={`text-[14px] leading-relaxed ${'text-foreground'}`}>
               Starting Monday was built by a founder who ran executive job searches at scale and watched colleagues waste months on reactive tactics that did not work. The sessions are direct, structured, and specific to your pipeline. Not coaching. Not cheerleading. One executive to another.
             </p>
           </Card>
 
-          <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-5 mb-12 ${premiumEnabled ? 'shadow-[0_20px_62px_rgba(15,23,42,0.2)]' : 'bg-slate-50'}`}>
-            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-orange-200' : 'text-slate-500'}`}>Trust and source note</p>
-            <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-slate-200' : 'text-slate-600'}`}>
+          <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-5 mb-12 ${premiumEnabled ? 'shadow-xl' : 'bg-muted'}`}>
+            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Trust and source note</p>
+            <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
               Confidential intake details are used only for founder review and fit decisions. Outcome expectations on this page are informed by the pilot Evidence Hub and source-linked methodology pages.
             </p>
           </Card>
 
-          <div className={`pt-2 border-t ${premiumEnabled ? 'border-white/10' : 'border-slate-100'}`}>
-            <p className={`text-[13px] mb-2 ${premiumEnabled ? 'text-slate-300' : 'text-slate-400'}`}>Looking for Executive or Active instead?</p>
+          <div className={`pt-2 border-t ${'border-border'}`}>
+            <p className={`text-[13px] mb-2 ${'text-muted-foreground'}`}>Looking for Executive or Active instead?</p>
             <Link
               href="/pricing"
-              className={`text-[13px] font-semibold transition-colors ${premiumEnabled ? 'text-slate-100 hover:text-orange-200' : 'text-slate-700 hover:text-slate-900'}`}
+              className={`text-[13px] font-semibold transition-colors ${premiumEnabled ? 'text-foreground hover:text-primary' : 'text-foreground hover:text-foreground'}`}
             >
               View all plans &rarr;
             </Link>
@@ -364,14 +356,14 @@ export function ConciergeWaitlist() {
         </div>
       </main>
 
-      <footer className={premiumEnabled ? 'border-t border-white/10 bg-slate-950/78 px-4 sm:px-6 py-8 backdrop-blur-xl' : 'bg-slate-900 border-t border-slate-800 px-4 sm:px-6 py-8'}>
+      <footer className={premiumEnabled ? 'border-t border-border bg-background/78 px-4 sm:px-6 py-8 backdrop-blur-xl' : 'bg-card border-t border-border px-4 sm:px-6 py-8'}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions?{' '}
-            <a href="mailto:contact@startingmonday.app" className="hover:text-slate-300 transition-colors">
+            <a href="mailto:contact@startingmonday.app" className="hover:text-muted-foreground transition-colors">
               contact@startingmonday.app
             </a>
           </p>

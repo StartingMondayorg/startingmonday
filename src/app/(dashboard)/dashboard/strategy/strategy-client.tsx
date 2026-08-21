@@ -2,11 +2,7 @@
 import Link from 'next/link'
 import { useState, useRef } from 'react'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, AlertTitle, Button, Card, Input } from '@/components/ui'
 function BoldText({ text }: { text: string }) {
   const parts = text.split(/\*\*(.+?)\*\*/g)
   return (
@@ -22,22 +18,22 @@ function renderBrief(text: string) {
     if (line.trim() === '---' || line.trim() === '***') return null
     if (line.startsWith('## ')) {
       return (
-        <h2 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mt-10 mb-4 first:mt-0 pb-2 border-b border-slate-100">
+        <h2 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mt-10 mb-4 first:mt-0 pb-2 border-b border-border">
           {line.slice(3)}
         </h2>
       )
     }
     if (line.startsWith('- ') || line.startsWith('* ')) {
       return (
-        <div key={i} className="flex gap-2.5 text-[14px] text-slate-700 leading-relaxed mb-2.5">
-          <span className="text-slate-300 shrink-0 select-none mt-0.5">–</span>
+        <div key={i} className="flex gap-2.5 text-[14px] text-muted-foreground leading-relaxed mb-2.5">
+          <span className="text-muted-foreground shrink-0 select-none mt-0.5">–</span>
           <BoldText text={line.slice(2)} />
         </div>
       )
     }
     if (line.trim() === '') return <div key={i} className="h-1.5" />
     return (
-      <p key={i} className="text-[14px] text-slate-700 leading-relaxed mb-2.5">
+      <p key={i} className="text-[14px] text-muted-foreground leading-relaxed mb-2.5">
         <BoldText text={line} />
       </p>
     )
@@ -146,16 +142,16 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
+    <div className="min-h-screen bg-muted font-sans">
 
-      <header className="bg-slate-900">
+      <header className="dark bg-card">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Link
             href="/dashboard"
-            className="text-[13px] text-slate-300 hover:text-white transition-colors"
+            className="text-[13px] text-muted-foreground hover:text-foreground transition-colors"
           >
             ← Dashboard
           </Link>
@@ -166,8 +162,8 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
 
         <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
           <div>
-            <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Search Strategy Brief</h1>
-            <p className="text-[13px] text-slate-500 mt-1.5">
+            <h1 className="text-[26px] font-bold text-foreground leading-tight">Search Strategy Brief</h1>
+            <p className="text-[13px] text-muted-foreground mt-1.5">
               Your market position, target profile, outreach framework, and first 30 days.
             </p>
           </div>
@@ -206,7 +202,7 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
 
         {!brief && !loading && !error && (
           <Card className="p-10 text-center">
-            <p className="text-[14px] text-slate-400 leading-relaxed max-w-md mx-auto">
+            <p className="text-[14px] text-muted-foreground leading-relaxed max-w-md mx-auto">
               Generates an honest read on your market position and a concrete action framework - based on your profile, target roles, and pipeline.
             </p>
           </Card>
@@ -215,9 +211,9 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
         {loading && !brief && (
           <Card className="p-8">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:150ms]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:300ms]" />
             </div>
           </Card>
         )}
@@ -226,7 +222,7 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
           <Card className="p-8">
             {renderBrief(brief)}
             {loading && (
-              <span className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />
+              <span className="inline-block w-0.5 h-4 bg-muted animate-pulse ml-0.5 align-middle" />
             )}
           </Card>
         )}
@@ -249,7 +245,7 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
                   key={chip}
                   variant="outline"
                   size="sm"
-                  className="rounded-full text-slate-500 hover:text-slate-700"
+                  className="rounded-full text-muted-foreground"
                   onClick={() => { setQuestion(chip); questionRef.current?.focus() }}
                 >
                   {chip}
@@ -280,19 +276,19 @@ export function StrategyClient({ missingFields }: { missingFields: MissingField[
             {(answer || answerLoading) && (
               <Card className="mt-4 p-6">
                 {answer && (
-                  <div className="text-[14px] text-slate-700 leading-relaxed whitespace-pre-wrap">
+                  <div className="text-[14px] text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {answer}
                   </div>
                 )}
                 {answerLoading && !answer && (
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:150ms]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:300ms]" />
                   </div>
                 )}
                 {answerLoading && answer && (
-                  <span className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />
+                  <span className="inline-block w-0.5 h-4 bg-muted animate-pulse ml-0.5 align-middle" />
                 )}
               </Card>
             )}

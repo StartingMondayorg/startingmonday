@@ -24,24 +24,24 @@ const TONES: Record<Tone, {
   waitingDot: string
 }> = {
   dark: {
-    panel: 'border-white/10 bg-white/5',
-    title: 'text-slate-100',
-    muted: 'text-slate-400',
-    stage: 'text-slate-200',
-    track: 'bg-white/10',
-    spinner: 'border-white/20 border-t-orange-400',
-    divider: 'border-white/10',
-    waitingDot: 'bg-slate-500',
+    panel: 'border-border bg-muted/40',
+    title: 'text-foreground',
+    muted: 'text-muted-foreground',
+    stage: 'text-foreground',
+    track: 'bg-muted/60',
+    spinner: 'border-border border-t-primary/30',
+    divider: 'border-border',
+    waitingDot: 'bg-muted',
   },
   light: {
-    panel: 'border-slate-200 bg-slate-50',
-    title: 'text-slate-800',
-    muted: 'text-slate-500',
-    stage: 'text-slate-700',
-    track: 'bg-slate-200',
-    spinner: 'border-slate-200 border-t-orange-500',
-    divider: 'border-slate-200',
-    waitingDot: 'bg-slate-300',
+    panel: 'border-border bg-muted',
+    title: 'text-foreground',
+    muted: 'text-muted-foreground',
+    stage: 'text-foreground',
+    track: 'bg-muted',
+    spinner: 'border-border border-t-primary/30',
+    divider: 'border-border',
+    waitingDot: 'bg-muted',
   },
 }
 
@@ -132,7 +132,7 @@ export function LinkedinImportProgress({
         <div
           className={[
             'h-full rounded-full transition-[width] duration-200 ease-out motion-reduce:transition-none',
-            done ? 'bg-emerald-500' : 'bg-gradient-to-r from-orange-500 to-amber-300',
+            done ? 'bg-success' : 'bg-gradient-to-r from-primary to-warning',
           ].join(' ')}
           style={{ width: `${Math.min(100, percent)}%` }}
         />
@@ -149,9 +149,9 @@ export function LinkedinImportProgress({
                     className={[
                       'w-1.5 h-1.5 rounded-full shrink-0',
                       stageState === 'done'
-                        ? 'bg-emerald-500'
+                        ? 'bg-success'
                         : stageState === 'active'
-                          ? 'bg-orange-400 animate-pulse'
+                          ? 'bg-primary animate-pulse'
                           : t.waitingDot,
                     ].join(' ')}
                   />

@@ -3,9 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
 import { StrategyClient } from './strategy-client'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, AlertTitle, Button } from '@/components/ui'
 export const metadata = {
   title: 'Search Strategy Brief - Starting Monday',
 }
@@ -45,8 +43,8 @@ export default async function StrategyPage() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 mb-4">
         {hasIntake ? (
           <Alert className="flex flex-wrap items-center justify-between gap-3 [&>svg]:hidden">
-            <AlertDescription className="text-[13px] text-slate-600">Strategy intake saved. Your brief uses those decision rules.</AlertDescription>
-            <Link href="/dashboard/strategy/intake" className="text-[13px] font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-slate-900 transition-colors">
+            <AlertDescription className="text-[13px] text-muted-foreground">Strategy intake saved. Your brief uses those decision rules.</AlertDescription>
+            <Link href="/dashboard/strategy/intake" className="text-[13px] font-semibold text-muted-foreground underline decoration-muted-foreground underline-offset-4 hover:text-foreground transition-colors">
               Edit intake
             </Link>
           </Alert>

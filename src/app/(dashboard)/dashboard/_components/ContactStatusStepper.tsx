@@ -2,8 +2,7 @@
 import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateOutreachStatus } from '@/app/(dashboard)/dashboard/contacts/actions'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui'
 export const STATUS_STEPS = [
   { value: 'prospect',          label: 'Prospect' },
   { value: 'reached_out',       label: 'Reached Out' },
@@ -13,11 +12,11 @@ export const STATUS_STEPS = [
 ]
 
 export const STATUS_CLS: Record<string, string> = {
-  prospect:          'bg-slate-100 text-slate-500',
-  reached_out:       'bg-blue-50 text-blue-600',
-  in_conversation:   'bg-amber-50 text-amber-700',
-  meeting_scheduled: 'bg-green-50 text-green-700',
-  closed:            'bg-slate-100 text-slate-400',
+  prospect:          'bg-muted text-muted-foreground',
+  reached_out:       'bg-info/10 text-info',
+  in_conversation:   'bg-warning/10 text-warning',
+  meeting_scheduled: 'bg-success/10 text-success',
+  closed:            'bg-muted text-muted-foreground',
 }
 
 export function ContactStatusStepper({
@@ -60,10 +59,8 @@ export function ContactStatusStepper({
             className={[
               'text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors disabled:opacity-50',
               isActive
-                ? 'bg-slate-900 text-white hover:bg-slate-900'
-                : isPast
-                  ? 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-                  : 'bg-slate-50 text-slate-400 hover:bg-slate-100',
+                ? 'bg-primary text-primary-foreground hover:bg-primary'
+                : 'bg-muted text-muted-foreground hover:bg-muted',
             ].join(' ')}
           >
             {step.label}

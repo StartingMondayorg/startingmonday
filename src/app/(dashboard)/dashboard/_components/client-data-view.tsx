@@ -2,29 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { CoachPreSessionSnapshot } from '@/app/(dashboard)/dashboard/_components/CoachPreSessionSnapshot'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-
+import { Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tabs, TabsContent, TabsList, TabsTrigger, Textarea } from '@/components/ui'
 interface Scorecard {
   pipeline: {
     total_companies: number
@@ -402,7 +380,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
   }
 
   if (error) {
-    return <div className="p-6 text-red-600">Error: {error}</div>
+    return <div className="p-6 text-destructive">Error: {error}</div>
   }
 
   if (!scorecard) {
@@ -420,35 +398,35 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
     <div className="space-y-6">
       {/* Workflow Snapshot */}
       <Card className="p-4">
-        <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-3">
+        <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">
           Session Prep Snapshot ({scorecard.session_prep_snapshot.baseline_label})
         </p>
         <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-          <Card className="p-3 bg-slate-50">
-            <p className="text-[11px] text-slate-500">Signals</p>
-            <p className="text-[18px] font-bold text-slate-900">{scorecard.session_prep_snapshot.signals_since_last_session}</p>
+          <Card className="p-3 bg-muted">
+            <p className="text-[11px] text-muted-foreground">Signals</p>
+            <p className="text-[18px] font-bold text-foreground">{scorecard.session_prep_snapshot.signals_since_last_session}</p>
           </Card>
-          <Card className="p-3 bg-slate-50">
-            <p className="text-[11px] text-slate-500">Pipeline changes</p>
-            <p className="text-[18px] font-bold text-slate-900">{scorecard.session_prep_snapshot.pipeline_changes_since_last_session}</p>
+          <Card className="p-3 bg-muted">
+            <p className="text-[11px] text-muted-foreground">Pipeline changes</p>
+            <p className="text-[18px] font-bold text-foreground">{scorecard.session_prep_snapshot.pipeline_changes_since_last_session}</p>
           </Card>
-          <Card className="p-3 bg-slate-50">
-            <p className="text-[11px] text-slate-500">Brief reviews</p>
-            <p className="text-[18px] font-bold text-slate-900">{scorecard.session_prep_snapshot.brief_reviews_since_last_session}</p>
+          <Card className="p-3 bg-muted">
+            <p className="text-[11px] text-muted-foreground">Brief reviews</p>
+            <p className="text-[18px] font-bold text-foreground">{scorecard.session_prep_snapshot.brief_reviews_since_last_session}</p>
           </Card>
-          <Card className="p-3 bg-slate-50">
-            <p className="text-[11px] text-slate-500">Active pipeline</p>
-            <p className="text-[18px] font-bold text-slate-900">{scorecard.session_prep_snapshot.active_pipeline_count}</p>
+          <Card className="p-3 bg-muted">
+            <p className="text-[11px] text-muted-foreground">Active pipeline</p>
+            <p className="text-[18px] font-bold text-foreground">{scorecard.session_prep_snapshot.active_pipeline_count}</p>
           </Card>
-          <Card className="p-3 bg-slate-50">
-            <p className="text-[11px] text-slate-500">Overdue actions</p>
-            <p className={`text-[18px] font-bold ${scorecard.session_prep_snapshot.overdue_actions > 0 ? 'text-red-600' : 'text-slate-900'}`}>
+          <Card className="p-3 bg-muted">
+            <p className="text-[11px] text-muted-foreground">Overdue actions</p>
+            <p className={`text-[18px] font-bold ${scorecard.session_prep_snapshot.overdue_actions > 0 ? 'text-destructive' : 'text-foreground'}`}>
               {scorecard.session_prep_snapshot.overdue_actions}
             </p>
           </Card>
-          <Card className="p-3 bg-slate-50">
-            <p className="text-[11px] text-slate-500">Interviews</p>
-            <p className="text-[18px] font-bold text-slate-900">{scorecard.session_prep_snapshot.interviews_since_last_session}</p>
+          <Card className="p-3 bg-muted">
+            <p className="text-[11px] text-muted-foreground">Interviews</p>
+            <p className="text-[18px] font-bold text-foreground">{scorecard.session_prep_snapshot.interviews_since_last_session}</p>
           </Card>
         </div>
         {scorecard.session_prep_snapshot.stalled_lanes.length > 0 && (
@@ -466,11 +444,11 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </div>
         )}
         <div className="mt-3 grid grid-cols-1 md:grid-cols-1 gap-3">
-          <Card className={actionIsOverdue ? 'p-3 border-red-200 bg-red-50' : 'p-3 bg-slate-50'}>
-            <p className="text-[11px] text-slate-500">Next action</p>
-            <p className="text-[13px] font-semibold text-slate-900 line-clamp-2">{nextAction?.action ?? actionDraft.action ?? 'Unassigned'}</p>
-            <p className="text-[11px] text-slate-500 mt-1">{actionOwner ? `Owner: ${actionOwner}` : 'Owner: unassigned'}</p>
-            <p className={`text-[11px] mt-0.5 ${actionIsOverdue ? 'text-red-700' : 'text-slate-500'}`}>
+          <Card className={actionIsOverdue ? 'p-3 border-destructive/30 bg-destructive/10' : 'p-3 bg-muted'}>
+            <p className="text-[11px] text-muted-foreground">Next action</p>
+            <p className="text-[13px] font-semibold text-foreground line-clamp-2">{nextAction?.action ?? actionDraft.action ?? 'Unassigned'}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{actionOwner ? `Owner: ${actionOwner}` : 'Owner: unassigned'}</p>
+            <p className={`text-[11px] mt-0.5 ${actionIsOverdue ? 'text-destructive' : 'text-muted-foreground'}`}>
               Due {actionDueDate || 'TBD'}{actionStatus ? ` · ${actionStatus}` : ''}
             </p>
           </Card>
@@ -481,8 +459,8 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
         <Card className="p-5">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-1">Next action editor</p>
-              <h3 className="text-[16px] font-semibold text-slate-900">Manager-style ownership and due date</h3>
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Next action editor</p>
+              <h3 className="text-[16px] font-semibold text-foreground">Manager-style ownership and due date</h3>
             </div>
             {actionIsOverdue && (
               <Badge variant="destructive">Overdue</Badge>
@@ -490,7 +468,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </div>
           <form onSubmit={saveNextAction} className="space-y-3">
             <div>
-              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Action</Label>
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Action</Label>
               <Input
                 value={actionDraft.action}
                 onChange={(event) => setActionDraft((current) => ({ ...current, action: event.target.value }))}
@@ -500,7 +478,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Owner</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Owner</Label>
                 <Input
                   aria-label="Next action owner"
                   value={actionDraft.owner}
@@ -510,7 +488,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
                 />
               </div>
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Due date</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Due date</Label>
                 <Input
                   aria-label="Next action due date"
                   value={actionDraft.dueDate}
@@ -520,7 +498,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
                 />
               </div>
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Status</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Status</Label>
                 <Select
                   value={actionDraft.status}
                   onValueChange={(value) => setActionDraft((current) => ({ ...current, status: value ?? current.status }))}
@@ -544,41 +522,41 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
               {savingAction ? 'Saving...' : 'Save next action'}
             </Button>
             {actionMessage && (
-              <p className={`text-[12px] ${actionMessage.includes('saved') ? 'text-green-700' : 'text-red-600'}`}>{actionMessage}</p>
+              <p className={`text-[12px] ${actionMessage.includes('saved') ? 'text-success' : 'text-destructive'}`}>{actionMessage}</p>
             )}
           </form>
         </Card>
 
         <Card className="p-5">
-          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-1">Weekly review rhythm</p>
-          <h3 className="text-[16px] font-semibold text-slate-900 mb-3">Repeatable in-app workflow</h3>
-          <p className="text-[13px] text-slate-600 leading-relaxed mb-4">
+          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Weekly review rhythm</p>
+          <h3 className="text-[16px] font-semibold text-foreground mb-3">Repeatable in-app workflow</h3>
+          <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">
             Save the current week, then carry the next action forward into the following review.
           </p>
-          <div className="space-y-3 text-[13px] text-slate-700">
+          <div className="space-y-3 text-[13px] text-muted-foreground">
             <div className="flex items-center justify-between gap-4">
-              <span className="text-slate-500">Current week</span>
+              <span className="text-muted-foreground">Current week</span>
               <span className="font-semibold">{workflow?.week_start ?? 'This week'}</span>
             </div>
             <div className="flex items-center justify-between gap-4">
-              <span className="text-slate-500">Status</span>
-              <span className="font-semibold text-green-700">{workflow?.current_review ? 'Saved' : 'Not saved yet'}</span>
+              <span className="text-muted-foreground">Status</span>
+              <span className="font-semibold text-success">{workflow?.current_review ? 'Saved' : 'Not saved yet'}</span>
             </div>
             <div className="flex items-center justify-between gap-4">
-              <span className="text-slate-500">Recent reviews</span>
+              <span className="text-muted-foreground">Recent reviews</span>
               <span className="font-semibold tabular-nums">{recentReviews.length}</span>
             </div>
           </div>
-          <div className="mt-4 border-t border-slate-100 pt-4 space-y-2">
+          <div className="mt-4 border-t border-border pt-4 space-y-2">
             {recentReviews.length > 0 ? (
               recentReviews.map((review) => (
                 <div key={review.id} className="flex items-center justify-between gap-3 text-[12px]">
-                  <span className="text-slate-600">Week of {review.week_start}</span>
-                  <span className="font-semibold text-slate-900">{review.status}</span>
+                  <span className="text-muted-foreground">Week of {review.week_start}</span>
+                  <span className="font-semibold text-foreground">{review.status}</span>
                 </div>
               ))
             ) : (
-              <p className="text-[12px] text-slate-400">No weekly reviews saved yet.</p>
+              <p className="text-[12px] text-muted-foreground">No weekly reviews saved yet.</p>
             )}
           </div>
         </Card>
@@ -586,7 +564,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
 
       {/* Tab Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList variant="line" className="border-b border-slate-200 justify-start rounded-none px-0">
+        <TabsList variant="line" className="border-b border-border justify-start rounded-none px-0">
           {[
             { id: 'prep', label: '⚡ Prep' },
             { id: 'scorecard', label: 'Scorecard' },
@@ -635,27 +613,27 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
       <TabsContent value="scorecard">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-4">Pipeline Health</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Pipeline Health</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Total Companies</span>
-                <span className="text-lg font-bold text-slate-900">
+                <span className="text-sm text-muted-foreground">Total Companies</span>
+                <span className="text-lg font-bold text-foreground">
                   {scorecard.pipeline.total_companies}
                 </span>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {Object.entries(scorecard.pipeline.by_stage).map(([stage, count]) => (
                   <div key={stage} className="text-center">
-                    <div className="text-xs text-slate-500 capitalize">
+                    <div className="text-xs text-muted-foreground capitalize">
                       {stage.replace('_', ' ')}
                     </div>
-                    <div className="text-lg font-bold text-slate-900">{count}</div>
+                    <div className="text-lg font-bold text-foreground">{count}</div>
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                <span className="text-sm text-slate-600">Avg Fit Score</span>
-                <span className="text-lg font-bold text-orange-600">
+              <div className="flex justify-between items-center pt-2 border-t border-border">
+                <span className="text-sm text-muted-foreground">Avg Fit Score</span>
+                <span className="text-lg font-bold text-primary">
                   {scorecard.pipeline.avg_fit_score}%
                 </span>
               </div>
@@ -663,16 +641,16 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-4">Activity Health</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Activity Health</h3>
             <div className="space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-slate-600">Status</span>
+                  <span className="text-sm text-muted-foreground">Status</span>
                   <span
                     className={`text-sm font-semibold ${
                       scorecard.activity_health.is_active
-                        ? 'text-green-600'
-                        : 'text-slate-400'
+                        ? 'text-success'
+                        : 'text-muted-foreground'
                     }`}
                   >
                     {scorecard.activity_health.is_active ? 'Active' : 'Inactive'}
@@ -680,16 +658,16 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Last Signal</span>
-                <span className="text-sm font-medium text-slate-900">
+                <span className="text-sm text-muted-foreground">Last Signal</span>
+                <span className="text-sm font-medium text-foreground">
                   {scorecard.activity_health.last_signal_days >= 999
                     ? 'None'
                     : `${scorecard.activity_health.last_signal_days}d ago`}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Last Brief</span>
-                <span className="text-sm font-medium text-slate-900">
+                <span className="text-sm text-muted-foreground">Last Brief</span>
+                <span className="text-sm font-medium text-foreground">
                   {scorecard.activity_health.last_brief_days >= 999
                     ? 'None'
                     : `${scorecard.activity_health.last_brief_days}d ago`}
@@ -699,17 +677,17 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-4">Signal Activity</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Signal Activity</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Last 30 Days</span>
-                <span className="text-lg font-bold text-slate-900">
+                <span className="text-sm text-muted-foreground">Last 30 Days</span>
+                <span className="text-lg font-bold text-foreground">
                   {scorecard.signals.last_30_days}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Avg Score</span>
-                <span className="text-lg font-bold text-orange-600">
+                <span className="text-sm text-muted-foreground">Avg Score</span>
+                <span className="text-lg font-bold text-primary">
                   {scorecard.signals.avg_score}
                 </span>
               </div>
@@ -717,23 +695,23 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-4">Interview Outcomes</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Interview Outcomes</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Successful</span>
-                <span className="text-lg font-bold text-green-600">
+                <span className="text-sm text-muted-foreground">Successful</span>
+                <span className="text-lg font-bold text-success">
                   {scorecard.preparation.interviews_by_outcome.successful}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Advancing</span>
-                <span className="text-lg font-bold text-blue-600">
+                <span className="text-sm text-muted-foreground">Advancing</span>
+                <span className="text-lg font-bold text-info">
                   {scorecard.preparation.interviews_by_outcome.advancing}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Rejected</span>
-                <span className="text-lg font-bold text-red-600">
+                <span className="text-sm text-muted-foreground">Rejected</span>
+                <span className="text-lg font-bold text-destructive">
                   {scorecard.preparation.interviews_by_outcome.rejected}
                 </span>
               </div>
@@ -744,68 +722,68 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
 
       {/* Weekly Review Tab */}
       <TabsContent value="review">
-        <form onSubmit={saveWeeklyReview} className="space-y-5 border border-slate-200 rounded-lg p-5 bg-white">
+        <form onSubmit={saveWeeklyReview} className="space-y-5 border border-border rounded-lg p-5 bg-card">
           {/* Header */}
           <div>
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-orange-500 mb-1">Weekly Review Ritual</p>
-            <h3 className="text-[16px] font-semibold text-slate-900">Four-part session operating loop</h3>
-            <p className="text-[13px] text-slate-500 mt-1">
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-primary mb-1">Weekly Review Ritual</p>
+            <h3 className="text-[16px] font-semibold text-foreground">Four-part session operating loop</h3>
+            <p className="text-[13px] text-muted-foreground mt-1">
               Week of {workflow?.week_start ?? 'this week'} · Complete all four parts to save.
             </p>
           </div>
 
           {/* Part 1: Strategic Decision */}
-          <Card className="border-blue-200 bg-blue-50/30 p-5 space-y-3">
+          <Card className="border-info/30 bg-info/30 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-blue-600 p-0 text-white text-[11px] font-bold justify-center flex-shrink-0">1</Badge>
-              <p className="text-[13px] font-bold text-blue-900">Strategic decision this session</p>
+              <Badge className="h-6 w-6 rounded-full bg-info p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">1</Badge>
+              <p className="text-[13px] font-bold text-info">Strategic decision this session</p>
             </div>
-            <p className="text-[12px] text-blue-700 leading-relaxed">
+            <p className="text-[12px] text-info leading-relaxed">
               What is the one strategic call the client needs to make - targeting, narrative, sequencing, or go/no-go?
             </p>
             <Textarea
               value={sessionNotes.decisions}
               onChange={(event) => setSessionNotes((current) => ({ ...current, decisions: event.target.value }))}
               rows={3}
-              className="w-full border-blue-200 resize-none bg-white"
+              className="w-full border-info/30 resize-none bg-card"
               placeholder="e.g. Decide whether to pursue the CFO role at Acme or hold for the PE-backed opportunity."
             />
           </Card>
 
           {/* Part 2: Risk */}
-          <Card className="border-red-200 bg-red-50/30 p-5 space-y-3">
+          <Card className="border-destructive/30 bg-destructive/30 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-red-600 p-0 text-white text-[11px] font-bold justify-center flex-shrink-0">2</Badge>
-              <p className="text-[13px] font-bold text-red-900">Risk and blockers</p>
+              <Badge className="h-6 w-6 rounded-full bg-destructive p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">2</Badge>
+              <p className="text-[13px] font-bold text-destructive">Risk and blockers</p>
             </div>
-            <p className="text-[12px] text-red-700 leading-relaxed">
+            <p className="text-[12px] text-destructive leading-relaxed">
               What could derail momentum this week - signals missed, confidence drop, narrative inconsistency, or pipeline stall?
             </p>
             <Textarea
               value={sessionNotes.risks}
               onChange={(event) => setSessionNotes((current) => ({ ...current, risks: event.target.value }))}
               rows={3}
-              className="w-full border-red-200 resize-none bg-white"
+              className="w-full border-destructive/30 resize-none bg-card"
               placeholder="e.g. Client has not responded to three tier-1 contacts - outreach rhythm is stalling."
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">What changed in signals?</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">What changed in signals?</label>
                 <Textarea
                   value={weeklyAnswers.signals}
                   onChange={(event) => setWeeklyAnswers((current) => ({ ...current, signals: event.target.value }))}
                   rows={2}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none bg-white"
+                  className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                   placeholder="New hires, funding, exits, board changes"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Which companies moved or stalled?</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Which companies moved or stalled?</label>
                 <Textarea
                   value={weeklyAnswers.pipeline}
                   onChange={(event) => setWeeklyAnswers((current) => ({ ...current, pipeline: event.target.value }))}
                   rows={2}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none bg-white"
+                  className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                   placeholder="Stage changes, blockers, interview progress"
                 />
               </div>
@@ -813,59 +791,59 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </Card>
 
           {/* Part 3: Narrative Shift */}
-          <Card className="border-amber-200 bg-amber-50/30 p-5 space-y-3">
+          <Card className="border-warning/30 bg-warning/30 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-amber-600 p-0 text-white text-[11px] font-bold justify-center flex-shrink-0">3</Badge>
-              <p className="text-[13px] font-bold text-amber-900">Narrative adjustment</p>
+              <Badge className="h-6 w-6 rounded-full bg-warning p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">3</Badge>
+              <p className="text-[13px] font-bold text-warning">Narrative adjustment</p>
             </div>
-            <p className="text-[12px] text-amber-700 leading-relaxed">
+            <p className="text-[12px] text-warning leading-relaxed">
               Did the client's story change this week? Did an objection reveal a gap in the current narrative?
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Narrative change or rehearsal need</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Narrative change or rehearsal need</label>
                 <Textarea
                   value={weeklyAnswers.brief}
                   onChange={(event) => setWeeklyAnswers((current) => ({ ...current, brief: event.target.value }))}
                   rows={3}
-                  className="w-full border border-amber-100 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-amber-400 resize-none bg-white"
+                  className="w-full border border-warning/30 rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                   placeholder="e.g. Client weakened on 'why now' - needs tighter inflection story."
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Wins to reinforce</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Wins to reinforce</label>
                 <Textarea
                   value={sessionNotes.wins}
                   onChange={(event) => setSessionNotes((current) => ({ ...current, wins: event.target.value }))}
                   rows={3}
-                  className="w-full border border-amber-100 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-amber-400 resize-none bg-white"
+                  className="w-full border border-warning/30 rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                   placeholder="Moments of strong narrative delivery or target progress."
                 />
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Freeform session notes</label>
+              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Freeform session notes</label>
               <Textarea
                 value={sessionNotes.freeform}
                 onChange={(event) => setSessionNotes((current) => ({ ...current, freeform: event.target.value }))}
                 rows={3}
-                className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none bg-white"
+                className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                 placeholder="Context, observations, themes to track."
               />
             </div>
           </Card>
 
-          <Card className="border-slate-200 bg-slate-50/70 p-5 space-y-3">
+          <Card className="border-border bg-muted/70 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-slate-700 p-0 text-white text-[11px] font-bold justify-center flex-shrink-0">4</Badge>
-              <p className="text-[13px] font-bold text-slate-900">State signals</p>
+              <Badge className="h-6 w-6 rounded-full bg-muted p-0 text-foreground text-[11px] font-bold justify-center flex-shrink-0">4</Badge>
+              <p className="text-[13px] font-bold text-foreground">State signals</p>
             </div>
-            <p className="text-[12px] text-slate-600 leading-relaxed">
+            <p className="text-[12px] text-muted-foreground leading-relaxed">
               Record the client&apos;s current confidence, momentum, and any explicit narrative drift worth surfacing next session.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="weekly-state-confidence" className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Confidence level</Label>
+                <Label htmlFor="weekly-state-confidence" className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Confidence level</Label>
                 <Select
                   value={weeklyStateSignals.confidenceLevel}
                   onValueChange={(value) => setWeeklyStateSignals((current) => ({ ...current, confidenceLevel: value ?? current.confidenceLevel }))}
@@ -881,7 +859,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="weekly-state-momentum" className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Momentum level</Label>
+                <Label htmlFor="weekly-state-momentum" className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Momentum level</Label>
                 <Select
                   value={weeklyStateSignals.momentumLevel}
                   onValueChange={(value) => setWeeklyStateSignals((current) => ({ ...current, momentumLevel: value ?? current.momentumLevel }))}
@@ -898,78 +876,78 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Narrative drift note</label>
+              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Narrative drift note</label>
               <Textarea
                 value={weeklyStateSignals.narrativeDrift}
                 onChange={(event) => setWeeklyStateSignals((current) => ({ ...current, narrativeDrift: event.target.value }))}
                 rows={3}
-                className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none bg-white"
+                className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                 placeholder="e.g. Story is leaning too operational; needs a sharper strategic arc."
               />
             </div>
           </Card>
 
           {/* Part 4: Next Action */}
-          <Card className="border-emerald-200 bg-emerald-50/30 p-5 space-y-3">
+          <Card className="border-success/30 bg-success/30 p-5 space-y-3">
             <div className="flex items-center gap-2 mb-1">
-              <Badge className="h-6 w-6 rounded-full bg-emerald-600 p-0 text-white text-[11px] font-bold justify-center flex-shrink-0">5</Badge>
-              <p className="text-[13px] font-bold text-emerald-900">Committed next action</p>
+              <Badge className="h-6 w-6 rounded-full bg-success p-0 text-primary-foreground text-[11px] font-bold justify-center flex-shrink-0">5</Badge>
+              <p className="text-[13px] font-bold text-success">Committed next action</p>
             </div>
-            <p className="text-[12px] text-emerald-700 leading-relaxed">
+            <p className="text-[12px] text-success leading-relaxed">
               One non-negotiable action with a named owner and a hard deadline. Review cannot be saved without this.
             </p>
             <div>
-              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">What is the one action before next session?</label>
+              <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">What is the one action before next session?</label>
               <Textarea
                 value={weeklyAnswers.nextStep}
                 onChange={(event) => setWeeklyAnswers((current) => ({ ...current, nextStep: event.target.value }))}
                 rows={2}
-                className="w-full border border-emerald-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-emerald-400 resize-none bg-white"
+                className="w-full border border-success/30 rounded px-3 py-2 text-[13px] focus:outline-none resize-none bg-card"
                 placeholder="e.g. Send follow-up to three tier-1 contacts by Thursday."
               />
             </div>
           </Card>
 
-          <Card className="p-4 bg-slate-50">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-3">Session note capture</p>
+          <Card className="p-4 bg-muted">
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Session note capture</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Wins</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Wins</label>
                 <Textarea
                   value={sessionNotes.wins}
                   onChange={(event) => setSessionNotes((current) => ({ ...current, wins: event.target.value }))}
                   rows={3}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none"
+                  className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none"
                   placeholder="What improved this week"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Risks</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Risks</label>
                 <Textarea
                   value={sessionNotes.risks}
                   onChange={(event) => setSessionNotes((current) => ({ ...current, risks: event.target.value }))}
                   rows={3}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none"
+                  className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none"
                   placeholder="What is at risk"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Decisions</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Decisions</label>
                 <Textarea
                   value={sessionNotes.decisions}
                   onChange={(event) => setSessionNotes((current) => ({ ...current, decisions: event.target.value }))}
                   rows={3}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none"
+                  className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none"
                   placeholder="Decisions made in session"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Freeform notes</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Freeform notes</label>
                 <Textarea
                   value={sessionNotes.freeform}
                   onChange={(event) => setSessionNotes((current) => ({ ...current, freeform: event.target.value }))}
                   rows={3}
-                  className="w-full border border-slate-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-slate-400 resize-none"
+                  className="w-full border border-border rounded px-3 py-2 text-[13px] focus:outline-none resize-none"
                   placeholder="Context and narrative from the session"
                 />
               </div>
@@ -980,38 +958,38 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Action (system field)</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Action (system field)</label>
                 <Input
                   aria-label="Weekly review next action"
                   value={actionDraft.action}
                   onChange={(event) => setActionDraft((current) => ({ ...current, action: event.target.value }))}
                   placeholder="Confirm interview prep session"
-                  className="w-full border border-emerald-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-emerald-400"
+                  className="w-full border border-success/30 rounded px-3 py-2 text-[13px] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Owner</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Owner</label>
                 <Input
                   aria-label="Weekly review next action owner"
                   value={actionDraft.owner}
                   onChange={(event) => setActionDraft((current) => ({ ...current, owner: event.target.value }))}
                   placeholder="Client or coach"
-                  className="w-full border border-emerald-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-emerald-400"
+                  className="w-full border border-success/30 rounded px-3 py-2 text-[13px] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Deadline</label>
+                <label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Deadline</label>
                 <Input
                   aria-label="Weekly review next action due date"
                   value={actionDraft.dueDate}
                   onChange={(event) => setActionDraft((current) => ({ ...current, dueDate: event.target.value }))}
                   type="date"
-                  className="w-full border border-emerald-200 rounded px-3 py-2 text-[13px] focus:outline-none focus:border-emerald-400"
+                  className="w-full border border-success/30 rounded px-3 py-2 text-[13px] focus:outline-none"
                 />
               </div>
             </div>
             <div className="max-w-[220px]">
-              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Status</Label>
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Status</Label>
               <Select
                 value={actionDraft.status}
                 onValueChange={(value) => setActionDraft((current) => ({ ...current, status: value ?? current.status }))}
@@ -1048,29 +1026,29 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           </div>
 
           {reviewMessage && (
-            <p className={`text-[12px] ${reviewMessage.includes('saved') ? 'text-green-700' : 'text-red-600'}`}>{reviewMessage}</p>
+            <p className={`text-[12px] ${reviewMessage.includes('saved') ? 'text-success' : 'text-destructive'}`}>{reviewMessage}</p>
           )}
 
           {recentReviews.length > 0 && (
-            <div className="border-t border-slate-100 pt-4">
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-3">Recent reviews</p>
+            <div className="border-t border-border pt-4">
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Recent reviews</p>
               <div className="space-y-3">
                 {recentReviews.map((review) => (
                   <Card key={review.id} className="p-3">
                     <div className="flex items-center justify-between gap-3 mb-2">
-                      <p className="text-[12px] font-semibold text-slate-900">Week of {review.week_start}</p>
-                      <span className="text-[11px] text-slate-500">{review.status}</span>
+                      <p className="text-[12px] font-semibold text-foreground">Week of {review.week_start}</p>
+                      <span className="text-[11px] text-muted-foreground">{review.status}</span>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[12px] text-slate-600">
-                      <p><span className="font-semibold text-slate-700">Signals:</span> {review.review_answers.signals ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Pipeline:</span> {review.review_answers.pipeline ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Brief:</span> {review.review_answers.brief ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Next step:</span> {review.review_answers.nextStep ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Confidence:</span> {review.review_answers.confidence_level ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Momentum:</span> {review.review_answers.momentum_level ?? '\u2014'}</p>
-                      <p className="md:col-span-2"><span className="font-semibold text-slate-700">Narrative drift:</span> {review.review_answers.narrative_drift ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Agenda:</span> {review.review_answers.agenda_template ?? '\u2014'}</p>
-                      <p><span className="font-semibold text-slate-700">Session notes:</span> {review.review_answers.session_notes?.freeform ?? '\u2014'}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[12px] text-muted-foreground">
+                      <p><span className="font-semibold text-muted-foreground">Signals:</span> {review.review_answers.signals ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Pipeline:</span> {review.review_answers.pipeline ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Brief:</span> {review.review_answers.brief ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Next step:</span> {review.review_answers.nextStep ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Confidence:</span> {review.review_answers.confidence_level ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Momentum:</span> {review.review_answers.momentum_level ?? '\u2014'}</p>
+                      <p className="md:col-span-2"><span className="font-semibold text-muted-foreground">Narrative drift:</span> {review.review_answers.narrative_drift ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Agenda:</span> {review.review_answers.agenda_template ?? '\u2014'}</p>
+                      <p><span className="font-semibold text-muted-foreground">Session notes:</span> {review.review_answers.session_notes?.freeform ?? '\u2014'}</p>
                     </div>
                   </Card>
                 ))}
@@ -1083,24 +1061,24 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
       {/* Weekly Trends Tab */}
       <TabsContent value="trends">
         <Card className="p-5">
-          <h3 className="text-sm font-semibold text-slate-900 mb-4">Weekly Progress Markers</h3>
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Weekly Progress Markers</h3>
+          <div className="overflow-x-auto rounded-lg border border-border">
             <Table className="w-full">
               <TableHeader>
-                <TableRow className="bg-slate-50">
-                  <TableHead className="text-left text-[11px] font-semibold text-slate-600 px-4 py-2">Week</TableHead>
-                  <TableHead className="text-right text-[11px] font-semibold text-slate-600 px-4 py-2">Signals</TableHead>
-                  <TableHead className="text-right text-[11px] font-semibold text-slate-600 px-4 py-2">Briefs</TableHead>
-                  <TableHead className="text-right text-[11px] font-semibold text-slate-600 px-4 py-2">Interviews</TableHead>
+                <TableRow className="bg-muted">
+                  <TableHead className="text-left text-[11px] font-semibold text-muted-foreground px-4 py-2">Week</TableHead>
+                  <TableHead className="text-right text-[11px] font-semibold text-muted-foreground px-4 py-2">Signals</TableHead>
+                  <TableHead className="text-right text-[11px] font-semibold text-muted-foreground px-4 py-2">Briefs</TableHead>
+                  <TableHead className="text-right text-[11px] font-semibold text-muted-foreground px-4 py-2">Interviews</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {scorecard.weekly_trends.map((week) => (
                   <TableRow key={week.week_start}>
-                    <TableCell className="px-4 py-2 text-[12px] text-slate-700">Week of {week.week_start}</TableCell>
-                    <TableCell className="px-4 py-2 text-[12px] text-right font-semibold text-slate-900 tabular-nums">{week.signals}</TableCell>
-                    <TableCell className="px-4 py-2 text-[12px] text-right font-semibold text-slate-900 tabular-nums">{week.briefs}</TableCell>
-                    <TableCell className="px-4 py-2 text-[12px] text-right font-semibold text-slate-900 tabular-nums">{week.interviews}</TableCell>
+                    <TableCell className="px-4 py-2 text-[12px] text-muted-foreground">Week of {week.week_start}</TableCell>
+                    <TableCell className="px-4 py-2 text-[12px] text-right font-semibold text-foreground tabular-nums">{week.signals}</TableCell>
+                    <TableCell className="px-4 py-2 text-[12px] text-right font-semibold text-foreground tabular-nums">{week.briefs}</TableCell>
+                    <TableCell className="px-4 py-2 text-[12px] text-right font-semibold text-foreground tabular-nums">{week.interviews}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -1115,19 +1093,19 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {companies.map((company) => (
               <Card key={company.id} className="p-4">
-                <h4 className="font-semibold text-slate-900">{company.name}</h4>
+                <h4 className="font-semibold text-foreground">{company.name}</h4>
                 <div className="flex justify-between items-center mt-2">
-                  <span className="text-sm text-slate-600 capitalize">{company.stage}</span>
-                  <span className="text-sm font-bold text-orange-600">{company.fit_score}%</span>
+                  <span className="text-sm text-muted-foreground capitalize">{company.stage}</span>
+                  <span className="text-sm font-bold text-primary">{company.fit_score}%</span>
                 </div>
                 {company.notes && (
-                  <p className="text-sm text-slate-500 mt-2 line-clamp-2">{company.notes}</p>
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{company.notes}</p>
                 )}
               </Card>
             ))}
           </div>
           {companies.length === 0 && (
-            <div className="text-center text-slate-500 p-8">No companies in pipeline</div>
+            <div className="text-center text-muted-foreground p-8">No companies in pipeline</div>
           )}
         </div>
       </TabsContent>
@@ -1138,15 +1116,15 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
           {signals.slice(0, 20).map((signal) => (
             <Card key={signal.id} className="p-4">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-semibold text-slate-900">
+                <h4 className="font-semibold text-foreground">
                   {(signal.companies?.name ?? 'Company')} · {signal.signal_type.replace('_', ' ')}
                 </h4>
                 <Badge variant="warning" className="capitalize">
                   {signal.signal_type.replace('_', ' ')}
                 </Badge>
               </div>
-              <p className="text-sm text-slate-600 mb-2">{signal.signal_summary}</p>
-              <p className="text-xs text-slate-500">
+              <p className="text-sm text-muted-foreground mb-2">{signal.signal_summary}</p>
+              <p className="text-xs text-muted-foreground">
                 {new Date(signal.signal_date).toLocaleDateString()}
               </p>
               {signal.source_url && (
@@ -1154,7 +1132,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
                   href={signal.source_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-xs text-slate-500 hover:text-slate-700 underline underline-offset-2"
+                  className="text-xs text-muted-foreground underline underline-offset-2"
                 >
                   Open source
                 </a>
@@ -1162,7 +1140,7 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
             </Card>
           ))}
           {signals.length === 0 && (
-            <div className="text-center text-slate-500 p-8">No signals detected</div>
+            <div className="text-center text-muted-foreground p-8">No signals detected</div>
           )}
         </div>
       </TabsContent>
@@ -1174,10 +1152,10 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
             <Card key={brief.id} className="p-4">
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-semibold text-slate-900">
+                  <h4 className="font-semibold text-foreground">
                     {(brief.companies?.name ?? 'General')} · {brief.type}
                   </h4>
-                  <p className="text-sm text-slate-600 mt-1 line-clamp-3">{brief.output_text}</p>
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{brief.output_text}</p>
                 </div>
                 <div className="flex flex-col items-end gap-2 shrink-0">
                   <Badge
@@ -1208,19 +1186,19 @@ export function CoachClientDataView({ clientId }: { clientId: string }) {
                 </div>
               </div>
               {brief.user_rating !== null && brief.user_rating !== undefined && (
-                <p className="text-xs text-slate-500 mt-2">Rating: {brief.user_rating > 0 ? 'positive' : 'negative'}</p>
+                <p className="text-xs text-muted-foreground mt-2">Rating: {brief.user_rating > 0 ? 'positive' : 'negative'}</p>
               )}
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {brief.reviewed_at ? `Reviewed ${new Date(brief.reviewed_at).toLocaleDateString()}` : 'Not reviewed yet'}
                 {brief.used_at ? ` · Used ${new Date(brief.used_at).toLocaleDateString()}` : ''}
               </p>
-              <p className="text-xs text-slate-500 mt-3">
+              <p className="text-xs text-muted-foreground mt-3">
                 {new Date(brief.created_at).toLocaleDateString()}
               </p>
             </Card>
           ))}
           {briefs.length === 0 && (
-            <div className="text-center text-slate-500 p-8">No briefs created</div>
+            <div className="text-center text-muted-foreground p-8">No briefs created</div>
           )}
         </div>
       </TabsContent>

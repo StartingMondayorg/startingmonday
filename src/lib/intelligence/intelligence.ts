@@ -150,39 +150,28 @@ export function signalLabel(type: string): string {
   return SIGNAL_LABELS[type] ?? type
 }
 
+/*
+  One map for both themes. This used to be a SIGNAL_COLORS / SIGNAL_COLORS_DARK
+  pair because the light and dark surfaces needed different literal hues; the
+  semantic tokens already resolve per theme, so the split had nothing left to
+  express and call sites no longer have to know which surface they are on.
+*/
 export const SIGNAL_COLORS: Record<string, string> = {
-  funding:        'bg-green-50 text-green-700',
-  exec_departure: 'bg-amber-50 text-amber-700',
-  exec_hire:      'bg-blue-50 text-blue-700',
-  acquisition:    'bg-purple-50 text-purple-700',
-  expansion:      'bg-teal-50 text-teal-700',
-  layoffs:        'bg-red-50 text-red-700',
-  ipo:            'bg-orange-50 text-orange-700',
-  new_product:    'bg-indigo-50 text-indigo-700',
-  award:          'bg-yellow-50 text-yellow-700',
-  filing_trend:   'bg-slate-100 text-slate-600',
-  partnership:    'bg-cyan-50 text-cyan-700',
-  board_change:   'bg-violet-50 text-violet-700',
-  regulatory_change: 'bg-fuchsia-50 text-fuchsia-700',
-  activist_entry: 'bg-rose-50 text-rose-700',
-  insider_sale:   'bg-stone-100 text-stone-700',
+  funding:           'bg-success/15 text-success',
+  exec_departure:    'bg-warning/15 text-warning',
+  exec_hire:         'bg-info/15 text-info',
+  acquisition:       'bg-info/15 text-info',
+  expansion:         'bg-success/15 text-success',
+  layoffs:           'bg-destructive/15 text-destructive',
+  ipo:               'bg-primary/15 text-primary',
+  new_product:       'bg-info/15 text-info',
+  award:             'bg-warning/15 text-warning',
+  filing_trend:      'bg-muted/60 text-muted-foreground',
+  partnership:       'bg-info/15 text-info',
+  board_change:      'bg-info/15 text-info',
+  regulatory_change: 'bg-destructive/15 text-destructive',
+  activist_entry:    'bg-destructive/15 text-destructive',
+  insider_sale:      'bg-muted/60 text-muted-foreground',
 }
 
-// Dark-surface variants for the premium dashboard theme.
-export const SIGNAL_COLORS_DARK: Record<string, string> = {
-  funding:        'bg-emerald-500/15 text-emerald-200',
-  exec_departure: 'bg-amber-500/15 text-amber-200',
-  exec_hire:      'bg-blue-500/15 text-blue-200',
-  acquisition:    'bg-purple-500/15 text-purple-200',
-  expansion:      'bg-teal-500/15 text-teal-200',
-  layoffs:        'bg-rose-500/15 text-rose-200',
-  ipo:            'bg-orange-500/15 text-orange-200',
-  new_product:    'bg-indigo-500/15 text-indigo-200',
-  award:          'bg-yellow-500/15 text-yellow-200',
-  filing_trend:   'bg-white/10 text-slate-300',
-  partnership:    'bg-cyan-500/15 text-cyan-200',
-  board_change:   'bg-violet-500/15 text-violet-200',
-  regulatory_change: 'bg-fuchsia-500/15 text-fuchsia-200',
-  activist_entry: 'bg-rose-500/15 text-rose-200',
-  insider_sale:   'bg-white/10 text-slate-300',
-}
+export const SIGNAL_FALLBACK_COLOR = 'bg-muted/60 text-muted-foreground'

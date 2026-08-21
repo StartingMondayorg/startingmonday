@@ -3,12 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Label } from '@/components/ui'
 type GuideSection = {
   id: string
   title: string
@@ -277,46 +272,46 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/help" className="text-[13px] text-slate-300 hover:text-white transition-colors">Help</Link>
-            <Link href="/features" className="text-[13px] text-slate-300 hover:text-white transition-colors">Features Docs</Link>
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">Dashboard</Link>
+            <Link href="/dashboard/help" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Help</Link>
+            <Link href="/features" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Features Docs</Link>
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-6">
-          <h1 className="text-[28px] font-bold text-slate-900">Starting Monday Career Guide</h1>
-          <p className="text-[13px] text-slate-500 mt-1">Find features fast with two levels: section summaries first, then function-level items when you select a section.</p>
+          <h1 className="text-[28px] font-bold text-foreground">Starting Monday Career Guide</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">Find features fast with two levels: section summaries first, then function-level items when you select a section.</p>
         </div>
 
-        <Card className="sticky top-4 z-20 !bg-slate-950 !text-slate-100 p-4 mb-6 shadow-lg">
+        <Card className="dark sticky top-4 z-20 !bg-background !text-foreground p-4 mb-6 shadow-lg">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">You are here</p>
-              <p className="text-[14px] font-semibold text-white mt-1">Career Guide{activeSection ? ` / ${activeSection.section.title}` : ''}{activeFunction ? ` / ${activeFunction.functionKey}` : ''}</p>
-              <p className="text-[12px] text-slate-400 mt-1">{activeFunction?.summary ?? activeSection?.section.body.split('\n').find((line) => line.trim())?.replace(/^[-*]\s*/, '') ?? 'Choose a section to see the next level of guide content.'}</p>
-              <p className="text-[11px] text-slate-500 mt-2">Guide synced {formatDate(guideGeneratedAt)}</p>
+              <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">You are here</p>
+              <p className="text-[14px] font-semibold text-foreground mt-1">Career Guide{activeSection ? ` / ${activeSection.section.title}` : ''}{activeFunction ? ` / ${activeFunction.functionKey}` : ''}</p>
+              <p className="text-[12px] text-muted-foreground mt-1">{activeFunction?.summary ?? activeSection?.section.body.split('\n').find((line) => line.trim())?.replace(/^[-*]\s*/, '') ?? 'Choose a section to see the next level of guide content.'}</p>
+              <p className="text-[11px] text-muted-foreground mt-2">Guide synced {formatDate(guideGeneratedAt)}</p>
             </div>
             {activeSection ? (
               <div className="lg:max-w-[45%]">
-                <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">Mini map</p>
+                <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Mini map</p>
                 <div className="space-y-2">
                   {activeSection.functions.map((entry) => (
                     <Button
                       key={entry.functionKey}
                       type="button"
                       onClick={() => updateSelection(activeSection.section.id, entry.functionKey)}
-                      className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left text-[12px] ${activeFunction?.functionKey === entry.functionKey ? '!border-orange-400 !bg-orange-500/10 !text-white' : '!border-slate-800 !bg-slate-900 !text-slate-200 hover:!border-slate-700'}`}
+                      className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left text-[12px] ${activeFunction?.functionKey === entry.functionKey ? '!border-primary/30 !bg-primary/10 !text-foreground' : '!border-border !bg-card !text-foreground hover:!border-border'}`}
                     >
                       <p className="font-semibold">{entry.functionKey}</p>
-                      <p className="mt-1 text-[11px] text-slate-300">Covers {entry.summary}.</p>
-                      <p className="mt-1 text-[11px] text-slate-400">Why: this is the next drill-down when the section alone is too broad.</p>
+                      <p className="mt-1 text-[11px] text-muted-foreground">Covers {entry.summary}.</p>
+                      <p className="mt-1 text-[11px] text-muted-foreground">Why: this is the next drill-down when the section alone is too broad.</p>
                     </Button>
                   ))}
                 </div>
@@ -326,16 +321,16 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
         </Card>
 
         <Card className="p-4 mb-5">
-          <Label htmlFor="guide-search" className="block text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Search all guide sections</Label>
+          <Label htmlFor="guide-search" className="block text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Search all guide sections</Label>
           <Input id="guide-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search features, onboarding steps, APIs, and articles..." className="w-full text-[14px]" />
-          <p className="text-[12px] text-slate-400 mt-2">Showing {filtered.length} of {sections.length} sections.</p>
+          <p className="text-[12px] text-muted-foreground mt-2">Showing {filtered.length} of {sections.length} sections.</p>
         </Card>
 
-        <Card className="!bg-slate-900 p-4 sm:p-5 mb-6">
-          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Career Guide Chat</p>
-          <p className="text-[13px] text-slate-300 mb-3">Ask anything about features, setup, workflows, or articles. You will get an answer plus source links.</p>
+        <Card className="dark !bg-card p-4 sm:p-5 mb-6">
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Career Guide Chat</p>
+          <p className="text-[13px] text-muted-foreground mb-3">Ask anything about features, setup, workflows, or articles. You will get an answer plus source links.</p>
           <div className="flex flex-col sm:flex-row gap-2">
-            <Input id="guide-chat" type="text" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); void askGuideChat() } }} placeholder="Example: How do I get started and set up my profile?" className="w-full text-[14px] !border-slate-700 !bg-slate-950 !text-slate-100 placeholder:!text-slate-500" />
+            <Input id="guide-chat" type="text" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); void askGuideChat() } }} placeholder="Example: How do I get started and set up my profile?" className="w-full text-[14px] !border-border !bg-background !text-foreground placeholder:!text-muted-foreground" />
             <Button type="button" onClick={() => { void askGuideChat() }} disabled={chatLoading || !question.trim()} className="sm:w-auto">
               {chatLoading ? 'Searching...' : 'Ask'}
             </Button>
@@ -346,34 +341,34 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
             </Alert>
           ) : null}
           {chatResult ? (
-            <div className="mt-4 p-4 rounded border border-slate-700 bg-slate-950">
-              <p className="text-[13px] text-slate-200 whitespace-pre-wrap">{chatResult.answer}</p>
+            <div className="mt-4 p-4 rounded border border-border bg-background">
+              <p className="text-[13px] text-foreground whitespace-pre-wrap">{chatResult.answer}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-                <span className="px-2 py-1 rounded bg-slate-800 text-slate-300">intent: {chatResult.intent ?? 'general'}</span>
-                <span className="px-2 py-1 rounded bg-slate-800 text-slate-300">confidence: {Math.round((chatResult.confidence ?? 0) * 100)}%</span>
-                {chatResult.conservative ? <span className="px-2 py-1 rounded bg-amber-900/30 text-amber-300">source-first mode</span> : null}
+                <span className="px-2 py-1 rounded bg-muted text-muted-foreground">intent: {chatResult.intent ?? 'general'}</span>
+                <span className="px-2 py-1 rounded bg-muted text-muted-foreground">confidence: {Math.round((chatResult.confidence ?? 0) * 100)}%</span>
+                {chatResult.conservative ? <span className="px-2 py-1 rounded bg-warning/30 text-warning">source-first mode</span> : null}
               </div>
               {chatResult.sources.length > 0 ? (
                 <div className="mt-3 space-y-1">
-                  <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Sources</p>
+                  <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Sources</p>
                   {chatResult.sources.map((source) => (
                     <div key={source.id}>
-                      <a href={source.url} className="block text-[13px] text-orange-300 hover:text-orange-200 hover:underline">{source.title}</a>
-                      {source.snippet ? <p className="text-[12px] text-slate-400">{source.snippet}</p> : null}
+                      <a href={source.url} className="block text-[13px] text-primary hover:underline">{source.title}</a>
+                      {source.snippet ? <p className="text-[12px] text-muted-foreground">{source.snippet}</p> : null}
                     </div>
                   ))}
                 </div>
               ) : null}
               {chatResult.queryId ? (
-                <div className="mt-4 pt-3 border-t border-slate-800">
-                  <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">Was this helpful?</p>
+                <div className="mt-4 pt-3 border-t border-border">
+                  <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Was this helpful?</p>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Button type="button" size="sm" onClick={() => { void sendFeedback('helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="!bg-emerald-500 !text-black hover:!bg-emerald-400">Helpful</Button>
-                    <Button type="button" size="sm" variant="secondary" onClick={() => { void sendFeedback('not_helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="!bg-slate-700 !text-slate-100 hover:!bg-slate-600">Not helpful</Button>
-                    <Input type="text" value={feedbackNote} onChange={(event) => setFeedbackNote(event.target.value)} placeholder="Optional: what was missing?" className="min-w-[240px] flex-1 text-[12px] !border-slate-700 !bg-slate-900 !text-slate-100 placeholder:!text-slate-500" />
+                    <Button type="button" size="sm" onClick={() => { void sendFeedback('helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="!bg-success !text-success-foreground hover:!bg-success/90">Helpful</Button>
+                    <Button type="button" size="sm" variant="secondary" onClick={() => { void sendFeedback('not_helpful') }} disabled={feedbackState === 'sending' || feedbackState === 'sent'} className="!bg-muted !text-foreground hover:!bg-muted/90">Not helpful</Button>
+                    <Input type="text" value={feedbackNote} onChange={(event) => setFeedbackNote(event.target.value)} placeholder="Optional: what was missing?" className="min-w-[240px] flex-1 text-[12px] !border-border !bg-card !text-foreground placeholder:!text-muted-foreground" />
                   </div>
-                  {feedbackState === 'sent' ? <p className="text-[11px] text-emerald-300 mt-2">Thanks. Feedback captured.</p> : null}
-                  {feedbackState === 'error' ? <p className="text-[11px] text-rose-300 mt-2">Could not save feedback right now.</p> : null}
+                  {feedbackState === 'sent' ? <p className="text-[11px] text-success mt-2">Thanks. Feedback captured.</p> : null}
+                  {feedbackState === 'error' ? <p className="text-[11px] text-destructive mt-2">Could not save feedback right now.</p> : null}
                 </div>
               ) : null}
             </div>
@@ -381,10 +376,10 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
         </Card>
 
         <Card className="p-4 mb-6">
-          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Audit shortcuts</p>
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Audit shortcuts</p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
-              <p className="text-[12px] font-semibold text-slate-900 mb-2">Most reviewed</p>
+              <p className="text-[12px] font-semibold text-foreground mb-2">Most reviewed</p>
               <div className="space-y-2">
                 {mostReviewed.map((entry) => (
                   <Button
@@ -392,17 +387,17 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                     type="button"
                     variant="outline"
                     onClick={() => updateSelection(entry.sectionId, entry.functionKey)}
-                    className="h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left !border-slate-300 !bg-slate-50 hover:!border-slate-400"
+                    className="h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left !border-border !bg-muted"
                   >
-                    <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
-                    <p className="text-[11px] text-slate-600 mt-1">Covers {entry.summary}.</p>
-                    <p className="text-[11px] text-slate-500 mt-1">Why: this is one of the highest-signal places to inspect first.</p>
+                    <p className="text-[12px] font-semibold text-foreground">{entry.functionKey}</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Covers {entry.summary}.</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Why: this is one of the highest-signal places to inspect first.</p>
                   </Button>
                 ))}
                 </div>
             </div>
             <div>
-              <p className="text-[12px] font-semibold text-slate-900 mb-2">Recently changed</p>
+              <p className="text-[12px] font-semibold text-foreground mb-2">Recently changed</p>
               <div className="space-y-2">
                 {recentlyChanged.map((entry) => (
                   <Button
@@ -410,11 +405,11 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                     type="button"
                     variant="outline"
                     onClick={() => updateSelection(entry.sectionId, entry.functionKey)}
-                    className="h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left !border-slate-300 !bg-white hover:!border-slate-400"
+                    className="h-auto w-full flex-col items-start gap-0 whitespace-normal rounded-lg px-3 py-2 text-left !border-border !bg-card"
                   >
-                    <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
-                    <p className="text-[11px] text-slate-600 mt-1">Covers {entry.summary}.</p>
-                    <p className="text-[11px] text-slate-500 mt-1">Why: updated {formatDate(entry.lastModifiedAt)}, so it is the freshest area to inspect.</p>
+                    <p className="text-[12px] font-semibold text-foreground">{entry.functionKey}</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Covers {entry.summary}.</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Why: updated {formatDate(entry.lastModifiedAt)}, so it is the freshest area to inspect.</p>
                   </Button>
                 ))}
               </div>
@@ -423,7 +418,7 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
         </Card>
 
         <Card className="p-4 mb-6">
-          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Level 1: Sections</p>
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Level 1: Sections</p>
           {sectionRollup.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {sectionRollup.map((entry) => (
@@ -432,21 +427,21 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                   type="button"
                   variant="outline"
                   onClick={() => updateSelection(entry.id, sectionDetails.find((detail) => detail.section.id === entry.id)?.functions[0]?.functionKey ?? null)}
-                  className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded px-3 py-2 text-left ${activeSection?.section.id === entry.id ? '!border-orange-400 !bg-orange-50' : '!border-slate-200 hover:!border-slate-300 !bg-white'}`}
+                  className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded px-3 py-2 text-left ${activeSection?.section.id === entry.id ? '!border-primary/30 !bg-primary/10' : '!border-border hover:!border-border !bg-card'}`}
                 >
-                  <p className="text-[12px] font-semibold text-slate-900">{entry.title}</p>
-                  <p className="text-[12px] text-slate-500 mt-1">Covers {entry.sectionSummary}.</p>
-                  <p className="text-[11px] text-slate-500 mt-1">Why: use this when you want the broad overview before drilling into functions.</p>
-                  <p className="text-[11px] text-slate-500 mt-1">{entry.functionCount} functions · {entry.itemCount} items</p>
+                  <p className="text-[12px] font-semibold text-foreground">{entry.title}</p>
+                  <p className="text-[12px] text-muted-foreground mt-1">Covers {entry.sectionSummary}.</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">Why: use this when you want the broad overview before drilling into functions.</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">{entry.functionCount} functions · {entry.itemCount} items</p>
                 </Button>
               ))}
             </div>
-          ) : <p className="text-[12px] text-slate-500">No sections match this search yet. Clear search to browse all guide sections.</p>}
+          ) : <p className="text-[12px] text-muted-foreground">No sections match this search yet. Clear search to browse all guide sections.</p>}
         </Card>
 
         {activeSection ? (
           <Card className="p-4 mb-6">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Level 2: Functions in {activeSection.section.title}</p>
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Level 2: Functions in {activeSection.section.title}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {activeSection.functions.map((entry) => (
                 <Button
@@ -454,12 +449,12 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
                   type="button"
                   variant="outline"
                   onClick={() => updateSelection(activeSection.section.id, entry.functionKey)}
-                  className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded px-3 py-2 text-left ${activeFunction?.functionKey === entry.functionKey ? '!border-orange-400 !bg-orange-50' : '!border-slate-200 hover:!border-slate-300 !bg-white'}`}
+                  className={`h-auto w-full flex-col items-start gap-0 whitespace-normal rounded px-3 py-2 text-left ${activeFunction?.functionKey === entry.functionKey ? '!border-primary/30 !bg-primary/10' : '!border-border hover:!border-border !bg-card'}`}
                 >
-                  <p className="text-[12px] font-semibold text-slate-900">{entry.functionKey}</p>
-                  <p className="text-[12px] text-slate-500 mt-1">Covers {entry.summary}.</p>
-                  <p className="text-[11px] text-slate-500 mt-1">Why: this groups the related items you would usually review together.</p>
-                  <p className="text-[11px] text-slate-500 mt-1">{entry.items.length} items{entry.lastModifiedAt ? ` · updated ${formatDate(entry.lastModifiedAt)}` : ''}</p>
+                  <p className="text-[12px] font-semibold text-foreground">{entry.functionKey}</p>
+                  <p className="text-[12px] text-muted-foreground mt-1">Covers {entry.summary}.</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">Why: this groups the related items you would usually review together.</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">{entry.items.length} items{entry.lastModifiedAt ? ` · updated ${formatDate(entry.lastModifiedAt)}` : ''}</p>
                 </Button>
               ))}
             </div>
@@ -468,25 +463,25 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
 
         {activeSection && activeFunction ? (
           <Card className="p-5">
-            <h2 className="text-[18px] font-bold text-slate-900 mb-2">{activeSection.section.title}</h2>
-            <p className="text-[13px] text-slate-600 mb-4">{activeFunction.functionKey} · {activeFunction.items.length} items</p>
+            <h2 className="text-[18px] font-bold text-foreground mb-2">{activeSection.section.title}</h2>
+            <p className="text-[13px] text-muted-foreground mb-4">{activeFunction.functionKey} · {activeFunction.items.length} items</p>
             <div className="space-y-3">
               {activeFunction.items.map((item, index) => (
-                <article key={`${item.title}-${index}`} className="rounded border border-slate-200 bg-slate-50 p-3">
-                  {item.url ? <a href={item.url} className="text-[13px] font-semibold text-slate-900 hover:text-slate-700 hover:underline">{item.title}</a> : <p className="text-[13px] font-semibold text-slate-900">{item.title}</p>}
-                  {item.url ? <p className="text-[12px] text-slate-500 mt-1">Covers {item.summary || 'the linked guide item'}.</p> : null}
-                  {item.url ? <p className="text-[11px] text-slate-500 mt-1">Why: open this for the exact page or step referenced by the current function.</p> : null}
-                  {item.url ? <p className="text-[12px] text-slate-500 mt-1">{item.url}</p> : null}
-                  {item.summary ? <p className="text-[12px] text-slate-600 mt-1">{item.summary}</p> : null}
-                  {item.lastModifiedAt ? <p className="text-[11px] text-slate-500 mt-2">Updated {formatDate(item.lastModifiedAt)}</p> : null}
+                <article key={`${item.title}-${index}`} className="rounded border border-border bg-muted p-3">
+                  {item.url ? <a href={item.url} className="text-[13px] font-semibold text-foreground hover:text-muted-foreground hover:underline">{item.title}</a> : <p className="text-[13px] font-semibold text-foreground">{item.title}</p>}
+                  {item.url ? <p className="text-[12px] text-muted-foreground mt-1">Covers {item.summary || 'the linked guide item'}.</p> : null}
+                  {item.url ? <p className="text-[11px] text-muted-foreground mt-1">Why: open this for the exact page or step referenced by the current function.</p> : null}
+                  {item.url ? <p className="text-[12px] text-muted-foreground mt-1">{item.url}</p> : null}
+                  {item.summary ? <p className="text-[12px] text-muted-foreground mt-1">{item.summary}</p> : null}
+                  {item.lastModifiedAt ? <p className="text-[11px] text-muted-foreground mt-2">Updated {formatDate(item.lastModifiedAt)}</p> : null}
                 </article>
               ))}
             </div>
           </Card>
         ) : (
           <Card className="p-5">
-            <p className="text-[14px] font-semibold text-slate-900">No guide sections found for this search.</p>
-            <p className="text-[13px] text-slate-600 mt-1">Try a broader keyword like onboarding, profile, companies, briefing, or outreach.</p>
+            <p className="text-[14px] font-semibold text-foreground">No guide sections found for this search.</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Try a broader keyword like onboarding, profile, companies, briefing, or outreach.</p>
           </Card>
         )}
       </main>

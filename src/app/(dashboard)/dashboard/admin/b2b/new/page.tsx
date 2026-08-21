@@ -4,13 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
 import { createProspect } from '../actions'
 import { TYPE_LABELS } from '../page'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 export const metadata = { title: 'Add Prospect - B2B Sales' }
 
 export default async function NewProspectPage() {
@@ -22,13 +16,13 @@ export default async function NewProspectPage() {
   if (!staff) notFound()
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/admin/b2b" className="text-[13px] text-slate-300 hover:text-white">
+          <Link href="/dashboard/admin/b2b" className="text-[13px] text-muted-foreground hover:text-foreground">
             Pipeline
           </Link>
         </div>
@@ -36,15 +30,15 @@ export default async function NewProspectPage() {
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         <div className="mb-7">
-          <h1 className="text-[24px] font-bold text-slate-900">Add prospect</h1>
-          <p className="text-[13px] text-slate-500 mt-1">Start tracking a new B2B sales conversation.</p>
+          <h1 className="text-[24px] font-bold text-foreground">Add prospect</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">Start tracking a new B2B sales conversation.</p>
         </div>
 
         <form action={createProspect}>
         <Card className="p-6 flex flex-col gap-5">
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
-              Organization name <span className="text-red-400">*</span>
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
+              Organization name <span className="text-destructive">*</span>
             </Label>
             <Input
               name="name"
@@ -56,7 +50,7 @@ export default async function NewProspectPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
                 Prospect type
               </Label>
               <Select name="type" defaultValue="outplacement">
@@ -72,7 +66,7 @@ export default async function NewProspectPage() {
             </div>
 
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
                 Website
               </Label>
               <Input
@@ -85,7 +79,7 @@ export default async function NewProspectPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
                 Estimated seats
               </Label>
               <Input
@@ -97,7 +91,7 @@ export default async function NewProspectPage() {
             </div>
 
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
                 Estimated ARR (USD)
               </Label>
               <Input
@@ -110,7 +104,7 @@ export default async function NewProspectPage() {
           </div>
 
           <div>
-            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
               Notes
             </Label>
             <Textarea
@@ -125,7 +119,7 @@ export default async function NewProspectPage() {
             <Button type="submit">
               Add prospect
             </Button>
-            <Link href="/dashboard/admin/b2b" className="text-[13px] text-slate-400 hover:text-slate-700">
+            <Link href="/dashboard/admin/b2b" className="text-[13px] text-muted-foreground">
               Cancel
             </Link>
           </div>

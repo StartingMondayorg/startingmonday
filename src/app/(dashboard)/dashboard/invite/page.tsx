@@ -3,8 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from '../logout-button'
 import { InviteClient } from './invite-client'
-import { Card } from '@/components/ui/card'
-
+import { Card } from '@/components/ui'
 export const metadata = { title: 'Invite - Starting Monday' }
 
 export default async function InvitePage() {
@@ -34,20 +33,20 @@ export default async function InvitePage() {
     : null
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-card">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-5">
-            <Link href="/dashboard" className="text-[12px] text-slate-300 hover:text-white transition-colors">Dashboard</Link>
+            <Link href="/dashboard" className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
             <LogoutButton label="Sign out" />
           </div>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-6 py-10">
-        <h1 className="text-[26px] font-bold text-slate-900 mb-1">Invite colleagues</h1>
-        <p className="text-[13px] text-slate-500 mb-8">
+        <h1 className="text-[26px] font-bold text-foreground mb-1">Invite colleagues</h1>
+        <p className="text-[13px] text-muted-foreground mb-8">
           Share your personal link. Anyone who signs up through it starts with a 30-day free trial.
         </p>
 
@@ -59,7 +58,7 @@ export default async function InvitePage() {
         />
 
         <Card className="mt-10 p-6">
-          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Why invite people?</p>
+          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Why invite people?</p>
           <div className="flex flex-col gap-3">
             {[
               'The best searches are run in community - peers share intel, warm intros, and honest feedback.',
@@ -67,8 +66,8 @@ export default async function InvitePage() {
               'The platform gets better as more of your actual peer group uses it.',
             ].map((s, i) => (
               <div key={i} className="flex items-start gap-3">
-                <span className="text-[11px] font-bold text-slate-300 shrink-0 w-4 mt-0.5">{i + 1}</span>
-                <p className="text-[13px] text-slate-500 leading-relaxed">{s}</p>
+                <span className="text-[11px] font-bold text-muted-foreground shrink-0 w-4 mt-0.5">{i + 1}</span>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{s}</p>
               </div>
             ))}
           </div>

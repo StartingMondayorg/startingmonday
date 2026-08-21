@@ -41,21 +41,21 @@ export function CompactTimelineModule({
         className={[
           'mx-auto max-w-5xl rounded-[1.75rem] border p-6 sm:p-7',
           isDark
-            ? 'border-white/12 bg-white/[0.04] text-slate-100 shadow-[0_24px_90px_rgba(15,23,42,0.2)]'
-            : 'border-slate-200 bg-slate-50 text-slate-900 shadow-[0_18px_60px_rgba(15,23,42,0.08)]',
+            ? 'border-border bg-muted/[0.04] text-foreground shadow-2xl'
+            : 'border-border bg-muted text-foreground shadow-xl',
         ].join(' ')}
       >
         <p className={[
           'mb-2 text-[11px] font-bold uppercase tracking-[0.16em]',
-          isDark ? 'text-orange-200' : 'text-orange-600',
+          'text-primary',
         ].join(' ')}>{eyebrow}</p>
         <h2 className={[
           'text-[24px] font-bold leading-[1.15] sm:text-[28px]',
-          isDark ? 'text-white' : 'text-slate-900',
+          'text-foreground',
         ].join(' ')}>{title}</h2>
         <p className={[
           'mt-2 max-w-3xl text-[14px] leading-relaxed',
-          isDark ? 'text-slate-200' : 'text-slate-600',
+          isDark ? 'text-foreground' : 'text-muted-foreground',
         ].join(' ')}>{summary}</p>
 
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -64,20 +64,20 @@ export function CompactTimelineModule({
               key={`${step.phase}-${index}`}
               className={[
                 'rounded-xl border p-4',
-                isDark ? 'border-white/12 bg-slate-950/45' : 'border-slate-200 bg-white',
+                isDark ? 'border-border bg-background/45' : 'border-border bg-primary',
               ].join(' ')}
             >
               <p className={[
                 'text-[11px] font-semibold uppercase tracking-[0.12em]',
-                isDark ? 'text-orange-200' : 'text-orange-600',
+                'text-primary',
               ].join(' ')}>{step.phase}</p>
               <p className={[
                 'mt-2 text-[14px] font-semibold leading-snug',
-                isDark ? 'text-white' : 'text-slate-900',
+                'text-foreground',
               ].join(' ')}>{step.focus}</p>
               <p className={[
                 'mt-2 text-[12px] leading-relaxed',
-                isDark ? 'text-slate-300' : 'text-slate-600',
+                'text-muted-foreground',
               ].join(' ')}>Visual cue: {step.visual}</p>
             </article>
           ))}
@@ -97,14 +97,14 @@ export function CompactTimelineModule({
             }}
             className={[
               'inline-flex items-center rounded px-4 py-2 text-[13px] font-semibold transition-colors',
-              isDark ? 'bg-orange-500 text-slate-950 hover:bg-orange-600' : 'bg-slate-900 text-white hover:bg-slate-700',
+              isDark ? 'bg-primary text-primary-foreground hover:bg-primary' : 'bg-card text-foreground hover:bg-muted',
             ].join(' ')}
           >
             Open full {CHANNEL_LABEL[channel]} timeline
           </TrackLink>
           <span className={[
             'text-[12px]',
-            isDark ? 'text-slate-300' : 'text-slate-500',
+            'text-muted-foreground',
           ].join(' ')}>Low-cognitive-load view with full phase-by-phase features.</span>
         </div>
       </div>

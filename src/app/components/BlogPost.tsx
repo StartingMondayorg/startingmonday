@@ -60,28 +60,28 @@ export function BlogPost({ title, description, date, readTime, url, slug, cta, c
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-primary font-sans">
       <JsonLd data={articleJsonLd} />
 
       {/* Nav */}
-      <nav className="bg-slate-900 sticky top-0 z-10">
+      <nav className="bg-card sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-white hover:text-slate-300 transition-colors">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground hover:text-muted-foreground transition-colors">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/blog" className="hidden sm:inline text-[13px] text-slate-400 hover:text-white transition-colors">
+            <Link href="/blog" className="hidden sm:inline text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Blog
             </Link>
-            <Link href="/optimize" className="hidden sm:inline text-[13px] text-slate-400 hover:text-white transition-colors">
+            <Link href="/optimize" className="hidden sm:inline text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Free Profile Grade
             </Link>
-            <Link href="/login" className="text-[13px] text-slate-400 hover:text-white transition-colors">
+            <Link href="/login" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Log in
             </Link>
             <Link
               href="/signup"
-              className="text-[13px] font-semibold text-slate-900 bg-white px-4 py-1.5 rounded hover:bg-slate-100 transition-colors"
+              className="text-[13px] font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded hover:bg-muted transition-colors"
             >
               Try free
             </Link>
@@ -92,25 +92,25 @@ export function BlogPost({ title, description, date, readTime, url, slug, cta, c
       <main>
 
       {/* Article header */}
-      <header className="bg-slate-900 px-4 sm:px-6 pt-14 pb-12">
+      <header className="bg-card px-4 sm:px-6 pt-14 pb-12">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-5">
-            <Link href="/blog" className="text-[12px] text-slate-300 hover:text-white transition-colors">
+            <Link href="/blog" className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
               &larr; All posts
             </Link>
-            <span className="text-slate-700 text-[12px]">/</span>
-            <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500">
+            <span className="text-foreground text-[12px]">/</span>
+            <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
               Executive Search
             </span>
           </div>
-          <h1 className="text-[30px] sm:text-[38px] font-bold text-white leading-[1.15] tracking-tight mb-4">
+          <h1 className="text-[30px] sm:text-[38px] font-bold text-foreground leading-[1.15] tracking-tight mb-4">
             {title}
           </h1>
-          <p className="text-[16px] text-slate-400 leading-relaxed mb-6">
+          <p className="text-[16px] text-muted-foreground leading-relaxed mb-6">
             {description}
           </p>
-          <div className="flex items-center gap-4 text-[13px] text-slate-600">
-            <Link href="/about" className="hover:text-slate-400 transition-colors">Richard Rothschild</Link>
+          <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
+            <Link href="/about" className="hover:text-muted-foreground transition-colors">Richard Rothschild</Link>
             <span>&middot;</span>
             <time dateTime={date}>{formatDate(date)}</time>
             <span>&middot;</span>
@@ -128,14 +128,14 @@ export function BlogPost({ title, description, date, readTime, url, slug, cta, c
 
       {/* Related posts */}
       {relatedPosts.length > 0 && (
-        <section className="px-4 sm:px-6 py-12 border-t border-slate-100">
+        <section className="px-4 sm:px-6 py-12 border-t border-border">
           <div className="max-w-2xl mx-auto">
-            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-6">Continue reading</p>
+            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-6">Continue reading</p>
             <div className="space-y-6">
               {relatedPosts.map(p => (
                 <Link key={p.slug} href={`/blog/${p.slug}`} className="block group">
-                  <p className="text-[15px] font-semibold text-slate-900 group-hover:text-orange-600 transition-colors leading-snug mb-1">{p.title}</p>
-                  <p className="text-[13px] text-slate-500 leading-relaxed">{p.description}</p>
+                  <p className="text-[15px] font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">{p.title}</p>
+                  <p className="text-[13px] text-muted-foreground leading-relaxed">{p.description}</p>
                 </Link>
               ))}
             </div>
@@ -144,61 +144,61 @@ export function BlogPost({ title, description, date, readTime, url, slug, cta, c
       )}
 
       {/* CTA */}
-      <section className="bg-slate-900 px-4 sm:px-6 py-14 sm:py-16 border-t border-slate-800">
+      <section className="bg-card px-4 sm:px-6 py-14 sm:py-16 border-t border-border">
         <div className="max-w-2xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
             Starting Monday
           </p>
-          <h2 className="text-[24px] sm:text-[28px] font-bold text-white mb-3 leading-snug">
+          <h2 className="text-[24px] sm:text-[28px] font-bold text-foreground mb-3 leading-snug">
             {activeCta.headline}
           </h2>
-          <p className="text-[14px] text-slate-400 mb-7 leading-relaxed max-w-lg">
+          <p className="text-[14px] text-muted-foreground mb-7 leading-relaxed max-w-lg">
             {activeCta.body}
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href={activeCta.href}
-              className="inline-block bg-orange-500 text-slate-900 text-[14px] font-bold px-7 py-3.5 rounded hover:bg-orange-600 transition-colors text-center"
+              className="inline-block bg-primary text-primary-foreground text-[14px] font-bold px-7 py-3.5 rounded hover:bg-primary/90 transition-colors text-center"
             >
               {activeCta.label}
             </Link>
             <Link
               href="/demo"
-              className="inline-block border border-slate-600 text-slate-200 text-[14px] font-semibold px-7 py-3.5 rounded hover:border-slate-400 transition-colors text-center"
+              className="inline-block border border-border text-foreground text-[14px] font-semibold px-7 py-3.5 rounded transition-colors text-center"
             >
               Run the live demo
             </Link>
 
           </div>
-          <p className="text-[12px] text-slate-400 mt-3">
+          <p className="text-[12px] text-muted-foreground mt-3">
             Start with demo if you want proof, pricing if you want to choose a tier, or trial if you are ready to move.
           </p>
-          {activeCta.note && <p className="text-[12px] text-slate-400 mt-3">{activeCta.note}</p>}
+          {activeCta.note && <p className="text-[12px] text-muted-foreground mt-3">{activeCta.note}</p>}
         </div>
       </section>
 
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 px-4 sm:px-6 py-8">
+      <footer className="bg-card border-t border-border px-4 sm:px-6 py-8">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-5 pb-5 border-b border-slate-800">
-            <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:text-slate-300 transition-colors">
-              <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-5 pb-5 border-b border-border">
+            <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
+              <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
             </Link>
             <div className="flex items-center gap-4 sm:gap-5 flex-wrap">
-              <Link href="/blog" className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors py-2">Blog</Link>
-              <Link href="/about" className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors py-2">About</Link>
-              <Link href="/optimize" className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors py-2">Free Profile Grade</Link>
-              <a href="https://www.linkedin.com/company/starting-monday" target="_blank" rel="noopener noreferrer" className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors py-2">LinkedIn</a>
-              <Link href="/privacy" className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors py-2">Privacy Policy</Link>
-              <Link href="/terms" className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors py-2">Terms</Link>
+              <Link href="/blog" className="text-[12px] text-muted-foreground transition-colors py-2">Blog</Link>
+              <Link href="/about" className="text-[12px] text-muted-foreground transition-colors py-2">About</Link>
+              <Link href="/optimize" className="text-[12px] text-muted-foreground transition-colors py-2">Free Profile Grade</Link>
+              <a href="https://www.linkedin.com/company/starting-monday" target="_blank" rel="noopener noreferrer" className="text-[12px] text-muted-foreground transition-colors py-2">LinkedIn</a>
+              <Link href="/privacy" className="text-[12px] text-muted-foreground transition-colors py-2">Privacy Policy</Link>
+              <Link href="/terms" className="text-[12px] text-muted-foreground transition-colors py-2">Terms</Link>
             </div>
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             &copy; {new Date().getFullYear()} Starting Monday. All rights reserved.
           </p>
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
         </div>
       </footer>
 

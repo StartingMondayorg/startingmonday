@@ -1,9 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 type EntitlementStatus = 'not_started' | 'checkout_started' | 'active' | 'delivered' | 'converted' | 'expired'
 
 type EntitlementResponse = {
@@ -90,36 +88,36 @@ export default function ShortlistSprintStatusCard() {
 
   return (
     <Card variant="glass" className="rounded-xl p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">Sprint entitlement status</p>
-      <p className="mt-2 text-[13px] text-slate-200">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">Sprint entitlement status</p>
+      <p className="mt-2 text-[13px] text-foreground">
         Operational view for SMK-396 and SMK-397. Status is derived from canonical user events.
       </p>
 
       {loading ? (
-        <p className="mt-3 text-[13px] text-slate-300">Loading status...</p>
+        <p className="mt-3 text-[13px] text-muted-foreground">Loading status...</p>
       ) : null}
 
       {!loading && status ? (
-        <div className="mt-3 space-y-2 text-[13px] text-slate-200">
+        <div className="mt-3 space-y-2 text-[13px] text-foreground">
           <p>
-            <span className="font-semibold text-white">Current status:</span> {status.status}
+            <span className="font-semibold text-foreground">Current status:</span> {status.status}
           </p>
           <p>
-            <span className="font-semibold text-white">Purchased:</span> {status.purchased_at ?? 'not yet'}
+            <span className="font-semibold text-foreground">Purchased:</span> {status.purchased_at ?? 'not yet'}
           </p>
           <p>
-            <span className="font-semibold text-white">Delivered:</span> {status.delivered_at ?? 'not yet'}
+            <span className="font-semibold text-foreground">Delivered:</span> {status.delivered_at ?? 'not yet'}
           </p>
           <p>
-            <span className="font-semibold text-white">Credit applied:</span> {status.converted_at ?? 'not yet'}
+            <span className="font-semibold text-foreground">Credit applied:</span> {status.converted_at ?? 'not yet'}
           </p>
           <p>
-            <span className="font-semibold text-white">SLA:</span> {status.sla_breached ? 'at risk' : 'on track'}
+            <span className="font-semibold text-foreground">SLA:</span> {status.sla_breached ? 'at risk' : 'on track'}
           </p>
         </div>
       ) : null}
 
-      {error ? <p className="mt-3 text-[13px] text-rose-300">{error}</p> : null}
+      {error ? <p className="mt-3 text-[13px] text-destructive">{error}</p> : null}
 
       <div className="mt-4 flex flex-wrap gap-2.5">
         {ACTIONS.map((action) => (
@@ -129,7 +127,7 @@ export default function ShortlistSprintStatusCard() {
             variant="outline"
             disabled={Boolean(savingAction)}
             onClick={() => runAction(action.key)}
-            className="rounded-full !border-white/20 !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-slate-100 hover:!border-orange-300/70 hover:!bg-white/5"
+            className="rounded-full !border-border !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-foreground hover:!border-primary/70 hover:!bg-muted/40"
           >
             {savingAction === action.key ? 'Saving...' : action.label}
           </Button>

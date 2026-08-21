@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import { Button } from '@/components/ui/button'
-
+import { Button } from '@/components/ui'
 type RunState = 'idle' | 'running' | 'done' | 'error'
 
 type OnDemandButtonProps = {
@@ -87,7 +86,7 @@ function OnDemandActionButton({ label, runningLabel, doneLabel, triggerUrl, poll
   }
 
   if (state === 'done') {
-    return <p className="mt-2 text-[12px] text-emerald-300">{doneLabel}{detail ? ` - ${detail}` : ''}</p>
+    return <p className="mt-2 text-[12px] text-success">{doneLabel}{detail ? ` - ${detail}` : ''}</p>
   }
 
   return (
@@ -98,12 +97,12 @@ function OnDemandActionButton({ label, runningLabel, doneLabel, triggerUrl, poll
         variant="outline"
         onClick={trigger}
         disabled={state === 'running'}
-        className="text-orange-100 border-orange-300/40 bg-orange-500/20 hover:bg-orange-500/30"
+        className="text-primary border-primary/40 bg-primary/20 hover:bg-primary/30"
       >
         {state === 'running' ? runningLabel : label}
       </Button>
       {detail && (
-        <p className={`mt-1.5 text-[11px] ${state === 'error' ? 'text-rose-300' : 'text-slate-400'}`}>{detail}</p>
+        <p className={`mt-1.5 text-[11px] ${state === 'error' ? 'text-destructive' : 'text-muted-foreground'}`}>{detail}</p>
       )}
     </div>
   )

@@ -79,17 +79,16 @@ const painPoints = [
 
 export default function CoachesChannelPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.22),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.12),_transparent_32%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.96)_54%,_rgba(10,15,28,0.98)_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
 
-      <nav className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+      <nav className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="text-[10px] font-bold tracking-[0.16em] text-white transition-opacity hover:opacity-80">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[10px] font-bold tracking-[0.16em] text-foreground transition-opacity hover:opacity-80">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <Link
             href="/coaches/executive-transition-coach-demo"
-            className="rounded bg-orange-500 px-4 py-1.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+            className="rounded bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Coach outcomes
           </Link>
@@ -99,13 +98,13 @@ export default function CoachesChannelPage() {
       <main>
         <section className="px-4 pb-14 pt-16 sm:px-6 sm:pt-20">
           <div className="mx-auto max-w-5xl">
-            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">
+            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
               For executive transition coaches
             </p>
-            <h1 className="max-w-4xl font-serif text-[38px] leading-[1.04] tracking-tight text-white sm:text-[54px]">
+            <h1 className="max-w-4xl font-serif text-[38px] leading-[1.04] tracking-tight text-foreground sm:text-[54px]">
               Your client reaches transition-ready confidence before interview pressure begins.
             </h1>
-            <p className="mt-6 max-w-3xl text-[19px] leading-relaxed text-slate-200/92 sm:text-[20px]">
+            <p className="mt-6 max-w-3xl text-[19px] leading-relaxed text-foreground/92 sm:text-[20px]">
               Starting Monday gives coaches one operating brief across the transition: narrative thesis, proof stories, commitment discipline, and opportunity timing in one place.
             </p>
 
@@ -115,37 +114,37 @@ export default function CoachesChannelPage() {
                 event={EVENT_NAMES.channelEntryClicked}
                 logToUserEvents
                 properties={{ channel: 'coaches', cta_label: 'View sample transition brief', source_page: '/coaches' }}
-                className="rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+                className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 View sample transition brief
               </TrackLink>
               <Link
                 href="/coaches/federal-it-transition-demo"
-                className="rounded-full border border-white/18 px-6 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+                className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
               >
                 Send federal IT demo
               </Link>
               <Link
                 href="/demo/search-strategy-intake"
-                className="rounded-full border border-white/18 px-6 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+                className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
               >
                 See the intake preview
               </Link>
             </div>
 
-            <p className="mt-6 text-[12px] tracking-[0.14em] text-slate-400">
+            <p className="mt-6 text-[12px] tracking-[0.14em] text-muted-foreground">
               One client. One brief. One transition path.
             </p>
           </div>
         </section>
 
         <section className="px-4 pb-14 sm:px-6 sm:pb-16">
-          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.22)] backdrop-blur-sm">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Executive summary</p>
-            <ul className="mt-4 space-y-3 text-[15px] leading-relaxed text-slate-200">
+          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-border bg-muted/[0.03] p-6 shadow-xl backdrop-blur-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Executive summary</p>
+            <ul className="mt-4 space-y-3 text-[15px] leading-relaxed text-foreground">
               {summaryPoints.map((point) => (
                 <li key={point} className="flex gap-3">
-                  <span className="font-bold text-orange-300">+</span>
+                  <span className="font-bold text-primary">+</span>
                   <span>{point}</span>
                 </li>
               ))}
@@ -154,23 +153,23 @@ export default function CoachesChannelPage() {
         </section>
 
         <section className="px-4 pb-14 sm:px-6 sm:pb-16">
-          <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-[linear-gradient(155deg,rgba(26,22,20,0.82),rgba(10,14,24,0.9))] p-6 shadow-[0_22px_80px_rgba(15,23,42,0.3)] backdrop-blur-sm sm:p-8">
+          <div className="mx-auto max-w-5xl rounded-[2rem] border border-border bg-card/85 p-6 shadow-2xl backdrop-blur-sm sm:p-8">
             <div>
-              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200">Coach workflow</p>
-              <h2 className="font-serif text-[30px] leading-[1.15] text-white sm:text-[36px]">How transition coaches run from clarity to conversion.</h2>
-              <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-slate-200">
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">Coach workflow</p>
+              <h2 className="font-serif text-[30px] leading-[1.15] text-foreground sm:text-[36px]">How transition coaches run from clarity to conversion.</h2>
+              <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-foreground">
                 Keep the sequence tight: build the thesis, protect momentum, then convert readiness into better opportunities.
               </p>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {coachingWorkflow.map((lane) => (
-                <article key={lane.title} className="rounded-2xl border border-white/10 bg-white/[0.05] p-5">
-                  <h3 className="text-[17px] font-semibold text-white">{lane.title}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-slate-200">{lane.body}</p>
+                <article key={lane.title} className="rounded-2xl border border-border bg-muted/[0.05] p-5">
+                  <h3 className="text-[17px] font-semibold text-foreground">{lane.title}</h3>
+                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">{lane.body}</p>
                   <Link
                     href={lane.href}
-                    className="mt-4 inline-flex rounded-full border border-white/18 px-4 py-2 text-xs font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+                    className="mt-4 inline-flex rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
                   >
                     {lane.cta}
                   </Link>
@@ -181,16 +180,16 @@ export default function CoachesChannelPage() {
         </section>
 
         <section className="px-4 pb-14 sm:px-6 sm:pb-16">
-          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-white/10 bg-[linear-gradient(145deg,rgba(17,21,35,0.86),rgba(13,16,28,0.92))] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.25)] backdrop-blur-sm sm:p-8">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">What makes Starting Monday different</p>
-            <h2 className="mt-3 font-serif text-[26px] leading-[1.2] text-white sm:text-[32px]">
+          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-border bg-card/85 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">What makes Starting Monday different</p>
+            <h2 className="mt-3 font-serif text-[26px] leading-[1.2] text-foreground sm:text-[32px]">
               Key differences executive transition coaches feel in real client work.
             </h2>
             <div className="mt-6 space-y-4">
               {differentiators.map((item) => (
-                <article key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                  <h3 className="text-[17px] font-semibold text-white">{item.title}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-slate-200">{item.body}</p>
+                <article key={item.title} className="rounded-2xl border border-border bg-muted/[0.04] p-5">
+                  <h3 className="text-[17px] font-semibold text-foreground">{item.title}</h3>
+                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">{item.body}</p>
                 </article>
               ))}
             </div>
@@ -200,13 +199,13 @@ export default function CoachesChannelPage() {
         <TransitionCoachDashboardPanel />
 
         <section className="px-4 pb-14 sm:px-6 sm:pb-16">
-          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-white/10 bg-[linear-gradient(150deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.22)] backdrop-blur-sm">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Transition pain points</p>
-            <h2 className="mt-3 font-serif text-[26px] leading-[1.2] text-white sm:text-[32px]">What breaks executive transitions and how this prevents it.</h2>
-            <ul className="mt-5 space-y-3 text-[14px] leading-relaxed text-slate-200">
+          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-border bg-muted/40 p-6 shadow-xl backdrop-blur-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Transition pain points</p>
+            <h2 className="mt-3 font-serif text-[26px] leading-[1.2] text-foreground sm:text-[32px]">What breaks executive transitions and how this prevents it.</h2>
+            <ul className="mt-5 space-y-3 text-[14px] leading-relaxed text-foreground">
               {painPoints.map((point) => (
                 <li key={point} className="flex gap-3">
-                  <span className="font-bold text-orange-300">+</span>
+                  <span className="font-bold text-primary">+</span>
                   <span>{point}</span>
                 </li>
               ))}
@@ -214,13 +213,13 @@ export default function CoachesChannelPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/coaches/objections"
-                className="rounded-full bg-orange-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-300"
+                className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Review coach objections
               </Link>
               <Link
                 href="/coaches/executive-transition-coach-demo"
-                className="rounded-full border border-white/18 px-4 py-2.5 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+                className="rounded-full border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
               >
                 Walk through coach outcomes
               </Link>
@@ -229,12 +228,12 @@ export default function CoachesChannelPage() {
         </section>
 
         <section className="px-4 pb-16 sm:px-6 sm:pb-20">
-          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-white/10 bg-[linear-gradient(145deg,rgba(27,20,17,0.68),rgba(11,14,24,0.94))] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.24)] backdrop-blur-sm sm:p-8">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Common objections</p>
-            <h2 className="mt-3 font-serif text-[26px] leading-[1.2] text-white sm:text-[32px]">
+          <div className="mx-auto max-w-5xl rounded-[1.75rem] border border-border bg-card/85 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Common objections</p>
+            <h2 className="mt-3 font-serif text-[26px] leading-[1.2] text-foreground sm:text-[32px]">
               Short answers for the objections executive coaches hear most.
             </h2>
-            <ul className="mt-4 space-y-2 text-[14px] leading-relaxed text-slate-200">
+            <ul className="mt-4 space-y-2 text-[14px] leading-relaxed text-foreground">
               <li>Will this add administration and dilute coaching quality?</li>
               <li>How is this different from notes, templates, and generic career platforms?</li>
               <li>How do we prove transition impact beyond activity volume?</li>
@@ -242,7 +241,7 @@ export default function CoachesChannelPage() {
             <div className="mt-6">
               <Link
                 href="/coaches/objections"
-                className="rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Read full objections and how we overcome them
               </Link>

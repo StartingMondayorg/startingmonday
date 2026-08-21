@@ -36,7 +36,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
       url="https://startingmonday.app/blog/what-companies-want-chief-data-officer"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Read a Chief Data Officer job description and you will find a list of platforms, a paragraph about
           governance frameworks, and a requirement for fifteen years of experience. Read between the lines and
@@ -49,7 +49,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
           best matches the problem behind it.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The three CDO mandates</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The three CDO mandates</h2>
 
         <p>
           Most companies hiring a Chief Data Officer are in one of three situations, and each requires a different
@@ -57,7 +57,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
         </p>
 
         <p>
-          The first is <strong className="text-slate-900">the foundation mandate</strong>. The company has
+          The first is <strong className="text-foreground">the foundation mandate</strong>. The company has
           committed to AI or advanced analytics and has discovered that their data is not ready. The CDO they
           need is an architect and operator: someone who can build data quality, governance, and infrastructure
           at enterprise scale, fast enough to justify the AI investment already on the board&rsquo;s agenda.
@@ -65,14 +65,14 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
         </p>
 
         <p>
-          The second is <strong className="text-slate-900">the business value mandate</strong>. The company has
+          The second is <strong className="text-foreground">the business value mandate</strong>. The company has
           data infrastructure but cannot translate it into revenue, cost reduction, or competitive advantage. The
           CDO they need is a translator: someone who can close the gap between what the data team is producing
           and what the business leaders can act on. This mandate rewards commercial fluency over technical depth.
         </p>
 
         <p>
-          The third is <strong className="text-slate-900">the governance mandate</strong>. Regulatory pressure,
+          The third is <strong className="text-foreground">the governance mandate</strong>. Regulatory pressure,
           a privacy incident, or an AI initiative that triggered internal questions about data use. The CDO they
           need is a risk manager who can build frameworks that satisfy regulators and legal without shutting down
           the business. This mandate rewards judgment over innovation.
@@ -83,7 +83,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
           the first call, and position themselves precisely for it.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the hiring committee is actually afraid of</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the hiring committee is actually afraid of</h2>
 
         <p>
           Every CDO search has a fear underneath it. The board approved a budget. The CEO made a commitment. The
@@ -97,7 +97,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
           Not by dismissing it. By showing a specific record of exactly that problem, solved.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the short-list looks like</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the short-list looks like</h2>
 
         <p>
           The CDO short list at a company making a serious investment has predictable shape. Two or three
@@ -112,7 +112,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
           list of platforms they have worked with. A problem they solved and the evidence it worked.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The AI question</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The AI question</h2>
 
         <p>
           Every CDO search right now has an AI dimension. The question is not whether you have worked with AI.
@@ -126,7 +126,7 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
           actually need: a credible plan they can defend to shareholders.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday watches</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday watches</h2>
 
         <p>
           Starting Monday tracks the organizational signals that precede Chief Data Officer searches: AI
@@ -136,14 +136,14 @@ export default function WhatCompaniesWantChiefDataOfficerPage() {
 
         <p>
           The{' '}
-          <Link href="/for-data-officer" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-data-officer" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           builds your win thesis from the company&rsquo;s actual situation in sixty seconds, so the first
           conversation is already a calibrated one.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The prep that changes the outcome</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The prep that changes the outcome</h2>
 
         <p>
           Know the mandate before you know the company. Know which of the three problems they are trying to

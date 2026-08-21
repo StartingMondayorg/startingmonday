@@ -2,20 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useRef, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type ArchetypeKey =
   | 'kenneth'
   | 'cio'
@@ -267,15 +254,15 @@ function renderBrief(text: string, isStreaming: boolean) {
     if (line.trim() === '---' || line.trim() === '***') return null
     if (line.startsWith('## ')) {
       return (
-        <h3 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mt-8 mb-3 first:mt-0 pb-2 border-b border-slate-100">
+        <h3 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mt-8 mb-3 first:mt-0 pb-2 border-b border-border">
           {line.slice(3)}
         </h3>
       )
     }
     if (line.startsWith('- ') || line.startsWith('* ')) {
       return (
-        <div key={i} className="flex gap-2.5 text-[14px] text-slate-700 leading-relaxed mb-2">
-          <span className="text-slate-300 shrink-0 select-none mt-0.5">-</span>
+        <div key={i} className="flex gap-2.5 text-[14px] text-muted-foreground leading-relaxed mb-2">
+          <span className="text-muted-foreground shrink-0 select-none mt-0.5">-</span>
           <span>{renderInline(line.slice(2))}</span>
         </div>
       )
@@ -284,14 +271,14 @@ function renderBrief(text: string, isStreaming: boolean) {
     return (
       <p
         key={i}
-        className="text-[14px] text-slate-700 leading-relaxed mb-2"
+        className="text-[14px] text-muted-foreground leading-relaxed mb-2"
       >
         {renderInline(line)}
       </p>
     )
   }).concat(
     isStreaming
-      ? [<span key="cursor" className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />]
+      ? [<span key="cursor" className="inline-block w-0.5 h-4 bg-muted animate-pulse ml-0.5 align-middle" />]
       : []
   )
 }
@@ -532,54 +519,54 @@ export function CioPresentationClient() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-slate-950 border-b border-slate-900 sticky top-0 z-20">
+    <div className="min-h-screen bg-muted text-foreground font-sans">
+      <header className="bg-primary border-b border-border sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-white hover:opacity-80 transition-opacity">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground hover:opacity-80 transition-opacity">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/demo/cio/notes" className="text-[13px] text-slate-400 hover:text-white transition-colors">Talking points page</Link>
+            <Link href="/demo/cio/notes" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">Talking points page</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">Kenneth transition presentation mode</p>
-          <h1 className="text-[28px] sm:text-[34px] font-bold text-slate-900 leading-[1.1] mb-4">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-3">Kenneth transition presentation mode</p>
+          <h1 className="text-[28px] sm:text-[34px] font-bold text-foreground leading-[1.1] mb-4">
             Executive-in-transition walkthrough tailored to Kenneth
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed mb-5 max-w-3xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed mb-5 max-w-3xl">
             Start with Kenneth's target-company context, then run a tailored brief showing how Starting Monday supports executives in transition from search strategy through interview prep and outreach execution.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Link href="/demo/cio" className="text-[12px] px-3 py-1.5 rounded border bg-slate-900 text-white border-slate-900">Presentation page</Link>
-            <Link href="/demo/cio/notes" className="text-[12px] px-3 py-1.5 rounded border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition-colors">Talking points page</Link>
+            <Link href="/demo/cio" className="text-[12px] px-3 py-1.5 rounded border bg-primary text-primary-foreground border-border">Presentation page</Link>
+            <Link href="/demo/cio/notes" className="text-[12px] px-3 py-1.5 rounded border bg-card text-muted-foreground border-border hover:bg-muted transition-colors">Talking points page</Link>
           </div>
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Card variant="default" className="rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Transition lens: from current CIO seat to next enterprise CIO role</Card>
-            <Card variant="default" className="rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Search outcome: stronger target narrative, faster prep, higher-quality outreach</Card>
-            <Card variant="default" className="rounded-lg p-3 bg-slate-50 text-[12px] text-slate-700">Credibility signals: transformation wins, governance leadership, advisory footprint</Card>
+            <Card variant="default" className="rounded-lg p-3 bg-muted text-[12px] text-muted-foreground">Transition lens: from current CIO seat to next enterprise CIO role</Card>
+            <Card variant="default" className="rounded-lg p-3 bg-muted text-[12px] text-muted-foreground">Search outcome: stronger target narrative, faster prep, higher-quality outreach</Card>
+            <Card variant="default" className="rounded-lg p-3 bg-muted text-[12px] text-muted-foreground">Credibility signals: transformation wins, governance leadership, advisory footprint</Card>
           </div>
         </Card>
 
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Target discovery</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Find best-fit companies for Kenneth</h2>
-          <p className="text-[14px] text-slate-600 mb-5">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Target discovery</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Find best-fit companies for Kenneth</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">
             Show that Starting Monday is not only prep and outreach. It also helps identify high-fit target companies for executives in transition.
           </p>
 
           <form onSubmit={findCompanyFit}>
-            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+            <Card variant="default" className="rounded p-5 bg-muted flex flex-col gap-4">
               <div>
-                <Label htmlFor="fit-keywords" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Fit keywords (comma-separated)</Label>
+                <Label htmlFor="fit-keywords" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Fit keywords (comma-separated)</Label>
                 <Input
                   id="fit-keywords"
                   value={fitKeywords}
                   onChange={(e) => setFitKeywords(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="public sector transformation, enterprise modernization"
                   required
                 />
@@ -596,16 +583,16 @@ export function CioPresentationClient() {
           {fitResults.length > 0 && (
             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
               {fitResults.map((company) => (
-                <Card key={company.name} variant="default" className="rounded-xl p-4 bg-white">
+                <Card key={company.name} variant="default" className="rounded-xl p-4 bg-card">
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div>
-                      <p className="text-[16px] font-semibold text-slate-900 leading-tight">{company.name}</p>
-                      <p className="text-[12px] text-slate-500">{company.sector}</p>
+                      <p className="text-[16px] font-semibold text-foreground leading-tight">{company.name}</p>
+                      <p className="text-[12px] text-muted-foreground">{company.sector}</p>
                     </div>
                     <Badge variant="success" className="rounded">Fit score {company.score}</Badge>
                   </div>
-                  <p className="text-[13px] text-slate-700 leading-relaxed mb-2">{company.whyFit}</p>
-                  <p className="text-[12px] text-slate-500">Signals: {company.strengths.join(', ')}</p>
+                  <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">{company.whyFit}</p>
+                  <p className="text-[12px] text-muted-foreground">Signals: {company.strengths.join(', ')}</p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Button
                       type="button"
@@ -619,7 +606,7 @@ export function CioPresentationClient() {
                       type="button"
                       variant="outline"
                       onClick={() => loadInBrief(company.name)}
-                      className="h-auto text-[12px] px-3 py-1.5 rounded border-slate-300"
+                      className="h-auto text-[12px] px-3 py-1.5 rounded border-border"
                     >
                       Use in live brief
                     </Button>
@@ -631,24 +618,24 @@ export function CioPresentationClient() {
         </Card>
 
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Demo pipeline view</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Kenneth target list</h2>
-          <p className="text-[14px] text-slate-600 mb-5">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Demo pipeline view</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Kenneth target list</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">
             This shows the handoff from fit discovery into pipeline targets. Saved companies are ready for briefing and outreach planning.
           </p>
 
           {targetList.length === 0 ? (
-            <Card variant="default" className="border-dashed rounded-xl p-4 text-[13px] text-slate-500 bg-slate-50">
+            <Card variant="default" className="border-dashed rounded-xl p-4 text-[13px] text-muted-foreground bg-muted">
               No saved targets yet. Use Save to Target List on any company match above.
             </Card>
           ) : (
             <div className="space-y-3">
               {targetList.map((company) => (
-                <Card key={company.name} variant="default" className="rounded-xl p-4 bg-white flex items-start justify-between gap-4">
+                <Card key={company.name} variant="default" className="rounded-xl p-4 bg-card flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[15px] font-semibold text-slate-900">{company.name}</p>
-                    <p className="text-[12px] text-slate-500 mb-1">{company.sector}</p>
-                    <p className="text-[13px] text-slate-700 leading-relaxed">{company.whyFit}</p>
+                    <p className="text-[15px] font-semibold text-foreground">{company.name}</p>
+                    <p className="text-[12px] text-muted-foreground mb-1">{company.sector}</p>
+                    <p className="text-[13px] text-muted-foreground leading-relaxed">{company.whyFit}</p>
                   </div>
                   <div className="shrink-0 flex flex-col items-end gap-2">
                     <Badge variant="success" className="rounded">Fit {company.score}</Badge>
@@ -661,30 +648,30 @@ export function CioPresentationClient() {
         </Card>
 
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Brief demo</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Generate the company brief on the fly</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Use this as a transition scenario: choose Kenneth's target company and target role, then show the brief quality before high-stakes interviews.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Brief demo</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Generate the company brief on the fly</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Use this as a transition scenario: choose Kenneth's target company and target role, then show the brief quality before high-stakes interviews.</p>
 
           <form onSubmit={generateCompanyBrief}>
-            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+            <Card variant="default" className="rounded p-5 bg-muted flex flex-col gap-4">
               <div>
-                <Label htmlFor="presentation-company-brief-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Label htmlFor="presentation-company-brief-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Company</Label>
                 <Input
                   id="presentation-company-brief-company"
                   value={companyBriefCompany}
                   onChange={(e) => setCompanyBriefCompany(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="ServiceNow"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="presentation-company-brief-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Label htmlFor="presentation-company-brief-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Role</Label>
                 <Input
                   id="presentation-company-brief-role"
                   value={companyBriefRole}
                   onChange={(e) => setCompanyBriefRole(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="Enterprise CIO (Next Role)"
                   required
                 />
@@ -696,14 +683,14 @@ export function CioPresentationClient() {
               >
                 {companyBriefLoading ? 'Generating...' : 'Generate company brief'}
               </Button>
-              {companyBriefStatus && <p className="text-[12px] text-slate-500">{companyBriefStatus}</p>}
-              {companyFirstTokenSlow && <p className="text-[12px] text-slate-500">First response chunk is taking longer than usual.</p>}
+              {companyBriefStatus && <p className="text-[12px] text-muted-foreground">{companyBriefStatus}</p>}
+              {companyFirstTokenSlow && <p className="text-[12px] text-muted-foreground">First response chunk is taking longer than usual.</p>}
               {lastCompanyRequest && !companyBriefLoading && (
                 <Button
                   type="button"
                   variant="link"
                   onClick={retryCompanyBrief}
-                  className="h-auto p-0 text-[12px] text-slate-600 hover:text-slate-900 self-start"
+                  className="h-auto p-0 text-[12px] text-muted-foreground hover:text-foreground self-start"
                 >
                   Retry last request
                 </Button>
@@ -717,34 +704,34 @@ export function CioPresentationClient() {
           </form>
 
           {(companyBriefLoading || companyBrief) && (
-            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={companyBriefRef}>
+            <Card variant="default" className="mt-5 rounded p-6 bg-card" ref={companyBriefRef}>
               {renderBrief(companyBrief, companyBriefLoading)}
             </Card>
           )}
         </Card>
 
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Tailored brief demo</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Kenneth transition brief at the named company and role</h2>
-          <p className="text-[14px] text-slate-600 mb-5">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Tailored brief demo</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Kenneth transition brief at the named company and role</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">
             Generate a tailored executive-in-transition brief from Kenneth's profile, showing how his past outcomes map to target-company priorities.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-            <Card variant="default" className="rounded p-4 bg-slate-50">
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">Profile snapshot ({activeProfile.label})</p>
-              <pre className="text-[12px] text-slate-700 whitespace-pre-wrap leading-relaxed">{activeProfile.resume}</pre>
+            <Card variant="default" className="rounded p-4 bg-muted">
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Profile snapshot ({activeProfile.label})</p>
+              <pre className="text-[12px] text-muted-foreground whitespace-pre-wrap leading-relaxed">{activeProfile.resume}</pre>
             </Card>
-            <Card variant="default" className="rounded p-4 bg-slate-50">
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">LinkedIn-style summary</p>
-              <p className="text-[12px] text-slate-700 leading-relaxed">{activeProfile.linkedin}</p>
+            <Card variant="default" className="rounded p-4 bg-muted">
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">LinkedIn-style summary</p>
+              <p className="text-[12px] text-muted-foreground leading-relaxed">{activeProfile.linkedin}</p>
             </Card>
           </div>
 
           <form onSubmit={generateTailoredBrief}>
-            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+            <Card variant="default" className="rounded p-5 bg-muted flex flex-col gap-4">
               <div>
-                <Label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Profile source</Label>
+                <Label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Profile source</Label>
                 <Select
                   value={archetype}
                   onValueChange={(value) => {
@@ -754,7 +741,7 @@ export function CioPresentationClient() {
                     if (profile) setTailoredRole(profile.defaultRole)
                   }}
                 >
-                  <SelectTrigger id="demo-archetype" className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900">
+                  <SelectTrigger id="demo-archetype" className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -765,23 +752,23 @@ export function CioPresentationClient() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="presentation-tailored-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Label htmlFor="presentation-tailored-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Company</Label>
                 <Input
                   id="presentation-tailored-company"
                   value={tailoredCompany}
                   onChange={(e) => setTailoredCompany(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="ServiceNow"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="presentation-tailored-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Label htmlFor="presentation-tailored-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Role</Label>
                 <Input
                   id="presentation-tailored-role"
                   value={tailoredRole}
                   onChange={(e) => setTailoredRole(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="Enterprise CIO (Next Role)"
                   required
                 />
@@ -793,14 +780,14 @@ export function CioPresentationClient() {
               >
                 {tailoredLoading ? 'Generating...' : 'Generate Kenneth-tailored brief'}
               </Button>
-              {tailoredStatus && <p className="text-[12px] text-slate-500">{tailoredStatus}</p>}
-              {tailoredFirstTokenSlow && <p className="text-[12px] text-slate-500">First response chunk is taking longer than usual.</p>}
+              {tailoredStatus && <p className="text-[12px] text-muted-foreground">{tailoredStatus}</p>}
+              {tailoredFirstTokenSlow && <p className="text-[12px] text-muted-foreground">First response chunk is taking longer than usual.</p>}
               {lastTailoredRequest && !tailoredLoading && (
                 <Button
                   type="button"
                   variant="link"
                   onClick={retryTailoredBrief}
-                  className="h-auto p-0 text-[12px] text-slate-600 hover:text-slate-900 self-start"
+                  className="h-auto p-0 text-[12px] text-muted-foreground hover:text-foreground self-start"
                 >
                   Retry last request
                 </Button>
@@ -814,7 +801,7 @@ export function CioPresentationClient() {
           </form>
 
           {(tailoredLoading || tailoredBrief) && (
-            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={tailoredBriefRef}>
+            <Card variant="default" className="mt-5 rounded p-6 bg-card" ref={tailoredBriefRef}>
               {renderBrief(tailoredBrief, tailoredLoading)}
             </Card>
           )}

@@ -20,14 +20,7 @@ import { HelpQuickButton } from '@/app/components/HelpQuickButton'
 import { BriefingPulseSupport } from './BriefingPulseSupport'
 import { BriefingHeader } from './BriefingHeader'
 import { parseBriefingJson } from './briefing-json'
-import { Card } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
-
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Card, Progress, Skeleton, Tabs, TabsList, TabsTrigger } from '@/components/ui'
 export const metadata = {
   title: 'Daily Briefing',
 }
@@ -593,29 +586,29 @@ Output valid JSON only, no markdown fences.`
 
 function BriefingBodySkeleton() {
   return (
-    <Card variant="glass" className="rounded-b-2xl border-t-0 px-5 sm:px-8 py-6 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
+    <Card variant="glass" className="rounded-b-2xl border-t-0 px-5 sm:px-8 py-6 sm:py-8 shadow-xl">
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-2 h-2 rounded-full bg-orange-300 animate-pulse" />
-        <p className="text-[13px] text-slate-300">Assembling your briefing...</p>
+        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+        <p className="text-[13px] text-muted-foreground">Assembling your briefing...</p>
       </div>
       <div className="mb-8 space-y-2">
-        <Skeleton className="h-4 w-full rounded bg-white/10" />
-        <Skeleton className="h-4 w-4/5 rounded bg-white/10" />
+        <Skeleton className="h-4 w-full rounded bg-muted/60" />
+        <Skeleton className="h-4 w-4/5 rounded bg-muted/60" />
       </div>
       <div className="mb-8">
-        <Skeleton className="h-2 w-28 rounded mb-4 bg-white/10" />
-        <Card variant="glass" className="p-4 bg-amber-500/10 border-amber-300/20 rounded-r space-y-2">
-          <Skeleton className="h-4 w-32 rounded bg-amber-200/20" />
-          <Skeleton className="h-3.5 w-full rounded bg-amber-200/20" />
-          <Skeleton className="h-3.5 w-3/4 rounded bg-amber-200/20" />
+        <Skeleton className="h-2 w-28 rounded mb-4 bg-muted/60" />
+        <Card variant="glass" className="p-4 bg-warning/10 border-warning/20 rounded-r space-y-2">
+          <Skeleton className="h-4 w-32 rounded bg-warning/20" />
+          <Skeleton className="h-3.5 w-full rounded bg-warning/20" />
+          <Skeleton className="h-3.5 w-3/4 rounded bg-warning/20" />
         </Card>
       </div>
       <div className="mb-8">
-        <Skeleton className="h-2 w-24 rounded mb-4 bg-white/10" />
+        <Skeleton className="h-2 w-24 rounded mb-4 bg-muted/60" />
         <Card variant="glass" className="p-4 rounded-r space-y-2">
-          <Skeleton className="h-4 w-40 rounded bg-white/10" />
-          <Skeleton className="h-3.5 w-full rounded bg-white/10" />
-          <Skeleton className="h-3.5 w-2/3 rounded bg-white/10" />
+          <Skeleton className="h-4 w-40 rounded bg-muted/60" />
+          <Skeleton className="h-3.5 w-full rounded bg-muted/60" />
+          <Skeleton className="h-3.5 w-2/3 rounded bg-muted/60" />
         </Card>
       </div>
     </Card>
@@ -654,11 +647,11 @@ async function BriefingBody({
   const stalledLanes = context.stalledLanes ?? []
 
   return (
-    <Card variant="glass" className="rounded-b-2xl border-t-0 px-5 sm:px-8 py-8 sm:py-10 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
+    <Card variant="glass" className="rounded-b-2xl border-t-0 px-5 sm:px-8 py-8 sm:py-10 shadow-xl">
       {!context.hasContent ? (
         <div className="text-center py-12">
-          <p className="text-[16px] sm:text-[18px] font-semibold text-white mb-3">Nothing urgent is pulling at the search today.</p>
-          <p className="text-[14px] sm:text-[15px] text-slate-300 leading-relaxed mb-8 max-w-md mx-auto">
+          <p className="text-[16px] sm:text-[18px] font-semibold text-foreground mb-3">Nothing urgent is pulling at the search today.</p>
+          <p className="text-[14px] sm:text-[15px] text-muted-foreground leading-relaxed mb-8 max-w-md mx-auto">
             No new matches, relationship follow-through, or company signals need attention right now.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -686,36 +679,36 @@ async function BriefingBody({
           )}
 
           {briefing?.intro && (
-            <p className="text-[15px] text-slate-200 leading-relaxed mb-8">{briefing.intro}</p>
+            <p className="text-[15px] text-foreground leading-relaxed mb-8">{briefing.intro}</p>
           )}
 
           {/* TENET 1: FIND ROLES FIRST */}
           <section id="tenet-find-roles" className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-1.5 h-7 bg-orange-500 rounded-full" />
-                <h2 className="text-[18px] sm:text-[20px] font-bold tracking-[0.08em] text-white">
+                <div className="w-1.5 h-7 bg-primary rounded-full" />
+                <h2 className="text-[18px] sm:text-[20px] font-bold tracking-[0.08em] text-foreground">
                   Find Roles First
                 </h2>
               </div>
 
               <section id="signals-to-review" className="mb-6">
-                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-slate-300 pb-3 border-b border-white/10 mb-4">
+                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-muted-foreground pb-3 border-b border-border mb-4">
                   Signals to review
                 </h3>
                 {signalAlerts.length > 0 ? (
                   <>
                     <div className="flex flex-col gap-3">
                       {signalAlerts.map((s, i) => (
-                        <Card key={i} variant="glass" className="p-4 sm:p-5 bg-gradient-to-br from-amber-500/10 to-white/5 border-amber-300/20 border-l-[4px] border-l-orange-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow">
+                        <Card key={i} variant="glass" className="p-4 sm:p-5 bg-gradient-to-br from-warning/10 to-muted/5 border-warning/20 border-l-[4px] border-l-primary/30 rounded-lg shadow-lg hover:shadow-lg transition-shadow">
                           <div className="flex items-center gap-2 flex-wrap mb-2">
-                            <span className="font-bold text-[16px] sm:text-[17px] text-white">{s.company}</span>
+                            <span className="font-bold text-[16px] sm:text-[17px] text-foreground">{s.company}</span>
                             <Badge variant="warning">
                               {SIGNAL_LABELS[s.signalType] ?? s.signalType}
                             </Badge>
                           </div>
-                          <p className="text-[15px] sm:text-[16px] text-slate-200 leading-relaxed mb-2">{s.summary}</p>
+                          <p className="text-[15px] sm:text-[16px] text-foreground leading-relaxed mb-2">{s.summary}</p>
                           {s.angle && (
-                            <p className="text-[14px] text-slate-300 italic leading-relaxed">{s.angle}</p>
+                            <p className="text-[14px] text-muted-foreground italic leading-relaxed">{s.angle}</p>
                           )}
                         </Card>
                       ))}
@@ -732,7 +725,7 @@ async function BriefingBody({
                   </>
                 ) : (
                   <Card variant="glass" className="rounded-lg p-4 sm:p-5">
-                    <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
+                    <p className="text-[14px] sm:text-[15px] text-foreground leading-relaxed">
                       No new market signals are competing for attention right now. Keep your current follow-through moving.
                     </p>
                   </Card>
@@ -743,26 +736,26 @@ async function BriefingBody({
           {/* TENET 2: TALK TO THE RIGHT PEOPLE */}
           <section id="tenet-talk-to-people" className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-1.5 h-7 bg-emerald-500 rounded-full" />
-                <h2 className="text-[18px] sm:text-[20px] font-bold tracking-[0.08em] text-white">
+                <div className="w-1.5 h-7 bg-success rounded-full" />
+                <h2 className="text-[18px] sm:text-[20px] font-bold tracking-[0.08em] text-foreground">
                   Talk to the Right People
                 </h2>
               </div>
 
               <section id="people-to-reach" className="mb-6">
-                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-slate-300 pb-3 border-b border-white/10 mb-4">
+                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-muted-foreground pb-3 border-b border-border mb-4">
                   People to reach
                 </h3>
                 {matchInsights.length > 0 ? (
                   <>
                     <div className="flex flex-col gap-3">
                       {matchInsights.map((m, i) => (
-                        <Card key={i} variant="glass" className="p-4 sm:p-5 border-l-[4px] border-l-emerald-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow">
-                          <div className="font-bold text-[16px] sm:text-[17px] text-white mb-2">{m.company}</div>
-                          <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-slate-400 mb-3">
+                        <Card key={i} variant="glass" className="p-4 sm:p-5 border-l-[4px] border-l-success/30 rounded-lg shadow-lg hover:shadow-lg transition-shadow">
+                          <div className="font-bold text-[16px] sm:text-[17px] text-foreground mb-2">{m.company}</div>
+                          <div className="text-[11px] font-semibold tracking-[0.08em] uppercase text-muted-foreground mb-3">
                             {(m.roles ?? []).join(' · ')}
                           </div>
-                          <p className="text-[15px] sm:text-[16px] text-slate-200 leading-relaxed">{m.insight}</p>
+                          <p className="text-[15px] sm:text-[16px] text-foreground leading-relaxed">{m.insight}</p>
                         </Card>
                       ))}
                     </div>
@@ -778,7 +771,7 @@ async function BriefingBody({
                   </>
                 ) : (
                   <Card variant="glass" className="rounded-lg p-4 sm:p-5">
-                    <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
+                    <p className="text-[14px] sm:text-[15px] text-foreground leading-relaxed">
                       No new role-to-contact matches surfaced yet. Use one existing relationship to keep the week moving.
                     </p>
                   </Card>
@@ -789,14 +782,14 @@ async function BriefingBody({
           {/* TENET 3: FOLLOW A CLEAR PLAN */}
           <section id="tenet-clear-plan" className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-1.5 h-7 bg-blue-500 rounded-full" />
-                <h2 className="text-[18px] sm:text-[20px] font-bold tracking-[0.08em] text-white">
+                <div className="w-1.5 h-7 bg-info rounded-full" />
+                <h2 className="text-[18px] sm:text-[20px] font-bold tracking-[0.08em] text-foreground">
                   Follow a Clear Plan
                 </h2>
               </div>
 
               <section id="keep-momentum" className="mb-6">
-                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-slate-300 pb-3 border-b border-white/10 mb-4">
+                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-muted-foreground pb-3 border-b border-border mb-4">
                   Keep momentum
                 </h3>
                 {stalledLanes.length > 0 ? (
@@ -805,21 +798,21 @@ async function BriefingBody({
                       <Card
                         key={`${lane.lane}-${index}`}
                         variant="glass"
-                        className={`p-4 sm:p-5 rounded-lg border-l-[4px] shadow-[0_18px_40px_rgba(15,23,42,0.12)] transition-shadow hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] ${lane.state === 'stalled' ? 'bg-gradient-to-br from-amber-500/10 to-white/5 border-amber-300/20 border-l-amber-400' : 'bg-gradient-to-br from-amber-500/5 to-white/5 border-amber-300/15 border-l-amber-300'}`}
+                        className={`p-4 sm:p-5 rounded-lg border-l-[4px] shadow-lg transition-shadow hover:shadow-lg ${lane.state === 'stalled' ? 'bg-gradient-to-br from-warning/10 to-muted/5 border-warning/20 border-l-warning/30' : 'bg-gradient-to-br from-warning/5 to-muted/5 border-warning/15 border-l-warning/30'}`}
                       >
                         <div className="flex items-center gap-2 flex-wrap mb-2">
-                          <span className="font-bold text-[16px] sm:text-[17px] text-white capitalize">{lane.lane}</span>
+                          <span className="font-bold text-[16px] sm:text-[17px] text-foreground capitalize">{lane.lane}</span>
                           <Badge variant="warning">
                             {normalizeLaneState(lane.state)}
                           </Badge>
                         </div>
-                        <p className="text-[15px] sm:text-[16px] text-slate-200 leading-relaxed">{normalizeLaneReason(lane.reason)}</p>
+                        <p className="text-[15px] sm:text-[16px] text-foreground leading-relaxed">{normalizeLaneReason(lane.reason)}</p>
                       </Card>
                     ))}
                   </div>
                 ) : (
                   <Card variant="glass" className="rounded-lg p-4 sm:p-5">
-                    <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
+                    <p className="text-[14px] sm:text-[15px] text-foreground leading-relaxed">
                       Your current cadence is steady. Keep one relationship move active and protect follow-through quality.
                     </p>
                   </Card>
@@ -827,18 +820,18 @@ async function BriefingBody({
               </section>
 
               <section id="best-next-moves" className="mb-0">
-                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-slate-300 pb-3 border-b border-white/10 mb-4">
+                <h3 className="text-[12px] font-semibold tracking-[0.12em] uppercase text-muted-foreground pb-3 border-b border-border mb-4">
                   Best next moves
                 </h3>
                 {followUpItems.length > 0 ? (
                   <>
                     <div className="flex flex-col gap-2">
                       {followUpItems.map((f, i) => (
-                        <Card key={i} variant="glass" className="p-4 sm:p-5 bg-gradient-to-br from-white/5 to-slate-950/30 border-l-[4px] border-l-blue-400 rounded-lg shadow-[0_18px_40px_rgba(15,23,42,0.12)] hover:shadow-[0_22px_54px_rgba(15,23,42,0.16)] transition-shadow">
-                          <div className="font-semibold text-[15px] sm:text-[16px] text-white mb-1">
-                            {f.person} <span className="font-normal text-slate-400">·</span> {f.action}
+                        <Card key={i} variant="glass" className="p-4 sm:p-5 bg-gradient-to-br from-muted/5 to-background/30 border-l-[4px] border-l-info/30 rounded-lg shadow-lg hover:shadow-lg transition-shadow">
+                          <div className="font-semibold text-[15px] sm:text-[16px] text-foreground mb-1">
+                            {f.person} <span className="font-normal text-muted-foreground">·</span> {f.action}
                           </div>
-                          <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">{f.suggestion}</p>
+                          <p className="text-[14px] sm:text-[15px] text-foreground leading-relaxed">{f.suggestion}</p>
                         </Card>
                       ))}
                     </div>
@@ -854,7 +847,7 @@ async function BriefingBody({
                   </>
                 ) : (
                   <Card variant="glass" className="rounded-lg p-4 sm:p-5">
-                    <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed">
+                    <p className="text-[14px] sm:text-[15px] text-foreground leading-relaxed">
                       Nothing urgent is due right now. Hold focus on one proactive relationship move to stay ahead of timing.
                     </p>
                   </Card>
@@ -863,7 +856,7 @@ async function BriefingBody({
             </section>
 
           {briefing?.closing && (
-            <p className="text-[14px] text-slate-300 leading-relaxed border-t border-white/10 pt-6 mb-6">
+            <p className="text-[14px] text-muted-foreground leading-relaxed border-t border-border pt-6 mb-6">
               {briefing.closing}
             </p>
           )}
@@ -891,31 +884,31 @@ function FirstSessionGuidedState({
   prepHref: string
 }) {
   return (
-    <Card variant="glass" className="px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-      <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-slate-300 mb-3">Guided first session</p>
-      <h2 className="text-[22px] sm:text-[24px] font-bold text-white leading-tight mb-2">
+    <Card variant="glass" className="px-5 py-6 sm:px-8 sm:py-8 shadow-xl">
+      <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-muted-foreground mb-3">Guided first session</p>
+      <h2 className="text-[22px] sm:text-[24px] font-bold text-foreground leading-tight mb-2">
         {firstName}, here is your first move.
       </h2>
-      <p className="text-[14px] text-slate-300 leading-relaxed mb-6">
+      <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
         Start with one company and one prep brief so today&apos;s outreach is specific, calm, and timely.
       </p>
 
-      <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4 sm:p-5 mb-5">
-        <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-slate-400 mb-1">Company being watched</p>
-        <p className="text-[16px] font-semibold text-white">{companyName ?? 'Add your first company'}</p>
+      <div className="rounded-xl border border-border bg-background/40 p-4 sm:p-5 mb-5">
+        <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-1">Company being watched</p>
+        <p className="text-[16px] font-semibold text-foreground">{companyName ?? 'Add your first company'}</p>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4 sm:p-5 mb-6">
-        <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-slate-400 mb-2">Live signals</p>
+      <div className="rounded-xl border border-border bg-background/40 p-4 sm:p-5 mb-6">
+        <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-2">Live signals</p>
         {companySignals.length === 0 ? (
-          <p className="text-[14px] text-slate-300 leading-relaxed">
+          <p className="text-[14px] text-muted-foreground leading-relaxed">
             No fresh signal yet. Generate your prep brief now so you are ready when the next change appears.
           </p>
         ) : (
           <ul className="space-y-2">
             {companySignals.map((signal, index) => (
-              <li key={`${signal.signalDate}-${index}`} className="text-[14px] text-slate-200 leading-relaxed">
-                <span className="font-semibold text-white">{SIGNAL_LABELS[signal.signalType] ?? signal.signalType}:</span>{' '}
+              <li key={`${signal.signalDate}-${index}`} className="text-[14px] text-foreground leading-relaxed">
+                <span className="font-semibold text-foreground">{SIGNAL_LABELS[signal.signalType] ?? signal.signalType}:</span>{' '}
                 {signal.summary}
               </li>
             ))}
@@ -932,7 +925,7 @@ function FirstSessionGuidedState({
         </Button>
       </form>
 
-      <p className="text-[12px] text-slate-400 mt-4">
+      <p className="text-[12px] text-muted-foreground mt-4">
         Your full briefing unlocks as your search builds.
       </p>
     </Card>
@@ -1023,17 +1016,17 @@ export default async function BriefingPage({
   const pulse = buildWeeklyPulse(context, firstName, todayLabel)
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
+    <div className="min-h-screen bg-card/85 font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+      <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
-              className="min-h-[44px] border-slate-700 text-slate-200 hover:text-white hover:border-slate-500"
+              className="min-h-[44px] border-border text-muted-foreground hover:text-foreground"
               render={<Link href="/dashboard" />}
             >
               Dashboard
@@ -1071,34 +1064,34 @@ export default async function BriefingPage({
         />
 
         {context.scanCoverage.scanned > 0 && (
-          <p className="mb-5 text-[13px] text-slate-300">
+          <p className="mb-5 text-[13px] text-muted-foreground">
             In the last 24 hours we scanned{' '}
-            <span className="font-semibold text-white">{context.scanCoverage.scanned}</span>{' '}
+            <span className="font-semibold text-foreground">{context.scanCoverage.scanned}</span>{' '}
             {context.scanCoverage.scanned === 1 ? 'company' : 'companies'},{' '}
-            ruled out <span className="font-semibold text-white">{context.scanCoverage.ruledOut}</span> with no
+            ruled out <span className="font-semibold text-foreground">{context.scanCoverage.ruledOut}</span> with no
             matching roles, and flagged{' '}
-            <span className="font-semibold text-white">{context.scanCoverage.passed}</span> for you below.
+            <span className="font-semibold text-foreground">{context.scanCoverage.passed}</span> for you below.
           </p>
         )}
 
-        <Card variant="glass" id="weekly-pulse" className="px-5 py-6 sm:px-8 sm:py-8 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <div className="rounded-2xl border border-slate-200/80 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.08),_transparent_34%),linear-gradient(180deg,_rgba(15,23,42,0.98)_0%,_rgba(15,23,42,0.94)_100%)] p-6 sm:p-8 shadow-[0_20px_48px_rgba(15,23,42,0.16)]">
+        <Card variant="glass" id="weekly-pulse" className="px-5 py-6 sm:px-8 sm:py-8 shadow-xl">
+          <div className="rounded-2xl border border-border/80 bg-card/85 p-6 sm:p-8 shadow-lg">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200/90">This week&apos;s position</p>
-                <div className="mt-3 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[12px] font-semibold text-white/95">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/90">This week&apos;s position</p>
+                <div className="mt-3 inline-flex items-center rounded-full border border-border bg-muted/40 px-3 py-1.5 text-[12px] font-semibold text-foreground/95">
                   {pulse.label}
                 </div>
               </div>
               <div className="w-full max-w-[200px]">
                 <Progress
                   value={pulse.state === 'building' ? 80 : pulse.state === 'steady' ? 60 : 40}
-                  className={`h-2 bg-white/10 ${pulse.state === 'watch' ? '[&_[data-slot=progress-indicator]]:bg-amber-300' : pulse.state === 'steady' ? '[&_[data-slot=progress-indicator]]:bg-slate-300' : '[&_[data-slot=progress-indicator]]:bg-orange-300'}`}
+                  className={`h-2 bg-muted/60 ${pulse.state === 'watch' ? '[&_[data-slot=progress-indicator]]:bg-warning' : pulse.state === 'steady' ? '[&_[data-slot=progress-indicator]]:bg-muted' : '[&_[data-slot=progress-indicator]]:bg-primary'}`}
                 />
               </div>
             </div>
 
-            <p className="text-[18px] sm:text-[20px] font-semibold leading-tight text-white mb-6">
+            <p className="text-[18px] sm:text-[20px] font-semibold leading-tight text-foreground mb-6">
               {pulse.support}
             </p>
 
@@ -1142,8 +1135,8 @@ export default async function BriefingPage({
           />
         ) : (
           <>
-            <Card variant="glass" id="briefing-mode" className="flex-row px-5 sm:px-8 py-3 items-center gap-2 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-              <h2 className="text-[11px] font-semibold text-slate-300">View:</h2>
+            <Card variant="glass" id="briefing-mode" className="flex-row px-5 sm:px-8 py-3 items-center gap-2 shadow-xl">
+              <h2 className="text-[11px] font-semibold text-muted-foreground">View:</h2>
               <Tabs value={mode}>
                 <TabsList>
                   <TabsTrigger value="focused" render={<Link href="/dashboard/briefing?mode=focused" />}>
@@ -1163,7 +1156,7 @@ export default async function BriefingPage({
           </>
         )}
 
-        <p className="text-center text-[11px] text-slate-400 mt-4">
+        <p className="text-center text-[11px] text-muted-foreground mt-4">
           Starting Monday &middot; Daily Intelligence Briefing
         </p>
 

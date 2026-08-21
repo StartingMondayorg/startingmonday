@@ -1,7 +1,6 @@
 'use client'
 
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui'
 type ContextOption = {
   key: string
   label: string
@@ -50,8 +49,8 @@ const BRIEFING_OPTIONS: ContextOption[] = [
 ]
 
 const OPTION_ITEM_BASE = 'flex-col h-auto items-start justify-start text-left rounded border px-4 py-3 whitespace-normal transition-colors cursor-pointer'
-const OPTION_ITEM_ACTIVE = '!border-orange-400/70 !bg-orange-500/20 !text-white'
-const OPTION_ITEM_INACTIVE = '!border-white/15 !bg-white/5 !text-slate-200 hover:!border-white/35'
+const OPTION_ITEM_ACTIVE = '!border-primary/70 !bg-primary/20 !text-foreground'
+const OPTION_ITEM_INACTIVE = '!border-border !bg-muted/40 !text-foreground hover:!border-border'
 
 function OptionGroup({
   title,
@@ -68,7 +67,7 @@ function OptionGroup({
 }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">{title}</p>
+      <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">{title}</p>
       <ToggleGroup
         value={selected}
         onValueChange={onToggle}
@@ -84,8 +83,8 @@ function OptionGroup({
               className={[OPTION_ITEM_BASE, active ? OPTION_ITEM_ACTIVE : OPTION_ITEM_INACTIVE].join(' ')}
             >
               <p className="text-[13px] font-semibold">{active ? '✓ ' : ''}{opt.label}</p>
-              <p className={['text-[12px] mt-1', active ? 'text-slate-200' : 'text-slate-400'].join(' ')}>{opt.hint}</p>
-              {!multi && active && <p className="text-[10px] mt-1 text-orange-200 uppercase tracking-[0.12em]">Selected</p>}
+              <p className={['text-[12px] mt-1', active ? 'text-foreground' : 'text-muted-foreground'].join(' ')}>{opt.hint}</p>
+              {!multi && active && <p className="text-[10px] mt-1 text-primary uppercase tracking-[0.12em]">Selected</p>}
             </ToggleGroupItem>
           )
         })}
@@ -161,10 +160,10 @@ export function OnboardingContextStep({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-[28px] font-serif font-bold text-white leading-tight mb-2">
+        <h1 className="text-[28px] font-serif font-bold text-foreground leading-tight mb-2">
           Add optional search context.
         </h1>
-        <p className="text-[15px] text-slate-300">
+        <p className="text-[15px] text-muted-foreground">
           This sharpens recommendations and prioritization. You can skip and refine later from the dashboard.
         </p>
       </div>
@@ -177,8 +176,8 @@ export function OnboardingContextStep({
             className={[
               'rounded border px-4 py-3 transition-colors',
               card.complete
-                ? 'border-orange-400/70 bg-orange-500/20 text-white'
-                : 'border-white/15 bg-white/5 text-slate-200 hover:border-white/35',
+                ? 'border-primary/70 bg-primary/20 text-foreground'
+                : 'border-border bg-muted/40 text-foreground hover:border-border',
             ].join(' ')}
           >
             <p className="text-[12px] font-bold tracking-[0.08em] uppercase">{card.title}</p>
@@ -218,7 +217,7 @@ export function OnboardingContextStep({
       </section>
 
       <section id="briefing-time" className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">Briefing time</p>
+        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">Briefing time</p>
         <ToggleGroup
           value={briefingTime ? [briefingTime] : []}
           onValueChange={(values) => {
@@ -238,7 +237,7 @@ export function OnboardingContextStep({
                 ].join(' ')}
               >
                 <p className="text-[13px] font-semibold">{opt.label}</p>
-                <p className={['text-[11px] mt-1', active ? 'text-slate-200' : 'text-slate-400'].join(' ')}>{opt.hint}</p>
+                <p className={['text-[11px] mt-1', active ? 'text-foreground' : 'text-muted-foreground'].join(' ')}>{opt.hint}</p>
               </ToggleGroupItem>
             )
           })}
@@ -255,7 +254,7 @@ export function OnboardingContextStep({
         />
       </section>
 
-      <p className="text-[12px] text-slate-400">
+      <p className="text-[12px] text-muted-foreground">
         {completedCount}/5 context blocks selected. More context improves ranking precision but is optional.
       </p>
     </div>

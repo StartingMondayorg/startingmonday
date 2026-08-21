@@ -61,21 +61,21 @@ const FINANCIAL_ADVISOR_PROOF_STORIES = [
 
 export default function ForFinancialAdvisorsPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-card font-sans">
 
       {/* Nav */}
-      <nav className="bg-slate-950 sticky top-0 z-10">
+      <nav className="dark bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/demo" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/demo" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               See a demo
             </Link>
             <Link
               href="/partners"
-              className="text-[13px] font-semibold text-slate-900 bg-orange-500 px-4 py-1.5 rounded hover:bg-orange-600 transition-colors"
+              className="text-[13px] font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded hover:bg-primary/90 transition-colors"
             >
               Become a partner
             </Link>
@@ -86,24 +86,24 @@ export default function ForFinancialAdvisorsPage() {
       <main>
 
         {/* Header */}
-        <header className="bg-slate-950 px-4 sm:px-6 pt-14 pb-12">
+        <header className="dark bg-background px-4 sm:px-6 pt-14 pb-12">
           <div className="max-w-2xl mx-auto">
-            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
               Partner Guide
             </p>
-            <h1 className="text-[30px] sm:text-[38px] font-bold text-white leading-[1.15] tracking-tight mb-4">
+            <h1 className="text-[30px] sm:text-[38px] font-bold text-foreground leading-[1.15] tracking-tight mb-4">
               Starting Monday for <span className="whitespace-nowrap">Executive Financial Advisors</span>
             </h1>
-            <p className="text-[16px] text-slate-200 leading-relaxed">
+            <p className="text-[16px] text-foreground leading-relaxed">
               Your client is about to start a search. You know the timeline, the runway, and the compensation target. Starting Monday gives them the infrastructure to execute it.
             </p>
-            <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-orange-200">Why now</p>
-              <p className="text-[13px] leading-relaxed text-slate-200">Search delays and weak first rounds directly change runway math. Better prep and timing improve financial outcomes, not just career outcomes.</p>
+            <div className="mt-5 rounded-2xl border border-border bg-muted/[0.04] p-4">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Why now</p>
+              <p className="text-[13px] leading-relaxed text-foreground">Search delays and weak first rounds directly change runway math. Better prep and timing improve financial outcomes, not just career outcomes.</p>
             </div>
-            <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-orange-200">This week</p>
-              <ol className="space-y-1 text-[13px] leading-relaxed text-slate-200">
+            <div className="mt-4 rounded-2xl border border-border bg-muted/[0.04] p-4">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-primary">This week</p>
+              <ol className="space-y-1 text-[13px] leading-relaxed text-foreground">
                 <li>1. Pick one transition client and set a 30-day operating baseline.</li>
                 <li>2. Align role target and comp expectation before active interview loops.</li>
                 <li>3. Review weekly motion with shared pipeline context, not anecdotal updates.</li>
@@ -128,26 +128,26 @@ export default function ForFinancialAdvisorsPage() {
                 ['6-8 weeks', 'Typical extension risk when first-round prep failures compound'],
                 ['1 shared view', 'Pipeline visibility that improves runway and compensation planning conversations'],
               ].map(([value, label]) => (
-                <div key={value} className="border border-slate-200 rounded-xl p-4 bg-white">
-                  <p className="text-[24px] font-bold text-slate-900 mb-1">{value}</p>
-                  <p className="text-[12px] text-slate-500 leading-relaxed">{label}</p>
+                <div key={value} className="border border-border rounded-xl p-4 bg-card">
+                  <p className="text-[24px] font-bold text-foreground mb-1">{value}</p>
+                  <p className="text-[12px] text-muted-foreground leading-relaxed">{label}</p>
                 </div>
               ))}
             </section>
 
-            <section className="border border-emerald-200 rounded-xl p-5 bg-emerald-50/40">
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-700 mb-2">Trust and confidentiality</p>
-              <p className="text-[13px] text-slate-700 leading-relaxed mb-2">
+            <section className="border border-success/30 rounded-xl p-5 bg-success/40">
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and confidentiality</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
                 The client controls who sees their pipeline. Advisor visibility is shared intentionally, and confidential search materials stay inside the user account rather than being forwarded across email threads.
               </p>
-              <p className="text-[12px] text-slate-600 leading-relaxed">
+              <p className="text-[12px] text-muted-foreground leading-relaxed">
                 Evidence path: use a 30-day client pilot, compare runway planning confidence before and after, and keep the decision anchored to observed search motion rather than anecdote.
               </p>
             </section>
 
             {/* What it is */}
-            <section id="advisor-fit" className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">What Starting Monday is</h2>
+            <section id="advisor-fit" className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">What Starting Monday is</h2>
               <p>
                 Starting Monday is an AI-powered job search platform built for leadership-level transitions.
                 It gives them the intelligence infrastructure that senior searches require: monitoring of
@@ -165,8 +165,8 @@ export default function ForFinancialAdvisorsPage() {
             </section>
 
             {/* Why advisors care */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">Why advisors are positioned to help</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">Why advisors are positioned to help</h2>
               <p>
                 You are often the first person a senior executive calls when they are thinking about a
                 career change. Before the search starts, before the coach is hired, before the search
@@ -189,18 +189,18 @@ export default function ForFinancialAdvisorsPage() {
 
             {/* How advisors use it */}
             <section id="advisor-playbook" className="space-y-6">
-              <h2 className="text-[22px] font-bold text-slate-900">How financial advisors use it</h2>
+              <h2 className="text-[22px] font-bold text-foreground">How financial advisors use it</h2>
               <div className="space-y-8">
                 {FEATURES.map(f => (
-                  <details key={f.name} className="border-l-2 border-orange-500 pl-5 group" open>
+                  <details key={f.name} className="border-l-2 border-primary/30 pl-5 group" open>
                     <summary className="list-none cursor-pointer flex items-center justify-between">
-                      <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-orange-600">{f.name}</p>
-                      <span className="text-slate-500 group-open:rotate-180 transition-transform">v</span>
+                      <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-primary">{f.name}</p>
+                      <span className="text-muted-foreground group-open:rotate-180 transition-transform">v</span>
                     </summary>
                     <div className="mt-2">
-                      <p className="text-[15px] text-slate-700 leading-relaxed mb-2">{f.forAdvisor}</p>
-                      <p className="text-[13px] text-slate-500 leading-relaxed">
-                        <span className="font-semibold text-slate-700">Outcome: </span>{f.outcome}
+                      <p className="text-[15px] text-muted-foreground leading-relaxed mb-2">{f.forAdvisor}</p>
+                      <p className="text-[13px] text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-muted-foreground">Outcome: </span>{f.outcome}
                       </p>
                     </div>
                   </details>
@@ -209,8 +209,8 @@ export default function ForFinancialAdvisorsPage() {
             </section>
 
             {/* What it does not do */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">What it does not do</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">What it does not do</h2>
               <p>
                 Starting Monday does not replace the financial planning, compensation modeling, or
                 equity analysis that you provide. It does not know the specifics of your client's
@@ -224,8 +224,8 @@ export default function ForFinancialAdvisorsPage() {
             </section>
 
             {/* For your practice */}
-            <section id="practice" className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">For your practice</h2>
+            <section id="practice" className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">For your practice</h2>
               <p>
                 The simplest way to start: recommend Starting Monday to your next client who is
                 entering or considering a career transition. Ask them to share pipeline view access
@@ -240,33 +240,33 @@ export default function ForFinancialAdvisorsPage() {
                   'Apply to the partner program at startingmonday.app/partners to receive your referral link, commission tracking, and partner resource kit',
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold shrink-0 mt-0.5">+</span>
-                    <span className="text-slate-700">{item}</span>
+                    <span className="text-primary font-bold shrink-0 mt-0.5">+</span>
+                    <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
             </section>
 
             {/* Apply CTA */}
-            <section className="bg-slate-50 border border-slate-200 rounded-lg p-7">
-              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+            <section className="bg-muted border border-border rounded-lg p-7">
+              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
                 Ready to partner?
               </p>
-              <h2 className="text-[20px] font-bold text-slate-900 mb-3 leading-snug">
+              <h2 className="text-[20px] font-bold text-foreground mb-3 leading-snug">
                 Apply to the partner program
               </h2>
-              <p className="text-[14px] text-slate-500 leading-relaxed mb-6">
+              <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
                 Fill out the application and we will follow up within 2 business days with your referral link, commission tracking, and partner resource kit.
               </p>
               <Link
                 href="/partners#apply"
-                className="inline-block bg-orange-500 text-slate-900 text-[14px] font-bold px-7 py-3 rounded hover:bg-orange-600 transition-colors"
+                className="inline-block bg-primary text-primary-foreground text-[14px] font-bold px-7 py-3 rounded hover:bg-primary/90 transition-colors"
               >
                 Apply now &rarr;
               </Link>
-              <p className="text-[13px] text-slate-200 mt-4">
+              <p className="text-[13px] text-muted-foreground mt-4">
                 Want to see the platform first?{' '}
-                <Link href="/demo" className="text-slate-600 underline hover:text-slate-900 transition-colors">
+                <Link href="/demo" className="text-muted-foreground underline hover:text-foreground transition-colors">
                   Walk through a live demo
                 </Link>
                 .
@@ -279,17 +279,17 @@ export default function ForFinancialAdvisorsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8 mt-8">
+      <footer className="dark bg-background border-t border-border px-4 sm:px-6 py-8 mt-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions? contact@startingmonday.app
           </p>
         </div>
       
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
 </footer>
 
     </div>

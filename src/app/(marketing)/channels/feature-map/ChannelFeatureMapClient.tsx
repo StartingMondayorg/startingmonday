@@ -3,10 +3,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CHANNEL_MAPS, type ChannelKey } from './channel-feature-map-data'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { Badge, Card, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 export function ChannelFeatureMapClient() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -28,14 +25,14 @@ export function ChannelFeatureMapClient() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100 sm:px-6 sm:py-14">
+    <main className="min-h-screen bg-background px-4 py-12 text-foreground sm:px-6 sm:py-14">
       <div className="mx-auto max-w-6xl">
         <Card variant="glass" className={`p-6 sm:p-8 ${config.border} ${config.glow}`}>
-          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.2em] text-orange-300">Interactive Feature Map</p>
-          <h1 className="text-[30px] font-bold leading-[1.06] tracking-tight text-white sm:text-[42px]">
+          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Interactive Feature Map</p>
+          <h1 className="text-[30px] font-bold leading-[1.06] tracking-tight text-foreground sm:text-[42px]">
             Channel operating system, visualized by timeline.
           </h1>
-          <p className="mt-4 max-w-4xl text-[15px] leading-relaxed text-slate-200">Select a channel to explore its operating rhythm and visual framework.</p>
+          <p className="mt-4 max-w-4xl text-[15px] leading-relaxed text-foreground">Select a channel to explore its operating rhythm and visual framework.</p>
 
           <ToggleGroup
             value={[selected]}
@@ -53,7 +50,7 @@ export function ChannelFeatureMapClient() {
               <ToggleGroupItem
                 key={key}
                 value={key}
-                className="rounded-full border-white/20 bg-transparent px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-200 hover:border-white/45 hover:text-white data-[state=on]:border-white/70 data-[state=on]:bg-white data-[state=on]:text-slate-900"
+                className="rounded-full border-border bg-transparent px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-primary-foreground hover:text-primary-foreground data-[state=on]:border-border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
               >
                 {CHANNEL_MAPS[key].label}
               </ToggleGroupItem>
@@ -65,11 +62,11 @@ export function ChannelFeatureMapClient() {
           <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${config.accent}`}>{config.label}</p>
-              <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-slate-200">{config.intro}</p>
+              <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-foreground">{config.intro}</p>
             </div>
             <Card variant="glass" className="px-4 py-3 text-right">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">Timeline phases</p>
-              <p className="mt-1 text-[24px] font-bold text-white">{String(phaseCount)}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Timeline phases</p>
+              <p className="mt-1 text-[24px] font-bold text-foreground">{String(phaseCount)}</p>
             </Card>
           </div>
 
@@ -77,17 +74,17 @@ export function ChannelFeatureMapClient() {
             {config.stages.map((stage, stageIndex) => (
               <Card key={stage.phase} variant="glass" className="relative p-5 sm:p-6">
                 {stageIndex < config.stages.length - 1 && (
-                  <div className="pointer-events-none absolute left-[26px] top-[68px] h-[calc(100%+18px)] w-px bg-gradient-to-b from-white/40 to-transparent" />
+                  <div className="pointer-events-none absolute left-[26px] top-[68px] h-[calc(100%+18px)] w-px bg-gradient-to-b from-muted/40 to-transparent" />
                 )}
 
                 <div className="mb-4 flex items-start gap-4">
-                  <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-white/35 bg-white/10 text-[12px] font-bold text-white">
+                  <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-border bg-muted/60 text-[12px] font-bold text-foreground">
                     {stageIndex + 1}
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-300">{stage.phase}</p>
-                    <h2 className="mt-1 text-[20px] font-semibold text-white">{stage.goal}</h2>
-                    <p className="mt-1 text-[12px] text-slate-300">Cadence: {stage.cadence}</p>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{stage.phase}</p>
+                    <h2 className="mt-1 text-[20px] font-semibold text-foreground">{stage.goal}</h2>
+                    <p className="mt-1 text-[12px] text-muted-foreground">Cadence: {stage.cadence}</p>
                   </div>
                 </div>
 
@@ -95,28 +92,28 @@ export function ChannelFeatureMapClient() {
                   {stage.features.map((feature) => (
                     <Card key={feature.name} variant="glass" className="p-4">
                       <div className="flex items-start justify-between gap-3">
-                        <p className="text-[14px] font-semibold text-white">{feature.name}</p>
-                        <Badge className="rounded-full border-white/20 bg-white/[0.03] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-300">
+                        <p className="text-[14px] font-semibold text-foreground">{feature.name}</p>
+                        <Badge className="rounded-full border-border bg-muted/[0.03] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                           {featureTag(feature.dashboardTag)}
                         </Badge>
                       </div>
-                      <p className="mt-2 text-[13px] leading-relaxed text-slate-200">{feature.benefit}</p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-foreground">{feature.benefit}</p>
                       <Card variant="glass" className="mt-3 grid gap-2 p-3">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">Visual timeline cue</p>
-                        <p className="text-[12px] text-slate-200">{feature.visual}</p>
-                        <p className="text-[11px] text-slate-400">Seen in: {feature.dashboardTag}</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">Visual timeline cue</p>
+                        <p className="text-[12px] text-foreground">{feature.visual}</p>
+                        <p className="text-[11px] text-muted-foreground">Seen in: {feature.dashboardTag}</p>
                       </Card>
                     </Card>
                   ))}
                 </div>
 
                 <Card variant="glass" className="mt-4 p-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">Feature coverage</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">Feature coverage</p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {stage.features.map((feature) => (
                       <Badge
                         key={`${stage.phase}-${feature.name}-coverage`}
-                        className="rounded-full border-white/15 bg-white/[0.03] px-2.5 py-1 text-[11px] text-slate-200"
+                        className="rounded-full border-border bg-muted/[0.03] px-2.5 py-1 text-[11px] text-foreground"
                       >
                         {feature.name}
                       </Badge>

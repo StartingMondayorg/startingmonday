@@ -4,25 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { inferPartnerProgramFromTier, toPercent, type PartnerProgram } from '@/lib/partner-kpi-schema'
 import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-
+import { Badge, Button, Card, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 import { SeatPurchase } from './seat-purchase'
 import { ExportCsvButton } from './ExportCsvButton'
 
@@ -324,20 +306,20 @@ export default async function PartnerDashboardPage({
   // Use a client component for the export button
   // ...existing code...
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:text-slate-300 transition-colors">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-8">
-          <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-2">Partner Dashboard</h2>
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Welcome, {partner.name.split(' ')[0]}.</h1>
-          <p className="text-[13px] text-slate-500 mt-1.5">
+          <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-primary mb-2">Partner Dashboard</h2>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Welcome, {partner.name.split(' ')[0]}.</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">
             Partner since {new Date(partner.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}.
             Commission rate: {partner.commission_pct}%.
           </p>
@@ -345,22 +327,22 @@ export default async function PartnerDashboardPage({
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <h2 className="sr-only">Quick actions</h2>
-          <Card variant="default" className="p-0 hover:border-slate-400 transition-colors">
+          <Card variant="default" className="p-0 hover:border-border transition-colors">
             <Link href="/partners#apply" className="block p-4">
-              <p className="text-[13px] font-semibold text-slate-900">Partnership terms</p>
-              <p className="text-[13px] text-slate-500 mt-1">Review partner program details and commission rules.</p>
+              <p className="text-[13px] font-semibold text-foreground">Partnership terms</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Review partner program details and commission rules.</p>
             </Link>
           </Card>
-          <Card variant="default" className="p-0 hover:border-slate-400 transition-colors">
+          <Card variant="default" className="p-0 hover:border-border transition-colors">
             <Link href="/dashboard/admin/customers" className="block p-4">
-              <p className="text-[13px] font-semibold text-slate-900">Open customers</p>
-              <p className="text-[13px] text-slate-500 mt-1">Inspect converted subscribers and plan mix.</p>
+              <p className="text-[13px] font-semibold text-foreground">Open customers</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Inspect converted subscribers and plan mix.</p>
             </Link>
           </Card>
-          <Card variant="default" className="p-0 hover:border-slate-400 transition-colors">
+          <Card variant="default" className="p-0 hover:border-border transition-colors">
             <Link href="/dashboard" className="block p-4">
-              <p className="text-[13px] font-semibold text-slate-900">Back to dashboard</p>
-              <p className="text-[13px] text-slate-500 mt-1">Return to your main campaign workspace.</p>
+              <p className="text-[13px] font-semibold text-foreground">Back to dashboard</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Return to your main campaign workspace.</p>
             </Link>
           </Card>
         </section>
@@ -373,8 +355,8 @@ export default async function PartnerDashboardPage({
             { label: 'Est. commission / mo', value: estimatedCommission > 0 ? `$${estimatedCommission}` : '$0' },
           ].map(({ label, value }) => (
             <Card key={label} variant="default" className="p-5">
-              <div className="text-[28px] font-bold text-slate-900">{value}</div>
-              <div className="text-[13px] text-slate-400 mt-1">{label}</div>
+              <div className="text-[28px] font-bold text-foreground">{value}</div>
+              <div className="text-[13px] text-muted-foreground mt-1">{label}</div>
             </Card>
           ))}
         </section>
@@ -382,14 +364,14 @@ export default async function PartnerDashboardPage({
         <Card variant="default" id="partner-performance" className="p-6 mb-6">
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Partner reporting dashboard v1</h2>
-              <p className="text-[13px] text-slate-500">Utilization, prep completion, follow-up completion, and pipeline movement for pilot operations.</p>
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Partner reporting dashboard v1</h2>
+              <p className="text-[13px] text-muted-foreground">Utilization, prep completion, follow-up completion, and pipeline movement for pilot operations.</p>
             </div>
-            <p className="text-[13px] text-slate-400">Scope users: {denominator}</p>
+            <p className="text-[13px] text-muted-foreground">Scope users: {denominator}</p>
           </div>
 
           <form method="get" className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-5">
-            <label className="text-[13px] font-semibold text-slate-600">
+            <label className="text-[13px] font-semibold text-muted-foreground">
               Partner account
               <Select name="partner" defaultValue="current" disabled>
                 <SelectTrigger className="mt-1 w-full">
@@ -400,7 +382,7 @@ export default async function PartnerDashboardPage({
                 </SelectContent>
               </Select>
             </label>
-            <label className="text-[13px] font-semibold text-slate-600">
+            <label className="text-[13px] font-semibold text-muted-foreground">
               Program
               <Select name="program" defaultValue={selectedProgram}>
                 <SelectTrigger className="mt-1 w-full">
@@ -414,7 +396,7 @@ export default async function PartnerDashboardPage({
                 </SelectContent>
               </Select>
             </label>
-            <label className="text-[13px] font-semibold text-slate-600">
+            <label className="text-[13px] font-semibold text-muted-foreground">
               Cohort
               <Select name="cohort" defaultValue={selectedCohort}>
                 <SelectTrigger className="mt-1 w-full">
@@ -428,7 +410,7 @@ export default async function PartnerDashboardPage({
                 </SelectContent>
               </Select>
             </label>
-            <label className="text-[13px] font-semibold text-slate-600">
+            <label className="text-[13px] font-semibold text-muted-foreground">
               Date range
               <Select name="range" defaultValue={selectedRange.value}>
                 <SelectTrigger className="mt-1 w-full">
@@ -453,37 +435,37 @@ export default async function PartnerDashboardPage({
               { label: 'Follow-up completion', value: followupCompletionRate, delta: followupCompletionDelta },
               { label: 'Pipeline movement', value: pipelineMovementRate, delta: pipelineMovementDelta },
             ].map((metric) => (
-              <Card key={metric.label} variant="default" className="p-3 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-500">{metric.label}</p>
-                <p className="text-[24px] font-bold text-slate-900 mt-1">{formatPct(metric.value)}</p>
-                <p className="text-[13px] text-slate-500 mt-1">vs prior window: {formatDelta(metric.delta)}</p>
+              <Card key={metric.label} variant="default" className="p-3 bg-muted">
+                <p className="text-[13px] font-semibold text-muted-foreground">{metric.label}</p>
+                <p className="text-[24px] font-bold text-foreground mt-1">{formatPct(metric.value)}</p>
+                <p className="text-[13px] text-muted-foreground mt-1">vs prior window: {formatDelta(metric.delta)}</p>
               </Card>
             ))}
           </div>
 
-          <div className="border border-slate-200 rounded overflow-hidden">
-            <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
-              <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Weekly usage tracking</p>
+          <div className="border border-border rounded overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border">
+              <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Weekly usage tracking</p>
             </div>
             {weeklyUsageRows.length === 0 ? (
-              <p className="px-4 py-4 text-[13px] text-slate-500">No weekly usage data yet for this filter scope.</p>
+              <p className="px-4 py-4 text-[13px] text-muted-foreground">No weekly usage data yet for this filter scope.</p>
             ) : (
               <Table className="text-[13px]">
                 <TableHeader>
-                  <TableRow className="bg-white border-b border-slate-100">
-                    <TableHead className="px-4 py-2 font-semibold text-slate-500">Week</TableHead>
-                    <TableHead className="px-4 py-2 font-semibold text-slate-500">Active users</TableHead>
-                    <TableHead className="px-4 py-2 font-semibold text-slate-500">Events</TableHead>
-                    <TableHead className="px-4 py-2 font-semibold text-slate-500">Active rate</TableHead>
+                  <TableRow className="bg-card border-b border-border">
+                    <TableHead className="px-4 py-2 font-semibold text-muted-foreground">Week</TableHead>
+                    <TableHead className="px-4 py-2 font-semibold text-muted-foreground">Active users</TableHead>
+                    <TableHead className="px-4 py-2 font-semibold text-muted-foreground">Events</TableHead>
+                    <TableHead className="px-4 py-2 font-semibold text-muted-foreground">Active rate</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody className="divide-y divide-slate-50">
+                <TableBody className="divide-y divide-border">
                   {weeklyUsageRows.map((row) => (
                     <TableRow key={row.week}>
-                      <TableCell className="px-4 py-2 text-slate-700">{row.week}</TableCell>
-                      <TableCell className="px-4 py-2 text-slate-700">{row.active_users}</TableCell>
-                      <TableCell className="px-4 py-2 text-slate-700">{row.events}</TableCell>
-                      <TableCell className="px-4 py-2 text-slate-700">{formatPct(row.active_rate)}</TableCell>
+                      <TableCell className="px-4 py-2 text-muted-foreground">{row.week}</TableCell>
+                      <TableCell className="px-4 py-2 text-muted-foreground">{row.active_users}</TableCell>
+                      <TableCell className="px-4 py-2 text-muted-foreground">{row.events}</TableCell>
+                      <TableCell className="px-4 py-2 text-muted-foreground">{formatPct(row.active_rate)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -500,16 +482,16 @@ export default async function PartnerDashboardPage({
 
         {/* Referral link */}
         <Card variant="default" id="partner-referral-link" className="p-6 mb-6">
-          <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Your referral link</h2>
+          <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Your referral link</h2>
           <div className="flex items-center gap-3 flex-wrap">
-            <code className="flex-1 text-[13px] bg-slate-50 border border-slate-200 rounded px-4 py-2.5 text-slate-700 font-mono min-w-0 truncate">
+            <code className="flex-1 text-[13px] bg-muted border border-border rounded px-4 py-2.5 text-muted-foreground font-mono min-w-0 truncate">
               {referralLink}
             </code>
-            <span className="text-[13px] font-bold bg-slate-100 text-slate-500 px-2.5 py-1 rounded font-mono">
+            <span className="text-[13px] font-bold bg-muted text-muted-foreground px-2.5 py-1 rounded font-mono">
               {partner.referral_code}
             </span>
           </div>
-          <p className="mt-3 text-[13px] text-slate-400 leading-relaxed">
+          <p className="mt-3 text-[13px] text-muted-foreground leading-relaxed">
             Share this link with your clients. When they sign up and convert to a paid plan, you earn {partner.commission_pct}% of their monthly subscription for as long as they remain active.
           </p>
         </Card>
@@ -519,41 +501,41 @@ export default async function PartnerDashboardPage({
 
         {/* Subscriber table */}
         <Card variant="default" id="partner-subscribers" className="overflow-hidden mb-6">
-          <div className="px-6 py-[18px] border-b border-slate-200">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+          <div className="px-6 py-[18px] border-b border-border">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
                 Referred Subscribers ({scopedRows.length} in current filter)
             </h2>
           </div>
             {scopedRows.length === 0 ? (
-            <p className="px-6 py-8 text-[13px] text-slate-400">
+            <p className="px-6 py-8 text-[13px] text-muted-foreground">
                 No subscribers in this filter scope. Adjust program, cohort, or date range.
             </p>
           ) : (
             <Table className="text-[13px]">
               <TableHeader>
-                <TableRow className="bg-slate-50 border-b border-slate-100">
-                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Joined</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Plan</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">MRR</TableHead>
+                <TableRow className="bg-muted border-b border-border">
+                  <TableHead className="px-6 py-2.5 font-semibold text-muted-foreground">Joined</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Plan</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Status</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right">MRR</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className="divide-y divide-slate-50">
+              <TableBody className="divide-y divide-border">
                 {scopedRows.map((row, i) => {
                   const mrr = row.status === 'active' ? (TIER_MRR[row.tier] ?? 0) : 0
                   const commission = Math.round(mrr * partner.commission_pct / 100)
                   return (
                     <TableRow key={i}>
-                      <TableCell className="px-6 py-3 text-slate-700">
+                      <TableCell className="px-6 py-3 text-muted-foreground">
                         {new Date(row.joinedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-700">{tierLabel[row.tier] ?? row.tier}</TableCell>
+                      <TableCell className="px-4 py-3 text-muted-foreground">{tierLabel[row.tier] ?? row.tier}</TableCell>
                       <TableCell className="px-4 py-3">
                         <Badge variant={statusBadgeVariant[row.status] ?? 'secondary'}>
                           {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
                         </Badge>
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-right text-slate-500">
+                      <TableCell className="px-4 py-3 text-right text-muted-foreground">
                         {commission > 0 ? `$${commission}/mo` : '-'}
                       </TableCell>
                     </TableRow>
@@ -566,7 +548,7 @@ export default async function PartnerDashboardPage({
 
         {/* Commission explanation */}
         <Card variant="default" id="partner-commission" className="p-6">
-          <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">How commissions work</h2>
+          <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">How commissions work</h2>
           <div className="flex flex-col gap-2">
             {[
               'Share your referral link with executives you work with.',
@@ -575,7 +557,7 @@ export default async function PartnerDashboardPage({
               'Monitor tier: $49/mo subscriber = $' + Math.round(49 * partner.commission_pct / 100) + '/mo for you.',
               'Active tier: $199/mo subscriber = $' + Math.round(199 * partner.commission_pct / 100) + '/mo for you.',
             ].map((line, i) => (
-              <div key={i} className="flex gap-3 text-[13px] text-slate-600">
+              <div key={i} className="flex gap-3 text-[13px] text-muted-foreground">
                 <Badge className="shrink-0 mt-0.5 justify-center rounded-full size-5 p-0">{i + 1}</Badge>
                 {line}
               </div>

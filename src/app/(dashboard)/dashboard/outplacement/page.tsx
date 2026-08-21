@@ -1,20 +1,18 @@
 ﻿import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 export default function OutplacementLanding() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center font-sans">
-      <header className="w-full bg-slate-900 py-4 mb-8">
+    <div className="min-h-screen bg-muted flex flex-col items-center justify-center font-sans">
+      <header className="dark w-full bg-card py-4 mb-8">
         <div className="max-w-2xl mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:text-slate-300 transition-colors">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
         </div>
       </header>
       <Card className="w-full max-w-2xl p-8 flex flex-col items-center shadow">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Outplacement by Starting Monday</h1>
-        <p className="text-lg text-slate-600 mb-6 text-center">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Outplacement by Starting Monday</h1>
+        <p className="text-lg text-muted-foreground mb-6 text-center">
           Modern, executive-focused outplacement for high-performing leaders.<br />
           White-label, partner-branded, and ready to launch in days.
         </p>
@@ -26,14 +24,14 @@ export default function OutplacementLanding() {
             { href: '/dashboard/outplacement/operator', label: 'Operator console', desc: 'Cohort health, exceptions, and interventions.' },
           ].map((item) => (
             <Link key={item.href} href={item.href}>
-              <Card className="p-4 text-left hover:border-orange-300 transition-colors">
-                <p className="text-[14px] font-semibold text-slate-900">{item.label}</p>
-                <p className="text-[12px] text-slate-500 mt-1">{item.desc}</p>
+              <Card className="p-4 text-left hover:border-primary/30 transition-colors">
+                <p className="text-[14px] font-semibold text-foreground">{item.label}</p>
+                <p className="text-[12px] text-muted-foreground mt-1">{item.desc}</p>
               </Card>
             </Link>
           ))}
         </div>
-        <ul className="text-slate-700 text-base mb-8 space-y-2 list-disc list-inside">
+        <ul className="text-muted-foreground text-base mb-8 space-y-2 list-disc list-inside">
           <li>1:1 executive coaching and job search strategy</li>
           <li>Personalized introductions to top executive recruiters</li>
           <li>AI-powered resume, LinkedIn, and interview prep</li>
@@ -41,7 +39,7 @@ export default function OutplacementLanding() {
           <li>Seamless white-label experience for your brand</li>
         </ul>
         <Button render={<a href="mailto:outplacement@startingmonday.com" />} size="lg" className="text-lg px-8 py-3 h-auto mb-2">Request a Demo</Button>
-        <p className="text-xs text-slate-400 mt-4">For partners: Custom landing and onboarding available. Contact us to white-label for your firm.</p>
+        <p className="text-xs text-muted-foreground mt-4">For partners: Custom landing and onboarding available. Contact us to white-label for your firm.</p>
       </Card>
     </div>
   )

@@ -2,12 +2,7 @@
 
 import { useRef, useState } from 'react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { ScrollArea } from '@/components/ui/scroll-area'
-
+import { Button, Card, Input, Label, ScrollArea } from '@/components/ui'
 type Source = {
   title: string
   url: string
@@ -75,10 +70,10 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
   }
 
   return (
-    <Card variant="glass" className="p-5 sm:p-8 shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
-      <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-300 mb-1">Instant answers</p>
-      <h2 className="text-[18px] font-bold text-white leading-tight mb-1.5">Ask the support assistant</h2>
-      <p className="text-[13px] text-slate-300 leading-relaxed mb-4 max-w-[58ch]">
+    <Card variant="glass" className="p-5 sm:p-8 shadow-lg">
+      <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-1">Instant answers</p>
+      <h2 className="text-[18px] font-bold text-foreground leading-tight mb-1.5">Ask the support assistant</h2>
+      <p className="text-[13px] text-muted-foreground leading-relaxed mb-4 max-w-[58ch]">
         Answers come from the live product guide, so they stay current with the site.
         If anything is unclear, one click sends your question to a person.
       </p>
@@ -91,7 +86,7 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
               type="button"
               variant="outline"
               onClick={() => { void ask(s) }}
-              className="h-auto min-h-[44px] whitespace-normal border-white/15 bg-white/5 px-3 py-2 text-left text-[13px] font-normal text-slate-200 hover:border-orange-300/60 hover:bg-white/10"
+              className="h-auto min-h-[44px] whitespace-normal border-border bg-muted/40 px-3 py-2 text-left text-[13px] font-normal text-foreground hover:border-primary/60 hover:bg-muted/60"
             >
               {s}
             </Button>
@@ -108,18 +103,18 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
                 variant="glass"
                 className={
                   turn.role === 'user'
-                    ? 'max-w-[85%] rounded-xl bg-orange-400/15 border-orange-300/25 px-4 py-2.5'
+                    ? 'max-w-[85%] rounded-xl bg-primary/15 border-primary/25 px-4 py-2.5'
                     : 'max-w-[92%] rounded-xl px-4 py-3'
                 }
               >
-                <p className="text-[13px] text-slate-100 leading-relaxed whitespace-pre-line">{turn.text}</p>
+                <p className="text-[13px] text-foreground leading-relaxed whitespace-pre-line">{turn.text}</p>
                 {turn.role === 'assistant' && (turn.sources?.length ?? 0) > 0 && (
-                  <div className="mt-2.5 border-t border-white/10 pt-2.5">
-                    <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">Sources</p>
+                  <div className="mt-2.5 border-t border-border pt-2.5">
+                    <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">Sources</p>
                     <ul className="space-y-1">
                       {turn.sources!.slice(0, 4).map((source) => (
                         <li key={source.url}>
-                          <Link href={source.url} className="text-[12px] text-orange-200 underline hover:text-orange-100">
+                          <Link href={source.url} className="text-[12px] text-primary underline">
                             {source.title}
                           </Link>
                         </li>
@@ -132,7 +127,7 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
                     type="button"
                     variant="outline"
                     onClick={() => onEscalate(lastQuestionRef.current)}
-                    className="mt-2.5 min-h-[44px] border-orange-300/40 bg-orange-400/10 text-[12px] text-orange-200 hover:bg-orange-400/20"
+                    className="mt-2.5 min-h-[44px] border-primary/40 bg-primary/10 text-[12px] text-primary hover:bg-primary/20"
                   >
                     Send this to the founder for a personal reply &rarr;
                   </Button>
@@ -141,8 +136,8 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
             </div>
           ))}
           {loading && (
-            <div className="flex items-center gap-2 text-[13px] text-slate-400">
-              <span className="inline-block h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
+            <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
+              <span className="inline-block h-2 w-2 rounded-full bg-primary animate-pulse" />
               Finding the answer...
             </div>
           )}
@@ -162,7 +157,7 @@ export function SupportChat({ onEscalate }: { onEscalate: (question: string) => 
           onChange={(e) => setQuestion(e.target.value)}
           maxLength={500}
           placeholder="Ask anything about Starting Monday..."
-          className="flex-1 min-h-[44px] border-white/15 bg-slate-900/70 text-[14px] text-slate-100 placeholder:text-slate-500 focus-visible:border-orange-300"
+          className="flex-1 min-h-[44px] border-border bg-card/70 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-primary/30"
         />
         <Button
           type="submit"

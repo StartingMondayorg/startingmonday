@@ -1,8 +1,7 @@
 ﻿import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Button, Card } from '@/components/ui'
 import { OutreachHubClient } from './outreach-hub-client'
 import { getStaffMember } from '@/lib/staff'
 import { getRecruiterMessagePacks, getRecruiterToolkit } from '@/lib/role-lane-learning'
@@ -315,16 +314,16 @@ export default async function OutreachHubPage() {
   const fromAddressLabel = 'Richard Rothschild <richard@startingmonday.app>'
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Button
             variant="outline"
             render={<Link href="/dashboard" />}
-            className="min-h-[44px] border-slate-700 text-[13px] text-slate-200 hover:text-white hover:border-slate-500"
+            className="min-h-[44px] border-border text-[13px] text-muted-foreground hover:text-primary-foreground"
           >
             ← Dashboard
           </Button>
@@ -333,8 +332,8 @@ export default async function OutreachHubPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-10 space-y-6">
 <div>
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Outreach Hub</h1>
-          <p className="text-[13px] text-slate-500 mt-1">
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Outreach Hub</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">
             Run one high-quality outreach block: choose a lane, send deliberate notes, and keep follow-through visible.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -352,31 +351,31 @@ export default async function OutreachHubPage() {
 
         <section id="outreach-snapshot" className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Total Prospects</p>
-            <p className="text-[24px] font-bold text-slate-900">{clientRows.length}</p>
-            <p className="text-[13px] text-slate-500 mt-1">Deduped across all channels</p>
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Total Prospects</p>
+            <p className="text-[24px] font-bold text-foreground">{clientRows.length}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Deduped across all channels</p>
           </Card>
           <Card className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">By Channel</p>
-            <p className="text-[13px] font-semibold text-slate-900 mt-1">Executives: {executiveCount}</p>
-            <p className="text-[13px] font-semibold text-slate-900">Search Firms: {searchFirmCount}</p>
-            <p className="text-[13px] font-semibold text-slate-900">Coaches: {coachCount}</p>
-            <p className="text-[13px] font-semibold text-slate-900">Outplacement Firms: {outplacementCount}</p>
-            <p className="text-[13px] text-orange-600 font-semibold mt-2">Day 1 Coach Sprint List: {day1CoachCount}</p>
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">By Channel</p>
+            <p className="text-[13px] font-semibold text-foreground mt-1">Executives: {executiveCount}</p>
+            <p className="text-[13px] font-semibold text-foreground">Search Firms: {searchFirmCount}</p>
+            <p className="text-[13px] font-semibold text-foreground">Coaches: {coachCount}</p>
+            <p className="text-[13px] font-semibold text-foreground">Outplacement Firms: {outplacementCount}</p>
+            <p className="text-[13px] text-primary font-semibold mt-2">Day 1 Coach Sprint List: {day1CoachCount}</p>
           </Card>
           <Card className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Fit Priority</p>
-            <p className="text-[13px] font-semibold text-slate-900 mt-1">Strong fit: {strongCount}</p>
-            <p className="text-[13px] font-semibold text-slate-900">Medium fit: {mediumCount}</p>
-            <p className="text-[13px] text-slate-500 mt-1">Strong-fit rows should be worked first</p>
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Fit Priority</p>
+            <p className="text-[13px] font-semibold text-foreground mt-1">Strong fit: {strongCount}</p>
+            <p className="text-[13px] font-semibold text-foreground">Medium fit: {mediumCount}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Strong-fit rows should be worked first</p>
           </Card>
         </section>
 
-        <Card className="p-5 border-orange-200">
-          <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-orange-600 mb-2">New Section: Day 1 Coach Sprint</p>
-          <h2 className="text-[18px] font-bold text-slate-900 leading-tight">Run the 60-target coach list with prefilled outreach drafts</h2>
-          <p className="text-[13px] text-slate-600 mt-2 max-w-3xl">
-            Use the <span className="font-semibold text-slate-900">Day 1 Coach List (60)</span> button in the outreach workbench channel bar.
+        <Card className="p-5 border-primary/30">
+          <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-primary mb-2">New Section: Day 1 Coach Sprint</p>
+          <h2 className="text-[18px] font-bold text-foreground leading-tight">Run the 60-target coach list with prefilled outreach drafts</h2>
+          <p className="text-[13px] text-muted-foreground mt-2 max-w-3xl">
+            Use the <span className="font-semibold text-foreground">Day 1 Coach List (60)</span> button in the outreach workbench channel bar.
             It filters to the Day 1 targets and preloads each contact with the Day 1 sprint email copy from the coach traction plan.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
@@ -390,32 +389,32 @@ export default async function OutreachHubPage() {
         </Card>
 
         <Card className="p-5">
-          <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">Role-family recruiter toolkit</p>
-          <h2 className="text-[18px] font-bold text-slate-900 leading-tight">{recruiterToolkit.lane}</h2>
-          <p className="text-[13px] text-slate-600 mt-2 max-w-3xl">
+          <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Role-family recruiter toolkit</p>
+          <h2 className="text-[18px] font-bold text-foreground leading-tight">{recruiterToolkit.lane}</h2>
+          <p className="text-[13px] text-muted-foreground mt-2 max-w-3xl">
             Ship role-specific recruiter and hiring-manager messaging packs with a strict cadence that prioritizes quality over volume.
           </p>
 
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             {recruiterMessagePacks.map((pack) => (
-              <Card key={pack.audience} variant="default" className="p-4 bg-slate-50">
-                <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-2">
+              <Card key={pack.audience} variant="default" className="p-4 bg-muted">
+                <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">
                   {pack.audience === 'recruiter' ? 'Recruiter pack' : 'Hiring manager pack'}
                 </p>
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">Subject: {pack.subject}</p>
-                <p className="text-[13px] text-slate-700 leading-relaxed mb-2">{pack.opening}</p>
+                <p className="text-[13px] font-semibold text-foreground mb-1">Subject: {pack.subject}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">{pack.opening}</p>
                 <ul className="space-y-1">
                   {pack.proofPoints.map((point) => (
-                    <li key={point} className="text-[12px] text-slate-600">- {point}</li>
+                    <li key={point} className="text-[12px] text-muted-foreground">- {point}</li>
                   ))}
                 </ul>
               </Card>
             ))}
           </div>
 
-          <div className="mt-4 rounded border border-slate-200 bg-slate-50 px-4 py-3">
-            <p className="text-[12px] font-semibold text-slate-800 mb-1">Cadence guide</p>
-            <ol className="list-decimal ml-4 space-y-1 text-[12px] text-slate-600">
+          <div className="mt-4 rounded border border-border bg-muted px-4 py-3">
+            <p className="text-[12px] font-semibold text-foreground mb-1">Cadence guide</p>
+            <ol className="list-decimal ml-4 space-y-1 text-[12px] text-muted-foreground">
               {recruiterToolkit.cadence.map((step) => (
                 <li key={step}>{step}</li>
               ))}
@@ -438,16 +437,16 @@ export default async function OutreachHubPage() {
         </section>
 
         <Card className="overflow-hidden" id="outreach-cadence">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <h2 className="text-[16px] font-bold text-slate-900">Operating Cadence</h2>
-              <p className="text-[13px] text-slate-500">Run this every week to keep outbound moving.</p>
+              <h2 className="text-[16px] font-bold text-foreground">Operating Cadence</h2>
+              <p className="text-[13px] text-muted-foreground">Run this every week to keep outbound moving.</p>
             </div>
             <Button render={<a href="/calendar/starting-monday-outreach-reminders.ics" download />}>
               Download Reminder Calendar
             </Button>
           </div>
-          <ol className="px-5 py-4 text-[13px] text-slate-700 list-decimal ml-5 space-y-2">
+          <ol className="px-5 py-4 text-[13px] text-muted-foreground list-decimal ml-5 space-y-2">
             <li>Monday: send first-touch notes to your active batch.</li>
             <li>Wednesday: send follow-up 1 for non-responders (day 3).</li>
             <li>Friday: send follow-up 2 for non-responders (day 7).</li>
@@ -457,15 +456,15 @@ export default async function OutreachHubPage() {
 
         <section id="outreach-links" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link href="/dashboard/calendar">
-            <Card className="p-5 hover:border-slate-300 transition-colors">
-              <p className="text-[13px] font-semibold text-slate-900 mb-1">In-App Calendar</p>
-              <p className="text-[13px] text-slate-500">Manage date-based follow-ups alongside the outreach routine.</p>
+            <Card className="p-5 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground mb-1">In-App Calendar</p>
+              <p className="text-[13px] text-muted-foreground">Manage date-based follow-ups alongside the outreach routine.</p>
             </Card>
           </Link>
           <Link href="/dashboard/contacts">
-            <Card className="p-5 hover:border-slate-300 transition-colors">
-              <p className="text-[13px] font-semibold text-slate-900 mb-1">Contacts</p>
-              <p className="text-[13px] text-slate-500">Update statuses: first sent, follow-up sent, replied, meeting booked.</p>
+            <Card className="p-5 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground mb-1">Contacts</p>
+              <p className="text-[13px] text-muted-foreground">Update statuses: first sent, follow-up sent, replied, meeting booked.</p>
             </Card>
           </Link>
         </section>

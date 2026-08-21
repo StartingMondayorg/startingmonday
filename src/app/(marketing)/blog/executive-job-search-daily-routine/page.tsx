@@ -42,7 +42,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most executive searches do not fail because the candidate lacks experience. They fail because
           the daily operating rhythm collapses by week three. Outreach becomes inconsistent, follow-up
@@ -54,14 +54,14 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           operating cadence, not a motivation project.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What elite candidates do every day</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What elite candidates do every day</h2>
 
         <p>
           They do not spend all day searching. They run a focused 60 to 90 minute block with clear
           objectives and finish with a closed loop. The structure is simple and repeatable.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">1. Review fresh signals first</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">1. Review fresh signals first</h3>
 
         <p>
           Before touching email, they review what changed overnight at target companies: executive moves,
@@ -73,7 +73,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           Average candidates start with inbox triage. Top candidates start with market intelligence.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">2. Prioritize five high-leverage contacts</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">2. Prioritize five high-leverage contacts</h3>
 
         <p>
           They pick five people for the day: two warm reactivations, two strategic referrals, and one
@@ -85,7 +85,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           I start?&rdquo;
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">3. Personalize from context, not flattery</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">3. Personalize from context, not flattery</h3>
 
         <p>
           Their outreach references something real: a leadership transition, a portfolio event,
@@ -97,7 +97,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           current operating reality in two sentences.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">4. Prepare for tomorrow&rsquo;s conversations today</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">4. Prepare for tomorrow&rsquo;s conversations today</h3>
 
         <p>
           Every day includes at least one prep brief review before a call happens. They walk into
@@ -108,14 +108,14 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           They show up as peers with perspective, not candidates waiting to be evaluated.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">5. Close the day with follow-up discipline</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">5. Close the day with follow-up discipline</h3>
 
         <p>
           They log outcomes immediately: who replied, who needs a follow-up, what was promised, and what
           deadline was set. Tomorrow starts from a clean state, not from memory.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">A practical daily template (75 minutes)</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">A practical daily template (75 minutes)</h2>
 
         <ul className="list-disc pl-5 space-y-2">
           <li>10 minutes: review signal feed and career page changes</li>
@@ -130,7 +130,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           occasional three-hour bursts every time.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What average candidates do instead</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What average candidates do instead</h2>
 
         <p>
           They scan job boards first. They send generic outreach to too many people. They skip prep
@@ -142,7 +142,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           The difference is not effort. It is operating design.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Weekly metrics that matter</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Weekly metrics that matter</h2>
 
         <p>
           Top candidates monitor a few indicators weekly, then adjust quickly:
@@ -162,7 +162,7 @@ export default function ExecutiveJobSearchDailyRoutinePage() {
           close loops first.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to make this sustainable</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to make this sustainable</h2>
 
         <p>
           Automation should remove manual admin, not replace judgment. Use systems for tracking,

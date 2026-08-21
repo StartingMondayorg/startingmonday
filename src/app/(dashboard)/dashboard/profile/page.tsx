@@ -9,12 +9,7 @@ import { PositioningGeneratorTextarea } from './positioning-generator'
 import { LinkedInGenerator } from './linkedin-generator'
 import { canUserSeeAdminHeader } from '@/lib/staff'
 import { ProfileAdvancedPanels } from './profile-advanced-panels'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Progress } from '@/components/ui/progress'
-
+import { Alert, AlertDescription, Button, Card, Input, Progress } from '@/components/ui'
 const DEFAULT_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 const ABBR_TO_FULL: Record<string, string> = {
   Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday',
@@ -114,28 +109,27 @@ export default async function ProfilePage({
   const completedSections = progressSections.filter(section => section.done).length
 
   return (
-    <div className="relative min-h-screen bg-slate-950 font-sans text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.12),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
+    <div className="relative min-h-screen bg-background font-sans text-foreground">
 
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">{'<- Dashboard'}</Link>
-            {isRothschildAdmin && <Link href="/dashboard/admin" className="text-[13px] font-semibold text-orange-400 hover:text-orange-300 transition-colors">Admin</Link>}
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">{'<- Dashboard'}</Link>
+            {isRothschildAdmin && <Link href="/dashboard/admin" className="text-[13px] font-semibold text-primary transition-colors">Admin</Link>}
           </div>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-6">
-          <h1 className="text-[26px] font-bold text-white leading-tight">Profile</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">{user.email}</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Profile</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">{user.email}</p>
         </div>
 
         <Card variant="glass" className="mb-6 px-5 py-3.5 max-w-xl flex-row items-center gap-4">
           <Progress value={(completedSections / progressSections.length) * 100} className="flex-1" />
-          <span className="text-[13px] font-semibold text-slate-300 shrink-0">{completedSections} of 5 sections complete</span>
+          <span className="text-[13px] font-semibold text-muted-foreground shrink-0">{completedSections} of 5 sections complete</span>
         </Card>
 
         <Alert variant="info" className="mb-4 max-w-xl">
@@ -143,67 +137,67 @@ export default async function ProfilePage({
           <AlertDescription>Your resume and career notes are stored only in your account and are used only to generate your briefs.</AlertDescription>
         </Alert>
 
-        <Card variant="glass" id="profile-editor" className="p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+        <Card variant="glass" id="profile-editor" className="p-8 max-w-xl shadow-lg">
           {saved && <Alert variant="success" className="mb-6"><AlertDescription>Profile saved.</AlertDescription></Alert>}
           {saveError && <Alert variant="destructive" className="mb-6"><AlertDescription>Save failed: {decodeURIComponent(saveError)}</AlertDescription></Alert>}
 
           <form id="profile-form" action={saveProfile} className="flex flex-col gap-6">
             <section id="section-identity">
-              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Identity and role</h2>
-              <label htmlFor="full_name" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Full name</label>
-              <Input id="full_name" name="full_name" type="text" defaultValue={profile?.full_name ?? ''} placeholder="Richard Rothschild" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
+              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">Identity and role</h2>
+              <label htmlFor="full_name" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Full name</label>
+              <Input id="full_name" name="full_name" type="text" defaultValue={profile?.full_name ?? ''} placeholder="Richard Rothschild" className="border-border text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label htmlFor="current_title" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Current or most recent title</label>
-                  <Input id="current_title" name="current_title" type="text" defaultValue={profile?.current_title ?? ''} placeholder="Chief Information Officer" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
+                  <label htmlFor="current_title" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Current or most recent title</label>
+                  <Input id="current_title" name="current_title" type="text" defaultValue={profile?.current_title ?? ''} placeholder="Chief Information Officer" className="border-border text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30" />
                 </div>
                 <div>
-                  <label htmlFor="current_company" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Current or most recent company</label>
-                  <Input id="current_company" name="current_company" type="text" defaultValue={profile?.current_company ?? ''} placeholder="Acme Corp" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
+                  <label htmlFor="current_company" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Current or most recent company</label>
+                  <Input id="current_company" name="current_company" type="text" defaultValue={profile?.current_company ?? ''} placeholder="Acme Corp" className="border-border text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30" />
                 </div>
               </div>
             </section>
 
             <section id="section-targets">
-              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Targets</h2>
-              <label htmlFor="target_titles" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Target titles</label>
+              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">Targets</h2>
+              <label htmlFor="target_titles" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Target titles</label>
               <TagInput id="target_titles" name="target_titles" defaultValue={targetTitles} placeholder="Type a title and press Enter - CIO, VP of Technology..." />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label htmlFor="target_sectors" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Target sectors</label>
+                  <label htmlFor="target_sectors" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Target sectors</label>
                   <TagInput id="target_sectors" name="target_sectors" defaultValue={targetSectors} placeholder="Healthcare, Fintech, SaaS..." />
                 </div>
                 <div>
-                  <label htmlFor="target_locations" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Target locations</label>
+                  <label htmlFor="target_locations" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Target locations</label>
                   <TagInput id="target_locations" name="target_locations" defaultValue={targetLocations} placeholder="New York, Remote, Dallas..." />
                 </div>
               </div>
             </section>
 
             <section id="section-posture">
-              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Search posture</h2>
-              <label htmlFor="search_posture" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">How should your dashboard frame the next move?</label>
+              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">Search posture</h2>
+              <label htmlFor="search_posture" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">How should your dashboard frame the next move?</label>
               <select
                 id="search_posture"
                 name="search_posture"
                 defaultValue={profile?.search_posture ?? 'exploring'}
-                className="w-full rounded-lg border border-white/15 bg-slate-900/70 px-4 py-3 text-[15px] text-slate-100 focus:border-orange-300 focus:outline-none"
+                className="w-full rounded-lg border border-border bg-card/70 px-4 py-3 text-[15px] text-foreground focus:border-primary/30 focus:outline-none"
               >
                 <option value="active">Actively searching</option>
                 <option value="exploring">Exploring and building relationships</option>
                 <option value="not_looking">Not looking right now</option>
               </select>
-              <p className="mt-2 text-[12px] leading-relaxed text-slate-400">This changes the tone of your recommendation, not what we watch.</p>
+              <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">This changes the tone of your recommendation, not what we watch.</p>
             </section>
 
             <section id="section-positioning">
-              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-3">Positioning</h2>
+              <h2 className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">Positioning</h2>
               <PositioningGeneratorTextarea defaultValue={positioningSummary} resumeText={resumeText} beyondResume={beyondResume} targetTitles={targetTitles} roleType={profile?.role_type ?? ''} currentTitle={profile?.current_title ?? ''} currentCompany={profile?.current_company ?? ''} />
             </section>
 
             <div>
-              <label htmlFor="linkedin_url" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">LinkedIn URL</label>
-              <Input id="linkedin_url" name="linkedin_url" type="url" defaultValue={linkedinUrl} placeholder="https://www.linkedin.com/in/yourname" className="border-white/15 text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300" />
+              <label htmlFor="linkedin_url" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">LinkedIn URL</label>
+              <Input id="linkedin_url" name="linkedin_url" type="url" defaultValue={linkedinUrl} placeholder="https://www.linkedin.com/in/yourname" className="border-border text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30" />
               <LinkedInGenerator positioning={positioningSummary} targetTitles={targetTitles} roleType={profile?.role_type ?? ''} currentTitle={profile?.current_title ?? ''} initialHeadline={linkedinHeadline} initialAbout={linkedinAbout} />
             </div>
 

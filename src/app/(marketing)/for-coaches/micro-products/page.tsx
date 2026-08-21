@@ -46,13 +46,13 @@ const COACH_BUNDLE_PACKS = [
 
 export default function CoachMicroProductsPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-card font-sans">
+      <nav className="dark bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/for-coaches" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+          <Link href="/for-coaches" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             Back to coach preview
           </Link>
         </div>
@@ -60,11 +60,11 @@ export default function CoachMicroProductsPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
         <header className="mb-10">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">Coach micro product catalog</p>
-          <h1 className="text-[30px] sm:text-[40px] font-bold text-slate-900 leading-[1.1] tracking-tight mb-4">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">Coach micro product catalog</p>
+          <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.1] tracking-tight mb-4">
             Small products. Immediate coaching leverage.
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed max-w-3xl mb-4">
+          <p className="text-[15px] text-muted-foreground leading-relaxed max-w-3xl mb-4">
             These are intentionally narrow, practical products for executive coaches. Each product solves one expensive workflow problem fast.
           </p>
         </header>
@@ -80,22 +80,22 @@ export default function CoachMicroProductsPage() {
           />
         </section>
 
-        <section id="bundle-packs" className="border border-emerald-200 rounded-2xl p-6 bg-emerald-50/40 mb-8">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-700 mb-3">Bundle packs</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-3">Save more with 1-3 product bundles</h2>
-          <p className="text-[14px] text-slate-700 leading-relaxed mb-5">
+        <section id="bundle-packs" className="border border-success/30 rounded-2xl p-6 bg-success/40 mb-8">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-3">Bundle packs</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-3">Save more with 1-3 product bundles</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">
             Bundle discounts are applied automatically at checkout. You can also enter a discount code before launching checkout.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {COACH_BUNDLE_PACKS.map((bundle) => (
-              <article key={bundle.slug} className="rounded-2xl border border-emerald-200 bg-white p-5 flex flex-col">
-                <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-emerald-700 mb-2">{bundle.discount}</p>
-                <h3 className="text-[18px] font-bold text-slate-900 mb-2 leading-snug">{bundle.name}</h3>
-                <p className="text-[13px] text-slate-600 leading-relaxed mb-3">{bundle.oneLiner}</p>
+              <article key={bundle.slug} className="rounded-2xl border border-success/30 bg-card p-5 flex flex-col">
+                <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-success mb-2">{bundle.discount}</p>
+                <h3 className="text-[18px] font-bold text-foreground mb-2 leading-snug">{bundle.name}</h3>
+                <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">{bundle.oneLiner}</p>
                 <div className="space-y-2 mb-4 flex-1">
                   {bundle.notes.map((note) => (
-                    <p key={note} className="text-[12px] text-slate-600 leading-relaxed">
+                    <p key={note} className="text-[12px] text-muted-foreground leading-relaxed">
                       {note}
                     </p>
                   ))}
@@ -108,14 +108,14 @@ export default function CoachMicroProductsPage() {
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {COACH_MICRO_PRODUCTS.map((product) => (
-            <article key={product.slug} className="border border-slate-200 rounded-2xl p-5 bg-white flex flex-col">
-              <h2 className="text-[20px] font-bold text-slate-900 leading-snug mb-2">{product.name}</h2>
-              <p className="text-[14px] text-slate-600 leading-relaxed mb-3">{product.oneLiner}</p>
-              <p className="text-[17px] font-bold text-orange-600 mb-4">{product.price}</p>
-              <p className="text-[13px] text-slate-600 leading-relaxed mb-4 flex-1">{product.pain}</p>
+            <article key={product.slug} className="border border-border rounded-2xl p-5 bg-card flex flex-col">
+              <h2 className="text-[20px] font-bold text-foreground leading-snug mb-2">{product.name}</h2>
+              <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">{product.oneLiner}</p>
+              <p className="text-[17px] font-bold text-primary mb-4">{product.price}</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4 flex-1">{product.pain}</p>
               <Link
                 href={`/for-coaches/micro-products/${product.slug}`}
-                className="inline-flex items-center justify-center rounded-lg bg-slate-950 text-white text-[13px] font-semibold px-4 py-2 hover:bg-slate-700 transition-colors"
+                className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 hover:bg-muted transition-colors"
               >
                 View product and checkout copy
               </Link>

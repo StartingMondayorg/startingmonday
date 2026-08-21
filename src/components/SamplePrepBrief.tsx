@@ -36,36 +36,36 @@ export function SamplePrepBrief() {
   const [open, setOpen] = useState(false)
 
   return (
-    <section className="bg-white px-4 sm:px-6 py-14 sm:py-20 border-b border-slate-100">
+    <section className="bg-card px-4 sm:px-6 py-14 sm:py-20 border-b border-border">
       <div className="max-w-5xl mx-auto">
-        <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+        <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
           What a prep brief looks like
         </p>
-        <h2 className="text-[22px] font-bold text-slate-900 mb-2 max-w-xl leading-snug">
+        <h2 className="text-[22px] font-bold text-foreground mb-2 max-w-xl leading-snug">
           {BRIEF.company} - {BRIEF.role}
         </h2>
-        <p className="text-[14px] text-slate-500 mb-6">
+        <p className="text-[14px] text-muted-foreground mb-6">
           Generated from a sample executive profile. Usually generated in about a minute. No account required to read this.
         </p>
 
         {/* Always-visible: win thesis */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-3">
-          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">{BRIEF.sections[0].heading}</p>
-          <p className="text-[14px] text-slate-700 leading-relaxed">{BRIEF.sections[0].body}</p>
+        <div className="bg-muted border border-border rounded-lg p-6 mb-3">
+          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">{BRIEF.sections[0].heading}</p>
+          <p className="text-[14px] text-muted-foreground leading-relaxed">{BRIEF.sections[0].body}</p>
         </div>
 
         {/* Expandable: rest of brief */}
         {open ? (
           <>
             {BRIEF.sections.slice(1).map((s, i) => (
-              <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-3">
-                <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">{s.heading}</p>
-                {s.body && <p className="text-[14px] text-slate-700 leading-relaxed">{s.body}</p>}
+              <div key={i} className="bg-muted border border-border rounded-lg p-6 mb-3">
+                <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">{s.heading}</p>
+                {s.body && <p className="text-[14px] text-muted-foreground leading-relaxed">{s.body}</p>}
                 {s.items && (
                   <ul className="space-y-4">
                     {s.items.map((item, j) => (
-                      <li key={j} className="text-[14px] text-slate-700 leading-relaxed">
-                        {'label' in item && <span className="font-semibold text-slate-900">{item.label}: </span>}
+                      <li key={j} className="text-[14px] text-muted-foreground leading-relaxed">
+                        {'label' in item && <span className="font-semibold text-foreground">{item.label}: </span>}
                         {item.body}
                       </li>
                     ))}
@@ -76,7 +76,7 @@ export function SamplePrepBrief() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-[13px] text-slate-400 hover:text-slate-600 transition-colors mt-1 bg-transparent border-0 cursor-pointer"
+              className="text-[13px] text-muted-foreground transition-colors mt-1 bg-transparent border-0 cursor-pointer"
             >
               Show less
             </button>
@@ -85,7 +85,7 @@ export function SamplePrepBrief() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="text-[13px] font-semibold text-slate-700 border border-slate-200 rounded px-4 py-2 hover:border-slate-400 transition-colors bg-white cursor-pointer"
+            className="text-[13px] font-semibold text-muted-foreground border border-border rounded px-4 py-2 transition-colors bg-card cursor-pointer"
           >
             See objections, peer questions, and what to leave out &darr;
           </button>

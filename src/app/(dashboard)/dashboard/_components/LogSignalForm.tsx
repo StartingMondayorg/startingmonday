@@ -1,10 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-
+import { Button, Input, Textarea } from '@/components/ui'
 export function LogSignalForm({ companyId }: { companyId: string }) {
   const [open, setOpen] = useState(false)
   const [text, setText] = useState('')
@@ -46,7 +43,7 @@ export function LogSignalForm({ companyId }: { companyId: string }) {
         variant="link"
         size="sm"
         onClick={() => setOpen(true)}
-        className="text-slate-500 hover:text-slate-700"
+        className="text-muted-foreground"
       >
         + Log a signal
       </Button>
@@ -62,7 +59,7 @@ export function LogSignalForm({ companyId }: { companyId: string }) {
         rows={4}
         autoFocus
         disabled={loading}
-        className="text-[13px] text-slate-800 resize-none leading-relaxed"
+        className="text-[13px] text-foreground resize-none leading-relaxed"
       />
       <Input
         type="url"
@@ -70,9 +67,9 @@ export function LogSignalForm({ companyId }: { companyId: string }) {
         onChange={e => setSourceUrl(e.target.value)}
         placeholder="Source URL (optional)"
         disabled={loading}
-        className="text-[13px] text-slate-700"
+        className="text-[13px] text-muted-foreground"
       />
-      {error && <p className="text-[12px] text-red-600">{error}</p>}
+      {error && <p className="text-[12px] text-destructive">{error}</p>}
       <div className="flex items-center gap-3">
         <Button
           type="submit"
@@ -86,7 +83,7 @@ export function LogSignalForm({ companyId }: { companyId: string }) {
           variant="ghost"
           size="sm"
           onClick={() => { setOpen(false); setError('') }}
-          className="text-slate-400 hover:text-slate-600"
+          className="text-muted-foreground"
         >
           Cancel
         </Button>

@@ -55,13 +55,13 @@ const OPERATING_AREAS = [
 
 export default function OutplacementSecurityOverviewPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-card font-sans">
+      <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/for-outplacement" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+          <Link href="/for-outplacement" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">
             Back to outplacement page
           </Link>
         </div>
@@ -69,58 +69,58 @@ export default function OutplacementSecurityOverviewPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <header className="mb-10">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">Security overview</p>
-          <h1 className="text-[30px] sm:text-[40px] font-bold text-slate-900 leading-[1.1] tracking-tight mb-4">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">Security overview</p>
+          <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.1] tracking-tight mb-4">
             Public security summary for partner evaluation.
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed max-w-2xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
             This document provides meaningful security and governance transparency for partner teams while intentionally excluding sensitive implementation details that could increase risk.
           </p>
         </header>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Security principles</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Security principles</p>
           {SECURITY_PRINCIPLES.map((item) => (
-            <p key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</p>
+            <p key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</p>
           ))}
         </section>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">What this document includes</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-muted">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">What this document includes</p>
           {INCLUDED_TOPICS.map((item) => (
-            <p key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</p>
+            <p key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</p>
           ))}
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3 mt-6">What this document intentionally excludes</p>
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3 mt-6">What this document intentionally excludes</p>
           {EXCLUDED_DETAILS.map((item) => (
-            <p key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</p>
+            <p key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</p>
           ))}
         </section>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Operating areas</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Operating areas</p>
           <div className="space-y-3">
             {OPERATING_AREAS.map((area) => (
-              <div key={area.title} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{area.title}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{area.detail}</p>
+              <div key={area.title} className="border border-border rounded-lg p-4 bg-muted">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{area.title}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{area.detail}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">Next step</p>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-4">
+        <section className="border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">Next step</p>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-4">
             For deeper diligence, request the trust artifact index through your partner contact and map required documents to your legal and security reviewers.
           </p>
           <div className="flex flex-wrap gap-4 text-[13px]">
-            <Link href="/for-outplacement/trust-pack" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/trust-pack" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open trust and governance pack
             </Link>
-            <Link href="/for-outplacement/executive-summary" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/executive-summary" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               View committee one-pager
             </Link>
-            <Link href="/partners#apply" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/partners#apply" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Contact partner team
             </Link>
           </div>

@@ -2,28 +2,25 @@
 
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui'
 
+/*
+  Icon visibility is driven by the `dark` class in CSS rather than by React state,
+  so there is no mount gate and no server/client mismatch to work around.
+*/
 export function ThemeToggle({ className }: { className?: string }) {
-  const { resolvedTheme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  // The server cannot know the resolved theme, so hold the icon back until mount
-  // rather than render one and swap it on hydration.
-  useEffect(() => setMounted(true), [])
-
-  const isDark = resolvedTheme === 'dark'
+  const { setTheme, resolvedTheme } = useTheme()
 
   return (
     <Button
       variant="ghost"
       size="icon"
       className={className}
-      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label="Toggle between light and dark theme"
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
     >
-      {mounted ? (isDark ? <Sun aria-hidden /> : <Moon aria-hidden />) : <span className="size-4" />}
+      <Moon aria-hidden className="block dark:hidden" />
+      <Sun aria-hidden className="hidden dark:block" />
     </Button>
   )
 }

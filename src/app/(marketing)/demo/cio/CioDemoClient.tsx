@@ -2,22 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useRef, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Toggle } from '@/components/ui/toggle'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Toggle, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 type ArchetypeKey =
   | 'cio'
   | 'cto'
@@ -313,15 +298,15 @@ function renderBrief(text: string, isStreaming: boolean) {
     if (line.trim() === '---' || line.trim() === '***') return null
     if (line.startsWith('## ')) {
       return (
-        <h3 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mt-8 mb-3 first:mt-0 pb-2 border-b border-slate-100">
+        <h3 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mt-8 mb-3 first:mt-0 pb-2 border-b border-border">
           {line.slice(3)}
         </h3>
       )
     }
     if (line.startsWith('- ') || line.startsWith('* ')) {
       return (
-        <div key={i} className="flex gap-2.5 text-[14px] text-slate-700 leading-relaxed mb-2">
-          <span className="text-slate-300 shrink-0 select-none mt-0.5">-</span>
+        <div key={i} className="flex gap-2.5 text-[14px] text-muted-foreground leading-relaxed mb-2">
+          <span className="text-muted-foreground shrink-0 select-none mt-0.5">-</span>
           <span>{renderInline(line.slice(2))}</span>
         </div>
       )
@@ -330,14 +315,14 @@ function renderBrief(text: string, isStreaming: boolean) {
     return (
       <p
         key={i}
-        className="text-[14px] text-slate-700 leading-relaxed mb-2"
+        className="text-[14px] text-muted-foreground leading-relaxed mb-2"
       >
         {renderInline(line)}
       </p>
     )
   }).concat(
     isStreaming
-      ? [<span key="cursor" className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />]
+      ? [<span key="cursor" className="inline-block w-0.5 h-4 bg-muted animate-pulse ml-0.5 align-middle" />]
       : []
   )
 }
@@ -479,37 +464,37 @@ export function CioDemoClient() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-slate-950 border-b border-slate-900 sticky top-0 z-20">
+    <div className="min-h-screen bg-muted text-foreground font-sans">
+      <header className="bg-primary border-b border-border sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-white hover:opacity-80 transition-opacity">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground hover:opacity-80 transition-opacity">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/demo/presenter" className="text-[13px] text-slate-400 hover:text-white transition-colors">Presenter mode</Link>
+            <Link href="/demo/presenter" className="text-[13px] text-muted-foreground hover:text-primary-foreground transition-colors">Presenter mode</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">CIO demo</p>
-          <h1 className="text-[28px] sm:text-[34px] font-bold text-slate-900 leading-[1.1] mb-4">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-3">CIO demo</p>
+          <h1 className="text-[28px] sm:text-[34px] font-bold text-foreground leading-[1.1] mb-4">
             Keep the talking points, show the brief, then pivot live.
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed mb-5 max-w-3xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed mb-5 max-w-3xl">
             Start with the concise talking points below. Then run a company brief on the fly. Then ask the custom question: what does fake user Bob Barker&apos;s interview brief look like for the company and role you just named?
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
             {TALKING_POINTS.map((point) => (
-              <Card key={point.title} variant="default" className="bg-slate-50 p-4">
-                <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">{point.title}</p>
-                <p className="text-[13px] text-slate-700 leading-relaxed">{point.body}</p>
+              <Card key={point.title} variant="default" className="bg-muted p-4">
+                <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">{point.title}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{point.body}</p>
               </Card>
             ))}
           </div>
-          <Card variant="default" className="!bg-slate-950 !text-slate-100 rounded-xl px-4 py-4 mb-4">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-orange-300 mb-2">Cadence visual (Horstman layer)</p>
+          <Card variant="default" className="!bg-primary !text-primary-foreground rounded-xl px-4 py-4 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-primary mb-2">Cadence visual (Horstman layer)</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {CADENCE_STEPS.map((step) => (
                 <Card key={step} variant="glass" className="rounded p-3 text-[12px] leading-relaxed">
@@ -518,22 +503,22 @@ export function CioDemoClient() {
               ))}
             </div>
           </Card>
-          <div className="text-[12px] text-slate-500 leading-relaxed">
+          <div className="text-[12px] text-muted-foreground leading-relaxed">
             Reciprocity and commitment close: run this with two clients for 30 days, then decide using a weekly scorecard (first signal action, first prep brief before high-stakes conversation, context-rebuild time reduction).
             <span className="inline-block ml-2">
-              <Link href="/references" className="underline underline-offset-2 hover:text-slate-800">References</Link>
+              <Link href="/references" className="underline underline-offset-2 hover:text-foreground">References</Link>
               {' · '}
-              <Link href="/evidence-hub" className="underline underline-offset-2 hover:text-slate-800">Evidence Hub</Link>
+              <Link href="/evidence-hub" className="underline underline-offset-2 hover:text-foreground">Evidence Hub</Link>
             </span>
           </div>
-          <Card variant="default" className="mt-5 rounded-xl p-3 bg-slate-50">
-            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-2">Presenter quick jump</p>
+          <Card variant="default" className="mt-5 rounded-xl p-3 bg-muted">
+            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Presenter quick jump</p>
             <div className="flex flex-wrap gap-2">
               {PRESENTER_ANCHORS.map((anchor) => (
                 <a
                   key={anchor.id}
                   href={`#${anchor.id}`}
-                  className="text-[12px] px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 transition-colors"
+                  className="text-[12px] px-3 py-1.5 rounded border border-border bg-card hover:bg-muted text-muted-foreground transition-colors"
                 >
                   {anchor.label}
                 </a>
@@ -543,36 +528,36 @@ export function CioDemoClient() {
         </Card>
 
         <Card id="proof-clarity" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Proof clarity</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Confidence and denominator badges</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Every claim includes denominator and confidence context so proof stays credible under scrutiny.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Proof clarity</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Confidence and denominator badges</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Every claim includes denominator and confidence context so proof stays credible under scrutiny.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROOF_METRICS.map((metric) => (
-              <Card key={metric.label} variant="default" className="p-4 bg-slate-50">
-                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">{metric.label}</p>
-                <p className="text-[28px] font-bold text-slate-900 leading-none mb-2">{metric.value}</p>
+              <Card key={metric.label} variant="default" className="p-4 bg-muted">
+                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">{metric.label}</p>
+                <p className="text-[28px] font-bold text-foreground leading-none mb-2">{metric.value}</p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  <Badge className="!bg-slate-900 !text-white rounded">n={metric.denominator}</Badge>
+                  <Badge className="!bg-primary !text-primary-foreground rounded">n={metric.denominator}</Badge>
                   <Badge variant="warning" className="rounded">{metric.confidence}</Badge>
                 </div>
-                <p className="text-[12px] text-slate-600 leading-relaxed">{metric.note}</p>
+                <p className="text-[12px] text-muted-foreground leading-relaxed">{metric.note}</p>
               </Card>
             ))}
           </div>
         </Card>
 
         <Card id="pilot-scorecard" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Pilot motion</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">30-day pilot success scorecard</h2>
-          <p className="text-[14px] text-slate-600 mb-4">Use this live during the demo: check boxes as outcomes are met, then decide from evidence.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Pilot motion</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">30-day pilot success scorecard</h2>
+          <p className="text-[14px] text-muted-foreground mb-4">Use this live during the demo: check boxes as outcomes are met, then decide from evidence.</p>
 
           <div className="mb-4">
-            <div className="flex items-center justify-between text-[12px] text-slate-600 mb-1.5">
+            <div className="flex items-center justify-between text-[12px] text-muted-foreground mb-1.5">
               <span>Pilot completion</span>
-              <span className="font-semibold text-slate-900">{pilotCompleted}/3 ({pilotCompletionPct}%)</span>
+              <span className="font-semibold text-foreground">{pilotCompleted}/3 ({pilotCompletionPct}%)</span>
             </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div className={`h-full bg-orange-500 transition-all ${pilotBarWidthClass}`} />
+            <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div className={`h-full bg-primary transition-all ${pilotBarWidthClass}`} />
             </div>
           </div>
 
@@ -580,34 +565,34 @@ export function CioDemoClient() {
             <Toggle
               pressed={pilotScorecard.firstSignalAction}
               onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, firstSignalAction: pressed }))}
-              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstSignalAction ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstSignalAction ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
             >
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 1</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">First signal action in week 1</p>
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Checkpoint 1</p>
+              <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">First signal action in week 1</p>
             </Toggle>
             <Toggle
               pressed={pilotScorecard.firstPrepBrief}
               onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, firstPrepBrief: pressed }))}
-              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstPrepBrief ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstPrepBrief ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
             >
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 2</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">First prep brief used before a high-stakes conversation</p>
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Checkpoint 2</p>
+              <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">First prep brief used before a high-stakes conversation</p>
             </Toggle>
             <Toggle
               pressed={pilotScorecard.contextRebuildDrop}
               onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, contextRebuildDrop: pressed }))}
-              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.contextRebuildDrop ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.contextRebuildDrop ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
             >
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 3</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">Context rebuild time reduction documented</p>
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Checkpoint 3</p>
+              <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">Context rebuild time reduction documented</p>
             </Toggle>
           </div>
         </Card>
 
         <Card id="hesitation-mode" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Negotiation support</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Late-stage hesitation mode (Voss)</h2>
-          <p className="text-[14px] text-slate-600 mb-5">One-click scripts for the most common late-stage stalls.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Negotiation support</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Late-stage hesitation mode (Voss)</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">One-click scripts for the most common late-stage stalls.</p>
 
           <ToggleGroup
             value={[activeHesitation]}
@@ -618,21 +603,21 @@ export function CioDemoClient() {
               <ToggleGroupItem
                 key={item.key}
                 value={item.key}
-                className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
+                className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-primary text-primary-foreground border-border' : 'bg-card text-primary-foreground border-border hover:bg-muted'}`}
               >
                 {item.label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
 
-          <Card variant="default" className="rounded p-4 bg-slate-50">
-            <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-2">Live script</p>
-            <p className="text-[14px] text-slate-800 leading-relaxed">{activeScript.script}</p>
+          <Card variant="default" className="rounded p-4 bg-muted">
+            <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Live script</p>
+            <p className="text-[14px] text-foreground leading-relaxed">{activeScript.script}</p>
             <Button
               type="button"
               variant="outline"
               onClick={copyScriptText}
-              className="mt-3 text-[12px] px-3 py-1.5 h-auto rounded border-slate-300 hover:bg-white"
+              className="mt-3 text-[12px] px-3 py-1.5 h-auto rounded border-border hover:bg-card"
             >
               {copiedScript ? 'Copied' : 'Copy script'}
             </Button>
@@ -640,9 +625,9 @@ export function CioDemoClient() {
         </Card>
 
         <Card id="accountability-timeline" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Execution rhythm</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Weekly accountability timeline</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Make operating cadence visible and measurable every week.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Execution rhythm</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Weekly accountability timeline</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Make operating cadence visible and measurable every week.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             {TIMELINE_STEPS.map((step) => (
               <Toggle
@@ -654,57 +639,57 @@ export function CioDemoClient() {
                     [step.key]: pressed,
                   }))
                 }
-                className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${timelineChecks[step.key] ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+                className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${timelineChecks[step.key] ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
               >
-                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Cadence step</p>
-                <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">{step.label}</p>
+                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Cadence step</p>
+                <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">{step.label}</p>
               </Toggle>
             ))}
           </div>
-          <p className="text-[13px] text-slate-700">
+          <p className="text-[13px] text-muted-foreground">
             Weekly cadence completion: <span className="font-semibold">{timelineCompleted}/{TIMELINE_STEPS.length}</span>
           </p>
         </Card>
 
         <Card id="objection-appendix" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Objections</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Objection-handling appendix</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Use these responses when concerns come up in real time during the demo.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Objections</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Objection-handling appendix</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Use these responses when concerns come up in real time during the demo.</p>
           <div className="space-y-3">
             {OBJECTION_APPENDIX.map((item) => (
-              <Card key={item.objection} variant="default" className="rounded-lg p-4 bg-slate-50">
-                <p className="text-[12px] font-bold text-slate-900 mb-1.5">{item.objection}</p>
-                <p className="text-[13px] text-slate-700 leading-relaxed">{item.response}</p>
+              <Card key={item.objection} variant="default" className="rounded-lg p-4 bg-muted">
+                <p className="text-[12px] font-bold text-foreground mb-1.5">{item.objection}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{item.response}</p>
               </Card>
             ))}
           </div>
         </Card>
 
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Brief demo</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Generate the company brief on the fly</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Type the company and role he names, click generate, and narrate the first section aloud.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Brief demo</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Generate the company brief on the fly</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Type the company and role he names, click generate, and narrate the first section aloud.</p>
 
           <form onSubmit={generateCompanyBrief}>
-            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+            <Card variant="default" className="rounded p-5 bg-muted flex flex-col gap-4">
               <div>
-                <Label htmlFor="company-brief-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Label htmlFor="company-brief-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Company</Label>
                 <Input
                   id="company-brief-company"
                   value={companyBriefCompany}
                   onChange={(e) => setCompanyBriefCompany(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="ServiceNow"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="company-brief-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Label htmlFor="company-brief-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Role</Label>
                 <Input
                   id="company-brief-role"
                   value={companyBriefRole}
                   onChange={(e) => setCompanyBriefRole(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="Chief Information Officer"
                   required
                 />
@@ -725,34 +710,34 @@ export function CioDemoClient() {
           </form>
 
           {(companyBriefLoading || companyBrief) && (
-            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={companyBriefRef}>
+            <Card variant="default" className="mt-5 rounded p-6 bg-card" ref={companyBriefRef}>
               {renderBrief(companyBrief, companyBriefLoading)}
             </Card>
           )}
         </Card>
 
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Tailored brief demo</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Bob Barker at the named company and role</h2>
-          <p className="text-[14px] text-slate-600 mb-5">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Tailored brief demo</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Bob Barker at the named company and role</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">
             Pick a fake C-suite or VP profile, then generate a tailored brief from fake resume plus fake LinkedIn summary. This is the exact move when he asks: what does Bob Barker&apos;s interview brief look like for this role?
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-            <Card variant="default" className="rounded p-4 bg-slate-50">
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">Fake resume ({activeProfile.label})</p>
-              <pre className="text-[12px] text-slate-700 whitespace-pre-wrap leading-relaxed">{activeProfile.resume}</pre>
+            <Card variant="default" className="rounded p-4 bg-muted">
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Fake resume ({activeProfile.label})</p>
+              <pre className="text-[12px] text-muted-foreground whitespace-pre-wrap leading-relaxed">{activeProfile.resume}</pre>
             </Card>
-            <Card variant="default" className="rounded p-4 bg-slate-50">
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">Fake LinkedIn summary</p>
-              <p className="text-[12px] text-slate-700 leading-relaxed">{activeProfile.linkedin}</p>
+            <Card variant="default" className="rounded p-4 bg-muted">
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Fake LinkedIn summary</p>
+              <p className="text-[12px] text-muted-foreground leading-relaxed">{activeProfile.linkedin}</p>
             </Card>
           </div>
 
           <form onSubmit={generateTailoredBrief}>
-            <Card variant="default" className="rounded p-5 bg-slate-50 flex flex-col gap-4">
+            <Card variant="default" className="rounded p-5 bg-muted flex flex-col gap-4">
               <div>
-                <Label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Fake profile archetype</Label>
+                <Label htmlFor="demo-archetype" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Fake profile archetype</Label>
                 <Select
                   value={archetype}
                   onValueChange={(value) => {
@@ -762,7 +747,7 @@ export function CioDemoClient() {
                     if (profile) setTailoredRole(profile.defaultRole)
                   }}
                 >
-                  <SelectTrigger id="demo-archetype" className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900">
+                  <SelectTrigger id="demo-archetype" className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -773,23 +758,23 @@ export function CioDemoClient() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="tailored-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Company</Label>
+                <Label htmlFor="tailored-company" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Company</Label>
                 <Input
                   id="tailored-company"
                   value={tailoredCompany}
                   onChange={(e) => setTailoredCompany(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="ServiceNow"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="tailored-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">Role</Label>
+                <Label htmlFor="tailored-role" className="block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">Role</Label>
                 <Input
                   id="tailored-role"
                   value={tailoredRole}
                   onChange={(e) => setTailoredRole(e.target.value)}
-                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-slate-900"
+                  className="w-full h-auto rounded px-3 py-2.5 text-[14px] text-foreground"
                   placeholder="Chief Information Officer"
                   required
                 />
@@ -810,7 +795,7 @@ export function CioDemoClient() {
           </form>
 
           {(tailoredLoading || tailoredBrief) && (
-            <Card variant="default" className="mt-5 rounded p-6 bg-white" ref={tailoredBriefRef}>
+            <Card variant="default" className="mt-5 rounded p-6 bg-card" ref={tailoredBriefRef}>
               {renderBrief(tailoredBrief, tailoredLoading)}
             </Card>
           )}

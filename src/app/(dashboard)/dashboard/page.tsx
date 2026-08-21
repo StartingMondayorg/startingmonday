@@ -63,14 +63,14 @@ import { isStartingMondayDashboardSimplificationEnabled } from "@/lib/feature-fl
 
 // Full class strings - must not be constructed dynamically (Tailwind scanner needs to see them)
 const STAGE: Record<string, { label: string; cls: string }> = {
-  watching: { label: "Watching", cls: "bg-white/10 text-slate-300" },
-  researching: { label: "Researching", cls: "bg-blue-500/15 text-blue-200" },
-  applied: { label: "In Process", cls: "bg-indigo-500/15 text-indigo-200" },
+  watching: { label: "Watching", cls: "bg-muted/60 text-muted-foreground" },
+  researching: { label: "Researching", cls: "bg-info/15 text-info" },
+  applied: { label: "In Process", cls: "bg-info/15 text-info" },
   interviewing: {
     label: "Interviewing",
-    cls: "bg-amber-500/15 text-amber-200",
+    cls: "bg-warning/15 text-warning",
   },
-  offer: { label: "Offer", cls: "bg-emerald-500/15 text-emerald-200" },
+  offer: { label: "Offer", cls: "bg-success/15 text-success" },
 };
 
 const PAGE_SIZE = 50;
@@ -1257,7 +1257,7 @@ export default async function DashboardPage({
       : "Briefing time not set";
 
     return (
-      <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+      <div className="relative min-h-screen overflow-hidden bg-background font-sans text-foreground">
         <FirstMileTelemetry
           eventName="dashboard_viewed"
           pageName="dashboard"
@@ -1271,15 +1271,14 @@ export default async function DashboardPage({
             posture: dashboardPosture,
           }}
         />
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.18),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.98)_100%)]" />
 
-        <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+        <header className="sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl">
           <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-            <span className="shrink-0 text-[13px] font-bold uppercase tracking-[0.16em] text-white/90">
-              <span className="text-white">Starting </span>
-              <span className="text-orange-500">Monday</span>
+            <span className="shrink-0 text-[13px] font-bold uppercase tracking-[0.16em] text-foreground/90">
+              <span className="text-foreground">Starting </span>
+              <span className="text-primary">Monday</span>
             </span>
-            <Link href="/dashboard/progress" className="ml-auto text-[12px] font-semibold text-slate-300 hover:text-white">
+            <Link href="/dashboard/progress" className="ml-auto text-[12px] font-semibold text-muted-foreground hover:text-foreground">
               Progress
             </Link>
             <LogoutButton label="Sign out" />
@@ -1288,26 +1287,26 @@ export default async function DashboardPage({
 
         <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
           <div className="mb-6">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Dashboard</p>
-            <h2 className="mt-2 font-serif text-[30px] font-bold leading-tight text-white sm:text-[42px]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary/90">Dashboard</p>
+            <h2 className="mt-2 font-serif text-[30px] font-bold leading-tight text-foreground sm:text-[42px]">
               What should I do today?
             </h2>
-            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-300">
+            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
               We watch your companies for signals, then turn the strongest ones into a company, people, and angle to act on.
             </p>
           </div>
 
           <section aria-labelledby="next-move-heading" data-first-mile-section="dashboard_next_move" className="mb-6">
             <Card variant="glass" className="p-5 sm:p-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">{threeZoneNextMove.eyebrow}</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary/90">{threeZoneNextMove.eyebrow}</p>
               <div className="mt-3 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
                 <div>
-                  <h2 id="next-move-heading" className="text-[24px] font-bold leading-tight text-white sm:text-[30px]">
+                  <h2 id="next-move-heading" className="text-[24px] font-bold leading-tight text-foreground sm:text-[30px]">
                     {threeZoneNextMove.title}
                   </h2>
-                  <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-slate-300">{threeZoneNextMove.body}</p>
+                  <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-muted-foreground">{threeZoneNextMove.body}</p>
                   {isTrialing && (
-                    <p className="mt-3 text-[12px] font-semibold text-slate-300">
+                    <p className="mt-3 text-[12px] font-semibold text-muted-foreground">
                       Trial: day {Math.max(1, 30 - trialDaysLeft)} of 30. You keep your data when the trial ends.
                     </p>
                   )}
@@ -1322,19 +1321,19 @@ export default async function DashboardPage({
           <section id="companies" aria-labelledby="companies-heading" data-first-mile-section="dashboard_companies" className="mb-6 scroll-mt-24">
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Your companies</p>
-                <h2 id="companies-heading" className="mt-1 text-[22px] font-bold text-white">Company, people, angle.</h2>
-                <p className="mt-1 text-[12px] text-slate-400">Signals mean a role may be forming before it is posted.</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary/90">Your companies</p>
+                <h2 id="companies-heading" className="mt-1 text-[22px] font-bold text-foreground">Company, people, angle.</h2>
+                <p className="mt-1 text-[12px] text-muted-foreground">Signals mean a role may be forming before it is posted.</p>
               </div>
-              <Link href="/dashboard/companies/new" className="text-[13px] font-semibold text-orange-300 hover:text-orange-200">
+              <Link href="/dashboard/companies/new" className="text-[13px] font-semibold text-primary">
                 Add company
               </Link>
             </div>
 
             {companyRows.length === 0 ? (
               <Card variant="glass" className="p-5">
-                <p className="text-[15px] font-semibold text-white">Add a company you would want to be shortlisted at.</p>
-                <p className="mt-1 text-[13px] text-slate-300">We start watching it today and tell you when something matters.</p>
+                <p className="text-[15px] font-semibold text-foreground">Add a company you would want to be shortlisted at.</p>
+                <p className="mt-1 text-[13px] text-muted-foreground">We start watching it today and tell you when something matters.</p>
                 <Button className="mt-4 min-h-[44px] text-[13px]" render={<Link href="/dashboard/companies/new" />}>
                   Add company
                 </Button>
@@ -1348,22 +1347,22 @@ export default async function DashboardPage({
                     <Card key={company.id} variant="glass" className="p-4 sm:p-5">
                       <div className="grid gap-4 lg:grid-cols-[1.1fr_1.4fr_1.2fr_auto] lg:items-center">
                         <div>
-                          <p className="text-[15px] font-semibold text-white">{company.name}</p>
-                          <p className="mt-0.5 text-[12px] text-slate-400">{sectorByCompanyId.get(company.id) ?? "Sector not set"}</p>
+                          <p className="text-[15px] font-semibold text-foreground">{company.name}</p>
+                          <p className="mt-0.5 text-[12px] text-muted-foreground">{sectorByCompanyId.get(company.id) ?? "Sector not set"}</p>
                         </div>
                         <div>
-                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-400">Latest signal</p>
-                          <p className="mt-1 text-[13px] leading-relaxed text-slate-200">
+                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Latest signal</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-foreground">
                             {latestSignal ? `${latestSignal.signal_summary} - ${signalAge}` : "No fresh signal this week."}
                           </p>
                         </div>
                         <div>
-                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-slate-400">Who to know</p>
-                          <p className="mt-1 text-[13px] leading-relaxed text-slate-200">
+                          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Who to know</p>
+                          <p className="mt-1 text-[13px] leading-relaxed text-foreground">
                             {targetRoles.length > 0 ? targetRoles.join(", ") : "Add target role titles in your profile."}
                           </p>
                         </div>
-                        <Link href={`/dashboard/companies/${company.id}/prep`} data-dashboard-action="company_brief" className="inline-flex min-h-[44px] items-center justify-center rounded border border-orange-300/30 px-4 text-[13px] font-semibold text-orange-200 hover:border-orange-200 hover:text-white">
+                        <Link href={`/dashboard/companies/${company.id}/prep`} data-dashboard-action="company_brief" className="inline-flex min-h-[44px] items-center justify-center rounded border border-primary/30 px-4 text-[13px] font-semibold text-primary hover:text-foreground">
                           Get brief
                         </Link>
                       </div>
@@ -1377,22 +1376,22 @@ export default async function DashboardPage({
           <section aria-labelledby="week-heading" data-first-mile-section="dashboard_this_week" className="mb-10">
             <Card variant="glass" className="p-4 sm:p-5">
               <div className="mb-3">
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">This week</p>
-                <h2 id="week-heading" className="mt-1 text-[20px] font-bold text-white">Quiet operating strip.</h2>
-                <p className="mt-1 text-[12px] text-slate-400">Only the weekly numbers that change action.</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary/90">This week</p>
+                <h2 id="week-heading" className="mt-1 text-[20px] font-bold text-foreground">Quiet operating strip.</h2>
+                <p className="mt-1 text-[12px] text-muted-foreground">Only the weekly numbers that change action.</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
-                <Link href="/dashboard/calendar" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
-                  <span className="block text-[22px] font-bold text-white">{overdueCount}</span>
-                  <span className="text-[12px] text-slate-300">follow-ups due</span>
+                <Link href="/dashboard/calendar" className="rounded border border-border bg-muted/40 p-3">
+                  <span className="block text-[22px] font-bold text-foreground">{overdueCount}</span>
+                  <span className="text-[12px] text-muted-foreground">follow-ups due</span>
                 </Link>
-                <Link href="/dashboard/signals" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
-                  <span className="block text-[22px] font-bold text-white">{signalCount}</span>
-                  <span className="text-[12px] text-slate-300">new signals this week</span>
+                <Link href="/dashboard/signals" className="rounded border border-border bg-muted/40 p-3">
+                  <span className="block text-[22px] font-bold text-foreground">{signalCount}</span>
+                  <span className="text-[12px] text-muted-foreground">new signals this week</span>
                 </Link>
-                <Link href="/dashboard/profile#section-briefing" className="rounded border border-white/10 bg-white/5 p-3 hover:border-white/25">
-                  <span className="block text-[14px] font-bold text-white">{nextBriefingLabel}</span>
-                  <span className="text-[12px] text-slate-300">briefing time</span>
+                <Link href="/dashboard/profile#section-briefing" className="rounded border border-border bg-muted/40 p-3">
+                  <span className="block text-[14px] font-bold text-foreground">{nextBriefingLabel}</span>
+                  <span className="text-[12px] text-muted-foreground">briefing time</span>
                 </Link>
               </div>
             </Card>
@@ -1404,7 +1403,7 @@ export default async function DashboardPage({
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+    <div className="relative min-h-screen overflow-hidden bg-background font-sans text-foreground">
         <FirstMileTelemetry
           eventName="dashboard_viewed"
           pageName="dashboard"
@@ -1417,14 +1416,13 @@ export default async function DashboardPage({
             layout: "legacy",
           }}
         />
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
 
       {/* Nav */}
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:gap-6 sm:px-6">
-          <span className="text-[13px] font-bold tracking-[0.16em] uppercase text-white/90 shrink-0">
-            <span className="text-white">Starting </span>
-            <span className="text-orange-500">Monday</span>
+          <span className="text-[13px] font-bold tracking-[0.16em] uppercase text-foreground/90 shrink-0">
+            <span className="text-foreground">Starting </span>
+            <span className="text-primary">Monday</span>
           </span>
           <div className="ml-auto flex items-center gap-2">
             <LogoutButton label="Sign out" />
@@ -1508,26 +1506,26 @@ export default async function DashboardPage({
             variant="glass"
             className="hidden lg:block p-5 lg:sticky lg:top-24"
           >
-            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-3">
+            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">
               On this page
             </p>
             <nav className="flex flex-col gap-2.5 text-[13px]">
-              <a href="#to-do-now" className="text-slate-200 hover:text-white">
+              <a href="#to-do-now" className="text-muted-foreground hover:text-foreground">
                 To do now
               </a>
-              <a href="#companies" className="text-slate-300 hover:text-white">
+              <a href="#companies" className="text-muted-foreground hover:text-foreground">
                 Companies
               </a>
               <a
                 href="#relationships"
-                className="text-slate-300 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
               >
                 Relationships
               </a>
-              <a href="#plan-panel" className="text-slate-300 hover:text-white">
+              <a href="#plan-panel" className="text-muted-foreground hover:text-foreground">
                 Plan
               </a>
-              <a href="#briefs" className="text-slate-300 hover:text-white">
+              <a href="#briefs" className="text-muted-foreground hover:text-foreground">
                 Briefs
               </a>
             </nav>
@@ -1539,14 +1537,14 @@ export default async function DashboardPage({
               variant="glass"
               className="scroll-mt-24 p-5 sm:p-6"
             >
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-1">
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-1">
                 To do now
               </p>
-              <h2 className="text-[22px] sm:text-[26px] font-serif font-bold text-white leading-tight">
+              <h2 className="text-[22px] sm:text-[26px] font-serif font-bold text-foreground leading-tight">
                 Today at a glance
               </h2>
-              <p className="text-[13px] text-slate-300 mt-2">{today}</p>
-              <p className="text-[12px] text-slate-400 mt-1">
+              <p className="text-[13px] text-muted-foreground mt-2">{today}</p>
+              <p className="text-[12px] text-muted-foreground mt-1">
                 {operatingStateLabel}
               </p>
             </Card>
@@ -1557,22 +1555,22 @@ export default async function DashboardPage({
                 variant="glass"
                 className="p-5"
               >
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
+                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-1">
                   Companies
                 </p>
-                <p className="text-[20px] font-bold text-white">{totalCount}</p>
-                <p className="text-[12px] text-slate-300 mt-2">
+                <p className="text-[20px] font-bold text-foreground">{totalCount}</p>
+                <p className="text-[12px] text-muted-foreground mt-2">
                   Scanner status:{" "}
                   {totalCount > 0
                     ? `${scannerCompletedCount} of ${totalCount} scanned`
                     : "Waiting for companies"}
                 </p>
                 {scannableCount === 0 && totalCount > 0 && (
-                  <p className="text-[11px] text-slate-400 mt-1">
+                  <p className="text-[11px] text-muted-foreground mt-1">
                     No career-page URLs yet.
                   </p>
                 )}
-                <p className="text-[12px] text-slate-400 mt-1">
+                <p className="text-[12px] text-muted-foreground mt-1">
                   Signals this week: {signalCount}
                 </p>
                 <OnDemandScanButton
@@ -1580,7 +1578,7 @@ export default async function DashboardPage({
                 />
                 <Link
                   href="/dashboard/signals"
-                  className="inline-block mt-3 text-[12px] font-semibold text-orange-300 hover:text-orange-200"
+                  className="inline-block mt-3 text-[12px] font-semibold text-primary"
                 >
                   Signals
                 </Link>
@@ -1591,17 +1589,17 @@ export default async function DashboardPage({
                 variant="glass"
                 className="p-5"
               >
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
+                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-1">
                   Relationships
                 </p>
-                <p className="text-[20px] font-bold text-white">
+                <p className="text-[20px] font-bold text-foreground">
                   {contactCount}
                 </p>
-                <p className="text-[12px] text-slate-300 mt-2">
+                <p className="text-[12px] text-muted-foreground mt-2">
                   {enrichmentQueueCount} compan
                   {enrichmentQueueCount === 1 ? "y" : "ies"} not yet enriched
                 </p>
-                <p className="text-[12px] text-slate-400 mt-1">
+                <p className="text-[12px] text-muted-foreground mt-1">
                   {contactCount === 0
                     ? "While enrichment runs, adding one contact you already know unblocks outreach today."
                     : enrichedContactRows.length > 0
@@ -1613,7 +1611,7 @@ export default async function DashboardPage({
                 )}
                 <Link
                   href="/dashboard/contacts"
-                  className="inline-block mt-3 text-[12px] font-semibold text-orange-300 hover:text-orange-200"
+                  className="inline-block mt-3 text-[12px] font-semibold text-primary"
                 >
                   Contacts
                 </Link>
@@ -1624,7 +1622,7 @@ export default async function DashboardPage({
                 variant="glass"
                 className="p-5"
               >
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-1">
+                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-1">
                   Follow-ups overdue
                 </p>
                 {(followUps ?? []).length > 0 ? (
@@ -1659,10 +1657,10 @@ export default async function DashboardPage({
                         return (
                           <li key={item.id}>
                             <Card variant="glass" className="px-3 py-2">
-                              <p className="text-[12px] font-semibold text-white">
+                              <p className="text-[12px] font-semibold text-foreground">
                                 {cleanAction || item.action}
                               </p>
-                              <p className="text-[11px] text-slate-400 mt-0.5">
+                              <p className="text-[11px] text-muted-foreground mt-0.5">
                                 {item.companies?.name ?? "General"} ·{" "}
                                 {daysOverdue > 0
                                   ? `Due ${dueLabel}`
@@ -1674,13 +1672,13 @@ export default async function DashboardPage({
                       })}
                   </ul>
                 ) : (
-                  <p className="text-[12px] text-slate-300 mt-2">
+                  <p className="text-[12px] text-muted-foreground mt-2">
                     Nothing due today. Your follow-through is clean.
                   </p>
                 )}
                 <Link
                   href="/dashboard/calendar"
-                  className="inline-block mt-3 text-[12px] font-semibold text-orange-300 hover:text-orange-200"
+                  className="inline-block mt-3 text-[12px] font-semibold text-primary"
                 >
                   Calendar
                 </Link>
@@ -1691,7 +1689,7 @@ export default async function DashboardPage({
 
         {/* Tenet: Companies */}
         <section id="companies" className="scroll-mt-24 mb-8">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-4">
             Companies
           </h2>
 
@@ -1731,7 +1729,7 @@ export default async function DashboardPage({
               </AlertDescription>
               <Link
                 href={rolesFormingCard.href}
-                className="text-[12px] font-semibold text-orange-300 hover:text-orange-200 shrink-0"
+                className="text-[12px] font-semibold text-primary shrink-0"
               >
                 Signals
               </Link>
@@ -1747,21 +1745,21 @@ export default async function DashboardPage({
               <Card variant="glass" className="mb-6 p-4 sm:p-5">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <h2 className="text-[13px] font-semibold text-orange-200/90">
+                    <h2 className="text-[13px] font-semibold text-primary/90">
                       Campaign health
                     </h2>
-                    <p className="text-[20px] font-bold text-white mt-1">
+                    <p className="text-[20px] font-bold text-foreground mt-1">
                       {campaignHealthScore}/100{" "}
-                      <span className="text-[13px] font-semibold text-slate-300">
+                      <span className="text-[13px] font-semibold text-muted-foreground">
                         {campaignHealthBand}
                       </span>
                     </p>
-                    <p className="text-[13px] text-slate-200 mt-1">
+                    <p className="text-[13px] text-foreground mt-1">
                       Cadence, follow-through, and stage progression combined
                       into one execution score.
                     </p>
                     {cadenceScore === 0 && (
-                      <p className="text-[12px] text-slate-400 mt-1">
+                      <p className="text-[12px] text-muted-foreground mt-1">
                         Cadence only counts outreach sent this week. Signal
                         review and prep work do not register here.
                       </p>
@@ -1769,26 +1767,26 @@ export default async function DashboardPage({
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center w-full sm:w-auto">
                     <Card variant="glass" className="px-3 py-2">
-                      <p className="text-[13px] text-slate-300 font-semibold">
+                      <p className="text-[13px] text-muted-foreground font-semibold">
                         Cadence
                       </p>
-                      <p className="text-[16px] font-bold text-white">
+                      <p className="text-[16px] font-bold text-foreground">
                         {cadenceScore}
                       </p>
                     </Card>
                     <Card variant="glass" className="px-3 py-2">
-                      <p className="text-[13px] text-slate-300 font-semibold">
+                      <p className="text-[13px] text-muted-foreground font-semibold">
                         Follow-through
                       </p>
-                      <p className="text-[16px] font-bold text-white">
+                      <p className="text-[16px] font-bold text-foreground">
                         {followThroughScore}
                       </p>
                     </Card>
                     <Card variant="glass" className="px-3 py-2">
-                      <p className="text-[13px] text-slate-300 font-semibold">
+                      <p className="text-[13px] text-muted-foreground font-semibold">
                         Conversion
                       </p>
-                      <p className="text-[16px] font-bold text-white">
+                      <p className="text-[16px] font-bold text-foreground">
                         {conversionScore}
                       </p>
                     </Card>
@@ -1841,25 +1839,25 @@ export default async function DashboardPage({
 
         {/* Tenet: Relationships */}
         <section id="relationships" className="scroll-mt-24 mb-8">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-4">
             Relationships
           </h2>
           <Card variant="glass" className="p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-[13px] text-slate-200">
+              <p className="text-[13px] text-foreground">
                 {contactCount} active contact{contactCount === 1 ? "" : "s"}{" "}
                 across {contactCountMap.size} compan
                 {contactCountMap.size === 1 ? "y" : "ies"}
               </p>
               <Link
                 href="/dashboard/contacts"
-                className="text-[12px] font-semibold text-orange-300 hover:text-orange-200"
+                className="text-[12px] font-semibold text-primary"
               >
                 Contacts
               </Link>
             </div>
             {warmPaths.length === 0 && (
-              <p className="text-[13px] text-slate-300 mt-3">
+              <p className="text-[13px] text-muted-foreground mt-3">
                 No warm paths this week. When a company you track shows a fresh
                 signal and you know someone there, the opening appears here.
               </p>
@@ -1919,21 +1917,21 @@ export default async function DashboardPage({
 
         {/* Tenet: Plan */}
         <section id="plan-panel" className="scroll-mt-24 mb-8">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-4">
             Plan
           </h2>
           <Card
             variant="glass"
             className="mb-5 flex flex-wrap items-center justify-between gap-2 px-5 py-4 sm:px-6"
           >
-            <p className="text-[13px] text-slate-200">
-              <span className="font-semibold text-white">Weekly plan.</span>{" "}
+            <p className="text-[13px] text-foreground">
+              <span className="font-semibold text-foreground">Weekly plan.</span>{" "}
               Choose one relationships move, one opportunities move, and one
               prep move for the week.
             </p>
             <Link
               href="/dashboard/plan"
-              className="text-[12px] font-semibold text-orange-300 hover:text-orange-200 shrink-0"
+              className="text-[12px] font-semibold text-primary shrink-0"
             >
               Open weekly plan →
             </Link>
@@ -1980,7 +1978,7 @@ export default async function DashboardPage({
 
         {/* Tenet: Briefs */}
         <section id="briefs" className="scroll-mt-24 mb-8">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-200/90 mb-4">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary/90 mb-4">
             Briefs
           </h2>
           <Card variant="glass" className="p-5 sm:p-6">
@@ -2008,7 +2006,7 @@ export default async function DashboardPage({
                   Signals
                 </Button>
               </div>
-              <p className="text-[12px] text-slate-400">
+              <p className="text-[12px] text-muted-foreground">
                 {signalCount > 0
                   ? `${signalCount} fresh signal${signalCount === 1 ? "" : "s"} this week`
                   : "No fresh signals this week"}
@@ -2023,7 +2021,7 @@ export default async function DashboardPage({
                 <PatternAlertsSection patternAlerts={patternAlerts} />
               </DashboardDisclosureSection>
             ) : (
-              <p className="text-[13px] text-slate-300">
+              <p className="text-[13px] text-muted-foreground">
                 No pattern alerts right now. Your daily briefing will flag the
                 next market move worth acting on.
               </p>

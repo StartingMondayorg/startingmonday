@@ -5,12 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { sendWelcomeEmail } from './actions'
 import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
-
+import { Badge, Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tabs, TabsList, TabsTrigger } from '@/components/ui'
 type Filter = 'all' | 'trialing' | 'intelligence' | 'search' | 'executive'
 
 const FILTER_LABELS: Record<Filter, string> = {
@@ -194,13 +189,13 @@ export default async function CustomersPage({
   const sendEmailAction = sendWelcomeEmail.bind(null)
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,146,60,0.18),_transparent_28%),linear-gradient(180deg,#0f172a_0%,#111827_45%,#020617_100%)] font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
+    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+      <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-300">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">
+          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
             Admin
           </Link>
         </div>
@@ -208,41 +203,41 @@ export default async function CustomersPage({
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-white leading-tight">Customers</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">Trial and paid subscriber overview.</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Customers</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">Trial and paid subscriber overview.</p>
         </div>
 
         {/* Conversion stats */}
         <Card variant="glass" className="p-6 mb-6">
-          <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-5">Conversion overview</h2>
+          <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-5">Conversion overview</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
             <div>
-              <p className="text-[28px] font-bold text-white leading-none">{trialing}</p>
-              <p className="text-[13px] text-slate-400 mt-1">Active trials</p>
+              <p className="text-[28px] font-bold text-foreground leading-none">{trialing}</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Active trials</p>
             </div>
             <div>
-              <p className="text-[28px] font-bold text-orange-300 leading-none">{converted}</p>
-              <p className="text-[13px] text-slate-400 mt-1">Converted</p>
+              <p className="text-[28px] font-bold text-primary leading-none">{converted}</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Converted</p>
             </div>
             <div>
-              <p className="text-[28px] font-bold text-white leading-none">{lapsed}</p>
-              <p className="text-[13px] text-slate-400 mt-1">Lapsed</p>
+              <p className="text-[28px] font-bold text-foreground leading-none">{lapsed}</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Lapsed</p>
             </div>
             <div>
-              <p className="text-[28px] font-bold text-white leading-none">{convRate}%</p>
-              <p className="text-[13px] text-slate-400 mt-1">Conv. rate</p>
-              <p className="text-[13px] text-slate-300 mt-0.5">of closed trials</p>
+              <p className="text-[28px] font-bold text-foreground leading-none">{convRate}%</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Conv. rate</p>
+              <p className="text-[13px] text-muted-foreground mt-0.5">of closed trials</p>
             </div>
           </div>
 
           {/* Channel attribution */}
-          <div className="border-t border-white/10 pt-5">
-            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Signups by source</p>
+          <div className="border-t border-border pt-5">
+            <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Signups by source</p>
             <div className="flex flex-wrap gap-2">
               {topSources.map(([src, count]) => (
-                <Badge key={src} variant="outline" className="gap-1.5 text-[13px] bg-white/5 border-white/10 px-3 py-1.5">
-                  <span className="font-semibold text-slate-200">{src}</span>
-                  <span className="text-slate-400">{count}</span>
+                <Badge key={src} variant="outline" className="gap-1.5 text-[13px] bg-muted/40 border-border px-3 py-1.5">
+                  <span className="font-semibold text-foreground">{src}</span>
+                  <span className="text-muted-foreground">{count}</span>
                 </Badge>
               ))}
             </div>
@@ -257,12 +252,12 @@ export default async function CustomersPage({
                 key={card.filter}
                 value={card.filter}
                 render={<Link href={`/dashboard/admin/customers?filter=${card.filter}`} />}
-                className="flex-col items-start rounded h-auto p-5 border border-white/10 bg-white/5 hover:border-white/30 data-active:bg-orange-400 data-active:border-orange-300/30 data-active:shadow-none"
+                className="flex-col items-start rounded h-auto p-5 border border-border bg-muted/40 data-active:bg-primary data-active:border-primary/30 data-active:shadow-none"
               >
-                <div className={`text-[30px] font-bold leading-none text-white ${card.accent ? 'text-orange-300' : ''}`}>
+                <div className={`text-[30px] font-bold leading-none text-foreground ${card.accent ? 'text-primary' : ''}`}>
                   {card.label}
                 </div>
-                <div className="text-[13px] mt-2 font-semibold tracking-wide text-slate-400">
+                <div className="text-[13px] mt-2 font-semibold tracking-wide text-muted-foreground">
                   {card.sublabel}
                 </div>
               </TabsTrigger>
@@ -272,41 +267,41 @@ export default async function CustomersPage({
 
         {/* Table */}
         <Card variant="glass" className="p-0">
-          <div className="px-6 py-[18px] border-b border-white/10">
-            <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+          <div className="px-6 py-[18px] border-b border-border">
+            <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
               {FILTER_LABELS[filter]} ({filteredUsers.length})
             </span>
           </div>
 
           {filteredUsers.length === 0 ? (
-            <p className="px-6 py-8 text-[13px] text-slate-400">No customers in this segment yet.</p>
+            <p className="px-6 py-8 text-[13px] text-muted-foreground">No customers in this segment yet.</p>
           ) : (
             <Table className="text-[13px]">
               <TableHeader>
-                <TableRow className="bg-white/5">
-                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Email</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Plan</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Joined</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-center hidden sm:table-cell">Score</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 hidden md:table-cell">Last active</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 hidden lg:table-cell">Source</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-center">Onboard</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-center">Co. added</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 hidden sm:table-cell">Trial ends</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right hidden sm:table-cell">7d outreach</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Welcome</TableHead>
+                <TableRow className="bg-muted/40">
+                  <TableHead className="px-6 py-2.5 font-semibold text-muted-foreground">Email</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Plan</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Status</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Joined</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-center hidden sm:table-cell">Score</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground hidden md:table-cell">Last active</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground hidden lg:table-cell">Source</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-center">Onboard</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-center">Co. added</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground hidden sm:table-cell">Trial ends</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right hidden sm:table-cell">7d outreach</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right">Welcome</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredUsers.map(u => {
                   const wasSent = sent === u.id
                   return (
-                    <TableRow key={u.id} className={wasSent ? 'bg-green-50' : undefined}>
-                      <TableCell className="px-6 py-3 font-semibold text-white max-w-[180px] truncate">
+                    <TableRow key={u.id} className={wasSent ? 'bg-success/10' : undefined}>
+                      <TableCell className="px-6 py-3 font-semibold text-foreground max-w-[180px] truncate">
                         {u.email}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300">
+                      <TableCell className="px-4 py-3 text-muted-foreground">
                         {TIER_NAMES[u.subscription_tier ?? 'free'] ?? 'Free'}
                       </TableCell>
                       <TableCell className="px-4 py-3">
@@ -314,41 +309,41 @@ export default async function CustomersPage({
                           {u.subscription_status.charAt(0).toUpperCase() + u.subscription_status.slice(1)}
                         </Badge>
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300 whitespace-nowrap">
+                      <TableCell className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                         {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-center hidden sm:table-cell">
                         {(() => {
                           const score = activationScore(u.id)
-                          const color = score >= 5 ? 'text-green-600' : score >= 3 ? 'text-amber-600' : 'text-slate-400'
+                          const color = score >= 5 ? 'text-success' : score >= 3 ? 'text-warning' : 'text-muted-foreground'
                           return <span className={`font-bold ${color}`}>{score}/6</span>
                         })()}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300 hidden md:table-cell whitespace-nowrap">
+                      <TableCell className="px-4 py-3 text-muted-foreground hidden md:table-cell whitespace-nowrap">
                         {daysAgo(lastActiveMap[u.id])}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-400 font-mono text-[13px] hidden lg:table-cell">
+                      <TableCell className="px-4 py-3 text-muted-foreground font-mono text-[13px] hidden lg:table-cell">
                         {u.signup_source ?? '--'}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-center">
                         {u.first_company_added_at
-                          ? <span className="text-green-600 font-bold">&#10003;</span>
-                          : <span className="text-slate-200">--</span>}
+                          ? <span className="text-success font-bold">&#10003;</span>
+                          : <span className="text-foreground">--</span>}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-center">
                         {u.first_company_added_at
-                          ? <span className="text-green-600 font-bold">&#10003;</span>
-                          : <span className="text-slate-200">--</span>}
+                          ? <span className="text-success font-bold">&#10003;</span>
+                          : <span className="text-foreground">--</span>}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300 hidden sm:table-cell whitespace-nowrap">
+                      <TableCell className="px-4 py-3 text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                         {u.subscription_status === 'trialing' ? daysLeft(u.trial_ends_at) : '--'}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-right text-slate-200 tabular-nums font-semibold hidden sm:table-cell">
+                      <TableCell className="px-4 py-3 text-right text-foreground tabular-nums font-semibold hidden sm:table-cell">
                         {outreachByUser[u.id] ?? 0}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-right">
                         {wasSent ? (
-                          <span className="text-[13px] font-bold text-green-700">Sent</span>
+                          <span className="text-[13px] font-bold text-success">Sent</span>
                         ) : (
                           <form action={sendEmailAction.bind(null, u.id, filter)}>
                             <Button type="submit" variant="outline" size="sm" className="whitespace-nowrap">

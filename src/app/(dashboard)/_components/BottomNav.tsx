@@ -101,7 +101,7 @@ export function BottomNav() {
   }
 
   return (
-    <nav aria-label="Mobile navigation" className="fixed bottom-0 left-0 right-0 z-[1000] md:hidden border-t border-white/10 bg-slate-950/90 shadow-[0_-12px_30px_rgba(15,23,42,0.32)] backdrop-blur-md safe-area-pb">
+    <nav aria-label="Mobile navigation" className="fixed bottom-0 left-0 right-0 z-[1000] md:hidden border-t border-border bg-background/90 shadow-md backdrop-blur-md safe-area-pb">
       <div className="flex items-stretch">
         {NAV_ITEMS.map(item => {
           const active = isActive(item)
@@ -111,14 +111,14 @@ export function BottomNav() {
               href={item.href}
               className={[
                 'flex-1 flex flex-col items-center justify-center gap-1.5 py-2 min-h-[56px] tap-highlight-transparent border-t-2 transition-colors',
-                active ? 'border-orange-400 bg-white/5' : 'border-transparent bg-transparent',
+                active ? 'border-primary/30 bg-muted/40' : 'border-transparent bg-transparent',
               ].join(' ')}
             >
               {item.icon(active)}
               <span
                 className={[
                   'text-[12px] tracking-wide',
-                  active ? 'font-bold text-orange-100' : 'font-semibold text-slate-400',
+                  active ? 'font-bold text-primary' : 'font-semibold text-muted-foreground',
                 ].join(' ')}
               >
                 {item.label}

@@ -4,12 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { SocialClient } from './social-client'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
-
+import { Alert, AlertDescription, Badge, Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 const PILLAR_LABELS: Record<string, string> = {
   search_craft:  'Search Craft',
   market_intel:  'Market Intelligence',
@@ -66,22 +61,22 @@ export default async function SocialAdminPage() {
     .maybeSingle()
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">&larr; Admin</Link>
+            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground transition-colors">&larr; Admin</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">LinkedIn Social</h1>
-          <p className="text-[13px] text-slate-500 mt-1.5">
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">LinkedIn Social</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">
             Daily weekday draft by audience - review, edit, copy, and mark posted.
           </p>
           <div className="mt-3">
@@ -94,12 +89,12 @@ export default async function SocialAdminPage() {
         <Card id="google-calendar" className="mb-6 p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-[16px] font-bold text-slate-900">Google Calendar sync</h2>
-              <p className="text-[13px] text-slate-500 mt-1.5 max-w-2xl">
+              <h2 className="text-[16px] font-bold text-foreground">Google Calendar sync</h2>
+              <p className="text-[13px] text-muted-foreground mt-1.5 max-w-2xl">
                 Connect Google Calendar to sync the posting reminder schedule directly instead of relying on manual .ics imports.
               </p>
-              <p className="text-[13px] text-slate-500 mt-1.5">
-                Source calendar: <span className="font-semibold text-slate-700">docs/operations/reminders/startingmonday-posting-reminders.ics</span>
+              <p className="text-[13px] text-muted-foreground mt-1.5">
+                Source calendar: <span className="font-semibold text-muted-foreground">docs/operations/reminders/startingmonday-posting-reminders.ics</span>
               </p>
             </div>
 
@@ -125,17 +120,17 @@ export default async function SocialAdminPage() {
             </div>
           </div>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-3 text-[13px] text-slate-600">
+          <div className="mt-4 grid gap-3 sm:grid-cols-3 text-[13px] text-muted-foreground">
             <Card className="p-3">
-              <p className="font-semibold text-slate-800 mb-1">Calendar</p>
+              <p className="font-semibold text-foreground mb-1">Calendar</p>
               <p>{googleCalendarIntegration?.calendar_id ?? 'primary'}</p>
             </Card>
             <Card className="p-3">
-              <p className="font-semibold text-slate-800 mb-1">Last sync</p>
+              <p className="font-semibold text-foreground mb-1">Last sync</p>
               <p>{googleCalendarIntegration?.last_synced_at ? new Date(googleCalendarIntegration.last_synced_at).toLocaleString() : 'Not synced yet'}</p>
             </Card>
             <Card className="p-3">
-              <p className="font-semibold text-slate-800 mb-1">Notes</p>
+              <p className="font-semibold text-foreground mb-1">Notes</p>
               <p>Refreshes on the cron schedule and after the first OAuth connection.</p>
             </Card>
           </div>
@@ -146,16 +141,16 @@ export default async function SocialAdminPage() {
         {/* Post history */}
         {posts.length > 0 && (
           <section id="post-history" className="mt-10">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Post History (30 days)</h2>
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Post History (30 days)</h2>
             <Card className="p-0">
               <Table className="text-[13px]">
                 <TableHeader>
-                  <TableRow className="bg-slate-50">
-                    <TableHead className="px-5 py-3 font-semibold text-slate-400">Date</TableHead>
-                    <TableHead className="px-4 py-3 font-semibold text-slate-400">Pillar</TableHead>
-                    <TableHead className="px-4 py-3 font-semibold text-slate-400">Status</TableHead>
-                    <TableHead className="px-4 py-3 font-semibold text-slate-400">Council</TableHead>
-                    <TableHead className="px-4 py-3 font-semibold text-slate-400 hidden sm:table-cell">Preview</TableHead>
+                  <TableRow className="bg-muted">
+                    <TableHead className="px-5 py-3 font-semibold text-muted-foreground">Date</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-muted-foreground">Pillar</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-muted-foreground">Status</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-muted-foreground">Council</TableHead>
+                    <TableHead className="px-4 py-3 font-semibold text-muted-foreground hidden sm:table-cell">Preview</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -165,10 +160,10 @@ export default async function SocialAdminPage() {
 
                     return (
                     <TableRow key={p.id}>
-                      <TableCell className="px-5 py-3 font-semibold text-slate-900 whitespace-nowrap">
+                      <TableCell className="px-5 py-3 font-semibold text-foreground whitespace-nowrap">
                         {new Date(p.post_date + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-500">
+                      <TableCell className="px-4 py-3 text-muted-foreground">
                         {PILLAR_LABELS[p.pillar] ?? p.pillar}
                       </TableCell>
                       <TableCell className="px-4 py-3">
@@ -185,12 +180,12 @@ export default async function SocialAdminPage() {
                           <Badge variant={councilPass ? 'success' : 'destructive'} className="w-fit">
                             {councilPass ? 'Pass' : 'Fail'}
                           </Badge>
-                          <span className="text-[13px] text-slate-500">
+                          <span className="text-[13px] text-muted-foreground">
                             {emotionalAngle ? emotionalAngle.replace('_', ' ') : 'No angle'}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-slate-400 hidden sm:table-cell max-w-xs truncate">
+                      <TableCell className="px-4 py-3 text-muted-foreground hidden sm:table-cell max-w-xs truncate">
                         {p.draft_text.split('\n')[0].slice(0, 80)}
                       </TableCell>
                     </TableRow>
@@ -205,19 +200,19 @@ export default async function SocialAdminPage() {
         {/* Liz instructions */}
         <section id="daily-workflow" className="mt-10">
         <Card className="p-6">
-          <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Daily Workflow -- Monday Through Friday</h2>
+          <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Daily Workflow -- Monday Through Friday</h2>
 
           <Alert variant="info" className="mb-6 p-4">
             <AlertDescription>
-              <h3 className="text-[13px] font-bold tracking-[0.08em] uppercase text-blue-700 mb-2">Executive Coach Outreach Guide For Liz</h3>
-              <p className="text-[13px] text-slate-700 leading-relaxed mb-3">
+              <h3 className="text-[13px] font-bold tracking-[0.08em] uppercase text-info mb-2">Executive Coach Outreach Guide For Liz</h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">
                 The full step-by-step guide, coach-finding criteria, and message options are in:
                 {' '}
-                <span className="font-mono text-slate-800">docs/liz-executive-coach-linkedin-guide.md</span>
+                <span className="font-mono text-foreground">docs/liz-executive-coach-linkedin-guide.md</span>
               </p>
-              <p className="text-[13px] text-slate-600 mb-2">Send-ready email draft:</p>
-              <Card className="p-3 text-[13px] text-slate-700 leading-relaxed">
-                <p><span className="font-semibold text-slate-900">Subject:</span> Executive coach outreach guide now live</p>
+              <p className="text-[13px] text-muted-foreground mb-2">Send-ready email draft:</p>
+              <Card className="p-3 text-[13px] text-muted-foreground leading-relaxed">
+                <p><span className="font-semibold text-foreground">Subject:</span> Executive coach outreach guide now live</p>
                 <p className="mt-2">Hi Liz,</p>
                 <p className="mt-1">
                   I published the daily executive coach outreach guide. It mirrors the Social page operating style and includes: coach-finding filters, persona criteria, objection tags, connection note options, and the 7-touch follow-up sequence.
@@ -262,46 +257,46 @@ export default async function SocialAdminPage() {
                 body: 'After the post has been live for a few hours, note: total likes, total comments, any specific people who commented (name and what they said), and anyone Rich should follow up with. Paste notable comments verbatim if they\'re worth keeping. This feeds the weekly digest and helps identify warm leads for outreach.',
               },
             ].map((step, i) => (
-              <li key={i} className="flex gap-3 text-[13px] text-slate-600">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-orange-500 text-white text-[13px] font-bold flex items-center justify-center mt-0.5">
+              <li key={i} className="flex gap-3 text-[13px] text-muted-foreground">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[13px] font-bold flex items-center justify-center mt-0.5">
                   {i + 1}
                 </span>
                 <div>
-                  <p className="font-semibold text-slate-800 mb-1">{step.title}</p>
+                  <p className="font-semibold text-foreground mb-1">{step.title}</p>
                   <p className="leading-relaxed">{step.body}</p>
                 </div>
               </li>
             ))}
           </ol>
 
-          <div className="mt-6 pt-5 border-t border-slate-100">
-            <h3 id="cio-outreach" className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">CIO Outreach - Accepted Connection Follow-Up</h3>
-            <p className="text-[13px] text-slate-500 mb-3">Use these when a CIO accepts the connection request. Pick one subject and one two-sentence body, then send same day.</p>
+          <div className="mt-6 pt-5 border-t border-border">
+            <h3 id="cio-outreach" className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">CIO Outreach - Accepted Connection Follow-Up</h3>
+            <p className="text-[13px] text-muted-foreground mb-3">Use these when a CIO accepts the connection request. Pick one subject and one two-sentence body, then send same day.</p>
             <Card className="p-4">
-              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">Version A - Direct And Memorable</p>
-              <p className="text-[13px] text-slate-800 mb-2"><span className="font-semibold">Subject:</span> Most CIO searches stall between sessions.</p>
-              <p className="text-[13px] text-slate-700 leading-relaxed">
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">Version A - Direct And Memorable</p>
+              <p className="text-[13px] text-foreground mb-2"><span className="font-semibold">Subject:</span> Most CIO searches stall between sessions.</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed">
                 [Name], thanks for connecting. Most CIO searches lose momentum between sessions, so we built Starting Monday to keep execution tight with company signals, prep briefs, and a live pipeline view; open to a 15-minute walkthrough?
               </p>
             </Card>
             <Card className="mt-3 p-4">
-              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">Version B - Relationship First</p>
-              <p className="text-[13px] text-slate-800 mb-2"><span className="font-semibold">Subject:</span> You run strategy. We handle the between-session execution.</p>
-              <p className="text-[13px] text-slate-700 leading-relaxed">
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">Version B - Relationship First</p>
+              <p className="text-[13px] text-foreground mb-2"><span className="font-semibold">Subject:</span> You run strategy. We handle the between-session execution.</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed">
                 [Name], appreciate the connection. The quiet middle of a CIO transition is where searches drift, so Starting Monday gives candidates a daily operating rhythm that keeps research, outreach, and interview prep moving; open to a short 15-minute walkthrough?
               </p>
             </Card>
-            <div className="mt-3 text-[13px] text-slate-600 leading-relaxed">
-              <p><span className="font-semibold text-slate-800">If no response after 3 days:</span> Happy to send a short demo video if that is easier than a live call.</p>
-              <p className="mt-1"><span className="font-semibold text-slate-800">If no response after 7 days:</span> No pressure if timing is not right. If priorities shift, I am happy to reconnect.</p>
+            <div className="mt-3 text-[13px] text-muted-foreground leading-relaxed">
+              <p><span className="font-semibold text-foreground">If no response after 3 days:</span> Happy to send a short demo video if that is easier than a live call.</p>
+              <p className="mt-1"><span className="font-semibold text-foreground">If no response after 7 days:</span> No pressure if timing is not right. If priorities shift, I am happy to reconnect.</p>
             </div>
 
-            <div className="mt-5 pt-4 border-t border-slate-100">
-              <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Executive Coach Outreach - Quick Use</h3>
-              <p className="text-[13px] text-slate-600 mb-3">
+            <div className="mt-5 pt-4 border-t border-border">
+              <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Executive Coach Outreach - Quick Use</h3>
+              <p className="text-[13px] text-muted-foreground mb-3">
                 Steps and message options are now on this page and fully documented in the guide above.
               </p>
-              <ol className="list-decimal pl-5 space-y-1 text-[13px] text-slate-700 leading-relaxed">
+              <ol className="list-decimal pl-5 space-y-1 text-[13px] text-muted-foreground leading-relaxed">
                 <li>Build 10-15 daily prospects in Sales Navigator (1-10 employee firms, active in last 30 days).</li>
                 <li>Tag each coach persona (Transition, VP-to-CXO, Search Affiliate, Board).</li>
                 <li>Send personalized connection notes the same day.</li>
@@ -310,42 +305,42 @@ export default async function SocialAdminPage() {
               </ol>
             </div>
 
-            <div id="council-review" className="mt-5 pt-4 border-t border-slate-100">
-              <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Synthetic Council Review - Sales Marketing And Pricing</h3>
+            <div id="council-review" className="mt-5 pt-4 border-t border-border">
+              <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Synthetic Council Review - Sales Marketing And Pricing</h3>
               <Card className="p-0 overflow-x-auto">
                 <Table className="text-[13px] text-left">
                   <TableHeader>
-                    <TableRow className="bg-slate-50">
-                      <TableHead className="px-3 py-2 font-semibold text-slate-900">Member</TableHead>
-                      <TableHead className="px-3 py-2 font-semibold text-slate-900">Feedback</TableHead>
-                      <TableHead className="px-3 py-2 font-semibold text-slate-900">Grade</TableHead>
+                    <TableRow className="bg-muted">
+                      <TableHead className="px-3 py-2 font-semibold text-foreground">Member</TableHead>
+                      <TableHead className="px-3 py-2 font-semibold text-foreground">Feedback</TableHead>
+                      <TableHead className="px-3 py-2 font-semibold text-foreground">Grade</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">Dave Gerhardt</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Strong opener and good founder-style directness. Version A is punchier and more likely to get a reply.</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A-</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">Dave Gerhardt</TableCell>
+                      <TableCell className="px-3 py-2 text-muted-foreground whitespace-normal">Strong opener and good founder-style directness. Version A is punchier and more likely to get a reply.</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">A-</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">April Dunford</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Clear who this is for: CIO-level transitions. Positioning is cleaner when centered on the execution gap between sessions.</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">April Dunford</TableCell>
+                      <TableCell className="px-3 py-2 text-muted-foreground whitespace-normal">Clear who this is for: CIO-level transitions. Positioning is cleaner when centered on the execution gap between sessions.</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">A</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">John McMahon</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Pain and urgency are visible. Keep CTA specific at 15 minutes and avoid adding extra links in first follow-up.</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A-</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">John McMahon</TableCell>
+                      <TableCell className="px-3 py-2 text-muted-foreground whitespace-normal">Pain and urgency are visible. Keep CTA specific at 15 minutes and avoid adding extra links in first follow-up.</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">A-</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">Katelyn Bourgoin</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Version B lands emotional reality better. "Quiet middle" language is memorable and human.</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">Katelyn Bourgoin</TableCell>
+                      <TableCell className="px-3 py-2 text-muted-foreground whitespace-normal">Version B lands emotional reality better. "Quiet middle" language is memorable and human.</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">A</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="px-3 py-2 text-slate-800 font-semibold">Patrick Campbell</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-700 whitespace-normal">Value framing is stronger when outcomes are explicit: sharper conversations and faster search velocity. Good premium signal without pricing friction.</TableCell>
-                      <TableCell className="px-3 py-2 text-slate-900 font-semibold">A-</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">Patrick Campbell</TableCell>
+                      <TableCell className="px-3 py-2 text-muted-foreground whitespace-normal">Value framing is stronger when outcomes are explicit: sharper conversations and faster search velocity. Good premium signal without pricing friction.</TableCell>
+                      <TableCell className="px-3 py-2 text-foreground font-semibold">A-</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -354,8 +349,8 @@ export default async function SocialAdminPage() {
           </div>
 
           {/* Pillar legend */}
-          <div id="pillar-legend" className="mt-6 pt-5 border-t border-slate-100">
-            <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What the pillar labels mean</h3>
+          <div id="pillar-legend" className="mt-6 pt-5 border-t border-border">
+            <h3 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">What the pillar labels mean</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {[
                 { label: 'Search Craft', desc: 'Practical advice for running a senior executive job search' },
@@ -366,15 +361,15 @@ export default async function SocialAdminPage() {
               ].map(p => (
                 <div key={p.label} className="flex gap-2 items-start">
                   <Badge className="shrink-0">{p.label}</Badge>
-                  <span className="text-[13px] text-slate-500 mt-0.5">{p.desc}</span>
+                  <span className="text-[13px] text-muted-foreground mt-0.5">{p.desc}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-5 pt-4 border-t border-slate-100">
-            <p className="text-[13px] text-slate-400">
-              This page: <span className="font-mono text-slate-600">https://startingmonday.app/dashboard/admin/social</span>
+          <div className="mt-5 pt-4 border-t border-border">
+            <p className="text-[13px] text-muted-foreground">
+              This page: <span className="font-mono text-muted-foreground">https://startingmonday.app/dashboard/admin/social</span>
             </p>
           </div>
         </Card>

@@ -4,20 +4,14 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { archiveContactSilent, toggleContactPriority } from '@/app/(dashboard)/dashboard/contacts/actions'
 import { STATUS_STEPS, STATUS_CLS } from '@/app/(dashboard)/dashboard/_components/ContactStatusStepper'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Toggle } from '@/components/ui/toggle'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-
+import { Badge, Button, Card, Input, Toggle, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 const CHANNEL: Record<string, { label: string; cls: string }> = {
-  linkedin:  { label: 'LinkedIn',  cls: 'border border-blue-300/20 bg-blue-500/10 text-blue-100' },
-  referral:  { label: 'Referral',  cls: 'border border-emerald-300/20 bg-emerald-500/10 text-emerald-100' },
-  cold:      { label: 'Cold',      cls: 'border border-white/10 bg-white/5 text-slate-300' },
-  inbound:   { label: 'Inbound',   cls: 'border border-indigo-300/20 bg-indigo-500/10 text-indigo-100' },
-  event:     { label: 'Event',     cls: 'border border-amber-300/20 bg-amber-500/10 text-amber-100' },
-  recruiter: { label: 'Recruiter', cls: 'border border-purple-300/20 bg-purple-500/10 text-purple-100' },
+  linkedin:  { label: 'LinkedIn',  cls: 'border border-info/20 bg-info/10 text-info' },
+  referral:  { label: 'Referral',  cls: 'border border-success/20 bg-success/10 text-success' },
+  cold:      { label: 'Cold',      cls: 'border border-border bg-muted/40 text-muted-foreground' },
+  inbound:   { label: 'Inbound',   cls: 'border border-info/20 bg-info/10 text-info' },
+  event:     { label: 'Event',     cls: 'border border-warning/20 bg-warning/10 text-warning' },
+  recruiter: { label: 'Recruiter', cls: 'border border-info/20 bg-info/10 text-info' },
 }
 
 const STATUS_LABELS: Record<string, string> = Object.fromEntries(
@@ -125,19 +119,19 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
   if (contacts.length === 0) {
     return (
       <Card variant="glass" className="overflow-hidden">
-        <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300">All contacts</span>
-          <span className="text-[12px] text-slate-400">0 contacts</span>
+        <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">All contacts</span>
+          <span className="text-[12px] text-muted-foreground">0 contacts</span>
         </div>
         <div className="px-6 py-12 text-center">
-          <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-3">
+          <div className="w-10 h-10 rounded-full bg-muted/40 border border-border flex items-center justify-center mx-auto mb-3">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <circle cx="10" cy="7" r="4" stroke="#94a3b8" strokeWidth="1.5"/>
               <path d="M3 18c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </div>
-          <p className="text-[14px] font-semibold text-white mb-1">No contacts yet</p>
-          <p className="text-[13px] text-slate-300 max-w-xs mx-auto">Add recruiters, hiring managers, and warm connections. Roles at this level fill through relationships.</p>
+          <p className="text-[14px] font-semibold text-foreground mb-1">No contacts yet</p>
+          <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">Add recruiters, hiring managers, and warm connections. Roles at this level fill through relationships.</p>
         </div>
       </Card>
     )
@@ -150,7 +144,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
     const subtitle = [ct.title, ct.firm ?? companyName].filter(Boolean).join(' · ')
     const status = ct.outreach_status ?? 'prospect'
     const statusLabel = STATUS_LABELS[status] ?? status
-    const statusCls = STATUS_CLS[status] ?? 'bg-slate-100 text-slate-500'
+    const statusCls = STATUS_CLS[status] ?? 'bg-muted text-muted-foreground'
     const isPriority = priorities[ct.id] ?? ct.is_priority
     const nextAction = status === 'prospect'
       ? 'Draft first outreach'
@@ -161,20 +155,20 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
           : 'Schedule next follow-up'
 
     return (
-      <div className="px-6 py-4 flex items-start gap-3 bg-slate-950/10 hover:bg-white/[0.03] transition-colors">
+      <div className="px-6 py-4 flex items-start gap-3 bg-background/10 hover:bg-muted/[0.03] transition-colors">
         {isLeader && (
           <Toggle
             pressed={isPriority}
             onPressedChange={() => togglePriority(ct)}
             title={isPriority ? 'Remove priority' : 'Mark as priority'}
-            className={`shrink-0 mt-0.5 h-auto min-w-0 p-0 text-[16px] leading-none hover:bg-transparent ${isPriority ? 'text-orange-300 opacity-100' : 'text-slate-500 opacity-30 hover:opacity-70'}`}
+            className={`shrink-0 mt-0.5 h-auto min-w-0 p-0 text-[16px] leading-none hover:bg-transparent ${isPriority ? 'text-primary opacity-100' : 'text-muted-foreground opacity-30 hover:opacity-70'}`}
           >
             ★
           </Toggle>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <Link href={`/dashboard/contacts/${ct.id}`} className="text-[14px] font-semibold text-white hover:text-orange-200">
+            <Link href={`/dashboard/contacts/${ct.id}`} className="text-[14px] font-semibold text-foreground hover:text-primary">
               {ct.name}
             </Link>
             {ch && (
@@ -183,7 +177,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
               </Badge>
             )}
             {relationshipType && (
-              <Badge className="font-semibold tracking-[0.04em] border border-orange-300/20 bg-orange-500/10 text-orange-100">
+              <Badge className="font-semibold tracking-[0.04em] border border-primary/20 bg-primary/10 text-primary">
                 {relationshipType}
               </Badge>
             )}
@@ -192,27 +186,27 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
             </Badge>
           </div>
           {subtitle && (
-            <p className="text-[13px] text-slate-300 mt-0.5">{subtitle}</p>
+            <p className="text-[13px] text-muted-foreground mt-0.5">{subtitle}</p>
           )}
           {ct.last_role_discussed && (
-            <p className="text-[12px] text-slate-400 mt-0.5">Last role discussed: {ct.last_role_discussed}</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">Last role discussed: {ct.last_role_discussed}</p>
           )}
-          <div className="text-[11px] text-slate-400 mt-1.5 flex items-center gap-2 flex-wrap">
+          <div className="text-[11px] text-muted-foreground mt-1.5 flex items-center gap-2 flex-wrap">
             {ct.companies?.id && (
-              <Link href={`/dashboard/companies/${ct.companies.id}`} className="font-semibold text-slate-200 hover:text-white transition-colors">
+              <Link href={`/dashboard/companies/${ct.companies.id}`} className="font-semibold text-muted-foreground hover:text-foreground transition-colors">
                 {ct.companies.name}
               </Link>
             )}
             {ct.companies?.id && (
               <Link
                 href={`/dashboard/companies/${ct.companies.id}/prep`}
-                className="font-semibold text-orange-200 hover:text-orange-100 transition-colors"
+                className="font-semibold text-primary transition-colors"
               >
                 Open company brief
               </Link>
             )}
             <span>
-              Next: <span className="font-semibold text-slate-100">{nextAction}</span>
+              Next: <span className="font-semibold text-foreground">{nextAction}</span>
             </span>
           </div>
         </div>
@@ -220,7 +214,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
           <Button
             variant="ghost"
             render={<Link href={`/dashboard/contacts/${ct.id}/outreach`} />}
-            className="text-[11px] text-slate-300 hover:text-white hover:bg-transparent font-medium h-auto p-0"
+            className="text-[11px] text-muted-foreground hover:text-foreground hover:bg-transparent font-medium h-auto p-0"
           >
             Draft outreach (with brief)
           </Button>
@@ -234,7 +228,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
                 router.refresh()
               })
             }}
-            className="text-[11px] text-slate-400 hover:text-red-200 hover:bg-transparent p-0 min-h-[32px] min-w-[44px] h-auto"
+            className="text-[11px] text-muted-foreground hover:text-destructive hover:bg-transparent p-0 min-h-[32px] min-w-[44px] h-auto"
           >
             Remove
           </Button>
@@ -245,20 +239,20 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
 
   return (
     <Card variant="glass" className="overflow-hidden">
-      <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
-        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-300">All contacts</span>
+      <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
+        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">All contacts</span>
         <div className="flex items-center gap-3">
           {isLeader && filtered.length > 0 && (
             <Button
               type="button"
               variant="ghost"
               onClick={() => exportContactsCsv(filtered)}
-              className="text-[11px] font-semibold text-slate-300 hover:text-white hover:bg-transparent p-0 h-auto"
+              className="text-[11px] font-semibold text-muted-foreground hover:text-foreground hover:bg-transparent p-0 h-auto"
             >
               Export CSV
             </Button>
           )}
-          <span className="text-[12px] text-slate-400">
+          <span className="text-[12px] text-muted-foreground">
             {filtered.length !== contacts.length
               ? `${filtered.length} of ${contacts.length}`
               : `${contacts.length} ${contacts.length === 1 ? 'contact' : 'contacts'}`}
@@ -267,19 +261,19 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
       </div>
 
       {/* Search */}
-      <div className="px-6 py-3 border-b border-white/10 bg-slate-950/20">
+      <div className="px-6 py-3 border-b border-border bg-background/20">
         <Input
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by name, title, or company..."
-          className="w-full h-auto border-0 p-0 text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0 bg-transparent"
+          className="w-full h-auto border-0 p-0 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:ring-0 bg-transparent"
         />
       </div>
 
       {/* Channel filter */}
       {activeChannelFilters.length > 1 && (
-        <div className="px-6 py-2.5 border-b border-white/10 overflow-x-auto bg-slate-950/20">
+        <div className="px-6 py-2.5 border-b border-border overflow-x-auto bg-background/20">
           <ToggleGroup
             value={channelFilter ? [channelFilter] : []}
             onValueChange={(values) => setChannelFilter(values[0] ?? '')}
@@ -287,7 +281,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
           >
             <ToggleGroupItem
               value=""
-              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${!channelFilter ? 'bg-orange-500 text-slate-950 hover:bg-orange-500' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${!channelFilter ? 'bg-primary text-primary-foreground hover:bg-primary' : 'bg-muted/40 text-primary-foreground hover:bg-muted/60'}`}
             >
               All
             </ToggleGroupItem>
@@ -297,7 +291,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
                 <ToggleGroupItem
                   key={v}
                   value={v}
-                  className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${channelFilter === v ? 'bg-orange-500 text-slate-950 hover:bg-orange-500' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+                  className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${channelFilter === v ? 'bg-primary text-primary-foreground hover:bg-primary' : 'bg-muted/40 text-primary-foreground hover:bg-muted/60'}`}
                 >
                   {ch?.label ?? v}
                 </ToggleGroupItem>
@@ -309,18 +303,18 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
 
       {/* Rows */}
       {filtered.length === 0 ? (
-        <div className="px-6 py-8 text-center text-[13px] text-slate-300">
+        <div className="px-6 py-8 text-center text-[13px] text-muted-foreground">
           No contacts match that filter.
         </div>
       ) : (
-        <div className="divide-y divide-white/10">
+        <div className="divide-y divide-border">
 
           {/* Leader: firm-grouped recruiters first */}
           {isLeader && grouped && Object.entries(grouped).sort(([,a],[,b]) => b.length - a.length).map(([firm, cts]) => (
             <div key={firm}>
-              <div className="px-6 py-2 bg-purple-500/10 border-b border-white/10 flex items-center gap-2">
-                <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-purple-100">{firm}</span>
-                <span className="text-[10px] text-purple-200/70">{cts.length} {cts.length === 1 ? 'contact' : 'contacts'}</span>
+              <div className="px-6 py-2 bg-info/10 border-b border-border flex items-center gap-2">
+                <span className="text-[10px] font-bold tracking-[0.1em] uppercase text-info">{firm}</span>
+                <span className="text-[10px] text-info/70">{cts.length} {cts.length === 1 ? 'contact' : 'contacts'}</span>
               </div>
               {cts.map(ct => <ContactRow key={ct.id} ct={ct} />)}
             </div>

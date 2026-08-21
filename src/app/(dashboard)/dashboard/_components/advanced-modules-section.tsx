@@ -5,8 +5,7 @@ import { DashboardPipelinePulse } from './pipeline-pulse'
 import { DashboardWeeklyPerformanceSection } from './weekly-performance-section'
 import type { WeekActivity } from '@/app/components/ActivityChart'
 import type { VelocityRow } from '@/app/components/PipelineVelocity'
-import { Card } from '@/components/ui/card'
-
+import { Card } from '@/components/ui'
 type DashboardAdvancedModulesSectionProps = {
   weeklyGoal: number | null
   outreachThisWeek: number
@@ -72,10 +71,10 @@ export function DashboardAdvancedModulesSection(props: DashboardAdvancedModulesS
 
       <Card variant="glass" className="p-5 mb-6 sm:mb-8 flex-row flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Search controls</p>
-          <p className="text-[13px] text-slate-200">Briefing time, frequency, pause, and activity snooze now live in settings.</p>
+          <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Search controls</p>
+          <p className="text-[13px] text-muted-foreground">Briefing time, frequency, pause, and activity snooze now live in settings.</p>
         </div>
-        <Link href="/settings" className="text-[12px] font-semibold text-orange-300 hover:text-orange-200 shrink-0">Open settings →</Link>
+        <Link href="/settings" className="text-[12px] font-semibold text-primary shrink-0">Open settings →</Link>
       </Card>
 
       <DashboardIntelSetupSections

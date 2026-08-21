@@ -29,7 +29,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
       url="https://startingmonday.app/blog/executive-coaching-candidate-infrastructure"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           There is a category of executive coaching engagement that is harder than it looks from the outside.
           Not the strategy work. Not the positioning conversations. Not even the work of getting a client
@@ -48,7 +48,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
           The problem is not the division of labor. The problem is what gets lost in the gap.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What happens between sessions</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What happens between sessions</h2>
 
         <p>
           A senior executive in active search is managing a campaign with forty to sixty target companies,
@@ -78,7 +78,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
           As a coach, you find out in the next session. By then, the opportunity is gone.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The session time problem</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The session time problem</h2>
 
         <p>
           When a client arrives at a coaching session underprepared on the mechanics of their search,
@@ -100,7 +100,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
           the work degrades.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What infrastructure changes</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What infrastructure changes</h2>
 
         <p>
           The infrastructure layer in a senior search does four things that manual effort cannot
@@ -129,7 +129,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
           The quality of the coaching conversation changes when the coach is informed, not briefed.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The prep brief as a coaching instrument</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The prep brief as a coaching instrument</h2>
 
         <p>
           One specific tool worth understanding is the AI-generated interview prep brief. Before any
@@ -151,7 +151,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
           The research is done. The strategy is yours.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The signal advantage</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The signal advantage</h2>
 
         <p>
           The most consequential conversations at the senior level happen before searches are
@@ -180,7 +180,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
           and surfaces the patterns is.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What this means for your practice</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What this means for your practice</h2>
 
         <p>
           The infrastructure layer does not replace the coaching relationship. It replaces the
@@ -201,7 +201,7 @@ export default function ExecutiveCoachingCandidateInfrastructurePage() {
         <p>
           That is what the infrastructure is for. Starting Monday was built specifically for
           VP and C-suite executives in active search. The{' '}
-          <a href="/coaches-guide" className="text-slate-900 font-semibold underline underline-offset-2 hover:text-orange-600 transition-colors">
+          <a href="/coaches-guide" className="text-foreground font-semibold underline underline-offset-2 hover:text-primary transition-colors">
             coaches guide
           </a>
           {' '}covers how the platform works in practice and what clients can expect.

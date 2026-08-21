@@ -1,11 +1,7 @@
 ﻿'use client'
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
-
+import { Badge, Button, Card, Textarea } from '@/components/ui'
 type Message = { role: 'user' | 'assistant'; content: string }
 
 function ActionToast({ message, onDismiss }: { message: string; onDismiss: () => void }) {
@@ -15,16 +11,16 @@ function ActionToast({ message, onDismiss }: { message: string; onDismiss: () =>
   }, [onDismiss])
 
   return (
-    <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-slate-900 text-white text-[13px] font-medium px-5 py-3 rounded-full shadow-lg">
-              <span className="text-amber-400">&#10003;</span>
+    <div className="dark fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-card text-foreground text-[13px] font-medium px-5 py-3 rounded-full shadow-lg">
+              <span className="text-warning">&#10003;</span>
       <span>{message}</span>
-      <Link href="/dashboard" className="text-slate-400 hover:text-white underline text-[12px]">
+      <Link href="/dashboard" className="text-muted-foreground hover:text-foreground underline text-[12px]">
         View pipeline
       </Link>
       <button
         type="button"
         onClick={onDismiss}
-        className="text-slate-500 hover:text-white bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
+        className="text-muted-foreground hover:text-foreground bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
         aria-label="Dismiss"
       >
         &times;
@@ -61,7 +57,7 @@ function AssistantMessage({ content }: { content: string }) {
               variant="warning"
               className="mx-0.5 gap-1.5 px-2.5 py-1 align-middle text-[11px]"
             >
-              <span className="text-amber-500">&#10003;</span>
+              <span className="text-warning">&#10003;</span>
               {match[1]}
             </Badge>
           )
@@ -214,26 +210,26 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col font-sans bg-white">
+    <div className="h-screen flex flex-col font-sans bg-card">
       <h1 className="sr-only">Career advisor chat</h1>
       {actionToast && (
         <ActionToast message={actionToast} onDismiss={() => setActionToast(null)} />
       )}
       {retryError && (
-        <div data-testid="chat-retry-banner" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-red-950 text-white text-[13px] font-medium px-5 py-3 rounded-full shadow-lg">
-          <span className="text-red-400">&#9888;</span>
+        <div data-testid="chat-retry-banner" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-destructive text-primary-foreground text-[13px] font-medium px-5 py-3 rounded-full shadow-lg">
+          <span className="text-destructive">&#9888;</span>
           <span>{retryError}</span>
           <button
             type="button"
             onClick={() => { setRetryError(null); send() }}
-            className="text-orange-400 hover:text-orange-300 underline text-[12px] bg-transparent border-0 cursor-pointer"
+            className="text-primary underline text-[12px] bg-transparent border-0 cursor-pointer"
           >
             Try again
           </button>
           <button
             type="button"
             onClick={() => setRetryError(null)}
-            className="text-slate-500 hover:text-white bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
+            className="text-muted-foreground hover:text-primary-foreground bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
             aria-label="Dismiss"
           >
             &times;
@@ -241,10 +237,10 @@ export default function ChatPage() {
         </div>
       )}
 
-      <header className="bg-slate-900 shrink-0">
+      <header className="dark bg-card shrink-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between gap-3">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-2 sm:gap-6">
             {messages.length > 0 && !loading && !loadingHistory && (
@@ -252,17 +248,17 @@ export default function ChatPage() {
                 type="button"
                 variant="ghost"
                 onClick={clearConversation}
-                className="hidden sm:inline-flex h-auto p-0 text-[12px] text-slate-400 hover:text-slate-300 hover:bg-transparent"
+                className="hidden sm:inline-flex h-auto p-0 text-[12px] text-muted-foreground hover:bg-transparent"
               >
                 Clear
               </Button>
             )}
-            <span className="hidden sm:inline text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">
+            <span className="hidden sm:inline text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">
               Chat
             </span>
             <Link
               href="/dashboard"
-              className="inline-flex min-h-[44px] items-center rounded-md border border-slate-700 px-3 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500 transition-colors"
+              className="inline-flex min-h-[44px] items-center rounded-md border border-border px-3 text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               &larr; Dashboard
             </Link>
@@ -272,22 +268,22 @@ export default function ChatPage() {
 
       <div className="flex-1 overflow-y-auto">
         {loadingHistory ? (
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 flex items-center gap-2 text-slate-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-200 animate-pulse inline-block" />
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-200 animate-pulse inline-block [animation-delay:150ms]" />
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-200 animate-pulse inline-block [animation-delay:300ms]" />
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 flex items-center gap-2 text-muted-foreground">
+            <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:150ms]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:300ms]" />
           </div>
         ) : messages.length === 0 ? (
           <section id="chat-empty-state" className="max-w-3xl mx-auto px-4 sm:px-6 py-20">
-            <p className="text-[22px] font-bold text-slate-900 mb-2">
+            <p className="text-[22px] font-bold text-foreground mb-2">
               What would you like to work on?
             </p>
-            <p className="text-[14px] text-slate-400 leading-relaxed mb-8">
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-8">
               Ask about your pipeline, or tell me to take action. I can move companies through stages, log follow-ups, and update notes directly.
             </p>
             <div className="flex flex-col gap-6">
               <div>
-                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Ask</h2>
+                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Ask</h2>
                 <div className="flex flex-col gap-2">
                   {ASK_PROMPTS.map(prompt => (
                     <Button
@@ -295,7 +291,7 @@ export default function ChatPage() {
                       type="button"
                       variant="outline"
                       onClick={() => { setInput(prompt); textareaRef.current?.focus() }}
-                      className="h-auto justify-start whitespace-normal text-left text-[13px] font-normal text-slate-500 border-slate-200 px-4 py-3 hover:border-slate-400 hover:text-slate-700"
+                      className="h-auto justify-start whitespace-normal text-left text-[13px] font-normal text-muted-foreground border-border px-4 py-3"
                     >
                       {prompt}
                     </Button>
@@ -303,7 +299,7 @@ export default function ChatPage() {
                 </div>
               </div>
               <div>
-                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Tell me to</h2>
+                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Tell me to</h2>
                 <div className="flex flex-col gap-2">
                   {DO_PROMPTS.map(prompt => (
                     <Button
@@ -311,7 +307,7 @@ export default function ChatPage() {
                       type="button"
                       variant="outline"
                       onClick={() => { setInput(prompt); textareaRef.current?.focus() }}
-                      className="h-auto justify-start whitespace-normal text-left text-[13px] font-normal text-slate-500 border-slate-200 px-4 py-3 hover:border-slate-400 hover:text-slate-700"
+                      className="h-auto justify-start whitespace-normal text-left text-[13px] font-normal text-muted-foreground border-border px-4 py-3"
                     >
                       {prompt}
                     </Button>
@@ -328,18 +324,18 @@ export default function ChatPage() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.role === 'user' ? (
-                  <Card variant="glass" className="gap-0 border-transparent bg-slate-900 py-3 text-white text-[14px] px-4 rounded-2xl rounded-br-sm max-w-[95%] sm:max-w-[85%] sm:max-w-[70%] whitespace-pre-wrap leading-relaxed">
+                  <Card variant="glass" className="dark gap-0 border-transparent bg-card py-3 text-foreground text-[14px] px-4 rounded-2xl rounded-br-sm max-w-[95%] sm:max-w-[85%] sm:max-w-[70%] whitespace-pre-wrap leading-relaxed">
                     {msg.content}
                   </Card>
                 ) : (
-                  <div className="text-[14px] text-slate-800 leading-relaxed max-w-[95%] sm:max-w-[85%]">
+                  <div className="text-[14px] text-foreground leading-relaxed max-w-[95%] sm:max-w-[85%]">
                     {msg.content ? (
                       <AssistantMessage content={msg.content} />
                     ) : (
                       <span className="inline-flex gap-1 items-center h-5">
-                        <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0ms]" />
-                        <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:150ms]" />
-                        <span className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:300ms]" />
+                        <span className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce [animation-delay:0ms]" />
+                        <span className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce [animation-delay:150ms]" />
+                        <span className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce [animation-delay:300ms]" />
                       </span>
                     )}
                   </div>
@@ -351,7 +347,7 @@ export default function ChatPage() {
         )}
       </div>
 
-      <div id="chat-composer" className="shrink-0 border-t border-slate-200 bg-white px-6 py-4">
+      <div id="chat-composer" className="shrink-0 border-t border-border bg-card px-6 py-4">
         <div className="max-w-3xl mx-auto px-4 sm:px-0 flex gap-3 items-end">
           <Textarea
             ref={textareaRef}
@@ -360,18 +356,18 @@ export default function ChatPage() {
             onKeyDown={onKeyDown}
             placeholder="Ask anything about your search…"
             rows={1}
-            className="flex-1 min-h-0 rounded-xl px-4 py-3 text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:border-slate-400 focus-visible:ring-0 resize-none max-h-[140px]"
+            className="flex-1 min-h-0 rounded-xl px-4 py-3 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-border focus-visible:ring-0 resize-none max-h-[140px]"
           />
           <Button
             type="button"
             onClick={send}
             disabled={loading || !input.trim()}
-            className="h-auto bg-slate-900 text-white text-[13px] font-semibold px-5 py-3 rounded-xl shrink-0"
+            className="h-auto bg-primary text-primary-foreground text-[13px] font-semibold px-5 py-3 rounded-xl shrink-0"
           >
             Send
           </Button>
         </div>
-        <p className="max-w-3xl mx-auto mt-2 text-[11px] text-slate-300">
+        <p className="max-w-3xl mx-auto mt-2 text-[11px] text-muted-foreground">
           Enter to send · Shift+Enter for new line
         </p>
       </div>

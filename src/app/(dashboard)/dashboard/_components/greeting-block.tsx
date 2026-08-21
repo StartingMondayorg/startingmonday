@@ -14,13 +14,13 @@ export function DashboardGreetingBlock({ firstName, briefingTimezone }: Dashboar
 
   return (
     <>
-      <p className="text-[13px] font-semibold text-orange-300 mb-2">This week&apos;s operating rhythm</p>
+      <p className="text-[13px] font-semibold text-primary mb-2">This week&apos;s operating rhythm</p>
       {/* h2 keeps the greeting in the document outline; the page h1 is the
           sr-only "Dashboard" heading in page.tsx (single-h1 a11y rule). */}
-      <h2 className="text-[26px] sm:text-[32px] font-serif font-bold text-white leading-tight">
+      <h2 className="text-[26px] sm:text-[32px] font-serif font-bold text-primary-foreground leading-tight">
         <LocalGreeting firstName={firstName} serverGreeting={greeting} />
       </h2>
-      <p className="text-[13px] text-slate-300 mt-1.5">{today}</p>
+      <p className="text-[13px] text-muted-foreground mt-1.5">{today}</p>
     </>
   )
 }

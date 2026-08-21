@@ -2,9 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 const BRIEF = {
   company: 'ServiceNow',
   role: 'Chief Information Officer',
@@ -55,54 +53,54 @@ export function LearnMoreBriefShowcase() {
   const [open, setOpen] = useState(false)
 
   return (
-    <section className="mt-12 rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(255,165,0,0.07),rgba(255,165,0,0.01))] p-5 sm:p-8">
+    <section className="mt-12 rounded-3xl border border-border bg-primary/15 p-5 sm:p-8">
       <div className="max-w-4xl">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-200">Sample prep brief</p>
-        <h2 className="mt-3 text-[1.6rem] font-serif leading-tight text-white sm:text-[2rem]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Sample prep brief</p>
+        <h2 className="mt-3 text-[1.6rem] font-serif leading-tight text-foreground sm:text-[2rem]">
           {BRIEF.company} - {BRIEF.role}
         </h2>
-        <p className="mt-3 text-[13px] leading-relaxed text-slate-400">
+        <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
           Generated from a sample executive profile. This is what goes into every conversation.
         </p>
       </div>
 
       {/* Bottom Line - always visible */}
-      <Card variant="glass" className="mt-7 border-orange-300/20 bg-orange-300/[0.05] p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Bottom line</p>
+      <Card variant="glass" className="mt-7 border-primary/20 bg-primary/[0.05] p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Bottom line</p>
         <ol className="mt-4 space-y-3">
           {BRIEF.bottomLine.map((sentence, i) => (
             <li key={i} className="flex gap-3">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-[11px] font-bold text-orange-300">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[11px] font-bold text-primary">
                 {i + 1}
               </span>
-              <p className="text-[14px] leading-relaxed text-slate-100">{sentence}</p>
+              <p className="text-[14px] leading-relaxed text-foreground">{sentence}</p>
             </li>
           ))}
         </ol>
       </Card>
 
       {/* Win Thesis - always visible */}
-      <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Win thesis</p>
-        <p className="mt-4 text-[14px] leading-relaxed text-slate-100">{BRIEF.winThesis}</p>
+      <Card variant="glass" className="mt-4 border-border bg-background/50 p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Win thesis</p>
+        <p className="mt-4 text-[14px] leading-relaxed text-foreground">{BRIEF.winThesis}</p>
       </Card>
 
       {/* Expandable sections */}
       {open ? (
         <>
           {/* Anticipated Pushback */}
-          <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Anticipated pushback</p>
+          <Card variant="glass" className="mt-4 border-border bg-background/50 p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Anticipated pushback</p>
             <div className="mt-4 space-y-5">
               {BRIEF.objections.map((obj, i) => (
                 <div key={i} className="space-y-2">
                   <div className="flex gap-2.5">
-                    <span className="mt-0.5 shrink-0 text-[11px] font-bold uppercase tracking-wide text-slate-500">They push:</span>
-                    <p className="text-[13px] leading-relaxed text-slate-300">{obj.push}</p>
+                    <span className="mt-0.5 shrink-0 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">They push:</span>
+                    <p className="text-[13px] leading-relaxed text-muted-foreground">{obj.push}</p>
                   </div>
                   <div className="flex gap-2.5">
-                    <span className="mt-0.5 shrink-0 text-[11px] font-bold uppercase tracking-wide text-orange-400">You say:</span>
-                    <p className="text-[13px] leading-relaxed text-slate-100">{obj.say}</p>
+                    <span className="mt-0.5 shrink-0 text-[11px] font-bold uppercase tracking-wide text-primary">You say:</span>
+                    <p className="text-[13px] leading-relaxed text-foreground">{obj.say}</p>
                   </div>
                 </div>
               ))}
@@ -110,14 +108,14 @@ export function LearnMoreBriefShowcase() {
           </Card>
 
           {/* Likely Questions */}
-          <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">Questions to ask - peer level</p>
+          <Card variant="glass" className="mt-4 border-border bg-background/50 p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Questions to ask - peer level</p>
             <div className="mt-4 space-y-5">
               {BRIEF.questions.map((q, i) => (
                 <div key={i} className="space-y-1.5">
-                  <p className="text-[14px] font-semibold leading-snug text-white">{q.body}</p>
-                  <p className="text-[12px] leading-relaxed text-slate-400">
-                    <span className="font-semibold text-slate-500">What it signals: </span>
+                  <p className="text-[14px] font-semibold leading-snug text-foreground">{q.body}</p>
+                  <p className="text-[12px] leading-relaxed text-muted-foreground">
+                    <span className="font-semibold text-muted-foreground">What it signals: </span>
                     {q.probing}
                   </p>
                 </div>
@@ -126,12 +124,12 @@ export function LearnMoreBriefShowcase() {
           </Card>
 
           {/* Leave Out */}
-          <Card variant="glass" className="mt-4 border-white/10 bg-slate-950/50 p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-300">What to leave out</p>
+          <Card variant="glass" className="mt-4 border-border bg-background/50 p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">What to leave out</p>
             <ul className="mt-4 space-y-2.5">
               {BRIEF.leaveOut.map((item, i) => (
-                <li key={i} className="flex gap-3 text-[13px] leading-relaxed text-slate-300">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-600" />
+                <li key={i} className="flex gap-3 text-[13px] leading-relaxed text-muted-foreground">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted" />
                   {item}
                 </li>
               ))}
@@ -142,7 +140,7 @@ export function LearnMoreBriefShowcase() {
             type="button"
             onClick={() => setOpen(false)}
             variant="link"
-            className="mt-4 h-auto self-start p-0 text-[12px] text-slate-500 hover:text-slate-300 hover:no-underline"
+            className="mt-4 h-auto self-start p-0 text-[12px] text-muted-foreground hover:no-underline"
           >
             Show less
           </Button>
@@ -152,20 +150,20 @@ export function LearnMoreBriefShowcase() {
           type="button"
           onClick={() => setOpen(true)}
           variant="outline"
-          className="mt-4 h-auto self-start rounded-xl border-white/10 bg-slate-950/30 px-4 py-2.5 text-[13px] font-semibold text-slate-200 hover:border-white/20 hover:bg-slate-950/30 hover:text-white"
+          className="mt-4 h-auto self-start rounded-xl border-border bg-background/30 px-4 py-2.5 text-[13px] font-semibold text-muted-foreground hover:text-foreground"
         >
           See objections, peer questions, and what to leave out ↓
         </Button>
       )}
 
-      <div className="mt-7 flex flex-col items-start gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:gap-5">
+      <div className="mt-7 flex flex-col items-start gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:gap-5">
         <Button
           render={<Link href="/demo" />}
           className="h-auto rounded-full px-5 py-2.5 text-[14px] font-semibold"
         >
           Generate your own brief
         </Button>
-        <p className="text-[12px] text-slate-400">Free for 30 days. No credit card. Usually ready in about a minute.</p>
+        <p className="text-[12px] text-muted-foreground">Free for 30 days. No credit card. Usually ready in about a minute.</p>
       </div>
     </section>
   )

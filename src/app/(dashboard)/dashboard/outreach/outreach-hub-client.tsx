@@ -2,23 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { detectLegacyTemplateCopy } from '@/lib/outreach/legacy-copy-guard'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Card, Checkbox, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
   { value: 'prospect', label: 'Prospect' },
@@ -786,9 +770,9 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
 
   return (
     <Card className="overflow-hidden">
-      <div className="px-5 py-4 border-b border-slate-100">
-        <h2 className="text-[16px] font-bold text-slate-900">Send Queue</h2>
-        <p className="text-[12px] text-slate-500 mt-1">Defaults to high-confidence emails. Filter by confidence and status, review content, then send from {fromAddressLabel}.</p>
+      <div className="px-5 py-4 border-b border-border">
+        <h2 className="text-[16px] font-bold text-foreground">Send Queue</h2>
+        <p className="text-[12px] text-muted-foreground mt-1">Defaults to high-confidence emails. Filter by confidence and status, review content, then send from {fromAddressLabel}.</p>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <ToggleGroup
@@ -809,11 +793,11 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
             className="flex-wrap gap-2"
           >
             {CHANNEL_OPTIONS.map((option) => (
-              <ToggleGroupItem key={option.value} value={option.value} variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-slate-900 data-[state=on]:text-white data-[state=on]:border-slate-900">
+              <ToggleGroupItem key={option.value} value={option.value} variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-border">
                 {option.label}
               </ToggleGroupItem>
             ))}
-            <ToggleGroupItem value="coaches:day1" variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-orange-600 data-[state=on]:text-white data-[state=on]:border-orange-600">
+            <ToggleGroupItem value="coaches:day1" variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/30">
               Day 1 Coach List (60)
             </ToggleGroupItem>
           </ToggleGroup>
@@ -831,8 +815,8 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] min-h-[640px]">
-        <div className="border-r border-slate-100">
-          <div className="px-4 py-3 border-b border-slate-100 flex flex-wrap gap-2">
+        <div className="border-r border-border">
+          <div className="px-4 py-3 border-b border-border flex flex-wrap gap-2">
             <Input
               value={search}
               onChange={(e) => {
@@ -877,9 +861,9 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
             </Select>
           </div>
 
-          <div className="max-h-[560px] overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-[560px] overflow-y-auto divide-y divide-border">
             {filtered.length === 0 && (
-              <div className="px-4 py-8 text-[13px] text-slate-400">No prospects match this channel, confidence, and status filter.</div>
+              <div className="px-4 py-8 text-[13px] text-muted-foreground">No prospects match this channel, confidence, and status filter.</div>
             )}
 
             {filtered.map((row, idx) => (
@@ -887,17 +871,17 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                 key={`${row.email}-${idx}`}
                 onClick={() => resetComposerFor(idx)}
                 className={[
-                  'w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors',
-                  selected?.email === row.email ? 'bg-slate-50' : 'bg-white',
+                  'w-full text-left px-4 py-3 hover:bg-muted transition-colors',
+                  selected?.email === row.email ? 'bg-muted' : 'bg-card',
                 ].join(' ')}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-[13px] font-semibold text-slate-900">{row.fullName}</p>
-                    <p className="text-[12px] text-slate-500 mt-0.5">{row.roleBucket} · {row.company}</p>
-                    <p className="text-[11px] text-slate-400 mt-1">{row.email}</p>
+                    <p className="text-[13px] font-semibold text-foreground">{row.fullName}</p>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">{row.roleBucket} · {row.company}</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">{row.email}</p>
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-slate-500">{row.outreachChannel.replace('_', ' ')}</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">{row.outreachChannel.replace('_', ' ')}</span>
                       <Badge variant={row.fitTier === 'strong' ? 'success' : 'warning'} className="text-[10px]">
                         {row.fitTier}
                       </Badge>
@@ -929,7 +913,7 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                       ))}
                     </SelectContent>
                   </Select>
-                  <span className="text-[11px] text-slate-400">Review and send on right</span>
+                  <span className="text-[11px] text-muted-foreground">Review and send on right</span>
                 </div>
               </button>
             ))}
@@ -939,18 +923,18 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
         <div className="p-4 space-y-3">
           {selected ? (
             <>
-              <Card className="bg-slate-50 p-3">
-                <p className="text-[11px] text-slate-500">To</p>
-                <p className="text-[13px] font-semibold text-slate-900">{selected.fullName} ({selected.email})</p>
-                <p className="text-[12px] text-slate-500 mt-1">Channel: {selected.outreachChannel.replace('_', ' ')} · Fit: {selected.fitTier}</p>
-                <p className="text-[12px] text-slate-500 mt-1">Email confidence: {selected.emailConfidence}</p>
-                <p className="text-[12px] text-slate-500 mt-1">Persona focus: {selected.personaFocus}</p>
-                <p className="text-[12px] text-slate-500 mt-1">From: {fromAddressLabel}</p>
-                <p className="text-[11px] text-slate-400 mt-2">Template build: {buildVersion}</p>
+              <Card className="bg-muted p-3">
+                <p className="text-[11px] text-muted-foreground">To</p>
+                <p className="text-[13px] font-semibold text-foreground">{selected.fullName} ({selected.email})</p>
+                <p className="text-[12px] text-muted-foreground mt-1">Channel: {selected.outreachChannel.replace('_', ' ')} · Fit: {selected.fitTier}</p>
+                <p className="text-[12px] text-muted-foreground mt-1">Email confidence: {selected.emailConfidence}</p>
+                <p className="text-[12px] text-muted-foreground mt-1">Persona focus: {selected.personaFocus}</p>
+                <p className="text-[12px] text-muted-foreground mt-1">From: {fromAddressLabel}</p>
+                <p className="text-[11px] text-muted-foreground mt-2">Template build: {buildVersion}</p>
               </Card>
 
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Subject</Label>
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Subject</Label>
                 <Input
                   aria-label="Email subject"
                   title="Email subject"
@@ -963,7 +947,7 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
 
               <div>
                 <div className="mb-1.5 flex items-center justify-between gap-2">
-                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">Message</Label>
+                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">Message</Label>
                   {isCoachComposer && (
                     <Button
                       variant="outline"
@@ -987,8 +971,8 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                 />
               </div>
 
-              <Card className="bg-slate-50 p-3 space-y-2">
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">Send Mode</Label>
+              <Card className="bg-muted p-3 space-y-2">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">Send Mode</Label>
                 <Select
                   value={sendMode}
                   onValueChange={(value) => {
@@ -1006,11 +990,11 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                     <SelectItem value="live">Send Live To Prospect</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-muted-foreground">
                   Start with Dry Run, then Send Test To Me, then Send Live.
                 </p>
                 {sendMode === 'live' && (
-                  <Label className="flex items-start gap-2 text-[12px] text-slate-700 font-normal normal-case tracking-normal">
+                  <Label className="flex items-start gap-2 text-[12px] text-muted-foreground font-normal normal-case tracking-normal">
                     <Checkbox
                       checked={confirmLive}
                       onCheckedChange={(checked) => setConfirmLive(checked === true)}
@@ -1065,11 +1049,11 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
                   </AlertDescription>
                 </Alert>
               )}
-              {success && <p className="text-[12px] text-green-700">{success}</p>}
+              {success && <p className="text-[12px] text-success">{success}</p>}
 
               {(googleFollowUp3Url || googleFollowUp7Url) && (
-                <Card className="bg-slate-50 p-3">
-                  <p className="text-[12px] font-semibold text-slate-700 mb-2">Follow-up reminders created</p>
+                <Card className="bg-muted p-3">
+                  <p className="text-[12px] font-semibold text-muted-foreground mb-2">Follow-up reminders created</p>
                   <div className="flex flex-wrap gap-2">
                     {googleFollowUp3Url && (
                       <Button variant="outline" size="sm" className="text-[12px] h-auto py-1.5" render={<a href={googleFollowUp3Url} target="_blank" rel="noreferrer" />}>
@@ -1111,7 +1095,7 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
               </Button>
             </>
           ) : (
-            <p className="text-[13px] text-slate-400">Select a person to review and send.</p>
+            <p className="text-[13px] text-muted-foreground">Select a person to review and send.</p>
           )}
         </div>
       </div>

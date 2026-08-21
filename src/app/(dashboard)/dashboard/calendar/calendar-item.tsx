@@ -3,9 +3,7 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { markFollowUpDone } from '@/app/(dashboard)/dashboard/actions'
 import { stripStaleRelativeTime } from '@/lib/outreach/follow-up-copy'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge, Button } from '@/components/ui'
 type Props = {
   id: string
   action: string
@@ -42,12 +40,12 @@ export function CalendarItemClient({ id, action, dueDate, googleEventUrl, today,
   return (
     <div className="px-5 py-3.5 flex items-start gap-3">
       <div className="flex-1 min-w-0">
-        <p className="text-[14px] font-semibold text-white leading-tight">{cleanAction || action}</p>
-        {label && <p className="text-[12px] text-slate-400 mt-0.5">{label}</p>}
+        <p className="text-[14px] font-semibold text-foreground leading-tight">{cleanAction || action}</p>
+        {label && <p className="text-[12px] text-muted-foreground mt-0.5">{label}</p>}
         {googleEventUrl && (
           <Button
             variant="link"
-            className="h-auto p-0 text-[11px] text-orange-200 hover:text-orange-100 mt-1"
+            className="h-auto p-0 text-[11px] text-primary mt-1"
             render={<a href={googleEventUrl} target="_blank" rel="noreferrer" />}
           >
             Add to Google Calendar
@@ -57,7 +55,7 @@ export function CalendarItemClient({ id, action, dueDate, googleEventUrl, today,
       {overdue || isToday ? (
         <Badge variant="destructive" className="shrink-0 mt-0.5">{dateLabel}</Badge>
       ) : (
-        <span className="shrink-0 text-[11px] font-semibold mt-0.5 text-slate-400">
+        <span className="shrink-0 text-[11px] font-semibold mt-0.5 text-muted-foreground">
           {dateLabel}
         </span>
       )}
@@ -66,7 +64,7 @@ export function CalendarItemClient({ id, action, dueDate, googleEventUrl, today,
         variant="outline"
         onClick={handleDone}
         disabled={pending}
-        className="shrink-0 text-[12px] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/10 hover:text-white min-h-[32px]"
+        className="shrink-0 text-[12px] text-muted-foreground border-border hover:bg-muted/60 hover:text-foreground min-h-[32px]"
       >
         {pending ? '…' : 'Done'}
       </Button>

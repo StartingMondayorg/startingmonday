@@ -16,11 +16,11 @@ export default async function DiagramsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="mb-6">
-        <a href="/dashboard/admin/internal-guide" className="text-[12px] text-orange-500 hover:text-orange-600">
+        <a href="/dashboard/admin/internal-guide" className="text-[12px] text-primary">
           ← Internal Guide
         </a>
-        <h1 className="text-[22px] font-bold text-slate-900 mt-2">Architecture Diagrams</h1>
-        <p className="text-[13px] text-slate-500 mt-1">
+        <h1 className="text-[22px] font-bold text-foreground mt-2">Architecture Diagrams</h1>
+        <p className="text-[13px] text-muted-foreground mt-1">
           {totalDiagrams} diagrams across {DIAGRAM_CATEGORIES.length} categories. Click any card to view the rendered diagram.
         </p>
       </div>

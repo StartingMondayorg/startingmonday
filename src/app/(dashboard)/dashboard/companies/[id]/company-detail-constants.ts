@@ -53,41 +53,41 @@ export type SignalDetailRow = {
 }
 
 export const SIGNAL_LABELS: Record<string, { label: string; cls: string }> = {
-  funding: { label: 'Funding', cls: 'bg-green-50 text-green-700' },
-  exec_departure: { label: 'Exec Departure', cls: 'bg-amber-50 text-amber-700' },
-  exec_hire: { label: 'Exec Hire', cls: 'bg-blue-50 text-blue-700' },
-  acquisition: { label: 'Acquisition', cls: 'bg-purple-50 text-purple-700' },
-  expansion: { label: 'Expansion', cls: 'bg-blue-50 text-blue-700' },
-  layoffs: { label: 'Layoffs', cls: 'bg-red-50 text-red-700' },
-  ipo: { label: 'IPO', cls: 'bg-green-50 text-green-700' },
-  new_product: { label: 'New Product', cls: 'bg-indigo-50 text-indigo-700' },
-  award: { label: 'Award', cls: 'bg-amber-50 text-amber-700' },
-  pattern_alert: { label: 'Pattern', cls: 'bg-orange-50 text-orange-700' },
-  filing_trend: { label: 'Filing Trend', cls: 'bg-teal-50 text-teal-700' },
+  funding: { label: 'Funding', cls: 'bg-success/10 text-success' },
+  exec_departure: { label: 'Exec Departure', cls: 'bg-warning/10 text-warning' },
+  exec_hire: { label: 'Exec Hire', cls: 'bg-info/10 text-info' },
+  acquisition: { label: 'Acquisition', cls: 'bg-info/10 text-info' },
+  expansion: { label: 'Expansion', cls: 'bg-info/10 text-info' },
+  layoffs: { label: 'Layoffs', cls: 'bg-destructive/10 text-destructive' },
+  ipo: { label: 'IPO', cls: 'bg-success/10 text-success' },
+  new_product: { label: 'New Product', cls: 'bg-info/10 text-info' },
+  award: { label: 'Award', cls: 'bg-warning/10 text-warning' },
+  pattern_alert: { label: 'Pattern', cls: 'bg-primary/10 text-primary' },
+  filing_trend: { label: 'Filing Trend', cls: 'bg-success/10 text-success' },
 }
 
 export const DOC_LABELS: Record<string, { label: string; cls: string }> = {
-  job_description: { label: 'Job Description', cls: 'bg-purple-50 text-purple-700' },
-  news: { label: 'News & Press', cls: 'bg-blue-50 text-blue-700' },
-  annual_report: { label: 'Annual Report', cls: 'bg-amber-50 text-amber-700' },
-  org_notes: { label: 'Org Notes', cls: 'bg-green-50 text-green-700' },
-  other: { label: 'Other', cls: 'bg-slate-100 text-slate-500' },
+  job_description: { label: 'Job Description', cls: 'bg-info/10 text-info' },
+  news: { label: 'News & Press', cls: 'bg-info/10 text-info' },
+  annual_report: { label: 'Annual Report', cls: 'bg-warning/10 text-warning' },
+  org_notes: { label: 'Org Notes', cls: 'bg-success/10 text-success' },
+  other: { label: 'Other', cls: 'bg-muted text-muted-foreground' },
 }
 
 export const CHANNEL: Record<string, { label: string; cls: string }> = {
-  linkedin: { label: 'LinkedIn', cls: 'bg-blue-50 text-blue-700' },
-  referral: { label: 'Referral', cls: 'bg-green-50 text-green-700' },
-  cold: { label: 'Cold', cls: 'bg-slate-100 text-slate-500' },
-  inbound: { label: 'Inbound', cls: 'bg-indigo-50 text-indigo-700' },
-  event: { label: 'Event', cls: 'bg-amber-50 text-amber-700' },
+  linkedin: { label: 'LinkedIn', cls: 'bg-info/10 text-info' },
+  referral: { label: 'Referral', cls: 'bg-success/10 text-success' },
+  cold: { label: 'Cold', cls: 'bg-muted text-muted-foreground' },
+  inbound: { label: 'Inbound', cls: 'bg-info/10 text-info' },
+  event: { label: 'Event', cls: 'bg-warning/10 text-warning' },
 }
 
 export const OUTREACH_STATUS: Record<string, { label: string; cls: string }> = {
-  prospect: { label: 'Prospect', cls: 'bg-slate-100 text-slate-500' },
-  reached_out: { label: 'Reached Out', cls: 'bg-blue-50 text-blue-600' },
-  in_conversation: { label: 'In Conversation', cls: 'bg-amber-50 text-amber-700' },
-  meeting_scheduled: { label: 'Meeting Set', cls: 'bg-green-50 text-green-700' },
-  closed: { label: 'Closed', cls: 'bg-slate-100 text-slate-400' },
+  prospect: { label: 'Prospect', cls: 'bg-muted text-muted-foreground' },
+  reached_out: { label: 'Reached Out', cls: 'bg-info/10 text-info' },
+  in_conversation: { label: 'In Conversation', cls: 'bg-warning/10 text-warning' },
+  meeting_scheduled: { label: 'Meeting Set', cls: 'bg-success/10 text-success' },
+  closed: { label: 'Closed', cls: 'bg-muted text-muted-foreground' },
 }
 
 export const STAGES = [

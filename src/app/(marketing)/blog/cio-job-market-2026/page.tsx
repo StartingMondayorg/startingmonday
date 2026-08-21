@@ -35,12 +35,12 @@ export default function CioJobMarket2026Page() {
       readTime={post.readTime}
       url="https://startingmonday.app/blog/cio-job-market-2026"
     >
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <h1 className="sr-only">CIO Job Market 2026 report</h1>
 
-        <details className="rounded-lg border border-slate-200 bg-slate-50 px-5 py-4 text-[14px]">
-          <summary className="cursor-pointer font-semibold text-slate-800 select-none">Key findings from Q2 2026 CIO hiring scans</summary>
-          <ul className="mt-3 space-y-1 text-slate-700 list-disc pl-5">
+        <details className="rounded-lg border border-border bg-muted px-5 py-4 text-[14px]">
+          <summary className="cursor-pointer font-semibold text-foreground select-none">Key findings from Q2 2026 CIO hiring scans</summary>
+          <ul className="mt-3 space-y-1 text-muted-foreground list-disc pl-5">
             <li>Healthcare (38%) and financial services (29%) had the most active CIO postings</li>
             <li>Roles appear on career pages a median of 17 days before LinkedIn</li>
             <li>3 pre-posting signals: adjacent executive departure, PE transaction, transformation launch</li>
@@ -65,7 +65,7 @@ export default function CioJobMarket2026Page() {
           financial services, healthcare, and professional services. Here is what we found.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What monitoring a career page actually means</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What monitoring a career page actually means</h2>
 
         <p>
           Most executives think monitoring looks like this: check LinkedIn once a day and see if anything new appears.
@@ -85,13 +85,13 @@ export default function CioJobMarket2026Page() {
           something is forming before the formal search begins.
         </p>
 
-        <h2 id="market-signals" className="text-[22px] font-bold text-slate-900 pt-4">The Q2 2026 CIO hiring picture: what the scans show</h2>
+        <h2 id="market-signals" className="text-[22px] font-bold text-foreground pt-4">The Q2 2026 CIO hiring picture: what the scans show</h2>
 
         <p>
           Across the career pages we monitored from April through early May, a few patterns emerged clearly.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">1. Healthcare and financial services are the most active sectors</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">1. Healthcare and financial services are the most active sectors</h3>
 
         <p>
           Of the companies with active CIO-level or equivalent VP Technology postings in our scans, 38% were in healthcare
@@ -112,7 +112,7 @@ export default function CioJobMarket2026Page() {
           can navigate both.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">2. Roles appear on career pages 12 to 21 days before LinkedIn</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">2. Roles appear on career pages 12 to 21 days before LinkedIn</h3>
 
         <p>
           Across the postings we tracked, the median gap between a role appearing on a company career page and the same
@@ -130,7 +130,7 @@ export default function CioJobMarket2026Page() {
           If you find out the same day it hits LinkedIn, you are one of hundreds. The window is closed.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">3. Three signals precede an executive posting more reliably than any other</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">3. Three signals precede an executive posting more reliably than any other</h3>
 
         <p>
           We track company signals alongside career page data. Looking at companies where a CIO or senior technology
@@ -154,7 +154,7 @@ export default function CioJobMarket2026Page() {
           not after the posting appears.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">4. Posting language has shifted toward transformation credentials</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">4. Posting language has shifted toward transformation credentials</h3>
 
         <p>
           We analyzed the requirements sections of CIO and VP Technology postings that appeared in our scans. The language
@@ -175,7 +175,7 @@ export default function CioJobMarket2026Page() {
           have gotten more specific about what they want. Your positioning needs to match.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">5. Wednesday is the most common career page update day</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">5. Wednesday is the most common career page update day</h3>
 
         <p>
           Of the postings we detected as newly appearing on career pages, 34% first appeared on a Wednesday. Tuesday and
@@ -188,7 +188,7 @@ export default function CioJobMarket2026Page() {
           of new postings is highest. A Friday-only check misses most of what appeared during the week.
         </p>
 
-        <h2 id="monitoring-system" className="text-[22px] font-bold text-slate-900 pt-4">How to monitor career pages without doing it manually</h2>
+        <h2 id="monitoring-system" className="text-[22px] font-bold text-foreground pt-4">How to monitor career pages without doing it manually</h2>
 
         <p>
           Manual monitoring does not scale. If you are watching 20 companies and checking each career page individually
@@ -199,7 +199,7 @@ export default function CioJobMarket2026Page() {
           Here is a workable system at each level of effort:
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">Minimum viable: Google Alerts</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">Minimum viable: Google Alerts</h3>
 
         <p>
           Set a Google Alert for each target company with a search like: &ldquo;[Company Name] careers OR jobs OR hiring CIO
@@ -212,7 +212,7 @@ export default function CioJobMarket2026Page() {
           page changes never generate a Google-indexed result at all.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">Better: Change-tracking tools</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">Better: Change-tracking tools</h3>
 
         <p>
           Tools like Visualping or Distill.io can watch a specific URL for changes and notify you. Point them at each
@@ -225,7 +225,7 @@ export default function CioJobMarket2026Page() {
           still significant manual time.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">Full signal intelligence: purpose-built monitoring</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">Full signal intelligence: purpose-built monitoring</h3>
 
         <p>
           The most effective approach combines career page scanning with company signal tracking: executive moves, funding
@@ -244,7 +244,7 @@ export default function CioJobMarket2026Page() {
           is the difference between being on the list and not being on it.
         </p>
 
-        <h2 id="actions-this-week" className="text-[22px] font-bold text-slate-900 pt-4">What this means for your search right now</h2>
+        <h2 id="actions-this-week" className="text-[22px] font-bold text-foreground pt-4">What this means for your search right now</h2>
 
         <p>
           The CIO job market in Q2 2026 is not frozen and it is not red-hot. It is active in specific sectors and specific
@@ -286,22 +286,22 @@ export default function CioJobMarket2026Page() {
           who you are monitoring and how early you are moving.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Outcome snapshot</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Outcome snapshot</h2>
         <ul className="list-disc pl-5 space-y-2">
-          <li><span className="font-semibold text-slate-900">Outcome:</span> Earlier company-page detection creates warmer first-touch windows.</li>
-          <li><span className="font-semibold text-slate-900">Outcome:</span> Signal tracking improves interview timing and shortlist entry odds.</li>
-          <li><span className="font-semibold text-slate-900">Outcome:</span> Weekly monitoring cadence reduces reactive outreach decisions.</li>
+          <li><span className="font-semibold text-foreground">Outcome:</span> Earlier company-page detection creates warmer first-touch windows.</li>
+          <li><span className="font-semibold text-foreground">Outcome:</span> Signal tracking improves interview timing and shortlist entry odds.</li>
+          <li><span className="font-semibold text-foreground">Outcome:</span> Weekly monitoring cadence reduces reactive outreach decisions.</li>
         </ul>
 
-        <div id="start-monitoring" className="bg-slate-50 border border-slate-200 rounded-lg p-6 mt-8">
-          <p className="text-[14px] font-semibold text-slate-900 mb-2">Start monitoring your target companies</p>
-          <p className="text-[14px] text-slate-600 mb-4">
+        <div id="start-monitoring" className="bg-muted border border-border rounded-lg p-6 mt-8">
+          <p className="text-[14px] font-semibold text-foreground mb-2">Start monitoring your target companies</p>
+          <p className="text-[14px] text-muted-foreground mb-4">
             Starting Monday scans career pages 3x per week and alerts you when a matching role appears.
             Free 30-day trial. No card required.
           </p>
           <Link
             href="/signup"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-[14px] font-semibold px-6 py-3 rounded transition-colors"
+            className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground text-[14px] font-semibold px-6 py-3 rounded transition-colors"
           >
             Start monitoring your companies
           </Link>

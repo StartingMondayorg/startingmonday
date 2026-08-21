@@ -1,11 +1,7 @@
 'use client'
 import { useState, useRef, useTransition } from 'react'
 import { saveMaterial } from './actions'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-
+import { Button, Input, Label, Textarea } from '@/components/ui'
 type Props = {
   prospectId: string
   prospectName: string
@@ -93,11 +89,11 @@ export default function MaterialClient(props: Props) {
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded">
-      <div className="px-5 py-4 border-b border-slate-100">
+    <div className="bg-card border border-border rounded">
+      <div className="px-5 py-4 border-b border-border">
         <div className="flex flex-col gap-3">
           <div>
-            <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1.5">
+            <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1.5">
               Additional context for this meeting
             </Label>
             <Textarea
@@ -121,20 +117,20 @@ export default function MaterialClient(props: Props) {
       {(output || generating) && (
         <div className="px-5 py-4">
           {generating && !output && (
-            <div className="text-[13px] text-slate-400 animate-pulse">Writing...</div>
+            <div className="text-[13px] text-muted-foreground animate-pulse">Writing...</div>
           )}
 
           {output && (
             <>
               <div
                 ref={outputRef}
-                className="text-[13px] text-slate-800 whitespace-pre-wrap font-mono max-h-[500px] overflow-y-auto leading-relaxed"
+                className="text-[13px] text-foreground whitespace-pre-wrap font-mono max-h-[500px] overflow-y-auto leading-relaxed"
               >
                 {output}
               </div>
 
               {!generating && (
-                <div className="mt-4 flex items-start gap-3 flex-wrap border-t border-slate-100 pt-4">
+                <div className="mt-4 flex items-start gap-3 flex-wrap border-t border-border pt-4">
                   <Button
                     onClick={copy}
                     variant="secondary"

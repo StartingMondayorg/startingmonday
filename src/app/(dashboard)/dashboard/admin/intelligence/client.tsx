@@ -2,19 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-
+import { Badge, Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, Input, Label, Textarea } from '@/components/ui'
 type Token = { id: string; label: string | null; expires_at: string | null; created_at: string }
 type IntelCompany = {
   slug: string
@@ -142,15 +130,15 @@ export function IntelligenceAdminClient({
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/dashboard/admin" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:text-white">
+            <Link href="/dashboard/admin" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground hover:text-primary-foreground">
               Admin
             </Link>
-            <span className="text-slate-700">/</span>
-            <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-orange-500">
+            <span className="text-muted-foreground">/</span>
+            <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-primary">
               Intelligence
             </span>
           </div>
@@ -162,8 +150,8 @@ export function IntelligenceAdminClient({
         {/* Page header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-[22px] font-bold text-slate-900">Company Intelligence</h1>
-            <p className="text-[13px] text-slate-500 mt-1">Manage public intelligence pages and generate ungated links for B2B demos.</p>
+            <h1 className="text-[22px] font-bold text-foreground">Company Intelligence</h1>
+            <p className="text-[13px] text-muted-foreground mt-1">Manage public intelligence pages and generate ungated links for B2B demos.</p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" render={<Link href="/dashboard/admin/intelligence/qa" />}>
@@ -183,25 +171,25 @@ export function IntelligenceAdminClient({
             </DialogHeader>
             <form onSubmit={handleAddCompany} className="flex flex-col gap-4">
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Company name *</Label>
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Company name *</Label>
                 <Input value={newName} onChange={e => setNewName(e.target.value)} required placeholder="Accenture" />
               </div>
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Description</Label>
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Description</Label>
                 <Textarea value={newDesc} onChange={e => setNewDesc(e.target.value)} rows={2} placeholder="One-line description for the public page..." className="resize-none" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Sector</Label>
+                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Sector</Label>
                   <Input value={newSector} onChange={e => setNewSector(e.target.value)} placeholder="Consulting" />
                 </div>
                 <div>
-                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">Website</Label>
+                  <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Website</Label>
                   <Input value={newWebsite} onChange={e => setNewWebsite(e.target.value)} placeholder="accenture.com" />
                 </div>
               </div>
               <div className="flex items-center justify-end gap-3 mt-2">
-                <Button type="button" variant="ghost" onClick={() => setAddOpen(false)} className="text-slate-400 hover:text-slate-700">Cancel</Button>
+                <Button type="button" variant="ghost" onClick={() => setAddOpen(false)} className="text-muted-foreground">Cancel</Button>
                 <Button
                   type="submit"
                   disabled={saving || !newName.trim()}
@@ -221,14 +209,14 @@ export function IntelligenceAdminClient({
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-1 flex-wrap">
-                      <span className="text-[16px] font-bold text-slate-900">{co.company_name}</span>
-                      {co.sector && <span className="text-[11px] text-slate-400">{co.sector}</span>}
+                      <span className="text-[16px] font-bold text-foreground">{co.company_name}</span>
+                      {co.sector && <span className="text-[11px] text-muted-foreground">{co.sector}</span>}
                       <Badge variant="secondary">
                         {co.signalCount} signals
                       </Badge>
                     </div>
                     {co.website && (
-                      <a href={co.website.startsWith('http') ? co.website : `https://${co.website}`} target="_blank" rel="noopener noreferrer" className="text-[12px] text-slate-400 hover:text-slate-700">
+                      <a href={co.website.startsWith('http') ? co.website : `https://${co.website}`} target="_blank" rel="noopener noreferrer" className="text-[12px] text-muted-foreground">
                         {co.website}
                       </a>
                     )}
@@ -250,16 +238,16 @@ export function IntelligenceAdminClient({
                 {/* Token list */}
                 {co.tokens.length > 0 && (
                   <div>
-                    <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">Active links</div>
+                    <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Active links</div>
                     <div className="flex flex-col gap-1.5">
                       {co.tokens.map(tok => {
                         const url = `${appUrl}/intelligence/${co.slug}?t=${tok.id}`
                         const expired = tok.expires_at && new Date(tok.expires_at) < new Date()
                         return (
-                          <div key={tok.id} className={['flex items-center gap-3 text-[12px] rounded px-3 py-2', expired ? 'opacity-40' : 'bg-slate-50'].join(' ')}>
-                            <span className="flex-1 truncate text-slate-600">{tok.label ?? url}</span>
+                          <div key={tok.id} className={['flex items-center gap-3 text-[12px] rounded px-3 py-2', expired ? 'opacity-40' : 'bg-muted'].join(' ')}>
+                            <span className="flex-1 truncate text-muted-foreground">{tok.label ?? url}</span>
                             {tok.expires_at && (
-                              <span className="text-slate-400 shrink-0">
+                              <span className="text-muted-foreground shrink-0">
                                 {expired ? 'Expired' : `Exp. ${new Date(tok.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
                               </span>
                             )}
@@ -271,7 +259,7 @@ export function IntelligenceAdminClient({
                                 setCopiedId(tok.id)
                                 setTimeout(() => setCopiedId(null), 2000)
                               }}
-                              className="shrink-0 text-slate-500 hover:text-slate-900"
+                              className="shrink-0 text-muted-foreground hover:text-foreground"
                             >
                               {copiedId === tok.id ? 'Copied!' : 'Copy'}
                             </Button>
@@ -288,16 +276,16 @@ export function IntelligenceAdminClient({
 
         {companies.length === 0 && (
           <Card className="px-6 py-12 text-center mb-10">
-            <p className="text-[15px] font-semibold text-slate-900 mb-2">No companies added yet</p>
-            <p className="text-[13px] text-slate-500 mb-4">Add companies to create public intelligence pages and generate ungated demo links.</p>
+            <p className="text-[15px] font-semibold text-foreground mb-2">No companies added yet</p>
+            <p className="text-[13px] text-muted-foreground mb-4">Add companies to create public intelligence pages and generate ungated demo links.</p>
           </Card>
         )}
 
         {/* B2B client finder */}
         <Card className="p-5 sm:p-6">
           <div className="mb-4">
-            <h2 className="text-[14px] font-bold text-slate-900 mb-1">B2B prospect finder</h2>
-            <p className="text-[13px] text-slate-500">Search companies in your pipeline as potential Starting Monday customers. Add them above to build a demo intelligence page.</p>
+            <h2 className="text-[14px] font-bold text-foreground mb-1">B2B prospect finder</h2>
+            <p className="text-[13px] text-muted-foreground">Search companies in your pipeline as potential Starting Monday customers. Add them above to build a demo intelligence page.</p>
           </div>
           <form onSubmit={handleFinder} className="flex gap-3 mb-4">
             <Input
@@ -318,10 +306,10 @@ export function IntelligenceAdminClient({
           {finderResults.length > 0 && (
             <div className="flex flex-col gap-2">
               {finderResults.map((r, i) => (
-                <div key={i} className="flex items-center justify-between gap-4 px-3 py-2.5 bg-slate-50 rounded-lg">
+                <div key={i} className="flex items-center justify-between gap-4 px-3 py-2.5 bg-muted rounded-lg">
                   <div>
-                    <span className="text-[14px] font-semibold text-slate-900">{r.name}</span>
-                    {r.industry && <span className="text-[12px] text-slate-400 ml-2">{r.industry}</span>}
+                    <span className="text-[14px] font-semibold text-foreground">{r.name}</span>
+                    {r.industry && <span className="text-[12px] text-muted-foreground ml-2">{r.industry}</span>}
                   </div>
                   <Button
                     variant="ghost"
@@ -352,7 +340,7 @@ export function IntelligenceAdminClient({
                       }
                     }}
                     disabled={saving || companies.some(c => c.company_name.toLowerCase() === r.name.toLowerCase())}
-                    className="text-slate-500 hover:text-slate-900 shrink-0"
+                    className="text-muted-foreground hover:text-foreground shrink-0"
                   >
                     {companies.some(c => c.company_name.toLowerCase() === r.name.toLowerCase()) ? 'Added' : '+ Add to intel'}
                   </Button>

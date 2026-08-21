@@ -1,12 +1,6 @@
 'use client'
 import { useState, useId } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Checkbox, Input, Textarea } from '@/components/ui'
 export type CareerEntry = {
   company: string
   parent_company: string
@@ -32,28 +26,28 @@ function ReadCard({ entry, onEdit, onDelete }: {
 }) {
   const dates = `${entry.start_year || '?'}${entry.end_year ? ` - ${entry.end_year}` : ' - present'}`
   return (
-    <Card className={`p-3 flex-row gap-3 ${entry.uncertain ? 'border-l-[3px] border-l-orange-400' : ''}`}>
+    <Card className={`p-3 flex-row gap-3 ${entry.uncertain ? 'border-l-[3px] border-l-primary/30' : ''}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-0.5">
-          <p className="text-[13px] font-semibold text-slate-900 leading-tight">
+          <p className="text-[13px] font-semibold text-foreground leading-tight">
             {entry.company}
-            {entry.parent_company ? <span className="font-normal text-slate-400"> / {entry.parent_company}</span> : null}
+            {entry.parent_company ? <span className="font-normal text-muted-foreground"> / {entry.parent_company}</span> : null}
           </p>
           {entry.uncertain && (
-            <span className="text-[9px] font-bold tracking-widest uppercase text-orange-500 shrink-0 pt-0.5">Review</span>
+            <span className="text-[9px] font-bold tracking-widest uppercase text-primary shrink-0 pt-0.5">Review</span>
           )}
         </div>
-        <p className="text-[12px] text-slate-500">{entry.title} &middot; {dates}</p>
+        <p className="text-[12px] text-muted-foreground">{entry.title} &middot; {dates}</p>
         {entry.key_outcome && (
-          <p className="text-[12px] text-slate-400 mt-1 leading-relaxed">{entry.key_outcome}</p>
+          <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">{entry.key_outcome}</p>
         )}
         {entry.acquisition_note && (
-          <p className="text-[11px] text-orange-600 mt-1 leading-relaxed">{entry.acquisition_note}</p>
+          <p className="text-[11px] text-primary mt-1 leading-relaxed">{entry.acquisition_note}</p>
         )}
       </div>
       <div className="flex flex-col items-end gap-1 shrink-0">
-        <Button type="button" variant="link" onClick={onEdit} className="h-auto p-0 text-[11px] text-slate-400 hover:text-slate-700">Edit</Button>
-        <Button type="button" variant="link" onClick={onDelete} className="h-auto p-0 text-[11px] text-slate-300 hover:text-red-500">Delete</Button>
+        <Button type="button" variant="link" onClick={onEdit} className="h-auto p-0 text-[11px] text-muted-foreground">Edit</Button>
+        <Button type="button" variant="link" onClick={onDelete} className="h-auto p-0 text-[11px] text-muted-foreground hover:text-destructive">Delete</Button>
       </div>
     </Card>
   )
@@ -69,41 +63,41 @@ function EditCard({ draft, onChange, onSave, onCancel }: {
     onChange({ ...draft, [key]: e.target.value })
 
   return (
-    <div className="border border-slate-400 rounded p-3 bg-slate-50 flex flex-col gap-2">
+    <div className="border border-border rounded p-3 bg-muted flex flex-col gap-2">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Company</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Company</p>
           <Input value={draft.company} onChange={field('company')} placeholder="Company name" className="text-[12px]" />
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Parent / Acquirer</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Parent / Acquirer</p>
           <Input value={draft.parent_company} onChange={field('parent_company')} placeholder="If acquired or subsidiary" className="text-[12px]" />
         </div>
       </div>
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Title</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Title</p>
         <Input value={draft.title} onChange={field('title')} placeholder="Title" className="text-[12px]" />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Start year</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Start year</p>
           <Input value={draft.start_year} onChange={field('start_year')} placeholder="2018" className="text-[12px]" />
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">End year</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">End year</p>
           <Input value={draft.end_year} onChange={field('end_year')} placeholder="Blank if current role" className="text-[12px]" />
         </div>
       </div>
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Key outcome</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Key outcome</p>
         <Textarea value={draft.key_outcome} onChange={field('key_outcome')} placeholder="One specific, quantified achievement" rows={2} className="text-[12px] resize-none" />
       </div>
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Acquisition or merger note</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Acquisition or merger note</p>
         <Input value={draft.acquisition_note} onChange={field('acquisition_note')} placeholder="e.g. Glu Mobile was acquired by EA in 2021" className="text-[12px]" />
       </div>
       <div className="flex items-center justify-between mt-1">
-        <label className="flex items-center gap-1.5 text-[11px] text-slate-500 cursor-pointer select-none">
+        <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground cursor-pointer select-none">
           <Checkbox
             checked={draft.uncertain}
             onCheckedChange={(checked) => onChange({ ...draft, uncertain: checked === true })}
@@ -111,12 +105,12 @@ function EditCard({ draft, onChange, onSave, onCancel }: {
           Flag for review
         </label>
         <div className="flex items-center gap-3">
-          <Button type="button" variant="link" onClick={onCancel} className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-700">Cancel</Button>
+          <Button type="button" variant="link" onClick={onCancel} className="h-auto p-0 text-[12px] text-muted-foreground">Cancel</Button>
           <Button
             type="button"
             size="sm"
             onClick={onSave}
-            className="!bg-slate-900 hover:!bg-slate-700"
+            className="!bg-primary hover:!bg-muted"
           >
             Save entry
           </Button>
@@ -216,13 +210,13 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
       <input type="hidden" name="career_history_json" value={storedValue} />
 
       <div className="flex items-center justify-between mb-2">
-        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
+        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
           Verified career history
           {entries.length > 0 && (
-            <span className="ml-2 text-[10px] font-normal tracking-normal normal-case text-slate-400">
+            <span className="ml-2 text-[10px] font-normal tracking-normal normal-case text-muted-foreground">
               {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
               {uncertainCount > 0 && (
-                <span className="text-orange-500"> &middot; {uncertainCount} need review</span>
+                <span className="text-primary"> &middot; {uncertainCount} need review</span>
               )}
             </span>
           )}
@@ -231,7 +225,7 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
           type="button"
           variant="link"
           onClick={addEntry}
-          className="h-auto p-0 text-[11px] text-slate-500 hover:text-slate-900"
+          className="h-auto p-0 text-[11px] text-muted-foreground hover:text-foreground"
         >
           + Add entry
         </Button>
@@ -244,8 +238,8 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
       )}
 
       {entries.length === 0 ? (
-        <div className="border border-dashed border-slate-200 rounded p-5 text-center">
-          <p className="text-[12px] text-slate-400 mb-3 leading-relaxed">
+        <div className="border border-dashed border-border rounded p-5 text-center">
+          <p className="text-[12px] text-muted-foreground mb-3 leading-relaxed">
             No verified entries. Extract from your career history, or add each role manually.
           </p>
           {resumeText && resumeText.length > 50 && (
@@ -275,7 +269,7 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
               variant="link"
               onClick={handleExtract}
               disabled={extracting}
-              className="h-auto self-start p-0 text-[11px] text-slate-400 hover:text-slate-600"
+              className="h-auto self-start p-0 text-[11px] text-muted-foreground"
             >
               {extracting ? 'Re-extracting...' : 'Re-extract from career history'}
             </Button>
@@ -283,7 +277,7 @@ export default function CareerVerificationPanel({ initialEntries, resumeText }: 
         </div>
       )}
 
-      <p className="mt-2 text-[12px] text-slate-400 leading-relaxed">
+      <p className="mt-2 text-[12px] text-muted-foreground leading-relaxed">
         Verified entries are used in interview prep briefs instead of raw resume text. The AI treats them as authoritative.
         Orange flagged entries have acquisition history or ambiguous company identity and should be reviewed.
       </p>

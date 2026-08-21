@@ -5,11 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { TraceViewer } from './trace-client'
 import { CopyCommandButton } from './copy-command-button'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Progress } from '@/components/ui/progress'
-
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Progress } from '@/components/ui'
 export const metadata = { title: 'LLM Traces - Starting Monday Admin' }
 
 const PAGE_SIZE = 25
@@ -77,17 +73,17 @@ export default async function TracesPage({
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,146,60,0.18),_transparent_28%),linear-gradient(180deg,#0f172a_0%,#111827_45%,#020617_100%)] font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
+    <div className="min-h-screen bg-card/85 font-sans text-foreground">
+      <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-300">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">
+            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
               Admin
             </Link>
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Dashboard
             </Link>
           </div>
@@ -97,8 +93,8 @@ export default async function TracesPage({
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
 <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-[26px] font-bold text-white">LLM Traces</h1>
-            <p className="text-[13px] text-slate-300 mt-1">
+            <h1 className="text-[26px] font-bold text-foreground">LLM Traces</h1>
+            <p className="text-[13px] text-muted-foreground mt-1">
               {count ?? 0} traces
               {totalRated > 0 && (
                 <> &middot; {totalRated} rated &middot; {passRate}% pass rate</>
@@ -115,55 +111,55 @@ export default async function TracesPage({
           </div>
         </div>
 
-        <Alert variant="info" className={`mb-4 ${labelingFocusMode ? 'bg-slate-900 border-white/10 text-slate-100' : ''}`}>
-          <AlertDescription className={labelingFocusMode ? 'text-slate-100' : undefined}>
+        <Alert variant="info" className={`mb-4 ${labelingFocusMode ? 'bg-card border-border text-foreground' : ''}`}>
+          <AlertDescription className={labelingFocusMode ? 'text-foreground' : undefined}>
             {labelingFocusMode ? (
               <>
                 <span className="font-semibold">Labeling shortcuts:</span> P = pass, F = fail, U = unrated, O = output, J/K = active trace, G/Shift+G = first/last row, D = dense view, 1-8 = fail tags. In this mode, rating auto-advances to the next trace.
               </>
             ) : (
               <>
-                <span className="font-semibold text-slate-200">Shortcut tip:</span> P = pass, F = fail, U = unrated, O = output.
+                <span className="font-semibold text-foreground">Shortcut tip:</span> P = pass, F = fail, U = unrated, O = output.
               </>
             )}
           </AlertDescription>
         </Alert>
 
-        <div className="mb-6 bg-white/5 border border-white/10 rounded p-4">
+        <div className="mb-6 bg-muted/40 border border-border rounded p-4">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div>
-              <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Prep Brief Labeling Progress</p>
-              <p className="text-[13px] text-slate-300 mt-1">Target for golden set: 25 pass + 25 fail labeled traces.</p>
+              <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Prep Brief Labeling Progress</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Target for golden set: 25 pass + 25 fail labeled traces.</p>
             </div>
             <Badge variant={goldenSetReady ? 'success' : 'warning'}>
               {goldenSetReady ? 'Ready to export' : 'In progress'}
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="border border-white/10 rounded p-3">
+            <div className="border border-border rounded p-3">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] text-slate-300">Pass labels</span>
-                <span className="text-[13px] font-semibold text-slate-200">{prepPass}/{GOLDEN_SET_TARGET_PER_CLASS}</span>
+                <span className="text-[13px] text-muted-foreground">Pass labels</span>
+                <span className="text-[13px] font-semibold text-foreground">{prepPass}/{GOLDEN_SET_TARGET_PER_CLASS}</span>
               </div>
               <Progress
                 value={prepPassPct}
-                className="w-full [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-slate-100 [&_[data-slot=progress-indicator]]:bg-emerald-500"
+                className="w-full [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-muted [&_[data-slot=progress-indicator]]:bg-success"
               />
             </div>
-            <div className="border border-white/10 rounded p-3">
+            <div className="border border-border rounded p-3">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] text-slate-300">Fail labels</span>
-                <span className="text-[13px] font-semibold text-slate-200">{prepFail}/{GOLDEN_SET_TARGET_PER_CLASS}</span>
+                <span className="text-[13px] text-muted-foreground">Fail labels</span>
+                <span className="text-[13px] font-semibold text-foreground">{prepFail}/{GOLDEN_SET_TARGET_PER_CLASS}</span>
               </div>
               <Progress
                 value={prepFailPct}
-                className="w-full [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-slate-100 [&_[data-slot=progress-indicator]]:bg-red-500"
+                className="w-full [&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:bg-muted [&_[data-slot=progress-indicator]]:bg-destructive"
               />
             </div>
-            <div className="border border-white/10 rounded p-3 flex items-center justify-between gap-3">
+            <div className="border border-border rounded p-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-[13px] text-slate-300">Unrated prep_brief traces</p>
-                <p className="text-[18px] font-bold text-white mt-0.5">{prepUnrated}</p>
+                <p className="text-[13px] text-muted-foreground">Unrated prep_brief traces</p>
+                <p className="text-[18px] font-bold text-foreground mt-0.5">{prepUnrated}</p>
               </div>
               <Button variant="outline" render={<Link href="/dashboard/admin/traces?feature=prep_brief&unrated=1" />}>
                 Label now

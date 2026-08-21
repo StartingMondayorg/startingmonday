@@ -2,13 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Skeleton } from '@/components/ui'
 type DiscoveryCompany = {
   id?: string
   narrativeUrl?: string
@@ -105,22 +99,22 @@ export default function DiscoverPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
+    <div className="min-h-screen bg-muted font-sans">
 
-      <header className="bg-slate-900">
+      <header className="dark bg-card">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-5">
             <Button
               variant="outline"
-              className="border-slate-700 text-[12px] font-semibold text-slate-400 hover:border-slate-500 whitespace-nowrap"
+              className="border-border text-[12px] font-semibold text-muted-foreground whitespace-nowrap"
               render={<Link href="/dashboard/companies/new" />}
             >
               Add manually
             </Button>
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap">
               &larr; Dashboard
             </Link>
           </div>
@@ -129,9 +123,9 @@ export default function DiscoverPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-6">
-          <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Company Discovery</div>
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Discover Companies</h1>
-          <p className="text-[13px] text-slate-500 mt-1">
+          <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-1">Company Discovery</div>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Discover Companies</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">
             {seedMode
               ? 'Showing companies similar to your seeds. Reset to go back to profile-based suggestions.'
               : 'AI-suggested targets based on your profile and search goals.'}
@@ -140,7 +134,7 @@ export default function DiscoverPage() {
 
         {/* Seed input */}
         <Card className="p-4 mb-6">
-          <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.08em] mb-2">
+          <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em] mb-2">
             Find companies similar to
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -150,7 +144,7 @@ export default function DiscoverPage() {
               onChange={e => setSeedInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleFindSimilar()}
               placeholder="ServiceNow, Workday, Salesforce (comma-separated)"
-              className="flex-1 text-[13px] text-slate-800 placeholder:text-slate-400"
+              className="flex-1 text-[13px] text-foreground placeholder:text-muted-foreground"
             />
             <div className="flex gap-2 shrink-0">
               <Button
@@ -215,8 +209,8 @@ export default function DiscoverPage() {
           </div>
         ) : companies.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-[14px] text-slate-500 mb-2">No suggestions returned.</p>
-            <p className="text-[13px] text-slate-400 mb-4">Complete your profile to improve results.</p>
+            <p className="text-[14px] text-muted-foreground mb-2">No suggestions returned.</p>
+            <p className="text-[13px] text-muted-foreground mb-4">Complete your profile to improve results.</p>
             <Button variant="secondary" className="text-[13px] font-semibold" render={<Link href="/dashboard/profile" />}>
               Go to profile &rarr;
             </Button>
@@ -230,15 +224,15 @@ export default function DiscoverPage() {
                 return (
                   <Card key={co.name} className="p-4 flex flex-col">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <span className="text-[15px] font-bold text-slate-900 leading-tight">{co.name}</span>
+                      <span className="text-[15px] font-bold text-foreground leading-tight">{co.name}</span>
                       <Badge variant={fitVariant(co.fit)} className="shrink-0">
                         {co.fit}/10
                       </Badge>
                     </div>
-                    <div className="text-[10px] text-slate-400 uppercase tracking-[0.08em] font-semibold mb-2">
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-[0.08em] font-semibold mb-2">
                       {co.sector}
                     </div>
-                    <p className="text-[13px] text-slate-600 leading-relaxed flex-1 mb-4">{co.why}</p>
+                    <p className="text-[13px] text-muted-foreground leading-relaxed flex-1 mb-4">{co.why}</p>
                     <div className="mb-3 flex flex-wrap gap-1.5">
                       <Badge variant={scoreVariant(co.signalFreshnessScore)}>
                         Signal freshness {co.signalFreshnessScore ?? '--'}
@@ -250,7 +244,7 @@ export default function DiscoverPage() {
                     {co.narrativeUrl && (
                       <Link
                         href={co.narrativeUrl}
-                        className="mb-3 inline-block text-[12px] font-semibold text-slate-700 hover:text-slate-900 underline"
+                        className="mb-3 inline-block text-[12px] font-semibold text-muted-foreground hover:text-foreground underline"
                       >
                         Why this company and who to contact &rarr;
                       </Link>
@@ -276,7 +270,7 @@ export default function DiscoverPage() {
                   : fetchSuggestions()
                 }
                 disabled={loading}
-                className="text-[13px] text-slate-400 hover:text-slate-600"
+                className="text-[13px] text-muted-foreground"
               >
                 Regenerate suggestions &rarr;
               </Button>

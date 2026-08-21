@@ -1,8 +1,6 @@
 'use client'
 
-import { Card } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, AlertTitle, Card } from '@/components/ui'
 /**
  * CoachPreSessionSnapshot
  *
@@ -48,9 +46,9 @@ const LANE_LABELS: Record<StalledLane['lane'], string> = {
 }
 
 const STATE_COLORS: Record<StalledLane['state'], { dot: string; text: string }> = {
-  healthy: { dot: 'bg-emerald-400', text: 'text-emerald-700' },
-  watch:   { dot: 'bg-amber-400',   text: 'text-amber-700' },
-  stalled: { dot: 'bg-red-400',     text: 'text-red-700' },
+  healthy: { dot: 'bg-success', text: 'text-success' },
+  watch:   { dot: 'bg-warning',   text: 'text-warning' },
+  stalled: { dot: 'bg-destructive',     text: 'text-destructive' },
 }
 
 const STATE_ALERT_VARIANTS: Record<StalledLane['state'], 'success' | 'warning' | 'destructive'> = {
@@ -84,17 +82,17 @@ export function CoachPreSessionSnapshot({
   return (
     <div className="space-y-4">
       {/* Header strip */}
-      <Card className="border-orange-200 bg-orange-50/40 px-5 py-4">
+      <Card className="border-primary/30 bg-primary/40 px-5 py-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">
+            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-1">
               Pre-Session Snapshot
             </p>
-            <h2 className="text-[17px] font-bold text-slate-900 leading-tight">
+            <h2 className="text-[17px] font-bold text-foreground leading-tight">
               {clientName ? `What changed for ${clientName}` : 'What changed since last session'}
             </h2>
           </div>
-          <span className="text-[11px] text-slate-400 mt-0.5">
+          <span className="text-[11px] text-muted-foreground mt-0.5">
             Baseline: {formatDaysAgo(snapshot.baseline_started_at)}
           </span>
         </div>
@@ -110,19 +108,19 @@ export function CoachPreSessionSnapshot({
         ].map(({ label, value, warn }) => (
           <Card
             key={label}
-            className={`p-4 text-center ${warn ? 'border-amber-200 bg-amber-50/30' : ''}`}
+            className={`p-4 text-center ${warn ? 'border-warning/30 bg-warning/30' : ''}`}
           >
-            <p className={`text-[24px] font-bold ${warn ? 'text-amber-600' : 'text-slate-900'}`}>
+            <p className={`text-[24px] font-bold ${warn ? 'text-warning' : 'text-foreground'}`}>
               {value}
             </p>
-            <p className="text-[11px] text-slate-500 mt-0.5">{label}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">{label}</p>
           </Card>
         ))}
       </div>
 
       {/* Lane health */}
       <Card className="p-5">
-        <h3 className="text-[12px] font-semibold text-slate-700 mb-3">Activity lane health</h3>
+        <h3 className="text-[12px] font-semibold text-muted-foreground mb-3">Activity lane health</h3>
         <div className="space-y-2">
           {snapshot.stalled_lanes.map((lane) => {
             const colors = STATE_COLORS[lane.state]
@@ -137,7 +135,7 @@ export function CoachPreSessionSnapshot({
                   <AlertTitle className={`text-[13px] font-semibold ${colors.text}`}>
                     {LANE_LABELS[lane.lane]}
                   </AlertTitle>
-                  <AlertDescription className="text-[12px] mt-0.5 text-slate-600 leading-relaxed">
+                  <AlertDescription className="text-[12px] mt-0.5 text-muted-foreground leading-relaxed">
                     {lane.reason}
                   </AlertDescription>
                 </div>
@@ -153,7 +151,7 @@ export function CoachPreSessionSnapshot({
           <AlertTitle className="text-[12px] font-semibold mb-1">
             {snapshot.overdue_actions} overdue action{snapshot.overdue_actions !== 1 ? 's' : ''}
           </AlertTitle>
-          <AlertDescription className="text-[12px] text-slate-600">
+          <AlertDescription className="text-[12px] text-muted-foreground">
             Review with client at the start of session and confirm or reset commitment.
           </AlertDescription>
         </Alert>
@@ -162,24 +160,24 @@ export function CoachPreSessionSnapshot({
       {/* Confidence, momentum, narrative drift - Sprint ITS-2 fields */}
       {(confidenceField || momentumField || narrativeDriftFlag) && (
         <Card className="p-5">
-          <h3 className="text-[12px] font-semibold text-slate-700 mb-3">State signals</h3>
+          <h3 className="text-[12px] font-semibold text-muted-foreground mb-3">State signals</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {confidenceField && (
-              <Card className="bg-slate-50 px-4 py-3">
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 mb-1">Confidence</p>
-                <p className="text-[14px] font-semibold text-slate-800">{confidenceField}</p>
+              <Card className="bg-muted px-4 py-3">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Confidence</p>
+                <p className="text-[14px] font-semibold text-foreground">{confidenceField}</p>
               </Card>
             )}
             {momentumField && (
-              <Card className="bg-slate-50 px-4 py-3">
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 mb-1">Momentum</p>
-                <p className="text-[14px] font-semibold text-slate-800">{momentumField}</p>
+              <Card className="bg-muted px-4 py-3">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Momentum</p>
+                <p className="text-[14px] font-semibold text-foreground">{momentumField}</p>
               </Card>
             )}
             {narrativeDriftFlag && (
-              <Card className="bg-amber-50 border-amber-200 px-4 py-3">
-                <p className="text-[10px] uppercase tracking-widest text-amber-500 mb-1">Narrative drift</p>
-                <p className="text-[14px] font-semibold text-amber-800">{narrativeDriftFlag}</p>
+              <Card className="bg-warning/10 border-warning/30 px-4 py-3">
+                <p className="text-[10px] uppercase tracking-widest text-warning mb-1">Narrative drift</p>
+                <p className="text-[14px] font-semibold text-warning">{narrativeDriftFlag}</p>
               </Card>
             )}
           </div>
@@ -187,29 +185,29 @@ export function CoachPreSessionSnapshot({
       )}
 
       {/* Recommended session opening */}
-      <Card className="bg-slate-50 px-5 py-4">
-        <h3 className="text-[12px] font-semibold text-slate-700 mb-2">Recommended session opening</h3>
-        <ul className="space-y-1.5 text-[13px] text-slate-600 list-none">
+      <Card className="bg-muted px-5 py-4">
+        <h3 className="text-[12px] font-semibold text-muted-foreground mb-2">Recommended session opening</h3>
+        <ul className="space-y-1.5 text-[13px] text-muted-foreground list-none">
           {anyStalledOrWatch && (
             <li className="flex items-start gap-2">
-              <span className="text-amber-500 mt-0.5">→</span>
+              <span className="text-warning mt-0.5">→</span>
               Open with: "I noticed {stalledCount > 0 ? 'some stalled activity' : 'a few areas to watch'}-let me share what I see before we jump in."
             </li>
           )}
           {snapshot.overdue_actions > 0 && (
             <li className="flex items-start gap-2">
-              <span className="text-red-500 mt-0.5">→</span>
+              <span className="text-destructive mt-0.5">→</span>
               Address overdue {snapshot.overdue_actions === 1 ? 'action' : 'actions'} early: "What happened with [action]? Do we reset or close it?"
             </li>
           )}
           {nextActionText && (
             <li className="flex items-start gap-2">
-              <span className="text-emerald-500 mt-0.5">→</span>
+              <span className="text-success mt-0.5">→</span>
               Last committed action: <span className="italic">"{nextActionText}"</span>
             </li>
           )}
           <li className="flex items-start gap-2">
-            <span className="text-slate-400 mt-0.5">→</span>
+            <span className="text-muted-foreground mt-0.5">→</span>
             Today's goal: one strategic decision, one narrative adjustment, one confirmed next action with a deadline.
           </li>
         </ul>
@@ -217,8 +215,8 @@ export function CoachPreSessionSnapshot({
 
       {/* Active pipeline reminder */}
       <Card className="flex-row items-center justify-between px-4 py-3 text-[13px]">
-        <span className="text-slate-500">Active pipeline companies</span>
-        <span className="font-bold text-slate-900">{snapshot.active_pipeline_count}</span>
+        <span className="text-muted-foreground">Active pipeline companies</span>
+        <span className="font-bold text-foreground">{snapshot.active_pipeline_count}</span>
       </Card>
     </div>
   )

@@ -43,7 +43,7 @@ export default function CisoInterviewPreparationPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most security executives prepare for CISO interviews the way they would prepare for a technical
           assessment. They review their architecture decisions. They rehearse their incident response record. They
@@ -56,7 +56,7 @@ export default function CisoInterviewPreparationPage() {
           risk in a room that does not think in security terms.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The three audiences in a CISO interview process</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The three audiences in a CISO interview process</h2>
 
         <p>
           A CISO process typically involves three distinct audiences, each evaluating a different version of the
@@ -64,26 +64,26 @@ export default function CisoInterviewPreparationPage() {
         </p>
 
         <p>
-          The <strong className="text-slate-900">board or audit committee</strong> is evaluating governance
+          The <strong className="text-foreground">board or audit committee</strong> is evaluating governance
           credibility. Can you present risk in terms they can act on? Not CVE counts and patch rates. Financial
           exposure, reputational risk, and the decision framework the organization should be using to allocate
           security investment. They want to know if you will make them more informed or more confused.
         </p>
 
         <p>
-          The <strong className="text-slate-900">CEO or CFO</strong> is evaluating fit and judgment. Is this
+          The <strong className="text-foreground">CEO or CFO</strong> is evaluating fit and judgment. Is this
           person going to bring me problems I cannot solve, or solutions I can fund? The candidates who move from
           CEO screen to final round are the ones who demonstrate that they understand the business first and the
           security problem second.
         </p>
 
         <p>
-          The <strong className="text-slate-900">CIO and peer executives</strong> are evaluating operational
+          The <strong className="text-foreground">CIO and peer executives</strong> are evaluating operational
           credibility and working-relationship potential. Can they trust your judgment under pressure? Will you
           slow the business down for marginal risk reduction? Will you fight the right battles?
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What they will ask</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What they will ask</h2>
 
         <p>
           The questions sound different by audience but share an underlying agenda. The board asks: &ldquo;How do
@@ -99,7 +99,7 @@ export default function CisoInterviewPreparationPage() {
           background. The judgment and the behavior are what they are evaluating.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The prep that matters</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The prep that matters</h2>
 
         <p>
           Prepare three stories, not a list of accomplishments.
@@ -124,7 +124,7 @@ export default function CisoInterviewPreparationPage() {
           distinguishes candidates in final rounds.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Company-specific preparation</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Company-specific preparation</h2>
 
         <p>
           The candidates who advance from first call to final round fastest are the ones who arrive already
@@ -139,7 +139,7 @@ export default function CisoInterviewPreparationPage() {
           compresses the search timeline.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday assembles</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday assembles</h2>
 
         <p>
           Starting Monday watches for the organizational signals that precede CISO searches - breach
@@ -149,14 +149,14 @@ export default function CisoInterviewPreparationPage() {
 
         <p>
           When the search opens, the{' '}
-          <Link href="/for-ciso" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-ciso" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           builds your win thesis, likely objections, and company-specific questions from their actual situation
           in sixty seconds. The document that turns a warm search firm call into a first-round interview.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The standard to clear</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The standard to clear</h2>
 
         <p>
           The CISO interview is not a test of what you know. It is a test of whether the board, the CEO, and the

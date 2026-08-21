@@ -5,7 +5,7 @@ import { PersonalEmailNudge } from '@/app/(dashboard)/_components/PersonalEmailN
 import { WatermarkOverlay } from '@/app/(dashboard)/_components/WatermarkOverlay'
 import { BottomNav } from '@/app/(dashboard)/_components/BottomNav'
 import { CommandPalette } from '@/app/(dashboard)/_components/CommandPalette'
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@/components/ui'
 import { DashboardFooter } from '@/app/(dashboard)/_components/DashboardFooter'
 import { BackToTop } from '@/app/(dashboard)/_components/BackToTop'
 import { resolveOrgScopeForUser } from '@/lib/org-scope'
@@ -32,7 +32,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* PostHog is provided by the root layout. */}
       {isDemo && <DemoBanner />}
       {!isDemo && user?.email && <WatermarkOverlay email={user.email} />}
-      <div id="top" className="nav-content-spacer min-h-screen bg-slate-950 text-slate-100">
+      <div id="top" className="nav-content-spacer min-h-screen bg-primary text-primary-foreground">
         {children}
         <DashboardFooter />
       </div>

@@ -30,10 +30,10 @@ export default function ProfileEditor({ requestId, initialProfile }: { requestId
 
   return (
     <div>
-      <textarea value={value} onChange={(event) => setValue(event.target.value)} rows={24} className="mt-4 block w-full rounded bg-slate-950 p-4 font-mono text-[12px] leading-5 text-slate-200 outline-none focus:ring-2 focus:ring-orange-500" aria-label="Reviewed profile JSON" />
+      <textarea value={value} onChange={(event) => setValue(event.target.value)} rows={24} className="mt-4 block w-full rounded bg-primary p-4 font-mono text-[12px] leading-5 text-primary-foreground outline-none focus:ring-2 focus:ring-primary/30" aria-label="Reviewed profile JSON" />
       <div className="mt-3 flex items-center justify-end gap-3">
-        {message && <span className={`text-[12px] ${message === 'Saved' ? 'text-emerald-700' : 'text-red-700'}`}>{message}</span>}
-        <button type="button" onClick={save} disabled={saving} className="rounded bg-orange-600 px-4 py-2 text-[13px] font-semibold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60">{saving ? 'Saving…' : 'Save reviewed profile'}</button>
+        {message && <span className={`text-[12px] ${message === 'Saved' ? 'text-success' : 'text-destructive'}`}>{message}</span>}
+        <button type="button" onClick={save} disabled={saving} className="rounded bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60">{saving ? 'Saving…' : 'Save reviewed profile'}</button>
       </div>
     </div>
   )

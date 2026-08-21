@@ -29,7 +29,7 @@ export default function LinkedInExecutiveSearchPage() {
       url="https://startingmonday.app/blog/linkedin-executive-search-strategy"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           LinkedIn is the only professional platform where retained search partners, board members,
           and CEOs spend time in a professional context. That makes it uniquely valuable for CIO and
@@ -43,7 +43,7 @@ export default function LinkedInExecutiveSearchPage() {
           than someone whose attention is worth having.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Your profile is a board document, not a resume</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Your profile is a board document, not a resume</h2>
 
         <p>
           At the CIO and CTO level, your LinkedIn profile will be reviewed by board members, search
@@ -69,7 +69,7 @@ export default function LinkedInExecutiveSearchPage() {
           read in the experience section.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What to publish and why it matters</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What to publish and why it matters</h2>
 
         <p>
           Publishing on LinkedIn during an active search serves one purpose: demonstrating that you
@@ -97,7 +97,7 @@ export default function LinkedInExecutiveSearchPage() {
           moment that matters are low.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The direct message approach that works</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The direct message approach that works</h2>
 
         <p>
           The DM is underused at the executive level because most executives either avoid it
@@ -119,7 +119,7 @@ export default function LinkedInExecutiveSearchPage() {
           expect.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The signal-watching function most executives miss</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The signal-watching function most executives miss</h2>
 
         <p>
           LinkedIn&rsquo;s most underused feature for a CIO or CTO in active search is the ability
@@ -141,7 +141,7 @@ export default function LinkedInExecutiveSearchPage() {
           every application submitted after the role is posted.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What not to do</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What not to do</h2>
 
         <p>
           The Open to Work badge: do not use it. The signal it sends - that you are available,
@@ -163,7 +163,7 @@ export default function LinkedInExecutiveSearchPage() {
           trying to build. If you have nothing specific to add, do not add anything.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The platform as intelligence infrastructure</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The platform as intelligence infrastructure</h2>
 
         <p>
           Used well, LinkedIn is not just a visibility tool. It is an intelligence infrastructure.
