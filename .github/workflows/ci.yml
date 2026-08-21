@@ -125,8 +125,7 @@ jobs:
             signal_engine_plan:
               - 'docs/signal-engine-cross-product-master-plan-2026-07-26.md'
               - 'AGENTS.md'
-            billing:
-              - 'supabase/migrations/**'
+            billing_code:
               - 'src/lib/billing/**'
               - 'src/app/[(]dashboard[)]/settings/billing/**'
               - 'src/app/api/[(]billing[)]/**'
@@ -134,6 +133,25 @@ jobs:
               - 'src/app/api/[(]ops[)]/webhooks/stripe/**'
               - 'scripts/check-billing-readiness.mjs'
               - 'scripts/fix-billing-placeholder-sql.mjs'
+            migrations:
+              - 'supabase/migrations/**'
+
+      - name: Detect billing-relevant migrations
+        id: billing_migrations
+        if: github.event_name == 'pull_request' && steps.scoped.outputs.migrations == 'true'
+        run: |
+          # supabase/migrations/** covers every migration, most of which have
+          # nothing to do with commerce data. Only treat a PR as "touching
+          # billing" if a changed migration actually references Stripe-backed
+          # tables/columns -- otherwise an unrelated migration (e.g. a new
+          # telemetry column) drags in the live-row check for products it
+          # never touched.
+          changed=$(git diff --name-only --diff-filter=ACMR "${{ github.event.pull_request.base.sha }}" -- 'supabase/migrations/**')
+          if [ -n "$changed" ] && echo "$changed" | xargs grep -liE 'stripe|billing|subscription|micro_product|bundle_status|coupon' > /dev/null 2>&1; then
+            echo "touches=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "touches=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-node@v5
         with:
@@ -238,7 +256,7 @@ jobs:
           # unrelated PR shouldn't be blocked by a billing item someone else
           # left half-configured. Only run the full check (env + rows) on
           # pushes (about to be live) or on PRs that actually touch billing.
-          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ steps.scoped.outputs.billing }}" != "true" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ steps.scoped.outputs.billing_code }}" != "true" ] && [ "${{ steps.billing_migrations.outputs.touches }}" != "true" ]; then
             npm run billing:readiness:strict -- --skip-rows
           else
             npm run billing:readiness:strict
