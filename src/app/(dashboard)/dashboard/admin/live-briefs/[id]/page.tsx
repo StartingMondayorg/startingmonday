@@ -6,6 +6,7 @@ import { getStaffMember } from '@/lib/staff'
 import { Card } from '@/components/ui/card'
 import ProfileEditor from './profile-editor'
 import ActionPanel from './action-panel'
+import ShortlistEditor from './shortlist-editor'
 
 export const metadata = { title: 'Live Brief Request - Starting Monday Admin' }
 
@@ -116,6 +117,9 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
             </div>
             <ProfileEditor requestId={request.id} initialProfile={request.reviewed_profile ?? {}} />
           </Card>
+        </div>
+        <div className="mt-4">
+          <ShortlistEditor requestId={request.id} enabled={request.status === 'reviewing'} />
         </div>
         <div className="mt-4">
           <ActionPanel requestId={request.id} status={request.status} reviewedProfile={request.reviewed_profile ?? {}} />
