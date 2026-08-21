@@ -9,7 +9,7 @@ describe('retired placeholder billing offers', () => {
   const productCheckout = readRepoFile('src/app/api/(billing)/billing/checkout/micro-product/route.ts')
   const bundleCheckout = readRepoFile('src/app/api/(billing)/billing/checkout/micro-product-bundle/route.ts')
 
-  it('retires exactly the three unapproved offer slugs and disables product prices', () => {
+  it('retires the three unapproved offer slugs and disables product prices', () => {
     expect(migration).toContain("'exec-interview-narrative-pack'")
     expect(migration).toContain("'board-transition-brief-kit'")
     expect(migration).toContain("'outplacement-accelerator-bundle'")
