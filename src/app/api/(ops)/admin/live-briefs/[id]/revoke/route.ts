@@ -14,7 +14,7 @@ export async function POST(
   const { id } = await params
   if (!id || id.length > 80) return NextResponse.json({ error: 'Invalid live brief request id' }, { status: 400 })
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: current, error: requestError } = await admin
     .from('live_brief_requests')
     .select('status')

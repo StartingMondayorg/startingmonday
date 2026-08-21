@@ -1472,6 +1472,187 @@ export type Database = {
         }
         Relationships: []
       }
+      live_brief_requests: {
+        Row: {
+          id: string
+          requested_by_user_id: string
+          hubspot_contact_id: string | null
+          hubspot_deal_id: string | null
+          prospect_name: string
+          prospect_email: string
+          linkedin_url: string | null
+          source_text_encrypted_ref: string
+          consent_attested_at: string
+          consent_source: string
+          request_received_at: string
+          request_source: string
+          location_preference: string | null
+          target_role_lane: string | null
+          operator_notes: string | null
+          reviewed_profile: Json
+          status: string
+          hubspot_sync_status: string
+          hubspot_synced_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          requested_by_user_id: string
+          prospect_name: string
+          prospect_email: string
+          source_text_encrypted_ref: string
+          consent_attested_at: string
+          consent_source: string
+          request_source: string
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
+      live_brief_scan_runs: {
+        Row: {
+          id: string
+          request_id: string
+          idempotency_key: string
+          created_by_user_id: string
+          status: string
+          selected_company_count: number
+          completed_company_count: number
+          blocked_company_count: number
+          failed_company_count: number
+          accepted_partial_at: string | null
+          accepted_partial_by_user_id: string | null
+          started_at: string | null
+          completed_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          idempotency_key: string
+          created_by_user_id: string
+          selected_company_count: number
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
+      live_brief_scan_companies: {
+        Row: {
+          id: string
+          run_id: string
+          company_key: string
+          company_name: string
+          career_page_url: string | null
+          target_role_lane: string | null
+          operator_selected: boolean
+          status: string
+          evidence_summary: Json
+          error_class: string | null
+          observed_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          run_id: string
+          company_key: string
+          company_name: string
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
+      live_brief_deliveries: {
+        Row: {
+          id: string
+          request_id: string
+          artifact_id: string | null
+          token_digest: string
+          released_by_user_id: string
+          sent_at: string | null
+          expires_at: string
+          revoked_at: string | null
+          revoked_by_user_id: string | null
+          first_opened_at: string | null
+          last_opened_at: string | null
+          view_count: number
+          cta_clicked_at: string | null
+          hubspot_meeting_id: string | null
+          call_booked_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          token_digest: string
+          released_by_user_id: string
+          expires_at: string
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
+      live_brief_events: {
+        Row: {
+          id: string
+          request_id: string
+          delivery_id: string | null
+          event_type: string
+          actor_user_id: string | null
+          idempotency_key: string
+          event_payload: Json
+          occurred_at: string
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          event_type: string
+          idempotency_key: string
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
+      live_brief_artifacts: {
+        Row: {
+          id: string
+          request_id: string
+          version: number
+          brief_payload: Json
+          content_hash: string
+          finalized_by_user_id: string
+          finalized_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          request_id: string
+          version: number
+          brief_payload: Json
+          content_hash: string
+          finalized_by_user_id: string
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
+      live_brief_handoff_metrics: {
+        Row: {
+          delivery_id: string
+          destination: string
+          click_count: number
+          first_clicked_at: string
+          last_clicked_at: string
+        }
+        Insert: {
+          delivery_id: string
+          destination: string
+          [key: string]: unknown
+        }
+        Update: { [key: string]: unknown }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
@@ -1482,6 +1663,10 @@ export type Database = {
       get_rate_limit_count: {
         Args: { p_key: string; p_window: string }
         Returns: number
+      }
+      record_live_brief_handoff_click: {
+        Args: { p_delivery_id: string; p_destination: string }
+        Returns: undefined
       }
     }
     Enums: Record<string, never>

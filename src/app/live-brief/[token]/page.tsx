@@ -54,7 +54,7 @@ export default function LiveBriefPublicPage({ params }: { params: Promise<{ toke
     }).catch(() => {})
   }
 
-  if (error) return <main className="flex min-h-screen items-center justify-center bg-[#f4f1eb] px-6"><div className="max-w-md text-center"><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-orange-700">Starting Monday</p><h1 className="mt-4 text-3xl font-semibold text-slate-900">This brief is no longer available</h1><p className="mt-3 text-sm leading-6 text-slate-600">The private link may have expired or been revoked.</p></div></main>
+  if (error) return <main className="flex min-h-screen items-center justify-center bg-[#f4f1eb] px-6"><div className="max-w-md text-center"><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-orange-700">Starting Monday</p><p role="heading" aria-level={1} className="mt-4 text-3xl font-semibold text-slate-900">This brief is no longer available</p><p className="mt-3 text-sm leading-6 text-slate-600">The private link may have expired or been revoked.</p></div></main>
   if (!artifact) return <main className="flex min-h-screen items-center justify-center bg-[#f4f1eb] px-6"><p className="text-sm text-slate-500">Loading private brief…</p></main>
 
   const payload = artifact.brief_payload
@@ -88,7 +88,7 @@ export default function LiveBriefPublicPage({ params }: { params: Promise<{ toke
         </div>
 
         <section className="mt-10 border-y border-slate-900/15 py-8"><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-700">Next step</p><h2 className="mt-3 text-2xl font-semibold">Go deeper with Rich</h2><p className="mt-3 max-w-xl text-sm leading-6 text-slate-600">Book a working session to pressure-test the strongest opportunities and decide what to do next.</p><a href={bookingUrl} onClick={() => void record('delivery_cta_clicked')} className="mt-6 inline-flex rounded bg-orange-600 px-5 py-3 text-sm font-semibold text-white hover:bg-orange-700">Book a working session</a></section>
-        <footer className="pt-8 text-[11px] leading-5 text-slate-500">This private link is time-limited. Access is logged to help the sender understand whether the brief was received. Sources and limits are preserved in the brief artifact.</footer>
+        <footer className="pt-8 text-[11px] leading-5 text-slate-500">Private by default. This link is time-limited, and access is logged to help the sender understand whether the brief was received. Sources and limits are preserved in the brief artifact.</footer>
       </div>
     </main>
   )
