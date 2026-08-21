@@ -104,7 +104,7 @@ export default async function PostLandingPage() {
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-card sticky top-0 z-10">
+      <header className="dark text-foreground bg-card sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] font-semibold text-muted-foreground">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -201,7 +201,7 @@ export default async function PostLandingPage() {
                     <span className={`h-7 w-7 rounded-full flex items-center justify-center text-[13px] font-bold ${
                       phase.id === currentPhase
                         ? 'bg-success text-success-foreground'
-                        : 'bg-muted text-success-foreground'
+                        : 'bg-muted text-foreground'
                     }`}>{phase.id}</span>
                     <div>
                       <p className="text-[13px] font-bold text-foreground">{phase.label}</p>

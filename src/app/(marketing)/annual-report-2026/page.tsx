@@ -27,7 +27,7 @@ const THEMES = [
 export default function AnnualReport2026Page() {
   return (
     <>
-      <section className="dark bg-background px-4 pt-6 sm:px-6">
+      <section className="dark text-foreground bg-background px-4 pt-6 sm:px-6">
         <div className="mx-auto max-w-2xl">
           <EvidenceProofCard
             claim="Observed pilot cohorts reached first qualified conversation faster when search execution included signal monitoring and weekly prep discipline."
@@ -83,7 +83,7 @@ export default function AnnualReport2026Page() {
                   <p className="text-[12px] text-muted-foreground font-semibold">{theme.value}%</p>
                 </div>
                 <div className="h-3 rounded-full bg-muted overflow-hidden">
-                  <div className={`dark h-full rounded-full bg-card ${theme.widthClass}`} />
+                  <div className={`dark text-foreground h-full rounded-full bg-card ${theme.widthClass}`} />
                 </div>
               </div>
             ))}

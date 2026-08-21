@@ -938,14 +938,14 @@ export function ExecutiveBriefHub({
                 <button
                   type="button"
                   onClick={() => setAnalysisTab('notes')}
-                  className={`rounded px-3 py-1.5 text-[12px] font-semibold ${analysisTab === 'notes' ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-primary-foreground'}`}
+                  className={`rounded px-3 py-1.5 text-[12px] font-semibold ${analysisTab === 'notes' ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-card-foreground'}`}
                 >
                   Notes analysis
                 </button>
                 <button
                   type="button"
                   onClick={() => setAnalysisTab('transcript')}
-                  className={`rounded px-3 py-1.5 text-[12px] font-semibold ${analysisTab === 'transcript' ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-primary-foreground'}`}
+                  className={`rounded px-3 py-1.5 text-[12px] font-semibold ${analysisTab === 'transcript' ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-card-foreground'}`}
                 >
                   Transcript analysis
                 </button>

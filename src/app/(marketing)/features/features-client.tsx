@@ -163,7 +163,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
           >
             <ToggleGroupItem
               value="all"
-              className="whitespace-nowrap rounded-full border border-border bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground data-[state=on]:border-border data-[state=on]:bg-card data-[state=on]:text-primary-foreground"
+              className="whitespace-nowrap rounded-full border border-border bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground aria-pressed:border-border bg-card aria-pressed:bg-card aria-pressed:text-primary-foreground"
             >
               All personas
             </ToggleGroupItem>
@@ -171,7 +171,7 @@ export function FeaturesClient({ docs }: { docs: FeatureDocCard[] }) {
               <ToggleGroupItem
                 key={value}
                 value={value}
-                className="whitespace-nowrap rounded-full border border-border bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground data-[state=on]:border-primary/30 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                className="whitespace-nowrap rounded-full border border-border bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground aria-pressed:border-primary/30 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
               >
                 {label}
               </ToggleGroupItem>

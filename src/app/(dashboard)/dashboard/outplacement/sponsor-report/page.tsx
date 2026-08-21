@@ -24,7 +24,7 @@ export default async function SponsorReportPage() {
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-card sticky top-0 z-10 print:hidden">
+      <header className="dark text-foreground bg-card sticky top-0 z-10 print:hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

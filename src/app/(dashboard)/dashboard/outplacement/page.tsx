@@ -3,7 +3,7 @@ import { Button, Card } from '@/components/ui'
 export default function OutplacementLanding() {
   return (
     <div className="min-h-screen bg-muted flex flex-col items-center justify-center font-sans">
-      <header className="dark w-full bg-card py-4 mb-8">
+      <header className="dark text-foreground w-full bg-card py-4 mb-8">
         <div className="max-w-2xl mx-auto px-4 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

@@ -63,7 +63,7 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-card">
+      <header className="dark text-foreground bg-card">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted-foreground sm:text-[14px]">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

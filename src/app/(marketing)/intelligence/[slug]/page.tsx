@@ -52,7 +52,7 @@ export default async function IntelligencePage({
   return (
     <div className="min-h-screen bg-muted font-sans">
       {/* Header */}
-      <header className="dark bg-background border-b border-border">
+      <header className="dark text-foreground bg-background border-b border-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] font-bold tracking-[0.18em] uppercase text-muted-foreground hover:text-foreground transition-colors">
             <span className="text-foreground">Starting </span>
@@ -226,7 +226,7 @@ export default async function IntelligencePage({
 
         {/* Bottom CTA for unlocked pages */}
         {isUnlocked && allSignals.length > 0 && (
-          <section id="next-step" className="dark mt-10 bg-background rounded-xl px-6 sm:px-8 py-8 text-center">
+          <section id="next-step" className="dark text-foreground mt-10 bg-background rounded-xl px-6 sm:px-8 py-8 text-center">
             <div className="text-[13px] font-bold tracking-[0.14em] uppercase text-primary mb-3">
               Starting Monday Intelligence
             </div>

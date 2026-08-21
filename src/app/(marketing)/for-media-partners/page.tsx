@@ -69,7 +69,7 @@ export default function ForMediaPartnersPage() {
     <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
-      <nav className="dark bg-background sticky top-0 z-10">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -90,7 +90,7 @@ export default function ForMediaPartnersPage() {
 
       <main>
 {/* Header */}
-        <header className="dark bg-background px-4 sm:px-6 pt-14 pb-12">
+        <header className="dark text-foreground bg-background px-4 sm:px-6 pt-14 pb-12">
           <div className="max-w-2xl mx-auto">
             <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
               Media Partner Guide
@@ -285,7 +285,7 @@ export default function ForMediaPartnersPage() {
       </main>
 
       {/* Footer */}
-      <footer className="dark bg-background border-t border-border px-4 sm:px-6 py-8 mt-8">
+      <footer className="dark text-foreground bg-background border-t border-border px-4 sm:px-6 py-8 mt-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

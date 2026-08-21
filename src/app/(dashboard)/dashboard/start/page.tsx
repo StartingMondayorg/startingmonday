@@ -353,7 +353,7 @@ export default async function StartPage() {
                   {/* Number / check */}
                   <Avatar
                     className={`shrink-0 mt-0.5 text-[13px] font-bold ${
-                      task.done ? 'bg-success text-success-foreground' : 'bg-muted/60 text-success-foreground'
+                      task.done ? 'bg-success text-success-foreground' : 'bg-muted/60 text-foreground'
                     }`}
                   >
                     <AvatarFallback className="bg-transparent text-inherit">

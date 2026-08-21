@@ -269,7 +269,7 @@ export default function IdeasPage() {
               <ToggleGroupItem
                 key={cat.value}
                 value={cat.value}
-                className="rounded px-3 py-1.5 text-[12px] font-semibold data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                className="rounded px-3 py-1.5 text-[12px] font-semibold bg-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground"
               >
                 {cat.label}
               </ToggleGroupItem>

@@ -86,7 +86,7 @@ export function AssistWidget() {
                     className={`flex-1 min-h-[44px] rounded-lg text-[13px] font-semibold ${
                       kind === option
                         ? '!bg-primary !text-primary-foreground !border-primary/30'
-                        : '!bg-muted/40 !text-primary-foreground !border-border hover:!border-border'
+                        : '!bg-muted/40 !text-foreground !border-border hover:!border-border'
                     }`}
                   >
                     {option === 'feedback' ? 'Feedback' : 'Question'}

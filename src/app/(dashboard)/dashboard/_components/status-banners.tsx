@@ -77,7 +77,7 @@ export function DashboardStatusBanners({
               >
                 <Badge
                   className={`mt-0.5 h-5 w-5 shrink-0 justify-center rounded-full p-0 text-[10px] font-bold ${
-                    step.done ? 'bg-success text-success-foreground' : 'bg-muted/60 text-success-foreground'
+                    step.done ? 'bg-success text-success-foreground' : 'bg-muted/60 text-foreground'
                   }`}
                 >
                   {step.done ? '✓' : index + 1}
@@ -154,7 +154,7 @@ export function DashboardStatusBanners({
             <Button
               type="submit"
               variant="secondary"
-              className="h-auto whitespace-nowrap border border-border bg-muted/60 px-5 py-2 text-[13px] font-bold text-success-foreground hover:bg-muted/80"
+              className="h-auto whitespace-nowrap border border-border bg-muted/60 px-5 py-2 text-[13px] font-bold text-foreground hover:bg-muted/80"
             >
               Yes, I accepted
             </Button>

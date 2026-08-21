@@ -18,7 +18,7 @@ export default async function HelpPage() {
   return (
     <div className="min-h-screen bg-muted font-sans">
 
-      <header className="dark bg-card">
+      <header className="dark text-foreground bg-card">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
           <Link href="/dashboard" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -50,7 +50,7 @@ export default async function HelpPage() {
         </div>
 
         <Link href="/guide" className="group block mb-6">
-          <Card className="dark rounded bg-card border-border px-6 py-5 flex items-center justify-between hover:bg-muted transition-colors">
+          <Card className="dark text-foreground rounded bg-card border-border px-6 py-5 flex items-center justify-between hover:bg-muted transition-colors">
             <div>
               <p className="text-[14px] font-semibold text-foreground">Open the full User Guide + Guide Chat</p>
               <p className="text-[12px] text-muted-foreground mt-0.5">Search features, read how-tos, and ask questions with source links.</p>

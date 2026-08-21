@@ -128,7 +128,7 @@ export default async function ContributorPage() {
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-background">
+      <header className="dark text-foreground bg-background">
         <div className="max-w-3xl mx-auto px-6 h-14 flex items-center">
           <span className="text-[13px] font-bold tracking-[0.16em] uppercase text-foreground">
             <span className="text-foreground">Starting </span>
@@ -205,7 +205,7 @@ export default async function ContributorPage() {
           ))}
         </div>
 
-        <section className="dark mt-10 bg-background rounded p-5">
+        <section className="dark text-foreground mt-10 bg-background rounded p-5">
           <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">
             Quick reference
           </h2>

@@ -315,15 +315,15 @@ export default async function OutreachHubPage() {
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="bg-primary">
+      <header className="dark text-foreground bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
-            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Button
             variant="outline"
             render={<Link href="/dashboard" />}
-            className="min-h-[44px] border-border text-[13px] text-primary-foreground hover:text-primary-foreground"
+            className="min-h-[44px] border-border text-[13px]"
           >
             ← Dashboard
           </Button>

@@ -157,8 +157,8 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
             value={key}
             className={`text-[12px] font-semibold px-3 py-1.5 rounded border transition-colors ${
               statusFilter === key
-                ? 'bg-primary border-border text-primary-foreground hover:bg-primary'
-                : 'bg-card border-border text-primary-foreground hover:border-border'
+                ? 'bg-primary aria-pressed:bg-primary border-border text-primary-foreground hover:bg-primary'
+                : 'bg-card border-border text-card-foreground hover:border-border'
             }`}
           >
             {label} <span className="ml-1 opacity-60">{counts[key] ?? 0}</span>

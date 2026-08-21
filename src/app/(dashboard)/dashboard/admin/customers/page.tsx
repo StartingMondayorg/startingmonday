@@ -247,17 +247,19 @@ export default async function CustomersPage({
         {/* Stat cards */}
         <Tabs value={filter} className="mb-6">
           <TabsList className="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-transparent p-0 h-auto w-full">
+            {/* The colour lives on the trigger, next to the background it pairs with,
+                so the children inherit whichever state actually wins. */}
             {cards.map(card => (
               <TabsTrigger
                 key={card.filter}
                 value={card.filter}
                 render={<Link href={`/dashboard/admin/customers?filter=${card.filter}`} />}
-                className="flex-col items-start rounded h-auto p-5 border border-border bg-muted/40 data-active:bg-primary data-active:border-primary/30 data-active:shadow-none"
+                className="group flex-col items-start rounded h-auto p-5 border border-border bg-muted/40 text-foreground data-active:bg-primary data-active:text-primary-foreground data-active:border-primary/30 data-active:shadow-none"
               >
-                <div className={`text-[30px] font-bold leading-none text-primary-foreground ${card.accent ? 'text-primary' : ''}`}>
+                <div className={`text-[30px] font-bold leading-none ${card.accent ? 'text-primary group-data-active:text-primary-foreground' : ''}`}>
                   {card.label}
                 </div>
-                <div className="text-[13px] mt-2 font-semibold tracking-wide text-primary-foreground">
+                <div className="text-[13px] mt-2 font-semibold tracking-wide opacity-80">
                   {card.sublabel}
                 </div>
               </TabsTrigger>

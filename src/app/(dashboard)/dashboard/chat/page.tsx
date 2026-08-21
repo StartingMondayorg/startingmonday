@@ -237,7 +237,7 @@ export default function ChatPage() {
         </div>
       )}
 
-      <header className="dark bg-card shrink-0">
+      <header className="dark text-foreground bg-card shrink-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between gap-3">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

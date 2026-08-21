@@ -32,7 +32,7 @@ const STRATEGY_MOVES = [
 export default function MichaelStrategyBriefPage() {
   return (
     <div className="min-h-screen bg-background font-sans">
-      <nav className="dark bg-background sticky top-0 z-10 border-b border-border">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10 border-b border-border">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase" aria-label="Go to Starting Monday homepage">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -45,7 +45,7 @@ export default function MichaelStrategyBriefPage() {
         </div>
       </nav>
 
-      <header className="dark bg-background px-4 sm:px-6 pt-14 pb-16">
+      <header className="dark text-foreground bg-background px-4 sm:px-6 pt-14 pb-16">
         <div className="max-w-4xl mx-auto">
           <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">Strategy brief demo</p>
           <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.12] tracking-tight mb-5">

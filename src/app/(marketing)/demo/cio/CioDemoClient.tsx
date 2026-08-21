@@ -603,7 +603,7 @@ export function CioDemoClient() {
               <ToggleGroupItem
                 key={item.key}
                 value={item.key}
-                className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-primary text-primary-foreground border-border' : 'bg-card text-primary-foreground border-border hover:bg-muted'}`}
+                className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-border' : 'bg-card text-card-foreground border-border hover:bg-muted'}`}
               >
                 {item.label}
               </ToggleGroupItem>

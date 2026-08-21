@@ -88,7 +88,7 @@ export function PricingSection({ trialNote }: { trialNote: string }) {
             className={`flex items-center gap-2 text-[13px] font-semibold px-4 py-1.5 rounded-md transition-colors ${annual ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
           >
             Annual
-            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded transition-colors ${annual ? 'bg-primary text-primary-foreground' : 'bg-muted text-primary-foreground'}`}>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded transition-colors ${annual ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
               2 months free
             </span>
           </button>
@@ -165,7 +165,7 @@ export function PricingSection({ trialNote }: { trialNote: string }) {
           </div>
 
           {/* Executive - slate-900 authority */}
-          <div className="dark border border-border rounded-lg p-5 sm:p-6 bg-card flex flex-col">
+          <div className="dark text-foreground border border-border rounded-lg p-5 sm:p-6 bg-card flex flex-col">
             {/* KPI Row */}
             <div className="mb-3 flex items-center gap-2">
               <span className="text-[13px] font-bold text-success">$499/mo</span>

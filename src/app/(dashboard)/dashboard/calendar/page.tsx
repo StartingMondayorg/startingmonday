@@ -139,7 +139,7 @@ export default async function CalendarPage({
               &larr; Prev
             </Button>
             <Button
-              className="text-[12px] font-semibold text-foreground"
+              className="text-[12px] font-semibold"
               render={<Link href={`/dashboard/calendar?week=${mondayOf(todayISO)}`} />}
             >
               Today

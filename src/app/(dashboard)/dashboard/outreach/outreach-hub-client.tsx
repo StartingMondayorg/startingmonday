@@ -793,11 +793,11 @@ export function OutreachHubClient({ rows, fromAddressLabel, buildVersion }: Prop
             className="flex-wrap gap-2"
           >
             {CHANNEL_OPTIONS.map((option) => (
-              <ToggleGroupItem key={option.value} value={option.value} variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-border">
+              <ToggleGroupItem key={option.value} value={option.value} variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto bg-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-pressed:border-border">
                 {option.label}
               </ToggleGroupItem>
             ))}
-            <ToggleGroupItem value="coaches:day1" variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/30">
+            <ToggleGroupItem value="coaches:day1" variant="outline" className="text-[12px] font-semibold px-3 py-1.5 h-auto bg-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-pressed:border-primary/30">
               Day 1 Coach List (60)
             </ToggleGroupItem>
           </ToggleGroup>

@@ -9,7 +9,7 @@ export const metadata = {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background font-sans">
-      <header className="dark bg-background">
+      <header className="dark text-foreground bg-background">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
       <main className="max-w-3xl mx-auto px-6 py-12">
 
         {/* Plain-language employer privacy section - visible before legal text */}
-        <div className="dark bg-background rounded-lg px-8 py-8 mb-12">
+        <div className="dark text-foreground bg-background rounded-lg px-8 py-8 mb-12">
           <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">What matters most</p>
           <h2 className="text-[22px] font-bold text-foreground mb-4 leading-snug">Your employer cannot see this.</h2>
           <div className="space-y-3 text-[14px] text-foreground leading-relaxed">

@@ -83,13 +83,13 @@ export function PricingCards() {
         >
           <ToggleGroupItem
             value="monthly"
-            className="rounded-none px-5 py-3 min-h-[44px] !bg-card text-muted-foreground hover:!bg-muted data-[state=on]:!bg-primary data-[state=on]:!text-card-foreground"
+            className="rounded-none px-5 py-3 min-h-[44px] !bg-card text-muted-foreground hover:!bg-muted aria-pressed:!bg-primary aria-pressed:!text-primary-foreground"
           >
             Monthly
           </ToggleGroupItem>
           <ToggleGroupItem
             value="annual"
-            className="rounded-none px-5 py-3 min-h-[44px] !bg-card text-muted-foreground hover:!bg-muted data-[state=on]:!bg-primary data-[state=on]:!text-card-foreground"
+            className="rounded-none px-5 py-3 min-h-[44px] !bg-card text-muted-foreground hover:!bg-muted aria-pressed:!bg-primary aria-pressed:!text-primary-foreground"
           >
             Annual
           </ToggleGroupItem>

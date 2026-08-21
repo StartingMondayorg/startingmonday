@@ -28,7 +28,7 @@ export default async function CounselorViewPage() {
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-card sticky top-0 z-10">
+      <header className="dark text-foreground bg-card sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/dashboard/outplacement" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

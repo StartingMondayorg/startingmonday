@@ -159,8 +159,8 @@ function SourceLegend({
             value={button.key}
             className={`h-auto gap-1 rounded border px-2 py-1 text-[10px] font-semibold tracking-[0.04em] uppercase transition-colors ${
               traceFilter === button.key
-                ? 'bg-primary text-primary-foreground border-primary/30'
-                : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                : 'bg-muted/40 text-foreground border-border hover:border-border'
             }`}
           >
             <span>{button.label}</span>
@@ -1109,8 +1109,8 @@ export function PrepClient({
                   value={opt.value}
                   className={`h-auto text-[12px] font-medium px-3 py-1.5 rounded border transition-colors ${
                     interviewStage === opt.value
-                      ? 'bg-primary text-primary-foreground border-primary/30'
-                      : 'bg-muted/40 text-primary-foreground border-border hover:text-primary-foreground'
+                      ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                      : 'bg-muted/40 text-foreground border-border hover:text-foreground'
                   }`}
                 >
                   {opt.label}
@@ -1133,8 +1133,8 @@ export function PrepClient({
                   value={opt.value}
                   className={`h-auto text-[12px] font-medium px-3 py-1.5 rounded border transition-colors ${
                     roleMode === opt.value
-                      ? 'bg-primary text-primary-foreground border-primary/30'
-                      : 'bg-muted/40 text-primary-foreground border-border hover:text-primary-foreground'
+                      ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                      : 'bg-muted/40 text-foreground border-border hover:text-foreground'
                   }`}
                 >
                   {opt.label}
@@ -1329,13 +1329,13 @@ export function PrepClient({
               >
                 <ToggleGroupItem
                   value="tonight"
-                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'tonight' ? 'bg-primary text-primary-foreground border-primary/30' : 'bg-muted/40 text-primary-foreground border-border hover:border-border'}`}
+                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'tonight' ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30' : 'bg-muted/40 text-foreground border-border hover:border-border'}`}
                 >
                   Tonight view
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="full"
-                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'full' ? 'bg-primary text-primary-foreground border-primary/30' : 'bg-muted/40 text-primary-foreground border-border hover:border-border'}`}
+                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'full' ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30' : 'bg-muted/40 text-foreground border-border hover:border-border'}`}
                 >
                   Full dossier
                 </ToggleGroupItem>
@@ -1631,7 +1631,7 @@ export function PrepClient({
                       <div className={`max-w-[85%] rounded-lg px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${
                         msg.role === 'user'
                           ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted/40 border border-border text-primary-foreground'
+                          : 'bg-muted/40 border border-border text-foreground'
                       }`}>
                         {msg.content}
                         {msg.role === 'assistant' && msg.content === '' && chatLoading && (

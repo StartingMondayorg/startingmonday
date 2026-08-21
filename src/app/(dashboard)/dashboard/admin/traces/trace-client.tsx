@@ -132,8 +132,8 @@ function TraceRow({
             aria-keyshortcuts="P"
             className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === true
-                ? 'bg-success text-success-foreground hover:bg-success'
-                : 'bg-muted text-success-foreground hover:bg-success/10 hover:text-success-foreground'
+                ? 'bg-success aria-pressed:bg-success text-success-foreground hover:bg-success'
+                : 'bg-muted text-foreground hover:bg-success/10 hover:text-foreground'
             }`}
           >
             Pass
@@ -144,8 +144,8 @@ function TraceRow({
             aria-keyshortcuts="F"
             className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === false
-                ? 'bg-destructive text-destructive-foreground hover:bg-destructive'
-                : 'bg-muted text-destructive-foreground hover:bg-destructive/10 hover:text-destructive-foreground'
+                ? 'bg-destructive aria-pressed:bg-destructive text-destructive-foreground hover:bg-destructive'
+                : 'bg-muted text-foreground hover:bg-destructive/10 hover:text-foreground'
             }`}
           >
             Fail
@@ -232,8 +232,8 @@ function TraceRow({
                   aria-keyshortcuts={String(idx + 1)}
                   className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                     active
-                      ? 'bg-primary text-primary-foreground border-primary/30'
-                      : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                      ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                      : 'bg-muted/40 text-foreground border-border hover:border-border'
                   }`}
                 >
                   <span className="mr-1 font-semibold">{idx + 1}</span>{category}
@@ -684,7 +684,7 @@ export function TraceViewer({
               render={<Link href={buildUrl({ feature: f || undefined, unrated: unratedOnly ? '1' : undefined })} />}
               className={`h-auto text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
                 currentFeature === f
-                  ? 'bg-card text-foreground'
+                  ? 'bg-card aria-pressed:bg-card text-foreground'
                   : 'bg-muted/40 border border-border text-muted-foreground hover:border-border'
               }`}
             >
@@ -698,8 +698,8 @@ export function TraceViewer({
             render={<Link href={buildUrl({ feature: currentFeature || undefined, unrated: unratedOnly ? undefined : '1' })} />}
             className={`h-auto text-[12px] font-semibold px-3 py-1.5 rounded transition-colors ${
               unratedOnly
-                ? 'bg-warning text-warning-foreground'
-                : 'bg-muted/40 border border-border text-warning-foreground hover:border-border'
+                ? 'bg-warning aria-pressed:bg-warning text-warning-foreground'
+                : 'bg-muted/40 border border-border text-foreground hover:border-border'
             }`}
           >
             Unrated only
@@ -777,7 +777,7 @@ export function TraceViewer({
                       className={`h-auto text-[10px] px-2 py-1 rounded ${
                         showCopyActions
                           ? 'bg-primary text-primary-foreground border-primary/30'
-                          : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                          : 'bg-muted/40 text-foreground border-border hover:border-border'
                       }`}
                     />
                   }
@@ -803,8 +803,8 @@ export function TraceViewer({
                 onPressedChange={() => setShowCopyPreview((value) => !value)}
                 className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   showCopyPreview
-                    ? 'bg-primary text-primary-foreground border-primary/30'
-                    : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                    ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                    : 'bg-muted/40 text-foreground border-border hover:border-border'
                 }`}
               >
                 {showCopyPreview ? 'Hide preview' : 'Preview copy'}
@@ -815,8 +815,8 @@ export function TraceViewer({
               onPressedChange={() => setCopyFormat((value) => (value === 'list' ? 'table' : 'list'))}
               className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 copyFormat === 'table'
-                  ? 'bg-primary text-primary-foreground border-primary/30'
-                  : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                  ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                  : 'bg-muted/40 text-foreground border-border hover:border-border'
               }`}
             >
               Format: {copyFormat}
@@ -826,8 +826,8 @@ export function TraceViewer({
               onPressedChange={() => setIncludeZeroCountsInCopy((value) => !value)}
               className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 includeZeroCountsInCopy
-                  ? 'bg-primary text-primary-foreground border-primary/30'
-                  : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                  ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                  : 'bg-muted/40 text-foreground border-border hover:border-border'
               }`}
             >
               Include zeros: {includeZeroCountsInCopy ? 'on' : 'off'}
@@ -837,8 +837,8 @@ export function TraceViewer({
               onPressedChange={() => setTrimForSlack((value) => !value)}
               className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                 trimForSlack
-                  ? 'bg-primary text-primary-foreground border-primary/30'
-                  : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                  ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                  : 'bg-muted/40 text-foreground border-border hover:border-border'
               }`}
             >
               Trim for Slack: {trimForSlack ? 'on' : 'off'}
@@ -867,8 +867,8 @@ export function TraceViewer({
                 value="page"
                 className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   failureSummaryMode === 'page'
-                    ? 'bg-primary text-primary-foreground border-primary/30'
-                    : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                    ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                    : 'bg-muted/40 text-foreground border-border hover:border-border'
                 }`}
               >
                 Page
@@ -877,8 +877,8 @@ export function TraceViewer({
                 value="session"
                 className={`h-auto text-[10px] px-2 py-1 rounded border transition-colors ${
                   failureSummaryMode === 'session'
-                    ? 'bg-primary text-primary-foreground border-primary/30'
-                    : 'bg-muted/40 text-primary-foreground border-border hover:border-border'
+                    ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                    : 'bg-muted/40 text-foreground border-border hover:border-border'
                 }`}
               >
                 Session

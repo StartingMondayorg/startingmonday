@@ -95,7 +95,7 @@ export default async function TeamJoinPage({
   }
 
   return (
-    <div className="dark min-h-screen bg-background font-sans flex flex-col">
+    <div className="dark text-foreground min-h-screen bg-background font-sans flex flex-col">
       <header className="px-6 h-14 flex items-center">
         <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
           <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

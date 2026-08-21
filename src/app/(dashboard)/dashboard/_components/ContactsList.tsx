@@ -281,7 +281,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
           >
             <ToggleGroupItem
               value=""
-              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${!channelFilter ? 'bg-primary text-primary-foreground hover:bg-primary' : 'bg-muted/40 text-primary-foreground hover:bg-muted/60'}`}
+              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${!channelFilter ? 'bg-primary aria-pressed:bg-primary text-primary-foreground hover:bg-primary' : 'bg-muted/40 text-foreground hover:bg-muted/60'}`}
             >
               All
             </ToggleGroupItem>
@@ -291,7 +291,7 @@ export function ContactsList({ contacts, isLeader = false }: { contacts: Contact
                 <ToggleGroupItem
                   key={v}
                   value={v}
-                  className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${channelFilter === v ? 'bg-primary text-primary-foreground hover:bg-primary' : 'bg-muted/40 text-primary-foreground hover:bg-muted/60'}`}
+                  className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 transition-colors ${channelFilter === v ? 'bg-primary aria-pressed:bg-primary text-primary-foreground hover:bg-primary' : 'bg-muted/40 text-foreground hover:bg-muted/60'}`}
                 >
                   {ch?.label ?? v}
                 </ToggleGroupItem>

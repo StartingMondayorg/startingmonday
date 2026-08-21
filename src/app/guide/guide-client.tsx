@@ -273,7 +273,7 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-card">
+      <header className="dark text-foreground bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
@@ -326,7 +326,7 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
           <p className="text-[12px] text-muted-foreground mt-2">Showing {filtered.length} of {sections.length} sections.</p>
         </Card>
 
-        <Card className="dark !bg-card p-4 sm:p-5 mb-6">
+        <Card className="dark text-foreground !bg-card p-4 sm:p-5 mb-6">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Career Guide Chat</p>
           <p className="text-[13px] text-muted-foreground mb-3">Ask anything about features, setup, workflows, or articles. You will get an answer plus source links.</p>
           <div className="flex flex-col sm:flex-row gap-2">

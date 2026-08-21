@@ -34,7 +34,7 @@ const TALK_TRACK = [
 export default function PresenterDemoPage() {
   return (
     <div className="min-h-screen bg-muted text-foreground font-sans">
-      <header className="dark bg-background border-b border-border sticky top-0 z-20">
+      <header className="dark text-foreground bg-background border-b border-border sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground hover:opacity-80 transition-opacity">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

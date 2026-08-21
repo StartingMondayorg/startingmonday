@@ -51,7 +51,7 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
 
   return (
     <div className="min-h-screen bg-muted font-sans">
-      <header className="dark bg-card">
+      <header className="dark text-foreground bg-card">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

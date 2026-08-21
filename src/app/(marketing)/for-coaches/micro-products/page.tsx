@@ -47,7 +47,7 @@ const COACH_BUNDLE_PACKS = [
 export default function CoachMicroProductsPage() {
   return (
     <div className="min-h-screen bg-background font-sans">
-      <nav className="dark bg-background sticky top-0 z-10">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

@@ -9,7 +9,7 @@ export const metadata = {
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-background font-sans">
-      <header className="dark bg-background">
+      <header className="dark text-foreground bg-background">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
