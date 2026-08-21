@@ -79,7 +79,7 @@ Issues surfaced by the Software & SRE Synthetic Council review. Grouped into spr
 
 ### E3.1 — Add per-job timeout to worker cron jobs
 - Worker jobs run inside `node-cron` with no per-job timeout
-- A hung Browserless call or a hung Claude stream can block the entire worker process
+- A hung browserless.io call or a hung Claude stream can block the entire worker process
 - Wrap the top 3 job bodies (`scan-job`, `executive-scan-job`, `weekly-digest`) in `Promise.race([jobFn(), timeout(300_000)])`
 - Log `{ event: 'job_timeout', job }` on timeout
 

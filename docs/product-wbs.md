@@ -42,7 +42,7 @@
 | 1.1.1 | Create GitHub repository, branch protection, main/staging branches | 0.5d | — | Git repo | |
 | 1.1.2 | Set up Supabase project (production + development instances) | 0.5d | 1.1.1 | Two Supabase projects | 🔴 |
 | 1.1.3 | Set up Railway account + project for background workers | 0.5d | 1.1.1 | Railway project | |
-| 1.1.4 | Set up Browserless.io account — obtain API key, test basic connection | 0.5d | — | Working API key | |
+| 1.1.4 | Set up browserless.io account — obtain API key, test basic connection | 0.5d | — | Working API key | |
 | 1.1.5 | Set up Anthropic API account — obtain key, test basic message call | 0.5d | — | Working API key | 🔴 |
 | 1.1.6 | Set up Resend account — verify sending domain (DNS DKIM/SPF) | 1d | — | Domain sending verified | 🔴 |
 | 1.1.7 | Set up Sentry project (error tracking) — configure alerts for P0 errors | 0.5d | 1.1.1 | Sentry project | |
@@ -77,7 +77,7 @@
 
 | ID | Task | Effort | Depends On | Deliverable | CP |
 |---|---|---|---|---|---|
-| 1.3.1 | Build core Playwright page-fetching function using Browserless.io REST API | 1d | 1.1.4 | `scanner/fetch-page.js` | 🔴 |
+| 1.3.1 | Build core Playwright page-fetching function using browserless.io REST API | 1d | 1.1.4 | `scanner/fetch-page.js` | 🔴 |
 | 1.3.2 | Build HTML text extraction — clean raw HTML to plain text, strip nav/footer/ads | 1d | 1.3.1 | `scanner/extract-text.js` | 🔴 |
 | 1.3.3 | Build role detection logic — keyword matching (title, level, function) against user profile | 1d | 1.3.2 | `scanner/detect-roles.js` | 🔴 |
 | 1.3.4 | Build robots.txt checker — before scanning any new URL, verify Disallow rules | 0.5d | 1.3.1 | `scanner/robots-check.js` | |
@@ -97,7 +97,7 @@
 | 1.4.1 | Set up Railway Node.js worker project — Dockerfile, health endpoint, env vars | 1d | 1.1.3 | Worker deployed on Railway | 🔴 |
 | 1.4.2 | Implement node-cron scheduler in worker: scan job (Mon/Wed/Fri 8AM UTC) | 0.5d | 1.4.1 | Cron running | 🔴 |
 | 1.4.3 | Implement scan job queue: query DB for companies due for scan, dispatch to scanner | 1d | 1.4.2, 1.3.9 | Queue runner | 🔴 |
-| 1.4.4 | Implement concurrency control: max 10 concurrent Browserless sessions | 0.5d | 1.4.3 | Throttled queue | |
+| 1.4.4 | Implement concurrency control: max 10 concurrent browserless.io sessions | 0.5d | 1.4.3 | Throttled queue | |
 | 1.4.5 | Add node-cron job: briefing engine (Mon–Fri 6:00 AM UTC) | 0.25d | 1.4.2 | Briefing cron | 🔴 |
 | 1.4.6 | Add node-cron job: follow-up reminder checker (daily 6:00 AM UTC) | 0.25d | 1.4.2 | Follow-up cron | |
 | 1.4.7 | Add node-cron job: momentum score calculation (Sunday 11:00 PM UTC) | 0.25d | 1.4.2 | Momentum cron | |
@@ -715,7 +715,7 @@ The following chain represents the longest dependency path. Any slip here direct
 
 | Risk | Probability | Impact on Timeline | Mitigation |
 |---|---|---|---|
-| Browserless.io rate limits or pricing change | Medium | +1 week | Self-hosted fallback documented |
+| browserless.io rate limits or pricing change | Medium | +1 week | Self-hosted fallback documented |
 | Playwright scanner blocked by target sites | High | Ongoing | Alert user, manual check fallback |
 | Claude API behavior changes on outreach drafts | Medium | +1 week | Prompt versioning, regression test set |
 | Resume .docx export formatting issues | Medium | +3 days | Expand QA matrix, test more templates |

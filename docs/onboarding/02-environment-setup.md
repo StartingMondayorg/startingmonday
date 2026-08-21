@@ -55,7 +55,7 @@ The worker is a separate Node.js process. Copy the Supabase, Anthropic, Resend, 
 |---|---|---|
 | `WORKER_SECRET` | Shared secret with the web app | Yes |
 | `GNEWS_API_KEY` | GNews.io for company news queries | Yes (scanner) |
-| `BROWSERLESS_API_KEY` | Browserless for career page scraping | Yes (scanner) |
+| `BROWSERLESS_API_KEY` | browserless.io for career page scraping | Yes (scanner) |
 | `PDL_API_KEY` | People Data Labs for exec roster snapshots | Yes (scanner) |
 | `CRUNCHBASE_API_KEY` | Crunchbase for funding round data | Optional (scanner skips if absent) |
 | `PREDICTLEADS_API_KEY` | PredictLeads for exec change signals | Optional (scanner skips if absent) |

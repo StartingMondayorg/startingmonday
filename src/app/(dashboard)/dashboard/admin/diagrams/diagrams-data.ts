@@ -276,7 +276,7 @@ export const DIAGRAM_CATEGORIES: DiagramCategory[] = [
     WRK["Worker"] <--> SB
     WRK --> RSD
     WRK --> ANT
-    WRK --> BWL["Browserless<br/>career page scraping"]
+    WRK --> BWL["browserless.io<br/>career page scraping"]
     WRK --> GNW["GNews<br/>news articles"]
     WRK --> CBF["Crunchbase<br/>funding data"]
     WRK --> PDL["People Data Labs<br/>exec roster"]

@@ -189,7 +189,7 @@ Key files:
 - `worker/index.js` — entry point, all cron definitions, job runner with timeout enforcement
 - `worker/jobs/` — individual job implementations (21 jobs as of May 2026)
 - `worker/signals/` — individual signal fetchers (news, SEC, PDL, Crunchbase, PredictLeads, etc.)
-- `worker/scanner/` — Browserless career page scraper
+- `worker/scanner/` — browserless.io career page scraper
 - `worker/briefing/` — daily briefing assembly and delivery
 - `worker/lib/` — shared utilities (logger, Supabase client, email helpers)
 

@@ -38,7 +38,7 @@ Everything currently live at startingmonday.app.
 
 - [x] Pipeline tracking (5 stages: Watching, Researching, Applied, Interviewing, Offer)
 - [x] Contact tracker with channel, follow-up, and notes
-- [x] Career page scanning (Browserless, 3x/week)
+- [x] Career page scanning (browserless.io, 3x/week)
 - [x] Company signals (funding, exec hires/departures, acquisition, expansion, etc.)
 - [x] Prep brief (full + 8 individual sections, all streaming)
 - [x] Search Strategy Brief (Opus, streaming, follow-up chat)

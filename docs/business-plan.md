@@ -119,7 +119,7 @@ Phase 3 targets 500 to 5,000 paying customers in months eighteen through thirty-
 
 ## Cost Structure
 
-The business is capital-efficient. Primary variable costs are Anthropic API usage at $3 to $8 per active user per month depending on feature utilization, Browserless scanning at approximately $0.50 per user per month, and email delivery via Resend at negligible cost at current scale. Fixed costs are Railway hosting at approximately $50 per month currently and $200 per month at 1,000 users, Stripe transaction fees at 2.9 percent plus $0.30, and monitoring tooling that is minimal at current scale.
+The business is capital-efficient. Primary variable costs are Anthropic API usage at $3 to $8 per active user per month depending on feature utilization, browserless.io scanning at approximately $0.50 per user per month, and email delivery via Resend at negligible cost at current scale. Fixed costs are Railway hosting at approximately $50 per month currently and $200 per month at 1,000 users, Stripe transaction fees at 2.9 percent plus $0.30, and monitoring tooling that is minimal at current scale.
 
 Target gross margin is 85 percent or above at 1,000 or more subscribers. There is no inventory and no physical delivery. The primary cost scales with revenue, not with headcount.
 

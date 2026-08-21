@@ -181,7 +181,7 @@ Users add target companies to a personal watchlist. The platform automatically c
 | F1.10 | Scan results are deduplicated — the same role does not trigger a second alert unless it has been updated significantly |
 
 #### Technical Notes
-- Playwright (via Browserless.io) executes scans in isolated browser contexts
+- Playwright (via browserless.io) executes scans in isolated browser contexts
 - Page content is extracted as cleaned text; standard HTML parsing applied first, Playwright fallback for JS-rendered pages
 - Claude Haiku scores each hit (low cost, high throughput)
 - Scan jobs are queued and distributed across worker pool — no scan runs on the main web server
@@ -768,7 +768,7 @@ A structured intelligence layer on top of the existing contact tracker. Maps the
                      ┌──────────────────────────────────────┐
                      │         External Services            │
                      │                                      │
-                     │  Browserless.io   (Playwright scans) │
+                     │  browserless.io   (Playwright scans) │
                      │  Resend           (email delivery)   │
                      │  Stripe           (billing)          │
                      │  Google OAuth     (Gmail / Calendar) │
@@ -786,7 +786,7 @@ A structured intelligence layer on top of the existing contact tracker. Maps the
 | Database | PostgreSQL via Supabase | Managed, includes auth, realtime, row-level security |
 | Auth | Supabase Auth | Email/password + Google OAuth, JWT |
 | Background Jobs | Railway (Node.js workers) | Reliable cron, separate from web server, observable |
-| Browser Automation | Browserless.io | Cloud Playwright — no self-hosted headless Chrome |
+| Browser Automation | browserless.io | Cloud Playwright — no self-hosted headless Chrome |
 | AI | Anthropic Claude API | claude-opus-4-7, claude-sonnet-4-6, claude-haiku-4-5-20251001 |
 | Email | Resend | Transactional email, React Email templates, deliverability |
 | Billing | Stripe | Subscriptions, dunning, usage-based add-ons |
@@ -1254,16 +1254,16 @@ Score 1-10 (7+ = send alert). Respond with JSON only: {"score": N, "summary": "o
 | Refresh | Automatic token refresh using Google's refresh token flow |
 | Optional | OAuth integration is optional at onboarding — product works without it |
 
-### 8.3 Browserless.io (Career Page Scanning)
+### 8.3 browserless.io (Career Page Scanning)
 
 | Requirement | Detail |
 |---|---|
-| API | Browserless REST API — `POST /chrome/playwright` |
+| API | browserless.io REST API — `POST /chrome/playwright` |
 | Auth | API key in environment variable |
 | Concurrency | Up to 10 concurrent browser sessions |
 | Timeout | 30 seconds per page — hard kill if exceeded |
 | Error handling | On timeout or block: log error, retry once after 2 hours, alert user if second failure |
-| Alternative | Self-hosted Playwright via Puppeteer Docker (Railway) — fallback if Browserless.io pricing scales poorly |
+| Alternative | Self-hosted Playwright via Puppeteer Docker (Railway) — fallback if browserless.io pricing scales poorly |
 
 ### 8.4 Resend (Email Delivery)
 
@@ -1297,7 +1297,7 @@ Score 1-10 (7+ = send alert). Respond with JSON only: {"score": N, "summary": "o
 | Session tokens | Short-lived JWTs (1 hour) + refresh tokens (7 days) |
 | Row-level security | RLS enforced at PostgreSQL — no cross-tenant data leakage even if app layer has a bug |
 | Admin access | Service role key used only in Railway workers — never exposed to client |
-| API keys | All third-party API keys (Anthropic, Stripe, Browserless) stored in environment variables, never in code or DB |
+| API keys | All third-party API keys (Anthropic, Stripe, browserless.io) stored in environment variables, never in code or DB |
 
 ### 9.2 Data Handling
 
@@ -1386,7 +1386,7 @@ Score 1-10 (7+ = send alert). Respond with JSON only: {"score": N, "summary": "o
 
 Deliverables:
 - [ ] Multi-tenant database schema deployed on Supabase
-- [ ] Career page scanner (Playwright / Browserless.io) running for 5–10 beta users
+- [ ] Career page scanner (Playwright / browserless.io) running for 5–10 beta users
 - [ ] Daily briefing engine generating emails via Resend
 - [ ] Claude API connected — scan scoring (Haiku) and briefing generation (Sonnet)
 - [ ] Manual user onboarding (no UI — admin creates accounts via DB)
@@ -1450,7 +1450,7 @@ Success criteria: 2+ outplacement firm agreements signed, 5+ Coach tier subscrib
 | Supabase Pro | $25/mo | $25/mo |
 | Vercel Pro | $20/mo | $20/mo |
 | Railway (workers) | $20/mo | $80/mo |
-| Browserless.io | $50/mo | $200/mo |
+| browserless.io | $50/mo | $200/mo |
 | Resend | $20/mo | $60/mo |
 | Claude API (est.) | $150/mo | $750/mo |
 | Stripe fees (2.9% + $0.30) | ~$560/mo | ~$2,100/mo |
@@ -1606,7 +1606,7 @@ The following are deliberately excluded from the initial build:
 | Claude API price increase | Low | Medium | Monitor token usage per user, token budgets, model tier selection |
 | Anthropic's ToS restricts career coaching use case | Low | Critical | Review ToS; commercial use of Claude API is explicitly allowed |
 | Competitor (LinkedIn, Indeed, ChatGPT) ships an equivalent product | Medium | High | Depth of integration and personalization as moat; speed to market |
-| Scraping targets adopt bot detection (Cloudflare Turnstile) | High | Medium | Browserless.io handles basic fingerprinting; fallback to manual check alerts |
+| Scraping targets adopt bot detection (Cloudflare Turnstile) | High | Medium | browserless.io handles basic fingerprinting; fallback to manual check alerts |
 | Solo founder bandwidth — can't build Phase 2 in 14 weeks alone | High | Medium | Phase 1 validates before Phase 2 investment; hire or contract at Phase 2 |
 | Low trial-to-paid conversion (< 20%) | Medium | Critical | A/B test onboarding; direct outreach to trial users; qualitative interviews |
 | GDPR audit triggered by EU user complaint | Low | High | Privacy policy + DPA in place before launch; no EU-specific targeting in V1 |
