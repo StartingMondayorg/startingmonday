@@ -12,6 +12,23 @@ const TERMINAL = new Set(['completed', 'failed', 'canceled'])
 export default function ScanStatus({ requestId }: { requestId: string }) {
   const [data, setData] = useState<ScanStatus | null>(null)
   const [message, setMessage] = useState('')
+  const [accepting, setAccepting] = useState(false)
+
+  async function acceptPartial() {
+    if (!data) return
+    setAccepting(true)
+    setMessage('')
+    try {
+      const response = await fetch(`/api/admin/live-briefs/${requestId}/scan/partial`, { method: 'POST' })
+      const result = await response.json() as { error?: string }
+      if (!response.ok) throw new Error(result.error ?? 'Unable to accept partial results')
+      setData({ ...data, run: { ...data.run, status: 'partial_ready' } })
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to accept partial results')
+    } finally {
+      setAccepting(false)
+    }
+  }
 
   useEffect(() => {
     let active = true
@@ -45,6 +62,7 @@ export default function ScanStatus({ requestId }: { requestId: string }) {
         <span className="rounded bg-amber-50 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-amber-700">{data.run.status.replaceAll('_', ' ')}</span>
       </div>
       <p className="mt-2 text-[12px] text-slate-500">{data.run.completed_company_count ?? 0} complete · {data.run.blocked_company_count ?? 0} blocked · {data.run.failed_company_count ?? 0} failed · {data.run.selected_company_count} selected</p>
+      {!TERMINAL.has(data.run.status) && <button type="button" onClick={acceptPartial} disabled={accepting} className="mt-4 rounded border border-orange-300 bg-orange-50 px-3 py-2 text-[12px] font-semibold text-orange-800 disabled:opacity-50">{accepting ? 'Accepting…' : 'Accept partial results'}</button>}
       <ul className="mt-4 divide-y divide-slate-100 rounded border border-slate-200">{data.companies.map((company) => <li key={company.id} className="flex items-center justify-between gap-3 px-3 py-2 text-[12px]"><span className="font-semibold text-slate-800">{company.company_name}</span><span className={company.status === 'failed' || company.status === 'blocked_by_source_policy' ? 'text-red-700' : 'text-slate-500'}>{company.error_class ?? company.status.replaceAll('_', ' ')}</span></li>)}</ul>
     </div>
   )
