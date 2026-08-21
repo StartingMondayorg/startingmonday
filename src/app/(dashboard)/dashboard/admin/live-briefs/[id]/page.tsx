@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
 import { Card } from '@/components/ui/card'
+import ProfileEditor from './profile-editor'
 
 export const metadata = { title: 'Live Brief Request - Starting Monday Admin' }
 
@@ -37,10 +38,6 @@ type RequestDetail = {
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value))
-}
-
-function prettyJson(value: Record<string, unknown>) {
-  return JSON.stringify(value, null, 2)
 }
 
 export default async function LiveBriefDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -116,7 +113,7 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
               <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-slate-500">Reviewed profile</h2>
               <span className="text-[11px] text-slate-400">{Object.keys(request.reviewed_profile ?? {}).length} fields</span>
             </div>
-            <pre className="mt-4 max-h-[620px] overflow-auto rounded bg-slate-950 p-4 text-[12px] leading-5 text-slate-200">{prettyJson(request.reviewed_profile ?? {})}</pre>
+            <ProfileEditor requestId={request.id} initialProfile={request.reviewed_profile ?? {}} />
           </Card>
         </div>
       </main>
