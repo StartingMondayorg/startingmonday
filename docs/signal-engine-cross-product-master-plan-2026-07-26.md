@@ -1123,6 +1123,10 @@ measurement gate, or promote a model without the accountable human decision.
 | DG-11 | Shared package extraction | Defer until two stable compatible contract releases | AO + ENG leads | Post Wave 5 | Continue independent adapters |
 | DG-12 | Public calibration claims | Quarterly, supported cohorts only, approved clean-source inputs | AO + LEGAL + DATA | Before PUB-01 | No public accuracy claim |
 | DG-13 | Portfolio and engine stewardship | Seerique is a DBA/brand of Rothschild Investments, LLC and may steward the logical engine; no third runtime, database, or implied legal/data-controller boundary | AO | Accepted 2026-07-27; review before any entity, contract, IP, or shared-repository change | Rothschild Investments, LLC remains the legal owner/steward and product-local boundaries remain authoritative |
+| DG-PTK-01 | People to Know product boundary | Four product-local slices: link-only hand-off and cited-name evidence in each product; neutral fixtures only may converge after contract approval | AO | Accepted 2026-08-21 | Keep current title-only/product behavior; no cross-product runtime, table, row, or release dependency |
+| DG-PTK-02 | People to Know outbound and reveal boundary | LinkedIn keyword search and a plain Apollo account link only; no provider fetch or contact field. MandateSignal paid contact reveal remains separately labeled, metered, and unchanged | AO | Accepted 2026-08-21 | LinkedIn-only title fallback; no Apollo link and no reveal interaction |
+| DG-PTK-03 | People to Know telemetry | Product-local count rows keyed to the owning brief delivery or tenant lead plus allowlisted destination; count and first/last timestamps only; no raw click rows, search strings, names, contact fields, URLs, or free text | AO + privacy/data review | Owner position accepted 2026-08-21; legal/privacy review before production | No destination telemetry |
+| DG-PTK-04 | Named public evidence grain | A cited name may exist only as a minimal company/lead-role evidence claim with no person entity, profile, enrichment, relationship inference, movement history, or cross-claim identifier; source rights are approved independently per product | AO + LEGAL | Owner classification accepted 2026-08-21; source/legal decisions before display | Render role title only |
 
 Decision records must include date, participants, alternatives, rationale,
 affected controls, review date, and reversal trigger.
@@ -1387,6 +1391,8 @@ that a fix is deployed or that its effect is measured.
 | WS7-07 Outcome loop | ENG-SM | WS7-02 | Feedback controls and local recipe update | Feedback event and resulting config version are both auditable |
 | WS7-08 Product promotion gate | AO + OPS | WS6-08, WS7-03 through WS7-07 | Cohort rollout decision | Existing release, UX, a11y, performance, privacy and telemetry gates pass |
 | WS7-09 Outreach-assist lift study | AO + DATA | WS7-06, measured cohort | Action, conversion and retention comparison for assisted versus eligible unassisted leads | Rung 3 remains out of backlog until measured positive lift and at least 10 paying customers; confounding and support reported |
+| WS7-10 People to Know hand-off | ENG-SM | DG-PTK-01 through DG-PTK-03; approved UX contract; existing Live Brief delivery | Default-off title/why-them block with allowlisted LinkedIn search and optional plain Apollo account link; no provider fetch or contact data | URL/component/no-contact/no-fetch/no-send tests, count-only telemetry tests, private-brief desktop/mobile checks, and flag-off characterization pass |
+| WS7-11 People to Know cited names | ENG-SM + LEGAL | WS7-10; WS1-08 product-local display decisions; WS2-04/06; DG-PTK-04 | Request/company-role evidence claims with source/date, 90-day re-verification, conflict/retraction handling, title fallback, and human review | Rights, RLS/service-role, retention/deletion, stale/conflict/blocked/uncited fixtures, manual-source trial, collection kill, and Live Brief render evidence pass |
 
 ### 16.9 WS8 stories - MandateSignal projection
 
@@ -1400,6 +1406,8 @@ that a fix is deployed or that its effect is measured.
 | WS8-06 Operator QA and correction | ENG-MS | WS8-03, AUTHZ-04 | Suppress, correct, rescore and rerun with immutable audit | Admin authorization and recent-auth requirements pass |
 | WS8-07 Quality burn-in | AO + OPS | WS8-04 through WS8-06 | Niche-specific usefulness/evidence/freshness/duplicate scorecard | MandateSignal GA control ENG-04 thresholds approved and met before unreviewed delivery |
 | WS8-08 Limited-availability gate | AO | WS8-07 plus GA P0 controls | Launch disposition | This plan records GA register result; it does not override open controls |
+| WS8-09 People to Know hand-off | ENG-MS | DG-PTK-01 through DG-PTK-03; approved UX contract; pinned lead/detail route | Default-off lead-detail title/why-them block with allowlisted LinkedIn search and optional plain Apollo account link, visibly separate from paid contact reveal | URL/component/no-contact/no-fetch/no-send tests prove zero reveal-provider calls, credits, or reveal-ledger writes; tenant denial, mobile/desktop, and flag-off checks pass |
+| WS8-10 People to Know cited names | ENG-MS + LEGAL | WS8-09; D14/D15 classification; DG-PTK-04; source rights; ENG-03/04; AUTHZ-01/02/04; LEG-03/04/05; REL-04 | Tenant/lead-role evidence claims with source/date, 90-day re-verification, contradiction/retraction handling, title fallback, and founder QA | Product-local rights, RLS, retention/deletion, stale/conflict/blocked/uncited fixtures, manual-source trial, collection kill, no reveal coupling, and Limited Availability evidence pass |
 
 ### 16.10 WS9 stories - aggregate learning exchange
 

@@ -189,7 +189,7 @@ Brief contents (r1 structure retained, with conversion additions marked ★):
 1. **Executive positioning** — one sentence, three proof points, role lanes.
 2. **Best-fit opportunities today** — verified public openings; plain-language fit explanation; public source URL and observation date; `Observed` / `Inferred` / `Needs verification` labels.
 3. **Companies likely to hire soon** ★ (upgraded from r1's "no current opening" section) — pre-search mandate signals where available (funding, exec departure, M&A), with source and date; likely target titles; clear language when no matching posting was found. This section is the differentiator: no other sample the prospect receives will contain it.
-4. **People to know** — role titles, not unverified names; public LinkedIn company-people search link; mutual-connection prompt; no guessed email or phone.
+4. **People to know** — role title and one evidence-bounded why-them sentence; allowlisted LinkedIn people-search and optional plain Apollo account hand-off; a public name may render only with a product-approved source URL and observed date, otherwise title-only; no guessed or provider-fetched name, email, or phone.
 5. **Next three actions** ★ — action 1 is always: *book a working session with Rich to go deeper on the top opportunities* (embedded HubSpot Meetings link synchronized with Rich's Google Calendar). Actions 2–3: one company to research; one person/role to identify.
 6. **Evidence and limits** — sources checked, blocked sources, scan timestamp, no-guarantee statement, consent/provenance record.
 

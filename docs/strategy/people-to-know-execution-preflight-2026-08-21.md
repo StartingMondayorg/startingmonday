@@ -5,7 +5,7 @@ Products: Starting Monday and MandateSignal, with separate product-local impleme
 Input: `docs/strategy/solpeopletoknowbrief20260821_1.md`  
 Input commit: `bce17eef8b99ad400205c8348582ea49ccf3dd29`  
 Scope expansion: Rich directed both-product execution on 2026-08-21; the verbatim input remains unchanged as the original Starting Monday brief  
-Status: `REPLAN_REQUIRED`; product-local link-only hand-offs are preparation-ready after owner decisions; public-name resolution is blocked on source rights, D14/D15, and contract decisions
+Status: link-only stories `READY`; cited-name stories `BLOCKED_EXTERNAL` on per-product source/legal approval
 
 ## 1. Preflight disposition
 
@@ -70,24 +70,24 @@ The `people`, `person_sources`, `contact_people`, and `company_people_candidates
 - D15 prohibits person-level tracking of signal subjects at watched companies. Existing `prospect_events` are a separate CRM exception for Rich's consenting sales prospects. PTK names require an explicit D14/D15 classification before persistence or display.
 - Applicable GA controls remain controlling: ENG-03 freshness/retraction/contradiction, ENG-04 quality burn-in, AUTHZ-01/02 tenancy, AUTHZ-04 privileged corrections, LEG-03 data flow/lawful basis, LEG-04 retention, LEG-05 deletion, REL-04 kill behavior, and the WS8 Limited Availability gate.
 
-## 3. Required owner and external decisions
+## 3. Approved decisions and external gates
 
-| ID | Decision | Owner | Required before | Default if unresolved |
-| --- | --- | --- | --- | --- |
-| PTK-D1 | Approve the four-slice, two-product execution split and canonical story registration | Rich / AO | Any implementation | No code |
-| PTK-D2 | Approve the verbatim trust line and a one-line `why_them` format | Rich / AO | Link-only renderer | Keep current titles-only brief |
-| PTK-D3 | Define the exact LinkedIn search behavior when no LinkedIn company ID exists: encoded keyword search or a stricter company-filter contract | Rich + ENG-SM + ENG-MS | PTK-2 | No LinkedIn hand-off link |
-| PTK-D4 | Approve plain Apollo destination and wording while referral/OEM questions are unresolved; decide how MandateSignal distinguishes it from paid contact reveal | Rich / AO | PTK-3 | LinkedIn only |
-| PTK-D5 | Decide telemetry grain, allowed fields, retention, deletion, and reporting denominator for destination clicks | Rich + privacy/data owner | PTK-3 telemetry | Do not record destination clicks |
-| PTK-D6 | Approve initial customer-display sources and all six WS1-08 use decisions | Rich + legal/privacy | PTK-1 | Title-only fallback |
-| PTK-D7 | Select PTK claim identity and lifecycle: request-scoped company claim or reusable canonical-company claim; define retention and deletion | Rich + ENG-SM + privacy | PTK-1 schema | No persistence |
-| PTK-D8 | Decide whether leadership-page removal detection is in the first resolver; it requires snapshots and absence-diff evidence, not a one-time fetch | Rich / AO | PTK-1 scope | Defer removal detection |
-| PTK-D9 | Classify MandateSignal cited names under D14/D15: prohibited signal-subject tracking, bounded lead-contact evidence, or another explicit governed class | Rich + legal/privacy + ENG-MS | MandateSignal PTK-1 | No name persistence/display |
-| PTK-D10 | Approve separate MandateSignal data shape and retention/deletion behavior; `contact_reveals` and `prospect_events` are not default PTK storage | Rich + legal/privacy + ENG-MS | MandateSignal PTK-1 | No schema |
-| PTK-D11 | Approve per-product source rights; Starting Monday and MandateSignal decisions do not transfer between products | Rich + legal/privacy | Either resolver | Source blocked in that product |
-| PTK-D12 | Approve whether aggregate click reports may derive from tenant/request-linked events in each product | Rich + privacy/data owners | Telemetry | No destination telemetry |
+Rich directed execution of preparation items 1-5 on 2026-08-21. That direction approves the owner-controlled dispositions below. It does not substitute for the named legal/privacy review of source display, lawful basis, retention, deletion, or vendor terms.
 
-Founder action D-A remains external: send Apollo partnerships the referral-program, listed-integration, and OEM-pricing questions. A referral answer does not unblock or authorize an Apollo API path.
+| ID | Approved disposition | Remaining external gate |
+| --- | --- | --- |
+| PTK-D1 | Four separately released slices are registered as WS7-10, WS7-11, WS8-09, and WS8-10. | None for link-only implementation |
+| PTK-D2 | Use the brief's trust line verbatim. `why_them` is one evidence-bounded sentence, at most 240 characters, describing the role's likely decision influence; it may not infer a relationship, availability, intent, or contactability. | CLR-8 and product copy review |
+| PTK-D3 | Use LinkedIn people-search `keywords`: verified name + company when a name exists, otherwise role title + company. Do not claim a `currentCompany` filter unless a verified LinkedIn company ID is available. | Link contract test against current public URL behavior |
+| PTK-D4 | Plain Apollo destination is `https://app.apollo.io/#/people` with copy “Open in your Apollo account.” MandateSignal renders it separately from “Reveal verified contact (uses credits).” | Referral tag waits for Apollo's response and separate approval |
+| PTK-D5 / PTK-D12 | Persist count-only product-local metrics keyed to the owning delivery or tenant lead plus destination. Store `click_count`, `first_clicked_at`, and `last_clicked_at`; no raw click rows, query/search text, name, contact field, outbound URL, or free text. Delete with the parent; reports expose aggregate counts/rates only. | Privacy/data review before production enablement |
+| PTK-D6 / PTK-D11 | Initial candidate sources are official company leadership/about/team pages, official company newsroom/IR announcements, and official SEC filings. Rights are decided independently per product and do not transfer. All collection/display remains fail-closed until each product's legal matrix approves the use. | Named legal/source-rights approval in each product |
+| PTK-D7 | Starting Monday claims are request + selected-company + role-family scoped, service-role-only, and deleted/redacted with the Live Brief request lifecycle. No reusable person entity or cross-request person key. | Retention/deletion legal review before migration |
+| PTK-D8 | Leadership-page removal/absence-diff detection is deferred from the first resolver. The initial slice may process only positive, current evidence. | Separate snapshot/absence story before later use |
+| PTK-D9 | MandateSignal names are claim-grain lead evidence, not person-grain tracking: no person entity, profile, enrichment, relationship graph, movement history, or cross-lead identifier. D15 continues to prohibit those person-level forms. | Legal/privacy confirmation before persistence/display |
+| PTK-D10 | MandateSignal claims are tenant + lead + company + role-family scoped, RLS-protected, and separate from `contact_reveals` and `prospect_events`. They re-verify at 90 days and delete with the governed lead lifecycle. | LEG-03/04/05 approval and tests before migration |
+
+Apollo D-A uses the official partner program and `partners@apollo.io`. A referral answer does not authorize an Apollo API path or transfer vendor rights between products.
 
 ## 4. Link-only slice contract
 
@@ -97,7 +97,7 @@ The first implementation slice should contain only:
 2. A fixed allowlisted Apollo account link, with no referral parameter until D-A is resolved and approved.
 3. A structured People to Know artifact section containing role title, optional verified name, optional citation/date, `why_them`, and outbound links. In the link-only slice, the name remains absent unless supplied through a separately approved evidence path.
 4. A public renderer with the approved trust line and clear external-link behavior.
-5. Destination-specific, minimized click telemetry only if PTK-D5 is approved.
+5. Destination-specific count rows using the approved PTK-D5/PTK-D12 contract.
 6. Independent default-off flags in each product, such as `LIVE_BRIEF_PEOPLE_HANDOFF_ENABLED` in Starting Monday and `PEOPLE_TO_KNOW_HANDOFF_ENABLED` in MandateSignal.
 
 The slice must not:
@@ -112,7 +112,7 @@ The slice must not:
 
 - Pure URL tests for known-name and title-only cases, encoding, allowed host/path, and malformed-input fallback.
 - Renderer tests for title-only fallback, approved trust copy, external-link attributes, and absent contact fields.
-- API/event tests for allowlisted destination values, payload minimization, invalid destination rejection, expiry/revocation behavior, and idempotency policy.
+- Metrics tests for allowlisted destination values, atomic count increments, payload minimization, invalid destination rejection, parent deletion, and aggregate reporting.
 - A planted violation proving the PTK no-contact-data gate fails on email/phone-shaped user-facing schema fields.
 - A repository inventory proving no PTK path fetches LinkedIn/Apollo and no autonomous send path exists.
 - Desktop/mobile Playwright checks for the private brief.
@@ -177,8 +177,8 @@ This is smaller and more falsifiable than enabling the full Appendix A source un
 | Slice | State | Blocking gate |
 | --- | --- | --- |
 | Verbatim intake | `VERIFIED` | None; committed at `bce17eef` |
-| Starting Monday PTK-2/PTK-3 | `BLOCKED_OWNER` | PTK-D1 through PTK-D5; canonical story registration |
+| Starting Monday PTK-2/PTK-3 | `READY` | Registered as WS7-10; production enablement still needs privacy review and normal release evidence |
 | Starting Monday PTK-1/PTK-4 names | `BLOCKED_EXTERNAL` | WS1-08 customer-display rights, story registration, claim/lifecycle contract |
-| MandateSignal PTK-2/PTK-3 | `BLOCKED_OWNER` | PTK-D1 through PTK-D5 and PTK-D12; canonical WS8 story; coexistence with reveal |
-| MandateSignal PTK-1/PTK-4 names | `BLOCKED_EXTERNAL` | PTK-D9 through PTK-D11; source rights; ENG-03/04; LEG-03/04/05; WS8 gate |
+| MandateSignal PTK-2/PTK-3 | `READY` | Registered as WS8-09; production enablement still needs privacy review and normal GA/release evidence |
+| MandateSignal PTK-1/PTK-4 names | `BLOCKED_EXTERNAL` | Registered as WS8-10; source rights; ENG-03/04; LEG-03/04/05; WS8 gate |
 | Cross-product runtime/data sharing | `PROHIBITED` | DG-03 and DG-11; separate products remain authoritative |
