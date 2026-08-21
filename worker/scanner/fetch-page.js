@@ -30,7 +30,7 @@ const BROWSER_HEADERS = {
 }
 
 // Career boards on these hosts render listings client-side (JS SPAs). A plain fetch
-// returns an app shell with no job text, so always route them through Browserless.
+// returns an app shell with no job text, so always route them through browserless.io.
 const SPA_HOSTS = [
   'bamboohr.com', 'lever.co', 'myworkdayjobs.com', 'ashbyhq.com', 'rippling.com',
   'smartrecruiters.com', 'workforcenow.adp.com', 'saashr.com', 'icims.com',
@@ -108,7 +108,7 @@ export async function fetchPage(url) {
       const html = await res.text()
       // Trust the plain-fetch HTML only when it is NOT a known JS-SPA host and it
       // carries enough *visible* text. A large shell with no rendered jobs must still
-      // escalate to Browserless (raw length alone would wrongly accept it).
+      // escalate to browserless.io (raw length alone would wrongly accept it).
       if (!isSpaHost(url) && visibleTextLength(html) >= MIN_VISIBLE_TEXT) {
         logger.info('fetch-page: plain fetch used', { url, htmlLength: html.length })
         return { html, via: 'direct_fetch', renderMs: null }
@@ -117,14 +117,14 @@ export async function fetchPage(url) {
         url, host: hostOf(url), htmlLength: html.length, visibleText: visibleTextLength(html),
       })
     }
-    // Got 2xx but a JS shell / sparse content — fall through to Browserless.
+    // Got 2xx but a JS shell / sparse content — fall through to browserless.io.
   } catch (err) {
-    if (err.blocked) throw err  // BlockedError: propagate immediately, skip Browserless
-    // Other error (timeout, ENOTFOUND, etc.) — try Browserless
+    if (err.blocked) throw err  // BlockedError: propagate immediately, skip browserless.io
+    // Other error (timeout, ENOTFOUND, etc.) — try browserless.io
     logger.warn('fetch-page: plain fetch failed, trying browserless', { url, error: err.message })
   }
 
-  // Step 2: Browserless
+  // Step 2: browserless.io
   if (!apiKey) {
     logger.warn('fetch-page: browserless key missing', { url })
     throw new Error('No BROWSERLESS_API_KEY configured')
@@ -152,7 +152,7 @@ async function fetchViaBrowserless(url, apiKey) {
 
   if (!res.ok) {
     const body = await res.text()
-    throw new Error(`Browserless ${res.status}: ${body.slice(0, 200)}`)
+    throw new Error(`browserless.io ${res.status}: ${body.slice(0, 200)}`)
   }
 
   return res.text()
