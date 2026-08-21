@@ -1192,6 +1192,7 @@ automation story blocked.
 | WS2-14 MandateSignal governed improvement and independent reconstruction | AO + ENG-MS + DATA + independent reviewer | WS2-12 minimal assurance measured; WS2-13 trigger or accepted critical defect | Two advisory agents initially, registered blinded quality sets, proposal/shadow/promotion workflow, control-correlation review, and quarterly clean-room reconstruction. Four additional agents and long soak remain trigger-deferred | No implementer self-approves evidence or promotion; independent reviewer reconstructs one signal; recommendations are bounded and reversible; long soak begins only with representative measured load and an accepted capacity question |
 | WS2-15 Scanner page-acquisition economics | ENG-SM | WS2-01, WS2-02 | Acquisition-path decision contract plus per-scan path telemetry: authoritative-zero versus lookup-failure distinction, ATS adapter coverage, and render budget per cycle | Per-scan acquisition path recorded in `scan_results`; an ATS returning HTTP 200 with an empty list produces a zero-hit result and zero render calls; render volume per cycle measurably below the recorded pre-change baseline |
 | WS2-16 Source URL integrity | ENG-SM | WS0-03 | Normalization and validation contract for `companies.career_page_url` on write, plus a corrected backfill of existing rows | No stored career URL fails validation; no two companies under one owner silently share a career URL; corrected rows recorded with prior values |
+| WS2-17 Scan outcome visibility | ENG-SM | WS2-16 | Per-company scan health projection derived from `scan_results`, a bounded set of user-facing outcome states, and a career-URL prompt at company-add | Every active company resolves to exactly one displayed state with no empty or ambiguous case; a company with no career URL shows a prompt rather than silence; "working, no roles yet" is visually distinct from every failure state; the count of companies with no career URL falls measurably after the prompt ships |
 
 WS2-10 through WS2-14 are implemented only in the MandateSignal repository.
 They do not create a Starting Monday runtime, data, deployment, or release
@@ -1257,6 +1258,62 @@ windows, 2026-08-20: scan-gap distribution by tier, successful scans per company
 per week against advertised cadence, scan failure causes, and 429 counts grouped
 by acquisition path. These are measured facts about the deployed system. No
 claim here establishes that a fix is deployed or that its effect is measured.
+
+#### 16.3.2 Re-plan addendum 2026-08-21 - scan outcome visibility
+
+Recorded by ENG-SM (Chris Goodwin) on 2026-08-21 under the AGENTS.md
+signal-engine preflight. Pending AO review. Adds WS2-17.
+
+**Why a further story is required.** WS2-16 governs whether a stored career URL
+is well-formed and points at the right company. Measurement taken on 2026-08-21
+shows that URL validity is a small part of the problem it was created to solve.
+
+Of 198 active companies, a validation sweep rejects **4** rows. In the same
+population, **113 companies deliver nothing**: 61 have no career URL at all and
+are silently never scanned, and 52 have a URL but produced no productive scan in
+their last three attempts, across 13 distinct users.
+
+The 52 divide five ways, and the product renders all five identically as
+silence:
+
+| Cause | Companies |
+| --- | --- |
+| Reads correctly, genuinely no matching leadership roles | 22 |
+| Fetch failure, predominantly browserless.io rate limiting | 13 |
+| ATS with no adapter | 7 |
+| Supported ATS, stale token or URL | 5 |
+| Target site blocks automated access | 5 |
+
+A user cannot distinguish "no roles exist" from "we cannot read this page". The
+scanner computes the distinction on every run and discards it at the UI
+boundary. No story in WS2-01 through WS2-16 covers user-visible scan outcome, so
+WS2-17 is added rather than stretching WS2-16 past its stated deliverable.
+
+**Relationship to the existing stories.** WS2-17 depends on WS2-16 for the
+career-URL prompt, and is otherwise independent. It does not require WS2-15
+telemetry, and it improves the user-visible picture regardless of the order in
+which WS2-15, WS2-16 and the browserless.io concurrency work land.
+
+**Effect on WS2-16 scope.** WS2-17 removes the recurring-cleanup justification
+for WS2-16. A user shown an honest failure state corrects their own career URL,
+so backfills against data owned by other people stop being the remedy. WS2-16
+retains validation on write, which prevents the malformed value being stored in
+the first place, and its one-off backfill, which was applied to seven rows on
+2026-08-21. Note four of the rejectable rows are owned by a team member and were
+deliberately left unmodified; WS2-16 reports rows it does not own rather than
+editing them, and WS2-17 is how their owner learns of them.
+
+**Rollback and kill behavior.**
+
+| Story | Rollback / kill behavior |
+| --- | --- |
+| WS2-17 | The scan health projection is derived and additive; it never gates a scan and can be recomputed from `scan_results` at any time. Outcome states degrade to the current silent behavior by configuration without redeploy. The career-URL prompt is dismissible and never blocks company creation. No user-owned data is modified by this story. |
+
+**Evidence produced.** Production read-only measurement, 35-day window,
+2026-08-21: company counts by scan outcome class, dark-company breakdown by
+cause, affected user counts, and a validation sweep of all active career URLs.
+These are measured facts about the deployed system. No claim here establishes
+that a fix is deployed or that its effect is measured.
 
 ### 16.4 WS3 stories - contracts and local ledgers
 
