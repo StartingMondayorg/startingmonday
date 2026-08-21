@@ -1,8 +1,8 @@
-# Migration 167 Rollback and Recovery
+# Migration 1671 Rollback and Recovery
 
 ## Scope
 
-Migration `167_rem01_categorical_linkedin_matching.sql` narrows LinkedIn relationship matching to categorical `strong_overlap` and `possible_overlap` outcomes. It maps legacy `high` and `medium` tiers to `strong_overlap`, maps `low` to `possible_overlap`, removes the numeric similarity columns and index, and drops the numeric SQL classifier.
+Migration `1671_rem01_categorical_linkedin_matching.sql` narrows LinkedIn relationship matching to categorical `strong_overlap` and `possible_overlap` outcomes. It maps legacy `high` and `medium` tiers to `strong_overlap`, maps `low` to `possible_overlap`, removes the numeric similarity columns and index, and drops the numeric SQL classifier.
 
 ## Preconditions
 
@@ -17,7 +17,7 @@ This migration is not reversible by restoring the dropped numeric columns from t
 
 1. Disable relationship-network matching.
 2. Stop any deployment that reads the affected matching path.
-3. Preserve migration 167 and all append-only audit evidence.
+3. Preserve migration 1671 and all append-only audit evidence.
 4. Restore service behavior through a forward-fix migration and code change.
 5. Rebuild any required historical numeric data only from an approved backup, never from inferred categorical tiers.
 6. Re-run the focused REM-01 tests, TypeScript, lint, migration checks, and a schema rehearsal before re-enabling anything.

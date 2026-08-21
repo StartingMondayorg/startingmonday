@@ -821,7 +821,7 @@ Documents indexed: **1166**
 - [development/migration-rollbacks/161_meeting_debriefs.md](development/migration-rollbacks/161_meeting_debriefs.md) — 161_meeting_debriefs rollback
 - [development/migration-rollbacks/166_rem01_remove_apollo_relationship_sources.md](development/migration-rollbacks/166_rem01_remove_apollo_relationship_sources.md) — Migration 166 Rollback and Recovery
 - [development/migration-rollbacks/167_monitoring_alert_state_compat_rls.md](development/migration-rollbacks/167_monitoring_alert_state_compat_rls.md) — 167_monitoring_alert_state_compat_rls rollback
-- [development/migration-rollbacks/167_rem01_categorical_linkedin_matching.md](development/migration-rollbacks/167_rem01_categorical_linkedin_matching.md) — Migration 167 Rollback and Recovery
+- [development/migration-rollbacks/1671_rem01_categorical_linkedin_matching.md](development/migration-rollbacks/1671_rem01_categorical_linkedin_matching.md) — Migration 1671 Rollback and Recovery
 - [development/migration-rollbacks/168_onboarding_completion_resume_state.md](development/migration-rollbacks/168_onboarding_completion_resume_state.md) — Migration 168 rollback
 - [development/migration-rollbacks/169_backtest_matching_dimensions.md](development/migration-rollbacks/169_backtest_matching_dimensions.md) — 169_backtest_matching_dimensions rollback
 - [development/migration-rollbacks/170_exec_search_lag_matching.md](development/migration-rollbacks/170_exec_search_lag_matching.md) — 170_exec_search_lag_matching rollback
