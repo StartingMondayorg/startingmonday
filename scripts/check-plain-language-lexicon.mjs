@@ -72,6 +72,7 @@ const retiredRegexes = lexicon.retiredPhrases.map((phrase) => ({
   phrase,
   regex: new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'),
 }))
+const forbiddenTerms = lexicon.forbiddenTerms ?? []
 
 const fileTermCounts = {}
 const violations = []
@@ -109,6 +110,34 @@ for (const fullPath of collectScopedFiles()) {
         count,
         baseline: baselineCount,
         message: `"${term.id}" count rose ${baselineCount} -> ${count}. Use plain language instead: ${term.plainSubstitute}.`,
+      })
+    }
+  }
+}
+
+for (const term of forbiddenTerms) {
+  const regex = new RegExp(term.pattern, 'gi')
+  const scopedFiles = new Set()
+  for (const scope of term.scope ?? []) {
+    const fullPath = path.join(root, scope)
+    if (scope.endsWith('/')) {
+      walk(fullPath, scopedFiles)
+    } else if (fs.existsSync(fullPath)) {
+      scopedFiles.add(fullPath)
+    }
+  }
+
+  for (const fullPath of scopedFiles) {
+    const relPath = path.relative(root, fullPath).replace(/\\/g, '/')
+    if (isExcluded(relPath)) continue
+    const count = countMatches(fs.readFileSync(fullPath, 'utf8'), regex)
+    if (count > 0) {
+      violations.push({
+        type: 'forbidden-term',
+        file: relPath,
+        term: term.id,
+        count,
+        message: term.message,
       })
     }
   }
