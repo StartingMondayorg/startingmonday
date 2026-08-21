@@ -30,7 +30,7 @@ export default function PricingPage() {
   return (
     <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-background' : 'bg-background'}`}>
       <EmiMarketingTelemetry pageSlug="/pricing" personaSegment="executives" />
-      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'bg-background sticky top-0 z-10'}>
+      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'sticky top-0 z-10 border-border bg-background/72'}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="inline-flex items-center min-h-[44px] text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -51,53 +51,53 @@ export default function PricingPage() {
         </div>
       </nav>
 
-      <main className={`max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 ${premiumEnabled ? 'text-foreground' : ''}`}>
+      <main className={`max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 ${'text-foreground'}`}>
         <div className="text-center mb-11">
           <h1 className={`text-[38px] sm:text-[48px] font-bold leading-[1.05] tracking-tight ${'text-foreground'}`}>
             The terms of engagement.
           </h1>
-          <p className={`text-[16px] mt-4 max-w-lg mx-auto leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <p className={`text-[16px] mt-4 max-w-lg mx-auto leading-relaxed ${'text-foreground'}`}>
             30-day free trial. No credit card. Choose based on search intensity, not job-board volume.
           </p>
         </div>
 
-        <section className={`mb-10 rounded-2xl p-6 sm:p-7 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border bg-muted'}`}>
-          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-4 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Why this model</p>
-          <p className={`text-[13px] leading-relaxed max-w-2xl ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+        <section className={`mb-10 rounded-2xl p-6 sm:p-7 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border bg-background/64'}`}>
+          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-4 ${'text-primary'}`}>Why this model</p>
+          <p className={`text-[13px] leading-relaxed max-w-2xl ${'text-foreground'}`}>
             Pay for earlier intelligence, better weekly execution, and higher-quality conversations before searches are public.
           </p>
         </section>
 
         <PricingCards />
 
-        <section className={`mt-10 rounded-2xl p-6 sm:p-7 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border bg-primary'}`}>
-          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-primary-foreground'}`}>First-week outcomes by plan</p>
-          <p className={`text-[13px] leading-relaxed mb-4 ${premiumEnabled ? 'text-primary-foreground' : 'text-primary-foreground'}`}>
+        <section className={`mt-10 rounded-2xl p-6 sm:p-7 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border bg-background/64'}`}>
+          <p className={`text-[11px] font-bold tracking-[0.14em] uppercase mb-3 ${'text-primary'}`}>First-week outcomes by plan</p>
+          <p className={`text-[13px] leading-relaxed mb-4 ${'text-foreground'}`}>
             Pick the plan that matches urgency this week. Each path defines what &quot;good&quot; looks like in seven days.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted'}`}>
+            <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
               <p className={`text-[12px] font-semibold mb-1 ${'text-foreground'}`}>{PRICING.passive.name}</p>
-              <p className={`text-[12px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>Build signal coverage and a clean watchlist so timing windows stop surprising you.</p>
-              <ul className={`mt-3 space-y-1.5 text-[12px] ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <p className={`text-[12px] leading-relaxed ${'text-foreground'}`}>Build signal coverage and a clean watchlist so timing windows stop surprising you.</p>
+              <ul className={`mt-3 space-y-1.5 text-[12px] ${'text-foreground'}`}>
                 <li>- 20-30 target companies tracked with fresh signal visibility</li>
                 <li>- At least 10 decision-timeline markers initialized</li>
                 <li>- Weekly check rhythm defined for one operator</li>
               </ul>
             </article>
-            <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted'}`}>
+            <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
               <p className={`text-[12px] font-semibold mb-1 ${'text-foreground'}`}>{PRICING.active.name}</p>
-              <p className={`text-[12px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>Establish daily execution rhythm with prep briefs, follow-ups, and conversion tracking.</p>
-              <ul className={`mt-3 space-y-1.5 text-[12px] ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <p className={`text-[12px] leading-relaxed ${'text-foreground'}`}>Establish daily execution rhythm with prep briefs, follow-ups, and conversion tracking.</p>
+              <ul className={`mt-3 space-y-1.5 text-[12px] ${'text-foreground'}`}>
                 <li>- Daily queue active with owner-assigned next actions</li>
                 <li>- Prep briefs completed before first-contact outreach</li>
                 <li>- Follow-up SLA visible across all live campaigns</li>
               </ul>
             </article>
-            <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted'}`}>
+            <article className={`rounded-2xl p-4 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
               <p className={`text-[12px] font-semibold mb-1 ${'text-foreground'}`}>{PRICING.executive.name}</p>
-              <p className={`text-[12px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>Launch high-depth scanning and decision-grade prep across your highest-priority targets.</p>
-              <ul className={`mt-3 space-y-1.5 text-[12px] ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+              <p className={`text-[12px] leading-relaxed ${'text-foreground'}`}>Launch high-depth scanning and decision-grade prep across your highest-priority targets.</p>
+              <ul className={`mt-3 space-y-1.5 text-[12px] ${'text-foreground'}`}>
                 <li>- Priority list narrowed to top 5-8 high-value targets</li>
                 <li>- Executive-ready prep packet produced for each active lane</li>
                 <li>- Decision owner and escalation path set per campaign</li>
@@ -106,9 +106,9 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className={`mt-8 rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted'}`}>
-          <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Source note</p>
-          <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+        <section className={`mt-8 rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
+          <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${'text-primary'}`}>Source note</p>
+          <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>
             Plan examples are illustrative and directional, not audited outcome claims. Privacy commitments and account confidentiality controls apply to all plans.
           </p>
         </section>
@@ -130,9 +130,9 @@ export default function PricingPage() {
                 a: 'No. All plans start with a 30-day free trial and can be canceled at any time.',
               },
             ].map(item => (
-              <div key={item.q} className={`rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border'}`}>
+              <div key={item.q} className={`rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
                 <p className={`text-[13px] font-semibold mb-1.5 ${'text-foreground'}`}>{item.q}</p>
-                <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>{item.a}</p>
+                <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>{item.a}</p>
               </div>
             ))}
           </div>
@@ -140,7 +140,7 @@ export default function PricingPage() {
 
         <p className={`mt-10 text-center text-[13px] ${'text-foreground'}`}>
           All plans include a 30-day free trial. Cancel any time.{' '}
-          Questions? <a data-emi-cta="pricing_support_email" data-emi-to="mailto:support@startingmonday.app" href="mailto:support@startingmonday.app" className={`inline-flex items-center min-h-[44px] underline underline-offset-2 ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>support@startingmonday.app</a>
+          Questions? <a data-emi-cta="pricing_support_email" data-emi-to="mailto:support@startingmonday.app" href="mailto:support@startingmonday.app" className={`inline-flex items-center min-h-[44px] underline underline-offset-2 ${'text-foreground'}`}>support@startingmonday.app</a>
         </p>
       
         <p className="sr-only">Private by default. We do not share your data with recruiters, employers, or third parties.</p>

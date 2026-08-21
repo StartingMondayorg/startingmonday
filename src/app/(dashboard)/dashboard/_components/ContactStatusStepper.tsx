@@ -63,7 +63,7 @@ export function ContactStatusStepper({
                 ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                 : isPast
                   ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80',
+                  : 'bg-muted text-foreground hover:bg-muted/80',
             ].join(' ')}
           >
             {step.label}

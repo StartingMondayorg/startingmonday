@@ -229,7 +229,7 @@ export default function ChatPage() {
           <button
             type="button"
             onClick={() => setRetryError(null)}
-            className="text-muted-foreground hover:text-destructive-foreground bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
+            className="text-destructive-foreground hover:text-destructive-foreground bg-transparent border-0 cursor-pointer ml-1 text-[16px] leading-none"
             aria-label="Dismiss"
           >
             &times;

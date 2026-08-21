@@ -144,8 +144,8 @@ function TraceRow({
             aria-keyshortcuts="F"
             className={`px-3 py-1.5 rounded text-[12px] font-bold cursor-pointer transition-colors w-14 h-auto ${
               evalPass === false
-                ? 'bg-destructive text-foreground hover:bg-destructive'
-                : 'bg-muted text-muted-foreground hover:bg-destructive/10 hover:text-destructive'
+                ? 'bg-destructive text-destructive-foreground hover:bg-destructive'
+                : 'bg-muted text-destructive-foreground hover:bg-destructive/10 hover:text-destructive-foreground'
             }`}
           >
             Fail

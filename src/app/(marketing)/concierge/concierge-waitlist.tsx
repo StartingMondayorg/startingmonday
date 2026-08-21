@@ -116,7 +116,7 @@ export function ConciergeWaitlist() {
 
   return (
     <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-background' : 'bg-background'}`}>
-      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'bg-card sticky top-0 z-10'}>
+      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'sticky top-0 z-10 border-border bg-background/72'}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -152,7 +152,7 @@ export function ConciergeWaitlist() {
               </>
             )}
           </h1>
-          <p className={`text-[15px] leading-relaxed max-w-lg ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <p className={`text-[15px] leading-relaxed max-w-lg ${'text-foreground'}`}>
             {isBetaProgram
               ? 'This is a private intake for senior leaders running high-stakes transitions. Share concise context, and we will reply personally with clear next steps.'
               : 'Executive is the full platform at full depth. Concierge adds one thing: a monthly session with the founder, who has run this search from the executive side. The program stays small because it has to.'}
@@ -165,7 +165,7 @@ export function ConciergeWaitlist() {
         </div>
       </header>
 
-      <main className={`px-4 sm:px-6 py-14 sm:py-20 ${premiumEnabled ? 'text-foreground' : ''}`}>
+      <main className={`px-4 sm:px-6 py-14 sm:py-20 ${'text-foreground'}`}>
         <div className="max-w-2xl mx-auto">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16 mb-16">
@@ -208,7 +208,7 @@ export function ConciergeWaitlist() {
               {submitted ? (
                 <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 ${premiumEnabled ? 'shadow-lg' : 'bg-muted'}`}>
                   <p className={`text-[15px] font-semibold mb-1 ${'text-foreground'}`}>Brief received.</p>
-                  <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>
                     We review each submission personally. You will hear from us directly.
                   </p>
                 </Card>
@@ -286,9 +286,9 @@ export function ConciergeWaitlist() {
                     />
                   </div>
                   {isBetaProgram && (
-                    <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-3 ${premiumEnabled ? 'bg-card/64 shadow-lg' : 'bg-muted'}`}>
-                      <p className={`text-[11px] font-bold tracking-[0.08em] uppercase mb-2 ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>Selection criteria and confidentiality guardrails</p>
-                      <ul className={`space-y-1 text-[12px] leading-relaxed list-disc pl-4 ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-3 ${premiumEnabled ? 'bg-card/64 shadow-lg' : 'bg-card/64'}`}>
+                      <p className={`text-[11px] font-bold tracking-[0.08em] uppercase mb-2 ${'text-foreground'}`}>Selection criteria and confidentiality guardrails</p>
+                      <ul className={`space-y-1 text-[12px] leading-relaxed list-disc pl-4 ${'text-foreground'}`}>
                         <li>Fit: senior operator with an active or near-term transition objective.</li>
                         <li>Commitment: able to run weekly cadence for 30 days.</li>
                         <li>Feedback: willing to share direct feedback and outcomes.</li>
@@ -330,15 +330,15 @@ export function ConciergeWaitlist() {
           </div>
 
           <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-6 mb-12 ${premiumEnabled ? 'shadow-lg' : ''}`}>
-            <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>About the founder</p>
+            <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-3 ${'text-primary'}`}>About the founder</p>
             <p className={`text-[14px] leading-relaxed ${'text-foreground'}`}>
               Starting Monday was built by a founder who ran executive job searches at scale and watched colleagues waste months on reactive tactics that did not work. The sessions are direct, structured, and specific to your pipeline. Not coaching. Not cheerleading. One executive to another.
             </p>
           </Card>
 
           <Card variant={premiumEnabled ? 'glass' : 'default'} className={`p-5 mb-12 ${premiumEnabled ? 'shadow-xl' : 'bg-muted'}`}>
-            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Trust and source note</p>
-            <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${'text-primary'}`}>Trust and source note</p>
+            <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>
               Confidential intake details are used only for founder review and fit decisions. Outcome expectations on this page are informed by the pilot Evidence Hub and source-linked methodology pages.
             </p>
           </Card>
@@ -347,7 +347,7 @@ export function ConciergeWaitlist() {
             <p className={`text-[13px] mb-2 ${'text-muted-foreground'}`}>Looking for Executive or Active instead?</p>
             <Link
               href="/pricing"
-              className={`text-[13px] font-semibold transition-colors ${premiumEnabled ? 'text-foreground hover:text-primary' : 'text-foreground hover:text-foreground'}`}
+              className={`text-[13px] font-semibold transition-colors ${'text-foreground hover:text-primary'}`}
             >
               View all plans &rarr;
             </Link>
@@ -356,7 +356,7 @@ export function ConciergeWaitlist() {
         </div>
       </main>
 
-      <footer className={premiumEnabled ? 'border-t border-border bg-background/78 px-4 sm:px-6 py-8 backdrop-blur-xl' : 'bg-card border-t border-border px-4 sm:px-6 py-8'}>
+      <footer className={premiumEnabled ? 'border-t border-border bg-background/78 px-4 sm:px-6 py-8 backdrop-blur-xl' : 'border-t px-4 sm:px-6 py-8 border-border bg-background/78'}>
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>

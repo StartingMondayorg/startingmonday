@@ -94,7 +94,7 @@ export default function MethodAndEvidencePage() {
   return (
     <div className={`relative min-h-screen font-sans ${premiumEnabled ? 'overflow-hidden bg-background' : 'bg-background'}`}>
       <JsonLd data={faqJsonLd} />
-      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'bg-background sticky top-0 z-10'}>
+      <nav className={premiumEnabled ? 'sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl' : 'sticky top-0 z-10 border-border bg-background/72'}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground transition-colors">
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
@@ -107,22 +107,22 @@ export default function MethodAndEvidencePage() {
         </div>
       </nav>
 
-      <main className={`max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-18 ${premiumEnabled ? 'text-foreground' : ''}`}>
+      <main className={`max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-18 ${'text-foreground'}`}>
     <header className="mb-14 max-w-3xl">
           <p className={`text-[11px] font-bold tracking-[0.16em] uppercase mb-3 ${'text-primary'}`}>Method and evidence</p>
           <h1 className={`text-[34px] sm:text-[44px] font-bold leading-[1.05] mb-4 ${'text-foreground'}`}>How Starting Monday turns research into product decisions.</h1>
-          <p className={`text-[15px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <p className={`text-[15px] leading-relaxed ${'text-foreground'}`}>
             We use peer-reviewed coaching, transition, behavior-change, and weak-signal research to decide what to build, what to claim, and what to measure.
           </p>
         </header>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-          <div className={`rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border'}`}>
-            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Evidence stack</p>
+          <div className={`rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md' : 'border border-border bg-background/64'}`}>
+            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-3 ${'text-primary'}`}>Evidence stack</p>
             <BarChart items={EVIDENCE_STACK} labelKey="label" valueKey="value" noteKey="note" widthKey="widthClass" premium={premiumEnabled} />
           </div>
-          <div className={`rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted'}`}>
-            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-3 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Timing model</p>
+          <div className={`rounded-2xl p-5 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
+            <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-3 ${'text-primary'}`}>Timing model</p>
             <BarChart items={TIMING_MODEL} labelKey="stage" valueKey="value" noteKey="note" widthKey="widthClass" premium={premiumEnabled} />
           </div>
         </section>
@@ -130,33 +130,33 @@ export default function MethodAndEvidencePage() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
           <div className={'border-t-2 border-primary/30 pt-4'}>
             <h2 className={`text-[16px] font-bold mb-2 ${'text-foreground'}`}>Coaching becomes infrastructure</h2>
-            <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>The research says outcomes depend on what happens between sessions, so the product should support that layer directly.</p>
+            <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>The research says outcomes depend on what happens between sessions, so the product should support that layer directly.</p>
           </div>
           <div className={'border-t-2 border-border pt-4'}>
             <h2 className={`text-[16px] font-bold mb-2 ${'text-foreground'}`}>Plans beat intention</h2>
-            <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>If-then planning and clear goals are the design basis for prep briefs, prompts, and accountability loops.</p>
+            <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>If-then planning and clear goals are the design basis for prep briefs, prompts, and accountability loops.</p>
           </div>
           <div className={'border-t-2 border-border pt-4'}>
             <h2 className={`text-[16px] font-bold mb-2 ${'text-foreground'}`}>Signals beat waiting</h2>
-            <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>Weak signals and transition cues matter before formal postings, so the platform should make early movement visible.</p>
+            <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>Weak signals and transition cues matter before formal postings, so the platform should make early movement visible.</p>
           </div>
         </section>
 
-        <section className={`mb-12 rounded-lg p-5 sm:p-6 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md text-foreground' : 'border border-border bg-background text-foreground'}`}>
+        <section className={`mb-12 rounded-lg p-5 sm:p-6 ${premiumEnabled ? 'border border-border bg-background/64 shadow-xl backdrop-blur-md text-foreground' : 'border border-border bg-background/64 text-foreground'}`}>
           <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-3 ${'text-primary'}`}>Dig deeper</p>
           <p className={`text-[14px] leading-relaxed mb-5 ${'text-foreground'}`}>
             Explore the citations, pilot data, and timing-model methodology behind every product decision.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/references" className={`inline-block text-[13px] font-semibold px-4 py-2 rounded transition-colors ${'bg-primary text-primary-foreground hover:bg-muted'}`}>References {"->"}</Link>
-            <Link href="/evidence-hub" className={`inline-block border text-[13px] font-semibold px-4 py-2 rounded transition-colors ${premiumEnabled ? 'border-border text-foreground hover:border-primary/60' : 'border-border text-foreground hover:border-border'}`}>Evidence Hub {"->"}</Link>
-            <Link href="/blog/how-we-estimate-early-role-signals" className={`inline-block border text-[13px] font-semibold px-4 py-2 rounded transition-colors ${premiumEnabled ? 'border-border text-foreground hover:border-primary/60' : 'border-border text-foreground hover:border-border'}`}>Timing model {"->"}</Link>
+            <Link href="/evidence-hub" className={`inline-block border text-[13px] font-semibold px-4 py-2 rounded transition-colors ${'border-border text-foreground hover:border-primary/60'}`}>Evidence Hub {"->"}</Link>
+            <Link href="/blog/how-we-estimate-early-role-signals" className={`inline-block border text-[13px] font-semibold px-4 py-2 rounded transition-colors ${'border-border text-foreground hover:border-primary/60'}`}>Timing model {"->"}</Link>
           </div>
         </section>
 
-        <section className={`rounded-2xl p-5 sm:p-6 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted'}`}>
-          <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${premiumEnabled ? 'text-primary' : 'text-muted-foreground'}`}>Source note</p>
-          <p className={`text-[13px] leading-relaxed ${premiumEnabled ? 'text-foreground' : 'text-muted-foreground'}`}>
+        <section className={`rounded-2xl p-5 sm:p-6 ${premiumEnabled ? 'border border-border bg-muted/[0.07] shadow-lg' : 'border border-border bg-muted/[0.07]'}`}>
+          <p className={`text-[11px] font-bold tracking-[0.12em] uppercase mb-2 ${'text-primary'}`}>Source note</p>
+          <p className={`text-[13px] leading-relaxed ${'text-foreground'}`}>
             All percentage bars represent weighted confidence applied to each evidence category, not absolute efficacy. Source citations and denominator notes are maintained in the references and evidence-room assets.
           </p>
         </section>
