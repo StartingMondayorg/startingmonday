@@ -3,10 +3,11 @@ import { NextRequest } from 'next/server'
 
 const mocked = vi.hoisted(() => ({
   requireLiveBriefMutationAccess: vi.fn(),
+  requireLiveBriefStaffAccess: vi.fn(),
   createAdminClient: vi.fn(),
 }))
 
-vi.mock('@/lib/live-brief-auth', () => ({ requireLiveBriefMutationAccess: mocked.requireLiveBriefMutationAccess }))
+vi.mock('@/lib/live-brief-auth', () => ({ requireLiveBriefMutationAccess: mocked.requireLiveBriefMutationAccess, requireLiveBriefStaffAccess: mocked.requireLiveBriefStaffAccess }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: mocked.createAdminClient }))
 
 import { GET, PATCH } from './route'
@@ -53,6 +54,7 @@ function configureDetailAdmin() {
 beforeEach(() => {
   vi.clearAllMocks()
   mocked.requireLiveBriefMutationAccess.mockResolvedValue(auth)
+  mocked.requireLiveBriefStaffAccess.mockResolvedValue(auth)
 })
 
 describe('PATCH /api/admin/live-briefs/[id]', () => {
@@ -92,7 +94,7 @@ describe('PATCH /api/admin/live-briefs/[id]', () => {
 
 describe('GET /api/admin/live-briefs/[id]', () => {
   it('requires staff and recent-auth access before loading a request', async () => {
-    mocked.requireLiveBriefMutationAccess.mockResolvedValue(null)
+    mocked.requireLiveBriefStaffAccess.mockResolvedValue(null)
     const response = await GET(new NextRequest('http://localhost/api/admin/live-briefs/request-1'), context)
     expect(response.status).toBe(403)
     expect(mocked.createAdminClient).not.toHaveBeenCalled()

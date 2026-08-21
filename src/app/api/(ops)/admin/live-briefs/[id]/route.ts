@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { requireLiveBriefMutationAccess } from '@/lib/live-brief-auth'
+import { requireLiveBriefMutationAccess, requireLiveBriefStaffAccess } from '@/lib/live-brief-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +16,7 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireLiveBriefMutationAccess()
+  const auth = await requireLiveBriefStaffAccess()
   if (!auth) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const { id } = await params

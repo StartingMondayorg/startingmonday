@@ -8,21 +8,28 @@ export type LiveBriefMutationAuth = {
   staff: StaffMember
 }
 
-export async function requireLiveBriefMutationAccess(): Promise<LiveBriefMutationAuth | null> {
+export async function requireLiveBriefStaffAccess(): Promise<LiveBriefMutationAuth | null> {
   const supabase = await createClient()
-  const [{ data: userData, error: userError }, { data: claimsData, error: claimsError }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getClaims(),
-  ])
+  const { data: userData, error: userError } = await supabase.auth.getUser()
   const user = userData.user
-  const claims = claimsData?.claims
 
-  if (userError || claimsError || !user || !claims?.sub || claims.sub !== user.id) return null
-  if (!hasRecentAuthentication(claims.amr)) return null
+  if (userError || !user) return null
 
   const userEmail = user.email?.trim() ?? ''
   const staff = await getStaffMember(userEmail)
   if (!staff || !hasAdminHeaderAccess(staff)) return null
 
   return { userId: user.id, userEmail, staff }
+}
+
+export async function requireLiveBriefMutationAccess(): Promise<LiveBriefMutationAuth | null> {
+  const auth = await requireLiveBriefStaffAccess()
+  if (!auth) return null
+
+  const supabase = await createClient()
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
+  const claims = claimsData?.claims
+  if (claimsError || !claims?.sub || claims.sub !== auth.userId) return null
+  if (!hasRecentAuthentication(claims.amr)) return null
+  return auth
 }
