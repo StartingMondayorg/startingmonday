@@ -8,6 +8,7 @@ import ProfileEditor from './profile-editor'
 import ActionPanel from './action-panel'
 import ShortlistEditor from './shortlist-editor'
 import ScanStatus from './scan-status'
+import DeletePanel from './delete-panel'
 
 export const metadata = { title: 'Live Brief Request - Starting Monday Admin' }
 
@@ -127,6 +128,9 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
         </div>
         <div className="mt-4">
           <ActionPanel requestId={request.id} status={request.status} reviewedProfile={request.reviewed_profile ?? {}} />
+        </div>
+        <div className="mt-4">
+          <DeletePanel requestId={request.id} enabled={request.status !== 'deleted'} />
         </div>
       </main>
     </div>
