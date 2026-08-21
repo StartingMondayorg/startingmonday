@@ -12,6 +12,28 @@ function isProfileObject(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 }
 
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const auth = await requireLiveBriefMutationAccess()
+  if (!auth) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  const { id } = await params
+  if (!id || id.length > 80) return NextResponse.json({ error: 'Invalid live brief request id' }, { status: 400 })
+
+  const admin = createAdminClient() as any
+  const { data, error } = await admin
+    .from('live_brief_requests')
+    .select('id,hubspot_contact_id,hubspot_deal_id,prospect_name,prospect_email,linkedin_url,consent_attested_at,consent_source,request_received_at,request_source,location_preference,target_role_lane,reviewed_profile,status,hubspot_sync_status,created_at,updated_at')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (error) return NextResponse.json({ error: 'Unable to load live brief request' }, { status: 500 })
+  if (!data) return NextResponse.json({ error: 'Live brief request not found' }, { status: 404 })
+  return NextResponse.json({ request: data })
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },

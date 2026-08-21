@@ -9,7 +9,7 @@ const mocked = vi.hoisted(() => ({
 vi.mock('@/lib/live-brief-auth', () => ({ requireLiveBriefMutationAccess: mocked.requireLiveBriefMutationAccess }))
 vi.mock('@/lib/supabase/admin', () => ({ createAdminClient: mocked.createAdminClient }))
 
-import { PATCH } from './route'
+import { GET, PATCH } from './route'
 
 const auth = { userId: 'user-1', userEmail: 'mo@example.com', staff: { id: 'staff-1', role: 'admin' } }
 const context = { params: Promise.resolve({ id: 'request-1' }) }
@@ -37,6 +37,17 @@ function configureAdmin(eventError: Error | null = null) {
     .mockReturnValueOnce({ update })
   mocked.createAdminClient.mockReturnValue({ from })
   return { eventInsert, update, updateEq }
+}
+
+function configureDetailAdmin() {
+  const maybeSingle = vi.fn().mockResolvedValue({
+    data: { id: 'request-1', prospect_name: 'Alex Prospect', reviewed_profile: { title: 'VP' }, status: 'reviewing' },
+    error: null,
+  })
+  const from = vi.fn().mockReturnValue({
+    select: vi.fn().mockReturnValue({ eq: vi.fn().mockReturnValue({ maybeSingle }) }),
+  })
+  mocked.createAdminClient.mockReturnValue({ from })
 }
 
 beforeEach(() => {
@@ -76,5 +87,23 @@ describe('PATCH /api/admin/live-briefs/[id]', () => {
     expect(response.status).toBe(500)
     expect(eventInsert).toHaveBeenCalled()
     expect(update).toHaveBeenLastCalledWith({ reviewed_profile: { source: 'original' }, status: 'draft' })
+  })
+})
+
+describe('GET /api/admin/live-briefs/[id]', () => {
+  it('requires staff and recent-auth access before loading a request', async () => {
+    mocked.requireLiveBriefMutationAccess.mockResolvedValue(null)
+    const response = await GET(new NextRequest('http://localhost/api/admin/live-briefs/request-1'), context)
+    expect(response.status).toBe(403)
+    expect(mocked.createAdminClient).not.toHaveBeenCalled()
+  })
+
+  it('returns request metadata and reviewed profile without source references', async () => {
+    configureDetailAdmin()
+    const response = await GET(new NextRequest('http://localhost/api/admin/live-briefs/request-1'), context)
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toEqual({
+      request: { id: 'request-1', prospect_name: 'Alex Prospect', reviewed_profile: { title: 'VP' }, status: 'reviewing' },
+    })
   })
 })
