@@ -17,7 +17,7 @@ This document shows how to set up VS Code so Chris has the same coding-agent wor
 ## 2. Required Accounts and Access
 
 Chris should have access to:
-- GitHub repo: `richrothschild/startingmonday`
+- GitHub repo: `StartingMondayorg/startingmonday` (transferred from `richrothschild` on 2026-08-22)
 - Doppler project/config: `startingmonday` (`dev` at minimum)
 - Supabase project access (for manual migration apply)
 - Railway visibility (if needed for deploy checks)
@@ -47,7 +47,7 @@ Then sign in to GitHub inside VS Code for Copilot + PR integration.
 ## 5. Clone and Bootstrap
 
 ```bash
-git clone https://github.com/richrothschild/startingmonday.git
+git clone https://github.com/StartingMondayorg/startingmonday.git
 cd startingmonday
 npm install
 ```
