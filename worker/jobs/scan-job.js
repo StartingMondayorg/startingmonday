@@ -21,7 +21,10 @@ async function scanWithRetry(supabase, company, profile, options) {
       err.message?.includes('ECONNRESET') ||
       err.message?.includes('ENOTFOUND') ||
       err.message?.includes('502') ||
-      err.message?.includes('503')
+      err.message?.includes('503') ||
+      // 429 is a burst ceiling that clears in seconds, not a quota. Without
+      // this the scan was lost for the whole cycle (SMK-472).
+      err.message?.includes('429')
     )
     if (!isTransient) throw err
 

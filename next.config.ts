@@ -59,6 +59,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/for-vp',
+        destination: '/for-executives/leadership',
+        permanent: true,
+      },
+      {
+        source: '/for-vp/',
+        destination: '/for-executives/leadership',
+        permanent: true,
+      },
+      {
         source: '/auth/login',
         destination: '/login',
         permanent: true,
@@ -119,6 +129,18 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/icon',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+        ],
+      },
+      {
+        source: '/apple-icon',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+        ],
+      },
+      {
+        source: '/:path*/apple-icon',
         headers: [
           { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
         ],
