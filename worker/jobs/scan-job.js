@@ -6,6 +6,7 @@ import { scanCompany } from '../scanner/scan-company.js'
 import { rescanWindowHoursForTier } from '../scanner/deduplicate.js'
 import { writeScanFailureDeadLetter } from '../lib/scan-dead-letter.js'
 import { notify } from '../lib/notify.js'
+import { warnIfTruncated } from '../lib/query-limits.js'
 
 const MAX_CONCURRENT_SCANS = 10
 
@@ -70,6 +71,8 @@ export async function runScanJob() {
       return
     }
 
+    warnIfTruncated(activeUsers, 2000, { job: 'scan-job', query: 'active_users' })
+
     // Executive and campaign users scan daily. All others scan Mon/Wed/Fri only.
     const DAILY_TIERS = new Set(['executive', 'campaign'])
     const tierByUserId = Object.fromEntries((activeUsers ?? []).map(u => [u.id, u.subscription_tier]))
@@ -99,6 +102,7 @@ export async function runScanJob() {
     }
 
     companies = companiesData ?? []
+    warnIfTruncated(companies, 5000, { job: 'scan-job', query: 'companies' })
 
     if (!companies.length) {
       logger.info('scan-job: no active companies — done')
