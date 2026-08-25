@@ -6,6 +6,7 @@ import { writeScanFailureDeadLetter } from '../lib/scan-dead-letter.js'
 import { scanCompany } from '../scanner/scan-company.js'
 import { RESCAN_WINDOW_DAILY_HOURS } from '../scanner/deduplicate.js'
 import { sendRoleFitAlert } from '../lib/signal-alert.js'
+import { warnIfTruncated } from '../lib/query-limits.js'
 
 const MAX_CONCURRENT_SCANS = 5
 
@@ -81,6 +82,8 @@ export async function runExecutiveScanJob() {
     await supabase.rpc('advisory_unlock', { p_key: EXEC_SCAN_LOCK_KEY })
     return
   }
+
+  warnIfTruncated(companies, 1000, { job: 'executive-scan-job', query: 'companies' })
 
   const { data: profiles } = await supabase
     .from('user_profiles')
