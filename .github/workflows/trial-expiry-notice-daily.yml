@@ -1,0 +1,52 @@
+name: Trial Expiry Notice Daily Cron
+
+on:
+  # Runs an hour after the re-engagement cron (13:00 UTC) so that if a user is
+  # both inactive and at trial day 20, the re-engagement send is already logged
+  # and this job suppresses its own notice rather than doubling up.
+  schedule:
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Report who would be emailed without sending'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  trial-expiry-notice:
+    name: Trial day-20 expiry notices
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Trigger trial expiry notice cron
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          APP_BASE_URL: https://startingmonday.app
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "CRON_SECRET secret is required"
+            exit 1
+          fi
+
+          URL="${APP_BASE_URL%/}/api/cron/trial-expiry-notice"
+          if [ "$DRY_RUN" = "true" ]; then
+            URL="${URL}?dryRun=1"
+          fi
+
+          echo "Calling $URL"
+          curl --fail --show-error --silent -H "x-cron-secret: ${CRON_SECRET}" "$URL" | tee trial-expiry-notice.latest.json
+          echo ""
+          cat trial-expiry-notice.latest.json
+
+      - name: Upload result artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trial-expiry-notice-daily
+          path: trial-expiry-notice.latest.json
+          retention-days: 14
