@@ -178,6 +178,8 @@
         "ci:pr-churn:slo:strict": "node scripts/generate-pr-churn-slo.mjs --strict",
         "ci:pr-churn:slo:json": "node scripts/generate-pr-churn-slo.mjs --json",
         "seed:demo": "npx tsx scripts/seed-demo.ts",
+        "seed:staging": "node scripts/seed-staging.mjs",
+        "seed:staging:apply": "node scripts/seed-staging.mjs --apply",
         "seed:social": "npx tsx scripts/seed-social-calendar.ts",
         "evals:label-progress": "node scripts/check-prep-brief-label-progress.mjs",
         "evals:label-progress:json": "node scripts/check-prep-brief-label-progress.mjs --json",
