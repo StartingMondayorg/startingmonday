@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isAdapterEnabled, recordAdapterSuccess, recordAdapterFailure } from './adapter-health.js'
+import { isAdapterEnabled, recordAdapterSuccess, recordAdapterFailure, reEnableAdapter } from './adapter-health.js'
 
 // Minimal in-memory fake for the single table this module touches.
 function createFakeSupabase() {
@@ -57,7 +57,7 @@ describe('adapter-health', () => {
     expect(await isAdapterEnabled(supabase, 'pr_wire')).toBe(false)
   })
 
-  it('a success resets the consecutive-failure counter and re-enables', async () => {
+  it('a success resets failures but does not re-enable a disabled adapter', async () => {
     const supabase = createFakeSupabase()
     for (let i = 0; i < 5; i++) {
       await recordAdapterFailure(supabase, 'pr_wire', 'network_error')
@@ -65,9 +65,19 @@ describe('adapter-health', () => {
     expect(await isAdapterEnabled(supabase, 'pr_wire')).toBe(false)
 
     await recordAdapterSuccess(supabase, 'pr_wire')
-    expect(await isAdapterEnabled(supabase, 'pr_wire')).toBe(true)
+    expect(await isAdapterEnabled(supabase, 'pr_wire')).toBe(false)
 
     const row = supabase._rows.get('pr_wire')
     expect(row.consecutive_failures).toBe(0)
+  })
+
+  it('requires explicit re-enable after human review', async () => {
+    const supabase = createFakeSupabase()
+    for (let i = 0; i < 5; i++) {
+      await recordAdapterFailure(supabase, 'pr_wire', 'network_error')
+    }
+    await reEnableAdapter(supabase, 'pr_wire')
+    expect(await isAdapterEnabled(supabase, 'pr_wire')).toBe(true)
+    expect(supabase._rows.get('pr_wire').disabled_reason).toBeNull()
   })
 })

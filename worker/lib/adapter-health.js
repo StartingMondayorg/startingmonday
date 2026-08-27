@@ -19,10 +19,33 @@ export async function isAdapterEnabled(supabase, source) {
 }
 
 export async function recordAdapterSuccess(supabase, source) {
+  const { data: existing } = await supabase
+    .from('adapter_health')
+    .select('enabled')
+    .eq('source', source)
+    .maybeSingle()
+
   await supabase
     .from('adapter_health')
     .upsert(
-      { source, enabled: true, consecutive_failures: 0, last_success_at: new Date().toISOString() },
+      { source, enabled: existing?.enabled ?? true, consecutive_failures: 0, last_success_at: new Date().toISOString() },
+      { onConflict: 'source' }
+    )
+}
+
+// Explicit human-reviewed resume operation for an auto-disabled adapter.
+export async function reEnableAdapter(supabase, source) {
+  await supabase
+    .from('adapter_health')
+    .upsert(
+      {
+        source,
+        enabled: true,
+        consecutive_failures: 0,
+        disabled_at: null,
+        disabled_reason: null,
+        updated_at: new Date().toISOString(),
+      },
       { onConflict: 'source' }
     )
 }
