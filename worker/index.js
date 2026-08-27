@@ -36,6 +36,7 @@ import { runSyncLinkedInEngagementJob } from './jobs/sync-linkedin-engagement-jo
 import { runLeadScoringJob } from './jobs/lead-scoring-job.js'
 import { runUiUxWeeklyReviewJob } from './jobs/ui-ux-weekly-review-job.js'
 import { runLinkIntegrityWeeklyReviewJob } from './jobs/link-integrity-weekly-review-job.js'
+import { runConfiguredWatchlistScanJob } from './jobs/watchlist-scan-job.js'
 import { runOutreachToneGuardJob } from './jobs/outreach-tone-guard-job.js'
 import { runIdeasMonthlyJob } from './jobs/ideas-monthly-job.js'
 import { runEdgarFreshnessAuditJob } from './jobs/edgar-freshness-audit-job.js'
@@ -280,6 +281,7 @@ const JOB_TIMEOUTS_MS = {
   'onboarding-video-job':   4 * 60_000,
 }
 const DEFAULT_JOB_TIMEOUT_MS = 5 * 60_000
+JOB_TIMEOUTS_MS['watchlist-scan-job'] = 15 * 60_000
 
 function shouldNotifyFailure(key) {
   const now = Date.now()
@@ -486,13 +488,16 @@ cron.schedule('45 20 * * 0', () => runJob('outreach-tone-guard-job', () => runOu
 // Ideas monthly report + gift card draw: 1st of each month at 09:00 UTC
 cron.schedule('0 9 1 * *', () => runJob('ideas-monthly-job', runIdeasMonthlyJob))
 
+// Opt-in watchlist scan; inactive until a watchlist UUID is configured.
+cron.schedule('0 5 * * 1', () => runJob('watchlist-scan-job', runConfiguredWatchlistScanJob))
+
 // ── Demo health check on startup ──────────────────────────────────────────────
 // Runs 10s after boot so the DB connection pool is settled.
 // Logs warnings to Railway for any demo data gaps — does not block startup.
 setTimeout(() => runDemoCheck().catch(err => logger.error('check-demo: failed', { error: err.message })), 10_000)
 
 logger.info('worker: cron schedules registered', {
-  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'followup-job', 'momentum-job', 'momentum-nudge-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'pulse-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job'],
+  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'followup-job', 'momentum-job', 'momentum-nudge-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'pulse-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job', 'watchlist-scan-job'],
 })
 bootPhase = 'ready'
 

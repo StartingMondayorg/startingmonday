@@ -320,3 +320,14 @@ export async function runWatchlistScan(supabase, watchlistId) {
 
   return { runId, entriesProcessed, entriesFailed }
 }
+
+export async function runConfiguredWatchlistScanJob() {
+  const watchlistId = process.env.WATCHLIST_SCAN_WATCHLIST_ID?.trim()
+  if (!watchlistId) {
+    logger.info('watchlist-scan-job: disabled; WATCHLIST_SCAN_WATCHLIST_ID is not configured')
+    return { disabled: true, entriesProcessed: 0, entriesFailed: 0 }
+  }
+
+  const { getSupabase } = await import('../lib/supabase.js')
+  return runWatchlistScan(getSupabase(), watchlistId)
+}
