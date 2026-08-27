@@ -11,8 +11,8 @@
 // matched to entries by normalized employer name (worker/lib/watchlist-warn.js)
 // rather than re-fetched per entry.
 //
-// ATS boards, SEC proxy/activist/insider, the Names layer's populating
-// adapter, and regional press remain WS11-05/06 fast-follows.
+// SEC proxy/activist/insider, the Names layer's populating adapter, and
+// regional press remain WS11-05/06 fast-follows.
 //
 // fetchPrWire and fetchWarnNoticesForState both swallow their own errors and
 // return [] either way, so an empty result from either is classified "thin"
@@ -24,6 +24,7 @@ import crypto from 'crypto'
 import { fetchSecFilings } from '../signals/fetch-sec-filings.js'
 import { fetchPrWire } from '../signals/fetch-pr-wire.js'
 import { fetchWarnNoticesForState } from '../signals/fetch-warn-notices.js'
+import { fetchBoardOpenings } from '../signals/fetch-ats-json.js'
 import { upsertCompanyEvent } from '../signals/event-store.js'
 import { resolveCanonicalCompanyForWatchlist } from '../lib/watchlist-canonical.js'
 import { isAdapterEnabled, recordAdapterSuccess, recordAdapterFailure } from '../lib/adapter-health.js'
@@ -33,6 +34,7 @@ import { logger } from '../lib/logger.js'
 const SEC_FILINGS_SOURCE = 'sec_filings'
 const PR_WIRE_SOURCE = 'pr_wire'
 const WARN_NOTICES_SOURCE = 'warn_notices'
+const ATS_SOURCE = 'ats_board'
 
 async function recordCoverage(supabase, { watchlistEntryId, source, runId, coverage, errorClass = null, itemsFound = 0 }) {
   await supabase.from('source_coverage').insert({
@@ -43,6 +45,61 @@ async function recordCoverage(supabase, { watchlistEntryId, source, runId, cover
     error_class: errorClass,
     items_found: itemsFound,
   })
+}
+
+async function runAtsForEntry(supabase, entry, runId) {
+  // No configured public board is a coverage gap, not an adapter failure.
+  if (!entry.ats_provider || !entry.ats_board_token) {
+    await recordCoverage(supabase, { watchlistEntryId: entry.id, source: ATS_SOURCE, runId, coverage: 'thin', errorClass: 'board_not_configured' })
+    return { written: 0 }
+  }
+
+  const enabled = await isAdapterEnabled(supabase, ATS_SOURCE)
+  if (!enabled) {
+    await recordCoverage(supabase, { watchlistEntryId: entry.id, source: ATS_SOURCE, runId, coverage: 'failed', errorClass: 'adapter_disabled' })
+    return { written: 0 }
+  }
+
+  let openings
+  try {
+    openings = await fetchBoardOpenings(entry.ats_provider, entry.ats_board_token)
+  } catch (err) {
+    await recordAdapterFailure(supabase, ATS_SOURCE, err.message)
+    await recordCoverage(supabase, { watchlistEntryId: entry.id, source: ATS_SOURCE, runId, coverage: 'failed', errorClass: err.message })
+    return { written: 0 }
+  }
+
+  await recordAdapterSuccess(supabase, ATS_SOURCE)
+  await recordCoverage(supabase, {
+    watchlistEntryId: entry.id,
+    source: ATS_SOURCE,
+    runId,
+    coverage: openings.length > 0 ? 'full' : 'thin',
+    itemsFound: openings.length,
+  })
+
+  if (openings.length === 0) return { written: 0 }
+  const canonicalCompanyId = await resolveCanonicalCompanyForWatchlist(supabase, {
+    name: entry.company_name,
+    domain: entry.domain,
+    cik: entry.sec_cik_padded,
+  })
+  if (!canonicalCompanyId) return { written: 0 }
+
+  let written = 0
+  for (const opening of openings) {
+    if (!opening.opened_on || !opening.role_title || !opening.role_url) continue
+    const result = await upsertCompanyEvent(supabase, {
+      canonicalCompanyId,
+      eventType: 'leadership_opening',
+      eventDate: opening.opened_on,
+      summary: `${opening.role_title} leadership opening`,
+      sourceUrl: opening.role_url,
+      sourceKind: 'ats_board',
+    })
+    if (result.eventId) written += 1
+  }
+  return { written }
 }
 
 async function runSecFilingsForEntry(supabase, entry, runId) {
@@ -221,7 +278,7 @@ export async function runWatchlistScan(supabase, watchlistId) {
 
   const { data: entries, error } = await supabase
     .from('watchlist_entries')
-    .select('id, company_name, domain, sec_cik_padded, state')
+    .select('id, company_name, domain, sec_cik_padded, state, ats_provider, ats_board_token')
     .eq('watchlist_id', watchlistId)
     .eq('active', true)
 
@@ -237,10 +294,12 @@ export async function runWatchlistScan(supabase, watchlistId) {
     try {
       const secResult = await runSecFilingsForEntry(supabase, entry, runId)
       const prResult = await runPrWireForEntry(supabase, entry, runId)
+      const atsResult = await runAtsForEntry(supabase, entry, runId)
       logger.info('watchlist-scan-job: entry scanned', {
         entry: entry.company_name,
         secWritten: secResult.written,
         prWireWritten: prResult.written,
+        atsWritten: atsResult.written,
       })
       entriesProcessed += 1
     } catch (err) {
