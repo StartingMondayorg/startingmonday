@@ -266,7 +266,8 @@
         "coverage:folders:check:staged": "node scripts/check-coverage-thresholds.mjs --staged",
         "coverage:diff:check": "node scripts/check-diff-coverage.mjs --min-coverage=90",
         "test": "npm run guard:observability-imports && npm run test:placeholder-guard && vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "watchlist:admin": "node scripts/watchlist-admin.mjs"
     },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.117.1",
