@@ -62,7 +62,6 @@
         "monitor:harness:generate": "node scripts/generate-monitoring-harness.mjs",
         "monitor:coverage:refresh": "npm run monitor:matrix:generate && npm run monitor:harness:generate",
         "smoke:auth-paths": "npx tsx tmp/auth-path-smoke.ts",
-        "guard:landing-page-approval": "node scripts/check-landing-page-change-approval.mjs",
         "guard:plain-language": "node scripts/check-plain-language-lexicon.mjs",
         "guard:plain-language:json": "node scripts/check-plain-language-lexicon.mjs --json",
         "guard:plain-language:baseline": "node scripts/check-plain-language-lexicon.mjs --update-baseline",
