@@ -26,6 +26,9 @@ jobs:
         run: npm run guard:observability-imports
 
       - name: Run code synthetic council audit
+        # Advisory: a red score is reported in the artifacts and the weekly
+        # unified audit, not by failing this workflow.
+        continue-on-error: true
         run: npm run audit:code-council:strict
 
       - name: Upload council audit artifacts

@@ -1,13 +1,13 @@
 # Code Synthetic Council Audit
 
-Generated: 2026-07-20T23:34:28.315Z
-Scope: 2006 code files across src, scripts, worker, tests
+Generated: 2026-08-28T22:21:37.541Z
+Scope: 2040 code files across src, scripts, worker, tests
 
 ## Overall
 
-- Score: 87
-- Grade: B+
-- Findings: 161
+- Score: 86
+- Grade: B
+- Findings: 512
 
 ## Category Scores
 
@@ -15,10 +15,10 @@ Scope: 2006 code files across src, scripts, worker, tests
 | --- | ---: |
 | correctness | 100 |
 | security | 100 |
-| maintainability | 92 |
+| maintainability | 72 |
 | performance | 100 |
-| testability | 0 |
-| observability | 100 |
+| testability | 49 |
+| observability | 53 |
 | typeSafety | 100 |
 | complexity | 100 |
 | deliveryRisk | 100 |
@@ -27,62 +27,62 @@ Scope: 2006 code files across src, scripts, worker, tests
 
 | File | Risk points |
 | --- | ---: |
-| src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx | 8 |
-| src/app/(dashboard)/dashboard/admin/admin-dark-theme.ts | 4 |
-| src/app/(dashboard)/dashboard/admin/diagrams/diagrams-client.tsx | 4 |
-| src/app/(dashboard)/dashboard/admin/diagrams/diagrams-data.ts | 4 |
-| src/app/(dashboard)/dashboard/admin/operations/wedge-economics/wedge-economics-client.tsx | 4 |
-| src/app/(dashboard)/dashboard/admin/prep-efficacy/prep-efficacy-client.tsx | 4 |
-| src/app/(dashboard)/dashboard/admin/sales-enablement/SalesEnablementWorkspace.tsx | 4 |
-| src/app/(dashboard)/dashboard/admin/wedge-funnels/wedge-funnels-client.tsx | 4 |
-| src/app/(dashboard)/dashboard/briefing/BriefingHeader.tsx | 4 |
-| src/app/(dashboard)/dashboard/briefing/BriefingPulseSupport.tsx | 4 |
-| src/app/(dashboard)/dashboard/companies/[id]/company-competitive-field.tsx | 4 |
-| src/app/(dashboard)/dashboard/companies/[id]/company-fit-card.tsx | 4 |
-| src/app/(dashboard)/dashboard/companies/[id]/company-offer-fields.tsx | 4 |
-| src/app/(dashboard)/dashboard/companies/[id]/prep/prep-config.ts | 4 |
-| src/app/(dashboard)/dashboard/contacts/linkedin-import-manager.tsx | 4 |
+| src/app/onboarding/onboarding-form.tsx | 12 |
+| src/app/(dashboard)/dashboard/_components/client-data-view.tsx | 10 |
+| src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx | 10 |
+| src/app/api/(ai)/narrative/generate-linkedin/route.ts | 7 |
+| src/app/api/(ai)/narrative/generate-positioning/route.ts | 7 |
+| src/app/api/(intelligence)/intelligence/companies/route.ts | 7 |
+| src/app/api/(intelligence)/intelligence/token/route.ts | 7 |
+| src/app/api/(intelligence)/signals/classify/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/daily-operating-snapshots/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/exception-lists/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/intelligence-qa-scorecard/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/migration-playbook-comms/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/monthly-business-review-packs/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/onboarding-qa-scorecard/route.ts | 7 |
+| src/app/api/(ops)/admin/automation/reporting/outplacement-cohort-admin/route.ts | 7 |
 
 ## Highest-Priority Findings (What To Fix)
 
 | Severity | Area | File | Issue |
 | --- | --- | --- | --- |
-| medium | testability | src/app/(dashboard)/dashboard/admin/admin-dark-theme.ts | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/admin/diagrams/diagrams-client.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/admin/diagrams/diagrams-data.ts | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/admin/operations/wedge-economics/wedge-economics-client.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/admin/prep-efficacy/prep-efficacy-client.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/admin/sales-enablement/SalesEnablementWorkspace.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/admin/wedge-funnels/wedge-funnels-client.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/briefing/BriefingHeader.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/briefing/BriefingPulseSupport.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/companies/[id]/company-competitive-field.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/companies/[id]/company-fit-card.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/companies/[id]/company-offer-fields.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/companies/[id]/prep/prep-config.ts | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/contacts/linkedin-import-manager.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/contacts/relationship-match-panel.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/dashboard-activity-snooze.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/dashboard-advanced-modules-section.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/dashboard-campaign-foundation-section.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/dashboard-decision-timeline-section.tsx | No obvious colocated or mirrored test file found |
-| medium | testability | src/app/(dashboard)/dashboard/dashboard-disclosure-section.tsx | No obvious colocated or mirrored test file found |
+| high | maintainability | src/app/onboarding/onboarding-form.tsx | Very large file (1843 lines) |
+| medium | maintainability | src/app/(dashboard)/dashboard/_components/client-data-view.tsx | Large file (1209 lines) |
+| medium | maintainability | src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx | Large file (1181 lines) |
+| medium | testability | src/app/(dashboard)/_components/BackToTop.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/_components/BottomNav.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/_components/CommandPalette.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/_components/DashboardFooter.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/_components/DemoBanner.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/_components/PersonalEmailNudge.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/_components/WatermarkOverlay.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/coach/[clientId]/_components/ClientTaskNav.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/LocalGreeting.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/PipelineFilter.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/Breadcrumbs.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/BriefRating.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/CoachPreSessionSnapshot.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/ContactStatusStepper.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/ContactsList.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/DashboardSkeleton.tsx | No obvious colocated or mirrored test file found |
+| medium | testability | src/app/(dashboard)/dashboard/_components/DraftPanel.tsx | No obvious colocated or mirrored test file found |
 
 ## Blind-Spot Companion Checks
 
 - Import/parser corruption files: 0
-- Placeholder baseline files: 334
+- Placeholder baseline files: 0
 
 | Largest Source Files | Lines |
 | --- | ---: |
-| src/app/(dashboard)/dashboard/companies/[id]/prep/prep-client.tsx | 1769 |
-| src/app/onboarding/onboarding-form.tsx | 1695 |
-| src/app/(dashboard)/dashboard/page.tsx | 1655 |
-| src/lib/supabase/database.types.ts | 1487 |
-| src/app/(dashboard)/dashboard/admin/page.tsx | 1279 |
-| src/components/coach/client-data-view.tsx | 1193 |
-| src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx | 1176 |
-| src/app/(dashboard)/dashboard/briefing/page.tsx | 1154 |
+| src/app/(dashboard)/dashboard/page.tsx | 2036 |
+| src/app/onboarding/onboarding-form.tsx | 1843 |
+| src/app/(dashboard)/dashboard/companies/[id]/prep/prep-client.tsx | 1812 |
+| src/lib/supabase/database.types.ts | 1676 |
+| src/app/(dashboard)/dashboard/admin/page.tsx | 1265 |
+| src/app/(dashboard)/dashboard/_components/client-data-view.tsx | 1209 |
+| src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx | 1181 |
+| src/app/(dashboard)/dashboard/briefing/page.tsx | 1169 |
 
 ## Council Personas
 

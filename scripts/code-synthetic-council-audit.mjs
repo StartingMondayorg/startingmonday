@@ -10,6 +10,7 @@ const OUT_MD = path.join(OUT_DIR, 'code-synthetic-council-audit.latest.md')
 const PLACEHOLDER_BASELINE_JSON = path.join(OUT_DIR, 'placeholder-test-baseline.json')
 
 const SOURCE_DIRS = ['src', 'scripts', 'worker', 'tests']
+const STRICT_MIN_SCORE = 84
 const EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.mjs', '.cjs'])
 const IGNORE_DIRS = new Set(['node_modules', '.next', '.git', 'playwright-report', 'test-results', 'public', 'docs'])
 
@@ -78,6 +79,12 @@ function counterpartTestCandidates(relPath) {
     `tests/${base.replace(/^src\//, '')}.spec.ts`,
     `tests/${name}.test.ts`,
     `tests/${name}.spec.ts`,
+    `tests/${name}.test.tsx`,
+    `tests/${name}.spec.tsx`,
+    `${dir}/__tests__/${name}.test.ts`,
+    `${dir}/__tests__/${name}.spec.ts`,
+    `${dir}/__tests__/${name}.test.tsx`,
+    `${dir}/__tests__/${name}.spec.tsx`,
   ]
 }
 
@@ -103,6 +110,11 @@ function analyzeFile(relPath, source) {
   const isReactMarkupFile = /\.(tsx|jsx)$/i.test(relPath)
   const hasSafeJsonLdEscaping = /application\/ld\+json/.test(source) && /replace\(\/</.test(source) && /\\u003c/.test(source)
   const mutatingApiHandlers = count(/export\s+async\s+function\s+(POST|PUT|PATCH|DELETE)\b/g, source)
+  // A since-deleted remediation script injected a dead
+  // `__councilObservabilitySignal` helper into route files purely so the logger
+  // regex below would match. It is declared, `void`-ed, and never called, so it
+  // is not an observability signal. Strip those lines before counting.
+  const observableSource = source.replace(/^.*__councilObservabilitySignal.*$/gm, '')
 
   return {
     path: relPath,
@@ -121,8 +133,8 @@ function analyzeFile(relPath, source) {
     mutatingApiHandlers,
     blockingFsCount: count(/\bfs\.(readFileSync|writeFileSync|appendFileSync|readdirSync)\(/g, source),
     childProcessExecCount: count(/\b(exec|execSync|spawn|spawnSync)\(/g, source),
-    sentryCount: count(/Sentry\.|captureException|captureMessage/g, source),
-    loggerCount: count(/logEvent\(|logger\.|console\.error\(/g, source),
+    sentryCount: count(/Sentry\.|captureException|captureMessage/g, observableSource),
+    loggerCount: count(/logEvent\(|logger\.|console\.error\(/g, observableSource),
     importCorruptionCount: /import\s*\{[\s\S]{0,240}\bconst\s+__councilObservabilitySignal\b[\s\S]{0,240}\}\s+from\s+['"]/m.test(source) ? 1 : 0,
   }
 }
@@ -157,6 +169,10 @@ function buildBlindspotReview(metrics) {
   }
 }
 
+function isMutatingApiRoute(relPath, m) {
+  return /^src\/app\/api\/.+\/route\.[jt]sx?$/.test(relPath) && m.mutatingApiHandlers > 0
+}
+
 function buildFindings(fileMetrics, hasTestMap) {
   const findings = []
 
@@ -171,10 +187,8 @@ function buildFindings(fileMetrics, hasTestMap) {
     if (m.evalCount > 0) {
       findings.push({ severity: 'critical', area: 'security', points: 16, path, issue: 'Uses eval or new Function' })
     }
-    if (m.dangerousHtmlCount > 0) {
-      if (path === 'src/app/components/JsonLd.tsx' && m.hasSafeJsonLdEscaping) {
-        continue
-      }
+    const isAllowlistedJsonLd = path === 'src/app/components/JsonLd.tsx' && m.hasSafeJsonLdEscaping
+    if (m.dangerousHtmlCount > 0 && !isAllowlistedJsonLd) {
       findings.push({ severity: 'high', area: 'security', points: 9, path, issue: 'Uses dangerouslySetInnerHTML' })
     }
     if (m.tsIgnoreCount > 0) {
@@ -186,14 +200,14 @@ function buildFindings(fileMetrics, hasTestMap) {
       findings.push({ severity: 'medium', area: 'type-safety', points: 3, path, issue: `Contains any usage (${m.anyCount})` })
     }
     const isGeneratedSupabaseTypes = path === 'src/lib/supabase/database.types.ts'
-    if (!hasCoverage && !isGeneratedSupabaseTypes && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 1400) {
+    if (!hasCoverage && !isGeneratedSupabaseTypes && !isTestPath && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 1400) {
       findings.push({ severity: 'high', area: 'maintainability', points: 8, path, issue: `Very large file (${m.lineCount} lines)` })
-    } else if (!hasCoverage && !isGeneratedSupabaseTypes && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 1150) {
+    } else if (!hasCoverage && !isGeneratedSupabaseTypes && !isTestPath && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 1150) {
+      findings.push({ severity: 'medium', area: 'maintainability', points: 6, path, issue: `Large file (${m.lineCount} lines)` })
+    } else if (!hasCoverage && !isGeneratedSupabaseTypes && !isTestPath && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 900) {
       findings.push({ severity: 'medium', area: 'maintainability', points: 4, path, issue: `Large file (${m.lineCount} lines)` })
-    } else if (!hasCoverage && !isGeneratedSupabaseTypes && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 900) {
+    } else if (!hasCoverage && !isGeneratedSupabaseTypes && !isTestPath && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 550) {
       findings.push({ severity: 'low', area: 'maintainability', points: 2, path, issue: `Elevated file size (${m.lineCount} lines)` })
-    } else if (!hasCoverage && !isAppPageFile && !isScriptOrWorkerFile && m.lineCount > 550) {
-      findings.push({ severity: 'medium', area: 'maintainability', points: 4, path, issue: `Large file (${m.lineCount} lines)` })
     }
     const longLineThreshold = isTsxUiFile ? 120 : 60
     if (!hasCoverage && !isAppPageFile && !isScriptOrWorkerFile && m.longLineCount > longLineThreshold) {
@@ -211,13 +225,8 @@ function buildFindings(fileMetrics, hasTestMap) {
       findings.push({ severity: 'medium', area: 'testability', points: 4, path, issue: 'No obvious colocated or mirrored test file found' })
     }
 
-    if (/^src\/app\/api\/.+\/(route\.[jt]s|route\.[jt]sx)$/.test(path)) {
-      if (m.mutatingApiHandlers === 0) {
-        continue
-      }
-      if (m.sentryCount === 0 && m.loggerCount === 0) {
-        findings.push({ severity: 'medium', area: 'observability', points: 3, path, issue: 'API route lacks explicit logging/exception capture signal' })
-      }
+    if (isMutatingApiRoute(path, m) && m.sentryCount === 0 && m.loggerCount === 0) {
+      findings.push({ severity: 'medium', area: 'observability', points: 3, path, issue: 'API route lacks explicit logging/exception capture signal' })
     }
 
     if (/^scripts\//.test(path) && m.blockingFsCount > 20) {
@@ -232,7 +241,35 @@ function buildFindings(fileMetrics, hasTestMap) {
   return findings
 }
 
-function computeCategoryScores(findings) {
+/**
+ * Testability and observability are population-wide properties: one finding per
+ * uncovered file, one per unlogged route. Subtracting fixed points per finding
+ * floors both at 0 on any codebase of real size — testability has read 0 in
+ * every run since this audit was written, which makes its 12% weight a constant
+ * and hides regressions rather than reporting them. Score them as coverage
+ * ratios instead, so the number moves when the underlying work is done.
+ */
+function computeRatioScores(metrics, hasTestMap) {
+  const sourceFiles = metrics.filter((m) => isLikelySourceFile(m.path))
+  const covered = sourceFiles.filter((m) => hasTestMap.get(m.path)).length
+
+  const mutatingRoutes = metrics.filter((m) => isMutatingApiRoute(m.path, m))
+  const logged = mutatingRoutes.filter((m) => m.sentryCount > 0 || m.loggerCount > 0).length
+
+  const ratio = (n, total) => (total === 0 ? 100 : Math.round((100 * n) / total))
+  return {
+    testability: ratio(covered, sourceFiles.length),
+    observability: ratio(logged, mutatingRoutes.length),
+    coverage: {
+      sourceFiles: sourceFiles.length,
+      coveredSourceFiles: covered,
+      mutatingApiRoutes: mutatingRoutes.length,
+      loggedApiRoutes: logged,
+    },
+  }
+}
+
+function computeCategoryScores(findings, ratioScores) {
   const base = {
     correctness: 100,
     security: 100,
@@ -261,6 +298,11 @@ function computeCategoryScores(findings) {
     const key = areaToKey[finding.area]
     if (!key) continue
     base[key] = Math.max(0, base[key] - finding.points)
+  }
+
+  if (ratioScores) {
+    base.testability = ratioScores.testability
+    base.observability = ratioScores.observability
   }
 
   return base
@@ -421,7 +463,8 @@ function main() {
   }
 
   const findings = buildFindings(metrics, hasTestMap)
-  const scores = computeCategoryScores(findings)
+  const ratioScores = computeRatioScores(metrics, hasTestMap)
+  const scores = computeCategoryScores(findings, ratioScores)
   const overall = overallScore(scores)
 
   const result = {
@@ -431,6 +474,7 @@ function main() {
     overallScore: overall,
     grade: gradeOf(overall),
     scores,
+    coverage: ratioScores.coverage,
     findings,
     council: {},
     blindspotReview: {},
@@ -453,8 +497,31 @@ function main() {
     console.log(`Data:   ${relative(OUT_JSON)}`)
   }
 
-  if (strict && (result.overallScore < 84 || result.blindspotReview.parserCorruptionCount > 0)) {
-    process.exitCode = 1
+  if (strict) {
+    const reasons = []
+    if (result.overallScore < STRICT_MIN_SCORE) {
+      reasons.push(`overall score ${result.overallScore} is below the strict minimum of ${STRICT_MIN_SCORE}`)
+      const weakest = Object.entries(result.scores)
+        .filter(([, value]) => value < 100)
+        .sort((a, b) => a[1] - b[1])
+      for (const [name, value] of weakest) {
+        reasons.push(`  ${name}: ${value}/100`)
+      }
+    }
+    if (result.blindspotReview.parserCorruptionCount > 0) {
+      reasons.push(`${result.blindspotReview.parserCorruptionCount} file(s) have corrupted import blocks`)
+      for (const file of result.blindspotReview.parserCorruptionFiles.slice(0, 10)) {
+        reasons.push(`  ${file}`)
+      }
+    }
+    if (reasons.length > 0) {
+      console.error('')
+      console.error('Strict audit failed:')
+      for (const reason of reasons) console.error(reason)
+      console.error('')
+      console.error(`Full findings: ${relative(OUT_MD)}`)
+      process.exitCode = 1
+    }
   }
 }
 
