@@ -102,5 +102,6 @@ Suggested opening:
 - [ADI company headlines](https://www.adiglobal.com/company-headlines)
 - [ADI launches inaugural Control4 NEXT conference](https://www.adiglobal.com/company-news/adi-launches-inaugural-control4-next-conference-for-certified-technicians)
 - [ADI expands 1Plan Services platform](https://www.adiglobal.com/company-news/adi-expands-1plan-services-platform-with-redesigned-parasol-experience)
+- [SEC EDGAR company filing index for ADI Global Distribution, CIK 2105139](https://www.sec.gov/edgar/browse/?CIK=2105139&owner=exclude&action=getcompany)
 
 **Prepared for John Dunn, Presidio.** This is a one-lead sample derived from the supplied New Prospect Brief and refreshed against the public ADI pages above. It is not a substitute for filing-level diligence.
