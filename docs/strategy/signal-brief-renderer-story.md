@@ -37,6 +37,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Disable and re-enable procedure is documented in `docs/development/signal-brief-preview-rollback.md`.
 - Representative public-record fixture `tests/fixtures/signal-brief/dataendure-prospect.json` renders through the adapter, quality gate, and preview route in an integration test.
 - Agecroft Partners fixture `tests/fixtures/signal-brief/agecroft-partners.json` renders through the same pipeline using dated public media/company sources; it is explicitly a hypothesis because no current trigger was verified.
+- ADI Global Distribution fixture `tests/fixtures/signal-brief/adi-global-distribution.json` renders through the same pipeline using dated official company activity; the report's separation/TSA thesis remains a discovery hypothesis until canonical filings are verified.
 - TypeScript compilation passes for the new contract.
 
 ## Deliberate boundary

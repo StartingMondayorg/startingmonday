@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { validateInternalRouteRequest } from '@/lib/internal-route-auth'
 import dataEndureFixture from '../../../../../../tests/fixtures/signal-brief/dataendure-prospect.json'
 import agecroftFixture from '../../../../../../tests/fixtures/signal-brief/agecroft-partners.json'
+import adiFixture from '../../../../../../tests/fixtures/signal-brief/adi-global-distribution.json'
 import { POST } from './route'
 
 vi.mock('@/lib/internal-route-auth', () => ({
@@ -143,5 +144,20 @@ describe('POST /api/internal/signal-brief/preview', () => {
     expect(body.html).toContain('www.bloomberg.com/news/audio/2021-01-25')
     expect(body.html).toContain('confirm the current growth pressure in discovery')
     expect(body.html).not.toContain('new mandate announced')
+  })
+
+  it('renders ADI as a current platform signal with separation questions held for discovery', async () => {
+    validateMock.mockReturnValue(true)
+    vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')
+
+    const response = await POST(request(JSON.stringify(adiFixture)))
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.html).toContain('ADI Global Distribution')
+    expect(body.html).toContain('2026-08-27')
+    expect(body.html).toContain('www.adiglobal.com/company-news/adi-expands-1plan-services-platform')
+    expect(body.html).toContain('confirm any separation workstreams')
+    expect(body.html).not.toContain('TSA deadline is confirmed')
   })
 })
