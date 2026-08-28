@@ -271,14 +271,6 @@ jobs:
       - name: Migration rollback readiness check
         run: npm run migration:rollback:check:strict
 
-      - name: Code council audit (advisory on staging and PR)
-        if: github.ref != 'refs/heads/main'
-        run: npm run audit:code-council
-
-      - name: Code council strict audit (main only)
-        if: github.ref == 'refs/heads/main'
-        run: npm run audit:code-council:strict
-
       - name: Build
         env:
           MOBILE_ELITE_GATE_STRICT: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging') && '1' || '0' }}

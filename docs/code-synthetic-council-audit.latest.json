@@ -1,21 +1,419 @@
 {
-  "generatedAt": "2026-07-20T23:34:28.315Z",
-  "fileCount": 2006,
-  "findingCount": 161,
-  "overallScore": 87,
-  "grade": "B+",
+  "generatedAt": "2026-08-28T22:21:37.541Z",
+  "fileCount": 2040,
+  "findingCount": 512,
+  "overallScore": 86,
+  "grade": "B",
   "scores": {
     "correctness": 100,
     "security": 100,
-    "maintainability": 92,
+    "maintainability": 72,
     "performance": 100,
-    "testability": 0,
-    "observability": 100,
+    "testability": 49,
+    "observability": 53,
     "typeSafety": 100,
     "complexity": 100,
     "deliveryRisk": 100
   },
+  "coverage": {
+    "sourceFiles": 796,
+    "coveredSourceFiles": 393,
+    "mutatingApiRoutes": 215,
+    "loggedApiRoutes": 113
+  },
   "findings": [
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/BackToTop.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/BottomNav.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/CommandPalette.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/DashboardFooter.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/DemoBanner.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/PersonalEmailNudge.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/_components/WatermarkOverlay.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/coach/[clientId]/_components/ClientTaskNav.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/LocalGreeting.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/PipelineFilter.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/Breadcrumbs.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/BriefRating.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/CoachPreSessionSnapshot.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/ContactStatusStepper.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/ContactsList.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/DashboardSkeleton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/DraftPanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/EmptyState.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/ExecutiveBrandingProfile.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/ExecutiveDecisionCockpit.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/FaqAccordion.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/FollowUpItem.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/LogSignalForm.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/NextBestActionPrompt.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/ProfileInactivityNudge.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/RouteError.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/ScanPoller.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/SignalOutreachGate.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/Skeleton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/StarStoriesPanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/SuggestionCards.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/TagInput.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/activity-snooze.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/advanced-modules-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/campaign-foundation-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/client-alert-preferences.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "maintainability",
+      "points": 6,
+      "path": "src/app/(dashboard)/dashboard/_components/client-data-view.tsx",
+      "issue": "Large file (1209 lines)"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/client-data-view.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/decision-timeline-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/disclosure-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/greeting-block.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/on-demand-actions.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/path-welcome-card.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/pipeline-pulse.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/post-placement-view.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/primary-nav-sections.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/profile-intelligence-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/quick-access-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/signal-sections.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/status-banners.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/top-shell-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/weekly-performance-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_components/welcome-nudge-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_utils/export-csv.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_utils/resume-tailor-utils.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/_utils/week-utils.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
     {
       "severity": "medium",
       "area": "testability",
@@ -31,10 +429,59 @@
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
+      "severity": "low",
+      "area": "maintainability",
+      "points": 2,
+      "path": "src/app/(dashboard)/dashboard/admin/internal-guide/internal-guide-client.tsx",
+      "issue": "Elevated file size (580 lines)"
+    },
+    {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/(dashboard)/dashboard/admin/diagrams/diagrams-data.ts",
+      "path": "src/app/(dashboard)/dashboard/admin/internal-guide/internal-guide-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/live-briefs/[id]/action-panel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/live-briefs/[id]/delete-panel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/live-briefs/[id]/profile-editor.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/live-briefs/[id]/scan-status.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/live-briefs/[id]/shortlist-editor.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/operations/bot-traffic/bot-traffic-chart.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -49,6 +496,13 @@
       "area": "testability",
       "points": 4,
       "path": "src/app/(dashboard)/dashboard/admin/prep-efficacy/prep-efficacy-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/admin/product/catalog/actions.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -125,147 +579,35 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-activity-snooze.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-advanced-modules-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-campaign-foundation-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-decision-timeline-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-disclosure-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-greeting-block.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-on-demand-actions.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-path-welcome-card.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-pipeline-pulse.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-post-placement-view.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-primary-nav-sections.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-profile-intelligence-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-quick-access-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-signal-sections.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-status-banners.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-top-shell-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-weekly-performance-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/(dashboard)/dashboard/dashboard-welcome-nudge-section.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
       "path": "src/app/(dashboard)/dashboard/discover/recommendation/[id]/recommendation-actions.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "maintainability",
-      "points": 4,
+      "points": 6,
       "path": "src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx",
-      "issue": "Large file (1176 lines)"
+      "issue": "Large file (1181 lines)"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
       "path": "src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/offers/offer-synthesis.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/opportunity-radar.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -273,6 +615,90 @@
       "area": "testability",
       "points": 4,
       "path": "src/app/(dashboard)/dashboard/outplacement/sponsor-report/print-button.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/partner/ExportCsvButton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/partner/seat-purchase.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/placed/actions.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/positioning/positioning-coach.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/profile/linkedin-generator.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/profile/positioning-generator.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/profile/profile-advanced-panels.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/profile/profile-linkedin-upload.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/profile/profile-resume-upload.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/salary/salary-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/signals/actions.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/dashboard/signals/filter-bar.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -293,7 +719,357 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
+      "path": "src/app/(dashboard)/dashboard/strategy/strategy-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
       "path": "src/app/(dashboard)/dashboard/support/support-chat.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/prep/_components/CultureFitRetentionSignalsCard.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/prep/_components/MeetingDebriefPersistencePanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/settings/_components/EmailPreferencesPanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/settings/_components/SearchControlsPanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/settings/_components/coach-access-manager.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/settings/billing/billing-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/settings/security/security-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "low",
+      "area": "maintainability",
+      "points": 2,
+      "path": "src/app/(dashboard)/settings/team/team-settings.tsx",
+      "issue": "Elevated file size (743 lines)"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(dashboard)/settings/team/team-settings.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/blog/_components/BlogCallout.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/blog/blog-chat.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/channels/feature-map/ChannelFeatureMapClient.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/coaches/TransitionCoachDashboardPanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/coaches/mock-dashboard/mock-data.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/coaches/mock-dashboard/status-theme.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/coaches/mock-dashboard/theme-tokens.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/concierge/concierge-waitlist.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "low",
+      "area": "maintainability",
+      "points": 2,
+      "path": "src/app/(marketing)/demo/cio/CioDemoClient.tsx",
+      "issue": "Elevated file size (809 lines)"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/demo/cio/CioDemoClient.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/demo/cio/CioNotesClient.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/evidence-hub/content-extra.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/evidence-room/content.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/features/_components/MarkdownArticle.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/features/features-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-cdo/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-cio/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-ciso/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/_components/CoachBundleCheckoutButton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/_components/CoachDeliverablePreviewTabs.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/_components/MicroProductCheckoutButton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/coach-preview-actions.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/micro-products/product-data.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/page-content.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coaches/sample-output-section.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-coo/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-cpo/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-data-officer/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-outplacement/_components/CompactTimelineModule.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-vp/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/for-vp-technology/opengraph-image.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/learn-more/_components/LearnMoreBriefShowcase.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/learn-more/content.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/learn-more/shared.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/partners/partners-form.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/partners/pilot-admin/PartnerPilotAdminClient.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/pricing/pricing-cards.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/proof/roi-calculator/roi-calculator-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/search-firms/ProspectingScannerPanel.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/(marketing)/shortlist-sprint/ShortlistSprintStatusCard.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -305,269 +1081,1424 @@
     },
     {
       "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(account)/onboarding/intel/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/guide/chat/feedback/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/guide/chat/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/automation/reporting/shortlist-sprint-funnel/route.ts",
+      "path": "src/app/api/(ai)/narrative/generate-linkedin/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/narrative/generate-linkedin/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ai)/narrative/generate-positioning/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/narrative/generate-positioning/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/positioning/chat/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ai)/role-lane/tutorials/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/tailor/check/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/tailor/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ai)/tailor/strengthen/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(auth)/auth/login-submit/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(auth)/auth/verify-and-oauth/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(auth)/google-calendar/disconnect/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(auth)/linkedin-import/consent/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(billing)/billing/checkout/micro-product/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(billing)/billing/checkout/micro-product-bundle/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(billing)/billing/checkout/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(billing)/billing/checkout/seats/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(billing)/billing/portal/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(billing)/plan/weekly/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/automation/signals/source-catalog/route.ts",
+      "path": "src/app/api/(intelligence)/discover/recommendations/[id]/save/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/edgar-status/route.ts",
+      "path": "src/app/api/(intelligence)/intelligence/companies/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(intelligence)/intelligence/companies/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(intelligence)/intelligence/radar/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/executive-research/health/route.ts",
+      "path": "src/app/api/(intelligence)/intelligence/token/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(intelligence)/intelligence/token/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(intelligence)/salary-intelligence/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/intelligence/label-metrics/route.ts",
+      "path": "src/app/api/(intelligence)/signals/classify/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(intelligence)/signals/classify/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/meetings/book-remind/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/context-capture/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/first-brief/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/first-milestone-tracking/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/identity-verify/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/intake/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/video-queue/[runId]/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/video-queue/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/onboarding/workflow-assignment/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/book-from-replies/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/classify-replies/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/enforce-suppression/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/follow-up-timing/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/initial-sequences/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/post-meeting-follow-up/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/reconcile-live-sends/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/outreach/stalled-nudges/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/council-review-prep/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/daily-operating-snapshots/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/daily-operating-snapshots/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/exception-lists/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/exception-lists/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/intelligence-qa-scorecard/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/intelligence-qa-scorecard/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/migration-playbook-comms/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/migration-playbook-comms/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/monthly-business-review-packs/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/monthly-business-review-packs/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/onboarding-qa-scorecard/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/onboarding-qa-scorecard/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/outplacement-cohort-admin/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/outplacement-cohort-admin/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/partner-kpi-schema/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/intelligence/metrics/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/partner-provisioning-import/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/partner-provisioning-import/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/pilot-partner-validation/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/sales-enablement/workspace/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/pmf-daily-dashboard/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/admin/social/mock-publish/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/pmf-event-monitor/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/briefing/pulse-events/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/prep-provenance-coverage/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/briefs/[id]/lifecycle/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/program-template-governance/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/program-template-governance/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/program-template-packs/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/program-template-packs/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/provisioning-sla-qa/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/coach/client/[clientId]/session-snapshot/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/seat-lifecycle-automation/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/seat-lifecycle-automation/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/session-closure-monitor/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/apollo-quality-audit/route.ts",
-      "issue": "Compatibility route is covered by src/app/api/cron/apollo-quality-audit/route.test.ts"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/app/api/cron/edgar-freshness-audit/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/shortlist-sprint-funnel/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/edgar-watchdog/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/sponsor-export-dispatch/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/sponsor-export-pipeline/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/sponsor-snapshot-cadence/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/enrichment-contact-retention/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/template-adoption-scorecard/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/executive-research-refresh/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/reporting/trend-reports/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/trend-reports/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/value-lane-pricing-entitlements/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/value-lane-pricing-entitlements/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/reporting/wedge-funnel-scorecard/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/reporting/weekly-kpi-summaries/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/managertools-day2-brief/route.ts",
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/bookkeeping-entry-preparation/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/bookkeeping-entry-preparation/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/exception-reporting/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/exception-reporting/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/mismatch-flagging/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/mismatch-flagging/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/payout-matching/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/payout-matching/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/revenue-classification/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/revenue-classification/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/automation/revenue-ops/stripe-supabase-accounting-sync/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/automation/signals/source-catalog/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/managertools-lifecycle/route.ts",
+      "path": "src/app/api/(ops)/admin/contacts/enrich/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/managertools-signup-alerts/route.ts",
+      "path": "src/app/api/(ops)/admin/executive-research/health/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/cron/managertools-signup-summary/route.ts",
+      "path": "src/app/api/(ops)/admin/internal-guide/chat/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/internal-guide/chat/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/leads/score-route/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/leads/score-route/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/delete/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/finalize/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/release/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/revoke/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/scan/partial/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/[id]/scan/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/live-briefs/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/sales-enablement/workspace/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/deploy-marker/route.ts",
+      "path": "src/app/api/(ops)/admin/signals/monitor/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/social/[id]/council-check/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/social/[id]/mark-posted/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/social/[id]/mark-posted/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/social/[id]/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/social/[id]/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/social/[id]/schedule/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/discover/recommendations/[id]/save/route.ts",
+      "path": "src/app/api/(ops)/admin/social/digest/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/executive-brief/grill-me/route.ts",
+      "path": "src/app/api/(ops)/admin/social/handoff-approved/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/social/handoff-approved/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/social/mock-publish/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/executive-brief/grill-me/sessions/route.ts",
+      "path": "src/app/api/(ops)/admin/social/schedule-publish/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/social/schedule-publish/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/admin/social/sync-engagement/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/executive-brief/grill-me/sessions/[id]/respond/route.ts",
+      "path": "src/app/api/(ops)/admin/social/today/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/executive-brief/transcription/route.ts",
+      "path": "src/app/api/(ops)/admin/speakers/[id]/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/speakers/[id]/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/admin/speakers/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/cron/commitment-friday/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/internal/automation/emi-smoke/route.ts",
+      "path": "src/app/api/(ops)/cron/commitment-sunday/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/outreach/kpi-chain/route.ts",
+      "path": "src/app/api/(ops)/cron/edgar-freshness-audit/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/partner/outcome-events/route.ts",
+      "path": "src/app/api/(ops)/cron/edgar-signals/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/partner/weekly-loop/route.ts",
+      "path": "src/app/api/(ops)/cron/edgar-watchdog/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/partners/pilot-admin/summary/route.ts",
+      "path": "src/app/api/(ops)/cron/enrichment-contact-retention/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/plan/weekly/route.ts",
+      "path": "src/app/api/(ops)/cron/executive-research-refresh/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/prep/relationships/enrich/route.ts",
+      "path": "src/app/api/(ops)/cron/google-calendar-sync/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/readiness/route.ts",
+      "path": "src/app/api/(ops)/cron/link-integrity-weekly-review/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/relationships/notes/route.ts",
+      "path": "src/app/api/(ops)/cron/managertools-day2-brief/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/relationships/recommendations/route.ts",
+      "path": "src/app/api/(ops)/cron/managertools-lifecycle/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/relationships/touchpoints/route.ts",
+      "path": "src/app/api/(ops)/cron/managertools-signup-alerts/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/role-lane/tutorials/route.ts",
+      "path": "src/app/api/(ops)/cron/managertools-signup-summary/route.ts",
       "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/cron/onboarding-video-worker/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/cron/outreach-reconcile/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/cron/ui-ux-weekly-review/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/cron/weekly-digest/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/deploy-marker/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/readiness/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(ops)/webhooks/onboarding-video/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/webhooks/onboarding-video/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(ops)/webhooks/resend/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(outreach)/outreach/current-status/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(outreach)/outreach/kpi-chain/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(outreach)/outreach/suppression/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(outreach)/outreach/suppression/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(outreach)/outreach/template/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(outreach)/pilot-outreach/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(outreach)/relationships/notes/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(outreach)/relationships/recommendations/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(outreach)/relationships/touchpoints/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(partner)/coach/client/[clientId]/actions/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(partner)/coach/client/[clientId]/alerts/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/coach/client/[clientId]/session-snapshot/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(partner)/coach/client/[clientId]/weekly-review/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/coach/command-center/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/partner/outcome-events/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/partner/weekly-loop/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/partners/attribute/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(partner)/partners/attribute/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/partners/pilot-admin/summary/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(partner)/team/invite/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/team/roles/[id]/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(partner)/team/roles/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(partner)/team/seat/[id]/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(prep)/briefing/pulse-events/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/briefing/send/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(prep)/briefs/[id]/lifecycle/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/briefs/[id]/rate/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/briefs/download/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/conversation/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(prep)/executive-brief/grill-me/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(prep)/executive-brief/grill-me/sessions/[id]/respond/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(prep)/executive-brief/grill-me/sessions/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/(prep)/executive-brief/transcription/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/prep/[id]/chat/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/prep/[id]/outreach/log/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/(prep)/prep/[id]/outreach/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/concierge-waitlist/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/demo-brief/executive-brief/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/demo-brief/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/demo-brief/tailored/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/demo-email/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/feedback/items/[id]/comments/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/feedback/items/[id]/status/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/api/feedback/items/[id]/vote/route.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/internal/signal-brief/preview/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/live-brief/[token]/events/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
+    },
+    {
+      "severity": "medium",
+      "area": "observability",
+      "points": 3,
+      "path": "src/app/api/optimize/route.ts",
+      "issue": "API route lacks explicit logging/exception capture signal"
     },
     {
       "severity": "medium",
@@ -580,84 +2511,259 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/team/roles/route.ts",
+      "path": "src/app/apple-icon.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/api/team/roles/[id]/route.ts",
+      "path": "src/app/brand-metadata.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/blog/blog-chat.tsx",
+      "path": "src/app/components/ActivityChart.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/channels/feature-map/ChannelFeatureMapClient.tsx",
+      "path": "src/app/components/AssistWidget.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/coaches/mock-dashboard/mock-data.ts",
+      "path": "src/app/components/BlogPost.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/coaches/mock-dashboard/status-theme.ts",
+      "path": "src/app/components/BrandIcon.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/coaches/mock-dashboard/theme-tokens.ts",
+      "path": "src/app/components/CapabilityDisclosure.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/coaches/TransitionCoachDashboardPanel.tsx",
+      "path": "src/app/components/CareerVerificationPanel.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/evidence-room/content.ts",
+      "path": "src/app/components/ChannelMicroProductRail.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/features/features-client.tsx",
+      "path": "src/app/components/ChannelSectionLayout.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/learn-more/content.ts",
+      "path": "src/app/components/CoachValueNudge.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/learn-more/shared.tsx",
+      "path": "src/app/components/EvidenceProofCard.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/FirstMileTelemetry.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/FirstWeekSpine.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/HelpQuickButton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/HomepageBriefTeaser.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/JsonLd.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "low",
+      "area": "maintainability",
+      "points": 2,
+      "path": "src/app/components/LandingPage.tsx",
+      "issue": "Elevated file size (803 lines)"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/LandingPage.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/OpportunityCharts.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/PipelineVelocity.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/PosthogProvider.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/ProofStoriesModule.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/ProofStrip.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/PublicPageHeader.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/SignalTimelineCard.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/SiteFooter.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/SiteHeader.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/ThemeProvider.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/ThemeToggle.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/TrackLink.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/TrackedCtaLink.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/components/turnstile-widget.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/error.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/guide/guide-client.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/icon.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/layout.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -665,6 +2771,13 @@
       "area": "testability",
       "points": 4,
       "path": "src/app/mark-review/content.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/not-found.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -679,6 +2792,27 @@
       "area": "testability",
       "points": 4,
       "path": "src/app/onboarding/onboarding-done-step.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "high",
+      "area": "maintainability",
+      "points": 8,
+      "path": "src/app/onboarding/onboarding-form.tsx",
+      "issue": "Very large file (1843 lines)"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/onboarding/onboarding-form.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/app/onboarding/onboarding-helpers.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -699,91 +2833,21 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/partners/pilot-admin/PartnerPilotAdminClient.tsx",
+      "path": "src/app/onboarding/use-onboarding-draft-state.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/search-firms/ProspectingScannerPanel.tsx",
+      "path": "src/app/opengraph-image.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/app/shortlist-sprint/ShortlistSprintStatusCard.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/AssistWidget.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/BackToTop.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/Breadcrumbs.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/CapabilityDisclosure.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/channel/CompactTimelineModule.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/channel/ProofStoriesModule.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/coach/CoachPreSessionSnapshot.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/CoachValueNudge.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/CultureFitRetentionSignalsCard.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/DashboardFooter.tsx",
+      "path": "src/components/CmdKButton.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -797,84 +2861,7 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/components/EmailPreferencesPanel.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/EvidenceProofCard.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/executive/ExecutiveBrandingProfile.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/executive/ExecutiveDecisionCockpit.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/FirstMileTelemetry.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/home/ChartZoomModal.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/home/OpportunityCharts.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/HomepageBriefTeaser.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
       "path": "src/components/HowStartingMondayHelpsModal.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/JsonLd.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/layouts/ChannelSectionLayout.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/components/LearnMoreBriefShowcase.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -888,13 +2875,6 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/components/MeetingDebriefPersistencePanel.tsx",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
       "path": "src/components/MeetingDebriefRiskCard.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
@@ -902,28 +2882,28 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/components/ProofStrip.tsx",
+      "path": "src/components/PauseSearchButton.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/components/PublicPageHeader.tsx",
+      "path": "src/components/PricingSection.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/components/SiteFooter.tsx",
+      "path": "src/components/SamplePrepBrief.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/components/SiteHeader.tsx",
+      "path": "src/components/SearchFirmSampleBriefExperience.tsx",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -931,6 +2911,307 @@
       "area": "testability",
       "points": 4,
       "path": "src/components/TrackedAccordionItem.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/home/ChannelEntryStrip.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/home/ChartZoomModal.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/accordion.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/alert-dialog.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/alert.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/avatar.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/badge.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/breadcrumb.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/button.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/card.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/checkbox.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/collapsible.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/command.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/dialog.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/index.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/input-group.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/input.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/label.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/pagination.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/progress.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/radio-group.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/scroll-area.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/select.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/separator.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/skeleton.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/slider.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/sonner.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/switch.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/table.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/tabs.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/textarea.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/toggle-group.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/toggle.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/components/ui/tooltip.tsx",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/instrumentation.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/attribution-failure.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/billing/micro-products.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/billing/pricing.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/billing/stripe.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/blog-posts-data-a.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/blog-posts-data-b.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/bot-detection/bot-user-agents.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -958,21 +3239,21 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/lib/dashboard-signal-contract.ts",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/lib/dashboard-signal-guard.ts",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
       "path": "src/lib/dev-auth.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/email/automated-email-policy.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/email/email.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -1028,14 +3309,7 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/lib/feature-flags.ts",
-      "issue": "No obvious colocated or mirrored test file found"
-    },
-    {
-      "severity": "medium",
-      "area": "testability",
-      "points": 4,
-      "path": "src/lib/follow-up-copy.ts",
+      "path": "src/lib/google-calendar.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -1043,6 +3317,34 @@
       "area": "testability",
       "points": 4,
       "path": "src/lib/grill-me-protocol.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/intelligence/dashboard-signal-contract.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/intelligence/dashboard-signal-guard.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/intelligence/lead-scoring-runner.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/intelligence/lead-scoring.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -1063,7 +3365,56 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
+      "path": "src/lib/onboarding/activation.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/onboarding/onboarding-video-provider.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/org-scope.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/outreach/auto-remediate.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/outreach/follow-up-copy.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
       "path": "src/lib/outreach/kpi-chain.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/outreach/legacy-copy-guard.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/outreach/outreach-rhythm.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -1091,7 +3442,7 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/lib/outreach-rhythm.ts",
+      "path": "src/lib/partner-kpi-schema.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -1105,6 +3456,13 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
+      "path": "src/lib/partner-provisioning.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
       "path": "src/lib/policy-versions.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
@@ -1112,21 +3470,126 @@
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/lib/prep-grounding.ts",
+      "path": "src/lib/prep/prep-context.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/lib/prep-route-utils.ts",
+      "path": "src/lib/prep/prep-grounding.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
       "severity": "medium",
       "area": "testability",
       "points": 4,
-      "path": "src/lib/prep-specificity-guard.ts",
+      "path": "src/lib/prep/prep-route-utils.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/prep/prep-specificity-guard.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/program-template-governance.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/prospect-news.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/require-auth.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/require-prep-access.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/resources.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/role-path-priority.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/schemas.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/signal-brief-quality.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/slack.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/social-posting-plan.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/supabase/admin.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/supabase/client.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/supabase/database.types.ts",
+      "issue": "No obvious colocated or mirrored test file found"
+    },
+    {
+      "severity": "medium",
+      "area": "testability",
+      "points": 4,
+      "path": "src/lib/utils.ts",
       "issue": "No obvious colocated or mirrored test file found"
     },
     {
@@ -1138,258 +3601,259 @@
     },
     {
       "severity": "medium",
-      "area": "maintainability",
+      "area": "testability",
       "points": 4,
-      "path": "tests/e2e/synthetics.spec.ts",
-      "issue": "Large file (890 lines)"
+      "path": "src/proxy.ts",
+      "issue": "No obvious colocated or mirrored test file found"
     }
   ],
   "council": {
     "topFindings": [
       {
+        "severity": "high",
+        "area": "maintainability",
+        "points": 8,
+        "path": "src/app/onboarding/onboarding-form.tsx",
+        "issue": "Very large file (1843 lines)"
+      },
+      {
+        "severity": "medium",
+        "area": "maintainability",
+        "points": 6,
+        "path": "src/app/(dashboard)/dashboard/_components/client-data-view.tsx",
+        "issue": "Large file (1209 lines)"
+      },
+      {
+        "severity": "medium",
+        "area": "maintainability",
+        "points": 6,
+        "path": "src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx",
+        "issue": "Large file (1181 lines)"
+      },
+      {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/admin-dark-theme.ts",
+        "path": "src/app/(dashboard)/_components/BackToTop.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/diagrams/diagrams-client.tsx",
+        "path": "src/app/(dashboard)/_components/BottomNav.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/diagrams/diagrams-data.ts",
+        "path": "src/app/(dashboard)/_components/CommandPalette.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/operations/wedge-economics/wedge-economics-client.tsx",
+        "path": "src/app/(dashboard)/_components/DashboardFooter.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/prep-efficacy/prep-efficacy-client.tsx",
+        "path": "src/app/(dashboard)/_components/DemoBanner.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/sales-enablement/SalesEnablementWorkspace.tsx",
+        "path": "src/app/(dashboard)/_components/PersonalEmailNudge.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/admin/wedge-funnels/wedge-funnels-client.tsx",
+        "path": "src/app/(dashboard)/_components/WatermarkOverlay.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/briefing/BriefingHeader.tsx",
+        "path": "src/app/(dashboard)/coach/[clientId]/_components/ClientTaskNav.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/briefing/BriefingPulseSupport.tsx",
+        "path": "src/app/(dashboard)/dashboard/LocalGreeting.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/companies/[id]/company-competitive-field.tsx",
+        "path": "src/app/(dashboard)/dashboard/PipelineFilter.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/companies/[id]/company-fit-card.tsx",
+        "path": "src/app/(dashboard)/dashboard/_components/Breadcrumbs.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/companies/[id]/company-offer-fields.tsx",
+        "path": "src/app/(dashboard)/dashboard/_components/BriefRating.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/companies/[id]/prep/prep-config.ts",
+        "path": "src/app/(dashboard)/dashboard/_components/CoachPreSessionSnapshot.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/contacts/linkedin-import-manager.tsx",
+        "path": "src/app/(dashboard)/dashboard/_components/ContactStatusStepper.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/contacts/relationship-match-panel.tsx",
+        "path": "src/app/(dashboard)/dashboard/_components/ContactsList.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/dashboard-activity-snooze.tsx",
+        "path": "src/app/(dashboard)/dashboard/_components/DashboardSkeleton.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       },
       {
         "severity": "medium",
         "area": "testability",
         "points": 4,
-        "path": "src/app/(dashboard)/dashboard/dashboard-advanced-modules-section.tsx",
-        "issue": "No obvious colocated or mirrored test file found"
-      },
-      {
-        "severity": "medium",
-        "area": "testability",
-        "points": 4,
-        "path": "src/app/(dashboard)/dashboard/dashboard-campaign-foundation-section.tsx",
-        "issue": "No obvious colocated or mirrored test file found"
-      },
-      {
-        "severity": "medium",
-        "area": "testability",
-        "points": 4,
-        "path": "src/app/(dashboard)/dashboard/dashboard-decision-timeline-section.tsx",
-        "issue": "No obvious colocated or mirrored test file found"
-      },
-      {
-        "severity": "medium",
-        "area": "testability",
-        "points": 4,
-        "path": "src/app/(dashboard)/dashboard/dashboard-disclosure-section.tsx",
+        "path": "src/app/(dashboard)/dashboard/_components/DraftPanel.tsx",
         "issue": "No obvious colocated or mirrored test file found"
       }
     ],
     "areaCounts": {
-      "testability": 159,
-      "maintainability": 2
+      "testability": 403,
+      "maintainability": 7,
+      "observability": 102
     },
     "fixQueue": [
       {
+        "file": "src/app/onboarding/onboarding-form.tsx",
+        "riskPoints": 12
+      },
+      {
+        "file": "src/app/(dashboard)/dashboard/_components/client-data-view.tsx",
+        "riskPoints": 10
+      },
+      {
         "file": "src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx",
-        "riskPoints": 8
+        "riskPoints": 10
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/admin-dark-theme.ts",
-        "riskPoints": 4
+        "file": "src/app/api/(ai)/narrative/generate-linkedin/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/diagrams/diagrams-client.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ai)/narrative/generate-positioning/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/diagrams/diagrams-data.ts",
-        "riskPoints": 4
+        "file": "src/app/api/(intelligence)/intelligence/companies/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/operations/wedge-economics/wedge-economics-client.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(intelligence)/intelligence/token/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/prep-efficacy/prep-efficacy-client.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(intelligence)/signals/classify/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/sales-enablement/SalesEnablementWorkspace.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/daily-operating-snapshots/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/admin/wedge-funnels/wedge-funnels-client.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/exception-lists/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/briefing/BriefingHeader.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/intelligence-qa-scorecard/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/briefing/BriefingPulseSupport.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/migration-playbook-comms/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/companies/[id]/company-competitive-field.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/monthly-business-review-packs/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/companies/[id]/company-fit-card.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/onboarding-qa-scorecard/route.ts",
+        "riskPoints": 7
       },
       {
-        "file": "src/app/(dashboard)/dashboard/companies/[id]/company-offer-fields.tsx",
-        "riskPoints": 4
-      },
-      {
-        "file": "src/app/(dashboard)/dashboard/companies/[id]/prep/prep-config.ts",
-        "riskPoints": 4
-      },
-      {
-        "file": "src/app/(dashboard)/dashboard/contacts/linkedin-import-manager.tsx",
-        "riskPoints": 4
+        "file": "src/app/api/(ops)/admin/automation/reporting/outplacement-cohort-admin/route.ts",
+        "riskPoints": 7
       }
     ]
   },
   "blindspotReview": {
     "parserCorruptionCount": 0,
     "parserCorruptionFiles": [],
-    "placeholderBaselineCount": 334,
+    "placeholderBaselineCount": 0,
     "largestSourceFiles": [
       {
-        "path": "src/app/(dashboard)/dashboard/companies/[id]/prep/prep-client.tsx",
-        "lines": 1769
+        "path": "src/app/(dashboard)/dashboard/page.tsx",
+        "lines": 2036
       },
       {
         "path": "src/app/onboarding/onboarding-form.tsx",
-        "lines": 1695
+        "lines": 1843
       },
       {
-        "path": "src/app/(dashboard)/dashboard/page.tsx",
-        "lines": 1655
+        "path": "src/app/(dashboard)/dashboard/companies/[id]/prep/prep-client.tsx",
+        "lines": 1812
       },
       {
         "path": "src/lib/supabase/database.types.ts",
-        "lines": 1487
+        "lines": 1676
       },
       {
         "path": "src/app/(dashboard)/dashboard/admin/page.tsx",
-        "lines": 1279
+        "lines": 1265
       },
       {
-        "path": "src/components/coach/client-data-view.tsx",
-        "lines": 1193
+        "path": "src/app/(dashboard)/dashboard/_components/client-data-view.tsx",
+        "lines": 1209
       },
       {
         "path": "src/app/(dashboard)/dashboard/executive-brief/executive-brief-hub.tsx",
-        "lines": 1176
+        "lines": 1181
       },
       {
         "path": "src/app/(dashboard)/dashboard/briefing/page.tsx",
-        "lines": 1154
+        "lines": 1169
       }
     ]
   }

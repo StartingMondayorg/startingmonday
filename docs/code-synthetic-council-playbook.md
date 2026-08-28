@@ -44,11 +44,41 @@ Optional machine-readable output:
 node scripts/code-synthetic-council-audit.mjs --json
 ```
 
-Strict mode (non-zero exit if overall score < 84):
+Strict mode (non-zero exit if overall score < 84, and it prints which categories
+dragged the score down):
 
 ```bash
 node scripts/code-synthetic-council-audit.mjs --strict
 ```
+
+## Where the council runs
+
+The council is **advisory**. It does not block merges.
+
+- **Pull requests** — `.github/workflows/code-council-pr.yml` audits the base
+  branch and the merge result, then comments with the delta: what this branch
+  introduced and resolved. This is the signal to act on, because it is the part
+  the author is responsible for. The absolute score is repo-wide and inherited.
+- **Weekly** — `weekly-code-council-audit.yml` and `weekly-unified-audit.yml`
+  report the repo-wide score to Slack and email. Both are non-blocking.
+
+A merge gate on the absolute score does not work here: a PR touching one file
+inherits every finding in the codebase, so the check tests accumulated debt
+rather than the diff. It sat red on `main` for a week in August 2026 for exactly
+that reason.
+
+## Scoring notes
+
+Most categories subtract fixed points per finding. **Testability and
+observability are scored as ratios instead** — covered source files over total,
+logged mutating routes over total. Subtractive scoring floors both at 0 on a
+codebase of this size, which turns their combined 22% weight into a constant and
+hides regressions rather than reporting them.
+
+Related: do not "remediate" findings by adding placeholder tests
+(`expect(true).toBe(true)`) or unused logging helpers. The audit now ignores the
+latter, and both make the score say something untrue. Findings are a to-do list,
+not a number to move.
 
 ## Outputs
 
