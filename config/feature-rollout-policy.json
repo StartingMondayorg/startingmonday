@@ -87,19 +87,6 @@
       "startedAt": "2026-08-12"
     },
     {
-      "id": "landing-page-guard-and-proof-banner-removal-2026-06",
-      "description": "Add landing-page change approval guard to predeploy-gates; remove homepage proof banner (PR #157)",
-      "paths": [
-        ".github/workflows/ci.yml",
-        "src/app/(marketing)/page.tsx",
-        "scripts/check-landing-page-change-approval.mjs"
-      ],
-      "phase": "full rollout",
-      "rollbackPath": "Revert PR #157 to restore homepage proof banner and remove landing-page guard step from ci.yml",
-      "killSwitch": "Remove guard:landing-page-approval step from predeploy-gates in ci.yml",
-      "startedAt": "2026-06-24"
-    },
-    {
       "id": "briefing-first-session-progressive-disclosure-2026-07",
       "description": "Phase 3 guided first-session briefing state for new users (<=1 tracked company and account age under 48 hours), with deterministic 50/50 rollout by user id hash.",
       "paths": [
