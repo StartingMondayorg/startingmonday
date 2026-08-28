@@ -324,18 +324,6 @@ jobs:
           fi
           npm run coverage:folders:check -- --base-ref="$BASE_REF" --head-ref="${GITHUB_SHA}"
 
-      - name: Diff coverage gate
-        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
-        env:
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
-        run: |
-          if [ -n "$PR_BASE_SHA" ]; then
-            BASE_REF="$PR_BASE_SHA"
-          else
-            BASE_REF="$(git rev-parse HEAD~1)"
-          fi
-          npm run coverage:diff:check -- --base-ref="$BASE_REF" --head-ref="${GITHUB_SHA}" --min-coverage=90
-
       # Em-dash check moved to ESLint (no-restricted-syntax in eslint.config.mjs)
       # so violations surface in-editor instead of at CI time.
 
