@@ -68,7 +68,7 @@ jobs:
 
       - name: Run luxury sentinel on staging (report-only)
         env:
-          SENTINEL_BASE_URL: https://starting-monday-staging.up.railway.app
+          SENTINEL_BASE_URL: ${{ vars.STAGING_BASE_URL }}
         run: node scripts/luxury-page-sentinel.mjs --report-only --output-json=tmp/luxury-page-sentinel.staging.json
 
       - name: Enforce staging sentinel contract
