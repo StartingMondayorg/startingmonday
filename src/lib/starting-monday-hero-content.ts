@@ -28,7 +28,7 @@ export const STARTING_MONDAY_HERO_CONTENT = {
     'Example signal timeline showing three public signals that a role is forming at an anonymized company.',
   pilotMicrocopy: null as string | null,
   proofCase: {
-    descriptor: 'National building-products supplier',
+    descriptor: "Bob's Building Supplies",
     events: [
       {
         date: 'May 18, 2026',

@@ -32,13 +32,13 @@ export function OpportunityTimingGapChart({ className = 'h-auto w-full' }: { cla
       <circle cx="505" cy="143" r="5.5" fill="var(--muted-foreground)" opacity="0.8" />
 
       {/* Phase labels - refined typography */}
-      <text x="55" y="175" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Signal</text>
-      <text x="130" y="190" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Shape</text>
-      <text x="205" y="175" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Outreach</text>
-      <text x="280" y="190" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Open</text>
-      <text x="355" y="175" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Interviews</text>
-      <text x="430" y="190" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Selection</text>
-      <text x="505" y="175" fill="var(--border)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Start</text>
+      <text x="55" y="175" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Signal</text>
+      <text x="130" y="190" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Shape</text>
+      <text x="205" y="175" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Outreach</text>
+      <text x="280" y="190" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Open</text>
+      <text x="355" y="175" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Interviews</text>
+      <text x="430" y="190" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Selection</text>
+      <text x="505" y="175" fill="var(--muted-foreground)" fontSize="12" fontWeight="500" textAnchor="middle" letterSpacing="0.3">Start</text>
 
       {/* Starting Monday entry point - refined */}
       <g>
@@ -62,10 +62,10 @@ export function OpportunityTimingGapChart({ className = 'h-auto w-full' }: { cla
 
       {/* Advantage callout - refined */}
       <rect x="40" y="225" width="480" height="1" fill="var(--muted-foreground)" opacity="0.4" />
-      <text x="280" y="250" fill="var(--border)" fontSize="12" fontWeight="600" textAnchor="middle" letterSpacing="0.3">
+      <text x="280" y="250" fill="var(--muted-foreground)" fontSize="12" fontWeight="600" textAnchor="middle" letterSpacing="0.3">
         Starting early: when role is still taking shape • Better odds: fewer qualified candidates
       </text>
-      <text x="280" y="268" fill="var(--border)" fontSize="12" fontWeight="600" textAnchor="middle" letterSpacing="0.3">
+      <text x="280" y="268" fill="var(--muted-foreground)" fontSize="12" fontWeight="600" textAnchor="middle" letterSpacing="0.3">
         Advantage: already known and trusted
       </text>
     </svg>
@@ -78,11 +78,11 @@ export function OpportunityTimingGapChartMobile({ className = 'h-auto w-full' }:
     <svg viewBox="0 0 360 320" className={className} role="img" aria-label="Opportunity timing gap: Starting Monday enters while the role is taking shape; typical candidates enter at the public posting">
       <circle cx="18" cy="26" r="7" fill="var(--success)" stroke="var(--success)" strokeWidth="1.5" />
       <text x="34" y="31" fill="var(--success)" fontSize="16" fontWeight="600">Starting Monday</text>
-      <text x="34" y="53" fill="var(--border)" fontSize="13">enters while the role is still taking shape</text>
+      <text x="34" y="53" fill="var(--muted-foreground)" fontSize="13">enters while the role is still taking shape</text>
 
       <circle cx="18" cy="88" r="7" fill="var(--primary)" stroke="var(--primary)" strokeWidth="1.5" />
       <text x="34" y="93" fill="var(--primary)" fontSize="16" fontWeight="600">Typical candidates</text>
-      <text x="34" y="115" fill="var(--border)" fontSize="13">enter when the posting is public and crowded</text>
+      <text x="34" y="115" fill="var(--muted-foreground)" fontSize="13">enter when the posting is public and crowded</text>
 
       <line x1="30" y1="190" x2="330" y2="190" stroke="var(--muted-foreground)" strokeWidth="1.5" />
       <circle cx="45" cy="190" r="5" fill="var(--muted-foreground)" />
@@ -98,13 +98,13 @@ export function OpportunityTimingGapChartMobile({ className = 'h-auto w-full' }:
       <line x1="186" y1="160" x2="186" y2="182" stroke="var(--primary)" strokeWidth="3.5" strokeLinecap="round" />
       <circle cx="186" cy="155" r="6.5" fill="var(--primary)" stroke="var(--primary)" strokeWidth="1.5" />
 
-      <text x="45" y="215" fill="var(--border)" fontSize="13" fontWeight="500" textAnchor="middle">Signal</text>
-      <text x="186" y="215" fill="var(--border)" fontSize="13" fontWeight="500" textAnchor="middle">Open</text>
-      <text x="327" y="215" fill="var(--border)" fontSize="13" fontWeight="500" textAnchor="middle">Start</text>
+      <text x="45" y="215" fill="var(--muted-foreground)" fontSize="13" fontWeight="500" textAnchor="middle">Signal</text>
+      <text x="186" y="215" fill="var(--muted-foreground)" fontSize="13" fontWeight="500" textAnchor="middle">Open</text>
+      <text x="327" y="215" fill="var(--muted-foreground)" fontSize="13" fontWeight="500" textAnchor="middle">Start</text>
 
       <line x1="30" y1="248" x2="330" y2="248" stroke="var(--muted-foreground)" strokeWidth="1" opacity="0.4" />
-      <text x="30" y="276" fill="var(--border)" fontSize="13.5" fontWeight="600">Enter early: fewer rivals, more shaping power.</text>
-      <text x="30" y="300" fill="var(--border)" fontSize="13.5" fontWeight="600">By posting day, you are already known and trusted.</text>
+      <text x="30" y="276" fill="var(--muted-foreground)" fontSize="13.5" fontWeight="600">Enter early: fewer rivals, more shaping power.</text>
+      <text x="30" y="300" fill="var(--muted-foreground)" fontSize="13.5" fontWeight="600">By posting day, you are already known and trusted.</text>
     </svg>
   )
 }
@@ -128,7 +128,7 @@ export function RoleLandingProbabilityChart({ className = 'h-auto w-full' }: { c
       <text x="14" y="110" fill="var(--muted-foreground)" fontSize="12">75%</text>
       <text x="10" y="74" fill="var(--muted-foreground)" fontSize="12">100%</text>
 
-      <text x="20" y="24" fill="var(--border)" fontSize="12" fontWeight="700">Probability of landing role</text>
+      <text x="20" y="24" fill="var(--muted-foreground)" fontSize="12" fontWeight="700">Probability of landing role</text>
 
       <line x1="84" y1="214" x2="84" y2="220" stroke="var(--muted-foreground)" strokeWidth="1.5" />
       <line x1="138" y1="214" x2="138" y2="220" stroke="var(--muted-foreground)" strokeWidth="1.5" />
@@ -139,14 +139,14 @@ export function RoleLandingProbabilityChart({ className = 'h-auto w-full' }: { c
       <line x1="410" y1="214" x2="410" y2="220" stroke="var(--muted-foreground)" strokeWidth="1.5" />
       <line x1="468" y1="214" x2="468" y2="220" stroke="var(--muted-foreground)" strokeWidth="1.5" />
 
-      <text x="84" y="234" fill="var(--border)" fontSize="12" textAnchor="middle">Signal</text>
-      <text x="138" y="248" fill="var(--border)" fontSize="12" textAnchor="middle">Shape</text>
-      <text x="194" y="234" fill="var(--border)" fontSize="12" textAnchor="middle">Outreach</text>
-      <text x="248" y="248" fill="var(--border)" fontSize="12" textAnchor="middle">Open</text>
-      <text x="302" y="234" fill="var(--border)" fontSize="12" textAnchor="middle">Prep</text>
-      <text x="356" y="248" fill="var(--border)" fontSize="12" textAnchor="middle">Interviews</text>
-      <text x="410" y="234" fill="var(--border)" fontSize="12" textAnchor="middle">Selection</text>
-      <text x="468" y="248" fill="var(--border)" fontSize="12" textAnchor="middle">Start</text>
+      <text x="84" y="234" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Signal</text>
+      <text x="138" y="248" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Shape</text>
+      <text x="194" y="234" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Outreach</text>
+      <text x="248" y="248" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Open</text>
+      <text x="302" y="234" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Prep</text>
+      <text x="356" y="248" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Interviews</text>
+      <text x="410" y="234" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Selection</text>
+      <text x="468" y="248" fill="var(--muted-foreground)" fontSize="12" textAnchor="middle">Start</text>
 
       <circle cx="84" cy="198" r="5.6" fill="var(--muted-foreground)" />
       <circle cx="138" cy="190" r="5.6" fill="var(--muted-foreground)" />
@@ -167,11 +167,11 @@ export function RoleLandingProbabilityChart({ className = 'h-auto w-full' }: { c
       <polyline points="84,188 138,171 194,154 248,137 302,120 356,103 410,86 468,70" fill="none" stroke="var(--info)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 3" opacity="0.95" />
       <polyline points="84,198 138,190 194,178 248,164 302,154 356,144" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 4" opacity="0.9" />
 
-      <text x="16" y="274" fill="var(--border)" fontSize="14" fontWeight="700">Without structure, momentum stalls at interviews. Starting Monday carries you through selection to day one.</text>
+      <text x="16" y="274" fill="var(--muted-foreground)" fontSize="14" fontWeight="700">Without structure, momentum stalls at interviews. Starting Monday carries you through selection to day one.</text>
 
       <rect x="504" y="36" width="86" height="52" rx="6" fill="var(--card)" stroke="var(--card)" strokeWidth="1" />
       <circle cx="516" cy="52" r="5" fill="var(--info)" />
-      <text x="526" y="56" fill="var(--border)" fontSize="11">With SM</text>
+      <text x="526" y="56" fill="var(--muted-foreground)" fontSize="11">With SM</text>
       <circle cx="516" cy="74" r="5" fill="var(--muted-foreground)" />
       <text x="526" y="78" fill="var(--muted-foreground)" fontSize="11">Typical</text>
     </svg>
