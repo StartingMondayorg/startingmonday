@@ -1,0 +1,53 @@
+{
+  "title": "DataEndure signal brief",
+  "reader": "DataEndure account team",
+  "client_config": {
+    "avg_deal_value": 2000000,
+    "win_rate": 0.2,
+    "lift_statement": "A first conversation creates more room to shape the engagement.",
+    "problems": [
+      "The trigger reaches competitors first.",
+      "The relationship map is unclear.",
+      "Owned accounts are not watched."
+    ],
+    "what_it_does": [
+      "Ranks dated triggers.",
+      "Names public decision-path evidence.",
+      "Tracks account deltas."
+    ],
+    "cost_to_reader": "About 10 minutes weekly; the brief arrives by email."
+  },
+  "profiles": [
+    {
+      "account": "DataEndure",
+      "positioning": "The public record suggests a capacity pressure; confirm it in discovery.",
+      "suggested_move": "Start with an investigating conversation before proposing a service.",
+      "discovery_questions": {
+        "situation": [
+          "What changed in the account?",
+          "Who owns the decision?"
+        ],
+        "problem": [
+          "Where is the team constrained?",
+          "What work is delayed?",
+          "Who feels the impact?"
+        ],
+        "implication": [
+          "What does delay cost?",
+          "Which commitment is at risk?"
+        ],
+        "need_payoff": [
+          "What would the team do with capacity back?",
+          "What result would make this worth solving?"
+        ]
+      },
+      "evidence": [
+        {
+          "date": "2026-08-20",
+          "event": "Capacity change announced",
+          "source_url": "https://example.com/capacity"
+        }
+      ]
+    }
+  ]
+}

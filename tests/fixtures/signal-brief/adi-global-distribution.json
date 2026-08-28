@@ -1,0 +1,58 @@
+{
+  "title": "ADI Global Distribution signal brief",
+  "reader": "ADI Global Distribution leadership team",
+  "client_config": {
+    "avg_deal_value": 2000000,
+    "win_rate": 0.2,
+    "lift_statement": "A timely separation conversation can shape the standalone technology plan before the transition window narrows.",
+    "problems": [
+      "The separation trigger may reach another integrator first.",
+      "The people who own the standalone technology plan are not all visible yet.",
+      "Shared-service exit work is difficult to monitor across many locations."
+    ],
+    "what_it_does": [
+      "Ranks dated separation and operating signals by decision relevance.",
+      "Connects public events to named decision-path leaders.",
+      "Tracks changes across the account until a workstream moves."
+    ],
+    "cost_to_reader": "About 10 minutes weekly; the internal preview requires no new system and does not send outreach."
+  },
+  "profiles": [
+    {
+      "account": "ADI Global Distribution",
+      "positioning": "The public record suggests a technology-foundation and operating-platform opportunity; confirm any separation workstreams, dates, and current owners in discovery.",
+      "suggested_move": "Start with an investigating conversation about the separation plan before proposing a network, security, cloud, or managed-services scope.",
+      "discovery_questions": {
+        "situation": [
+          "Which technology services and transition dates are currently confirmed for the standalone company?",
+          "Which leaders own network, security, identity, collaboration, and hosting decisions today?"
+        ],
+        "problem": [
+          "Where is the separation creating the most operational or security pressure?",
+          "Which shared-service dependency is hardest to exit on the desired timeline?",
+          "Where does the team lack capacity to build and run the standalone foundation?"
+        ],
+        "implication": [
+          "What would a delayed technology separation cost against the operating-savings plan?",
+          "Which customer, branch, or distribution operation is most exposed if a shared service changes before its replacement is ready?"
+        ],
+        "need_payoff": [
+          "If the highest-risk separation workstream were sequenced and staffed now, what would the team protect first?",
+          "What would a predictable run model allow the internal IT organization to focus on?"
+        ]
+      },
+      "evidence": [
+        {
+          "date": "2026-08-18",
+          "event": "ADI announced its inaugural Control4 NEXT conference for certified technicians",
+          "source_url": "https://www.adiglobal.com/company-news/adi-launches-inaugural-control4-next-conference-for-certified-technicians"
+        },
+        {
+          "date": "2026-08-27",
+          "event": "ADI announced an expanded 1Plan Services platform experience",
+          "source_url": "https://www.adiglobal.com/company-news/adi-expands-1plan-services-platform-with-redesigned-parasol-experience"
+        }
+      ]
+    }
+  ]
+}
