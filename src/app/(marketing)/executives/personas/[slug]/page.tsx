@@ -30,11 +30,11 @@ export default async function ExecutivePersonaDetailPage({ params }: { params: P
   if (!persona) notFound()
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white px-4 sm:px-6 py-14 sm:py-20">
+    <main className="min-h-screen bg-background text-foreground px-4 sm:px-6 py-14 sm:py-20">
       <div className="max-w-3xl mx-auto">
-        <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-400 mb-4">Executive persona</p>
+        <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">Executive persona</p>
         <h1 className="text-[34px] sm:text-[42px] font-bold leading-[1.1] tracking-tight mb-4">{persona.label}</h1>
-        <p className="text-[16px] text-slate-300 leading-relaxed mb-8">{persona.summary}</p>
+        <p className="text-[16px] text-muted-foreground leading-relaxed mb-8">{persona.summary}</p>
 
         <div className="flex flex-wrap gap-3">
           <TrackLink
@@ -42,7 +42,7 @@ export default async function ExecutivePersonaDetailPage({ params }: { params: P
             event={EVENT_NAMES.channelEntryClicked}
             logToUserEvents
             properties={{ channel: 'executives', cta_label: `Open ${persona.slug} destination`, source_page: `/executives/personas/${persona.slug}` }}
-            className="inline-block bg-orange-500 text-slate-900 text-[14px] font-semibold px-5 py-3 rounded hover:bg-orange-600 transition-colors"
+            className="inline-block bg-primary text-primary-foreground text-[14px] font-semibold px-5 py-3 rounded hover:bg-primary/90 transition-colors"
           >
             Continue to persona journey
           </TrackLink>
@@ -51,7 +51,7 @@ export default async function ExecutivePersonaDetailPage({ params }: { params: P
             event={EVENT_NAMES.personaRouteSelected}
             logToUserEvents
             properties={{ channel: 'executives', persona: 'persona_back_nav', source_route: `/executives/personas/${persona.slug}`, target_route: '/executives/personas' }}
-            className="inline-block border border-slate-600 text-slate-100 text-[14px] font-semibold px-5 py-3 rounded hover:border-slate-300 transition-colors"
+            className="inline-block border border-border text-foreground text-[14px] font-semibold px-5 py-3 rounded transition-colors"
           >
             Back to persona list
           </TrackLink>

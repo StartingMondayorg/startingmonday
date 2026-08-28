@@ -2,16 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
-import { Card } from '@/components/ui/card'
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
-
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Outplacement Outreach - Admin',
   description: 'Internal-only outplacement outreach strategy, buyer pains, and approved email sequence.',
@@ -161,42 +152,42 @@ export default async function OutplacementOutreachPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-900 hover:text-orange-600 transition-colors">
+          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-foreground hover:text-primary transition-colors">
             ← Admin
           </Link>
-          <h1 className="text-[18px] font-bold text-slate-900">Outplacement Outreach</h1>
+          <h1 className="text-[18px] font-bold text-foreground">Outplacement Outreach</h1>
           <div className="w-16" />
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         <Card variant="default" className="p-6 space-y-4">
-          <h2 className="text-[18px] font-bold text-slate-900">Channel Overview</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[13px] text-slate-600 leading-relaxed">
+          <h2 className="text-[18px] font-bold text-foreground">Channel Overview</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[13px] text-muted-foreground leading-relaxed">
             <div>
-              <p className="font-semibold text-slate-900 mb-1">The Buyer</p>
+              <p className="font-semibold text-foreground mb-1">The Buyer</p>
               <p>Practice leaders, program operations owners, counselor leads, and commercial leaders at outplacement and executive transition firms.</p>
             </div>
             <div>
-              <p className="font-semibold text-slate-900 mb-1">The Wedge</p>
+              <p className="font-semibold text-foreground mb-1">The Wedge</p>
               <p>Shared readiness standards, lower counselor context rebuild, less coordinator cleanup, and a no-custom pilot path procurement can approve.</p>
             </div>
             <div>
-              <p className="font-semibold text-slate-900 mb-1">Current Council Readout</p>
+              <p className="font-semibold text-foreground mb-1">Current Council Readout</p>
               <p>All four approved default emails currently score 90 EJES with no blockers in the live email council.</p>
             </div>
           </div>
         </Card>
 
         <Card variant="default" className="p-6 space-y-4">
-          <h2 className="text-[18px] font-bold text-slate-900">Top Buyer Pain Points</h2>
-          <ul className="space-y-2 text-[13px] text-slate-600 leading-relaxed">
+          <h2 className="text-[18px] font-bold text-foreground">Top Buyer Pain Points</h2>
+          <ul className="space-y-2 text-[13px] text-muted-foreground leading-relaxed">
             {painPoints.map((item) => (
               <li key={item} className="flex gap-3">
-                <span className="shrink-0 text-slate-400">•</span>
+                <span className="shrink-0 text-muted-foreground">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -204,14 +195,14 @@ export default async function OutplacementOutreachPage() {
         </Card>
 
         <Card variant="default" className="p-6 space-y-4">
-          <h2 className="text-[18px] font-bold text-slate-900">Prospect Search Filters</h2>
+          <h2 className="text-[18px] font-bold text-foreground">Prospect Search Filters</h2>
           {filters.map((filterSet) => (
-            <div key={filterSet.title} className="border-t border-slate-100 pt-4 first:border-t-0 first:pt-0">
-              <p className="text-[14px] font-semibold text-slate-900 mb-3">{filterSet.title}</p>
+            <div key={filterSet.title} className="border-t border-border pt-4 first:border-t-0 first:pt-0">
+              <p className="text-[14px] font-semibold text-foreground mb-3">{filterSet.title}</p>
               <ul className="space-y-2">
                 {filterSet.filters.map((filter) => (
-                  <li key={filter} className="flex gap-3 text-[13px] text-slate-600">
-                    <span className="shrink-0 text-slate-400">•</span>
+                  <li key={filter} className="flex gap-3 text-[13px] text-muted-foreground">
+                    <span className="shrink-0 text-muted-foreground">•</span>
                     <span>{filter}</span>
                   </li>
                 ))}
@@ -221,34 +212,34 @@ export default async function OutplacementOutreachPage() {
         </Card>
 
         <Card variant="default" className="p-6 space-y-4">
-          <h2 className="text-[18px] font-bold text-slate-900">4-Step Outreach Process</h2>
+          <h2 className="text-[18px] font-bold text-foreground">4-Step Outreach Process</h2>
           <div className="space-y-4 pt-2">
             {outreachSteps.map((step) => (
-              <div key={step.title} className="border-l-3 border-orange-500 pl-4">
-                <p className="text-[13px] font-bold text-slate-900">{step.title}</p>
-                <p className="text-[13px] text-slate-600 mt-1.5">{step.action}</p>
+              <div key={step.title} className="border-l-3 border-primary/30 pl-4">
+                <p className="text-[13px] font-bold text-foreground">{step.title}</p>
+                <p className="text-[13px] text-muted-foreground mt-1.5">{step.action}</p>
               </div>
             ))}
           </div>
         </Card>
 
         <Card variant="default" className="p-6 space-y-4">
-          <h2 className="text-[18px] font-bold text-slate-900">Default Sequence</h2>
+          <h2 className="text-[18px] font-bold text-foreground">Default Sequence</h2>
           <div className="mt-4">
             <Table className="text-[12px] text-left">
               <TableHeader>
-                <TableRow className="bg-slate-50">
-                  <TableHead className="font-semibold text-slate-900">Touch</TableHead>
-                  <TableHead className="font-semibold text-slate-900">Subject</TableHead>
-                  <TableHead className="font-semibold text-slate-900">Use when</TableHead>
+                <TableRow className="bg-muted">
+                  <TableHead className="font-semibold text-foreground">Touch</TableHead>
+                  <TableHead className="font-semibold text-foreground">Subject</TableHead>
+                  <TableHead className="font-semibold text-foreground">Use when</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {sequence.map((item) => (
                   <TableRow key={item.touch}>
-                    <TableCell className="text-slate-700 font-semibold whitespace-normal">{item.touch}</TableCell>
-                    <TableCell className="text-slate-700 whitespace-normal">{item.subject}</TableCell>
-                    <TableCell className="text-slate-600 whitespace-normal">{item.useWhen}</TableCell>
+                    <TableCell className="text-muted-foreground font-semibold whitespace-normal">{item.touch}</TableCell>
+                    <TableCell className="text-muted-foreground whitespace-normal">{item.subject}</TableCell>
+                    <TableCell className="text-muted-foreground whitespace-normal">{item.useWhen}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -257,20 +248,20 @@ export default async function OutplacementOutreachPage() {
         </Card>
 
         <Card variant="default" className="p-6 space-y-6">
-          <h2 className="text-[18px] font-bold text-slate-900">Approved Message Templates</h2>
-          <p className="text-[13px] text-slate-600">
+          <h2 className="text-[18px] font-bold text-foreground">Approved Message Templates</h2>
+          <p className="text-[13px] text-muted-foreground">
             Personalize the trigger, company context, and buyer lens. Keep the pain and proof architecture intact.
           </p>
           <div className="space-y-8 pt-2">
             {messageTemplates.map((template) => (
-              <div key={template.title} className="border-t border-slate-100 pt-6 first:border-t-0 first:pt-0">
-                <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-orange-600 mb-2">{template.title}</p>
-                <p className="text-[12px] text-slate-500 mb-2">{template.context}</p>
-                <p className="text-[12px] font-semibold text-slate-900 mb-4">Subject: {template.subject}</p>
+              <div key={template.title} className="border-t border-border pt-6 first:border-t-0 first:pt-0">
+                <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-primary mb-2">{template.title}</p>
+                <p className="text-[12px] text-muted-foreground mb-2">{template.context}</p>
+                <p className="text-[12px] font-semibold text-foreground mb-4">Subject: {template.subject}</p>
                 <ul className="space-y-4">
                   {template.body.map((line) => (
                     <li key={line}>
-                      <Card variant="default" className="bg-slate-50 p-3.5 text-[13px] text-slate-700 leading-relaxed">
+                      <Card variant="default" className="bg-muted p-3.5 text-[13px] text-muted-foreground leading-relaxed">
                         {line}
                       </Card>
                     </li>

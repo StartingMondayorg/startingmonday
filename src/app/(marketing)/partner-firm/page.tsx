@@ -86,22 +86,22 @@ export default function PartnerFirmPage() {
         sourcePage="/partner-firm"
       />
 
-      <div className="bg-slate-950 pb-12 sm:pb-14">
+      <div className="bg-background pb-12 sm:pb-14">
         <section className="mx-auto max-w-5xl px-4 pb-8 sm:px-6">
-          <div className="rounded-[1.5rem] border border-white/12 bg-gradient-to-b from-slate-900/70 to-slate-950/80 p-5 shadow-[0_32px_88px_rgba(2,6,23,0.35)] sm:p-6">
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">Choose your lane</p>
-            <h2 className="mb-2 text-[22px] font-bold leading-snug text-white">Start with the partner model you run today.</h2>
-            <p className="mb-5 text-[14px] leading-relaxed text-slate-200/90">
+          <div className="rounded-[1.5rem] border border-border bg-gradient-to-b from-card/70 to-background/80 p-5 shadow-2xl sm:p-6">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Choose your lane</p>
+            <h2 className="mb-2 text-[22px] font-bold leading-snug text-foreground">Start with the partner model you run today.</h2>
+            <p className="mb-5 text-[14px] leading-relaxed text-foreground/90">
               Each lane matches the home-page visual language, then adapts workflows for coaching, outplacement, or search delivery.
             </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {PARTNER_CHOICES.map((choice) => (
-                <article key={choice.label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-[0_18px_56px_rgba(15,23,42,0.2)]">
-                  <p className="text-[16px] font-semibold text-white">{choice.label}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-slate-300">{choice.description}</p>
+                <article key={choice.label} className="rounded-2xl border border-border bg-muted/[0.04] p-5 shadow-xl">
+                  <p className="text-[16px] font-semibold text-foreground">{choice.label}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{choice.description}</p>
                   <Link
                     href={choice.href}
-                    className="mt-4 inline-flex items-center rounded-full border border-orange-300/70 px-4 py-2 text-[12px] font-semibold text-orange-100 hover:bg-orange-400/10 hover:text-white"
+                    className="mt-4 inline-flex items-center rounded-full border border-primary/70 px-4 py-2 text-[12px] font-semibold text-primary hover:bg-primary/10 hover:text-foreground"
                   >
                     Open {choice.label}
                   </Link>
@@ -111,24 +111,24 @@ export default function PartnerFirmPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-5xl border-t border-white/10 px-4 pt-8 sm:px-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-200">Demo stack</p>
+        <section className="mx-auto max-w-5xl border-t border-border px-4 pt-8 sm:px-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Demo stack</p>
           <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <article className="rounded-2xl border border-white/10 bg-slate-900/45 p-4 shadow-[0_18px_56px_rgba(15,23,42,0.2)]">
-              <p className="text-[15px] font-semibold text-white">1. Signal demo</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-slate-300">
+            <article className="rounded-2xl border border-border bg-card/45 p-4 shadow-xl">
+              <p className="text-[15px] font-semibold text-foreground">1. Signal demo</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
                 Review role-shaping trigger clusters with confidence context before your team commits outreach effort.
               </p>
             </article>
-            <article className="rounded-2xl border border-white/10 bg-slate-900/45 p-4 shadow-[0_18px_56px_rgba(15,23,42,0.2)]">
-              <p className="text-[15px] font-semibold text-white">2. Brief demo</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-slate-300">
+            <article className="rounded-2xl border border-border bg-card/45 p-4 shadow-xl">
+              <p className="text-[15px] font-semibold text-foreground">2. Brief demo</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
                 Use structured briefing templates for mandate framing, objection handling, and next-step clarity.
               </p>
             </article>
-            <article className="rounded-2xl border border-white/10 bg-slate-900/45 p-4 shadow-[0_18px_56px_rgba(15,23,42,0.2)]">
-              <p className="text-[15px] font-semibold text-white">3. Relationship momentum demo</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-slate-300">
+            <article className="rounded-2xl border border-border bg-card/45 p-4 shadow-xl">
+              <p className="text-[15px] font-semibold text-foreground">3. Relationship momentum demo</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
                 Keep stakeholder maps, contact priority, and cadence visibility aligned across your delivery team.
               </p>
             </article>

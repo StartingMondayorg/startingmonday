@@ -36,7 +36,7 @@ export default function HowCiosFindJobsPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           The answer most people do not say out loud: almost nobody at the CIO level finds their next
           role through a job board. The process by which senior technology executives land their next
@@ -47,7 +47,7 @@ export default function HowCiosFindJobsPage() {
           Understanding how it actually works changes what you should be doing with your time.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How CIO searches are actually filled</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How CIO searches are actually filled</h2>
 
         <p>
           At the $250,000 and above level, the process follows a consistent structure. A company
@@ -69,7 +69,7 @@ export default function HowCiosFindJobsPage() {
           Applications submitted through a posted job opening rarely appear on either list.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What this means for your search</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What this means for your search</h2>
 
         <p>
           Being findable when the search opens is a byproduct of being known before the search opens.
@@ -87,7 +87,7 @@ export default function HowCiosFindJobsPage() {
           transformation that the CEO read three weeks before the search opened.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The three relationships that determine whether you get the call</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The three relationships that determine whether you get the call</h2>
 
         <p>
           Retained search firm partners. Not recruiters generally - specific partners at the
@@ -118,7 +118,7 @@ export default function HowCiosFindJobsPage() {
           believe it reflects well on them.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The role of organizational intelligence</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The role of organizational intelligence</h2>
 
         <p>
           The executives who land the best roles fastest are not the ones who search hardest. They
@@ -143,7 +143,7 @@ export default function HowCiosFindJobsPage() {
           target companies - is what puts you in the right conversations at the right moment.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What to do this week</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What to do this week</h2>
 
         <p>
           Build the target list before anything else. Forty to sixty companies where you would say

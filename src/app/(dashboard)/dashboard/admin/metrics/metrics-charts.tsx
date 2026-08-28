@@ -5,17 +5,7 @@ import {
   ResponsiveContainer, Legend, CartesianGrid,
 } from 'recharts'
 import { GROUP_COLORS, GROUP_LABELS, type ScoreGroup } from '@/lib/action-scores'
-import { Badge } from '@/components/ui/badge'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-
+import { Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 export type WeekRow = {
   week: string
   onboarding: number
@@ -66,7 +56,7 @@ export function MetricsCharts({
     <div>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={weeklyData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
           <XAxis dataKey="week" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} allowDecimals={false} />
           <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, border: '1px solid #e2e8f0' }} />
@@ -112,35 +102,35 @@ export function MetricsCharts({
       </ToggleGroup>
 
       {selected && (
-        <div className="border-t border-slate-100 pt-5">
+        <div className="border-t border-border pt-5">
           <p className="text-[11px] font-bold tracking-[0.12em] uppercase mb-3" style={{ color: GROUP_COLORS[selected] }}>
             {GROUP_LABELS[selected]} - event breakdown
           </p>
           {details.length === 0 ? (
-            <p className="text-[13px] text-slate-400">No events recorded for this group yet.</p>
+            <p className="text-[13px] text-muted-foreground">No events recorded for this group yet.</p>
           ) : (
             <Table className="text-[12px]">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="font-semibold text-slate-400">Action</TableHead>
-                  <TableHead className="font-semibold text-slate-400 text-right">30d</TableHead>
-                  <TableHead className="font-semibold text-slate-400 text-right">7d</TableHead>
-                  <TableHead className="font-semibold text-slate-400 text-right">Emotion</TableHead>
-                  <TableHead className="font-semibold text-slate-400 text-right">Cog load</TableHead>
-                  <TableHead className="font-semibold text-slate-400 text-right">Retention</TableHead>
-                  <TableHead className="font-semibold text-slate-400 text-right">Composite</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Action</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right">30d</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right">7d</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right">Emotion</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right">Cog load</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right">Retention</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right">Composite</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {[...details].sort((a, b) => b.composite - a.composite).map(row => (
                   <TableRow key={row.event_name} className={row.count30d === 0 ? 'opacity-40' : ''}>
-                    <TableCell className="text-slate-700 font-medium">{row.label}</TableCell>
-                    <TableCell className="text-right font-semibold text-slate-900">{row.count30d}</TableCell>
-                    <TableCell className="text-right text-slate-400">{row.count7d}</TableCell>
+                    <TableCell className="text-muted-foreground font-medium">{row.label}</TableCell>
+                    <TableCell className="text-right font-semibold text-foreground">{row.count30d}</TableCell>
+                    <TableCell className="text-right text-muted-foreground">{row.count7d}</TableCell>
                     <TableCell className="text-right"><ScoreBadge value={row.emotion} highGood /></TableCell>
                     <TableCell className="text-right"><ScoreBadge value={row.cognitive_load} highGood={false} /></TableCell>
                     <TableCell className="text-right"><ScoreBadge value={row.retention} highGood /></TableCell>
-                    <TableCell className="text-right font-bold text-slate-900">{row.composite}</TableCell>
+                    <TableCell className="text-right font-bold text-foreground">{row.composite}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -29,7 +29,7 @@ export default function RetainedSearchCandidatePreparationPage() {
       url="https://startingmonday.app/blog/retained-search-candidate-preparation"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           There is a conversation that happens at retained search firms after a technology executive
           candidate does not advance past the first round. The hiring committee gives feedback. The
@@ -50,7 +50,7 @@ export default function RetainedSearchCandidatePreparationPage() {
           it happens more than once.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What adequate preparation looks like</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What adequate preparation looks like</h2>
 
         <p>
           The preparation gap is a problem of degree. Every candidate reads the company website
@@ -82,7 +82,7 @@ export default function RetainedSearchCandidatePreparationPage() {
           or they do not.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Why candidates are not doing this</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Why candidates are not doing this</h2>
 
         <p>
           Technology executives who are candidates in an active search are managing a campaign
@@ -107,7 +107,7 @@ export default function RetainedSearchCandidatePreparationPage() {
           and possibly working a current role at the same time.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What changes the equation</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What changes the equation</h2>
 
         <p>
           Adequate preparation becomes sustainable when the information-gathering infrastructure is systematized. An AI-generated prep
@@ -132,7 +132,7 @@ export default function RetainedSearchCandidatePreparationPage() {
           eliminated.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The pre-search signal advantage</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The pre-search signal advantage</h2>
 
         <p>
           There is a related problem that affects search timelines before the first interview happens.
@@ -163,7 +163,7 @@ export default function RetainedSearchCandidatePreparationPage() {
           to enter conversations at the right moment.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The firm's interest in candidate preparation</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The firm's interest in candidate preparation</h2>
 
         <p>
           The incentive for a retained search firm to invest in candidate preparation quality
@@ -182,7 +182,7 @@ export default function RetainedSearchCandidatePreparationPage() {
 
         <p>
           Starting Monday was built for VP and C-suite executives in active search. The{' '}
-          <a href="/search-firms" className="text-slate-900 font-semibold underline underline-offset-2 hover:text-orange-600 transition-colors">
+          <a href="/search-firms" className="text-foreground font-semibold underline underline-offset-2 hover:text-primary transition-colors">
             search firm partner guide
           </a>
           {' '}covers how the platform works in practice and how firms can refer and support candidates.

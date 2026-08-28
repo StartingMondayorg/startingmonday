@@ -42,13 +42,13 @@ const CLAIMS_POLICY = [
 
 export default function OutplacementExecutiveSummaryPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/for-outplacement" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+          <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
             Back to outplacement page
           </Link>
         </div>
@@ -56,78 +56,78 @@ export default function OutplacementExecutiveSummaryPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
 <header className="mb-10">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">Executive summary</p>
-          <h1 className="text-[30px] sm:text-[40px] font-bold text-slate-900 leading-[1.1] tracking-tight mb-4">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">Executive summary</p>
+          <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.1] tracking-tight mb-4">
             Committee one-pager for pilot approval decisions.
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed max-w-2xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
             Use this page in procurement, legal, and sponsor conversations when deciding whether to run a 30-day outplacement cohort pilot.
           </p>
         </header>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">What this solves</p>
-          <p className="text-[14px] text-slate-700 leading-relaxed">
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-muted">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">What this solves</p>
+          <p className="text-[14px] text-muted-foreground leading-relaxed">
             Outplacement teams already provide coaching and workshops. The operating-layer gap is between-session execution consistency: signal timing, prep discipline, and cohort-level visibility. Starting Monday addresses that operating gap while preserving counselor judgment.
           </p>
         </section>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Success definition partner and client HR can share</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Success definition partner and client HR can share</p>
           <ul className="space-y-2">
             {SUCCESS_DEFINITION.map((item) => (
-              <li key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</li>
+              <li key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">No-regret pilot scope and contract shape</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">No-regret pilot scope and contract shape</p>
           <ul className="space-y-2">
             {NO_REGRET_SCOPE.map((item) => (
-              <li key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</li>
+              <li key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Implementation burden split</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Implementation burden split</p>
           <div className="space-y-3">
             {IMPLEMENTATION_BURDEN.map((item) => (
-              <div key={item.owner} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{item.owner}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{item.owns}</p>
+              <div key={item.owner} className="border border-border rounded-lg p-4 bg-muted">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{item.owner}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{item.owns}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-8 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Board-safe claims policy</p>
+        <section className="mb-8 border border-border rounded-2xl p-6 bg-muted">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Board-safe claims policy</p>
           <ul className="space-y-2">
             {CLAIMS_POLICY.map((item) => (
-              <li key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</li>
+              <li key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="border border-slate-200 rounded-2xl p-6 bg-white">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">Next step</p>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-4">
+        <section className="border border-border rounded-2xl p-6 bg-card">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">Next step</p>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-4">
             Would it be unreasonable to approve one 30-day cohort with explicit pass/fail criteria before deciding on broader rollout?
           </p>
           <div className="flex flex-wrap gap-4 text-[13px]">
-            <Link href="/partners#apply" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/partners#apply" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Apply to partner program
             </Link>
-            <Link href="/for-outplacement/economics" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/economics" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               View economics and commercial examples
             </Link>
-            <Link href="/for-outplacement/runbook" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/runbook" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open pilot runbook and templates
             </Link>
           </div>
-          <p className="text-[12px] text-slate-500 mt-4 leading-relaxed">
+          <p className="text-[12px] text-muted-foreground mt-4 leading-relaxed">
             Clean no path: if criteria are not met, close without expansion commitment.
           </p>
         </section>

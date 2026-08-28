@@ -4,14 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { FeedbackItem } from '@/lib/database.types'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
+import { Alert, AlertDescription, Badge, Button, Card, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 type FeedbackStatus = 'new' | 'under_review' | 'planned' | 'in_progress' | 'shipped' | 'declined'
 
 const STATUS_BADGE_VARIANT: Record<FeedbackStatus, 'secondary' | 'info' | 'outline' | 'warning' | 'success' | 'destructive'> = {
@@ -123,18 +116,18 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-slate-500">Loading...</div>
+      <div className="min-h-screen bg-muted flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     )
   }
 
   if (!item) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-muted flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-600">Feedback item not found</p>
-          <Link href="/dashboard/admin/feedback" className="text-orange-600 hover:text-orange-700 mt-4 inline-block">
+          <p className="text-muted-foreground">Feedback item not found</p>
+          <Link href="/dashboard/admin/feedback" className="text-primary mt-4 inline-block">
             ← Back to Feedback
           </Link>
         </div>
@@ -143,24 +136,24 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted">
+      <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/dashboard/admin/feedback" className="text-[13px] font-semibold text-slate-900 hover:text-orange-600 transition-colors">
+          <Link href="/dashboard/admin/feedback" className="text-[13px] font-semibold text-foreground hover:text-primary transition-colors">
             ← Feedback Admin
           </Link>
-          <h1 className="text-[16px] font-bold text-slate-900 truncate">{item.title}</h1>
+          <h1 className="text-[16px] font-bold text-foreground truncate">{item.title}</h1>
           <div className="w-32" />
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 {/* Item Details */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <section className="bg-card border border-border rounded-lg p-6 space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <h2 className="text-[18px] font-bold text-slate-900 mb-2">{item.title}</h2>
-              <p className="text-[13px] text-slate-600 mb-3">{item.body}</p>
+              <h2 className="text-[18px] font-bold text-foreground mb-2">{item.title}</h2>
+              <p className="text-[13px] text-muted-foreground mb-3">{item.body}</p>
               <div className="flex flex-wrap gap-2 mb-4">
                 <Badge variant="secondary">
                   {item.category}
@@ -170,14 +163,14 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
                 </Badge>
               </div>
             </div>
-            <div className="text-right text-[12px] text-slate-500">
+            <div className="text-right text-[12px] text-muted-foreground">
               <p><strong>Votes:</strong> {item.vote_count}</p>
               <p><strong>Comments:</strong> {item.comment_count}</p>
               <p className="mt-2"><strong>By:</strong> {item.user_profiles?.full_name || 'Unknown'}</p>
             </div>
           </div>
 
-          <Card className="bg-slate-50 border-slate-200 p-3 text-[12px] text-slate-600 space-y-1">
+          <Card className="bg-muted border-border p-3 text-[12px] text-muted-foreground space-y-1">
             <p><strong>Submitted:</strong> {new Date(item.created_at).toLocaleString()}</p>
             <p><strong>Last Updated:</strong> {new Date(item.updated_at).toLocaleString()}</p>
             {item.first_staff_response_at && (
@@ -190,8 +183,8 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
         </section>
 
         {/* Status Update Form */}
-        <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
-          <h3 className="text-[16px] font-bold text-slate-900">Update Status</h3>
+        <section className="bg-card border border-border rounded-lg p-6 space-y-4">
+          <h3 className="text-[16px] font-bold text-foreground">Update Status</h3>
 
           {updateError && (
             <Alert variant="destructive">
@@ -206,7 +199,7 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
 
           <div className="space-y-4">
             <div>
-              <Label htmlFor="status-select" className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label htmlFor="status-select" className="block text-[12px] font-semibold text-foreground mb-2">
                 Status
               </Label>
               <Select value={newStatus} onValueChange={(v) => setNewStatus(v as FeedbackStatus)}>
@@ -225,7 +218,7 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
             </div>
 
             <div>
-              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-foreground mb-2">
                 Change Note (visible to user)
               </Label>
               <Textarea
@@ -237,7 +230,7 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
             </div>
 
             <div>
-              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-foreground mb-2">
                 Internal Staff Notes
               </Label>
               <Textarea
@@ -259,26 +252,26 @@ export default function FeedbackDetailPage({ params }: { params: { id: string } 
 
         {/* Status History */}
         {history.length > 0 && (
-          <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
-            <h3 className="text-[16px] font-bold text-slate-900">Status History</h3>
+          <section className="bg-card border border-border rounded-lg p-6 space-y-4">
+            <h3 className="text-[16px] font-bold text-foreground">Status History</h3>
             <div className="space-y-3">
               {history.map((entry, i) => (
-                <div key={entry.id} className="border-l-2 border-orange-300 pl-4 pb-3">
+                <div key={entry.id} className="border-l-2 border-primary/30 pl-4 pb-3">
                   <div className="flex justify-between items-start gap-2 mb-1">
                     <div>
-                      <p className="text-[12px] font-semibold text-slate-900">
+                      <p className="text-[12px] font-semibold text-foreground">
                         {entry.old_status || 'Created'} → {entry.new_status}
                       </p>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[11px] text-muted-foreground">
                         by {entry.user_profiles?.full_name || 'Unknown'}
                       </p>
                     </div>
-                    <p className="text-[11px] text-slate-500 whitespace-nowrap">
+                    <p className="text-[11px] text-muted-foreground whitespace-nowrap">
                       {new Date(entry.created_at).toLocaleString()}
                     </p>
                   </div>
                   {entry.change_note && (
-                    <p className="text-[12px] text-slate-600 italic">"{entry.change_note}"</p>
+                    <p className="text-[12px] text-muted-foreground italic">"{entry.change_note}"</p>
                   )}
                 </div>
               ))}

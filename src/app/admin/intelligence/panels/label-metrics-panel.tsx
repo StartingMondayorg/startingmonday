@@ -6,11 +6,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
-
+import { Alert, AlertDescription, Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 interface LabelStats {
   totalCompanies: number
   companiesWithLabels: number
@@ -66,7 +62,7 @@ export function LabelMetricsPanel() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="animate-pulse h-48 bg-slate-200 rounded" />
+        <div className="animate-pulse h-48 bg-muted rounded" />
       </div>
     )
   }
@@ -83,7 +79,7 @@ export function LabelMetricsPanel() {
   }
 
   if (!stats) {
-    return <div className="text-slate-600">No label data available yet</div>
+    return <div className="text-muted-foreground">No label data available yet</div>
   }
 
   const coverageStatus = stats.coveragePercent >= 60 ? 'pass' : stats.coveragePercent >= 40 ? 'warn' : 'fail'
@@ -97,7 +93,7 @@ export function LabelMetricsPanel() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-slate-900">Label Coverage & Latency</h2>
+        <h2 className="text-2xl font-bold text-foreground">Label Coverage & Latency</h2>
         <Button size="sm" variant="secondary" onClick={handleRefresh}>
           Refresh
         </Button>
@@ -145,51 +141,51 @@ export function LabelMetricsPanel() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* By Source */}
         <Card className="p-4">
-          <h3 className="font-semibold text-slate-900 mb-3">By Source</h3>
+          <h3 className="font-semibold text-foreground mb-3">By Source</h3>
           <div className="space-y-2">
             {stats.openingsBySource.length > 0 ? (
               stats.openingsBySource.map((row) => (
                 <div key={row.source} className="flex justify-between items-center text-sm">
-                  <span className="text-slate-700">{row.source}</span>
-                  <span className="font-mono bg-slate-200 px-2 py-1 rounded text-slate-900">{row.count}</span>
+                  <span className="text-muted-foreground">{row.source}</span>
+                  <span className="font-mono bg-muted px-2 py-1 rounded text-foreground">{row.count}</span>
                 </div>
               ))
             ) : (
-              <p className="text-slate-600 text-sm italic">No data</p>
+              <p className="text-muted-foreground text-sm italic">No data</p>
             )}
           </div>
         </Card>
 
         {/* By Role Family */}
         <Card className="p-4">
-          <h3 className="font-semibold text-slate-900 mb-3">By Role Family</h3>
+          <h3 className="font-semibold text-foreground mb-3">By Role Family</h3>
           <div className="space-y-2">
             {stats.openingsByFamily.length > 0 ? (
               stats.openingsByFamily.map((row) => (
                 <div key={row.family} className="flex justify-between items-center text-sm">
-                  <span className="text-slate-700">{row.family}</span>
-                  <span className="font-mono bg-slate-200 px-2 py-1 rounded text-slate-900">{row.count}</span>
+                  <span className="text-muted-foreground">{row.family}</span>
+                  <span className="font-mono bg-muted px-2 py-1 rounded text-foreground">{row.count}</span>
                 </div>
               ))
             ) : (
-              <p className="text-slate-600 text-sm italic">No data</p>
+              <p className="text-muted-foreground text-sm italic">No data</p>
             )}
           </div>
         </Card>
 
         {/* By Sector */}
         <Card className="p-4">
-          <h3 className="font-semibold text-slate-900 mb-3">By Sector (Top 5)</h3>
+          <h3 className="font-semibold text-foreground mb-3">By Sector (Top 5)</h3>
           <div className="space-y-2">
             {stats.openingsBySector.slice(0, 5).length > 0 ? (
               stats.openingsBySector.slice(0, 5).map((row) => (
                 <div key={row.sector} className="flex justify-between items-center text-sm">
-                  <span className="text-slate-700 truncate">{row.sector}</span>
-                  <span className="font-mono bg-slate-200 px-2 py-1 rounded text-slate-900">{row.count}</span>
+                  <span className="text-muted-foreground truncate">{row.sector}</span>
+                  <span className="font-mono bg-muted px-2 py-1 rounded text-foreground">{row.count}</span>
                 </div>
               ))
             ) : (
-              <p className="text-slate-600 text-sm italic">No data</p>
+              <p className="text-muted-foreground text-sm italic">No data</p>
             )}
           </div>
         </Card>
@@ -198,7 +194,7 @@ export function LabelMetricsPanel() {
       {/* Source Details Table */}
       {sourceBreakdown.length > 0 && (
         <Card className="p-4">
-          <h3 className="font-semibold text-slate-900 mb-3">Source Details (Last 24h)</h3>
+          <h3 className="font-semibold text-foreground mb-3">Source Details (Last 24h)</h3>
           <Table>
             <TableHeader>
               <TableRow>
@@ -227,7 +223,7 @@ export function LabelMetricsPanel() {
       )}
 
       {/* Footer */}
-      <div className="text-xs text-slate-600 pt-2">
+      <div className="text-xs text-muted-foreground pt-2">
         Last updated: {new Date(stats.lastUpdated).toLocaleString()}
       </div>
     </div>

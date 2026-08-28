@@ -14,14 +14,14 @@ export const metadata: Metadata = {
 
 export default function CoachPersonasPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
         <div className="max-w-3xl">
-          <p className="mb-4 text-[11px] font-bold tracking-[0.18em] uppercase text-orange-400">Coach persona routes</p>
+          <p className="mb-4 text-[11px] font-bold tracking-[0.18em] uppercase text-primary">Coach persona routes</p>
           <h1 className="text-[34px] font-bold leading-[1.06] tracking-tight sm:text-[46px]">
             Choose the coaching model that gets you to value fastest.
           </h1>
-          <p className="mt-4 text-[16px] leading-relaxed text-slate-300 sm:text-[17px]">
+          <p className="mt-4 text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
             Pick the route that matches how you work today. Each path points to the same coach-first preview, but the detail pages shape the sign-up story around your practice model.
           </p>
         </div>
@@ -34,11 +34,11 @@ export default function CoachPersonasPage() {
               event={EVENT_NAMES.personaRouteSelected}
               logToUserEvents
               properties={{ channel: 'coaches', persona: persona.slug, source_route: '/coaches/personas', target_route: `/coaches/personas/${persona.slug}` }}
-              className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 transition-colors hover:border-orange-400 hover:bg-slate-900"
+              className="rounded-2xl border border-border bg-card/80 p-5 transition-colors hover:border-primary/30 hover:bg-card"
             >
-              <p className="mb-2 text-[13px] font-semibold text-white">{persona.label}</p>
-              <p className="text-[13px] leading-relaxed text-slate-300">{persona.summary}</p>
-              <p className="mt-4 text-[12px] font-semibold text-orange-300">Open this route</p>
+              <p className="mb-2 text-[13px] font-semibold text-foreground">{persona.label}</p>
+              <p className="text-[13px] leading-relaxed text-muted-foreground">{persona.summary}</p>
+              <p className="mt-4 text-[12px] font-semibold text-primary">Open this route</p>
             </TrackLink>
           ))}
         </div>

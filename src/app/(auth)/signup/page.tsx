@@ -9,13 +9,7 @@ import TurnstileWidget from '@/app/components/turnstile-widget'
 import { PRIVACY_VERSION, TERMS_VERSION } from '@/lib/policy-versions'
 import { reportAttributionFailure } from '@/lib/attribution-failure'
 import firstWeekSpine from '@/content/first-week-spine.json'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 const TURNSTILE_ENABLED = process.env.NEXT_PUBLIC_TURNSTILE_ENABLED === '1'
 
 type SituationContent = {
@@ -423,12 +417,12 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.12),_transparent_30%),linear-gradient(180deg,_#020617_0%,_#0f172a_48%,_#111827_100%)] font-sans text-slate-100">
+    <div className="min-h-screen bg-background font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur">
+      <header className="border-b border-border bg-background/80 backdrop-blur">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-200 hover:text-slate-100 transition-colors">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground transition-colors">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
         </div>
       </header>
@@ -439,25 +433,25 @@ export default function SignupPage() {
           {confirmed ? (
             <>
               <section id="confirm-email" className="mb-8">
-                <h2 className="text-[24px] font-bold text-white leading-tight">Check your email</h2>
-                <p className="text-[13px] text-slate-100 mt-1.5">Confirmation link sent to <span className="font-semibold text-white">{email}</span>.</p>
-                <p className="text-[13px] text-slate-100 mt-1">Most emails arrive in under 2 minutes.</p>
-                <p className="text-[13px] text-slate-100 mt-1">{firstWeekSpine.confirmationLine}</p>
+                <h2 className="text-[24px] font-bold text-foreground leading-tight">Check your email</h2>
+                <p className="text-[13px] text-foreground mt-1.5">Confirmation link sent to <span className="font-semibold text-foreground">{email}</span>.</p>
+                <p className="text-[13px] text-foreground mt-1">Most emails arrive in under 2 minutes.</p>
+                <p className="text-[13px] text-foreground mt-1">{firstWeekSpine.confirmationLine}</p>
               </section>
-              <Card variant="glass" className="border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
-                <p className="text-[14px] text-slate-100 leading-relaxed">
+              <Card variant="glass" className="border-border bg-card/80 p-8 shadow-lg">
+                <p className="text-[14px] text-foreground leading-relaxed">
                   Open the email, click the link, and finish setup. If it is not there after a few minutes, check spam or promotions.
                 </p>
-                <p className="text-[13px] text-slate-200 leading-relaxed mt-3">
+                <p className="text-[13px] text-foreground leading-relaxed mt-3">
                   While you wait, you can preview the workflow and come back once your email is confirmed.
                 </p>
-                <Link href="/demo" className="inline-block mt-3 text-[13px] font-semibold text-orange-200 underline hover:text-orange-100">
+                <Link href="/demo" className="inline-block mt-3 text-[13px] font-semibold text-primary underline">
                   Explore the demo while waiting &rarr;
                 </Link>
               </Card>
-              <p className="text-center text-[13px] text-slate-100 mt-5">
+              <p className="text-center text-[13px] text-foreground mt-5">
                 Already confirmed?{' '}
-                <Link href="/login" className="text-orange-200 font-semibold hover:text-orange-100">
+                <Link href="/login" className="text-primary font-semibold">
                   Sign in
                 </Link>
               </p>
@@ -467,12 +461,12 @@ export default function SignupPage() {
               <section id="signup-intro" className="mb-8">
                 {situation && SITUATION_COPY[situation] ? (
                   <>
-                    <h2 className="text-[22px] font-bold text-white leading-tight">{SITUATION_COPY[situation].title}</h2>
-                    <p className="text-[13px] text-slate-100 mt-1.5">{SITUATION_COPY[situation].sub}</p>
-                      <p className="text-[13px] text-slate-100 mt-3">Create your account. {managerToolsOffer ? '60 days free' : '30 days free'}. No credit card.</p>
-                    <div className="mt-4 rounded border border-white/10 bg-slate-900/70 p-3">
-                      <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-100 mb-2">Your first steps</p>
-                      <ol className="space-y-1.5 text-[13px] text-slate-100 leading-relaxed">
+                    <h2 className="text-[22px] font-bold text-foreground leading-tight">{SITUATION_COPY[situation].title}</h2>
+                    <p className="text-[13px] text-foreground mt-1.5">{SITUATION_COPY[situation].sub}</p>
+                      <p className="text-[13px] text-foreground mt-3">Create your account. {managerToolsOffer ? '60 days free' : '30 days free'}. No credit card.</p>
+                    <div className="mt-4 rounded border border-border bg-card/70 p-3">
+                      <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-2">Your first steps</p>
+                      <ol className="space-y-1.5 text-[13px] text-foreground leading-relaxed">
                         <li>1. Create your account</li>
                         <li>2. {SITUATION_COPY[situation].firstStep}</li>
                         <li>3. {firstWeekSpine.condensed[1]}</li>
@@ -482,25 +476,25 @@ export default function SignupPage() {
                   </>
                 ) : (
                   <>
-                    <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-300 mb-2">Start your free trial</p>
-                    <h1 className="text-[24px] font-bold text-white leading-tight">Create your account</h1>
-                    <p className="text-[14px] text-slate-100 mt-1.5 font-semibold">{managerToolsOffer ? '60 days free' : '30 days free'}. No credit card. Cancel anytime.</p>
+                    <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-2">Start your free trial</p>
+                    <h1 className="text-[24px] font-bold text-foreground leading-tight">Create your account</h1>
+                    <p className="text-[14px] text-foreground mt-1.5 font-semibold">{managerToolsOffer ? '60 days free' : '30 days free'}. No credit card. Cancel anytime.</p>
                   </>
                 )}
                 {entrySource && ENTRY_HANDOFF[entrySource] && (
-                  <div className="mt-4 rounded border border-white/10 bg-slate-900/70 p-3">
-                    <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-100 mb-2">Continuity note</p>
-                    <p className="text-[13px] text-slate-100 leading-relaxed mb-1.5">{ENTRY_HANDOFF[entrySource].title}</p>
-                    <p className="text-[13px] text-slate-100 leading-relaxed mb-1.5">{ENTRY_HANDOFF[entrySource].body}</p>
-                    <p className="text-[13px] text-slate-100 leading-relaxed"><span className="font-semibold text-white">Next:</span> {ENTRY_HANDOFF[entrySource].nextStep}</p>
+                  <div className="mt-4 rounded border border-border bg-card/70 p-3">
+                    <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-2">Continuity note</p>
+                    <p className="text-[13px] text-foreground leading-relaxed mb-1.5">{ENTRY_HANDOFF[entrySource].title}</p>
+                    <p className="text-[13px] text-foreground leading-relaxed mb-1.5">{ENTRY_HANDOFF[entrySource].body}</p>
+                    <p className="text-[13px] text-foreground leading-relaxed"><span className="font-semibold text-foreground">Next:</span> {ENTRY_HANDOFF[entrySource].nextStep}</p>
                   </div>
                 )}
               </section>
 
-              <Card variant="glass" className="border-white/10 bg-slate-900/80 p-8 shadow-[0_20px_48px_rgba(2,6,23,0.45)]">
+              <Card variant="glass" className="border-border bg-card/80 p-8 shadow-lg">
 
                 <section id="social-signin" className="mb-5">
-                <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-200 mb-3">Social sign-in</h2>
+                <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-foreground mb-3">Social sign-in</h2>
                 {socialError && (
                   <Alert variant="destructive" className="mb-3">
                     <AlertDescription>{socialError}</AlertDescription>
@@ -511,7 +505,7 @@ export default function SignupPage() {
                   variant="outline"
                   onClick={handleGoogle}
                   disabled={authBusy}
-                  className="w-full min-h-[44px] justify-center gap-2.5 !border-white/15 !bg-white/5 !text-slate-100 mb-5 hover:!border-white/35 hover:!bg-white/10"
+                  className="w-full min-h-[44px] justify-center gap-2.5 !border-border !bg-muted/40 !text-foreground mb-5 hover:!bg-muted/60"
                 >
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.658 14.252 17.64 11.927 17.64 9.2z" fill="#4285F4"/>
@@ -526,29 +520,29 @@ export default function SignupPage() {
                   type="button"
                   onClick={handleApple}
                   disabled={authBusy}
-                  className="w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-black !text-white mb-5 hover:!bg-slate-800"
+                  className="w-full min-h-[44px] justify-center gap-2.5 !border-transparent !bg-primary !text-primary-foreground mb-5 hover:!bg-primary/90"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M16.365 1.43c0 1.14-.425 2.13-1.273 2.97-.852.84-1.88 1.31-3.084 1.21-.077-1.11.39-2.12 1.16-2.89.85-.85 1.99-1.35 3.197-1.29zM20.93 17.19c-.36.83-.79 1.6-1.29 2.31-.68.97-1.23 1.64-1.65 2.01-.65.6-1.34.91-2.07.93-.52 0-1.15-.15-1.89-.45-.74-.3-1.42-.45-2.04-.45-.65 0-1.35.15-2.1.45-.75.3-1.36.46-1.83.48-.7.03-1.41-.29-2.13-.96-.46-.4-1.04-1.1-1.74-2.1-.75-1.07-1.37-2.31-1.85-3.72-.51-1.52-.77-2.99-.77-4.41 0-1.63.35-3.04 1.06-4.23.56-.96 1.3-1.72 2.24-2.28.94-.56 1.96-.84 3.05-.86.57 0 1.31.18 2.22.53.91.35 1.49.53 1.74.53.19 0 .84-.2 1.95-.6 1.05-.37 1.93-.53 2.65-.48 1.95.16 3.42.93 4.4 2.31-1.75 1.06-2.62 2.55-2.6 4.47.02 1.5.56 2.75 1.64 3.74.49.46 1.04.81 1.64 1.04-.13.38-.27.75-.42 1.12z" />
                   </svg>
                   {appleLoading ? 'Redirecting…' : 'Continue with Apple'}
                 </Button>
-                <p className="text-[12px] text-slate-200 leading-relaxed">
-                  By continuing, you agree to our <Link href="/terms" className="underline hover:text-slate-200">Terms and Conditions</Link> and <Link href="/privacy" className="underline hover:text-slate-200">Privacy Policy</Link>.
+                <p className="text-[12px] text-foreground leading-relaxed">
+                  By continuing, you agree to our <Link href="/terms" className="underline hover:text-foreground">Terms and Conditions</Link> and <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
                 </p>
                 </section>
 
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="flex-1 h-px bg-white/15" />
-                  <span className="text-[13px] text-slate-200 font-semibold uppercase tracking-wide">or</span>
-                  <div className="flex-1 h-px bg-white/15" />
+                  <div className="flex-1 h-px bg-muted/80" />
+                  <span className="text-[13px] text-foreground font-semibold uppercase tracking-wide">or</span>
+                  <div className="flex-1 h-px bg-muted/80" />
                 </div>
 
                 <form id="email-signup" onSubmit={handleSubmit} className="flex flex-col gap-5">
-                  <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-200">Email signup</h2>
+                  <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-foreground">Email signup</h2>
 
                   <div>
-                    <Label htmlFor="email" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="email" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-1.5">
                       Email
                     </Label>
                     <Input
@@ -558,12 +552,12 @@ export default function SignupPage() {
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
+                      className="w-full !border-border !bg-background/60 text-base text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="password" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="password" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-1.5">
                       Password
                     </Label>
                     <Input
@@ -573,13 +567,13 @@ export default function SignupPage() {
                       minLength={8}
                       value={password}
                       onChange={e => setPassword(e.target.value)}
-                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 focus-visible:!border-white/40"
+                      className="w-full !border-border !bg-background/60 text-base text-foreground"
                     />
-                    <p className="mt-1.5 text-[13px] text-slate-200">At least 8 characters.</p>
+                    <p className="mt-1.5 text-[13px] text-foreground">At least 8 characters.</p>
                   </div>
 
                   <div>
-                    <Label htmlFor="heard-about" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="heard-about" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-1.5">
                       How did you hear about Starting Monday?
                     </Label>
                     <Select
@@ -587,7 +581,7 @@ export default function SignupPage() {
                       onValueChange={(value) => setHeardAbout(value as HeardAboutOption)}
                       disabled={heardAboutLocked}
                     >
-                      <SelectTrigger id="heard-about" className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 disabled:!bg-slate-900 disabled:!text-slate-500">
+                      <SelectTrigger id="heard-about" className="w-full !border-border !bg-background/60 text-base text-foreground disabled:!bg-card disabled:!text-muted-foreground">
                         <SelectValue placeholder="Select (optional)" />
                       </SelectTrigger>
                       <SelectContent>
@@ -597,15 +591,15 @@ export default function SignupPage() {
                       </SelectContent>
                     </Select>
                     {heardAboutLocked ? (
-                      <p className="mt-1.5 text-[13px] text-slate-200">Auto-selected from the Manager Tools link.</p>
+                      <p className="mt-1.5 text-[13px] text-foreground">Auto-selected from the Manager Tools link.</p>
                     ) : (
-                      <p className="mt-1.5 text-[13px] text-slate-200">Optional. Helps us tailor your onboarding.</p>
+                      <p className="mt-1.5 text-[13px] text-foreground">Optional. Helps us tailor your onboarding.</p>
                     )}
                   </div>
 
                   {heardAbout === 'other' && !heardAboutLocked ? (
                     <div>
-                      <Label htmlFor="heard-about-other" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                      <Label htmlFor="heard-about-other" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-1.5">
                         Other source
                       </Label>
                       <Input
@@ -614,13 +608,13 @@ export default function SignupPage() {
                         value={heardAboutOther}
                         onChange={(e) => setHeardAboutOther(e.target.value)}
                         placeholder="Please specify"
-                        className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
+                        className="w-full !border-border !bg-background/60 text-base text-foreground placeholder:text-muted-foreground"
                       />
                     </div>
                   ) : null}
 
                   <div>
-                    <Label htmlFor="referrer-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="referrer-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-1.5">
                       Referrer name (optional)
                     </Label>
                     <Input
@@ -629,12 +623,12 @@ export default function SignupPage() {
                       value={referrerName}
                       onChange={(e) => setReferrerName(e.target.value)}
                       placeholder="Who referred you?"
-                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
+                      className="w-full !border-border !bg-background/60 text-base text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="referrer-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-200 mb-1.5">
+                    <Label htmlFor="referrer-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-foreground mb-1.5">
                       Referrer company (optional)
                     </Label>
                     <Input
@@ -643,9 +637,9 @@ export default function SignupPage() {
                       value={referrerCompany}
                       onChange={(e) => setReferrerCompany(e.target.value)}
                       placeholder="Company or firm name"
-                      className="w-full !border-white/15 !bg-slate-950/60 text-base text-slate-100 placeholder:text-slate-500 focus-visible:!border-white/40"
+                      className="w-full !border-border !bg-background/60 text-base text-foreground placeholder:text-muted-foreground"
                     />
-                    <p className="mt-1.5 text-[13px] text-slate-200">Used for partner referral fee and commission tracking.</p>
+                    <p className="mt-1.5 text-[13px] text-foreground">Used for partner referral fee and commission tracking.</p>
                   </div>
 
                   {error && (
@@ -661,38 +655,38 @@ export default function SignupPage() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full min-h-[44px] justify-center rounded !bg-orange-500 !text-slate-950 text-[14px] hover:!bg-orange-400"
+                    className="w-full min-h-[44px] justify-center rounded !bg-primary !text-primary-foreground text-[14px] hover:!bg-primary/90"
                   >
                     {loading ? 'Creating account…' : (situation && SITUATION_COPY[situation] ? `Create account and ${SITUATION_COPY[situation].cta}` : 'Start free trial')}
                   </Button>
-                  <p className="text-[12px] text-slate-200 leading-relaxed text-center">
-                    By creating an account, you agree to our <Link href="/terms" className="underline hover:text-slate-200">Terms and Conditions</Link> and <Link href="/privacy" className="underline hover:text-slate-200">Privacy Policy</Link>.
+                  <p className="text-[12px] text-foreground leading-relaxed text-center">
+                    By creating an account, you agree to our <Link href="/terms" className="underline hover:text-foreground">Terms and Conditions</Link> and <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
                   </p>
-                  <p id="signup-trust" className="text-center text-[13px] text-slate-100">
+                  <p id="signup-trust" className="text-center text-[13px] text-foreground">
                     Private by default. We do not share your data with recruiters, employers, or third parties.{' '}
-                    <Link href="/privacy" className="inline-flex items-center min-h-[44px] underline hover:text-slate-100">Privacy policy &rarr;</Link>
+                    <Link href="/privacy" className="inline-flex items-center min-h-[44px] underline hover:text-foreground">Privacy policy &rarr;</Link>
                   </p>
-                  <p className="text-center text-[13px] font-semibold text-slate-100">{firstWeekSpine.guaranteeLine}</p>
+                  <p className="text-center text-[13px] font-semibold text-foreground">{firstWeekSpine.guaranteeLine}</p>
 
                 </form>
               </Card>
 
               <div className="flex flex-col items-center mt-5">
-                <span className="text-[13px] text-slate-200">Already have an account?</span>
-                <Link href="/login" className="flex items-center justify-center min-h-[44px] text-[13px] text-slate-200 font-semibold hover:text-white">
+                <span className="text-[13px] text-foreground">Already have an account?</span>
+                <Link href="/login" className="flex items-center justify-center min-h-[44px] text-[13px] text-muted-foreground font-semibold hover:text-foreground">
                   Sign in
                 </Link>
               </div>
               <div className="flex flex-col items-center mt-1">
-                <span className="text-[13px] text-slate-200">Not ready to commit?</span>
-                <Link href="/demo" className="flex items-center justify-center min-h-[44px] text-[13px] text-slate-200 font-semibold hover:text-white">
+                <span className="text-[13px] text-foreground">Not ready to commit?</span>
+                <Link href="/demo" className="flex items-center justify-center min-h-[44px] text-[13px] text-muted-foreground font-semibold hover:text-foreground">
                   Explore the demo first &rarr;
                 </Link>
               </div>
             </>
           )}
 
-          <p className="text-center text-[13px] text-slate-500 mt-8">
+          <p className="text-center text-[13px] text-muted-foreground mt-8">
             &copy; {new Date().getFullYear()} Starting Monday. All rights reserved.
           </p>
 

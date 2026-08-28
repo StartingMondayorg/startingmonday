@@ -2,20 +2,8 @@
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { updateContact } from '../actions'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
-const selectTriggerCls = 'w-full border-white/15 bg-slate-950/70 text-slate-100'
+import { Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
+const selectTriggerCls = 'w-full border-border bg-background/70 text-foreground'
 
 // shadcn Select can't have an item with value "" — use this sentinel for the
 // "unset" option and strip it back to an empty string in the form action below.
@@ -71,79 +59,79 @@ export default async function EditContactPage({
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
+    <div className="min-h-screen bg-background font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+      <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href={`/dashboard/contacts/${id}`} className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <Link href={`/dashboard/contacts/${id}`} className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             Cancel
           </Link>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-<div className="mb-6 rounded-2xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Edit contact</p>
-          <h1 className="mt-1 text-[22px] font-bold text-white">{contact.name}</h1>
-          <p className="text-[13px] text-slate-200 mt-1">Update relationship details and outreach metadata.</p>
+<div className="mb-6 rounded-2xl border border-border bg-muted/40 px-5 py-5 shadow-xl backdrop-blur-md">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary">Edit contact</p>
+          <h1 className="mt-1 text-[22px] font-bold text-foreground">{contact.name}</h1>
+          <p className="text-[13px] text-foreground mt-1">Update relationship details and outreach metadata.</p>
         </div>
 
-        <div className="rounded-2xl border border-white/15 bg-white/5 p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
+        <div className="rounded-2xl border border-border bg-muted/40 p-6 shadow-xl backdrop-blur-md">
           <form action={updateContact.bind(null, id)} className="flex flex-col gap-4">
 
             <div>
-              <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
-                Name <span className="text-red-500">*</span>
+              <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
+                Name <span className="text-destructive">*</span>
               </Label>
               <Input
                 name="name"
                 required
                 defaultValue={contact.name}
                 placeholder="Jane Smith"
-                className="bg-slate-950/70 text-slate-100"
+                className="bg-background/70 text-foreground"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Title</Label>
-                <Input name="title" defaultValue={contact.title ?? ''} placeholder="VP of Engineering" className="bg-slate-950/70 text-slate-100" />
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Title</Label>
+                <Input name="title" defaultValue={contact.title ?? ''} placeholder="VP of Engineering" className="bg-background/70 text-foreground" />
               </div>
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Firm</Label>
-                <Input name="firm" defaultValue={contact.firm ?? ''} placeholder="Korn Ferry" className="bg-slate-950/70 text-slate-100" />
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Firm</Label>
+                <Input name="firm" defaultValue={contact.firm ?? ''} placeholder="Korn Ferry" className="bg-background/70 text-foreground" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Email</Label>
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Email</Label>
                 <Input
                   name="email"
                   type="text"
                   defaultValue={contact.email ?? ''}
                   placeholder="jane@company.com"
-                  className="bg-slate-950/70 text-slate-100"
+                  className="bg-background/70 text-foreground"
                 />
               </div>
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">LinkedIn URL</Label>
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">LinkedIn URL</Label>
                 <Input
                   name="linkedin_url"
                   type="text"
                   defaultValue={contact.linkedin_url ?? ''}
                   placeholder="https://linkedin.com/in/jane"
-                  className="bg-slate-950/70 text-slate-100"
+                  className="bg-background/70 text-foreground"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Channel</Label>
+                <Label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Channel</Label>
                 <Select name="channel" defaultValue={contact.channel || NONE}>
                   <SelectTrigger id="contact-channel" title="Channel" className={selectTriggerCls}>
                     <SelectValue />
@@ -158,7 +146,7 @@ export default async function EditContactPage({
               </div>
               {companyList.length > 0 && (
                 <div>
-                  <Label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Company</Label>
+                  <Label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Company</Label>
                   <Select name="company_id" defaultValue={contact.company_id || NONE}>
                     <SelectTrigger id="contact-company" title="Company" className={selectTriggerCls}>
                       <SelectValue />
@@ -176,7 +164,7 @@ export default async function EditContactPage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Relationship type</Label>
+                <Label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Relationship type</Label>
                 <Select name="contact_type" defaultValue={contact.contact_type || NONE}>
                   <SelectTrigger id="contact-type" title="Relationship type" className={selectTriggerCls}>
                     <SelectValue />
@@ -192,31 +180,31 @@ export default async function EditContactPage({
                 </Select>
               </div>
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Last role discussed</Label>
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Last role discussed</Label>
                 <Input
                   name="last_role_discussed"
                   defaultValue={contact.last_role_discussed ?? ''}
                   placeholder="CIO at Acme Corp"
-                  className="bg-slate-950/70 text-slate-100"
+                  className="bg-background/70 text-foreground"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">Notes</Label>
+              <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">Notes</Label>
               <Textarea
                 name="notes"
                 defaultValue={contact.notes ?? ''}
                 rows={3}
                 placeholder="Met at SaaStr, warm connection..."
-                className="bg-slate-950/70 text-slate-100 resize-none"
+                className="bg-background/70 text-foreground resize-none"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-2 border-t border-border">
               <Button
                 variant="ghost"
-                className="text-slate-300 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
                 render={<Link href={`/dashboard/contacts/${id}`} />}
               >
                 Cancel

@@ -5,22 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { FeedbackItem } from '@/lib/database.types'
 import { BrandIcon } from '@/app/components/BrandIcon'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Toggle } from '@/components/ui/toggle'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea, Toggle } from '@/components/ui'
 type FeedbackCategory = 'bug' | 'feature_request' | 'ui_ux' | 'performance' | 'other'
 type FeedbackStatus = 'new' | 'under_review' | 'planned' | 'in_progress' | 'shipped' | 'declined'
 
@@ -153,13 +138,13 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted">
+      <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/dashboard" className="text-[13px] font-semibold text-slate-900 hover:text-orange-600 transition-colors">
+          <Link href="/dashboard" className="text-[13px] font-semibold text-foreground hover:text-primary transition-colors">
             ← Dashboard
           </Link>
-          <h1 className="text-[18px] font-bold text-slate-900">Feedback & Ideas</h1>
+          <h1 className="text-[18px] font-bold text-foreground">Feedback & Ideas</h1>
           <div className="w-16" />
         </div>
       </header>
@@ -167,8 +152,8 @@ export default function FeedbackPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Submit Form */}
         <Card className="p-6 space-y-4">
-          <h2 className="text-[16px] font-bold text-slate-900">Share Your Feedback</h2>
-          <p className="text-[13px] text-slate-600">
+          <h2 className="text-[16px] font-bold text-foreground">Share Your Feedback</h2>
+          <p className="text-[13px] text-muted-foreground">
             Help us improve Starting Monday. Your feedback is valuable and we review everything.
           </p>
 
@@ -187,7 +172,7 @@ export default function FeedbackPage() {
             )}
 
             <div>
-              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-foreground mb-2">
                 Title *
               </Label>
               <Input
@@ -200,7 +185,7 @@ export default function FeedbackPage() {
             </div>
 
             <div>
-              <Label className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label className="block text-[12px] font-semibold text-foreground mb-2">
                 Description *
               </Label>
               <Textarea
@@ -213,7 +198,7 @@ export default function FeedbackPage() {
             </div>
 
             <div>
-              <Label htmlFor="category-input" className="block text-[12px] font-semibold text-slate-900 mb-2">
+              <Label htmlFor="category-input" className="block text-[12px] font-semibold text-foreground mb-2">
                 Category *
               </Label>
               <Select name="category" required>
@@ -244,7 +229,7 @@ export default function FeedbackPage() {
         <Card className="p-4 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
-              <Label htmlFor="category-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label htmlFor="category-filter" className="block text-[11px] font-semibold text-muted-foreground uppercase mb-1.5">
                 Category
               </Label>
               <Select
@@ -266,7 +251,7 @@ export default function FeedbackPage() {
             </div>
 
             <div>
-              <Label htmlFor="status-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label htmlFor="status-filter" className="block text-[11px] font-semibold text-muted-foreground uppercase mb-1.5">
                 Status
               </Label>
               <Select
@@ -289,7 +274,7 @@ export default function FeedbackPage() {
             </div>
 
             <div>
-              <Label htmlFor="sort-filter" className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label htmlFor="sort-filter" className="block text-[11px] font-semibold text-muted-foreground uppercase mb-1.5">
                 Sort By
               </Label>
               <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'recent' | 'votes' | 'comments')}>
@@ -305,7 +290,7 @@ export default function FeedbackPage() {
             </div>
 
             <div>
-              <Label className="block text-[11px] font-semibold text-slate-600 uppercase mb-1.5">
+              <Label className="block text-[11px] font-semibold text-muted-foreground uppercase mb-1.5">
                 Search
               </Label>
               <Input
@@ -322,9 +307,9 @@ export default function FeedbackPage() {
         {/* Feedback Items List */}
         <section className="space-y-3">
           {isLoading ? (
-            <div className="text-center py-8 text-slate-500">Loading...</div>
+            <div className="text-center py-8 text-muted-foreground">Loading...</div>
           ) : items.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-muted-foreground">
               No feedback found. Be the first to share!
             </div>
           ) : (
@@ -333,11 +318,11 @@ export default function FeedbackPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start gap-2 mb-1">
-                      <h3 className="text-[14px] font-semibold text-slate-900 line-clamp-2">
+                      <h3 className="text-[14px] font-semibold text-foreground line-clamp-2">
                         {item.title}
                       </h3>
                     </div>
-                    <p className="text-[12px] text-slate-600 line-clamp-2">{item.body}</p>
+                    <p className="text-[12px] text-muted-foreground line-clamp-2">{item.body}</p>
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <Badge variant={STATUS_VARIANT[item.status as FeedbackStatus]} className="whitespace-nowrap">
@@ -346,10 +331,10 @@ export default function FeedbackPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-[12px] text-slate-500">
+                <div className="flex items-center justify-between text-[12px] text-muted-foreground">
                   <div className="flex gap-3">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-slate-100 text-slate-700 rounded">
-                      <BrandIcon name={CATEGORY_ICONS[item.category as FeedbackCategory]} className="h-3.5 w-3.5 text-orange-600" />
+                    <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-muted text-muted-foreground rounded">
+                      <BrandIcon name={CATEGORY_ICONS[item.category as FeedbackCategory]} className="h-3.5 w-3.5 text-primary" />
                       {CATEGORY_LABELS[item.category as FeedbackCategory]}
                     </span>
                     {item.user_profiles && (
@@ -359,19 +344,19 @@ export default function FeedbackPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-4 text-[12px] border-t border-slate-100 pt-3">
+                <div className="flex gap-4 text-[12px] border-t border-border pt-3">
                   <Toggle
                     pressed={item.user_voted}
                     onPressedChange={() => handleVote(item.id, item.user_voted)}
                     className={`h-auto px-0 gap-1 hover:bg-transparent ${
                       item.user_voted
-                        ? 'text-orange-600 font-semibold'
-                        : 'text-slate-500 hover:text-orange-600'
+                        ? 'text-primary font-semibold'
+                        : 'text-muted-foreground hover:text-primary'
                     }`}
                   >
                     Votes {item.vote_count}
                   </Toggle>
-                  <div className="flex items-center gap-1 text-slate-500">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     Comments {item.comment_count}
                   </div>
                 </div>

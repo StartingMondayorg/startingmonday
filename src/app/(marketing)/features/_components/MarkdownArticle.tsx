@@ -120,7 +120,7 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
     if (index > last) output.push(text.slice(last, index))
 
     output.push(
-      <a key={`${keyBase}-${index}`} href={href} className="text-orange-600 underline decoration-orange-300 underline-offset-2 hover:text-orange-500">
+      <a key={`${keyBase}-${index}`} href={href} className="text-primary underline decoration-primary underline-offset-2">
         {label}
       </a>,
     )
@@ -136,15 +136,15 @@ export function MarkdownArticle({ markdown }: { markdown: string }) {
   const blocks = parseBlocks(markdown)
 
   return (
-    <article className="space-y-5 text-slate-800">
+    <article className="space-y-5 text-foreground">
       {blocks.map((block, index) => {
-        if (block.type === 'divider') return <hr key={`d-${index}`} className="border-slate-200" />
-        if (block.type === 'h1') return <h1 key={`h1-${index}`} className="text-3xl font-bold tracking-tight text-slate-950">{block.text}</h1>
-        if (block.type === 'h2') return <h2 key={`h2-${index}`} className="pt-2 text-2xl font-bold text-slate-950">{block.text}</h2>
-        if (block.type === 'h3') return <h3 key={`h3-${index}`} className="pt-1 text-lg font-semibold text-slate-900">{block.text}</h3>
+        if (block.type === 'divider') return <hr key={`d-${index}`} className="border-border" />
+        if (block.type === 'h1') return <h1 key={`h1-${index}`} className="text-3xl font-bold tracking-tight text-foreground">{block.text}</h1>
+        if (block.type === 'h2') return <h2 key={`h2-${index}`} className="pt-2 text-2xl font-bold text-foreground">{block.text}</h2>
+        if (block.type === 'h3') return <h3 key={`h3-${index}`} className="pt-1 text-lg font-semibold text-foreground">{block.text}</h3>
         if (block.type === 'paragraph') {
           return (
-            <p key={`p-${index}`} className="text-[15px] leading-relaxed text-slate-700">
+            <p key={`p-${index}`} className="text-[15px] leading-relaxed text-muted-foreground">
               {renderInline(block.text, `p-${index}`)}
             </p>
           )
@@ -152,7 +152,7 @@ export function MarkdownArticle({ markdown }: { markdown: string }) {
         if (block.type === 'list') {
           if (block.ordered) {
             return (
-              <ol key={`l-${index}`} className="ml-5 list-decimal space-y-1.5 text-[15px] leading-relaxed text-slate-700">
+              <ol key={`l-${index}`} className="ml-5 list-decimal space-y-1.5 text-[15px] leading-relaxed text-muted-foreground">
                 {block.items.map((item, itemIndex) => (
                   <li key={`i-${index}-${itemIndex}`}>{renderInline(item, `i-${index}-${itemIndex}`)}</li>
                 ))}
@@ -161,7 +161,7 @@ export function MarkdownArticle({ markdown }: { markdown: string }) {
           }
 
           return (
-            <ul key={`l-${index}`} className="ml-5 list-disc space-y-1.5 text-[15px] leading-relaxed text-slate-700">
+            <ul key={`l-${index}`} className="ml-5 list-disc space-y-1.5 text-[15px] leading-relaxed text-muted-foreground">
               {block.items.map((item, itemIndex) => (
                 <li key={`i-${index}-${itemIndex}`}>{renderInline(item, `i-${index}-${itemIndex}`)}</li>
               ))}
@@ -172,12 +172,12 @@ export function MarkdownArticle({ markdown }: { markdown: string }) {
           const headers = block.rows[0] ?? []
           const body = block.rows.slice(1)
           return (
-            <div key={`t-${index}`} className="overflow-x-auto rounded-xl border border-slate-200">
+            <div key={`t-${index}`} className="overflow-x-auto rounded-xl border border-border">
               <table className="min-w-full border-collapse text-left text-[14px]">
-                <thead className="bg-slate-100 text-slate-900">
+                <thead className="bg-muted text-foreground">
                   <tr>
                     {headers.map((cell, cellIndex) => (
-                      <th key={`h-${index}-${cellIndex}`} className="border-b border-slate-200 px-3 py-2.5 font-semibold">
+                      <th key={`h-${index}-${cellIndex}`} className="border-b border-border px-3 py-2.5 font-semibold">
                         {renderInline(cell, `th-${index}-${cellIndex}`)}
                       </th>
                     ))}
@@ -185,9 +185,9 @@ export function MarkdownArticle({ markdown }: { markdown: string }) {
                 </thead>
                 <tbody>
                   {body.map((row, rowIndex) => (
-                    <tr key={`r-${index}-${rowIndex}`} className="odd:bg-white even:bg-slate-50">
+                    <tr key={`r-${index}-${rowIndex}`} className="odd:bg-card even:bg-muted">
                       {row.map((cell, cellIndex) => (
-                        <td key={`c-${index}-${rowIndex}-${cellIndex}`} className="border-t border-slate-100 px-3 py-2 align-top text-slate-700">
+                        <td key={`c-${index}-${rowIndex}-${cellIndex}`} className="border-t border-border px-3 py-2 align-top text-muted-foreground">
                           {renderInline(cell, `td-${index}-${rowIndex}-${cellIndex}`)}
                         </td>
                       ))}

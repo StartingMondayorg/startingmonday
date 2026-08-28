@@ -1,12 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Label } from '@/components/ui'
 export function SecurityClient({ accountEmail }: { accountEmail: string }) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -57,17 +52,17 @@ export function SecurityClient({ accountEmail }: { accountEmail: string }) {
 
   return (
     <Card className="p-6 sm:p-8">
-      <h2 className="text-[20px] font-bold text-slate-900">Security</h2>
-      <p className="text-[13px] text-slate-500 mt-1">
-        Add or change your password for <span className="font-semibold text-slate-700">{accountEmail}</span>.
+      <h2 className="text-[20px] font-bold text-foreground">Security</h2>
+      <p className="text-[13px] text-muted-foreground mt-1">
+        Add or change your password for <span className="font-semibold text-muted-foreground">{accountEmail}</span>.
       </p>
-      <p className="text-[13px] text-slate-500 mt-1.5">
+      <p className="text-[13px] text-muted-foreground mt-1.5">
         If you originally signed up with Google or Apple, this links a password so you can sign in either way.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4 max-w-md">
         <div>
-          <Label htmlFor="new-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5">
+          <Label htmlFor="new-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
             New password
           </Label>
           <Input
@@ -84,7 +79,7 @@ export function SecurityClient({ accountEmail }: { accountEmail: string }) {
         </div>
 
         <div>
-          <Label htmlFor="confirm-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5">
+          <Label htmlFor="confirm-password" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
             Confirm password
           </Label>
           <Input

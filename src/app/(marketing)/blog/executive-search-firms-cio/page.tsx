@@ -36,14 +36,14 @@ export default function ExecutiveSearchFirmsCioPage() {
       url="https://startingmonday.app/blog/executive-search-firms-cio"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most technology executives think about executive search firms the wrong way. They think of them as
           the people who find jobs. The firms think of themselves as the people who fill mandates - a
           different orientation, with different implications for how you should approach them.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How retained search actually works</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How retained search actually works</h2>
 
         <p>
           When a company engages a retained search firm for a CIO, they pay a retainer
@@ -70,7 +70,7 @@ export default function ExecutiveSearchFirmsCioPage() {
           list. If you are not on the long list, you do not exist to this search.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What gets you on the short list</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What gets you on the short list</h2>
 
         <p>
           The firms that fill CIO mandates at $300K and above - Korn Ferry, Spencer Stuart,
@@ -92,7 +92,7 @@ export default function ExecutiveSearchFirmsCioPage() {
           person at least once in the last two years.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The calibration conversation</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The calibration conversation</h2>
 
         <p>
           Every search firm screening call has a second agenda: calibration. The associate or partner is trying
@@ -112,7 +112,7 @@ export default function ExecutiveSearchFirmsCioPage() {
           after you were there.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Timing: why it matters more than almost anything else</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Timing: why it matters more than almost anything else</h2>
 
         <p>
           Search firm relationships are time-sensitive in a specific way. A partner who meets you today and
@@ -139,7 +139,7 @@ export default function ExecutiveSearchFirmsCioPage() {
           candidate who gets the call. Not the one who updated their LinkedIn profile the week before.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday tracks</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday tracks</h2>
 
         <p>
           Starting Monday watches the organizational signals that precede CIO searches - transformation
@@ -150,14 +150,14 @@ export default function ExecutiveSearchFirmsCioPage() {
 
         <p>
           When a search does open, the{' '}
-          <Link href="/for-cio" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-cio" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           assembles your win thesis, likely objections, and company-specific questions in sixty
           seconds - the document that converts a warm search firm conversation into a first-round interview.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The only question that matters</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The only question that matters</h2>
 
         <p>
           When the right partner calls - and if your positioning is right, they will - the outcome

@@ -4,9 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, getAllStaff } from '@/lib/staff'
 import { TeamClient } from './team-client'
 import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Badge } from '@/components/ui'
 export default async function TeamPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -19,10 +17,10 @@ export default async function TeamPage() {
 
   return (
     <div className={ADMIN_DARK_PAGE_BG}>
-      <header className="bg-slate-900">
+      <header className="bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
-          <Link href="/dashboard/admin" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
+          <Link href="/dashboard/admin" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             ← Admin
           </Link>
         </div>
@@ -30,9 +28,9 @@ export default async function TeamPage() {
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-white leading-tight">Team Management</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">
-            Signed in as <span className="font-semibold text-slate-100">{user.email}</span>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Team Management</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">
+            Signed in as <span className="font-semibold text-foreground">{user.email}</span>
             <Badge
               variant={staff.role === 'owner' ? 'warning' : staff.role === 'admin' ? 'info' : 'secondary'}
               className="ml-2"

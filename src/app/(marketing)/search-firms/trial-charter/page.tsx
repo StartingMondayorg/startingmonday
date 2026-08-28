@@ -59,46 +59,45 @@ const approvalChecklist = [
 
 export default function SearchFirmsTrialCharterPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 sm:py-14">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.22),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.96)_54%,_rgba(10,15,28,0.98)_100%)]" />
+    <main className="relative min-h-screen overflow-hidden bg-background px-4 py-10 text-foreground sm:px-6 sm:py-14">
       <div className="mx-auto max-w-5xl">
-        <Link href="/search-firms/procurement" className="text-sm text-slate-400 transition-colors hover:text-white">
+        <Link href="/search-firms/procurement" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
           {'<- Back to procurement path'}
         </Link>
 
-        <header className="mt-6 rounded-[2rem] border border-white/10 bg-[linear-gradient(160deg,rgba(28,20,17,0.66),rgba(12,14,24,0.92))] p-6 shadow-[0_22px_80px_rgba(15,23,42,0.28)] backdrop-blur-sm sm:p-8">
-          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-200">Pilot governance</p>
-          <h1 className="mt-3 max-w-3xl font-serif text-[34px] leading-[1.08] text-white sm:text-[44px]">Pilot charter requirements before kickoff.</h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-200">
+        <header className="mt-6 rounded-[2rem] border border-border bg-card/85 p-6 shadow-2xl backdrop-blur-sm sm:p-8">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Pilot governance</p>
+          <h1 className="mt-3 max-w-3xl font-serif text-[34px] leading-[1.08] text-foreground sm:text-[44px]">Pilot charter requirements before kickoff.</h1>
+          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-foreground">
             All search-firm pilots require a complete charter before any candidate activation. This page covers the six required sections and the day-30 decision structure.
           </p>
-          <p className="mt-5 text-[12px] uppercase tracking-[0.14em] text-slate-400">One mandate. Named sponsor. Day-30 go, revise, or stop.</p>
+          <p className="mt-5 text-[12px] uppercase tracking-[0.14em] text-muted-foreground">One mandate. Named sponsor. Day-30 go, revise, or stop.</p>
         </header>
 
         {/* Named owners */}
-        <section className="mt-6 rounded-[2rem] border border-white/10 bg-[linear-gradient(150deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] p-6 shadow-[0_20px_70px_rgba(15,23,42,0.24)] backdrop-blur-sm sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Section H</p>
-          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-white">Six named owners required before kickoff</h2>
-          <p className="mt-3 text-[13px] leading-relaxed text-slate-400">No pilot begins without all six roles assigned. Unnamed ownership is the most common reason for mid-search governance failures.</p>
+        <section className="mt-6 rounded-[2rem] border border-border bg-muted/40 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Section H</p>
+          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-foreground">Six named owners required before kickoff</h2>
+          <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">No pilot begins without all six roles assigned. Unnamed ownership is the most common reason for mid-search governance failures.</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {namedOwners.map((item) => (
-              <div key={item.role} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-[14px] font-semibold text-white">{item.role}</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-slate-400">{item.note}</p>
+              <div key={item.role} className="rounded-xl border border-border bg-muted/[0.03] p-4">
+                <p className="text-[14px] font-semibold text-foreground">{item.role}</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{item.note}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Day-0 baselines */}
-        <section className="mt-6 rounded-[2rem] border border-white/10 bg-[linear-gradient(150deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] p-6 shadow-[0_20px_70px_rgba(15,23,42,0.24)] backdrop-blur-sm sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Section D</p>
-          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-white">Day-0 baseline metrics</h2>
-          <p className="mt-3 text-[13px] leading-relaxed text-slate-400">All five baseline fields must be captured and sourced before day-30 scorecard decisions are valid. Retrospective narratives cannot substitute for captured baselines.</p>
-          <ul className="mt-5 space-y-3 text-[14px] leading-relaxed text-slate-200">
+        <section className="mt-6 rounded-[2rem] border border-border bg-muted/40 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Section D</p>
+          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-foreground">Day-0 baseline metrics</h2>
+          <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">All five baseline fields must be captured and sourced before day-30 scorecard decisions are valid. Retrospective narratives cannot substitute for captured baselines.</p>
+          <ul className="mt-5 space-y-3 text-[14px] leading-relaxed text-foreground">
             {baselineFields.map((field) => (
               <li key={field} className="flex gap-3">
-                <span className="font-bold text-orange-300">+</span>
+                <span className="font-bold text-primary">+</span>
                 <span>{field}</span>
               </li>
             ))}
@@ -106,31 +105,31 @@ export default function SearchFirmsTrialCharterPage() {
         </section>
 
         {/* Success thresholds */}
-        <section className="mt-6 rounded-[2rem] border border-white/10 bg-[linear-gradient(150deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] p-6 shadow-[0_20px_70px_rgba(15,23,42,0.24)] backdrop-blur-sm sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Section E</p>
-          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-white">Day-30 decision structure</h2>
-          <p className="mt-3 text-[13px] leading-relaxed text-slate-400">Three possible outcomes. Decision must use pre-defined thresholds and baseline deltas, not retrospective narratives or relationship factors.</p>
+        <section className="mt-6 rounded-[2rem] border border-border bg-muted/40 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Section E</p>
+          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-foreground">Day-30 decision structure</h2>
+          <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">Three possible outcomes. Decision must use pre-defined thresholds and baseline deltas, not retrospective narratives or relationship factors.</p>
           <div className="mt-5 grid gap-3 md:grid-cols-3">
             {thresholds.map((t) => (
-              <article key={t.outcome} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-[14px] font-semibold text-white">{t.outcome}</p>
-                <p className="mt-2 text-[12px] leading-relaxed text-slate-400">{t.condition}</p>
+              <article key={t.outcome} className="rounded-xl border border-border bg-muted/[0.03] p-4">
+                <p className="text-[14px] font-semibold text-foreground">{t.outcome}</p>
+                <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">{t.condition}</p>
               </article>
             ))}
           </div>
         </section>
 
         {/* Reporting artifacts */}
-        <section className="mt-6 rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.22)]">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Section J</p>
-          <h2 className="mt-2 font-serif text-[24px] leading-[1.15] text-white">Required pilot artifacts</h2>
+        <section className="mt-6 rounded-[1.75rem] border border-border bg-muted/[0.04] p-6 shadow-xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Section J</p>
+          <h2 className="mt-2 font-serif text-[24px] leading-[1.15] text-foreground">Required pilot artifacts</h2>
           <div className="mt-4 space-y-3">
             {reportingArtifacts.map((artifact) => (
               <div key={artifact.name} className="flex items-start gap-3">
-                <span className="font-bold text-orange-300">+</span>
+                <span className="font-bold text-primary">+</span>
                 <div>
-                  <p className="text-[14px] font-semibold text-white">{artifact.name}</p>
-                  <p className="text-[12px] text-slate-400">{artifact.cadence}</p>
+                  <p className="text-[14px] font-semibold text-foreground">{artifact.name}</p>
+                  <p className="text-[12px] text-muted-foreground">{artifact.cadence}</p>
                 </div>
               </div>
             ))}
@@ -138,14 +137,14 @@ export default function SearchFirmsTrialCharterPage() {
         </section>
 
         {/* Approval checklist */}
-        <section className="mt-6 rounded-[2rem] border border-white/10 bg-[linear-gradient(150deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] p-6 shadow-[0_20px_70px_rgba(15,23,42,0.24)] backdrop-blur-sm sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Section K</p>
-          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-white">Charter approval checklist</h2>
-          <p className="mt-3 text-[13px] leading-relaxed text-slate-400">All six items must be checked before charter is considered approved and pilot kickoff is authorized.</p>
-          <ul className="mt-5 space-y-3 text-[14px] leading-relaxed text-slate-200">
+        <section className="mt-6 rounded-[2rem] border border-border bg-muted/40 p-6 shadow-xl backdrop-blur-sm sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Section K</p>
+          <h2 className="mt-2 font-serif text-[26px] leading-[1.15] text-foreground">Charter approval checklist</h2>
+          <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">All six items must be checked before charter is considered approved and pilot kickoff is authorized.</p>
+          <ul className="mt-5 space-y-3 text-[14px] leading-relaxed text-foreground">
             {approvalChecklist.map((item) => (
               <li key={item} className="flex gap-3">
-                <span className="font-bold text-orange-300">+</span>
+                <span className="font-bold text-primary">+</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -153,28 +152,28 @@ export default function SearchFirmsTrialCharterPage() {
         </section>
 
         {/* CTA */}
-        <section className="mt-6 rounded-[2rem] border border-amber-200/25 bg-[linear-gradient(160deg,rgba(28,20,17,0.66),rgba(12,14,24,0.92))] p-6 shadow-[0_22px_80px_rgba(15,23,42,0.28)] backdrop-blur-sm sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Next step</p>
-          <h2 className="mt-3 font-serif text-[28px] leading-[1.15] text-white sm:text-[34px]">Complete the charter, then apply.</h2>
-          <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-slate-200">
+        <section className="mt-6 rounded-[2rem] border border-warning/25 bg-card/85 p-6 shadow-2xl backdrop-blur-sm sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Next step</p>
+          <h2 className="mt-3 font-serif text-[28px] leading-[1.15] text-foreground sm:text-[34px]">Complete the charter, then apply.</h2>
+          <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-foreground">
             If all six charter sections are complete and approved internally, submit your search-firm pilot application. An incomplete charter delays kickoff - legal and procurement reviews cannot begin without it.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/partners?channel=search-firms#apply"
-              className="rounded-full bg-orange-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-300"
+              className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Apply to partner program
             </Link>
             <Link
               href="/search-firms/trust"
-              className="rounded-full border border-white/18 px-5 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+              className="rounded-full border border-border px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
             >
               Review trust summary
             </Link>
             <Link
               href="/search-firms/procurement"
-              className="rounded-full border border-white/18 px-5 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+              className="rounded-full border border-border px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
             >
               Procurement path
             </Link>

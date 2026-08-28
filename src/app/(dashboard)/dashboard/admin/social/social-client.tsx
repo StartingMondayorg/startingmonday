@@ -1,23 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { ALLOWED_EMOTIONAL_ANGLES, type EmotionalAngle } from '@/lib/social-council-check'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Toggle } from '@/components/ui/toggle'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton, Textarea, Toggle } from '@/components/ui'
 type SocialPost = {
   id: string
   post_date: string
@@ -626,10 +610,10 @@ export function SocialClient() {
   if (!state.isPostDay) {
     return (
       <Card className="p-8 text-center">
-        <p className="text-[14px] font-semibold text-slate-900 mb-2">No post scheduled today.</p>
-        <p className="text-[13px] text-slate-500">Posts go out every weekday with audience rotation.</p>
+        <p className="text-[14px] font-semibold text-foreground mb-2">No post scheduled today.</p>
+        <p className="text-[13px] text-muted-foreground">Posts go out every weekday with audience rotation.</p>
         {state.nextPostDays.length > 0 && (
-          <p className="text-[12px] text-slate-400 mt-3">
+          <p className="text-[12px] text-muted-foreground mt-3">
             Next: {state.nextPostDays.map(d => formatDate(d)).join(', ')}
           </p>
         )}
@@ -649,7 +633,7 @@ export function SocialClient() {
       {/* Date + pillar header */}
       <Card className="px-6 py-5 flex-row items-center justify-between gap-4">
         <div>
-          <p className="text-[13px] font-semibold text-slate-900">{formatDate(dateStr)}</p>
+          <p className="text-[13px] font-semibold text-foreground">{formatDate(dateStr)}</p>
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <Badge>{pillarLabel}</Badge>
             {state.audienceLabel && (
@@ -669,8 +653,8 @@ export function SocialClient() {
               disabled={busy || post.is_posted}
               className={`h-auto text-[11px] font-bold px-2 py-0.5 rounded border ${
                 isApproved
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-400'
-                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-400'
+                  ? 'bg-success/10 text-success border-success/30 hover:bg-success/10 hover:border-success/30'
+                  : 'bg-muted text-muted-foreground border-border hover:bg-muted hover:border-border'
               }`}
             >
               {togglingApproval ? 'Saving…' : isApproved ? 'Approved' : 'Unapproved'}
@@ -691,12 +675,12 @@ export function SocialClient() {
       {/* Draft editor */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Post Draft</p>
+          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Post Draft</p>
           {isDirty && !saving && (
-            <span className="text-[11px] text-amber-600 font-medium">Unsaved edits</span>
+            <span className="text-[11px] text-warning font-medium">Unsaved edits</span>
           )}
           {saving && (
-            <span className="text-[11px] text-slate-400">Saving…</span>
+            <span className="text-[11px] text-muted-foreground">Saving…</span>
           )}
         </div>
         <Textarea
@@ -708,7 +692,7 @@ export function SocialClient() {
           className="text-[14px] leading-relaxed resize-none"
           placeholder="Draft will appear here…"
         />
-        <p className="mt-1.5 text-[11px] text-slate-300">{draftText.length} characters · Edits save on blur</p>
+        <p className="mt-1.5 text-[11px] text-muted-foreground">{draftText.length} characters · Edits save on blur</p>
       </Card>
 
       {/* Character count advisory */}
@@ -724,8 +708,8 @@ export function SocialClient() {
       <Card id="content-checker" className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Run Short-Form Council Check</p>
-            <p className="text-[12px] text-slate-500 mt-1">Server-enforced council gate for posts under 1200 characters.</p>
+            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Run Short-Form Council Check</p>
+            <p className="text-[12px] text-muted-foreground mt-1">Server-enforced council gate for posts under 1200 characters.</p>
           </div>
           <div className="flex items-center gap-2">
             <Select value={emotionalAngle} onValueChange={v => setEmotionalAngle(v as EmotionalAngle)}>
@@ -750,9 +734,9 @@ export function SocialClient() {
         </div>
 
         {councilCheck && (
-          <div className="mt-4 border-t border-slate-100 pt-4">
+          <div className="mt-4 border-t border-border pt-4">
             <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="text-[12px] font-bold text-slate-900">Score {councilCheck.score}/100</span>
+              <span className="text-[12px] font-bold text-foreground">Score {councilCheck.score}/100</span>
               <Badge variant="secondary">{councilCheck.characterCount} chars</Badge>
               {councilCheck.emotionalAngle && (
                 <Badge variant="info">Angle: {councilCheck.emotionalAngle.replace('_', ' ')}</Badge>
@@ -772,28 +756,28 @@ export function SocialClient() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
-              <p className="text-[11px] text-slate-600">Hook: <span className="font-semibold text-slate-800">{councilCheck.categories.hook}/25</span></p>
-              <p className="text-[11px] text-slate-600">Specificity: <span className="font-semibold text-slate-800">{councilCheck.categories.specificity}/20</span></p>
-              <p className="text-[11px] text-slate-600">Credibility: <span className="font-semibold text-slate-800">{councilCheck.categories.credibility}/20</span></p>
-              <p className="text-[11px] text-slate-600">Wit: <span className="font-semibold text-slate-800">{councilCheck.categories.wit}/15</span></p>
-              <p className="text-[11px] text-slate-600">Compression: <span className="font-semibold text-slate-800">{councilCheck.categories.compression}/10</span></p>
-              <p className="text-[11px] text-slate-600">CTA: <span className="font-semibold text-slate-800">{councilCheck.categories.cta}/10</span></p>
+              <p className="text-[11px] text-muted-foreground">Hook: <span className="font-semibold text-foreground">{councilCheck.categories.hook}/25</span></p>
+              <p className="text-[11px] text-muted-foreground">Specificity: <span className="font-semibold text-foreground">{councilCheck.categories.specificity}/20</span></p>
+              <p className="text-[11px] text-muted-foreground">Credibility: <span className="font-semibold text-foreground">{councilCheck.categories.credibility}/20</span></p>
+              <p className="text-[11px] text-muted-foreground">Wit: <span className="font-semibold text-foreground">{councilCheck.categories.wit}/15</span></p>
+              <p className="text-[11px] text-muted-foreground">Compression: <span className="font-semibold text-foreground">{councilCheck.categories.compression}/10</span></p>
+              <p className="text-[11px] text-muted-foreground">CTA: <span className="font-semibold text-foreground">{councilCheck.categories.cta}/10</span></p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              <p className="text-[11px] text-slate-600">Under 1200: <span className="font-semibold text-slate-800">{councilCheck.checks.under1200 ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">One core idea: <span className="font-semibold text-slate-800">{councilCheck.checks.oneCoreIdea ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">One CTA: <span className="font-semibold text-slate-800">{councilCheck.checks.oneCta ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">One humor line max: <span className="font-semibold text-slate-800">{councilCheck.checks.oneHumorLineMax ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">Real detail present: <span className="font-semibold text-slate-800">{councilCheck.checks.realDetail ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">Honest claim: <span className="font-semibold text-slate-800">{councilCheck.checks.honestClaim ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">Angle selected: <span className="font-semibold text-slate-800">{councilCheck.checks.emotionalAnglePresent ? 'PASS' : 'FAIL'}</span></p>
-              <p className="text-[11px] text-slate-600">Angle rotated: <span className="font-semibold text-slate-800">{councilCheck.checks.emotionalAngleRotation ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">Under 1200: <span className="font-semibold text-foreground">{councilCheck.checks.under1200 ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">One core idea: <span className="font-semibold text-foreground">{councilCheck.checks.oneCoreIdea ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">One CTA: <span className="font-semibold text-foreground">{councilCheck.checks.oneCta ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">One humor line max: <span className="font-semibold text-foreground">{councilCheck.checks.oneHumorLineMax ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">Real detail present: <span className="font-semibold text-foreground">{councilCheck.checks.realDetail ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">Honest claim: <span className="font-semibold text-foreground">{councilCheck.checks.honestClaim ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">Angle selected: <span className="font-semibold text-foreground">{councilCheck.checks.emotionalAnglePresent ? 'PASS' : 'FAIL'}</span></p>
+              <p className="text-[11px] text-muted-foreground">Angle rotated: <span className="font-semibold text-foreground">{councilCheck.checks.emotionalAngleRotation ? 'PASS' : 'FAIL'}</span></p>
             </div>
 
             <div>
-              <p className="text-[11px] font-semibold text-slate-700 mb-1">Top fixes</p>
-              <ul className="list-disc pl-5 text-[11px] text-slate-600 space-y-1">
+              <p className="text-[11px] font-semibold text-muted-foreground mb-1">Top fixes</p>
+              <ul className="list-disc pl-5 text-[11px] text-muted-foreground space-y-1">
                 {councilCheck.topFixes.map(fix => (
                   <li key={fix}>{fix}</li>
                 ))}
@@ -837,12 +821,12 @@ export function SocialClient() {
             variant="outline"
             onClick={handleMarkPosted}
             disabled={busy}
-            className="flex-1 text-green-700 border-green-200 bg-green-50 hover:border-green-400 hover:bg-green-50"
+            className="flex-1 text-success border-success/30 bg-success/10"
           >
             {markingPosted ? 'Saving…' : 'Mark posted (manual)'}
           </Button>
         ) : (
-          <div className="flex-1 text-center text-[13px] font-semibold text-green-700 border border-green-200 rounded px-5 py-3 bg-green-50">
+          <div className="flex-1 text-center text-[13px] font-semibold text-success border border-success/30 rounded px-5 py-3 bg-success/10">
             Posted
           </div>
         )}
@@ -852,8 +836,8 @@ export function SocialClient() {
       <Card className="p-6">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Handoff approved article</p>
-            <p className="text-[12px] text-slate-500 mt-1">
+            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Handoff approved article</p>
+            <p className="text-[12px] text-muted-foreground mt-1">
               One click queues approved variants into upcoming open social slots.
             </p>
             <div className="mt-2 flex items-center gap-2">
@@ -864,10 +848,10 @@ export function SocialClient() {
                 Add to Google Calendar
               </Button>
               {calendarReminderSaved && (
-                <span className="text-[11px] text-emerald-700">Downloaded</span>
+                <span className="text-[11px] text-success">Downloaded</span>
               )}
               {googleCalendarOpened && (
-                <span className="text-[11px] text-emerald-700">Opened</span>
+                <span className="text-[11px] text-success">Opened</span>
               )}
             </div>
           </div>
@@ -878,7 +862,7 @@ export function SocialClient() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Article title</Label>
+            <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">Article title</Label>
             <Input
               value={handoffTitle}
               onChange={e => setHandoffTitle(e.target.value)}
@@ -886,7 +870,7 @@ export function SocialClient() {
             />
           </div>
           <div>
-            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Article URL (optional)</Label>
+            <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">Article URL (optional)</Label>
             <Input
               value={handoffUrl}
               onChange={e => setHandoffUrl(e.target.value)}
@@ -894,7 +878,7 @@ export function SocialClient() {
             />
           </div>
           <div>
-            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Pillar</Label>
+            <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">Pillar</Label>
             <Select value={handoffPillar} onValueChange={v => setHandoffPillar(v as (typeof PILLAR_OPTIONS)[number]['value'])}>
               <SelectTrigger title="Select pillar" aria-label="Select pillar" className="w-full">
                 <SelectValue />
@@ -907,7 +891,7 @@ export function SocialClient() {
             </Select>
           </div>
           <div>
-            <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Audience (optional)</Label>
+            <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">Audience (optional)</Label>
             <Input
               value={handoffAudience}
               onChange={e => setHandoffAudience(e.target.value)}
@@ -917,7 +901,7 @@ export function SocialClient() {
         </div>
 
         <div className="mt-3">
-          <Label className="block text-[11px] font-semibold text-slate-500 mb-1">Article summary</Label>
+          <Label className="block text-[11px] font-semibold text-muted-foreground mb-1">Article summary</Label>
           <Textarea
             value={handoffSummary}
             onChange={e => setHandoffSummary(e.target.value)}
@@ -928,7 +912,7 @@ export function SocialClient() {
         </div>
 
         <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-end sm:justify-between">
-          <Label className="flex-col items-start text-[11px] font-semibold text-slate-500">
+          <Label className="flex-col items-start text-[11px] font-semibold text-muted-foreground">
             Variant count (1-5)
             <Input
               type="number"
@@ -944,7 +928,7 @@ export function SocialClient() {
             type="button"
             onClick={handleApprovedHandoff}
             disabled={busy || !handoffSummary.trim()}
-            className="bg-emerald-600 text-white hover:bg-emerald-600/80"
+            className="bg-success text-success-foreground hover:bg-success/80"
           >
             {handoffSubmitting ? 'Queueing…' : 'Handoff approved article'}
           </Button>
@@ -956,29 +940,29 @@ export function SocialClient() {
           </Alert>
         )}
 
-        <div className="mt-4 border-t border-slate-100 pt-4">
+        <div className="mt-4 border-t border-border pt-4">
           <div className="flex items-center justify-between gap-3 mb-2">
-            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Recent handoff runs</p>
-            {handoffHistoryLoading && <span className="text-[11px] text-slate-400">Loading…</span>}
+            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Recent handoff runs</p>
+            {handoffHistoryLoading && <span className="text-[11px] text-muted-foreground">Loading…</span>}
           </div>
 
           {!handoffHistoryLoading && handoffHistory.length === 0 && (
-            <p className="text-[12px] text-slate-500">No approved handoff runs yet.</p>
+            <p className="text-[12px] text-muted-foreground">No approved handoff runs yet.</p>
           )}
 
           {handoffHistory.length > 0 && (
             <div className="flex flex-col gap-2">
               {handoffHistory.slice(0, 5).map(run => (
-                <Card key={run.batchId} className="p-3 bg-slate-50">
+                <Card key={run.batchId} className="p-3 bg-muted">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                    <p className="text-[12px] font-semibold text-slate-800 truncate">
+                    <p className="text-[12px] font-semibold text-foreground truncate">
                       {run.articleTitle || 'Approved handoff'}
                     </p>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-muted-foreground">
                       {new Date(run.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                     </p>
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-600">
+                  <p className="mt-1 text-[11px] text-muted-foreground">
                     Queued dates: {run.dates.map(date => formatDate(date)).join(', ')}
                   </p>
                 </Card>
@@ -991,7 +975,7 @@ export function SocialClient() {
       {/* Connection outreach */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">LinkedIn Connection Messages</p>
+          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground">LinkedIn Connection Messages</p>
           <div className="flex gap-2">
             <Button render={<a href={LINKEDIN_MESSAGING_URL} target="_blank" rel="noopener noreferrer" />} variant="outline" size="sm">
               Open Messaging
@@ -1003,9 +987,9 @@ export function SocialClient() {
         </div>
         <div className="flex flex-col gap-4">
           {CONNECTION_TEMPLATES.map((template, i) => (
-            <Card key={template.label} className="p-4 bg-slate-50">
+            <Card key={template.label} className="p-4 bg-muted">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.07em]">{template.label}</span>
+                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.07em]">{template.label}</span>
                 <Button type="button" variant="outline" size="sm" onClick={() => handleCopyTemplate(i)}>
                   {copiedTemplate === i ? 'Copied!' : 'Copy'}
                 </Button>
@@ -1016,9 +1000,9 @@ export function SocialClient() {
                 rows={3}
                 title={template.label}
                 placeholder="Edit connection message…"
-                className="leading-relaxed resize-none bg-white"
+                className="leading-relaxed resize-none bg-card"
               />
-              <p className="mt-1 text-[11px] text-slate-300">{connectionTexts[i].length} chars</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">{connectionTexts[i].length} chars</p>
             </Card>
           ))}
         </div>
@@ -1027,12 +1011,12 @@ export function SocialClient() {
       {/* Notes */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400">Notes (engagement, replies, reach)</p>
+          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Notes (engagement, replies, reach)</p>
           {isNotesDirty && !savingNotes && (
-            <span className="text-[11px] text-amber-600 font-medium">Unsaved</span>
+            <span className="text-[11px] text-warning font-medium">Unsaved</span>
           )}
           {savingNotes && (
-            <span className="text-[11px] text-slate-400">Saving…</span>
+            <span className="text-[11px] text-muted-foreground">Saving…</span>
           )}
         </div>
         <Textarea

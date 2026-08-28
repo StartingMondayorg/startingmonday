@@ -1,7 +1,6 @@
 import { NextBestActionPrompt } from '@/app/(dashboard)/dashboard/_components/NextBestActionPrompt'
 import { DashboardPathWelcomeCard } from './path-welcome-card'
-import { Button } from '@/components/ui/button'
-
+import { Button } from '@/components/ui'
 type StallNudge = {
   headline: string
   body: string
@@ -78,7 +77,7 @@ export function DashboardWelcomeNudgeSection({
               type="submit"
               variant="ghost"
               size="icon"
-              className="text-amber-600 hover:text-amber-900 hover:bg-transparent"
+              className="text-warning hover:bg-transparent"
               aria-label="Dismiss"
             >
               ✕

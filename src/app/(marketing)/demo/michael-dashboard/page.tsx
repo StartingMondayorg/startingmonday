@@ -53,16 +53,15 @@ const RELATIONSHIP_QUEUE = [
 
 export default function MichaelDashboardPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-background font-sans text-foreground">
 
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:gap-6 sm:px-6">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] transition-opacity hover:opacity-80">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/demo/michael-strategy-brief" className="text-[14px] font-semibold text-slate-300 hover:text-white transition-colors">
+            <Link href="/demo/michael-strategy-brief" className="text-[14px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
               Strategy brief
             </Link>
           </div>
@@ -70,10 +69,10 @@ export default function MichaelDashboardPage() {
       </header>
 
       <main className="dashboard-landing-theme max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
-        <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-          <p className="text-[14px] font-semibold tracking-[0.08em] text-orange-200">Prefilled operating dashboard demo</p>
-          <h1 className="mt-2 font-serif text-[28px] leading-tight text-white sm:text-[34px]">Michael Torres · VP of IT transition dashboard</h1>
-          <p className="mt-2 text-[15px] leading-relaxed text-slate-200">New dashboard style with Michael Torres data prefilled for fast walkthrough: priorities, signals, pipeline, and next actions.</p>
+        <div className="mb-4 rounded-2xl border border-border bg-muted/[0.03] p-4 sm:p-5">
+          <p className="text-[14px] font-semibold tracking-[0.08em] text-primary">Prefilled operating dashboard demo</p>
+          <h1 className="mt-2 font-serif text-[28px] leading-tight text-foreground sm:text-[34px]">Michael Torres · VP of IT transition dashboard</h1>
+          <p className="mt-2 text-[15px] leading-relaxed text-foreground">New dashboard style with Michael Torres data prefilled for fast walkthrough: priorities, signals, pipeline, and next actions.</p>
         </div>
 
         <DashboardTopShellSection
@@ -115,48 +114,48 @@ export default function MichaelDashboardPage() {
         <DailyMomentumPlan actions={michaelActions} dateKey={new Date().toISOString().slice(0, 10)} status="medium" />
 
         <section className="mt-5 grid gap-4 lg:grid-cols-2">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-            <p className="text-[14px] font-semibold tracking-[0.08em] text-orange-200">Michael pipeline snapshot</p>
+          <article className="rounded-2xl border border-border bg-muted/[0.03] p-5">
+            <p className="text-[14px] font-semibold tracking-[0.08em] text-primary">Michael pipeline snapshot</p>
             <div className="mt-3 space-y-2.5">
               {PIPELINE.map((item) => (
-                <div key={item.company} className="rounded-xl border border-white/10 bg-slate-950/45 p-3">
-                  <p className="text-[14px] font-semibold text-white">{item.company} · {item.stage}</p>
-                  <p className="mt-1 text-[14px] text-slate-300">Owner: {item.owner}</p>
-                  <p className="mt-1 text-[14px] text-slate-200">Next action: {item.nextAction}</p>
+                <div key={item.company} className="rounded-xl border border-border bg-background/45 p-3">
+                  <p className="text-[14px] font-semibold text-foreground">{item.company} · {item.stage}</p>
+                  <p className="mt-1 text-[14px] text-muted-foreground">Owner: {item.owner}</p>
+                  <p className="mt-1 text-[14px] text-foreground">Next action: {item.nextAction}</p>
                 </div>
               ))}
             </div>
           </article>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-            <p className="text-[14px] font-semibold tracking-[0.08em] text-orange-200">Key relationships</p>
+          <article className="rounded-2xl border border-border bg-muted/[0.03] p-5">
+            <p className="text-[14px] font-semibold tracking-[0.08em] text-primary">Key relationships</p>
             <div className="mt-3 space-y-2.5">
               {KEY_CONTACTS.map((contact) => (
-                <div key={contact.name} className="rounded-xl border border-white/10 bg-slate-950/45 p-3">
-                  <p className="text-[14px] font-semibold text-white">{contact.name}</p>
-                  <p className="mt-1 text-[14px] text-slate-300">{contact.role}</p>
-                  <p className="mt-1 text-[14px] text-slate-200">Status: {contact.status} · Last touch: {contact.lastTouch}</p>
+                <div key={contact.name} className="rounded-xl border border-border bg-background/45 p-3">
+                  <p className="text-[14px] font-semibold text-foreground">{contact.name}</p>
+                  <p className="mt-1 text-[14px] text-muted-foreground">{contact.role}</p>
+                  <p className="mt-1 text-[14px] text-foreground">Status: {contact.status} · Last touch: {contact.lastTouch}</p>
                 </div>
               ))}
             </div>
           </article>
         </section>
 
-        <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          <p className="text-[14px] font-semibold tracking-[0.08em] text-orange-200">Weekly relationship action queue</p>
+        <section className="mt-4 rounded-2xl border border-border bg-muted/[0.03] p-5">
+          <p className="text-[14px] font-semibold tracking-[0.08em] text-primary">Weekly relationship action queue</p>
           <div className="mt-3 grid gap-2.5 md:grid-cols-3">
             {RELATIONSHIP_QUEUE.map((item) => (
-              <article key={item.action} className="rounded-xl border border-white/10 bg-slate-950/45 p-3">
+              <article key={item.action} className="rounded-xl border border-border bg-background/45 p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-[14px] font-semibold text-white">{item.due}</p>
-                  <span className="rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 text-[12px] font-semibold text-orange-200">{item.status}</span>
+                  <p className="text-[14px] font-semibold text-foreground">{item.due}</p>
+                  <span className="rounded-full border border-border bg-muted/[0.06] px-2 py-0.5 text-[12px] font-semibold text-primary">{item.status}</span>
                 </div>
-                <p className="mt-1 text-[14px] font-semibold text-slate-100">{item.action}</p>
-                <p className="mt-1 text-[14px] text-slate-300">{item.note}</p>
+                <p className="mt-1 text-[14px] font-semibold text-foreground">{item.action}</p>
+                <p className="mt-1 text-[14px] text-muted-foreground">{item.note}</p>
               </article>
             ))}
           </div>
-          <p className="mt-3 text-[14px] leading-relaxed text-slate-400">Trust layer: each queue item is tied to role-timing signals and decision-path relevance, with uncertainty surfaced before outreach.</p>
+          <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">Trust layer: each queue item is tied to role-timing signals and decision-path relevance, with uncertainty surfaced before outreach.</p>
         </section>
       
         <p className="sr-only">Private by default. We do not share your data with recruiters, employers, or third parties.</p>

@@ -1,18 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
-
+import { Badge, Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 type LoadState<T> =
   | { status: 'loading' }
   | { status: 'error'; error: string }
@@ -177,8 +166,8 @@ export default function WedgeFunnelsClient() {
       <Card variant="glass" className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-slate-400">Unified wedge monitor</p>
-            <p className="mt-1 text-[13px] text-slate-300">Single pane for shortlist and partner pilot health.</p>
+            <p className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Unified wedge monitor</p>
+            <p className="mt-1 text-[13px] text-muted-foreground">Single pane for shortlist and partner pilot health.</p>
           </div>
           <div className="flex items-center gap-2">
             <StatusBadge ok={systemHealthy}>{systemHealthy ? 'all feeds healthy' : 'attention needed'}</StatusBadge>
@@ -193,26 +182,26 @@ export default function WedgeFunnelsClient() {
             </Button>
           </div>
         </div>
-        {persistError ? <p className="mt-3 text-[13px] text-rose-300">{persistError}</p> : null}
+        {persistError ? <p className="mt-3 text-[13px] text-destructive">{persistError}</p> : null}
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <a href="/api/admin/automation/reporting/wedge-funnel-scorecard?lookbackDays=30" className="block">
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
               Wedge scorecard API
             </Card>
           </a>
           <a href="/api/admin/automation/reporting/shortlist-sprint-funnel?lookbackDays=30" className="block">
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
               Shortlist funnel API
             </Card>
           </a>
           <a href="/api/admin/automation/reporting/wedge-epic-closeout?lookbackDays=30" className="block">
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
               SMK-395/398/401 closeout artifact API
             </Card>
           </a>
           <a href="/api/cron/wedge-weekly-scorecard" className="block sm:col-span-2">
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200 hover:border-white/30">
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
               Weekly cron trigger API (requires cron secret)
             </Card>
           </a>
@@ -221,20 +210,20 @@ export default function WedgeFunnelsClient() {
 
       <Card variant="glass" className="mt-6 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Scale or stop decision gate</p>
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Scale or stop decision gate</p>
           {decision ? <DecisionBadge decision={decision.summary} /> : null}
         </div>
-        {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-slate-300">Loading...</p> : null}
-        {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-rose-300">{scorecard.error}</p> : null}
+        {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-muted-foreground">Loading...</p> : null}
+        {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-destructive">{scorecard.error}</p> : null}
         {decision ? (
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[13px] text-slate-200">
-              <p>Direct paid sprint: <span className="font-semibold text-white">{decision.motion1_direct_paid_sprint}</span></p>
-              <p className="mt-1">Partner pilot: <span className="font-semibold text-white">{decision.motion2_partner_pilot}</span></p>
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[13px] text-foreground">
+              <p>Direct paid sprint: <span className="font-semibold text-foreground">{decision.motion1_direct_paid_sprint}</span></p>
+              <p className="mt-1">Partner pilot: <span className="font-semibold text-foreground">{decision.motion2_partner_pilot}</span></p>
             </Card>
-            <ul className="space-y-1.5 text-[13px] text-slate-200">
+            <ul className="space-y-1.5 text-[13px] text-foreground">
               {decision.reasons.map((reason) => (
-                <li key={reason} className="flex gap-2"><span className="text-orange-300">+</span><span>{reason}</span></li>
+                <li key={reason} className="flex gap-2"><span className="text-primary">+</span><span>{reason}</span></li>
               ))}
             </ul>
           </div>
@@ -242,21 +231,21 @@ export default function WedgeFunnelsClient() {
 
         {trend ? (
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
-              <p className="text-slate-400">Purchase WoW</p>
-              <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.purchase_rate_from_checkout_delta, '%')}</p>
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
+              <p className="text-muted-foreground">Purchase WoW</p>
+              <p className="mt-1 text-[14px] font-semibold text-foreground">{deltaText(trend.purchase_rate_from_checkout_delta, '%')}</p>
             </Card>
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
-              <p className="text-slate-400">Delivery WoW</p>
-              <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.delivery_completion_rate_delta, '%')}</p>
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
+              <p className="text-muted-foreground">Delivery WoW</p>
+              <p className="mt-1 text-[14px] font-semibold text-foreground">{deltaText(trend.delivery_completion_rate_delta, '%')}</p>
             </Card>
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
-              <p className="text-slate-400">Seats Active WoW</p>
-              <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.seats_active_rate_delta, '%')}</p>
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
+              <p className="text-muted-foreground">Seats Active WoW</p>
+              <p className="mt-1 text-[14px] font-semibold text-foreground">{deltaText(trend.seats_active_rate_delta, '%')}</p>
             </Card>
-            <Card variant="glass" className="border-white/10 bg-slate-950/40 p-3 text-[12px] text-slate-200">
-              <p className="text-slate-400">At-risk Seats WoW</p>
-              <p className="mt-1 text-[14px] font-semibold text-white">{deltaText(trend.at_risk_seats_delta)}</p>
+            <Card variant="glass" className="border-border bg-background/40 p-3 text-[12px] text-foreground">
+              <p className="text-muted-foreground">At-risk Seats WoW</p>
+              <p className="mt-1 text-[14px] font-semibold text-foreground">{deltaText(trend.at_risk_seats_delta)}</p>
             </Card>
           </div>
         ) : null}
@@ -264,17 +253,17 @@ export default function WedgeFunnelsClient() {
 
       <Card variant="glass" className="mt-6 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Weekly snapshot history</p>
-          <span className="text-[12px] text-slate-300">Latest 8 weeks</span>
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Weekly snapshot history</p>
+          <span className="text-[12px] text-muted-foreground">Latest 8 weeks</span>
         </div>
 
         {snapshotHistory.length === 0 ? (
-          <p className="mt-3 text-[13px] text-slate-300">No snapshots saved yet. Use Save weekly snapshot to persist the current run.</p>
+          <p className="mt-3 text-[13px] text-muted-foreground">No snapshots saved yet. Use Save weekly snapshot to persist the current run.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <Table className="text-left text-[12px] text-slate-200">
+            <Table className="text-left text-[12px] text-foreground">
               <TableHeader>
-                <TableRow className="border-white/10 text-slate-400">
+                <TableRow className="border-border text-muted-foreground">
                   <TableHead className="py-2 pr-4">Week</TableHead>
                   <TableHead className="py-2 pr-4">Purchase rate</TableHead>
                   <TableHead className="py-2 pr-4">Delivery rate</TableHead>
@@ -285,7 +274,7 @@ export default function WedgeFunnelsClient() {
               </TableHeader>
               <TableBody>
                 {snapshotHistory.map((row) => (
-                  <TableRow key={`${row.week_start}-${row.generated_at}`} className="border-white/5">
+                  <TableRow key={`${row.week_start}-${row.generated_at}`} className="border-border">
                     <TableCell className="py-2 pr-4">{row.week_start}</TableCell>
                     <TableCell className="py-2 pr-4">{row.shortlist_purchase_rate_from_checkout}%</TableCell>
                     <TableCell className="py-2 pr-4">{row.shortlist_delivery_completion_rate}%</TableCell>
@@ -302,17 +291,17 @@ export default function WedgeFunnelsClient() {
 
       <Card variant="glass" className="mt-6 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Cron execution log</p>
-          <span className="text-[12px] text-slate-300">Latest 8 runs</span>
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Cron execution log</p>
+          <span className="text-[12px] text-muted-foreground">Latest 8 runs</span>
         </div>
 
         {cronRuns.length === 0 ? (
-          <p className="mt-3 text-[13px] text-slate-300">No cron runs logged yet.</p>
+          <p className="mt-3 text-[13px] text-muted-foreground">No cron runs logged yet.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <Table className="text-left text-[12px] text-slate-200">
+            <Table className="text-left text-[12px] text-foreground">
               <TableHeader>
-                <TableRow className="border-white/10 text-slate-400">
+                <TableRow className="border-border text-muted-foreground">
                   <TableHead className="py-2 pr-4">Triggered</TableHead>
                   <TableHead className="py-2 pr-4">Duration</TableHead>
                   <TableHead className="py-2 pr-4">HTTP</TableHead>
@@ -323,7 +312,7 @@ export default function WedgeFunnelsClient() {
               </TableHeader>
               <TableBody>
                 {cronRuns.map((run) => (
-                  <TableRow key={run.triggered_at} className="border-white/5">
+                  <TableRow key={run.triggered_at} className="border-border">
                     <TableCell className="py-2 pr-4">{new Date(run.triggered_at).toISOString()}</TableCell>
                     <TableCell className="py-2 pr-4">{run.duration_ms}ms</TableCell>
                     <TableCell className="py-2 pr-4">{run.http_status}</TableCell>
@@ -341,37 +330,37 @@ export default function WedgeFunnelsClient() {
       <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card variant="glass" className="p-5">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Shortlist sprint</p>
+            <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Shortlist sprint</p>
             <StatusBadge ok={scorecard.status === 'ready'}>{scorecard.status}</StatusBadge>
           </div>
-          {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-slate-300">Loading...</p> : null}
-          {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-rose-300">{scorecard.error}</p> : null}
+          {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-muted-foreground">Loading...</p> : null}
+          {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-destructive">{scorecard.error}</p> : null}
           {shortlistMetrics ? (
-            <div className="mt-3 space-y-2 text-[13px] text-slate-200">
-              <p>Viewed users: <span className="font-semibold text-white">{shortlistMetrics.viewed_users}</span></p>
-              <p>CTA click-through: <span className="font-semibold text-white">{shortlistMetrics.cta_click_through_rate}%</span></p>
-              <p>Checkout start rate: <span className="font-semibold text-white">{shortlistMetrics.checkout_start_rate}%</span></p>
-              <p>Purchase from checkout: <span className="font-semibold text-white">{shortlistMetrics.purchase_rate_from_checkout}%</span></p>
-              <p>Delivery completion: <span className="font-semibold text-white">{shortlistMetrics.delivery_completion_rate}%</span></p>
-              <p>Credit application: <span className="font-semibold text-white">{shortlistMetrics.credit_application_rate}%</span></p>
+            <div className="mt-3 space-y-2 text-[13px] text-foreground">
+              <p>Viewed users: <span className="font-semibold text-foreground">{shortlistMetrics.viewed_users}</span></p>
+              <p>CTA click-through: <span className="font-semibold text-foreground">{shortlistMetrics.cta_click_through_rate}%</span></p>
+              <p>Checkout start rate: <span className="font-semibold text-foreground">{shortlistMetrics.checkout_start_rate}%</span></p>
+              <p>Purchase from checkout: <span className="font-semibold text-foreground">{shortlistMetrics.purchase_rate_from_checkout}%</span></p>
+              <p>Delivery completion: <span className="font-semibold text-foreground">{shortlistMetrics.delivery_completion_rate}%</span></p>
+              <p>Credit application: <span className="font-semibold text-foreground">{shortlistMetrics.credit_application_rate}%</span></p>
             </div>
           ) : null}
         </Card>
 
         <Card variant="glass" className="p-5">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Partner pilot</p>
+            <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Partner pilot</p>
             <StatusBadge ok={scorecard.status === 'ready'}>{scorecard.status}</StatusBadge>
           </div>
-          {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-slate-300">Loading...</p> : null}
-          {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-rose-300">{scorecard.error}</p> : null}
+          {scorecard.status === 'loading' ? <p className="mt-3 text-[13px] text-muted-foreground">Loading...</p> : null}
+          {scorecard.status === 'error' ? <p className="mt-3 text-[13px] text-destructive">{scorecard.error}</p> : null}
           {pilotMetrics ? (
-            <div className="mt-3 space-y-2 text-[13px] text-slate-200">
-              <p>Seats total: <span className="font-semibold text-white">{pilotMetrics.seats_total}</span></p>
-              <p>Seats active rate: <span className="font-semibold text-white">{pilotMetrics.seats_active_rate}%</span></p>
-              <p>At-risk seats: <span className="font-semibold text-white">{pilotMetrics.at_risk_seats}</span></p>
-              <p>Seat updates logged: <span className="font-semibold text-white">{pilotMetrics.seat_updates_logged}</span></p>
-              <p>Partner accounts active: <span className="font-semibold text-white">{pilotMetrics.partner_accounts_active}</span></p>
+            <div className="mt-3 space-y-2 text-[13px] text-foreground">
+              <p>Seats total: <span className="font-semibold text-foreground">{pilotMetrics.seats_total}</span></p>
+              <p>Seats active rate: <span className="font-semibold text-foreground">{pilotMetrics.seats_active_rate}%</span></p>
+              <p>At-risk seats: <span className="font-semibold text-foreground">{pilotMetrics.at_risk_seats}</span></p>
+              <p>Seat updates logged: <span className="font-semibold text-foreground">{pilotMetrics.seat_updates_logged}</span></p>
+              <p>Partner accounts active: <span className="font-semibold text-foreground">{pilotMetrics.partner_accounts_active}</span></p>
             </div>
           ) : null}
         </Card>

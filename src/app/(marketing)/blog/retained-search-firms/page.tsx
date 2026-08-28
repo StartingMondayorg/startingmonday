@@ -36,7 +36,7 @@ export default function RetainedSearchFirmsPage() {
       url="https://startingmonday.app/blog/retained-search-firms"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           The retained search firm is paid by the company doing the hiring. That single fact explains
           almost everything about how the relationship works and where most candidates go wrong.
@@ -49,7 +49,7 @@ export default function RetainedSearchFirmsPage() {
           than the candidate who expects the firm to advocate for them.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How retained search actually works</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How retained search actually works</h2>
 
         <p>
           A retained search begins when a company pays a firm a fee, typically one-third of first-year
@@ -65,7 +65,7 @@ export default function RetainedSearchFirmsPage() {
           make the client want you.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Getting in the file versus getting on the short list</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Getting in the file versus getting on the short list</h2>
 
         <p>
           Most candidates approach search firms with the goal of getting a call. The real goal is being
@@ -85,7 +85,7 @@ export default function RetainedSearchFirmsPage() {
           needed them.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The relationship before the search opens</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The relationship before the search opens</h2>
 
         <p>
           The right way to build a relationship with a search firm is to be useful before you need
@@ -99,7 +99,7 @@ export default function RetainedSearchFirmsPage() {
           in reflects that memory.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What to say in the first call</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What to say in the first call</h2>
 
         <p>
           The first call with a search firm partner is a screening call whether or not it is presented
@@ -120,7 +120,7 @@ export default function RetainedSearchFirmsPage() {
           do, and pressure to be presented before the relationship is established.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Following up without becoming a nuisance</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Following up without becoming a nuisance</h2>
 
         <p>
           The right follow-up cadence with a search firm is quarterly when you are not in active search
@@ -135,7 +135,7 @@ export default function RetainedSearchFirmsPage() {
           the search is moving slowly. Neither is solved by more outreach.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">When the firm comes to you</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">When the firm comes to you</h2>
 
         <p>
           The call you want from a search firm is the one where they are presenting you, not screening
@@ -150,7 +150,7 @@ export default function RetainedSearchFirmsPage() {
           opens that does match your timing.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday tracks</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday tracks</h2>
 
         <p>
           Starting Monday logs every search firm conversation and every referral in the pipeline, so
@@ -161,7 +161,7 @@ export default function RetainedSearchFirmsPage() {
         <p>
           The platform also monitors the organizational signals that precede retained searches before
           the search firms receive the mandate. The{' '}
-          <Link href="/for-cio" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-cio" className="text-foreground underline hover:text-muted-foreground transition-colors">
             early role intelligence feature
           </Link>{' '}
           surfaces those signals so you can reach out to the right firm partners before the search

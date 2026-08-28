@@ -42,19 +42,19 @@ export default function ConfidentialExecutiveSearchPipelinePage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           A confidential executive search needs two things at once: velocity and discretion. Most campaigns get one and lose the other.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Core constraints</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Core constraints</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>No broad-market signaling that exposes intent.</li>
           <li>No uncontrolled message forwarding risk.</li>
           <li>No ad hoc contact strategy that leaks pattern changes.</li>
         </ul>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Pipeline architecture</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Pipeline architecture</h2>
         <ol className="list-decimal pl-5 space-y-2">
           <li>Segment contacts into trusted, monitored, and deferred tiers.</li>
           <li>Use low-leak language templates with role-relevant context.</li>
@@ -62,12 +62,12 @@ export default function ConfidentialExecutiveSearchPipelinePage() {
           <li>Review risk weekly and remove weak opportunities fast.</li>
         </ol>
 
-        <section className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <h2 className="text-[18px] font-bold text-slate-900 mb-2">Evidence path</h2>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-3">
+        <section className="border border-border rounded-lg p-5 bg-muted">
+          <h2 className="text-[18px] font-bold text-foreground mb-2">Evidence path</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">
             For execution consistency and confidentiality-compatible operating models, review the behavior section below.
           </p>
-          <Link href="/evidence-hub#behavior-change" className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded hover:bg-slate-700 transition-colors">
+          <Link href="/evidence-hub#behavior-change" className="inline-block bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 rounded hover:bg-muted transition-colors">
             See behavior-change evidence
           </Link>
         </section>

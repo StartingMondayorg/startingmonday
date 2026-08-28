@@ -42,23 +42,23 @@ export default function SourceBackedExecutiveCareerNarrativePage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>Executive narrative quality improves when each core claim is supported by context, quantified outcomes, and external validation where possible.</p>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Narrative components</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Narrative components</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>Mandate context and constraints</li>
           <li>Decision logic and trade-offs</li>
           <li>Business outcomes and system impact</li>
           <li>Leadership influence across stakeholders</li>
         </ul>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Evidence attachment model</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Evidence attachment model</h2>
         <p>For each claim, attach one proof artifact or quantified result. This improves credibility and reduces committee ambiguity.</p>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Story testing</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Story testing</h2>
         <p>Test your narrative in low-risk conversations first, then tighten where comprehension or confidence drops.</p>
-        <section className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <h2 className="text-[18px] font-bold text-slate-900 mb-2">Evidence path</h2>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-3">See communication and visibility evidence for narrative effectiveness.</p>
-          <Link href="/evidence-hub#organizational-visibility" className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded hover:bg-slate-700 transition-colors">Review organizational-visibility evidence</Link>
+        <section className="border border-border rounded-lg p-5 bg-muted">
+          <h2 className="text-[18px] font-bold text-foreground mb-2">Evidence path</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">See communication and visibility evidence for narrative effectiveness.</p>
+          <Link href="/evidence-hub#organizational-visibility" className="inline-block bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 rounded hover:bg-muted transition-colors">Review organizational-visibility evidence</Link>
         </section>
       </div>
     </BlogPost>

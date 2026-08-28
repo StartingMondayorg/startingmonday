@@ -68,7 +68,8 @@ describe('scoreClass', () => {
     const low = scoreClass(30)
     expect(high).not.toBe(mid)
     expect(mid).not.toBe(low)
-    expect(high).toContain('green')
-    expect(mid).toContain('amber')
+    // Semantic tokens now, not raw hues: green -> success, amber -> warning.
+    expect(high).toContain('success')
+    expect(mid).toContain('warning')
   })
 })

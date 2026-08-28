@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 export default function MockCoachDashboardPage() {
   return (
     <div className={`min-h-screen ${DASHBOARD_THEME.appBg} ${DASHBOARD_THEME.inkStrong}`}>
-      <nav className="border-b border-slate-800 bg-slate-950 text-white">
+      <nav className="border-b border-border bg-background text-foreground">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[10px] font-bold tracking-[0.16em] transition-opacity hover:opacity-80">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/coaches" className="text-[13px] text-slate-200 transition-colors hover:text-white">
+          <Link href="/coaches" className="text-[13px] text-muted-foreground transition-colors hover:text-foreground">
             Back to coaches
           </Link>
         </div>
@@ -29,7 +29,7 @@ export default function MockCoachDashboardPage() {
 
       <header className={`border-b px-4 py-10 sm:px-6 sm:py-12 ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
         <div className="mx-auto max-w-6xl">
-          <p className="text-[10px] font-semibold tracking-[0.16em] text-orange-600">Mock coach dashboard</p>
+          <p className="text-[10px] font-semibold tracking-[0.16em] text-primary">Mock coach dashboard</p>
           <h1 className={`mt-2 font-serif text-[34px] font-semibold leading-[1.08] tracking-tight sm:text-[42px] ${DASHBOARD_THEME.inkStrong}`}>
             Your next coaching session should start with decisions, not recap.
           </h1>
@@ -45,9 +45,9 @@ export default function MockCoachDashboardPage() {
           <p className={`mt-2 text-[12px] ${DASHBOARD_THEME.metalStrong}`}>Source: Bozer and Jones, 2018.</p>
           <div className="mt-5 flex flex-wrap items-center gap-2 text-[11px]">
             <span className={`font-semibold tracking-[0.08em] ${DASHBOARD_THEME.metalStrong}`}>Scan by state:</span>
-            <span className="rounded-full border border-rose-200 bg-rose-100 px-2 py-1 font-semibold text-rose-800">High risk</span>
-            <span className="rounded-full border border-amber-200 bg-amber-100 px-2 py-1 font-semibold text-amber-900">Needs intervention</span>
-            <span className="rounded-full border border-emerald-200 bg-emerald-100 px-2 py-1 font-semibold text-emerald-800">Stable</span>
+            <span className="rounded-full border border-destructive/30 bg-destructive/10 px-2 py-1 font-semibold text-destructive">High risk</span>
+            <span className="rounded-full border border-warning/30 bg-warning/10 px-2 py-1 font-semibold text-warning">Needs intervention</span>
+            <span className="rounded-full border border-success/30 bg-success/10 px-2 py-1 font-semibold text-success">Stable</span>
           </div>
         </div>
       </header>
@@ -55,7 +55,7 @@ export default function MockCoachDashboardPage() {
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 sm:py-10">
         <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {MOCK_PORTFOLIO_KPIS.map((kpi) => (
-            <article key={kpi.label} className={`rounded-xl border p-4 shadow-[0_6px_22px_rgba(15,23,42,0.06)] ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+            <article key={kpi.label} className={`rounded-xl border p-4 shadow-md ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
               <p className={`text-[11px] font-semibold tracking-[0.1em] ${DASHBOARD_THEME.metalStrong}`}>{kpi.label}</p>
               <p className={`mt-2 text-[28px] font-semibold leading-none ${DASHBOARD_THEME.inkStrong}`}>{kpi.value}</p>
               <p className={`mt-1 text-[12px] ${DASHBOARD_THEME.metal}`}>{kpi.note}</p>
@@ -63,7 +63,7 @@ export default function MockCoachDashboardPage() {
           ))}
         </section>
 
-        <section className={`rounded-2xl border p-5 shadow-[0_10px_30px_rgba(15,23,42,0.08)] ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
+        <section className={`rounded-2xl border p-5 shadow-md ${DASHBOARD_THEME.panelBorder} ${DASHBOARD_THEME.paper}`}>
           <div className="mb-4 flex items-center justify-between gap-3">
             <p className={`text-[11px] font-semibold tracking-[0.12em] ${DASHBOARD_THEME.metalStrong}`}>Portfolio command center</p>
             <p className={`text-[12px] ${DASHBOARD_THEME.metalStrong}`}>Click any client to open the detailed coach dashboard</p>
@@ -84,9 +84,9 @@ export default function MockCoachDashboardPage() {
                 {MOCK_CLIENTS.map((client) => {
                   const statusTone = getClientStatusTone(client.status)
                   return (
-                  <tr key={client.id} className={`border-b border-white/10 align-top transition-colors hover:bg-white/5 ${statusTone.border}`}>
+                  <tr key={client.id} className={`border-b border-border align-top transition-colors hover:bg-muted/40 ${statusTone.border}`}>
                     <td className="py-3 pr-3">
-                      <Link href={`/coaches/mock-dashboard/${client.id}`} className={`text-[13px] font-semibold ${DASHBOARD_THEME.inkStrong} hover:text-orange-700`}>
+                      <Link href={`/coaches/mock-dashboard/${client.id}`} className={`text-[13px] font-semibold ${DASHBOARD_THEME.inkStrong} hover:text-primary`}>
                         {client.name}
                       </Link>
                     </td>
@@ -107,21 +107,21 @@ export default function MockCoachDashboardPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-slate-950 p-6 text-white">
+        <section className="rounded-2xl border border-border bg-background p-6 text-foreground">
           <h2 className="text-[23px] font-bold leading-tight">When this is live, coaching quality compounds.</h2>
-          <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-slate-200">
+          <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-foreground">
             You spend less time chasing status and more time making high-leverage calls with clients.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/partners#apply"
-              className="inline-flex items-center justify-center rounded bg-orange-500 px-6 py-3 text-[14px] font-semibold text-slate-900 transition-colors hover:bg-orange-600"
+              className="inline-flex items-center justify-center rounded bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Request the coach preview
             </Link>
             <Link
               href="/dashboard/coach"
-              className="inline-flex items-center justify-center rounded border border-slate-600 px-6 py-3 text-[14px] font-semibold text-slate-200 transition-colors hover:border-slate-400 hover:text-white"
+              className="inline-flex items-center justify-center rounded border border-border px-6 py-3 text-[14px] font-semibold text-muted-foreground transition-colors hover:text-foreground"
             >
               Open live coach dashboard
             </Link>

@@ -28,16 +28,16 @@ export default async function CoachPersonaDetailPage({ params }: { params: Promi
   if (!persona) notFound()
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-14 text-white sm:px-6 sm:py-20">
+    <main className="min-h-screen bg-background px-4 py-14 text-foreground sm:px-6 sm:py-20">
       <div className="mx-auto max-w-4xl">
-        <p className="mb-4 text-[11px] font-bold tracking-[0.18em] uppercase text-orange-400">Coach persona</p>
+        <p className="mb-4 text-[11px] font-bold tracking-[0.18em] uppercase text-primary">Coach persona</p>
         <h1 className="text-[34px] font-bold leading-[1.06] tracking-tight sm:text-[46px]">{persona.label}</h1>
-        <p className="mt-4 max-w-3xl text-[16px] leading-relaxed text-slate-300 sm:text-[17px]">{persona.summary}</p>
+        <p className="mt-4 max-w-3xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">{persona.summary}</p>
 
-        <div className="mt-8 grid gap-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 md:grid-cols-[1.15fr_0.85fr] md:items-center">
+        <div className="mt-8 grid gap-4 rounded-3xl border border-border bg-card/80 p-5 sm:p-6 md:grid-cols-[1.15fr_0.85fr] md:items-center">
           <div>
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-orange-300">What this route does</p>
-            <p className="text-[14px] leading-relaxed text-slate-300">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-primary">What this route does</p>
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
               Use this page to see how the coach preview fits your operating model before you commit to a deeper rollout.
             </p>
           </div>
@@ -47,7 +47,7 @@ export default async function CoachPersonaDetailPage({ params }: { params: Promi
             event={EVENT_NAMES.channelEntryClicked}
             logToUserEvents
             properties={{ channel: 'coaches', cta_label: `Open ${persona.slug} destination`, source_page: `/coaches/personas/${persona.slug}` }}
-            className="inline-flex items-center justify-center rounded bg-orange-500 px-5 py-3 text-[14px] font-semibold text-slate-900 transition-colors hover:bg-orange-600"
+            className="inline-flex items-center justify-center rounded bg-primary px-5 py-3 text-[14px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Continue to coach journey
           </TrackLink>
@@ -56,7 +56,7 @@ export default async function CoachPersonaDetailPage({ params }: { params: Promi
             event={EVENT_NAMES.personaRouteSelected}
             logToUserEvents
             properties={{ channel: 'coaches', persona: 'persona_back_nav', source_route: `/coaches/personas/${persona.slug}`, target_route: '/coaches/personas' }}
-            className="inline-flex items-center justify-center rounded border border-slate-600 px-5 py-3 text-[14px] font-semibold text-slate-100 transition-colors hover:border-slate-300"
+            className="inline-flex items-center justify-center rounded border border-border px-5 py-3 text-[14px] font-semibold text-foreground transition-colors"
           >
             Back to persona list
           </TrackLink>

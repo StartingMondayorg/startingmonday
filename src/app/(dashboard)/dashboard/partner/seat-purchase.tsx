@@ -2,10 +2,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { PRICING } from '@/lib/billing/pricing'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-
+import { Button, Card, RadioGroup, RadioGroupItem } from '@/components/ui'
 type Plan = 'passive' | 'active'
 
 const SEAT_PLANS: Record<Plan, { name: string; pricePerSeat: number; description: string }> = {
@@ -51,19 +48,19 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
     const seatsRemaining = seatsPurchased - seatsUsed
     return (
       <Card variant="default" className="p-6 mb-6">
-        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Client Seats</p>
+        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Client Seats</p>
         <div className="flex items-center gap-6 mb-4">
           <div>
-            <p className="text-[28px] font-bold text-slate-900">{seatsUsed} <span className="text-[16px] font-normal text-slate-400">/ {seatsPurchased}</span></p>
-            <p className="text-[12px] text-slate-400 mt-0.5">seats used</p>
+            <p className="text-[28px] font-bold text-foreground">{seatsUsed} <span className="text-[16px] font-normal text-muted-foreground">/ {seatsPurchased}</span></p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">seats used</p>
           </div>
           {seatsRemaining > 0 ? (
-            <p className="text-[13px] text-slate-600">
-              {seatsRemaining} seat{seatsRemaining !== 1 ? 's' : ''} available. Invite clients from your <Link href="/settings/team" className="font-semibold text-slate-900 underline">team settings</Link>.
+            <p className="text-[13px] text-muted-foreground">
+              {seatsRemaining} seat{seatsRemaining !== 1 ? 's' : ''} available. Invite clients from your <Link href="/settings/team" className="font-semibold text-foreground underline">team settings</Link>.
             </p>
           ) : (
-            <p className="text-[13px] text-slate-600">
-              All seats are in use. <Link href="/settings/billing" className="font-semibold text-slate-900 underline">Manage subscription</Link> to add more.
+            <p className="text-[13px] text-muted-foreground">
+              All seats are in use. <Link href="/settings/billing" className="font-semibold text-foreground underline">Manage subscription</Link> to add more.
             </p>
           )}
         </div>
@@ -79,8 +76,8 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
 
   return (
     <Card variant="default" className="p-6 mb-6">
-      <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Coach Seats</p>
-      <p className="text-[13px] text-slate-500 mb-5 leading-relaxed">
+      <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Coach Seats</p>
+      <p className="text-[13px] text-muted-foreground mb-5 leading-relaxed">
         Purchase seats to activate Starting Monday for your clients. You pay monthly. Clients log in to their own account.
       </p>
 
@@ -92,19 +89,19 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
         {(Object.entries(SEAT_PLANS) as [Plan, typeof SEAT_PLANS[Plan]][]).map(([key, p]) => (
           <label
             key={key}
-            className={`flex items-start gap-3 text-left p-4 rounded border transition-colors cursor-pointer ${plan === key ? 'border-slate-900 bg-slate-50' : 'border-slate-200 hover:bg-slate-50'}`}
+            className={`flex items-start gap-3 text-left p-4 rounded border transition-colors cursor-pointer ${plan === key ? 'border-border bg-muted' : 'border-border hover:bg-muted'}`}
           >
             <RadioGroupItem value={key} className="mt-1" />
             <span>
-              <p className="text-[14px] font-bold text-slate-900">{p.name} <span className="text-[13px] font-normal text-slate-500">${p.pricePerSeat}/seat/mo</span></p>
-              <p className="text-[12px] text-slate-500 mt-0.5">{p.description}</p>
+              <p className="text-[14px] font-bold text-foreground">{p.name} <span className="text-[13px] font-normal text-muted-foreground">${p.pricePerSeat}/seat/mo</span></p>
+              <p className="text-[12px] text-muted-foreground mt-0.5">{p.description}</p>
             </span>
           </label>
         ))}
       </RadioGroup>
 
       <div className="flex items-center gap-4 mb-5">
-        <label className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Seats</label>
+        <label className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Seats</label>
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -112,7 +109,7 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
             size="icon"
             onClick={() => setQuantity(q => Math.max(1, q - 1))}
           >-</Button>
-          <span className="text-[18px] font-bold text-slate-900 w-8 text-center">{quantity}</span>
+          <span className="text-[18px] font-bold text-foreground w-8 text-center">{quantity}</span>
           <Button
             type="button"
             variant="outline"
@@ -120,7 +117,7 @@ export function SeatPurchase({ seatsPurchased, seatsUsed }: {
             onClick={() => setQuantity(q => Math.min(20, q + 1))}
           >+</Button>
         </div>
-        <p className="text-[15px] font-bold text-slate-900 ml-auto">${monthlyTotal}/mo</p>
+        <p className="text-[15px] font-bold text-foreground ml-auto">${monthlyTotal}/mo</p>
       </div>
 
       <Button

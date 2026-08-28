@@ -68,7 +68,7 @@ export default function ExecutiveHiringPatterns2026Page() {
         }}
       >
       <h1 className="sr-only">{post.title}</h1>
-        <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+        <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
 
         <p>
           We reviewed more than 300 executive and VP-level hiring profiles across enterprise sectors to answer a practical question:
@@ -80,44 +80,44 @@ export default function ExecutiveHiringPatterns2026Page() {
           something different: transformation evidence, cross-functional influence, and measurable business outcomes.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The five signals hiring teams prioritize</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The five signals hiring teams prioritize</h2>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">1. Transformation over stewardship</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">1. Transformation over stewardship</h3>
 
         <p>
           Language like "scaled," "rebuilt," "integrated," and "turned around" appears far more often in roles that move to final rounds
           than language like "managed" or "oversaw." Leadership teams want operators who can move a system, not just maintain one.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">2. Cross-functional range, not silo depth</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">2. Cross-functional range, not silo depth</h3>
 
         <p>
           C-suite and VP hiring increasingly rewards leaders who can work across product, finance, operations, security, and go-to-market.
           Narrow excellence still matters, but broad influence is now part of the screen.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">3. Outcomes in business terms</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">3. Outcomes in business terms</h3>
 
         <p>
           Team size and budget ownership matter less than evidence of impact. Revenue expansion, margin improvement, cycle-time reduction,
           risk reduction, and post-acquisition integration outcomes carry more weight than activity metrics.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">4. Decision quality under uncertainty</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">4. Decision quality under uncertainty</h3>
 
         <p>
           Senior hiring panels ask versions of the same question: can this person make high-stakes calls in ambiguous conditions and keep
           the organization aligned while doing it.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">5. Board and executive stakeholder fluency</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">5. Board and executive stakeholder fluency</h3>
 
         <p>
           Strong candidates show they can translate technical or functional complexity into strategic tradeoffs for CEOs, boards,
           investors, and peers. Communication quality at that level is a differentiator.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Where senior candidates still lose ground</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Where senior candidates still lose ground</h2>
 
         <ul className="list-disc pl-5 space-y-2">
           <li>Positioning that sounds interchangeable with ten other candidates</li>
@@ -130,7 +130,7 @@ export default function ExecutiveHiringPatterns2026Page() {
           None of these are capability issues. They are framing and evidence issues. That is fixable if you catch it early.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to apply this in your next 7 days</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to apply this in your next 7 days</h2>
 
         <ol className="list-decimal pl-5 space-y-2">
           <li>Rewrite your top headline around business impact, not role tenure.</li>

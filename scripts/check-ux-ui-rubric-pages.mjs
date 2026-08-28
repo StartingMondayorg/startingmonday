@@ -205,7 +205,10 @@ const SPECS = [
 			{
 				id: 'discover-brand-shell',
 				description: 'Discover page preserves branded shell header styling.',
-				matcher: 'bg-slate-900',
+				// The shell used to be pinned with a literal bg-slate-900. It is now a
+				// dark-scoped token surface, which is the same intent -- a dark header
+				// band -- expressed in the theme vocabulary.
+				matcher: /dark[^"']*\bbg-(?:card|background)\b/,
 			},
 			{
 				id: 'discover-grid-density',

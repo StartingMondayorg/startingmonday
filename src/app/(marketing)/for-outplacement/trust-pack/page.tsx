@@ -173,14 +173,14 @@ const SLA_ATTESTATION_MAP = [
 
 export default function OutplacementTrustPackPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/for-outplacement" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Back to outplacement page
             </Link>
           </div>
@@ -189,49 +189,49 @@ export default function OutplacementTrustPackPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
 <header className="mb-12">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
             Trust and governance
           </p>
-          <h1 className="text-[30px] sm:text-[40px] font-bold text-slate-900 leading-[1.1] tracking-tight mb-4">
+          <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.1] tracking-tight mb-4">
             Procurement-ready trust pack for partner teams.
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed max-w-2xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
             Summary for outplacement, legal, and procurement teams reviewing pilot launch.
           </p>
         </header>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Trust pillars
           </h2>
           <div className="space-y-3">
             {TRUST_PILLARS.map((item) => (
-              <div key={item.title} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{item.title}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{item.detail}</p>
+              <div key={item.title} className="border border-border rounded-lg p-4 bg-muted">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{item.title}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{item.detail}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-muted">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Procurement and legal checklist
           </h2>
           <ul className="space-y-2">
             {PROCUREMENT_CHECKLIST.map((item) => (
-              <li key={item} className="text-[14px] text-slate-700 leading-relaxed">- {item}</li>
+              <li key={item} className="text-[14px] text-muted-foreground leading-relaxed">- {item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Consolidated trust artifact index (owner + refresh cadence)
           </h2>
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-border rounded-lg">
             <table className="min-w-full text-left text-[13px]">
-              <thead className="bg-slate-100 text-slate-700">
+              <thead className="bg-muted text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Artifact</th>
                   <th className="px-4 py-3 font-semibold">Owner</th>
@@ -242,126 +242,126 @@ export default function OutplacementTrustPackPage() {
               </thead>
               <tbody>
                 {CONSOLIDATED_ARTIFACT_INDEX.map((row) => (
-                  <tr key={row.artifact} className="border-t border-slate-200 bg-white">
-                    <td className="px-4 py-3 text-slate-900 font-medium">{row.artifact}</td>
-                    <td className="px-4 py-3 text-slate-700">{row.owner}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.refreshCadence}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.contractMap}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.clauseId}</td>
+                  <tr key={row.artifact} className="border-t border-border bg-card">
+                    <td className="px-4 py-3 text-foreground font-medium">{row.artifact}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.owner}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.refreshCadence}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.contractMap}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.clauseId}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-[12px] text-slate-500 mt-3 leading-relaxed">
+          <p className="text-[12px] text-muted-foreground mt-3 leading-relaxed">
             Clause IDs are proposed placeholders and should be swapped for final legal numbering once template schedules are finalized.
           </p>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Legal boundary summary
           </h2>
           <div className="space-y-3">
             {LEGAL_BOUNDARIES.map((row) => (
-              <div key={row.topic} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.topic}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{row.detail}</p>
+              <div key={row.topic} className="border border-border rounded-lg p-4 bg-muted">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.topic}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{row.detail}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-muted">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             SLA and attestation clause mapping
           </h2>
           <div className="space-y-3">
             {SLA_ATTESTATION_MAP.map((row) => (
-              <div key={row.domain} className="border border-slate-200 rounded-lg p-4 bg-white">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.domain}</p>
-                <p className="text-[13px] text-slate-600 mb-1"><span className="font-semibold text-slate-700">Clause ID: </span>{row.clauseId}</p>
-                <p className="text-[13px] text-slate-600 mb-1"><span className="font-semibold text-slate-700">Requirement: </span>{row.requirement}</p>
-                <p className="text-[13px] text-slate-600"><span className="font-semibold text-slate-700">Evidence: </span>{row.evidence}</p>
+              <div key={row.domain} className="border border-border rounded-lg p-4 bg-card">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.domain}</p>
+                <p className="text-[13px] text-muted-foreground mb-1"><span className="font-semibold text-muted-foreground">Clause ID: </span>{row.clauseId}</p>
+                <p className="text-[13px] text-muted-foreground mb-1"><span className="font-semibold text-muted-foreground">Requirement: </span>{row.requirement}</p>
+                <p className="text-[13px] text-muted-foreground"><span className="font-semibold text-muted-foreground">Evidence: </span>{row.evidence}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Lightweight authority badges and attestation index
           </h2>
           <div className="space-y-3">
             {ATTESTATION_INDEX.map((row) => (
-              <div key={row.item} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.item}</p>
-                <p className="text-[12px] text-slate-600">{row.availability}</p>
+              <div key={row.item} className="border border-border rounded-lg p-4 bg-muted">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.item}</p>
+                <p className="text-[12px] text-muted-foreground">{row.availability}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-muted">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Confidentiality by design
           </h2>
-          <p className="text-[14px] text-slate-700 leading-relaxed">
+          <p className="text-[14px] text-muted-foreground leading-relaxed">
             Sensitive transitions require minimum-necessary visibility, explicit permission scopes, and traceable access patterns. Partner and counselor views should align to program need, not blanket visibility, especially for regulated or high-profile cohorts.
           </p>
           <div className="mt-4">
             {REGULATED_INDUSTRY_GUIDANCE.map((line) => (
-              <p key={line} className="text-[13px] text-slate-700 leading-relaxed">+ {line}</p>
+              <p key={line} className="text-[13px] text-muted-foreground leading-relaxed">+ {line}</p>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Board-safe claims policy
           </h2>
           <ul className="space-y-2">
             {CLAIMS_POLICY.map((item) => (
-              <li key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</li>
+              <li key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</li>
             ))}
           </ul>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Staged KPI model (30/60/90)
           </h2>
           <div className="space-y-3">
             {KPI_STAGES.map((row) => (
-              <div key={row.stage} className="border border-slate-200 rounded-lg p-4 bg-white">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.stage}: {row.focus}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{row.metrics}</p>
+              <div key={row.stage} className="border border-border rounded-lg p-4 bg-card">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.stage}: {row.focus}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{row.metrics}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-muted">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Trust artifact index and request flow
           </h2>
           <ul className="space-y-2">
             {TRUST_ARTIFACT_INDEX.map((item) => (
-              <li key={item} className="text-[14px] text-slate-700 leading-relaxed">+ {item}</li>
+              <li key={item} className="text-[14px] text-muted-foreground leading-relaxed">+ {item}</li>
             ))}
           </ul>
-          <p className="text-[12px] text-slate-500 mt-3 leading-relaxed">
+          <p className="text-[12px] text-muted-foreground mt-3 leading-relaxed">
             Request flow: submit partner inquiry, receive artifact index, map requested materials to legal/security owners, and schedule review checkpoint.
           </p>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Artifact maintenance ownership
           </h2>
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-border rounded-lg">
             <table className="min-w-full text-left text-[13px]">
-              <thead className="bg-slate-100 text-slate-700">
+              <thead className="bg-muted text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Artifact</th>
                   <th className="px-4 py-3 font-semibold">Update cadence</th>
@@ -370,10 +370,10 @@ export default function OutplacementTrustPackPage() {
               </thead>
               <tbody>
                 {ARTIFACT_MAINTENANCE.map((row) => (
-                  <tr key={row.artifact} className="border-t border-slate-200 bg-white">
-                    <td className="px-4 py-3 text-slate-900 font-medium">{row.artifact}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.cadence}</td>
-                    <td className="px-4 py-3 text-slate-700">{row.owner}</td>
+                  <tr key={row.artifact} className="border-t border-border bg-card">
+                    <td className="px-4 py-3 text-foreground font-medium">{row.artifact}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.cadence}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.owner}</td>
                   </tr>
                 ))}
               </tbody>
@@ -381,58 +381,58 @@ export default function OutplacementTrustPackPage() {
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Pilot review timeline
           </h2>
           <div className="space-y-3">
             {REVIEW_TIMELINE.map((row) => (
-              <div key={row.phase} className="border border-slate-200 rounded-lg p-4 bg-white">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.phase}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{row.detail}</p>
+              <div key={row.phase} className="border border-border rounded-lg p-4 bg-card">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.phase}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{row.detail}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">
+        <section className="border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">
             Next step
           </h2>
-          <div className="border border-orange-200 rounded-lg p-4 bg-orange-50/50 mb-5">
-            <p className="text-[12px] font-semibold text-slate-900 mb-1">Short objection response</p>
-            <p className="text-[12px] text-slate-700 leading-relaxed">Concerned this expands governance burden? The trust pack is designed to reduce uncertainty with explicit artifacts and clear decision gates.</p>
+          <div className="border border-primary/30 rounded-lg p-4 bg-primary/10 mb-5">
+            <p className="text-[12px] font-semibold text-foreground mb-1">Short objection response</p>
+            <p className="text-[12px] text-muted-foreground leading-relaxed">Concerned this expands governance burden? The trust pack is designed to reduce uncertainty with explicit artifacts and clear decision gates.</p>
           </div>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-5">
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">
             If this trust model fits your standards, move to pilot planning and set explicit pass/fail criteria before kickoff.
           </p>
-          <p className="text-[13px] text-slate-600 leading-relaxed mb-5">
-            Governance path: review the shared <Link href="/security" className="underline underline-offset-2 hover:text-slate-900 transition-colors">security overview</Link> and <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-900 transition-colors">privacy policy</Link> first, then use this pack for partner-specific procurement, claims, and pilot-governance review.
+          <p className="text-[13px] text-muted-foreground leading-relaxed mb-5">
+            Governance path: review the shared <Link href="/security" className="underline underline-offset-2 hover:text-foreground transition-colors">security overview</Link> and <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground transition-colors">privacy policy</Link> first, then use this pack for partner-specific procurement, claims, and pilot-governance review.
           </p>
           <div className="flex flex-wrap gap-4 text-[13px]">
-            <Link href="/security" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/security" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open shared security overview
             </Link>
-            <Link href="/partners#apply" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/partners#apply" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Apply to partner program
             </Link>
-            <Link href="/for-outplacement/executive-summary" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/executive-summary" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               View committee one-pager
             </Link>
-            <Link href="/for-outplacement/metric-dictionary" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/metric-dictionary" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open canonical metric dictionary
             </Link>
-            <Link href="/for-outplacement/operating-scorecard" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/operating-scorecard" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open printable operating scorecard
             </Link>
-            <Link href="/for-outplacement/economics" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/economics" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               View outplacement economics
             </Link>
-            <Link href="/for-outplacement/faq" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/faq" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Read outplacement FAQ
             </Link>
           </div>
-          <p className="text-[12px] text-slate-500 leading-relaxed mt-4">
+          <p className="text-[12px] text-muted-foreground leading-relaxed mt-4">
             Day-30 pause path: if committee evidence is mixed, pause expansion, run one corrective cycle, and reconvene at day 60 with unchanged metric definitions.
           </p>
         </section>

@@ -1,8 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, Button } from '@/components/ui'
 export function DemoBanner() {
   return (
     <Alert variant="warning" className="rounded-none border-x-0 border-t-0 flex-row items-center justify-between gap-3 px-4 sm:px-6 py-2.5">

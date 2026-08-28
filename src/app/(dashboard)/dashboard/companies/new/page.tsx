@@ -3,20 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { addCompany } from './actions'
 import { CompanySearchInput } from './company-search-input'
-import { Card } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 // shadcn Select can't have an item with value "" — use this sentinel for the
 // "Unknown" company-size option. addCompany() already treats any value outside
 // the valid size set as null, so no server-side normalization is needed.
@@ -47,18 +34,17 @@ export default async function AddCompanyPage({
     null
 
   return (
-    <div className="relative min-h-screen bg-slate-950 font-sans text-slate-100">
+    <div className="relative min-h-screen bg-background font-sans text-foreground">
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.12),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
 
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Link
             href="/dashboard"
-            className="text-[13px] text-slate-300 hover:text-white transition-colors"
+            className="text-[13px] text-muted-foreground hover:text-foreground transition-colors"
           >
             &larr; Dashboard
           </Link>
@@ -67,22 +53,22 @@ export default async function AddCompanyPage({
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-white leading-tight">Add company</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">Add a company to your pipeline to track and monitor.</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Add company</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">Add a company to your pipeline to track and monitor.</p>
         </div>
 
         <Alert className="mb-4 max-w-xl px-4 py-3 flex items-center justify-between gap-3 backdrop-blur-md">
-          <AlertDescription className="text-[12px] text-slate-300">Need examples for targeting and pipeline setup?</AlertDescription>
+          <AlertDescription className="text-[12px] text-muted-foreground">Need examples for targeting and pipeline setup?</AlertDescription>
           <Button
             variant="link"
-            className="text-[12px] font-semibold text-orange-200 hover:text-orange-100"
+            className="text-[12px] font-semibold text-primary"
             render={<Link href="/guide?q=Where+do+I+add+companies+to+my+target+list%3F" />}
           >
             Open Guide
           </Button>
         </Alert>
 
-        <Card variant="glass" className="rounded-xl p-5 sm:p-8 max-w-xl shadow-[0_18px_40px_rgba(15,23,42,0.18)]">
+        <Card variant="glass" className="rounded-xl p-5 sm:p-8 max-w-xl shadow-lg">
 
           {errorMsg && (
             <Alert variant="destructive" className="mb-6 px-4 py-3">
@@ -93,19 +79,19 @@ export default async function AddCompanyPage({
           <form action={addCompany} className="flex flex-col gap-5">
 
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
-                Company name <span className="text-rose-300">*</span>
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
+                Company name <span className="text-destructive">*</span>
               </Label>
               <CompanySearchInput defaultValue={prefillName} />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Stage
                 </Label>
                 <Select name="stage" defaultValue="watching">
-                  <SelectTrigger className="w-full text-[14px] text-slate-100 focus-visible:border-orange-300 bg-slate-900/70">
+                  <SelectTrigger className="w-full text-[14px] text-foreground focus-visible:border-primary/30 bg-card/70">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,8 +103,8 @@ export default async function AddCompanyPage({
               </div>
 
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
-                  Fit score <span className="text-slate-500 font-normal">(1–10)</span>
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
+                  Fit score <span className="text-muted-foreground font-normal">(1–10)</span>
                 </Label>
                 <Input
                   name="fit_score"
@@ -126,30 +112,30 @@ export default async function AddCompanyPage({
                   min="1"
                   max="10"
                   placeholder="-"
-                  className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
+                  className="w-full text-[14px] text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30"
                 />
-                <p className="mt-1.5 text-[12px] text-slate-400">1 = weak fit &middot; 10 = dream company</p>
+                <p className="mt-1.5 text-[12px] text-muted-foreground">1 = weak fit &middot; 10 = dream company</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Sector
                 </Label>
                 <Input
                   name="sector"
                   type="text"
                   placeholder="e.g. Healthcare, Fintech"
-                  className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
+                  className="w-full text-[14px] text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30"
                 />
               </div>
               <div>
-                <Label htmlFor="company_size" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+                <Label htmlFor="company_size" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Company size
                 </Label>
                 <Select name="company_size" defaultValue={NONE}>
-                  <SelectTrigger id="company_size" className="w-full text-[14px] text-slate-100 focus-visible:border-orange-300 bg-slate-900/70">
+                  <SelectTrigger id="company_size" className="w-full text-[14px] text-foreground focus-visible:border-primary/30 bg-card/70">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -159,45 +145,45 @@ export default async function AddCompanyPage({
                     <SelectItem value="enterprise">Enterprise (2,000+)</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="mt-1.5 text-[12px] text-slate-400">Used to calibrate CTO prep briefs</p>
+                <p className="mt-1.5 text-[12px] text-muted-foreground">Used to calibrate CTO prep briefs</p>
               </div>
             </div>
 
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                 Company website
               </Label>
               <Input
                 name="company_url"
                 type="text"
                 placeholder="acme.com or https://acme.com"
-                className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
+                className="w-full text-[14px] text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30"
               />
-              <p className="mt-1.5 text-[12px] text-slate-400">Main URL - used to discover press room and leadership page</p>
+              <p className="mt-1.5 text-[12px] text-muted-foreground">Main URL - used to discover press room and leadership page</p>
             </div>
 
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                 Career page URL
               </Label>
               <Input
                 name="career_page_url"
                 type="text"
                 placeholder="acme.com/careers or https://acme.com/careers"
-                className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300"
+                className="w-full text-[14px] text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30"
               />
-              <p className="mt-1.5 text-[12px] text-slate-400">Used in job scans - runs Mon / Wed / Fri</p>
+              <p className="mt-1.5 text-[12px] text-muted-foreground">Used in job scans - runs Mon / Wed / Fri</p>
             </div>
 
             <div>
-              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-300 mb-1.5">
+              <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                 Notes
               </Label>
               <Textarea
                 name="notes"
                 rows={3}
                 placeholder="Warm intro through Sarah, strong culture fit…"
-                className="w-full text-[14px] text-slate-100 bg-slate-900/70 placeholder:text-slate-500 focus-visible:border-orange-300 resize-none"
+                className="w-full text-[14px] text-foreground bg-card/70 placeholder:text-muted-foreground focus-visible:border-primary/30 resize-none"
               />
             </div>
 
@@ -210,7 +196,7 @@ export default async function AddCompanyPage({
               </Button>
               <Link
                 href="/dashboard"
-                className="text-[14px] text-slate-300 hover:text-white transition-colors"
+                className="text-[14px] text-muted-foreground hover:text-foreground transition-colors"
               >
                 Cancel
               </Link>

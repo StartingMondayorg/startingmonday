@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui'
 type DashboardDisclosureSectionProps = {
   id: string
   title: string
@@ -20,14 +19,14 @@ export function DashboardDisclosureSection({
     <Collapsible
       id={id}
       defaultOpen={defaultOpen}
-      className="mb-8 rounded border border-white/10 bg-slate-900/70 overflow-hidden scroll-mt-24 shadow-[0_14px_34px_rgba(2,6,23,0.35)]"
+      className="mb-8 rounded border border-border bg-card/70 overflow-hidden scroll-mt-24 shadow-lg"
     >
       <CollapsibleTrigger
-        className="w-full cursor-pointer px-6 py-4 border-b border-white/10 flex items-center justify-between"
+        className="w-full cursor-pointer px-6 py-4 border-b border-border flex items-center justify-between"
         aria-controls={panelId}
       >
-        <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-300">{title}</span>
-        <span className="text-[11px] text-slate-500">Details</span>
+        <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">{title}</span>
+        <span className="text-[11px] text-muted-foreground">Details</span>
       </CollapsibleTrigger>
       <CollapsibleContent id={panelId} className="px-6 py-6">
         {children}

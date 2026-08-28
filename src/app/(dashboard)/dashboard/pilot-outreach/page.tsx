@@ -1,12 +1,7 @@
 
 "use client"
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Textarea } from '@/components/ui'
 export default function PilotOutreachForm() {
   const [form, setForm] = useState({ name: '', email: '', company: '', message: '' })
   const [status, setStatus] = useState<'idle'|'sending'|'sent'|'error'>('idle')
@@ -26,8 +21,8 @@ export default function PilotOutreachForm() {
     <form className="max-w-lg mx-auto mt-12" onSubmit={handleSubmit}>
       <Card className="p-8">
         <h1 className="sr-only">Pilot Outreach</h1>
-        <h2 className="text-2xl font-bold mb-4 text-slate-900">Pilot Outreach</h2>
-        <p className="mb-6 text-slate-600">Request a pilot or partnership. We'll get back to you within 1 business day.</p>
+        <h2 className="text-2xl font-bold mb-4 text-foreground">Pilot Outreach</h2>
+        <p className="mb-6 text-muted-foreground">Request a pilot or partnership. We'll get back to you within 1 business day.</p>
         <div className="mb-4">
           <Input required placeholder="Your Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
         </div>

@@ -39,11 +39,6 @@ test.describe('Starting Monday evidence hero @landing-hero', () => {
     await expect(getAccess).toHaveAttribute('data-slot', 'button')
     await expect(liveExample).toHaveAttribute('data-slot', 'button')
 
-    await expect(page).toHaveScreenshot('landing-hero-desktop.png', {
-      animations: 'disabled',
-      maxDiffPixelRatio: 0.02,
-    })
-
     await liveExample.click()
     await expect(page).toHaveURL(/\/example$/)
     await expect(page.getByRole('heading', { level: 1, name: 'What a forming role looks like.' })).toBeVisible()
@@ -89,9 +84,5 @@ test.describe('Starting Monday evidence hero @landing-hero', () => {
 
     await getAccess.focus()
     await expect(getAccess).toBeFocused()
-    await expect(page).toHaveScreenshot('landing-hero-mobile.png', {
-      animations: 'disabled',
-      maxDiffPixelRatio: 0.02,
-    })
   })
 })

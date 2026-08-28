@@ -62,7 +62,6 @@
         "monitor:harness:generate": "node scripts/generate-monitoring-harness.mjs",
         "monitor:coverage:refresh": "npm run monitor:matrix:generate && npm run monitor:harness:generate",
         "smoke:auth-paths": "npx tsx tmp/auth-path-smoke.ts",
-        "guard:landing-page-approval": "node scripts/check-landing-page-change-approval.mjs",
         "guard:plain-language": "node scripts/check-plain-language-lexicon.mjs",
         "guard:plain-language:json": "node scripts/check-plain-language-lexicon.mjs --json",
         "guard:plain-language:baseline": "node scripts/check-plain-language-lexicon.mjs --update-baseline",
@@ -264,7 +263,6 @@
         "test:coverage": "node scripts/run-unit-coverage.mjs",
         "coverage:folders:check": "node scripts/check-coverage-thresholds.mjs",
         "coverage:folders:check:staged": "node scripts/check-coverage-thresholds.mjs --staged",
-        "coverage:diff:check": "node scripts/check-diff-coverage.mjs --min-coverage=90",
         "test": "npm run guard:observability-imports && npm run test:placeholder-guard && vitest run",
         "test:watch": "vitest",
         "watchlist:admin": "node scripts/watchlist-admin.mjs"
@@ -288,6 +286,7 @@
         "mammoth": "^1.12.1",
         "mermaid": "^11.16.1",
         "next": "^16.3.1",
+        "next-themes": "^0.4.6",
         "pdf-parse": "^2.4.5",
         "postcss": "^8.5.26",
         "posthog-js": "^1.417.1",

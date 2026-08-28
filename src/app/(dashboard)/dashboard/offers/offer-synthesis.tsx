@@ -1,9 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card } from '@/components/ui'
 type OfferInput = {
   name: string
   sector?: string | null
@@ -45,10 +42,10 @@ export function OfferSynthesis({ offers }: { offers: OfferInput[] }) {
 
   return (
     <Card className="mt-6 py-0">
-      <div className="px-6 py-[18px] border-b border-slate-100 flex items-center justify-between">
+      <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Decision synthesis</p>
-          <p className="text-[12px] text-slate-400 mt-0.5">Claude reads your offer data and decision factors and tells you where the real tension is.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Decision synthesis</p>
+          <p className="text-[12px] text-muted-foreground mt-0.5">Claude reads your offer data and decision factors and tells you where the real tension is.</p>
         </div>
         {!synthesis && (
           <Button onClick={generate} disabled={loading} className="shrink-0">
@@ -70,14 +67,14 @@ export function OfferSynthesis({ offers }: { offers: OfferInput[] }) {
       )}
       {loading && !synthesis && (
         <div className="px-6 py-6 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block" />
-          <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:150ms]" />
-          <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse inline-block [animation-delay:300ms]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block" />
+          <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:150ms]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-muted animate-pulse inline-block [animation-delay:300ms]" />
         </div>
       )}
       {synthesis && (
         <div className="px-6 py-5">
-          <p className="text-[14px] text-slate-800 leading-relaxed">{synthesis}</p>
+          <p className="text-[14px] text-foreground leading-relaxed">{synthesis}</p>
         </div>
       )}
     </Card>

@@ -1,9 +1,7 @@
 ﻿'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, Button } from '@/components/ui'
 const PERSONAL_DOMAINS = new Set([
   'gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'yahoo.co.in',
   'hotmail.com', 'outlook.com', 'live.com', 'msn.com', 'icloud.com',
@@ -35,13 +33,13 @@ export function PersonalEmailNudge({ email }: { email: string }) {
   }
 
   return (
-    <Alert className="rounded-none border-x-0 border-b-0 bg-slate-800 border-slate-700 text-slate-300 flex-row items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
-      <AlertDescription className="text-[12px] leading-relaxed text-slate-300">
-        <span className="font-semibold text-white">Work email on file.</span>{' '}
+    <Alert className="rounded-none border-x-0 border-b-0 bg-muted border-border text-muted-foreground flex-row items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
+      <AlertDescription className="text-[12px] leading-relaxed text-muted-foreground">
+        <span className="font-semibold text-foreground">Work email on file.</span>{' '}
         If an assistant manages your inbox, your daily briefings may not reach you directly.{' '}
         <Link
           href="/dashboard/profile#briefing-email"
-          className="underline text-slate-400 hover:text-white transition-colors"
+          className="underline text-muted-foreground hover:text-foreground transition-colors"
         >
           Set a personal delivery address in profile settings.
         </Link>
@@ -51,7 +49,7 @@ export function PersonalEmailNudge({ email }: { email: string }) {
         variant="ghost"
         size="sm"
         onClick={dismiss}
-        className="shrink-0 text-slate-300 hover:text-white"
+        className="shrink-0 text-muted-foreground hover:text-foreground"
         aria-label="Dismiss"
       >
         Dismiss

@@ -2,17 +2,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { OfferSynthesis } from './offer-synthesis'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
-
+import { Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 export const metadata = { title: 'Offers - Starting Monday' }
 
 function fmt(n: number) {
@@ -49,39 +39,39 @@ export default async function OffersPage() {
   const offers = (raw ?? []) as unknown as OfferCompany[]
 
   const ROWS = [
-    { label: 'Role',         render: (o: OfferCompany) => o.offer_role_title ?? <span className="text-slate-300">-</span> },
-    { label: 'Base',         render: (o: OfferCompany) => o.offer_base ? fmt(o.offer_base) : <span className="text-slate-300">-</span> },
+    { label: 'Role',         render: (o: OfferCompany) => o.offer_role_title ?? <span className="text-muted-foreground">-</span> },
+    { label: 'Base',         render: (o: OfferCompany) => o.offer_base ? fmt(o.offer_base) : <span className="text-muted-foreground">-</span> },
     { label: 'Bonus',        render: (o: OfferCompany) => {
-      if (!o.offer_bonus_pct) return <span className="text-slate-300">-</span>
+      if (!o.offer_bonus_pct) return <span className="text-muted-foreground">-</span>
       const est = o.offer_base ? ` (${fmt(Math.round(o.offer_base * o.offer_bonus_pct / 100))})` : ''
       return `${o.offer_bonus_pct}%${est}`
     }},
-    { label: 'Signing',      render: (o: OfferCompany) => o.offer_signing ? fmt(o.offer_signing) : <span className="text-slate-300">-</span> },
-    { label: 'Equity',       render: (o: OfferCompany) => o.offer_equity ?? <span className="text-slate-300">-</span> },
+    { label: 'Signing',      render: (o: OfferCompany) => o.offer_signing ? fmt(o.offer_signing) : <span className="text-muted-foreground">-</span> },
+    { label: 'Equity',       render: (o: OfferCompany) => o.offer_equity ?? <span className="text-muted-foreground">-</span> },
     { label: 'Total cash',   render: (o: OfferCompany) => {
-      if (!o.offer_base) return <span className="text-slate-300">-</span>
+      if (!o.offer_base) return <span className="text-muted-foreground">-</span>
       const bonus = o.offer_bonus_pct ? Math.round(o.offer_base * o.offer_bonus_pct / 100) : 0
-      return <span className="font-bold text-green-700">{fmt(o.offer_base + bonus)}</span>
+      return <span className="font-bold text-success">{fmt(o.offer_base + bonus)}</span>
     }},
-    { label: 'Fit score',    render: (o: OfferCompany) => o.fit_score != null ? o.fit_score : <span className="text-slate-300">-</span> },
+    { label: 'Fit score',    render: (o: OfferCompany) => o.fit_score != null ? o.fit_score : <span className="text-muted-foreground">-</span> },
     { label: 'Notes',        render: (o: OfferCompany) => o.offer_notes
-      ? <span className="text-[13px] text-slate-500 leading-relaxed">{o.offer_notes}</span>
-      : <span className="text-slate-300">-</span>
+      ? <span className="text-[13px] text-muted-foreground leading-relaxed">{o.offer_notes}</span>
+      : <span className="text-muted-foreground">-</span>
     },
     { label: 'Factors',      render: (o: OfferCompany) => o.offer_decision_factors
-      ? <span className="text-[13px] text-slate-500 leading-relaxed">{o.offer_decision_factors}</span>
-      : <span className="text-slate-300">-</span>
+      ? <span className="text-[13px] text-muted-foreground leading-relaxed">{o.offer_decision_factors}</span>
+      : <span className="text-muted-foreground">-</span>
     },
   ]
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             ← Dashboard
           </Link>
         </div>
@@ -89,8 +79,8 @@ export default async function OffersPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Offers in Flight</h1>
-          <p className="text-[13px] text-slate-500 mt-1.5">
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Offers in Flight</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">
             {offers.length === 0
               ? 'No offers yet. Move a company to the Offer stage to start tracking.'
               : `${offers.length} offer${offers.length !== 1 ? 's' : ''} - compare compensation, fit, and negotiate.`}
@@ -99,24 +89,24 @@ export default async function OffersPage() {
 
         {offers.length === 0 ? (
           <Card className="p-16 text-center">
-            <p className="text-[14px] text-slate-400 mb-4">No companies at the Offer stage.</p>
+            <p className="text-[14px] text-muted-foreground mb-4">No companies at the Offer stage.</p>
             <Button variant="secondary" render={<Link href="/dashboard/briefing" />}>
               Open daily briefing →
             </Button>
           </Card>
         ) : offers.length === 1 ? (
           // Single offer: vertical card layout
-          <Card className="border-green-200 py-0 overflow-hidden">
-            <div className="px-6 py-[18px] border-b border-green-100 flex items-center justify-between">
+          <Card className="border-success/30 py-0 overflow-hidden">
+            <div className="px-6 py-[18px] border-b border-success/30 flex items-center justify-between">
               <div>
-                <h2 className="text-[18px] font-bold text-slate-900">{offers[0].name}</h2>
-                {offers[0].sector && <p className="text-[13px] text-slate-400 mt-0.5">{offers[0].sector}</p>}
+                <h2 className="text-[18px] font-bold text-foreground">{offers[0].name}</h2>
+                {offers[0].sector && <p className="text-[13px] text-muted-foreground mt-0.5">{offers[0].sector}</p>}
               </div>
               <div className="flex items-center gap-3">
                 {offers[0].offer_role_title && (
                   <Button
                     variant="secondary"
-                    className="text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100"
+                    className="text-success bg-success/10"
                     render={<a href={`/dashboard/salary?company=${encodeURIComponent(offers[0].name)}&role=${encodeURIComponent(offers[0].offer_role_title)}`} />}
                   >
                     Get negotiation script →
@@ -127,21 +117,21 @@ export default async function OffersPage() {
                 </Button>
               </div>
             </div>
-            <div className="divide-y divide-slate-50">
+            <div className="divide-y divide-border">
               {ROWS.map(row => {
                 const val = row.render(offers[0])
                 return (
                   <div key={row.label} className="px-6 py-4 flex items-start gap-6">
-                    <span className="text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 w-24 shrink-0 pt-0.5">{row.label}</span>
-                    <span className="text-[14px] text-slate-800 flex-1">{val}</span>
+                    <span className="text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground w-24 shrink-0 pt-0.5">{row.label}</span>
+                    <span className="text-[14px] text-foreground flex-1">{val}</span>
                   </div>
                 )
               })}
             </div>
-            <div className="px-6 py-5 border-t border-slate-100 bg-slate-50">
-              <p className="text-[13px] text-slate-400">
+            <div className="px-6 py-5 border-t border-border bg-muted">
+              <p className="text-[13px] text-muted-foreground">
                 Add offer details on the{' '}
-                <Link href={`/dashboard/companies/${offers[0].id}`} className="text-slate-600 underline hover:text-slate-900">
+                <Link href={`/dashboard/companies/${offers[0].id}`} className="text-muted-foreground underline hover:text-foreground">
                   company page
                 </Link>
                 {' '}to unlock total cash calculation and the negotiation script.
@@ -150,35 +140,35 @@ export default async function OffersPage() {
           </Card>
         ) : (
           // Multiple offers: comparison table
-          <Card className="border-green-200 py-0 overflow-hidden">
-            <div className="px-6 py-[18px] border-b border-green-100">
-              <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-green-700">Side-by-side comparison</p>
+          <Card className="border-success/30 py-0 overflow-hidden">
+            <div className="px-6 py-[18px] border-b border-success/30">
+              <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-success">Side-by-side comparison</p>
             </div>
             <div className="overflow-x-auto">
               <Table className="w-full border-collapse">
                 <TableHeader>
-                  <TableRow className="border-b border-slate-100">
-                    <TableHead scope="col" className="py-3 pl-6 pr-4 text-left text-[13px] font-bold tracking-[0.09em] uppercase text-slate-400 w-28">
+                  <TableRow className="border-b border-border">
+                    <TableHead scope="col" className="py-3 pl-6 pr-4 text-left text-[13px] font-bold tracking-[0.09em] uppercase text-muted-foreground w-28">
                       Field
                     </TableHead>
                     {offers.map(o => (
                       <TableHead key={o.id} className="py-3 px-4 text-left">
-                        <Link href={`/dashboard/companies/${o.id}`} className="text-[14px] font-bold text-slate-900 hover:text-slate-600 block">
+                        <Link href={`/dashboard/companies/${o.id}`} className="text-[14px] font-bold text-foreground hover:text-muted-foreground block">
                           {o.name}
                         </Link>
-                        {o.sector && <p className="text-[13px] text-slate-400 font-normal mt-0.5">{o.sector}</p>}
+                        {o.sector && <p className="text-[13px] text-muted-foreground font-normal mt-0.5">{o.sector}</p>}
                       </TableHead>
                     ))}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {ROWS.map(row => (
-                    <TableRow key={row.label} className="border-b border-slate-50">
-                      <TableCell className="py-3.5 pl-6 pr-4 text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 align-top">
+                    <TableRow key={row.label} className="border-b border-border">
+                      <TableCell className="py-3.5 pl-6 pr-4 text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground align-top">
                         {row.label}
                       </TableCell>
                       {offers.map(o => (
-                        <TableCell key={o.id} className="py-3.5 px-4 text-[14px] text-slate-800 align-top">
+                        <TableCell key={o.id} className="py-3.5 px-4 text-[14px] text-foreground align-top">
                           {row.render(o)}
                         </TableCell>
                       ))}
@@ -192,7 +182,7 @@ export default async function OffersPage() {
                           {o.offer_role_title && (
                             <Button
                               variant="secondary"
-                              className="text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100 inline-block"
+                              className="text-success bg-success/10 inline-block"
                               render={<a href={`/dashboard/salary?company=${encodeURIComponent(o.name)}&role=${encodeURIComponent(o.offer_role_title)}`} />}
                             >
                               Negotiate →

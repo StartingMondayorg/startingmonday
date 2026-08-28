@@ -16,18 +16,7 @@ import {
   DASHBOARD_PATTERN_ALERT_LIMIT,
 } from '@/lib/intelligence/dashboard-signal-contract'
 import { SignalFilterBar } from './filter-bar'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
-
+import { Alert, AlertDescription, Badge, Button, Card, Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui'
 const PAGE_SIZE = 25
 
 const SIGNAL_TYPE_LABELS: Record<string, string> = {
@@ -198,11 +187,10 @@ export default async function SignalsPage({
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.12),_transparent_34%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(11,17,30,0.95)_54%,_rgba(10,15,28,0.98)_100%)]" />
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+    <div className="relative min-h-screen overflow-hidden bg-background font-sans text-foreground">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/72 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-2">
             <Button variant="outline" render={<Link href="/dashboard" />}>
               Dashboard
@@ -222,12 +210,12 @@ export default async function SignalsPage({
         />
         <div className="flex items-center gap-4 mb-6">
           <div>
-            <h1 className="text-[30px] font-bold text-white">Company Signals</h1>
-            <p className="text-[13px] text-slate-300 mt-0.5">
+            <h1 className="text-[30px] font-bold text-foreground">Company Signals</h1>
+            <p className="text-[13px] text-muted-foreground mt-0.5">
               {sortedSignals.length} signal{sortedSignals.length !== 1 ? 's' : ''} detected
             </p>
           </div>
-          <Link href="/dashboard" className="ml-auto text-[13px] font-semibold text-slate-300 hover:text-orange-200 transition-colors">
+          <Link href="/dashboard" className="ml-auto text-[13px] font-semibold text-muted-foreground hover:text-primary transition-colors">
             Back to dashboard
           </Link>
         </div>
@@ -236,7 +224,7 @@ export default async function SignalsPage({
           <Alert variant="warning" className="mb-6">
             <AlertDescription className="text-current">
               <p className="text-[11px] font-bold tracking-[0.08em] uppercase mb-1">Roles forming now</p>
-              <p className="text-[15px] font-semibold text-white">
+              <p className="text-[15px] font-semibold text-foreground">
                 {rolesFormingSignal.companies ? `${Array.isArray(rolesFormingSignal.companies) ? rolesFormingSignal.companies[0]?.name : rolesFormingSignal.companies.name} may be opening a role window.` : 'A role window may be opening.'}
               </p>
               <p className="text-[12px] mt-1.5 leading-relaxed">
@@ -267,7 +255,7 @@ export default async function SignalsPage({
             <Button
               type="submit"
               variant="outline"
-              className="border-orange-300/40 bg-orange-500/20 text-orange-100 hover:bg-orange-500/30"
+              className="border-primary/40 bg-primary/10 text-primary hover:bg-primary/30"
             >
               Run signal scan now
             </Button>
@@ -299,11 +287,11 @@ export default async function SignalsPage({
         {/* Signal list */}
         {signalList.length > 0 && (
           <div className="mb-4">
-            <p className="text-[13px] text-slate-300 italic leading-relaxed">
+            <p className="text-[13px] text-muted-foreground italic leading-relaxed">
               Use signals as a reason to reconnect with someone who already knows you. Cold outreach on a signal rarely lands at the executive level.
             </p>
             {suppressedCount > 0 && (
-              <p className="text-[13px] text-slate-400 mt-1">
+              <p className="text-[13px] text-muted-foreground mt-1">
                 Suppressed {suppressedCount} low-confidence or stale signal{suppressedCount !== 1 ? 's' : ''} using Sprint 5 quality filters.
               </p>
             )}
@@ -311,13 +299,13 @@ export default async function SignalsPage({
         )}
         {signalList.length === 0 ? (
           <Card variant="glass" className="p-10 text-center">
-            <p className="text-[14px] text-slate-300">
+            <p className="text-[14px] text-muted-foreground">
               {hasFilters ? 'No signals match your filters.' : 'No signals yet. Signals are detected when the scanner runs (Mon, Wed, Fri).'}
             </p>
           </Card>
         ) : (
           <Card variant="glass" className="overflow-hidden mb-6">
-            <div className="divide-y divide-white/10">
+            <div className="divide-y divide-border">
               {signalList.map(sig => {
                 const co = Array.isArray(sig.companies) ? (sig.companies[0] ?? null) : sig.companies
                 const dateLabel = new Date(sig.signal_date + 'T12:00:00Z').toLocaleDateString('en-US', {
@@ -346,13 +334,13 @@ export default async function SignalsPage({
                       {co && (
                         <Link
                           href={`/dashboard/companies/${co.id}`}
-                          className="text-[14px] font-semibold text-white hover:text-orange-200 transition-colors"
+                          className="text-[14px] font-semibold text-foreground hover:text-primary transition-colors"
                         >
                           {co.name}
                         </Link>
                       )}
                       <Badge variant="default">{typeLabel}</Badge>
-                      <span className="text-[13px] text-slate-400 ml-auto">{dateLabel}</span>
+                      <span className="text-[13px] text-muted-foreground ml-auto">{dateLabel}</span>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap mb-2">
                       <Badge variant="secondary">Confidence {sig._confidence}</Badge>
@@ -363,17 +351,17 @@ export default async function SignalsPage({
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1.5fr_0.8fr] gap-3 mt-4">
                       <Card variant="glass" className="p-4">
-                        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">What happened</p>
-                        <p className="text-[13px] text-slate-200 leading-relaxed">{translation.whatHappened}</p>
+                        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">What happened</p>
+                        <p className="text-[13px] text-foreground leading-relaxed">{translation.whatHappened}</p>
                       </Card>
                       <Card variant="glass" className="p-4">
-                        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Why it may matter for your search</p>
-                        <p className="text-[13px] text-slate-200 leading-relaxed">{translation.whyItMatters}</p>
+                        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Why it may matter for your search</p>
+                        <p className="text-[13px] text-foreground leading-relaxed">{translation.whyItMatters}</p>
                       </Card>
                       <Card variant="glass" className="p-4 flex flex-col gap-3">
                         <div>
-                          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">What to do next</p>
-                          <p className="text-[13px] text-slate-200 leading-relaxed">{translation.nextStepLabel}</p>
+                          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">What to do next</p>
+                          <p className="text-[13px] text-foreground leading-relaxed">{translation.nextStepLabel}</p>
                         </div>
                         <div className="flex flex-col gap-2">
                           <Button render={<Link href={translation.nextStepHref} />}>
@@ -390,7 +378,7 @@ export default async function SignalsPage({
                       </Card>
                     </div>
                     {sig.outreach_angle && (
-                      <p className="text-[12px] text-slate-400 italic mt-3 leading-relaxed">Original angle: {sig.outreach_angle}</p>
+                      <p className="text-[12px] text-muted-foreground italic mt-3 leading-relaxed">Original angle: {sig.outreach_angle}</p>
                     )}
                     {sig.outreach_draft && (
                       <div className="mt-3"><DraftPanel draft={sig.outreach_draft} /></div>
@@ -398,7 +386,7 @@ export default async function SignalsPage({
                     {sig.source_url && (
                       <Button
                         variant="link"
-                        className="mt-3 h-auto p-0 text-[13px] text-slate-400 hover:text-slate-200"
+                        className="mt-3 h-auto p-0 text-[13px] text-muted-foreground hover:text-foreground"
                         render={<a href={sig.source_url} target="_blank" rel="noopener noreferrer" />}
                       >
                         Source link
@@ -417,7 +405,7 @@ export default async function SignalsPage({
                     {contact && !sig.outreach_draft && (
                       <div className="mt-3 flex items-center gap-3 flex-wrap">
                         <Button
-                          className="bg-emerald-500/20 text-emerald-100 hover:bg-emerald-500/30 border-emerald-300/35"
+                          className="bg-success/10 text-success hover:bg-success/30 border-success/35"
                           render={<Link href={`/dashboard/contacts/${contact.id}/outreach`} />}
                         >
                           Draft outreach to {contact.name}
@@ -451,7 +439,7 @@ export default async function SignalsPage({
                 />
               </PaginationItem>
             </PaginationContent>
-            <span className="text-[13px] text-slate-300">
+            <span className="text-[13px] text-muted-foreground">
               Page {safePage + 1} of {totalPages}
             </span>
             <PaginationContent>

@@ -1,7 +1,6 @@
 'use client'
 import { useRef, useState, useEffect } from 'react'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge } from '@/components/ui'
 interface TagInputProps {
   name?: string
   id?: string
@@ -65,7 +64,7 @@ export function TagInput({ name, id, placeholder, defaultValue, value, onChange,
 
   return (
     <div
-      className="flex flex-wrap gap-1.5 items-center min-h-[42px] border border-slate-200 rounded px-3 py-2 focus-within:border-slate-400 cursor-text"
+      className="flex flex-wrap gap-1.5 items-center min-h-[42px] border border-border rounded px-3 py-2 focus-within:border-border cursor-text"
       onClick={() => inputRef.current?.focus()}
     >
       {name && <input type="hidden" name={name} value={tags.join(', ')} readOnly />}
@@ -86,7 +85,7 @@ export function TagInput({ name, id, placeholder, defaultValue, value, onChange,
           <button
             type="button"
             onClick={e => { e.stopPropagation(); remove(i) }}
-            className="text-slate-400 hover:text-slate-700 bg-transparent border-0 cursor-pointer p-0 leading-none ml-0.5"
+            className="text-muted-foreground bg-transparent border-0 cursor-pointer p-0 leading-none ml-0.5"
             aria-label={`Remove ${t}`}
           >
             &times;
@@ -102,7 +101,7 @@ export function TagInput({ name, id, placeholder, defaultValue, value, onChange,
         onKeyDown={onKey}
         onBlur={() => commit(text)}
         placeholder={tags.length === 0 ? placeholder : undefined}
-        className="flex-1 min-w-[120px] text-[14px] text-slate-900 placeholder:text-slate-300 border-0 outline-none bg-transparent p-0"
+        className="flex-1 min-w-[120px] text-[14px] text-foreground placeholder:text-muted-foreground border-0 outline-none bg-transparent p-0"
       />
     </div>
   )

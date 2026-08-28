@@ -1,15 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Badge } from '@/components/ui/badge'
-
+import { Alert, AlertDescription, Badge, Button, Card, Checkbox, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type CompanyOption = {
   id: string
   name: string
@@ -202,11 +194,11 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
   }
 
   return (
-    <Card variant="glass" className="mb-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
+    <Card variant="glass" className="mb-6 p-5 shadow-xl">
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div>
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Relationship matching</p>
-          <p className="mt-1 text-[13px] text-slate-200">Find likely connections from uploaded LinkedIn contacts and candidate records.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary">Relationship matching</p>
+          <p className="mt-1 text-[13px] text-foreground">Find likely connections from uploaded LinkedIn contacts and candidate records.</p>
         </div>
       </div>
 
@@ -220,9 +212,9 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
         <div>
-          <Label className="text-[12px] text-slate-200">Company</Label>
+          <Label className="text-[12px] text-foreground">Company</Label>
           <Select value={companyId} onValueChange={(value) => setCompanyId(value ?? '')}>
-            <SelectTrigger className="mt-1 min-h-[44px] w-full border-white/15 bg-slate-950/70 text-[13px] text-slate-100">
+            <SelectTrigger className="mt-1 min-h-[44px] w-full border-border bg-background/70 text-[13px] text-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -234,13 +226,13 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
         </div>
 
         <div>
-          <Label className="text-[12px] text-slate-200">LinkedIn upload</Label>
+          <Label className="text-[12px] text-foreground">LinkedIn upload</Label>
           <Select
             value={hasUploads ? uploadId : undefined}
             onValueChange={(value) => setUploadId(value ?? '')}
             disabled={!hasUploads}
           >
-            <SelectTrigger className="mt-1 min-h-[44px] w-full border-white/15 bg-slate-950/70 text-[13px] text-slate-100">
+            <SelectTrigger className="mt-1 min-h-[44px] w-full border-border bg-background/70 text-[13px] text-foreground">
               <SelectValue placeholder="No processed uploads yet" />
             </SelectTrigger>
             <SelectContent>
@@ -275,26 +267,26 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
 
       {data && (
         <div className="mt-4 space-y-4">
-          <Card variant="glass" className="border-white/10 bg-slate-950/30 p-3">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Likely known to you</p>
+          <Card variant="glass" className="border-border bg-background/30 p-3">
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Likely known to you</p>
             {data.likely_known.length === 0 ? (
-              <p className="mt-2 text-[13px] text-slate-300">No strong-overlap matches yet.</p>
+              <p className="mt-2 text-[13px] text-muted-foreground">No strong-overlap matches yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.likely_known.map((item) => (
                   <li key={item.match_id}>
-                  <Card variant="glass" className="border-white/10 bg-slate-950/60 px-3 py-2">
-                    <p className="text-[13px] font-semibold text-white">{item.candidate_name} <span className="font-normal text-slate-300">({item.candidate_title ?? 'Role unknown'})</span></p>
-                    <p className="mt-1 text-[12px] text-slate-300">Matched to your connection: {item.connection_name}{item.connection_company ? ` at ${item.connection_company}` : ''}</p>
-                    <Label className="mt-2 block text-[11px] text-slate-300">Correct LinkedIn profile URL (optional)</Label>
+                  <Card variant="glass" className="border-border bg-background/60 px-3 py-2">
+                    <p className="text-[13px] font-semibold text-foreground">{item.candidate_name} <span className="font-normal text-muted-foreground">({item.candidate_title ?? 'Role unknown'})</span></p>
+                    <p className="mt-1 text-[12px] text-muted-foreground">Matched to your connection: {item.connection_name}{item.connection_company ? ` at ${item.connection_company}` : ''}</p>
+                    <Label className="mt-2 block text-[11px] text-muted-foreground">Correct LinkedIn profile URL (optional)</Label>
                     <Input
                       type="url"
                       value={profileCorrections[item.match_id] ?? ''}
                       onChange={(event) => setProfileCorrections((prev) => ({ ...prev, [item.match_id]: event.target.value }))}
                       placeholder={item.connection_profile_url ?? 'https://linkedin.com/in/...'}
-                      className="mt-1 min-h-[36px] w-full border-white/15 bg-slate-950/75 text-[12px] text-slate-100 placeholder:text-slate-500"
+                      className="mt-1 min-h-[36px] w-full border-border bg-background/75 text-[12px] text-foreground placeholder:text-muted-foreground"
                     />
-                    <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[12px] text-slate-200">
+                    <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[12px] text-foreground">
                       <Checkbox
                         checked={Boolean(confirmChecks[item.match_id])}
                         onCheckedChange={(checked) => setConfirmChecks((prev) => ({ ...prev, [item.match_id]: checked === true }))}
@@ -308,7 +300,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
                         variant="outline"
                         onClick={() => confirmMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="min-h-[36px] border-emerald-300/30 bg-emerald-500/10 text-[12px] font-semibold text-emerald-200 hover:bg-emerald-500/20"
+                        className="min-h-[36px] border-success/30 bg-success/10 text-[12px] font-semibold text-success hover:bg-success/20"
                       >
                         Confirm + add contact
                       </Button>
@@ -317,7 +309,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
                         variant="outline"
                         onClick={() => rejectMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="min-h-[36px] border-rose-300/30 bg-rose-500/10 text-[12px] font-semibold text-rose-200 hover:bg-rose-500/20"
+                        className="min-h-[36px] border-destructive/30 bg-destructive/10 text-[12px] font-semibold text-destructive hover:bg-destructive/20"
                       >
                         Reject
                       </Button>
@@ -329,26 +321,26 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
             )}
           </Card>
 
-          <Card variant="glass" className="border-white/10 bg-slate-950/30 p-3">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Needs review</p>
+          <Card variant="glass" className="border-border bg-background/30 p-3">
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Needs review</p>
             {data.suggested_matches.length === 0 ? (
-              <p className="mt-2 text-[13px] text-slate-300">No possible-overlap suggestions yet.</p>
+              <p className="mt-2 text-[13px] text-muted-foreground">No possible-overlap suggestions yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.suggested_matches.map((item) => (
                   <li key={item.match_id}>
-                  <Card variant="glass" className="border-white/10 bg-slate-950/60 px-3 py-2">
-                    <p className="text-[13px] font-semibold text-white">{item.candidate_name}</p>
-                    <p className="mt-1 text-[12px] text-slate-300">Potential overlap with {item.connection_name}</p>
-                    <Label className="mt-2 block text-[11px] text-slate-300">Correct LinkedIn profile URL (optional)</Label>
+                  <Card variant="glass" className="border-border bg-background/60 px-3 py-2">
+                    <p className="text-[13px] font-semibold text-foreground">{item.candidate_name}</p>
+                    <p className="mt-1 text-[12px] text-muted-foreground">Potential overlap with {item.connection_name}</p>
+                    <Label className="mt-2 block text-[11px] text-muted-foreground">Correct LinkedIn profile URL (optional)</Label>
                     <Input
                       type="url"
                       value={profileCorrections[item.match_id] ?? ''}
                       onChange={(event) => setProfileCorrections((prev) => ({ ...prev, [item.match_id]: event.target.value }))}
                       placeholder={item.connection_profile_url ?? 'https://linkedin.com/in/...'}
-                      className="mt-1 min-h-[36px] w-full border-white/15 bg-slate-950/75 text-[12px] text-slate-100 placeholder:text-slate-500"
+                      className="mt-1 min-h-[36px] w-full border-border bg-background/75 text-[12px] text-foreground placeholder:text-muted-foreground"
                     />
-                    <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[12px] text-slate-200">
+                    <label className="mt-2 inline-flex min-h-[36px] items-center gap-2 text-[12px] text-foreground">
                       <Checkbox
                         checked={Boolean(confirmChecks[item.match_id])}
                         onCheckedChange={(checked) => setConfirmChecks((prev) => ({ ...prev, [item.match_id]: checked === true }))}
@@ -362,7 +354,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
                         variant="outline"
                         onClick={() => confirmMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="min-h-[36px] border-emerald-300/30 bg-emerald-500/10 text-[12px] font-semibold text-emerald-200 hover:bg-emerald-500/20"
+                        className="min-h-[36px] border-success/30 bg-success/10 text-[12px] font-semibold text-success hover:bg-success/20"
                       >
                         Confirm + add contact
                       </Button>
@@ -371,7 +363,7 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
                         variant="outline"
                         onClick={() => rejectMatch(item.match_id)}
                         disabled={actingMatchId === item.match_id}
-                        className="min-h-[36px] border-rose-300/30 bg-rose-500/10 text-[12px] font-semibold text-rose-200 hover:bg-rose-500/20"
+                        className="min-h-[36px] border-destructive/30 bg-destructive/10 text-[12px] font-semibold text-destructive hover:bg-destructive/20"
                       >
                         Reject
                       </Button>
@@ -383,28 +375,28 @@ export function RelationshipMatchPanel({ companies, uploads }: { companies: Comp
             )}
           </Card>
 
-          <Card variant="glass" className="border-white/10 bg-slate-950/30 p-3">
+          <Card variant="glass" className="border-border bg-background/30 p-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300">Confirmed relationships</p>
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Confirmed relationships</p>
               <Button
                 type="button"
                 variant="outline"
                 onClick={exportConfirmedRelationships}
                 disabled={data.confirmed_relationships.length === 0}
-                className="min-h-[36px] border-white/15 bg-white/5 text-[12px] font-semibold text-slate-100"
+                className="min-h-[36px] border-border bg-muted/40 text-[12px] font-semibold text-foreground"
               >
                 Export Sales Navigator CSV
               </Button>
             </div>
             {data.confirmed_relationships.length === 0 ? (
-              <p className="mt-2 text-[13px] text-slate-300">No confirmed relationships yet.</p>
+              <p className="mt-2 text-[13px] text-muted-foreground">No confirmed relationships yet.</p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {data.confirmed_relationships.map((item) => (
                   <li key={item.match_id}>
-                  <Card variant="glass" className="border-white/10 bg-slate-950/60 px-3 py-2">
-                    <p className="text-[13px] font-semibold text-white">{item.candidate_name}</p>
-                    <p className="mt-1 text-[12px] text-slate-300">Confirmed through connection {item.connection_name}</p>
+                  <Card variant="glass" className="border-border bg-background/60 px-3 py-2">
+                    <p className="text-[13px] font-semibold text-foreground">{item.candidate_name}</p>
+                    <p className="mt-1 text-[12px] text-muted-foreground">Confirmed through connection {item.connection_name}</p>
                   </Card>
                   </li>
                 ))}

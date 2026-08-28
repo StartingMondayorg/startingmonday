@@ -26,16 +26,15 @@ const TERMS = [
 
 export default function ShortlistSprintPage() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.1),_transparent_30%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.96)_60%,_rgba(10,15,28,1)_100%)]" />
+    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
 
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/78 backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/78 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] transition-opacity hover:opacity-80">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/demo/wedge-30s" className="text-[13px] text-slate-200 transition-colors hover:text-white">
+            <Link href="/demo/wedge-30s" className="text-[13px] text-muted-foreground transition-colors hover:text-foreground">
               30-second demo
             </Link>
           </div>
@@ -43,34 +42,34 @@ export default function ShortlistSprintPage() {
       </header>
 
       <main className="px-4 py-6 sm:px-6 sm:py-8">
-        <div className="mx-auto max-w-5xl rounded-[1.5rem] border border-white/10 bg-[linear-gradient(150deg,rgba(26,22,20,0.72),rgba(10,14,24,0.92))] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.24)] sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Paid entry offer</p>
-          <h1 className="mt-3 max-w-3xl font-serif text-[34px] leading-[1.05] tracking-tight text-white sm:text-[46px]">
+        <div className="mx-auto max-w-5xl rounded-[1.5rem] border border-border bg-card/85 p-6 shadow-xl sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Paid entry offer</p>
+          <h1 className="mt-3 max-w-3xl font-serif text-[34px] leading-[1.05] tracking-tight text-foreground sm:text-[46px]">
             7-Day Shortlist Sprint
           </h1>
-          <p className="mt-4 max-w-3xl text-[16px] leading-relaxed text-slate-200 sm:text-[18px]">
+          <p className="mt-4 max-w-3xl text-[16px] leading-relaxed text-foreground sm:text-[18px]">
             If you are in transition now, this is the fastest way to test wedge value: likely-to-open roles, decision-path contacts, and the next actions that create warm conversations.
           </p>
 
           <section className="mt-6 grid gap-4 md:grid-cols-2">
-            <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">What you get in 7 days</p>
-              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-slate-200">
+            <article className="rounded-xl border border-border bg-muted/[0.04] p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">What you get in 7 days</p>
+              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-foreground">
                 {DELIVERABLES.map((item) => (
                   <li key={item} className="flex gap-2.5">
-                    <span className="font-bold text-orange-300">+</span>
+                    <span className="font-bold text-primary">+</span>
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </article>
 
-            <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">Offer terms</p>
-              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-slate-200">
+            <article className="rounded-xl border border-border bg-muted/[0.04] p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">Offer terms</p>
+              <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-foreground">
                 {TERMS.map((item) => (
                   <li key={item} className="flex gap-2.5">
-                    <span className="font-bold text-orange-300">+</span>
+                    <span className="font-bold text-primary">+</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -90,7 +89,7 @@ export default function ShortlistSprintPage() {
                 offer_code: 'shortlist_sprint',
                 amount_usd: 199,
               }}
-              className="rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+              className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Start 7-day sprint
             </TrackLink>
@@ -104,16 +103,16 @@ export default function ShortlistSprintPage() {
                 destination: '/demo/wedge-30s',
                 offer_code: 'shortlist_sprint',
               }}
-              className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+              className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
             >
               Review wedge demo first
             </TrackLink>
           </div>
 
           <section className="mt-6 grid gap-4 md:grid-cols-2">
-            <article className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-orange-200">Funnel instrumentation</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
+            <article className="rounded-xl border border-border bg-muted/[0.04] p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">Funnel instrumentation</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-foreground">
                 This page now emits canonical shortlist funnel events to user_events so cohort reporting can track CTA clicks, checkout starts, purchases, delivery, and credit-forward conversion.
               </p>
               <TrackLink
@@ -126,7 +125,7 @@ export default function ShortlistSprintPage() {
                   destination: '/api/admin/automation/reporting/shortlist-sprint-funnel',
                   offer_code: 'shortlist_sprint',
                 }}
-                className="mt-3 inline-flex rounded-full border border-white/20 px-4 py-2 text-[12px] font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+                className="mt-3 inline-flex rounded-full border border-border px-4 py-2 text-[12px] font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
               >
                 View funnel report endpoint
               </TrackLink>

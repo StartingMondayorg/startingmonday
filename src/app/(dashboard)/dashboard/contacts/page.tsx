@@ -9,19 +9,7 @@ import { RelationshipMatchPanel } from './relationship-match-panel'
 import { LinkedInImportManager } from './linkedin-import-manager'
 import { LogoutButton } from '../logout-button'
 import { isRelationshipNetworkMatchingEnabled } from '@/lib/feature-flags'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 export const metadata = { title: 'Contacts' }
 
 // shadcn Select can't have an item with value "" — use this sentinel for the
@@ -29,7 +17,7 @@ export const metadata = { title: 'Contacts' }
 // addContact server action below.
 const NONE = '__none__'
 
-const selectTriggerCls = 'w-full border-white/15 rounded px-3 py-2 text-[13px] text-slate-100 focus:outline-none focus:border-white/30 bg-slate-950/70'
+const selectTriggerCls = 'w-full border-border rounded px-3 py-2 text-[13px] text-foreground focus:outline-none focus:border-border bg-background/70'
 
 type UploadRow = {
   id: string
@@ -175,17 +163,17 @@ export default async function ContactsPage({
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
+    <div className="min-h-screen bg-background font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+      <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
-              className="min-h-[44px] border-slate-700 text-[12px] font-semibold text-slate-200 hover:text-white hover:border-slate-500"
+              className="min-h-[44px] border-border text-[12px] font-semibold text-muted-foreground hover:text-foreground"
               render={<Link href="/dashboard" />}
             >
               Dashboard
@@ -196,26 +184,26 @@ export default async function ContactsPage({
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-5 sm:py-10">
-        <Card variant="glass" className="mb-8 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">Contacts</p>
-          <h1 className="mt-1 text-[26px] font-bold text-white leading-tight">Relationship network</h1>
-          <p className="text-[13px] text-slate-200 mt-1.5">
+        <Card variant="glass" className="mb-8 px-5 py-5 shadow-xl">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary">Contacts</p>
+          <h1 className="mt-1 text-[26px] font-bold text-foreground leading-tight">Relationship network</h1>
+          <p className="text-[13px] text-foreground mt-1.5">
             Recruiters, hiring managers, and warm connections.
           </p>
         </Card>
 
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Card variant="glass" className="px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-            <p className="text-[13px] uppercase tracking-[0.12em] text-slate-400 mb-1">Network health</p>
-            <p className="text-[24px] font-semibold text-white">{relationshipSummary.coverageScore}</p>
+          <Card variant="glass" className="px-4 py-3 shadow-xl">
+            <p className="text-[13px] uppercase tracking-[0.12em] text-muted-foreground mb-1">Network health</p>
+            <p className="text-[24px] font-semibold text-foreground">{relationshipSummary.coverageScore}</p>
           </Card>
-          <Card variant="glass" className="px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-            <p className="text-[13px] uppercase tracking-[0.12em] text-slate-400 mb-1">Covered types</p>
-            <p className="text-[24px] font-semibold text-white">{relationshipSummary.coveredTypes}/{Object.keys(CONTACT_TYPE_LABELS).length}</p>
+          <Card variant="glass" className="px-4 py-3 shadow-xl">
+            <p className="text-[13px] uppercase tracking-[0.12em] text-muted-foreground mb-1">Covered types</p>
+            <p className="text-[24px] font-semibold text-foreground">{relationshipSummary.coveredTypes}/{Object.keys(CONTACT_TYPE_LABELS).length}</p>
           </Card>
-          <Card variant="glass" className="px-4 py-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-            <p className="text-[13px] uppercase tracking-[0.12em] text-slate-400 mb-1">Gap</p>
-            <p className="text-[14px] font-semibold text-slate-100 leading-snug">{relationshipSummary.coverageGapLabel}</p>
+          <Card variant="glass" className="px-4 py-3 shadow-xl">
+            <p className="text-[13px] uppercase tracking-[0.12em] text-muted-foreground mb-1">Gap</p>
+            <p className="text-[14px] font-semibold text-foreground leading-snug">{relationshipSummary.coverageGapLabel}</p>
           </Card>
         </div>
 
@@ -238,8 +226,8 @@ export default async function ContactsPage({
           <ContactsList contacts={contacts} isLeader={isExecutive} />
 
           {/* Add contact form */}
-          <Card variant="glass" className="p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-            <div className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-300 mb-4">
+          <Card variant="glass" className="p-5 shadow-xl">
+            <div className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
               Add contact
             </div>
 
@@ -257,8 +245,8 @@ export default async function ContactsPage({
             <form action={addContactForm} className="flex flex-col gap-3">
 
               <div>
-                <Label htmlFor="contact-name" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
-                  Name <span className="text-red-500">*</span>
+                <Label htmlFor="contact-name" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
+                  Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="contact-name"
@@ -266,12 +254,12 @@ export default async function ContactsPage({
                   type="text"
                   required
                   placeholder="Jane Smith"
-                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
+                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground bg-background/70"
                 />
               </div>
 
               <div>
-                <Label htmlFor="contact-title" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-title" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   Title
                 </Label>
                 <Input
@@ -279,12 +267,12 @@ export default async function ContactsPage({
                   name="title"
                   type="text"
                   placeholder="VP of Engineering"
-                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
+                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground bg-background/70"
                 />
               </div>
 
               <div>
-                <Label htmlFor="contact-firm" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-firm" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   Firm
                 </Label>
                 <Input
@@ -292,12 +280,12 @@ export default async function ContactsPage({
                   name="firm"
                   type="text"
                   placeholder="Korn Ferry"
-                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
+                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground bg-background/70"
                 />
               </div>
 
               <div>
-                <Label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-channel" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   Channel
                 </Label>
                 <Select name="channel" defaultValue={NONE}>
@@ -317,7 +305,7 @@ export default async function ContactsPage({
               </div>
 
               <div>
-                <Label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-type" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   Relationship type
                 </Label>
                 <Select name="contact_type" defaultValue={NONE}>
@@ -337,8 +325,8 @@ export default async function ContactsPage({
 
               {companyList.length > 0 && (
                 <div>
-                  <Label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
-                    Company <span className="text-slate-300 font-normal">(optional)</span>
+                  <Label htmlFor="contact-company" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
+                    Company <span className="text-muted-foreground font-normal">(optional)</span>
                   </Label>
                   <Select
                     name="company_id"
@@ -358,7 +346,7 @@ export default async function ContactsPage({
               )}
 
               <div>
-                <Label htmlFor="contact-email" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-email" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   Email
                 </Label>
                 <Input
@@ -366,12 +354,12 @@ export default async function ContactsPage({
                   name="email"
                   type="text"
                   placeholder="jane@company.com"
-                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
+                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground bg-background/70"
                 />
               </div>
 
               <div>
-                <Label htmlFor="contact-linkedin" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-linkedin" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   LinkedIn URL
                 </Label>
                 <Input
@@ -379,12 +367,12 @@ export default async function ContactsPage({
                   name="linkedin_url"
                   type="text"
                   placeholder="https://linkedin.com/in/jane"
-                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
+                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground bg-background/70"
                 />
               </div>
 
               <div>
-                <Label htmlFor="contact-notes" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5">
+                <Label htmlFor="contact-notes" className="block text-[13px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5">
                   Notes
                 </Label>
                 <Input
@@ -392,7 +380,7 @@ export default async function ContactsPage({
                   name="notes"
                   type="text"
                   placeholder="Met at SaaStr, warm connection…"
-                  className="w-full text-[13px] text-slate-100 placeholder:text-slate-500 bg-slate-950/70"
+                  className="w-full text-[13px] text-foreground placeholder:text-muted-foreground bg-background/70"
                 />
               </div>
 

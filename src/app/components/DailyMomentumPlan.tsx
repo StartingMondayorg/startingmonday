@@ -3,12 +3,7 @@
 import Link from 'next/link'
 import { usePostHog } from 'posthog-js/react'
 import { useEffect, useRef, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Textarea } from '@/components/ui'
 export type DailyMomentumAction = {
   body: string
   cta: string
@@ -37,17 +32,17 @@ type DailyMomentumState = {
 const STATUS_COPY: Record<DailyMomentumPlanProps['status'], { chip: string; accent: string; body: string }> = {
   low: {
     chip: 'Steady start',
-    accent: 'border-slate-300/35 bg-white/10 text-slate-100',
+    accent: 'border-border/35 bg-muted/60 text-foreground',
     body: 'Keep today narrow. Finish two actions and leave the rest for tomorrow.',
   },
   medium: {
     chip: 'Momentum building',
-    accent: 'border-amber-300/40 bg-amber-500/10 text-amber-100',
+    accent: 'border-warning/40 bg-warning/10 text-warning',
     body: 'You have enough signal to move. Protect the top three actions before opening more tabs.',
   },
   strong: {
     chip: 'Strong momentum',
-    accent: 'border-emerald-300/40 bg-emerald-500/10 text-emerald-100',
+    accent: 'border-success/40 bg-success/10 text-success',
     body: 'The pipeline is giving you something to work with. Convert it into clean follow-through today.',
   },
 }
@@ -192,12 +187,12 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
   }
 
   return (
-    <Card id="daily-momentum-plan" variant="glass" className="mb-8 overflow-hidden py-0 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-      <div className="px-6 py-4 sm:px-7 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(251,146,60,0.2),_transparent_34%),linear-gradient(180deg,_rgba(15,23,42,0.98)_0%,_rgba(15,23,42,0.94)_100%)]">
+    <Card id="daily-momentum-plan" variant="glass" className="mb-8 overflow-hidden py-0 shadow-xl">
+      <div className="px-6 py-4 sm:px-7 border-b border-border bg-card/85">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h2 className="text-[16px] font-bold text-white leading-tight">Today&apos;s three actions</h2>
-            <span className="text-[12px] text-slate-300">{completedCount} of 3 complete · day complete at two</span>
+            <h2 className="text-[16px] font-bold text-foreground leading-tight">Today&apos;s three actions</h2>
+            <span className="text-[12px] text-muted-foreground">{completedCount} of 3 complete · day complete at two</span>
           </div>
           <div className={`inline-flex items-center self-start rounded-full border px-3 py-1 text-[12px] font-semibold ${statusCopy.accent}`}>
             {statusChip}
@@ -212,33 +207,33 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
             return (
               <article
                 key={action.id}
-                className={`rounded-2xl border p-5 sm:p-6 transition-colors ${done ? 'border-emerald-300/40 bg-emerald-500/10' : 'border-white/15 bg-white/5'}`}
+                className={`rounded-2xl border p-5 sm:p-6 transition-colors ${done ? 'border-success/40 bg-success/10' : 'border-border bg-muted/40'}`}
               >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-orange-500 text-[11px] font-bold text-slate-950">{index + 1}</span>
-                      <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[13px] font-medium text-slate-200">
+                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">{index + 1}</span>
+                      <span className="rounded-full border border-border bg-muted/40 px-2.5 py-1 text-[13px] font-medium text-foreground">
                         {action.track}
                       </span>
-                      <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[13px] font-medium text-slate-200">
+                      <span className="rounded-full border border-border bg-muted/40 px-2.5 py-1 text-[13px] font-medium text-foreground">
                         {action.effortMinutes} min
                       </span>
                     </div>
-                    <h3 className="text-[15px] font-semibold text-white mb-1.5">{action.title}</h3>
-                    <p className="text-[13px] leading-relaxed text-slate-200">{action.body}</p>
+                    <h3 className="text-[15px] font-semibold text-foreground mb-1.5">{action.title}</h3>
+                    <p className="text-[13px] leading-relaxed text-foreground">{action.body}</p>
                     {(action.whyNow || action.whyYou) && (
                       <dl className="mt-3 space-y-1.5">
                         {action.whyNow && (
                           <div className="flex gap-2 text-[12px] leading-relaxed">
-                            <dt className="shrink-0 font-bold uppercase tracking-[0.08em] text-orange-200/90">Why now</dt>
-                            <dd className="text-slate-300">{action.whyNow}</dd>
+                            <dt className="shrink-0 font-bold uppercase tracking-[0.08em] text-primary/90">Why now</dt>
+                            <dd className="text-muted-foreground">{action.whyNow}</dd>
                           </div>
                         )}
                         {action.whyYou && (
                           <div className="flex gap-2 text-[12px] leading-relaxed">
-                            <dt className="shrink-0 font-bold uppercase tracking-[0.08em] text-orange-200/90">Why you</dt>
-                            <dd className="text-slate-300">{action.whyYou}</dd>
+                            <dt className="shrink-0 font-bold uppercase tracking-[0.08em] text-primary/90">Why you</dt>
+                            <dd className="text-muted-foreground">{action.whyYou}</dd>
                           </div>
                         )}
                       </dl>
@@ -249,7 +244,7 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
                           <Link
                             key={link.href + link.label}
                             href={link.href}
-                            className="rounded border border-white/15 px-2.5 py-1 text-[12px] font-semibold text-slate-200 hover:border-white/40 transition-colors"
+                            className="rounded border border-border px-2.5 py-1 text-[12px] font-semibold text-foreground transition-colors"
                           >
                             {link.label}
                           </Link>
@@ -281,7 +276,7 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
 
                         return nextState
                       })}
-                      className={`min-h-[44px] rounded-full px-4 text-[13px] font-semibold ${done ? '!border-emerald-300/40 !bg-emerald-500/10 !text-emerald-100' : '!border-white/25 !bg-white/5 !text-slate-100 hover:!border-white/40'}`}
+                      className={`min-h-[44px] rounded-full px-4 text-[13px] font-semibold ${done ? '!border-success/40 !bg-success/10 !text-success' : '!border-border !bg-muted/40 !text-foreground hover:!border-border'}`}
                     >
                       {done ? 'Done' : 'Complete'}
                     </Button>
@@ -308,14 +303,14 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
                         },
                       }))}
                       placeholder="What will make this easier to finish?"
-                      className="w-full rounded-xl !border-white/15 !bg-white/5 text-[13px] !text-slate-100 placeholder:!text-slate-400 focus-visible:!border-orange-300/60"
+                      className="w-full rounded-xl !border-border !bg-muted/40 text-[13px] !text-foreground placeholder:!text-muted-foreground focus-visible:!border-primary/60"
                     />
                   ) : (
                     <Button
                       type="button"
                       variant="link"
                       onClick={() => setOpenNoteId(action.id)}
-                      className="h-auto p-0 text-[12px] font-semibold !text-slate-300 hover:!text-slate-100"
+                      className="h-auto p-0 text-[12px] font-semibold !text-muted-foreground hover:!text-foreground"
                     >
                       Add note
                     </Button>
@@ -327,8 +322,8 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_15rem] lg:items-start">
-          <div className="rounded-2xl border border-white/15 bg-white/5 px-4 py-4">
-            <label className="block text-[13px] font-medium text-slate-200 mb-2" htmlFor="daily-reflection-prompt">
+          <div className="rounded-2xl border border-border bg-muted/40 px-4 py-4">
+            <label className="block text-[13px] font-medium text-foreground mb-2" htmlFor="daily-reflection-prompt">
               Daily reflection
             </label>
             <Textarea
@@ -337,7 +332,7 @@ export function DailyMomentumPlan({ actions, dateKey, status }: DailyMomentumPla
               onChange={(event) => setState((current) => ({ ...current, reflection: event.target.value }))}
               onBlur={(event) => emitReflectionSubmitted(event.target.value)}
               placeholder="What moved? What got stuck? What needs a simpler recovery tomorrow?"
-              className="min-h-[112px] w-full resize-y rounded-xl !border-white/15 !bg-white/5 text-[13px] !text-slate-100 placeholder:!text-slate-400 focus-visible:!border-orange-300/60"
+              className="min-h-[112px] w-full resize-y rounded-xl !border-border !bg-muted/40 text-[13px] !text-foreground placeholder:!text-muted-foreground focus-visible:!border-primary/60"
             />
           </div>
 

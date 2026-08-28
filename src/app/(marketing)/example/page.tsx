@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
 import { TrackLink } from '@/app/components/TrackLink'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui'
 import { getBrandContextFromHosts } from '@/lib/brand'
 import { HERO_EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
@@ -35,13 +35,13 @@ export default async function ExamplePage() {
   const proofCase = STARTING_MONDAY_HERO_CONTENT.proofCase
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100 sm:px-6 sm:py-20">
+    <main className="min-h-screen bg-background px-4 py-12 text-foreground sm:px-6 sm:py-20">
       <div className="mx-auto max-w-4xl">
-        <Link href="/" className="inline-flex min-h-[48px] items-center text-[13px] font-bold uppercase tracking-[0.14em] text-orange-200 hover:text-white">
+        <Link href="/" className="inline-flex min-h-[48px] items-center text-[13px] font-bold uppercase tracking-[0.14em] text-primary hover:text-foreground">
           Starting Monday
         </Link>
-        <p className="mt-12 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">Public signal example</p>
-        <h1 className="mt-4 max-w-3xl font-display text-[2.4rem] font-semibold leading-[1.04] text-white sm:text-[4rem]">
+        <p className="mt-12 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Public signal example</p>
+        <h1 className="mt-4 max-w-3xl font-display text-[2.4rem] font-semibold leading-[1.04] text-foreground sm:text-[4rem]">
           What a forming role looks like.
         </h1>
         <div className="mt-10">
@@ -61,7 +61,7 @@ export default async function ExamplePage() {
             Get access
           </Button>
         </div>
-        <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-orange-200/90">
+        <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/90">
           Private by default. No one knows you&apos;re looking until you decide they do.
         </p>
       </div>

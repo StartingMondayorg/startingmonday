@@ -29,7 +29,7 @@ export default function ExecutiveCoachingJobSearchPage() {
       url="https://startingmonday.app/blog/executive-coaching-job-search"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           There is a moment that happens in almost every executive coaching engagement focused on a
           job search. You ask your client how the week went. They give you a summary. It is accurate
@@ -47,7 +47,7 @@ export default function ExecutiveCoachingJobSearchPage() {
           building and positioning.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the search actually looks like from inside</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the search actually looks like from inside</h2>
 
         <p>
           A senior executive in transition is managing a campaign that would overwhelm a first-time
@@ -68,7 +68,7 @@ export default function ExecutiveCoachingJobSearchPage() {
           short list was already being assembled.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The question most coaches cannot answer</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The question most coaches cannot answer</h2>
 
         <p>
           At the end of a typical coaching session, you know what your client told you. You know
@@ -83,7 +83,7 @@ export default function ExecutiveCoachingJobSearchPage() {
           you have no direct visibility into that execution. You are working from their self-report.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What changes with the right infrastructure</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What changes with the right infrastructure</h2>
 
         <p>
           The most useful thing you can do for a client in transition is not always in the session.
@@ -107,7 +107,7 @@ export default function ExecutiveCoachingJobSearchPage() {
           about them. You ask better questions because you have better information.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The prep brief as a coaching instrument</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The prep brief as a coaching instrument</h2>
 
         <p>
           One of the specific tools worth understanding is the AI-generated prep brief. Before an
@@ -129,7 +129,7 @@ export default function ExecutiveCoachingJobSearchPage() {
           That is the work that justifies a coaching engagement. The research does not.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The signal advantage</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The signal advantage</h2>
 
         <p>
           At the senior level, the executive who finds out about an opportunity when it is posted
@@ -153,7 +153,7 @@ export default function ExecutiveCoachingJobSearchPage() {
           and surfaces the patterns is.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">A practical starting point</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">A practical starting point</h2>
 
         <p>
           If you have a client entering transition in the next thirty days, recommend they try

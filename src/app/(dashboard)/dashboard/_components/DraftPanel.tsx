@@ -1,9 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui'
 export function DraftPanel({ draft }: { draft: { subject: string; body: string } }) {
   const [copied, setCopied] = useState(false)
 
@@ -17,21 +14,21 @@ export function DraftPanel({ draft }: { draft: { subject: string; body: string }
 
   return (
     <Collapsible className="mt-2">
-      <CollapsibleTrigger className="text-[12px] text-orange-600 font-semibold cursor-pointer hover:text-orange-800">
+      <CollapsibleTrigger className="text-[12px] text-primary font-semibold cursor-pointer">
         Draft ready &#8595;
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <Card className="mt-2 border-orange-100 bg-orange-50 p-3">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-0.5">Subject</p>
-          <p className="text-[13px] font-semibold text-slate-800 mb-3">{draft.subject}</p>
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-0.5">Body</p>
-          <p className="text-[13px] text-slate-700 leading-relaxed whitespace-pre-wrap mb-3">{draft.body}</p>
+        <Card className="mt-2 border-primary/30 bg-primary/10 p-3">
+          <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide mb-0.5">Subject</p>
+          <p className="text-[13px] font-semibold text-foreground mb-3">{draft.subject}</p>
+          <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide mb-0.5">Body</p>
+          <p className="text-[13px] text-muted-foreground leading-relaxed whitespace-pre-wrap mb-3">{draft.body}</p>
           <div className="flex items-center gap-4">
             <Button
               type="button"
               variant="outline"
               onClick={copy}
-              className="text-[11px] font-semibold text-orange-700 border-orange-200 bg-white hover:bg-orange-50 px-3 py-1"
+              className="text-[11px] font-semibold text-primary border-primary/30 bg-card hover:bg-primary/10 px-3 py-1"
             >
               {copied ? 'Copied!' : 'Copy to clipboard'}
             </Button>
@@ -39,7 +36,7 @@ export function DraftPanel({ draft }: { draft: { subject: string; body: string }
               href="https://www.manager-tools.com/2016/09/job-search-tracking"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] text-slate-400 hover:text-slate-600 underline"
+              className="text-[11px] text-muted-foreground underline"
             >
               Log this send
             </a>

@@ -43,7 +43,7 @@ export default function ExecutiveResumeGapsPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           The first person to read your resume in a retained search is not the partner. It is an
           associate running a long list against a criteria sheet.
@@ -56,7 +56,7 @@ export default function ExecutiveResumeGapsPage() {
           screening for.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The first filter and what it looks for</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The first filter and what it looks for</h2>
 
         <p>
           Search firms build criteria sheets from the client brief. For a CIO role, the standard
@@ -71,7 +71,7 @@ export default function ExecutiveResumeGapsPage() {
           it is not findable at scale.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Technology outputs instead of business outcomes</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Technology outputs instead of business outcomes</h2>
 
         <p>
           The most common gap in CIO resumes is describing what was built instead of what it delivered.
@@ -92,7 +92,7 @@ export default function ExecutiveResumeGapsPage() {
           significance. Do not leave it as a technology deliverable alone.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The P&amp;L gap</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The P&amp;L gap</h2>
 
         <p>
           Many technology executives have never held formal P&amp;L ownership. The resume shows technology
@@ -109,7 +109,7 @@ export default function ExecutiveResumeGapsPage() {
           overstating your role.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Tenure patterns and how they read</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Tenure patterns and how they read</h2>
 
         <p>
           Short tenures require explanation. Two years at three consecutive companies raises a pattern
@@ -131,7 +131,7 @@ export default function ExecutiveResumeGapsPage() {
           units. Lateral depth reads as stagnation. Expanding scope reads as career progression.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The language gap</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The language gap</h2>
 
         <p>
           CIO resumes written in technology language do not read as executive documents. Agile
@@ -152,7 +152,7 @@ export default function ExecutiveResumeGapsPage() {
           Different audience.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to fix it before you send</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to fix it before you send</h2>
 
         <p>
           Read your resume as if you are looking for someone else. Does it answer what the business
@@ -166,7 +166,7 @@ export default function ExecutiveResumeGapsPage() {
           show scope without context.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the quality check does</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the quality check does</h2>
 
         <p>
           Starting Monday&rsquo;s resume quality check reads your resume against the role you are
@@ -176,7 +176,7 @@ export default function ExecutiveResumeGapsPage() {
 
         <p>
           The{' '}
-          <Link href="/for-cio" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-cio" className="text-foreground underline hover:text-muted-foreground transition-colors">
             resume tailoring feature
           </Link>{' '}
           rewrites each bullet in the language of the specific job description without keyword stuffing,

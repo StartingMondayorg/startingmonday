@@ -35,8 +35,8 @@ function ObservationList() {
     <div className="space-y-4">
       {OBSERVATIONS.map(item => (
         <div key={item.label}>
-          <p className="text-[13px] font-semibold text-slate-900 mb-1">{item.label}</p>
-          <p className="text-[13px] text-slate-600 leading-relaxed">{item.detail}</p>
+          <p className="text-[13px] font-semibold text-foreground mb-1">{item.label}</p>
+          <p className="text-[13px] text-muted-foreground leading-relaxed">{item.detail}</p>
         </div>
       ))}
     </div>
@@ -59,28 +59,28 @@ export default function PilotFindingsPage() {
         note: 'Public evidence and methods are linked from the references page.',
       }}
     >
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <h1 className="sr-only">What We Learned from the Pilot</h1>
         <p>
           This is the non-promotional version of what the pilot suggests: the system appears most useful when it reduces ambiguity, surfaces the next best move, and keeps the campaign moving between formal sessions.
         </p>
 
-        <section id="pilot-signals" className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Pilot observations (qualitative, directional)</p>
+        <section id="pilot-signals" className="border border-border rounded-lg p-5 bg-muted">
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Pilot observations (qualitative, directional)</p>
           <ObservationList />
         </section>
 
-        <h2 id="what-changed" className="text-[22px] font-bold text-slate-900 pt-4">What changed</h2>
+        <h2 id="what-changed" className="text-[22px] font-bold text-foreground pt-4">What changed</h2>
         <ul className="list-disc pl-5 space-y-2">
           {LESSONS.map(item => <li key={item}>{item}</li>)}
         </ul>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What did not change</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What did not change</h2>
         <p>
           The platform does not replace judgment, coaching, or search relationships. It appears to work when it gives those inputs a better operating layer.
         </p>
 
-        <h2 id="next-measures" className="text-[22px] font-bold text-slate-900 pt-4">What we should do next</h2>
+        <h2 id="next-measures" className="text-[22px] font-bold text-foreground pt-4">What we should do next</h2>
         <ol className="list-decimal pl-5 space-y-2">
           <li>Keep instrumenting signal-to-action timing.</li>
           <li>Track how often prep briefs are used before live conversations.</li>
@@ -92,12 +92,12 @@ export default function PilotFindingsPage() {
           The main lesson is simple: when leaders and coaches have the right structure between sessions, the session itself becomes more strategic.
         </p>
 
-        <section id="evidence-action" className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <h2 className="text-[18px] font-bold text-slate-900 mb-2">Turn pilot findings into operating practice</h2>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-3">
+        <section id="evidence-action" className="border border-border rounded-lg p-5 bg-muted">
+          <h2 className="text-[18px] font-bold text-foreground mb-2">Turn pilot findings into operating practice</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">
             Review methods, references, and linked evidence so your team can separate observed signal from interpretation.
           </p>
-          <Link href="/evidence-hub#internal-validation" className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded hover:bg-slate-700 transition-colors">
+          <Link href="/evidence-hub#internal-validation" className="inline-block bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 rounded hover:bg-muted transition-colors">
             Get started in Evidence Hub
           </Link>
         </section>

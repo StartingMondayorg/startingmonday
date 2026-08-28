@@ -148,7 +148,7 @@ export default function ForCioPage() {
       <JsonLd data={jsonLd} />
       <JsonLd data={faqJsonLd} />
       <EmiMarketingTelemetry pageSlug="/for-cio" personaSegment="executives" />
-      <section className="bg-slate-950 px-4 pt-6 sm:px-6">
+      <section className="bg-background px-4 pt-6 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <EvidenceProofCard
             claim="Observed pilot cohorts reached first qualified conversation faster when weekly preparation and signal-led outreach stayed consistent."
@@ -165,34 +165,34 @@ export default function ForCioPage() {
         source="Internal timing model with method notes at /references"
       />
       <h1 className="sr-only">Starting Monday for C-suite technology searches</h1>
-      <section className="bg-slate-900 border-b border-slate-800 px-4 sm:px-6 py-8">
+      <section className="bg-card border-b border-border px-4 sm:px-6 py-8">
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div data-emi-proof="cio_prehero_proof" className="lg:col-span-2 border border-slate-700 rounded-xl p-5 bg-slate-950/40">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-orange-300 mb-3">CIO proof snapshot</p>
+          <div data-emi-proof="cio_prehero_proof" className="lg:col-span-2 border border-border rounded-xl p-5 bg-background/40">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-primary mb-3">CIO proof snapshot</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-              <div className="border border-slate-700 rounded-lg p-3">
-                <p className="text-[22px] font-bold text-emerald-300 leading-none mb-1">1-3 wks</p>
-                <p className="text-[13px] text-slate-200">Typical signal lead time before broad-market posting</p>
+              <div className="border border-border rounded-lg p-3">
+                <p className="text-[22px] font-bold text-success leading-none mb-1">1-3 wks</p>
+                <p className="text-[13px] text-foreground">Typical signal lead time before broad-market posting</p>
               </div>
-              <div className="border border-slate-700 rounded-lg p-3">
-                <p className="text-[22px] font-bold text-emerald-300 leading-none mb-1">60 sec</p>
-                <p className="text-[13px] text-slate-200">To generate a role-specific prep brief</p>
+              <div className="border border-border rounded-lg p-3">
+                <p className="text-[22px] font-bold text-success leading-none mb-1">60 sec</p>
+                <p className="text-[13px] text-foreground">To generate a role-specific prep brief</p>
               </div>
-              <div className="border border-slate-700 rounded-lg p-3">
-                <p className="text-[22px] font-bold text-emerald-300 leading-none mb-1">3x/wk</p>
-                <p className="text-[13px] text-slate-200">Career-page scans on every tracked company</p>
+              <div className="border border-border rounded-lg p-3">
+                <p className="text-[22px] font-bold text-success leading-none mb-1">3x/wk</p>
+                <p className="text-[13px] text-foreground">Career-page scans on every tracked company</p>
               </div>
             </div>
-            <p className="text-[13px] text-slate-200">Product mechanics you can verify in the live demo. Timing model and method notes are published at /references.</p>
+            <p className="text-[13px] text-foreground">Product mechanics you can verify in the live demo. Timing model and method notes are published at /references.</p>
           </div>
-          <div className="border border-slate-700 rounded-xl p-5 bg-slate-950/40 flex flex-col justify-between">
+          <div className="border border-border rounded-xl p-5 bg-background/40 flex flex-col justify-between">
             <div className="space-y-2 mb-4">
               <TrackLink
                 href="/signup?from=executive"
                 event={EVENT_NAMES.channelEntryClicked}
                 logToUserEvents
                 properties={{ channel: 'executives', cta_label: 'cio_prehero_start_trial', source_page: '/for-cio' }}
-                className="block text-center text-[13px] font-semibold text-slate-900 bg-orange-500 px-4 py-2 rounded hover:bg-orange-600 transition-colors"
+                className="block text-center text-[13px] font-semibold text-primary-foreground bg-primary px-4 py-2 rounded hover:bg-primary/90 transition-colors"
               >
                 Start 30-day trial
               </TrackLink>
@@ -201,14 +201,14 @@ export default function ForCioPage() {
                 event={EVENT_NAMES.channelEntryClicked}
                 logToUserEvents
                 properties={{ channel: 'executives', cta_label: 'cio_prehero_review_method', source_page: '/for-cio' }}
-                className="block text-center text-[13px] font-semibold text-white border border-slate-600 px-4 py-2 rounded hover:border-slate-300 transition-colors"
+                className="block text-center text-[13px] font-semibold text-foreground border border-border px-4 py-2 rounded transition-colors"
               >
                 Evidence Hub
               </TrackLink>
             </div>
-            <details data-emi-objection="cio_confidentiality_timing_recruiter" className="border border-slate-700 rounded-lg p-3">
-              <summary className="list-none cursor-pointer text-[13px] font-semibold text-slate-200">Have questions first?</summary>
-              <ul className="mt-2 space-y-1 text-[13px] text-slate-200">
+            <details data-emi-objection="cio_confidentiality_timing_recruiter" className="border border-border rounded-lg p-3">
+              <summary className="list-none cursor-pointer text-[13px] font-semibold text-foreground">Have questions first?</summary>
+              <ul className="mt-2 space-y-1 text-[13px] text-foreground">
                 <li>Confidential by default - your activity is never shared with employers.</li>
                 <li>Works alongside your existing recruiter relationships, not against them.</li>
                 <li>Optionality mode is available if you are not ready to go active yet.</li>
