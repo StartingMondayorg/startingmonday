@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { validateInternalRouteRequest } from '@/lib/internal-route-auth'
 import dataEndureFixture from '../../../../../../tests/fixtures/signal-brief/dataendure-prospect.json'
+import agecroftFixture from '../../../../../../tests/fixtures/signal-brief/agecroft-partners.json'
 import { POST } from './route'
 
 vi.mock('@/lib/internal-route-auth', () => ({
@@ -127,5 +128,20 @@ describe('POST /api/internal/signal-brief/preview', () => {
     expect(body.html).toContain('2026-08-20')
     expect(body.html).toContain('$400,000')
     expect(body.html).toContain('Need-payoff')
+  })
+
+  it('renders Agecroft Partners as an evidence-backed hypothesis, not a fabricated trigger', async () => {
+    validateMock.mockReturnValue(true)
+    vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')
+
+    const response = await POST(request(JSON.stringify(agecroftFixture)))
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.html).toContain('Agecroft Partners')
+    expect(body.html).toContain('2021-01-25')
+    expect(body.html).toContain('www.bloomberg.com/news/audio/2021-01-25')
+    expect(body.html).toContain('confirm the current growth pressure in discovery')
+    expect(body.html).not.toContain('new mandate announced')
   })
 })
