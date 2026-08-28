@@ -33,6 +33,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Route validation rejects prescriptive positioning and malformed SPIN question structures.
 - Sample-mode tests prove one full-depth profile and teaser-only output for the remaining profiles.
 - Route tests prove sample mode remains disabled unless its explicit feature flag is enabled.
+- Disable and re-enable procedure is documented in `docs/development/signal-brief-preview-rollback.md`.
 - TypeScript compilation passes for the new contract.
 
 ## Deliberate boundary
@@ -41,4 +42,4 @@ This slice implements only the pure rendering policy and kill switch for sample 
 
 ## Next integration decision
 
-Connect an approved client-facing prospect-collateral producer and map its source payload through `adaptSignalBriefPayload`. The integration must preserve public-record provenance, dated facts, and client configuration boundaries before rendering an artifact. Keep `SIGNAL_BRIEF_PREVIEW_ENABLED=0` until the integration test, rollback/disable drill, and commercial approval are complete. Enable `sample_mode` only from an explicitly approved caller configuration, and add a priced menu only after Rich approves the commercial offer.
+Connect an approved client-facing prospect-collateral producer and map its source payload through `adaptSignalBriefPayload`. The integration must preserve public-record provenance, dated facts, and client configuration boundaries before rendering an artifact. Keep `SIGNAL_BRIEF_PREVIEW_ENABLED=0` until the integration test, rollback/disable drill, and commercial approval are complete. The disable procedure is documented in `docs/development/signal-brief-preview-rollback.md`. Enable `sample_mode` only from an explicitly approved caller configuration, and add a priced menu only after Rich approves the commercial offer.
