@@ -1,7 +1,5 @@
 import { TrackLink } from '@/app/components/TrackLink'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, AlertTitle, Button } from '@/components/ui'
 export function NextBestActionPrompt({
   action,
   href,

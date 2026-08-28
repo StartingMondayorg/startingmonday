@@ -1,6 +1,4 @@
-import { Skeleton as SkeletonBase } from '@/components/ui/skeleton'
-import { Card } from '@/components/ui/card'
-
+import { Card, Skeleton as SkeletonBase } from '@/components/ui'
 export function Skeleton({ className = '' }: { className?: string }) {
   return <SkeletonBase className={className} />
 }
@@ -44,10 +42,10 @@ export function SkeletonStats() {
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (
     <Card variant="default" className="gap-0 p-0">
-      <div className="px-6 py-4 border-b border-slate-200">
+      <div className="px-6 py-4 border-b border-border">
         <Skeleton className="h-3.5 w-28" />
       </div>
-      <div className="divide-y divide-slate-100">
+      <div className="divide-y divide-border">
         {Array.from({ length: rows }).map((_, i) => (
           <div key={i} className="px-6 py-4 flex items-center gap-4">
             <Skeleton className="h-4 flex-1 max-w-[180px]" />

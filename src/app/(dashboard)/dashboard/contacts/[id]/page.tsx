@@ -2,34 +2,19 @@
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
-import { signalLabel, SIGNAL_COLORS } from '@/lib/intelligence/intelligence'
+import { signalLabel, SIGNAL_COLORS, SIGNAL_FALLBACK_COLOR } from '@/lib/intelligence/intelligence'
 import { FollowUpItem } from '@/app/(dashboard)/dashboard/_components/FollowUpItem'
 import { ContactStatusStepper } from '@/app/(dashboard)/dashboard/_components/ContactStatusStepper'
 import { markContactSentForm, scheduleMeetingFollowUp } from '../actions'
 import { addContactFollowUp, logOutreach } from './actions'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
+import { Alert, AlertDescription, AlertTitle, Avatar, AvatarFallback, Badge, Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 const CHANNEL: Record<string, { label: string; cls: string }> = {
-  linkedin:  { label: 'LinkedIn',  cls: 'bg-blue-500/15 text-blue-200' },
-  referral:  { label: 'Referral',  cls: 'bg-emerald-500/15 text-emerald-200' },
-  cold:      { label: 'Cold',      cls: 'bg-white/10 text-slate-300' },
-  inbound:   { label: 'Inbound',   cls: 'bg-indigo-500/15 text-indigo-200' },
-  event:     { label: 'Event',     cls: 'bg-amber-500/15 text-amber-200' },
-  recruiter: { label: 'Recruiter', cls: 'bg-white/10 text-slate-200' },
-}
-
-function normalizeSignalClass(signalClass: string): string {
-  if (/(purple|fuchsia|violet|rose|pink|indigo|cyan|teal|yellow|blue|green|red)-/.test(signalClass)) {
-    return 'bg-white/10 text-slate-200'
-  }
-  return signalClass
+  linkedin:  { label: 'LinkedIn',  cls: 'bg-info/10 text-info' },
+  referral:  { label: 'Referral',  cls: 'bg-success/10 text-success' },
+  cold:      { label: 'Cold',      cls: 'bg-muted/60 text-muted-foreground' },
+  inbound:   { label: 'Inbound',   cls: 'bg-info/10 text-info' },
+  event:     { label: 'Event',     cls: 'bg-warning/10 text-warning' },
+  recruiter: { label: 'Recruiter', cls: 'bg-muted/60 text-foreground' },
 }
 
 function fmtDate(iso: string | null) {
@@ -122,7 +107,7 @@ export default async function ContactDetailPage({
   }
 
   const ch = contact.channel
-    ? (CHANNEL[contact.channel] ?? { label: contact.channel, cls: 'bg-white/10 text-slate-300' })
+    ? (CHANNEL[contact.channel] ?? { label: contact.channel, cls: 'bg-muted/60 text-muted-foreground' })
     : null
   const companyName = (contact.companies as { name: string } | null)?.name ?? contact.firm ?? null
   const daysSinceContacted = daysSince(contact.contacted_at)
@@ -148,14 +133,14 @@ export default async function ContactDetailPage({
   const doneFollowUps = allFollowUps.filter(f => f.status === 'completed')
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-100">
+    <div className="min-h-screen bg-background font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/80">
+      <header className="border-b border-border bg-background/80">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/contacts" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <Link href="/dashboard/contacts" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             Contacts
           </Link>
         </div>
@@ -174,15 +159,15 @@ export default async function ContactDetailPage({
         <Card variant="glass" className="p-6 mb-5">
           <div className="flex items-start gap-4 mb-4">
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <Avatar size="lg" className="w-12 h-12 bg-white/10 border border-white/15 shrink-0">
-                <AvatarFallback className="bg-transparent text-white text-[16px] font-bold">
+              <Avatar size="lg" className="w-12 h-12 bg-muted/60 border border-border shrink-0">
+                <AvatarFallback className="bg-transparent text-foreground text-[16px] font-bold">
                   {contact.name[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <h1 className="text-[22px] font-bold text-white leading-tight truncate">{contact.name}</h1>
+                <h1 className="text-[22px] font-bold text-foreground leading-tight truncate">{contact.name}</h1>
                 {(contact.title || companyName) && (
-                  <p className="text-[14px] text-slate-400 mt-0.5 truncate">
+                  <p className="text-[14px] text-muted-foreground mt-0.5 truncate">
                     {[contact.title, companyName].filter(Boolean).join(' at ')}
                   </p>
                 )}
@@ -196,7 +181,7 @@ export default async function ContactDetailPage({
               )}
               <Button
                 variant="outline"
-                className="text-[13px] font-semibold text-slate-400 hover:text-white border-white/15 hover:border-white/40 px-3 py-1.5"
+                className="text-[13px] font-semibold text-muted-foreground hover:text-foreground border-border px-3 py-1.5"
                 render={<Link href={`/dashboard/contacts/${id}/edit`} />}
               >
                 Edit
@@ -205,15 +190,15 @@ export default async function ContactDetailPage({
           </div>
 
           {/* Contact details row */}
-          <div className="flex flex-wrap gap-4 text-[13px] text-slate-400 mb-4">
+          <div className="flex flex-wrap gap-4 text-[13px] text-muted-foreground mb-4">
             {contact.email && (
-              <a href={`mailto:${contact.email}`} className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <a href={`mailto:${contact.email}`} className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1" stroke="currentColor" strokeWidth="1.3"/><path d="M1 4l6 4 6-4" stroke="currentColor" strokeWidth="1.3"/></svg>
                 {contact.email}
               </a>
             )}
             {contact.linkedin_url && (
-              <a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M4 6v4M4 4.5v.5M6.5 10V7.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5V10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
                 LinkedIn
               </a>
@@ -225,12 +210,12 @@ export default async function ContactDetailPage({
               </span>
             )}
             {!contact.contacted_at && (
-              <span className="text-slate-400">Never contacted</span>
+              <span className="text-muted-foreground">Never contacted</span>
             )}
             {isRecruiterContact && (
               <Badge
                 variant={warmth === 'warm' ? 'success' : 'secondary'}
-                className={`h-auto text-[13px] font-bold px-2 py-0.5 ${warmth === 'warm' ? '' : 'bg-white/10 text-slate-400'}`}
+                className={`h-auto text-[13px] font-bold px-2 py-0.5 ${warmth === 'warm' ? '' : 'bg-muted/60 text-muted-foreground'}`}
               >
                 {warmth === 'warm' ? 'Warm' : 'Cold'}
               </Badge>
@@ -239,21 +224,21 @@ export default async function ContactDetailPage({
 
           {/* Recruiter-specific: last role discussed */}
           {isRecruiterContact && contact.last_role_discussed && (
-            <div className="flex items-center gap-2 text-[13px] text-slate-400 mb-4">
-              <span className="font-semibold text-slate-300">Last role discussed:</span>
+            <div className="flex items-center gap-2 text-[13px] text-muted-foreground mb-4">
+              <span className="font-semibold text-muted-foreground">Last role discussed:</span>
               <span>{contact.last_role_discussed}</span>
             </div>
           )}
 
           {contact.notes && (
-            <p className="text-[13px] text-slate-400 bg-white/5 rounded px-4 py-3 mb-4 leading-relaxed">
+            <p className="text-[13px] text-muted-foreground bg-muted/40 rounded px-4 py-3 mb-4 leading-relaxed">
               {contact.notes}
             </p>
           )}
 
           {/* Outreach status stepper */}
           <div className="mb-4">
-            <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">Status</h2>
+            <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Status</h2>
             <ContactStatusStepper
               contactId={id}
               currentStatus={contact.outreach_status ?? 'prospect'}
@@ -272,7 +257,7 @@ export default async function ContactDetailPage({
               <Button
                 type="submit"
                 variant="outline"
-                className="border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 bg-white/5"
+                className="border-border text-foreground text-[13px] font-semibold px-5 py-2.5 bg-muted/40"
               >
                 Mark contacted
               </Button>
@@ -281,7 +266,7 @@ export default async function ContactDetailPage({
               <Button
                 type="submit"
                 variant="outline"
-                className="border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5 bg-white/5"
+                className="border-border text-foreground text-[13px] font-semibold px-5 py-2.5 bg-muted/40"
               >
                 Schedule meeting
               </Button>
@@ -289,7 +274,7 @@ export default async function ContactDetailPage({
             {contact.linkedin_url && (
               <Button
                 variant="outline"
-                className="border-white/15 hover:border-white/40 text-slate-200 text-[13px] font-semibold px-5 py-2.5"
+                className="border-border text-foreground text-[13px] font-semibold px-5 py-2.5"
                 render={<a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer" />}
               >
                 View LinkedIn
@@ -300,25 +285,25 @@ export default async function ContactDetailPage({
 
         {linkedCompany && (
           <Card variant="glass" className="p-5 mb-5">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Linked company</h2>
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Linked company</h2>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <Link href={`/dashboard/companies/${linkedCompany.id}`} className="text-[14px] font-semibold text-white hover:text-slate-200 transition-colors">
+                <Link href={`/dashboard/companies/${linkedCompany.id}`} className="text-[14px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
                   {linkedCompany.name}
                 </Link>
                 {linkedCompany.stage && (
-                  <p className="text-[13px] text-slate-400 mt-0.5">
+                  <p className="text-[13px] text-muted-foreground mt-0.5">
                     Stage: {stageLabel[linkedCompany.stage] ?? linkedCompany.stage}
                   </p>
                 )}
-                <p className="text-[13px] text-slate-400 mt-1.5">
-                  Next action: <span className="font-semibold text-slate-200">{nextCompanyAction}</span>
+                <p className="text-[13px] text-muted-foreground mt-1.5">
+                  Next action: <span className="font-semibold text-foreground">{nextCompanyAction}</span>
                 </p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Button
                   variant="outline"
-                  className="text-[13px] font-semibold text-slate-200 border-white/15 hover:border-white/40 px-3 py-1.5"
+                  className="text-[13px] font-semibold text-foreground border-border px-3 py-1.5"
                   render={<Link href={`/dashboard/companies/${linkedCompany.id}`} />}
                 >
                   Open company
@@ -337,7 +322,7 @@ export default async function ContactDetailPage({
         {/* Mark contacted confirmation */}
         {sent === '1' && (
           <Alert variant="success" className="px-5 py-3 mb-5">
-            <AlertDescription className="text-[13px] text-emerald-200 font-medium">
+            <AlertDescription className="text-[13px] text-success font-medium">
               Marked as contacted. Follow-up scheduled for next week.
             </AlertDescription>
           </Alert>
@@ -346,7 +331,7 @@ export default async function ContactDetailPage({
         {/* Log outreach confirmation */}
         {logged === '1' && (
           <Alert variant="success" className="px-5 py-3 mb-5">
-            <AlertDescription className="text-[13px] text-emerald-200 font-medium">
+            <AlertDescription className="text-[13px] text-success font-medium">
               Outreach logged.
             </AlertDescription>
           </Alert>
@@ -354,7 +339,7 @@ export default async function ContactDetailPage({
 
         {meeting === '1' && (
           <Alert variant="success" className="px-5 py-3 mb-5">
-            <AlertDescription className="text-[13px] text-emerald-200 font-medium">
+            <AlertDescription className="text-[13px] text-success font-medium">
               Meeting follow-up scheduled.
             </AlertDescription>
           </Alert>
@@ -363,23 +348,23 @@ export default async function ContactDetailPage({
         {/* Warm path alert */}
         {mostRecentSignal && (
           <Alert variant="warning" className="px-5 py-4 mb-5">
-            <AlertTitle className="text-[13px] font-bold tracking-[0.12em] uppercase text-amber-200 mb-2">
+            <AlertTitle className="text-[13px] font-bold tracking-[0.12em] uppercase text-warning mb-2">
               Timing signal at {companyName}
             </AlertTitle>
             <div className="flex items-start gap-3">
-              <Badge className={`shrink-0 h-auto text-[13px] font-bold tracking-[0.06em] uppercase px-2.5 py-1 mt-0.5 ${normalizeSignalClass(SIGNAL_COLORS[mostRecentSignal.signal_type] ?? 'bg-white/10 text-slate-300')}`}>
+              <Badge className={`shrink-0 h-auto text-[13px] font-bold tracking-[0.06em] uppercase px-2.5 py-1 mt-0.5 ${SIGNAL_COLORS[mostRecentSignal.signal_type] ?? SIGNAL_FALLBACK_COLOR}`}>
                 {signalLabel(mostRecentSignal.signal_type)}
               </Badge>
               <div>
-                <p className="text-[14px] text-slate-200 leading-relaxed">{mostRecentSignal.signal_summary}</p>
-                <p className="text-[13px] text-amber-300 mt-1 font-medium">
+                <p className="text-[14px] text-foreground leading-relaxed">{mostRecentSignal.signal_summary}</p>
+                <p className="text-[13px] text-warning mt-1 font-medium">
                   {fmtDate(mostRecentSignal.signal_date)} - strong moment to reach out
                 </p>
               </div>
             </div>
             <Link
               href={`/dashboard/contacts/${id}/outreach`}
-              className="mt-3 inline-block text-[13px] font-semibold text-amber-100 hover:text-amber-100 underline transition-colors"
+              className="mt-3 inline-block text-[13px] font-semibold text-warning underline transition-colors"
             >
               Draft a message using this signal
             </Link>
@@ -390,16 +375,16 @@ export default async function ContactDetailPage({
 
           {/* Follow-ups */}
           <Card variant="glass" className="gap-0 p-0 overflow-hidden">
-            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-              <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Follow-ups</h2>
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+              <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Follow-ups</h2>
               {pendingFollowUps.length > 0 && (
-                <span className="text-[13px] font-semibold text-rose-300">{pendingFollowUps.length} pending</span>
+                <span className="text-[13px] font-semibold text-destructive">{pendingFollowUps.length} pending</span>
               )}
             </div>
 
             {/* Pending - interactive (mark done / edit) */}
             {pendingFollowUps.length > 0 && (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-border">
                 {pendingFollowUps.map(fu => {
                   const isToday = fu.due_date === todayISO
                   const dateLabel = isToday ? 'Today' : fmtShort(fu.due_date)
@@ -419,33 +404,33 @@ export default async function ContactDetailPage({
 
             {/* Done - static */}
             {doneFollowUps.length > 0 && (
-              <div className="divide-y divide-white/5 border-t border-white/10">
+              <div className="divide-y divide-border border-t border-border">
                 {doneFollowUps.slice(0, 3).map(fu => (
                   <div key={fu.id} className="px-5 py-3 flex items-center gap-3 opacity-60">
                     <Badge variant="success" className="h-auto text-[13px] font-bold tracking-[0.06em] uppercase px-2 py-0.5 shrink-0">
                       Done
                     </Badge>
-                    <p className="text-[13px] text-slate-400 truncate">{fu.action}</p>
+                    <p className="text-[13px] text-muted-foreground truncate">{fu.action}</p>
                   </div>
                 ))}
               </div>
             )}
 
             {allFollowUps.length === 0 && (
-              <div className="px-5 py-5 text-center text-[13px] text-slate-400">
+              <div className="px-5 py-5 text-center text-[13px] text-muted-foreground">
                 No follow-ups yet.
               </div>
             )}
 
             {/* Add follow-up form */}
-            <div className="border-t border-white/10 px-5 py-4">
-              <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2.5">Add follow-up</p>
+            <div className="border-t border-border px-5 py-4">
+              <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2.5">Add follow-up</p>
               <form action={addContactFollowUp.bind(null, id)} className="flex flex-col gap-2">
                 <Input
                   name="action"
                   required
                   placeholder="Send follow-up email"
-                  className="w-full bg-slate-950/70 text-[13px] text-slate-100"
+                  className="w-full bg-background/70 text-[13px] text-foreground"
                 />
                 <div className="flex items-center gap-2">
                   <Input
@@ -454,7 +439,7 @@ export default async function ContactDetailPage({
                     required
                     aria-label="Due date"
                     defaultValue={tomorrowISO}
-                    className="w-auto bg-slate-950/70 text-[13px] text-slate-200"
+                    className="w-auto bg-background/70 text-[13px] text-foreground"
                   />
                   <Button
                     type="submit"
@@ -467,11 +452,11 @@ export default async function ContactDetailPage({
             </div>
 
             {/* Log outreach sent */}
-            <div className="border-t border-white/10 px-5 py-4">
-              <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2.5">Log outreach sent</p>
+            <div className="border-t border-border px-5 py-4">
+              <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2.5">Log outreach sent</p>
               <form action={logOutreach.bind(null, id)} className="flex flex-col gap-2">
                 <Select name="channel" required>
-                  <SelectTrigger aria-label="Channel" className="border-white/15 text-slate-200 bg-slate-900">
+                  <SelectTrigger aria-label="Channel" className="border-border text-foreground bg-card">
                     <SelectValue placeholder="Select channel" />
                   </SelectTrigger>
                   <SelectContent>
@@ -486,7 +471,7 @@ export default async function ContactDetailPage({
                   placeholder="Paste first lines of your message (optional, 200 chars max)"
                   maxLength={200}
                   rows={2}
-                  className="w-full bg-slate-950/70 text-[13px] text-slate-100 resize-none"
+                  className="w-full bg-background/70 text-[13px] text-foreground resize-none"
                 />
                 <Button
                   type="submit"
@@ -501,35 +486,35 @@ export default async function ContactDetailPage({
           {/* Company signals */}
           {contact.company_id && (
             <Card variant="glass" className="gap-0 p-0 overflow-hidden">
-              <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-                <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+                <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
                   {companyName} signals
                 </h2>
                 {contact.company_id && (
                   <Link
                     href={`/dashboard/companies/${contact.company_id}`}
-                    className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors"
+                    className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors"
                   >
                     View company
                   </Link>
                 )}
               </div>
               {companySignals.length > 0 ? (
-                <div className="divide-y divide-white/5">
+                <div className="divide-y divide-border">
                   {companySignals.map(sig => (
                     <div key={sig.id} className="px-5 py-3">
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge className={`h-auto tracking-[0.06em] uppercase px-2 py-0.5 ${normalizeSignalClass(SIGNAL_COLORS[sig.signal_type] ?? 'bg-white/10 text-slate-300')}`}>
+                        <Badge className={`h-auto tracking-[0.06em] uppercase px-2 py-0.5 ${SIGNAL_COLORS[sig.signal_type] ?? SIGNAL_FALLBACK_COLOR}`}>
                           {signalLabel(sig.signal_type)}
                         </Badge>
-                        <span className="text-[13px] text-slate-400">{fmtDate(sig.signal_date)}</span>
+                        <span className="text-[13px] text-muted-foreground">{fmtDate(sig.signal_date)}</span>
                       </div>
-                      <p className="text-[13px] text-slate-200 leading-relaxed">{sig.signal_summary}</p>
+                      <p className="text-[13px] text-foreground leading-relaxed">{sig.signal_summary}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="px-5 py-8 text-center text-[13px] text-slate-400">
+                <div className="px-5 py-8 text-center text-[13px] text-muted-foreground">
                   No signals in the last 30 days.
                 </div>
               )}
@@ -541,17 +526,17 @@ export default async function ContactDetailPage({
         {/* Recent outreach drafts */}
         {recentBriefs && recentBriefs.length > 0 && (
           <Card variant="glass" className="gap-0 p-0 overflow-hidden mt-5">
-            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-              <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent drafts</h2>
-              <Link href={`/dashboard/contacts/${id}/outreach`} className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+              <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Recent drafts</h2>
+              <Link href={`/dashboard/contacts/${id}/outreach`} className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
                 Draft new
               </Link>
             </div>
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {recentBriefs.map(b => (
                 <div key={b.id} className="px-5 py-4">
-                  <div className="text-[13px] text-slate-400 mb-1.5">{fmtDate(b.created_at)}</div>
-                  <p className="text-[13px] text-slate-200 leading-relaxed line-clamp-3">{b.output_text.slice(0, 280)}{b.output_text.length > 280 ? '...' : ''}</p>
+                  <div className="text-[13px] text-muted-foreground mb-1.5">{fmtDate(b.created_at)}</div>
+                  <p className="text-[13px] text-foreground leading-relaxed line-clamp-3">{b.output_text.slice(0, 280)}{b.output_text.length > 280 ? '...' : ''}</p>
                 </div>
               ))}
             </div>

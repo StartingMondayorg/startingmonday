@@ -7,19 +7,7 @@ import { PLANS, WAITLIST_PLANS } from '@/lib/billing/plans'
 import type { BillingInterval } from '@/lib/billing/plans'
 import { TIER_DISPLAY_NAMES } from '@/lib/billing/pricing'
 import { MICRO_PRODUCT_DEFINITIONS, formatMicroProductPrice } from '@/lib/billing/micro-products'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { Alert, AlertDescription, Badge, Button, Card, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 function fmtDate(d: Date | null) {
   if (!d) return null
   return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
@@ -170,16 +158,16 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
     : TIER_DISPLAY_NAMES[sub.tier] ?? sub.tier
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground"><span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+            <Link href="/dashboard" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Dashboard
             </Link>
             {canSeeAdminHeader && (
-              <Link href="/dashboard/admin" className="text-[12px] font-semibold text-orange-400 hover:text-orange-300 transition-colors">
+              <Link href="/dashboard/admin" className="text-[12px] font-semibold text-primary transition-colors">
                 Admin
               </Link>
             )}
@@ -188,24 +176,24 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-10">
-        <h1 className="text-[26px] font-bold text-slate-900 mb-1">Billing</h1>
-        <p className="text-[13px] text-slate-500 mb-8">Manage your subscription and plan.</p>
+        <h1 className="text-[26px] font-bold text-foreground mb-1">Billing</h1>
+        <p className="text-[13px] text-muted-foreground mb-8">Manage your subscription and plan.</p>
 
         {/* Account */}
         <Card className="p-6 mb-6">
-          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Account</p>
+          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Account</p>
           {accountName && (
-            <p className="text-[15px] font-semibold text-slate-900">{accountName}</p>
+            <p className="text-[15px] font-semibold text-foreground">{accountName}</p>
           )}
-          <p className="text-[13px] text-slate-500">{accountEmail}</p>
+          <p className="text-[13px] text-muted-foreground">{accountEmail}</p>
         </Card>
 
         {/* Maintenance mode: placed user on active/executive tier */}
         {isPlaced && sub.isPaid && sub.tier !== 'passive' && sub.tier !== 'free' && !paused && (
-          <Alert className="mb-6 flex items-start gap-4 bg-orange-50 border-orange-200 text-slate-900">
+          <Alert className="mb-6 flex items-start gap-4 bg-primary/10 border-primary/30 text-foreground">
             <div className="flex-1">
-              <p className="text-[13px] font-semibold text-slate-900 mb-1">You placed. Consider dropping to Monitor.</p>
-              <AlertDescription className="text-[13px] text-slate-600 leading-relaxed">
+              <p className="text-[13px] font-semibold text-foreground mb-1">You placed. Consider dropping to Monitor.</p>
+              <AlertDescription className="text-[13px] text-muted-foreground leading-relaxed">
                 Monitor ($49/mo) keeps your signal monitoring and weekly digest running without the active search tools.
                 Most executives search again within 3 years. When you are ready, everything you built here will be waiting.
               </AlertDescription>
@@ -223,7 +211,7 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
 
         {/* Current status */}
         <Card className="p-6 mb-8">
-          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Current Plan</p>
+          <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Current Plan</p>
 
           {sub.status === 'trialing' && trialDaysLeft != null && (
             <Alert variant="warning" className="mb-4">
@@ -260,8 +248,8 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
 
           <div className="flex items-center gap-4">
             <div>
-              <p className="text-[18px] font-bold text-slate-900 capitalize">{planLabel}</p>
-              <p className="text-[13px] text-slate-500 capitalize">{sub.status.replace('_', ' ')}</p>
+              <p className="text-[18px] font-bold text-foreground capitalize">{planLabel}</p>
+              <p className="text-[13px] text-muted-foreground capitalize">{sub.status.replace('_', ' ')}</p>
             </div>
             <div className="ml-auto flex items-center gap-3">
               {paused && hasStripeCustomer && (
@@ -310,9 +298,9 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
             </div>
           </div>
           {sub.isPaid && !paused && hasStripeCustomer && (
-            <p className="mt-3 text-[12px] text-slate-400">
-              <strong className="font-semibold text-slate-500">Pause</strong> stops billing temporarily - your data and pipeline stay intact.{' '}
-              <strong className="font-semibold text-slate-500">Cancel</strong> (via Manage subscription) ends your subscription entirely.
+            <p className="mt-3 text-[12px] text-muted-foreground">
+              <strong className="font-semibold text-muted-foreground">Pause</strong> stops billing temporarily - your data and pipeline stay intact.{' '}
+              <strong className="font-semibold text-muted-foreground">Cancel</strong> (via Manage subscription) ends your subscription entirely.
             </p>
           )}
           {portalError && (
@@ -335,12 +323,12 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
         {/* Plans */}
         {!sub.isPaid && (
           <>
-            <p className="text-[13px] text-slate-500 leading-relaxed mb-6">
+            <p className="text-[13px] text-muted-foreground leading-relaxed mb-6">
               One hour with an executive coach runs $300 to $500. Starting Monday is $199 a month and runs every day.
             </p>
 
             <div className="flex items-center gap-3 mb-6">
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Choose a plan</p>
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Choose a plan</p>
               <ToggleGroup
                 value={[interval]}
                 onValueChange={(v) => v[0] && setInterval(v[0] as BillingInterval)}
@@ -366,25 +354,25 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
                 const monthlyEquiv = interval === 'annual' ? Math.round(plan.annualAmount / 12) : null
                 const isFeatured = key === 'active'
                 return (
-                  <Card key={key} className={`p-6 ${isFeatured ? 'ring-2 ring-slate-900' : ''}`}>
+                  <Card key={key} className={`p-6 ${isFeatured ? 'ring-2 ring-border' : ''}`}>
                     {isFeatured && (
-                      <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-3">Most popular</p>
+                      <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-primary mb-3">Most popular</p>
                     )}
-                    <p className="text-[20px] font-bold text-slate-900">{plan.name}</p>
-                    <p className="text-[28px] font-bold text-slate-900 mt-1">
+                    <p className="text-[20px] font-bold text-foreground">{plan.name}</p>
+                    <p className="text-[28px] font-bold text-foreground mt-1">
                       ${interval === 'annual' ? (monthlyEquiv! / 100).toFixed(0) : (amount / 100).toFixed(0)}
-                      <span className="text-[14px] font-normal text-slate-500">/mo</span>
+                      <span className="text-[14px] font-normal text-muted-foreground">/mo</span>
                     </p>
                     {interval === 'annual' && monthlyEquiv && (
-                      <p className="text-[12px] text-slate-400 mt-0.5">
-                        billed as ${(amount / 100).toFixed(0)}/yr · <span className="text-green-600">Save ${((plan.amount * 12 - plan.annualAmount) / 100).toFixed(0)}</span>
+                      <p className="text-[12px] text-muted-foreground mt-0.5">
+                        billed as ${(amount / 100).toFixed(0)}/yr · <span className="text-success">Save ${((plan.amount * 12 - plan.annualAmount) / 100).toFixed(0)}</span>
                       </p>
                     )}
-                    <p className="text-[13px] text-slate-500 mt-2 mb-4 leading-relaxed">{plan.description}</p>
+                    <p className="text-[13px] text-muted-foreground mt-2 mb-4 leading-relaxed">{plan.description}</p>
                     <ul className="mb-5 flex flex-col gap-1.5">
                       {plan.features.map(f => (
-                        <li key={f} className="flex items-start gap-2 text-[13px] text-slate-600">
-                          <span className="text-slate-400 shrink-0 mt-0.5">+</span>
+                        <li key={f} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                          <span className="text-muted-foreground shrink-0 mt-0.5">+</span>
                           {f}
                         </li>
                       ))}
@@ -407,17 +395,17 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {(Object.entries(WAITLIST_PLANS) as [string, typeof WAITLIST_PLANS[keyof typeof WAITLIST_PLANS]][]).map(([key, plan]) => (
                 <Card key={key} className="p-6 opacity-80">
-                  <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Coming soon</p>
-                  <p className="text-[20px] font-bold text-slate-900">{plan.name}</p>
-                  <p className="text-[28px] font-bold text-slate-900 mt-1">
+                  <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Coming soon</p>
+                  <p className="text-[20px] font-bold text-foreground">{plan.name}</p>
+                  <p className="text-[28px] font-bold text-foreground mt-1">
                     ${(plan.amount / 100).toFixed(0)}
-                    <span className="text-[14px] font-normal text-slate-500">/mo</span>
+                    <span className="text-[14px] font-normal text-muted-foreground">/mo</span>
                   </p>
-                  <p className="text-[13px] text-slate-500 mt-2 mb-4 leading-relaxed">{plan.description}</p>
+                  <p className="text-[13px] text-muted-foreground mt-2 mb-4 leading-relaxed">{plan.description}</p>
                   <ul className="mb-5 flex flex-col gap-1.5">
                     {plan.features.map(f => (
-                      <li key={f} className="flex items-start gap-2 text-[13px] text-slate-600">
-                        <span className="text-slate-400 shrink-0 mt-0.5">+</span>
+                      <li key={f} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                        <span className="text-muted-foreground shrink-0 mt-0.5">+</span>
                         {f}
                       </li>
                     ))}
@@ -439,18 +427,18 @@ export function BillingClient({ sub, hasStripeCustomer, accountEmail, accountNam
         <Card className="p-6 mt-8">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Executive add-ons</p>
-              <p className="text-[13px] text-slate-500 mt-1">Micro-products for role-specific outcomes. Purchased separately from plan tier.</p>
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Executive add-ons</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Micro-products for role-specific outcomes. Purchased separately from plan tier.</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {MICRO_PRODUCT_DEFINITIONS.filter((item) => item.channel === 'executives').map((item) => {
               const highlighted = highlightedAddOn === item.slug
               return (
-                <Card key={item.slug} className={`p-4 ${highlighted ? 'ring-2 ring-orange-500 bg-orange-50/40' : 'bg-slate-50'}`}>
-                  <p className="text-[14px] font-semibold text-slate-900">{item.name}</p>
-                  <p className="text-[13px] text-slate-500 mt-1 leading-relaxed">{item.summary}</p>
-                  <p className="text-[13px] font-semibold text-slate-900 mt-3">{formatMicroProductPrice(item.amountCents, item.defaultInterval)}</p>
+                <Card key={item.slug} className={`p-4 ${highlighted ? 'ring-2 ring-primary/30 bg-primary/10' : 'bg-muted'}`}>
+                  <p className="text-[14px] font-semibold text-foreground">{item.name}</p>
+                  <p className="text-[13px] text-muted-foreground mt-1 leading-relaxed">{item.summary}</p>
+                  <p className="text-[13px] font-semibold text-foreground mt-3">{formatMicroProductPrice(item.amountCents, item.defaultInterval)}</p>
                   <Button
                     type="button"
                     onClick={() => handleMicroProductCheckout(item.slug)}

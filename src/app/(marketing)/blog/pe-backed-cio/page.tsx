@@ -43,7 +43,7 @@ export default function PeBackedCioPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           A PE-backed CIO search and a public company CIO search are different searches that happen
           to use the same job title.
@@ -55,7 +55,7 @@ export default function PeBackedCioPage() {
           looks like, and what success means at the end of it.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The PE thesis and why it changes everything</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The PE thesis and why it changes everything</h2>
 
         <p>
           Every PE-backed company is operating against a thesis. The sponsor acquired the business at
@@ -76,7 +76,7 @@ export default function PeBackedCioPage() {
           you are actually being hired to do.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the sponsor actually cares about</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the sponsor actually cares about</h2>
 
         <p>
           The management team will describe the role in operational terms. The sponsor cares about
@@ -96,7 +96,7 @@ export default function PeBackedCioPage() {
           by it later.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Speed and compressed timelines</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Speed and compressed timelines</h2>
 
         <p>
           PE-backed companies operate on compressed timelines. A technology modernization that would
@@ -116,7 +116,7 @@ export default function PeBackedCioPage() {
           would recognize.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The integration and carve-out dimension</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The integration and carve-out dimension</h2>
 
         <p>
           Many PE-backed CIO searches are triggered by an acquisition or a carve-out. The company just
@@ -136,7 +136,7 @@ export default function PeBackedCioPage() {
           rare and search firms know it.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How equity works in PE-backed companies</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How equity works in PE-backed companies</h2>
 
         <p>
           Equity in a PE-backed company is not stock. It is a share of the proceeds at exit, structured
@@ -152,7 +152,7 @@ export default function PeBackedCioPage() {
           you what risk you are actually taking.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to position yourself</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to position yourself</h2>
 
         <p>
           PE-backed companies are not looking for a technology steward. They are looking for a
@@ -166,7 +166,7 @@ export default function PeBackedCioPage() {
           make it before the second.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday watches</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday watches</h2>
 
         <p>
           Starting Monday tracks the organizational signals that precede PE-backed CIO searches: sponsor
@@ -176,7 +176,7 @@ export default function PeBackedCioPage() {
 
         <p>
           The{' '}
-          <Link href="/for-cio" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-cio" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           builds the context for each specific company: what the sponsor acquired it for, what the exit

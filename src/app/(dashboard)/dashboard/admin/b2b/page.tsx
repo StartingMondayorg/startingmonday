@@ -4,19 +4,17 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import StageSelect from './stage-select'
-import { Card } from '@/components/ui/card'
-import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
-
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 export const metadata = { title: 'B2B Sales Pipeline - Starting Monday Admin' }
 
 export const STAGES: { key: string; label: string; cls: string }[] = [
-  { key: 'identified',     label: 'Identified',    cls: 'bg-slate-100 text-slate-500' },
-  { key: 'contacted',      label: 'Contacted',     cls: 'bg-blue-50 text-blue-700' },
-  { key: 'demo_scheduled', label: 'Demo',          cls: 'bg-amber-50 text-amber-700' },
-  { key: 'proposal_sent',  label: 'Proposal',      cls: 'bg-orange-50 text-orange-700' },
-  { key: 'negotiating',    label: 'Negotiating',   cls: 'bg-purple-50 text-purple-700' },
-  { key: 'closed_won',     label: 'Won',           cls: 'bg-emerald-50 text-emerald-700' },
-  { key: 'closed_lost',    label: 'Lost',          cls: 'bg-red-50 text-red-600' },
+  { key: 'identified',     label: 'Identified',    cls: 'bg-muted text-muted-foreground' },
+  { key: 'contacted',      label: 'Contacted',     cls: 'bg-info/10 text-info' },
+  { key: 'demo_scheduled', label: 'Demo',          cls: 'bg-warning/10 text-warning' },
+  { key: 'proposal_sent',  label: 'Proposal',      cls: 'bg-primary/10 text-primary' },
+  { key: 'negotiating',    label: 'Negotiating',   cls: 'bg-info/10 text-info' },
+  { key: 'closed_won',     label: 'Won',           cls: 'bg-success/10 text-success' },
+  { key: 'closed_lost',    label: 'Lost',          cls: 'bg-destructive/10 text-destructive' },
 ]
 
 export const TYPE_LABELS: Record<string, string> = {
@@ -69,15 +67,15 @@ export default async function B2BPipelinePage() {
   }, {})
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark text-foreground bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-slate-400 hover:text-slate-200">Admin</Link>
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white">Dashboard</Link>
+            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground">Admin</Link>
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground">Dashboard</Link>
           </div>
         </div>
       </header>
@@ -85,8 +83,8 @@ export default async function B2BPipelinePage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
 <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-[26px] font-bold text-slate-900">B2B Sales Pipeline</h1>
-            <p className="text-[13px] text-slate-500 mt-1">
+            <h1 className="text-[26px] font-bold text-foreground">B2B Sales Pipeline</h1>
+            <p className="text-[13px] text-muted-foreground mt-1">
               {activeRows.length} active prospect{activeRows.length !== 1 ? 's' : ''}
               {totalArr > 0 && <> &middot; {fmt(totalArr)} estimated ARR</>}
               {totalSeats > 0 && <> &middot; {totalSeats} seats</>}
@@ -94,7 +92,7 @@ export default async function B2BPipelinePage() {
           </div>
           <Link
             href="/dashboard/admin/b2b/new"
-            className="text-[13px] font-semibold text-white bg-slate-900 hover:bg-slate-700 px-4 py-2 rounded transition-colors shrink-0"
+            className="text-[13px] font-semibold text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-2 rounded transition-colors shrink-0"
           >
             + Add prospect
           </Link>
@@ -104,7 +102,7 @@ export default async function B2BPipelinePage() {
         <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-6">
           {STAGES.map(s => (
             <Card key={s.key} className="p-3 text-center">
-              <div className="text-[20px] font-bold text-slate-900">{stageCounts[s.key] ?? 0}</div>
+              <div className="text-[20px] font-bold text-foreground">{stageCounts[s.key] ?? 0}</div>
               <div className={`text-[10px] font-bold tracking-[0.06em] uppercase mt-1 ${s.cls.split(' ')[1]}`}>
                 {s.label}
               </div>
@@ -115,8 +113,8 @@ export default async function B2BPipelinePage() {
         {/* Prospect list */}
         {rows.length === 0 ? (
           <Card className="p-12 text-center">
-            <p className="text-[14px] text-slate-400">No prospects yet.</p>
-            <Link href="/dashboard/admin/b2b/new" className="mt-3 inline-block text-[13px] font-semibold text-slate-900 underline">
+            <p className="text-[14px] text-muted-foreground">No prospects yet.</p>
+            <Link href="/dashboard/admin/b2b/new" className="mt-3 inline-block text-[13px] font-semibold text-foreground underline">
               Add your first prospect
             </Link>
           </Card>
@@ -124,12 +122,12 @@ export default async function B2BPipelinePage() {
           <Card className="p-0">
             <Table>
               <TableHeader>
-                <TableRow className="bg-slate-50">
-                  <TableHead className="px-5 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">Prospect</TableHead>
-                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell">Type</TableHead>
-                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400">Stage</TableHead>
-                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden sm:table-cell text-right">ARR</TableHead>
-                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-slate-400 hidden md:table-cell">Next action</TableHead>
+                <TableRow className="bg-muted">
+                  <TableHead className="px-5 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-muted-foreground">Prospect</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-muted-foreground hidden sm:table-cell">Type</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-muted-foreground">Stage</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-muted-foreground hidden sm:table-cell text-right">ARR</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold tracking-[0.09em] uppercase text-muted-foreground hidden md:table-cell">Next action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -142,14 +140,14 @@ export default async function B2BPipelinePage() {
                   return (
                     <TableRow key={r.id}>
                       <TableCell className="px-5 py-3.5 whitespace-normal">
-                        <Link href={`/dashboard/admin/b2b/${r.id}`} className="text-[14px] font-semibold text-slate-900 hover:text-slate-600">
+                        <Link href={`/dashboard/admin/b2b/${r.id}`} className="text-[14px] font-semibold text-foreground hover:text-muted-foreground">
                           {r.name}
                         </Link>
                         {r.notes && (
-                          <p className="text-[12px] text-slate-400 mt-0.5 truncate max-w-[240px]">{r.notes}</p>
+                          <p className="text-[12px] text-muted-foreground mt-0.5 truncate max-w-[240px]">{r.notes}</p>
                         )}
                       </TableCell>
-                      <TableCell className="px-4 py-3.5 hidden sm:table-cell text-[13px] text-slate-500">
+                      <TableCell className="px-4 py-3.5 hidden sm:table-cell text-[13px] text-muted-foreground">
                         {TYPE_LABELS[r.type] ?? r.type}
                       </TableCell>
                       <TableCell className="px-4 py-3.5">
@@ -157,24 +155,24 @@ export default async function B2BPipelinePage() {
                           id={r.id}
                           stage={r.stage}
                           stages={STAGES}
-                          cls={stage?.cls ?? 'bg-slate-100 text-slate-500'}
+                          cls={stage?.cls ?? 'bg-muted text-muted-foreground'}
                         />
                       </TableCell>
-                      <TableCell className="px-4 py-3.5 hidden sm:table-cell text-right text-[13px] font-semibold text-slate-700">
-                        {r.estimated_arr ? fmt(r.estimated_arr) : <span className="text-slate-300">-</span>}
+                      <TableCell className="px-4 py-3.5 hidden sm:table-cell text-right text-[13px] font-semibold text-muted-foreground">
+                        {r.estimated_arr ? fmt(r.estimated_arr) : <span className="text-muted-foreground">-</span>}
                       </TableCell>
                       <TableCell className="px-4 py-3.5 hidden md:table-cell whitespace-normal">
                         {latestWithAction ? (
                           <div>
-                            <p className="text-[12px] text-slate-700 truncate max-w-[180px]">{latestWithAction.next_action}</p>
+                            <p className="text-[12px] text-muted-foreground truncate max-w-[180px]">{latestWithAction.next_action}</p>
                             {nextActionDue && (
-                              <p className={`text-[11px] mt-0.5 ${isOverdue ? 'text-red-600 font-semibold' : 'text-slate-400'}`}>
+                              <p className={`text-[11px] mt-0.5 ${isOverdue ? 'text-destructive font-semibold' : 'text-muted-foreground'}`}>
                                 {isOverdue ? 'Overdue: ' : ''}{nextActionDue}
                               </p>
                             )}
                           </div>
                         ) : (
-                          <span className="text-[12px] text-slate-300">None set</span>
+                          <span className="text-[12px] text-muted-foreground">None set</span>
                         )}
                       </TableCell>
                     </TableRow>

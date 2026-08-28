@@ -1,27 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 type MarketingMotion = 'direct_paid_sprint' | 'partner_pilot' | 'other'
 type PartnerCommercialEvent = 'pilot_fee_collected' | 'expansion_proposal_sent' | 'expansion_accepted' | 'expansion_rejected'
 
@@ -224,8 +204,8 @@ export default function WedgeEconomicsClient() {
     <>
       <Card variant="glass" className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Ledger controls</p>
-          <Label className="text-[12px] text-slate-300">
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Ledger controls</p>
+          <Label className="text-[12px] text-muted-foreground">
             Lookback days
             <Input
               type="number"
@@ -239,21 +219,21 @@ export default function WedgeEconomicsClient() {
         </div>
 
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Marketing rows</p>
-            <p className="mt-1 text-[18px] font-semibold text-white">{payload?.marketing_spend_entries.length ?? 0}</p>
+          <Card variant="glass" className="p-3 border-border bg-background/40">
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Marketing rows</p>
+            <p className="mt-1 text-[18px] font-semibold text-foreground">{payload?.marketing_spend_entries.length ?? 0}</p>
           </Card>
-          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Marketing total</p>
-            <p className="mt-1 text-[18px] font-semibold text-white">{money(marketingTotal)}</p>
+          <Card variant="glass" className="p-3 border-border bg-background/40">
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Marketing total</p>
+            <p className="mt-1 text-[18px] font-semibold text-foreground">{money(marketingTotal)}</p>
           </Card>
-          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Partner events</p>
-            <p className="mt-1 text-[18px] font-semibold text-white">{payload?.partner_commercial_events.length ?? 0}</p>
+          <Card variant="glass" className="p-3 border-border bg-background/40">
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Partner events</p>
+            <p className="mt-1 text-[18px] font-semibold text-foreground">{payload?.partner_commercial_events.length ?? 0}</p>
           </Card>
-          <Card variant="glass" className="p-3 border-white/10 bg-slate-950/40">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Pilot fees</p>
-            <p className="mt-1 text-[18px] font-semibold text-white">{money(partnerFeesTotal)}</p>
+          <Card variant="glass" className="p-3 border-border bg-background/40">
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Pilot fees</p>
+            <p className="mt-1 text-[18px] font-semibold text-foreground">{money(partnerFeesTotal)}</p>
           </Card>
         </div>
 
@@ -277,8 +257,8 @@ export default function WedgeEconomicsClient() {
       <section className="mt-5 grid gap-5 lg:grid-cols-2">
         <form onSubmit={submitMarketingEntry}>
         <Card variant="glass" className="p-5">
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Add marketing spend</p>
-          <div className="mt-3 space-y-3 text-[13px] text-slate-200">
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Add marketing spend</p>
+          <div className="mt-3 space-y-3 text-[13px] text-foreground">
             <div>
               <Label className="block">Motion</Label>
               <Select value={marketingMotion} onValueChange={(value) => setMarketingMotion(value as MarketingMotion)}>
@@ -317,8 +297,8 @@ export default function WedgeEconomicsClient() {
 
         <form onSubmit={submitPartnerEvent}>
         <Card variant="glass" className="p-5">
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-orange-200">Add partner commercial event</p>
-          <div className="mt-3 space-y-3 text-[13px] text-slate-200">
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">Add partner commercial event</p>
+          <div className="mt-3 space-y-3 text-[13px] text-foreground">
             <div>
               <Label className="block">Partner ID</Label>
               <Input value={partnerId} onChange={(event) => setPartnerId(event.target.value)} placeholder="UUID" required className="mt-1 w-full" />
@@ -354,14 +334,14 @@ export default function WedgeEconomicsClient() {
       </section>
 
       <Card variant="glass" className="mt-5 overflow-hidden">
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent marketing spend rows</p>
-          <span className="text-[12px] text-slate-400">{loadState === 'loading' ? 'Loading...' : `Rows: ${payload?.marketing_spend_entries.length ?? 0}`}</span>
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Recent marketing spend rows</p>
+          <span className="text-[12px] text-muted-foreground">{loadState === 'loading' ? 'Loading...' : `Rows: ${payload?.marketing_spend_entries.length ?? 0}`}</span>
         </div>
         <div className="overflow-x-auto">
-          <Table className="text-[12px] text-slate-200">
+          <Table className="text-[12px] text-foreground">
             <TableHeader>
-              <TableRow className="text-slate-400">
+              <TableRow className="text-muted-foreground">
                 <TableHead className="px-5 pr-4">Effective</TableHead>
                 <TableHead className="pr-4">Motion</TableHead>
                 <TableHead className="pr-4">Channel</TableHead>
@@ -372,7 +352,7 @@ export default function WedgeEconomicsClient() {
             <TableBody>
               {(payload?.marketing_spend_entries ?? []).map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell className="px-5 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.effective_at).toISOString()}</TableCell>
+                  <TableCell className="px-5 pr-4 font-mono text-[11px] text-muted-foreground">{new Date(row.effective_at).toISOString()}</TableCell>
                   <TableCell className="pr-4">{row.motion}</TableCell>
                   <TableCell className="pr-4">{row.channel ?? '--'}</TableCell>
                   <TableCell className="pr-4">{money(row.amount_usd)}</TableCell>
@@ -385,14 +365,14 @@ export default function WedgeEconomicsClient() {
       </Card>
 
       <Card variant="glass" className="mt-5 overflow-hidden">
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Recent partner commercial events</p>
-          <span className="text-[12px] text-slate-400">{loadState === 'loading' ? 'Loading...' : `Rows: ${payload?.partner_commercial_events.length ?? 0}`}</span>
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Recent partner commercial events</p>
+          <span className="text-[12px] text-muted-foreground">{loadState === 'loading' ? 'Loading...' : `Rows: ${payload?.partner_commercial_events.length ?? 0}`}</span>
         </div>
         <div className="overflow-x-auto">
-          <Table className="text-[12px] text-slate-200">
+          <Table className="text-[12px] text-foreground">
             <TableHeader>
-              <TableRow className="text-slate-400">
+              <TableRow className="text-muted-foreground">
                 <TableHead className="px-5 pr-4">Effective</TableHead>
                 <TableHead className="pr-4">Partner</TableHead>
                 <TableHead className="pr-4">Event</TableHead>
@@ -402,8 +382,8 @@ export default function WedgeEconomicsClient() {
             <TableBody>
               {(payload?.partner_commercial_events ?? []).map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell className="px-5 pr-4 font-mono text-[11px] text-slate-300">{new Date(row.effective_at).toISOString()}</TableCell>
-                  <TableCell className="pr-4 font-mono text-[11px] text-slate-300">{row.partner_id}</TableCell>
+                  <TableCell className="px-5 pr-4 font-mono text-[11px] text-muted-foreground">{new Date(row.effective_at).toISOString()}</TableCell>
+                  <TableCell className="pr-4 font-mono text-[11px] text-muted-foreground">{row.partner_id}</TableCell>
                   <TableCell className="pr-4">{row.event_type}</TableCell>
                   <TableCell className="pr-4">{money(row.amount_usd)}</TableCell>
                 </TableRow>

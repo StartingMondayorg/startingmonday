@@ -18,24 +18,24 @@ export default async function WedgeEconomicsLedgerPage() {
 
   return (
     <div className={ADMIN_DARK_PAGE_BG}>
-      <header className="bg-slate-900">
+      <header className="bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin/operations" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Operations</Link>
-            <Link href="/dashboard/admin/wedge-funnels" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Wedge Monitor</Link>
-            <Link href="/dashboard/admin" className="text-[13px] text-slate-300 hover:text-white transition-colors">Admin</Link>
+            <Link href="/dashboard/admin/operations" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Operations</Link>
+            <Link href="/dashboard/admin/wedge-funnels" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Wedge Monitor</Link>
+            <Link href="/dashboard/admin" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Admin</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-7">
-          <h1 className="text-[26px] font-bold text-white leading-tight">Wedge Economics Ledger</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">Enter canonical direct-paid spend and partner commercial events used by the wedge closeout artifact.</p>
-          <p className="mt-1 text-[13px] text-slate-400">Signed in as {user.email}</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Wedge Economics Ledger</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">Enter canonical direct-paid spend and partner commercial events used by the wedge closeout artifact.</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">Signed in as {user.email}</p>
         </div>
 
         <WedgeEconomicsClient />

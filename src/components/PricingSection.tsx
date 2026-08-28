@@ -50,45 +50,45 @@ export function PricingSection({ trialNote }: { trialNote: string }) {
   }
 
   return (
-    <section className="bg-white px-4 sm:px-6 py-14 sm:py-20 border-b border-slate-100">
+    <section className="bg-card px-4 sm:px-6 py-14 sm:py-20 border-b border-border">
       <div className="max-w-5xl mx-auto">
-        <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+        <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
           What it costs
         </p>
-        <h2 className="text-[22px] font-bold text-slate-900 mb-4 max-w-xl leading-snug">
+        <h2 className="text-[22px] font-bold text-foreground mb-4 max-w-xl leading-snug">
           C-suite campaign pricing. Campaign outcomes.
         </h2>
-        <p className="text-[14px] text-slate-500 mb-4 max-w-2xl leading-relaxed">
+        <p className="text-[14px] text-muted-foreground mb-4 max-w-2xl leading-relaxed">
           You run the campaign. We power it. Choose the tier that matches your search altitude. All plans include a 30-day free trial, no credit card required.
         </p>
-        <p className="text-[13px] text-slate-500 border-l-2 border-orange-500 pl-4 mb-6 max-w-2xl leading-relaxed">
+        <p className="text-[13px] text-muted-foreground border-l-2 border-primary/30 pl-4 mb-6 max-w-2xl leading-relaxed">
           The delta between the role you want and the role you settle for is measured in weeks, not years. At $199/mo, this is a fraction of a rounding error on a $300K compensation decision.
         </p>
-        <div className="flex items-center gap-3 mb-4 text-[12px] text-slate-400">
+        <div className="flex items-center gap-3 mb-4 text-[12px] text-muted-foreground">
           <span>Built for confidential executive search campaigns</span>
-          <span className="text-slate-300">&middot;</span>
+          <span className="text-muted-foreground">&middot;</span>
           <span>No recruiter marketplace</span>
         </div>
-        <p className="text-[12px] text-slate-500 mb-8">
+        <p className="text-[12px] text-muted-foreground mb-8">
           Most executives start on Monitor, move to Active once they see what prep briefs do. C-suite leaders who want deeper analysis move to Executive when they need full coverage.
         </p>
 
         {/* Billing toggle */}
-        <div className="flex items-center gap-1 mb-10 bg-slate-100 rounded-lg p-1 w-fit">
+        <div className="flex items-center gap-1 mb-10 bg-muted rounded-lg p-1 w-fit">
           <button
             type="button"
             onClick={() => setAnnual(false)}
-            className={`text-[13px] font-semibold px-4 py-1.5 rounded-md transition-colors ${!annual ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            className={`text-[13px] font-semibold px-4 py-1.5 rounded-md transition-colors ${!annual ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
           >
             Monthly
           </button>
           <button
             type="button"
             onClick={() => setAnnual(true)}
-            className={`flex items-center gap-2 text-[13px] font-semibold px-4 py-1.5 rounded-md transition-colors ${annual ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex items-center gap-2 text-[13px] font-semibold px-4 py-1.5 rounded-md transition-colors ${annual ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
           >
             Annual
-            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded transition-colors ${annual ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-500'}`}>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded transition-colors ${annual ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
               2 months free
             </span>
           </button>
@@ -97,99 +97,99 @@ export function PricingSection({ trialNote }: { trialNote: string }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl">
 
           {/* Monitor */}
-          <div className="border border-slate-200 rounded-lg p-5 sm:p-6 flex flex-col">
+          <div className="border border-border rounded-lg p-5 sm:p-6 flex flex-col">
             {/* KPI Row */}
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-[13px] font-bold text-green-600">$49/mo</span>
-              <span className="text-[12px] text-slate-400">Track up to 25 companies, get weekly signals</span>
+              <span className="text-[13px] font-bold text-success">$49/mo</span>
+              <span className="text-[12px] text-muted-foreground">Track up to 25 companies, get weekly signals</span>
             </div>
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Monitor</p>
-            <p className="text-[32px] font-bold text-slate-900 leading-none mb-1">
-              ${price('passive')}<span className="text-[16px] font-normal text-slate-400">/mo</span>
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Monitor</p>
+            <p className="text-[32px] font-bold text-foreground leading-none mb-1">
+              ${price('passive')}<span className="text-[16px] font-normal text-muted-foreground">/mo</span>
             </p>
-            <p className="text-[12px] text-slate-400 mb-0.5">30-day free trial. No credit card.</p>
-            <p className="text-[12px] text-slate-500 mb-5">{subline('passive')}</p>
+            <p className="text-[12px] text-muted-foreground mb-0.5">30-day free trial. No credit card.</p>
+            <p className="text-[12px] text-muted-foreground mb-5">{subline('passive')}</p>
             <ul className="space-y-2.5">
               {PASSIVE_FEATURES.map(f => (
                 <li key={f} className="flex items-start gap-2.5">
-                  <span className="text-slate-300 shrink-0 mt-0.5 text-[12px]">+</span>
-                  <span className="text-[13px] text-slate-500 leading-snug">{f}</span>
+                  <span className="text-muted-foreground shrink-0 mt-0.5 text-[12px]">+</span>
+                  <span className="text-[13px] text-muted-foreground leading-snug">{f}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-auto pt-4 text-[12px] text-slate-400 leading-relaxed">
+            <p className="mt-auto pt-4 text-[12px] text-muted-foreground leading-relaxed">
               Most users move to Active once they see what prep briefs do before an interview.
             </p>
             <Link
               href="/signup"
-              className="mt-4 inline-block w-full text-center border border-slate-200 text-slate-700 text-[13px] font-semibold px-5 py-2.5 rounded hover:border-slate-400 transition-colors"
+              className="mt-4 inline-block w-full text-center border border-border text-muted-foreground text-[13px] font-semibold px-5 py-2.5 rounded transition-colors"
             >
               Try free &rarr;
             </Link>
           </div>
 
           {/* Active - most popular, orange border */}
-          <div className="border-2 border-orange-500 rounded-lg p-5 sm:p-6 bg-white flex flex-col relative">
+          <div className="border-2 border-primary/30 rounded-lg p-5 sm:p-6 bg-card flex flex-col relative">
             {/* KPI Row */}
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-[13px] font-bold text-green-600">$199/mo</span>
-              <span className="text-[12px] text-slate-400">Unlimited briefs, daily signals, AI advisor</span>
+              <span className="text-[13px] font-bold text-success">$199/mo</span>
+              <span className="text-[12px] text-muted-foreground">Unlimited briefs, daily signals, AI advisor</span>
             </div>
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-              <span className="text-[10px] font-bold tracking-[0.08em] uppercase bg-orange-500 text-slate-900 px-3 py-1 rounded-full whitespace-nowrap">Most popular</span>
+              <span className="text-[10px] font-bold tracking-[0.08em] uppercase bg-primary text-primary-foreground px-3 py-1 rounded-full whitespace-nowrap">Most popular</span>
             </div>
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-600 mb-2">Active</p>
-            <p className="text-[32px] font-bold text-slate-900 leading-none mb-1">
-              ${price('active')}<span className="text-[16px] font-normal text-slate-400">/mo</span>
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-2">Active</p>
+            <p className="text-[32px] font-bold text-foreground leading-none mb-1">
+              ${price('active')}<span className="text-[16px] font-normal text-muted-foreground">/mo</span>
             </p>
-            <p className="text-[12px] text-slate-400 mb-0.5">{trialNote}</p>
-            <p className="text-[12px] text-slate-500 mb-5">{subline('active')}</p>
-            <p className="text-[13px] text-slate-600 mb-4 leading-relaxed">Stop running a reactive search.</p>
+            <p className="text-[12px] text-muted-foreground mb-0.5">{trialNote}</p>
+            <p className="text-[12px] text-muted-foreground mb-5">{subline('active')}</p>
+            <p className="text-[13px] text-muted-foreground mb-4 leading-relaxed">Stop running a reactive search.</p>
             <ul className="space-y-2.5">
               {ACTIVE_FEATURES.map(f => (
                 <li key={f} className="flex items-start gap-2.5">
-                  <span className="text-orange-500 shrink-0 mt-0.5 text-[12px]">+</span>
-                  <span className="text-[13px] text-slate-700 leading-snug">{f}</span>
+                  <span className="text-primary shrink-0 mt-0.5 text-[12px]">+</span>
+                  <span className="text-[13px] text-muted-foreground leading-snug">{f}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 mb-1 text-[11px] text-slate-400 leading-relaxed">
+            <p className="mt-4 mb-1 text-[11px] text-muted-foreground leading-relaxed">
               When you&apos;re ready for full depth, Executive is waiting.
             </p>
             <Link
               href="/signup"
-              className="mt-auto inline-block w-full text-center bg-orange-500 text-slate-900 text-[13px] font-bold px-5 py-2.5 rounded hover:bg-orange-600 transition-colors"
+              className="mt-auto inline-block w-full text-center bg-primary text-primary-foreground text-[13px] font-bold px-5 py-2.5 rounded hover:bg-primary/90 transition-colors"
             >
               Start your campaign &rarr;
             </Link>
           </div>
 
           {/* Executive - slate-900 authority */}
-          <div className="border border-slate-800 rounded-lg p-5 sm:p-6 bg-slate-900 flex flex-col">
+          <div className="dark text-foreground border border-border rounded-lg p-5 sm:p-6 bg-card flex flex-col">
             {/* KPI Row */}
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-[13px] font-bold text-green-400">$499/mo</span>
-              <span className="text-[12px] text-green-200">Full pipeline, salary intelligence, recruiter tracker</span>
+              <span className="text-[13px] font-bold text-success">$499/mo</span>
+              <span className="text-[12px] text-success">Full pipeline, salary intelligence, recruiter tracker</span>
             </div>
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-2">Executive</p>
-            <p className="text-[32px] font-bold text-white leading-none mb-1">
-              ${price('executive')}<span className="text-[16px] font-normal text-slate-500">/mo</span>
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-2">Executive</p>
+            <p className="text-[32px] font-bold text-foreground leading-none mb-1">
+              ${price('executive')}<span className="text-[16px] font-normal text-muted-foreground">/mo</span>
             </p>
-            <p className="text-[12px] text-slate-500 mb-0.5">{trialNote}</p>
-            <p className="text-[12px] text-slate-500 mb-5">{subline('executive')}</p>
-            <p className="text-[13px] text-slate-400 mb-2 leading-relaxed">The analysis is done. The brief is written. The intelligence is running at full depth before you wake up.</p>
-            <p className="text-[12px] text-slate-500 mb-4 leading-relaxed">One additional week of negotiation on a C-suite offer typically exceeds the annual cost of this plan.</p>
+            <p className="text-[12px] text-muted-foreground mb-0.5">{trialNote}</p>
+            <p className="text-[12px] text-muted-foreground mb-5">{subline('executive')}</p>
+            <p className="text-[13px] text-muted-foreground mb-2 leading-relaxed">The analysis is done. The brief is written. The intelligence is running at full depth before you wake up.</p>
+            <p className="text-[12px] text-muted-foreground mb-4 leading-relaxed">One additional week of negotiation on a C-suite offer typically exceeds the annual cost of this plan.</p>
             <ul className="space-y-2.5">
               {EXECUTIVE_FEATURES.map(f => (
                 <li key={f} className="flex items-start gap-2.5">
-                  <span className="text-orange-500 shrink-0 mt-0.5 text-[12px]">+</span>
-                  <span className="text-[13px] text-slate-300 leading-snug">{f}</span>
+                  <span className="text-primary shrink-0 mt-0.5 text-[12px]">+</span>
+                  <span className="text-[13px] text-muted-foreground leading-snug">{f}</span>
                 </li>
               ))}
             </ul>
             <Link
               href="/signup"
-              className="mt-auto inline-block w-full text-center bg-orange-500 text-slate-900 text-[13px] font-bold px-5 py-2.5 rounded hover:bg-orange-600 transition-colors"
+              className="mt-auto inline-block w-full text-center bg-primary text-primary-foreground text-[13px] font-bold px-5 py-2.5 rounded hover:bg-primary/90 transition-colors"
             >
               Start your campaign &rarr;
             </Link>

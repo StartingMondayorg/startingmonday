@@ -46,24 +46,24 @@ export default function ShortlistEditor({ requestId, enabled }: { requestId: str
   }
 
   return (
-    <div className="rounded border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded border border-border bg-card p-5 shadow-sm">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-slate-500">Manual shortlist</h2>
-        <span className="text-[11px] text-slate-400">{companies.length}/10 selected</span>
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-muted-foreground">Manual shortlist</h2>
+        <span className="text-[11px] text-muted-foreground">{companies.length}/10 selected</span>
       </div>
-      <p className="mt-2 text-[12px] text-slate-500">Verify companies and role paths in Sales Navigator, then add the companies approved for this scan.</p>
+      <p className="mt-2 text-[12px] text-muted-foreground">Verify companies and role paths in Sales Navigator, then add the companies approved for this scan.</p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
-        <input disabled={!enabled || companies.length >= 10} value={draft.company_name} onChange={(event) => setDraft({ ...draft, company_name: event.target.value })} placeholder="Company name" className="h-9 rounded border border-slate-300 px-3 text-[12px] outline-none focus:border-orange-500 disabled:bg-slate-50" />
-        <input disabled={!enabled || companies.length >= 10} value={draft.company_key} onChange={(event) => setDraft({ ...draft, company_key: event.target.value })} placeholder="Stable company key" className="h-9 rounded border border-slate-300 px-3 text-[12px] outline-none focus:border-orange-500 disabled:bg-slate-50" />
-        <input disabled={!enabled || companies.length >= 10} value={draft.career_page_url} onChange={(event) => setDraft({ ...draft, career_page_url: event.target.value })} placeholder="Career page URL (optional)" className="h-9 rounded border border-slate-300 px-3 text-[12px] outline-none focus:border-orange-500 disabled:bg-slate-50" />
-        <input disabled={!enabled || companies.length >= 10} value={draft.target_role_lane} onChange={(event) => setDraft({ ...draft, target_role_lane: event.target.value })} placeholder="Target role lane (optional)" className="h-9 rounded border border-slate-300 px-3 text-[12px] outline-none focus:border-orange-500 disabled:bg-slate-50" />
+        <input disabled={!enabled || companies.length >= 10} value={draft.company_name} onChange={(event) => setDraft({ ...draft, company_name: event.target.value })} placeholder="Company name" className="h-9 rounded border border-border px-3 text-[12px] outline-none focus:border-primary/30 disabled:bg-muted" />
+        <input disabled={!enabled || companies.length >= 10} value={draft.company_key} onChange={(event) => setDraft({ ...draft, company_key: event.target.value })} placeholder="Stable company key" className="h-9 rounded border border-border px-3 text-[12px] outline-none focus:border-primary/30 disabled:bg-muted" />
+        <input disabled={!enabled || companies.length >= 10} value={draft.career_page_url} onChange={(event) => setDraft({ ...draft, career_page_url: event.target.value })} placeholder="Career page URL (optional)" className="h-9 rounded border border-border px-3 text-[12px] outline-none focus:border-primary/30 disabled:bg-muted" />
+        <input disabled={!enabled || companies.length >= 10} value={draft.target_role_lane} onChange={(event) => setDraft({ ...draft, target_role_lane: event.target.value })} placeholder="Target role lane (optional)" className="h-9 rounded border border-border px-3 text-[12px] outline-none focus:border-primary/30 disabled:bg-muted" />
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" disabled={!enabled || companies.length >= 10} onClick={addCompany} className="rounded border border-slate-300 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 disabled:opacity-50">Add company</button>
-        <button type="button" disabled={!enabled || companies.length === 0 || working} onClick={startScan} className="rounded bg-orange-600 px-3 py-2 text-[12px] font-semibold text-white disabled:opacity-50">{working ? 'Starting…' : 'Start bounded scan'}</button>
+        <button type="button" disabled={!enabled || companies.length >= 10} onClick={addCompany} className="rounded border border-border bg-card px-3 py-2 text-[12px] font-semibold text-muted-foreground disabled:opacity-50">Add company</button>
+        <button type="button" disabled={!enabled || companies.length === 0 || working} onClick={startScan} className="rounded bg-primary px-3 py-2 text-[12px] font-semibold text-primary-foreground disabled:opacity-50">{working ? 'Starting…' : 'Start bounded scan'}</button>
       </div>
-      {companies.length > 0 && <ul className="mt-4 divide-y divide-slate-100 rounded border border-slate-200">{companies.map((company, index) => <li key={company.company_key} className="flex items-center justify-between gap-3 px-3 py-2 text-[12px]"><span><strong className="text-slate-800">{company.company_name}</strong><span className="ml-2 text-slate-400">{company.target_role_lane || 'Role lane not set'}</span></span><button type="button" onClick={() => setCompanies((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="text-red-600 hover:text-red-800">Remove</button></li>)}</ul>}
-      {message && <p role="status" className="mt-3 text-[12px] text-slate-500">{message}</p>}
+      {companies.length > 0 && <ul className="mt-4 divide-y divide-border rounded border border-border">{companies.map((company, index) => <li key={company.company_key} className="flex items-center justify-between gap-3 px-3 py-2 text-[12px]"><span><strong className="text-foreground">{company.company_name}</strong><span className="ml-2 text-muted-foreground">{company.target_role_lane || 'Role lane not set'}</span></span><button type="button" onClick={() => setCompanies((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="text-destructive">Remove</button></li>)}</ul>}
+      {message && <p role="status" className="mt-3 text-[12px] text-muted-foreground">{message}</p>}
     </div>
   )
 }

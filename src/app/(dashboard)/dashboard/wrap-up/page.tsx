@@ -2,11 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { markPlaced } from '../placed/actions'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-
+import { Button, Card, Input, Label } from '@/components/ui'
 export const metadata = { title: 'Search Complete -- Starting Monday' }
 
 export default async function WrapUpPage() {
@@ -27,30 +23,30 @@ export default async function WrapUpPage() {
   const firstName = profile?.full_name?.split(' ')[0] ?? 'there'
 
   return (
-    <div className="min-h-screen bg-slate-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-background font-sans flex flex-col">
       <header className="px-6 h-14 flex items-center justify-between">
         <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-          <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
         </Link>
-        <Link href="/dashboard" className="text-[12px] text-slate-400 hover:text-slate-200 transition-colors">
+        <Link href="/dashboard" className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
           Back to dashboard
         </Link>
       </header>
 
       <main className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="max-w-lg w-full">
-          <p className="text-[13px] text-slate-500 mb-4">Search wrapping up.</p>
-          <h1 className="text-[32px] font-bold text-white leading-tight mb-4">
+          <p className="text-[13px] text-muted-foreground mb-4">Search wrapping up.</p>
+          <h1 className="text-[32px] font-bold text-foreground leading-tight mb-4">
             {firstName}, mark your search as complete.
           </h1>
-          <p className="text-[15px] text-slate-300 leading-relaxed mb-8">
+          <p className="text-[15px] text-muted-foreground leading-relaxed mb-8">
             Your companies, contacts, and research stay here. Most executives search again within a few years.
             When you are ready, everything you built will be waiting.
           </p>
 
           <form action={markPlaced} className="flex flex-col gap-4 mb-8">
             <div>
-              <Label htmlFor="company" className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
+              <Label htmlFor="company" className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">
                 Company you accepted (optional)
               </Label>
               <Input
@@ -58,7 +54,7 @@ export default async function WrapUpPage() {
                 name="company"
                 type="text"
                 placeholder="Leave blank if not applicable"
-                className="w-full bg-slate-800 border-slate-700 text-white text-[14px] placeholder:text-slate-500 focus-visible:border-slate-500"
+                className="w-full bg-muted border-border text-foreground text-[14px] placeholder:text-muted-foreground"
               />
             </div>
             <Button
@@ -70,13 +66,13 @@ export default async function WrapUpPage() {
           </form>
 
           {(isActivePaid || isTrialing) && tier !== 'free' && (
-            <Card className="bg-slate-800 p-5 mb-6 ring-0">
-              <p className="text-[13px] text-white font-semibold mb-1">Keep your market intelligence running.</p>
-              <p className="text-[13px] text-slate-400 leading-relaxed mb-4">
+            <Card className="bg-muted p-5 mb-6 ring-0">
+              <p className="text-[13px] text-foreground font-semibold mb-1">Keep your market intelligence running.</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">
                 After you land, the executives who stay sharp are the ones who have options when things change.
                 Monitor ($49/mo) keeps your signal monitoring and briefing running with no active search work required.
               </p>
-              <Button variant="outline" render={<Link href="/settings/billing" />} className="text-[13px] font-semibold text-slate-300 hover:text-white border-slate-600 hover:border-slate-400">
+              <Button variant="outline" render={<Link href="/settings/billing" />} className="text-[13px] font-semibold text-muted-foreground hover:text-foreground border-border">
                 Review subscription options
               </Button>
             </Card>
@@ -84,7 +80,7 @@ export default async function WrapUpPage() {
 
           <Link
             href="/dashboard"
-            className="block text-center text-[13px] text-slate-500 hover:text-slate-300 transition-colors"
+            className="block text-center text-[13px] text-muted-foreground transition-colors"
           >
             Not yet -- back to my dashboard
           </Link>

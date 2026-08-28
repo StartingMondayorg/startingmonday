@@ -29,7 +29,7 @@ export default function CtoVsVpEngineeringPage() {
       url="https://startingmonday.app/blog/cto-vs-vp-engineering-career-path"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           At some point in a technology executive career, the choice becomes real. CTO or VP
           Engineering. One company wants you in the vision seat. Another wants you in the build seat.
@@ -42,7 +42,7 @@ export default function CtoVsVpEngineeringPage() {
           so CTO wins. That is the wrong frame entirely.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the titles actually mean in practice</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the titles actually mean in practice</h2>
 
         <p>
           The confusion starts because both titles appear in technology organizations and both involve
@@ -71,7 +71,7 @@ export default function CtoVsVpEngineeringPage() {
           second is VP Engineering territory. Both are necessary. Neither is better.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to read your own track record</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to read your own track record</h2>
 
         <p>
           The clearest signal is in what you have actually done and which parts made you feel most
@@ -100,7 +100,7 @@ export default function CtoVsVpEngineeringPage() {
           go to thinking. The discomfort is data.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the career path implications look like</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the career path implications look like</h2>
 
         <p>
           Choosing VP Engineering at a well-engineered technology company is often the path to
@@ -123,7 +123,7 @@ export default function CtoVsVpEngineeringPage() {
           served by the mismatch.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How this shapes your target company list</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How this shapes your target company list</h2>
 
         <p>
           Once you have clarity on which seat fits, the target company list changes significantly.
@@ -148,7 +148,7 @@ export default function CtoVsVpEngineeringPage() {
           the title you are reaching for.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The clarity that changes everything</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The clarity that changes everything</h2>
 
         <p>
           The executives who thrive - both VPs Engineering and CTOs - are the ones who know

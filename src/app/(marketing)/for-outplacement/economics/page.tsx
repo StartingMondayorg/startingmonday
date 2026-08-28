@@ -262,13 +262,13 @@ const RACI_ROWS = [
 
 export default function OutplacementEconomicsPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/for-outplacement" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+          <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
             Back to outplacement page
           </Link>
         </div>
@@ -276,115 +276,115 @@ export default function OutplacementEconomicsPage() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <header className="mb-12">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
             Outplacement economics
           </p>
-          <h1 className="text-[30px] sm:text-[40px] font-bold text-slate-900 leading-[1.1] tracking-tight mb-4">
+          <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.1] tracking-tight mb-4">
             Pilot structure and commercial model, one click deeper.
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed max-w-2xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
             For partner teams that need pricing, scorecards, and rollout mechanics for internal approval.
           </p>
         </header>
 
-        <section id="pilot-first" className="border border-emerald-200 bg-emerald-50/40 rounded-2xl p-6 sm:p-7 mb-10">
-          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-700 mb-3">
+        <section id="pilot-first" className="border border-success/30 bg-success/10 rounded-2xl p-6 sm:p-7 mb-10">
+          <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-3">
             Pilot first
           </p>
-          <div className="space-y-3 text-[14px] text-slate-700 leading-relaxed">
+          <div className="space-y-3 text-[14px] text-muted-foreground leading-relaxed">
             <p>Most partners begin with one cohort and a 30-day pass/fail review before expanding seats.</p>
             <p>This keeps procurement risk low while giving counselor teams enough workflow exposure to judge fit.</p>
-            <p className="font-semibold text-slate-800">Pilot is for decision, not lock-in.</p>
+            <p className="font-semibold text-foreground">Pilot is for decision, not lock-in.</p>
           </div>
         </section>
 
-        <details className="group border border-slate-200 rounded-2xl bg-white overflow-hidden mb-10">
-          <summary className="list-none cursor-pointer px-6 py-5 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
+        <details className="group border border-border rounded-2xl bg-card overflow-hidden mb-10">
+          <summary className="list-none cursor-pointer px-6 py-5 flex items-center justify-between gap-4 hover:bg-muted transition-colors">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Deep dive</p>
-              <p className="text-[16px] font-semibold text-slate-900">Expand partner models, scorecards, and commercial examples</p>
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-1">Deep dive</p>
+              <p className="text-[16px] font-semibold text-foreground">Expand partner models, scorecards, and commercial examples</p>
             </div>
-            <span className="text-slate-200 text-[18px] leading-none group-open:rotate-45 transition-transform">+</span>
+            <span className="text-muted-foreground text-[18px] leading-none group-open:rotate-45 transition-transform">+</span>
           </summary>
-          <div className="px-6 py-6 border-t border-slate-100 space-y-10">
+          <div className="px-6 py-6 border-t border-border space-y-10">
         <section id="partner-models" className="mb-10">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-5">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-5">
             Partner models
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PARTNER_PLANS.map((plan) => (
-              <div key={plan.name} className="border border-slate-200 rounded-2xl p-5 bg-white">
-                <p className="text-[16px] font-semibold text-slate-900 mb-1">{plan.name}</p>
-                <p className="text-[20px] font-bold text-orange-600 mb-3">{plan.price}</p>
-                <p className="text-[14px] text-slate-600 leading-relaxed">{plan.fit}</p>
+              <div key={plan.name} className="border border-border rounded-2xl p-5 bg-card">
+                <p className="text-[16px] font-semibold text-foreground mb-1">{plan.name}</p>
+                <p className="text-[20px] font-bold text-primary mb-3">{plan.price}</p>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">{plan.fit}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             What is included
           </h2>
           <ul className="space-y-3">
             {WHAT_IS_INCLUDED.map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-[14px] text-slate-700 leading-relaxed">
-                <span className="text-orange-500 shrink-0 mt-0.5">+</span>
+              <li key={item} className="flex items-start gap-2.5 text-[14px] text-muted-foreground leading-relaxed">
+                <span className="text-primary shrink-0 mt-0.5">+</span>
                 <span>{item}</span>
               </li>
             ))}
           </ul>
         </section>
 
-        <section id="decision-scorecard" className="mb-10 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section id="decision-scorecard" className="mb-10 border border-border rounded-2xl p-6 bg-muted">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             30-day decision scorecard
           </h2>
           <div className="space-y-3">
             {SCORECARD_METRICS.map((row) => (
-              <div key={row.metric} className="border border-slate-200 rounded-lg p-4 bg-white">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.metric}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{row.detail}</p>
+              <div key={row.metric} className="border border-border rounded-lg p-4 bg-card">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.metric}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{row.detail}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-3">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">
             Commercial notes
           </h2>
-          <div className="space-y-3 text-[14px] text-slate-600 leading-relaxed">
+          <div className="space-y-3 text-[14px] text-muted-foreground leading-relaxed">
             {COMMERCIAL_NOTES.map((note) => (
               <p key={note}>{note}</p>
             ))}
           </div>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Cohort sizing scenarios for procurement
           </h2>
           <div className="space-y-3">
             {COHORT_SCENARIOS.map((row) => (
-              <div key={row.cohort} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                <p className="text-[13px] font-semibold text-slate-900 mb-1">{row.cohort} - {row.profile}</p>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{row.decisionUse}</p>
+              <div key={row.cohort} className="border border-border rounded-lg p-4 bg-muted">
+                <p className="text-[13px] font-semibold text-foreground mb-1">{row.cohort} - {row.profile}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{row.decisionUse}</p>
               </div>
             ))}
           </div>
-          <p className="text-[12px] text-slate-500 mt-4 leading-relaxed">
+          <p className="text-[12px] text-muted-foreground mt-4 leading-relaxed">
             Final pricing depends on seat mix, term, and support model. These scenarios are for planning conversations and internal approvals.
           </p>
         </section>
 
-        <section className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Quantified current-model vs operating-layer outcomes
           </h2>
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-border rounded-lg">
             <table className="min-w-full text-left text-[13px]">
-              <thead className="bg-slate-100 text-slate-700">
+              <thead className="bg-muted text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Metric</th>
                   <th className="px-4 py-3 font-semibold">Typical current range</th>
@@ -393,27 +393,27 @@ export default function OutplacementEconomicsPage() {
               </thead>
               <tbody>
                 {QUANTIFIED_COMPARISON.map((row) => (
-                  <tr key={row.metric} className="border-t border-slate-200 bg-white">
-                    <td className="px-4 py-3 text-slate-900 font-medium">{row.metric}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.current}</td>
-                    <td className="px-4 py-3 text-slate-700">{row.target}</td>
+                  <tr key={row.metric} className="border-t border-border bg-card">
+                    <td className="px-4 py-3 text-foreground font-medium">{row.metric}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.current}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.target}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-[12px] text-slate-500 mt-3 leading-relaxed">
+          <p className="text-[12px] text-muted-foreground mt-3 leading-relaxed">
             Ranges are directional planning bands; calibrate with your baseline and governance model before launch.
           </p>
         </section>
 
-        <section id="commercial-examples" className="mb-10 border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-200 mb-4">
+        <section id="commercial-examples" className="mb-10 border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">
             Commercial examples by term and seat mix (illustrative)
           </h2>
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-border rounded-lg">
             <table className="min-w-full text-left text-[13px]">
-              <thead className="bg-slate-100 text-slate-700">
+              <thead className="bg-muted text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Cohort</th>
                   <th className="px-4 py-3 font-semibold">Term</th>
@@ -424,70 +424,70 @@ export default function OutplacementEconomicsPage() {
               </thead>
               <tbody>
                 {COMMERCIAL_EXAMPLES.map((row) => (
-                  <tr key={`${row.seats}-${row.term}`} className="border-t border-slate-200 bg-white">
-                    <td className="px-4 py-3 text-slate-900 font-medium">{row.seats}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.term}</td>
-                    <td className="px-4 py-3 text-slate-600">{row.mix}</td>
-                    <td className="px-4 py-3 text-slate-700">{row.monthlyList}</td>
-                    <td className="px-4 py-3 text-slate-700">{row.estimate}</td>
+                  <tr key={`${row.seats}-${row.term}`} className="border-t border-border bg-card">
+                    <td className="px-4 py-3 text-foreground font-medium">{row.seats}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.term}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.mix}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.monthlyList}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.estimate}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-[12px] text-slate-500 mt-3 leading-relaxed">
+          <p className="text-[12px] text-muted-foreground mt-3 leading-relaxed">
             Illustrative calculations use published plan prices before partner discounts, term incentives, and negotiated service scope.
           </p>
         </section>
           </div>
         </details>
 
-        <section id="next-step" className="border border-slate-200 rounded-2xl p-6 bg-white">
-          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">
+        <section id="next-step" className="border border-border rounded-2xl p-6 bg-card">
+          <h2 className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">
             Next step
           </h2>
-          <div className="border border-orange-200 rounded-lg p-4 bg-orange-50/50 mb-5">
-            <p className="text-[12px] font-semibold text-slate-900 mb-1">Short objection response</p>
-            <p className="text-[12px] text-slate-700 leading-relaxed">Worried this creates commitment pressure? It does not. Pilot is scoped as a decision gate with a documented clean-no exit path.</p>
+          <div className="border border-primary/30 rounded-lg p-4 bg-primary/10 mb-5">
+            <p className="text-[12px] font-semibold text-foreground mb-1">Short objection response</p>
+            <p className="text-[12px] text-muted-foreground leading-relaxed">Worried this creates commitment pressure? It does not. Pilot is scoped as a decision gate with a documented clean-no exit path.</p>
           </div>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-5">
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">
             If the model looks viable, request a live partner walkthrough and define a pilot cohort with named success metrics.
           </p>
-          <div className="border border-slate-200 rounded-lg p-4 bg-slate-50 mb-5">
-            <p className="text-[12px] font-semibold text-slate-900 mb-2">Calibrated decision questions</p>
-            <p className="text-[12px] text-slate-600 leading-relaxed">Would it be unreasonable to use one 30-day cohort as the only decision gate before scaling?</p>
-            <p className="text-[12px] text-slate-600 leading-relaxed mt-1">What specific day-30 evidence would make expansion feel obvious to your committee?</p>
+          <div className="border border-border rounded-lg p-4 bg-muted mb-5">
+            <p className="text-[12px] font-semibold text-foreground mb-2">Calibrated decision questions</p>
+            <p className="text-[12px] text-muted-foreground leading-relaxed">Would it be unreasonable to use one 30-day cohort as the only decision gate before scaling?</p>
+            <p className="text-[12px] text-muted-foreground leading-relaxed mt-1">What specific day-30 evidence would make expansion feel obvious to your committee?</p>
           </div>
           <div className="flex flex-wrap gap-4 text-[13px]">
-            <Link href="/partners#apply" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/partners#apply" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Apply to partner program
             </Link>
-            <Link href="/for-outplacement/executive-summary" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/executive-summary" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               View committee one-pager
             </Link>
-            <Link href="/for-outplacement/runbook" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/runbook" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open runbook and templates
             </Link>
-            <Link href="/for-outplacement/metric-dictionary" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/metric-dictionary" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open canonical metric dictionary
             </Link>
-            <Link href="/for-outplacement/operating-scorecard" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/operating-scorecard" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open printable operating scorecard
             </Link>
-            <Link href="/for-outplacement/trust-pack" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/trust-pack" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open trust and governance pack
             </Link>
-            <Link href="/proof/roi-calculator" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/proof/roi-calculator" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Open ROI calculator by channel and role
             </Link>
-            <Link href="/for-outplacement/faq" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement/faq" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Read outplacement FAQ
             </Link>
-            <Link href="/for-outplacement" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+            <Link href="/for-outplacement" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
               Return to outplacement preview
             </Link>
           </div>
-          <p className="text-[12px] text-slate-500 leading-relaxed mt-4">
+          <p className="text-[12px] text-muted-foreground leading-relaxed mt-4">
             Clean no path: if pilot criteria are not met at day 30, close without expansion commitment and retain the decision artifacts.
           </p>
         </section>

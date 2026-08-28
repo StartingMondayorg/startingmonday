@@ -3,14 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { LIFECYCLE_TEMPLATES } from '@/lib/executive-lifecycle'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
+import { Alert, AlertDescription, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Board & Governance Track | Starting Monday',
   description: 'Board narrative, governance thesis, committee-fit preparation, and long-horizon relationship cadence.',
@@ -51,76 +44,76 @@ export default async function BoardGovernancePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
-      <header className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] font-semibold text-slate-300">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] font-semibold text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <nav className="flex items-center gap-4 text-[13px] text-slate-300">
-            <Link href="/dashboard/optionality" className="hover:text-white transition-colors">Optionality</Link>
-            <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+          <nav className="flex items-center gap-4 text-[13px] text-muted-foreground">
+            <Link href="/dashboard/optionality" className="hover:text-foreground transition-colors">Optionality</Link>
+            <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
           </nav>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-6">
         {/* Header */}
-        <Card variant="glass" className="gap-0 px-6 py-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <p className="text-[13px] font-semibold text-orange-400 mb-2">
+        <Card variant="glass" className="gap-0 px-6 py-6 shadow-xl">
+          <p className="text-[13px] font-semibold text-primary mb-2">
             Board &amp; Governance Track
           </p>
-          <h1 className="text-[26px] font-bold text-white leading-tight">
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">
             {firstName}&apos;s board pursuit workflow
           </h1>
-          <p className="text-[14px] text-slate-200 mt-2 max-w-xl leading-relaxed">
+          <p className="text-[14px] text-foreground mt-2 max-w-xl leading-relaxed">
             Board seats are built over quarters, not weeks. The goal is narrative consistency, relationship compounding, and patient signal monitoring.
           </p>
         </Card>
 
         {/* Governance thesis builder */}
-        <Card variant="glass" className="gap-4 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <h2 className="text-[13px] font-bold text-white">Governance thesis</h2>
-          <p className="text-[13px] text-slate-300">
+        <Card variant="glass" className="gap-4 px-5 py-5 shadow-xl">
+          <h2 className="text-[13px] font-bold text-foreground">Governance thesis</h2>
+          <p className="text-[13px] text-muted-foreground">
             Articulate your unique value as a director - not what you have done as an operator, but what you bring to a governance context.
           </p>
           {GOVERNANCE_THESIS_PROMPTS.map(({ label, placeholder }) => (
             <div key={label}>
-              <Label className="block text-[13px] font-semibold text-slate-300 mb-1">{label}</Label>
+              <Label className="block text-[13px] font-semibold text-muted-foreground mb-1">{label}</Label>
               <Textarea
                 rows={2}
                 placeholder={placeholder}
-                className="w-full rounded-lg border-white/15 px-3 py-2 text-[13px] text-slate-100 bg-slate-950/70 placeholder:text-slate-500 focus-visible:border-white/30 focus-visible:ring-0 resize-none"
+                className="w-full rounded-lg border-border px-3 py-2 text-[13px] text-foreground bg-background/70 placeholder:text-muted-foreground focus-visible:ring-0 resize-none"
               />
             </div>
           ))}
         </Card>
 
         {/* Board composition watchlist */}
-        <Card variant="glass" className="gap-3 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <h2 className="text-[13px] font-bold text-white">Board composition watchlist</h2>
-          <p className="text-[13px] text-slate-300">
+        <Card variant="glass" className="gap-3 px-5 py-5 shadow-xl">
+          <h2 className="text-[13px] font-bold text-foreground">Board composition watchlist</h2>
+          <p className="text-[13px] text-muted-foreground">
             Track target companies where the board composition is aging, lacks your functional profile, or has a term expiry coming up.
           </p>
-          <div className="rounded-lg border border-white/10 overflow-hidden bg-slate-950/30">
+          <div className="rounded-lg border border-border overflow-hidden bg-background/30">
             <Table className="text-[13px]">
-              <TableHeader className="bg-white/5 [&_tr]:border-white/10">
+              <TableHeader className="bg-muted/40 [&_tr]:border-border">
                 <TableRow className="hover:bg-transparent">
                   {['Company', 'Board gap you fill', 'Next inflection signal', 'Relationship in', 'Warmth'].map((h) => (
-                    <TableHead key={h} className="px-3 py-2 text-[13px] font-semibold text-slate-300">{h}</TableHead>
+                    <TableHead key={h} className="px-3 py-2 text-[13px] font-semibold text-muted-foreground">{h}</TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
-              <TableBody className="divide-y divide-white/10">
+              <TableBody className="divide-y divide-border">
                 {[...Array(4)].map((_, i) => (
-                  <TableRow key={i} className="bg-slate-950/30 border-white/10 hover:bg-slate-950/30">
-                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="Company name" /></TableCell>
-                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="e.g. Technology risk" /></TableCell>
-                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="e.g. IPO in 18 months" /></TableCell>
-                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-slate-100 placeholder:text-slate-500 focus-visible:ring-0" placeholder="e.g. via John S." /></TableCell>
+                  <TableRow key={i} className="bg-background/30 border-border">
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:ring-0" placeholder="Company name" /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:ring-0" placeholder="e.g. Technology risk" /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:ring-0" placeholder="e.g. IPO in 18 months" /></TableCell>
+                    <TableCell className="px-3 py-2 whitespace-normal"><Input className="h-auto w-full border-0 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:ring-0" placeholder="e.g. via John S." /></TableCell>
                     <TableCell className="px-3 py-2 whitespace-normal">
                       <Select defaultValue="Cold">
-                        <SelectTrigger aria-label="Relationship warmth" className="border-white/15 bg-slate-950/70 px-2 py-1 text-[13px] text-slate-100">
+                        <SelectTrigger aria-label="Relationship warmth" className="border-border bg-background/70 px-2 py-1 text-[13px] text-foreground">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -138,17 +131,17 @@ export default async function BoardGovernancePage() {
         </Card>
 
         {/* Relationship cadence tiers */}
-        <Card variant="glass" className="gap-4 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <h2 className="text-[13px] font-bold text-white">Relationship cadence</h2>
+        <Card variant="glass" className="gap-4 px-5 py-5 shadow-xl">
+          <h2 className="text-[13px] font-bold text-foreground">Relationship cadence</h2>
           <div className="space-y-3">
             {RELATIONSHIP_TIERS.map(({ tier, description }) => (
-              <div key={tier} className="rounded-lg border border-white/10 bg-slate-950/30 px-4 py-3">
-                <p className="text-[13px] font-bold text-slate-100">{tier}</p>
-                <p className="text-[13px] text-slate-300 mt-0.5 mb-2">{description}</p>
+              <div key={tier} className="rounded-lg border border-border bg-background/30 px-4 py-3">
+                <p className="text-[13px] font-bold text-foreground">{tier}</p>
+                <p className="text-[13px] text-muted-foreground mt-0.5 mb-2">{description}</p>
                 <Textarea
                   rows={2}
                   placeholder="List names and last-touched date..."
-                  className="w-full rounded border-white/15 px-3 py-2 text-[13px] text-slate-100 bg-slate-950/70 placeholder:text-slate-500 focus-visible:border-white/30 focus-visible:ring-0 resize-none"
+                  className="w-full rounded border-border px-3 py-2 text-[13px] text-foreground bg-background/70 placeholder:text-muted-foreground focus-visible:ring-0 resize-none"
                 />
               </div>
             ))}
@@ -156,12 +149,12 @@ export default async function BoardGovernancePage() {
         </Card>
 
         {/* Session prompts */}
-        <Card variant="glass" className="gap-0 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <h2 className="text-[13px] font-bold text-white mb-3">Coach session opening prompts</h2>
+        <Card variant="glass" className="gap-0 px-5 py-5 shadow-xl">
+          <h2 className="text-[13px] font-bold text-foreground mb-3">Coach session opening prompts</h2>
           <ul className="space-y-2">
             {template.sessionOpeningPrompts.map((p) => (
-              <li key={p} className="flex items-start gap-3 text-[13px] text-slate-300 italic">
-                <span className="text-slate-500 not-italic flex-shrink-0">?</span>
+              <li key={p} className="flex items-start gap-3 text-[13px] text-muted-foreground italic">
+                <span className="text-muted-foreground not-italic flex-shrink-0">?</span>
                 {p}
               </li>
             ))}
@@ -171,8 +164,8 @@ export default async function BoardGovernancePage() {
         {/* Positioning guidance */}
         <Alert variant="info" className="px-5 py-4">
           <AlertDescription className="text-current">
-            <p className="text-[13px] font-semibold text-blue-200 mb-2">External positioning</p>
-            <p className="text-[13px] text-blue-50 leading-relaxed">{template.positioningGuidance}</p>
+            <p className="text-[13px] font-semibold text-info mb-2">External positioning</p>
+            <p className="text-[13px] text-info leading-relaxed">{template.positioningGuidance}</p>
           </AlertDescription>
         </Alert>
       </main>

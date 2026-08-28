@@ -1,17 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  CommandDialog,
-  Command,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from '@/components/ui/command'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui'
 type Company = { id: string; name: string; stage: string | null; sector: string | null }
 type Contact = { id: string; full_name: string; title: string | null; company_name: string | null }
 
@@ -136,14 +126,14 @@ export function CommandPalette() {
                 const item = (r as Extract<Result, { kind: 'company' }>).item
                 return (
                   <CommandItem key={resultKey(r)} value={resultKey(r)} onSelect={() => navigate(r)}>
-                    <span className="w-7 h-7 rounded bg-slate-100 flex items-center justify-center text-[11px] font-bold text-slate-500 shrink-0">
+                    <span className="w-7 h-7 rounded bg-muted flex items-center justify-center text-[11px] font-bold text-muted-foreground shrink-0">
                       {item.name[0].toUpperCase()}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-medium text-slate-900 truncate">{item.name}</div>
-                      {item.sector && <div className="text-[12px] text-slate-400 truncate">{item.sector}</div>}
+                      <div className="text-[14px] font-medium text-foreground truncate">{item.name}</div>
+                      {item.sector && <div className="text-[12px] text-muted-foreground truncate">{item.sector}</div>}
                     </div>
-                    <span className="text-[11px] text-slate-400 shrink-0">Company</span>
+                    <span className="text-[11px] text-muted-foreground shrink-0">Company</span>
                   </CommandItem>
                 )
               })}
@@ -155,14 +145,14 @@ export function CommandPalette() {
                 const item = (r as Extract<Result, { kind: 'contact' }>).item
                 return (
                   <CommandItem key={resultKey(r)} value={resultKey(r)} onSelect={() => navigate(r)}>
-                    <span className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center text-[11px] font-bold text-blue-500 shrink-0">
+                    <span className="w-7 h-7 rounded-full bg-info/10 flex items-center justify-center text-[11px] font-bold text-info shrink-0">
                       {item.full_name[0].toUpperCase()}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-medium text-slate-900 truncate">{item.full_name}</div>
-                      {item.title && <div className="text-[12px] text-slate-400 truncate">{item.title}{item.company_name ? ` · ${item.company_name}` : ''}</div>}
+                      <div className="text-[14px] font-medium text-foreground truncate">{item.full_name}</div>
+                      {item.title && <div className="text-[12px] text-muted-foreground truncate">{item.title}{item.company_name ? ` · ${item.company_name}` : ''}</div>}
                     </div>
-                    <span className="text-[11px] text-slate-400 shrink-0">Contact</span>
+                    <span className="text-[11px] text-muted-foreground shrink-0">Contact</span>
                   </CommandItem>
                 )
               })}
@@ -174,12 +164,12 @@ export function CommandPalette() {
                 const action = r as Extract<Result, { kind: 'action' }>
                 return (
                   <CommandItem key={resultKey(r)} value={resultKey(r)} onSelect={() => navigate(r)}>
-                    <span className="w-7 h-7 rounded bg-slate-900 flex items-center justify-center text-[13px] text-white shrink-0">
+                    <span className="dark w-7 h-7 rounded bg-card flex items-center justify-center text-[13px] text-foreground shrink-0">
                       {action.icon}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-medium text-slate-900">{action.label}</div>
-                      <div className="text-[12px] text-slate-400">{action.sub}</div>
+                      <div className="text-[14px] font-medium text-foreground">{action.label}</div>
+                      <div className="text-[12px] text-muted-foreground">{action.sub}</div>
                     </div>
                   </CommandItem>
                 )
@@ -188,7 +178,7 @@ export function CommandPalette() {
           )}
         </CommandList>
 
-        <div className="px-4 py-2.5 border-t border-slate-100 flex items-center gap-4 text-[11px] text-slate-400">
+        <div className="px-4 py-2.5 border-t border-border flex items-center gap-4 text-[11px] text-muted-foreground">
           <span className="flex items-center gap-1"><Badge variant="outline" className="font-semibold">↑↓</Badge> navigate</span>
           <span className="flex items-center gap-1"><Badge variant="outline" className="font-semibold">↵</Badge> open</span>
           <span className="flex items-center gap-1"><Badge variant="outline" className="font-semibold">Esc</Badge> close</span>

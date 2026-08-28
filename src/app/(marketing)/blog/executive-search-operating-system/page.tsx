@@ -42,7 +42,7 @@ export default function ExecutiveSearchOperatingSystemPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           On the day your CIO role ends - whether by elimination, restructuring, or your own
           decision - something happens that no one in your professional life has prepared you for.
@@ -70,7 +70,7 @@ export default function ExecutiveSearchOperatingSystemPage() {
           way it needs to be run.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Why executives are especially vulnerable</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Why executives are especially vulnerable</h2>
 
         <p>
           The difficulty is not unique to senior leaders, but it takes a specific shape at that level.
@@ -105,7 +105,7 @@ export default function ExecutiveSearchOperatingSystemPage() {
           Multiply that by six months. Some searches run to twelve.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What an operating system gives you</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What an operating system gives you</h2>
 
         <p>
           When engineers talk about an operating system, they mean something specific: a layer of
@@ -161,7 +161,7 @@ export default function ExecutiveSearchOperatingSystemPage() {
           Tuesday morning is for that work, and the system does not negotiate.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The difference in practice</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The difference in practice</h2>
 
         <p>
           Executives who run searches with this kind of structure behave differently from those who
@@ -191,7 +191,7 @@ export default function ExecutiveSearchOperatingSystemPage() {
           They are more organized. They treat the search like the business it is.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What this looks like built</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What this looks like built</h2>
 
         <p>
           Starting Monday is a search operating system for senior technology executives. The company

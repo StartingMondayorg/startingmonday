@@ -3,23 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { BriefRating } from '@/app/(dashboard)/dashboard/_components/BriefRating'
 import { markContactSent, remindLater } from '../../actions'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 const GOALS = [
   'Request a 20-minute exploratory call',
   'Ask about open roles at their company',
@@ -220,11 +204,11 @@ export function OutreachClient({
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/80">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="border-b border-border bg-background/80">
         <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-300"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
-          <Link href={`/dashboard/contacts/${contact.id}`} className="text-[13px] text-slate-400 hover:text-slate-300 transition-colors">
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
+          <Link href={`/dashboard/contacts/${contact.id}`} className="text-[13px] text-muted-foreground transition-colors">
             ← {contact.name}
           </Link>
         </div>
@@ -234,16 +218,16 @@ export function OutreachClient({
         {profileScore < 50 && (
           <Alert variant="warning" className="mb-6 px-5 py-4 flex items-start gap-4">
             <div className="flex-1 min-w-0">
-              <AlertTitle className="text-[13px] font-semibold text-amber-100">
+              <AlertTitle className="text-[13px] font-semibold text-warning">
                 Your draft quality is limited by an incomplete profile.
               </AlertTitle>
-              <AlertDescription className="text-[12px] text-amber-200 mt-1 leading-relaxed">
+              <AlertDescription className="text-[12px] text-warning mt-1 leading-relaxed">
                 The AI is working with partial information. A complete profile (resume, positioning, targets) produces outreach that reads as if you wrote it yourself instead of generic templates.
               </AlertDescription>
             </div>
             <Button
               variant="outline"
-              className="shrink-0 border-amber-300/40 text-[12px] font-semibold text-amber-100 hover:border-amber-300/70"
+              className="shrink-0 border-warning/40 text-[12px] font-semibold text-warning hover:border-warning/70"
               render={<Link href="/dashboard/profile#section-resume" />}
             >
               Complete profile →
@@ -252,27 +236,27 @@ export function OutreachClient({
         )}
 
         <div className="mb-6">
-          <h1 className="text-[26px] font-bold text-white">Draft outreach</h1>
-          <p className="text-[13px] text-slate-400 mt-1">
-            To <span className="font-semibold text-slate-200">{contact.name}</span>
-            {subtitle ? <span className="text-slate-400"> · {subtitle}</span> : null}
+          <h1 className="text-[26px] font-bold text-foreground">Draft outreach</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">
+            To <span className="font-semibold text-foreground">{contact.name}</span>
+            {subtitle ? <span className="text-muted-foreground"> · {subtitle}</span> : null}
           </p>
         </div>
 
         {companyId && contact.company_name && (
-          <Card variant="glass" className="mb-5 rounded border-white/15 bg-white/5 px-5 py-4">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Brief launcher</p>
-            <p className="text-[13px] text-slate-300 leading-relaxed mb-3">
+          <Card variant="glass" className="mb-5 rounded border-border bg-muted/40 px-5 py-4">
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Brief launcher</p>
+            <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">
               Before you send this note, open the prep brief for {contact.company_name} so your outreach lands with company-specific context.
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <Button className="min-h-[40px] text-[12px] font-semibold" render={<Link href={`/dashboard/companies/${companyId}/prep`} />}>
                 Open company brief
               </Button>
-              <Button variant="outline" className="min-h-[40px] border-white/20 bg-white/5 text-[12px] font-semibold text-slate-200 hover:border-white/40" render={<Link href={`/dashboard/companies/${companyId}`} />}>
+              <Button variant="outline" className="min-h-[40px] border-border bg-muted/40 text-[12px] font-semibold text-foreground" render={<Link href={`/dashboard/companies/${companyId}`} />}>
                 Open company page
               </Button>
-              <Button variant="outline" className="min-h-[40px] border-white/20 bg-white/5 text-[12px] font-semibold text-slate-200 hover:border-white/40" render={<Link href="/dashboard/briefing" />}>
+              <Button variant="outline" className="min-h-[40px] border-border bg-muted/40 text-[12px] font-semibold text-foreground" render={<Link href="/dashboard/briefing" />}>
                 Open daily briefing
               </Button>
             </div>
@@ -281,7 +265,7 @@ export function OutreachClient({
 
         {recentSignals.length > 0 && (
           <Alert variant="warning" className="mb-5 px-5 py-4">
-            <AlertTitle className="text-[10px] font-bold tracking-[0.12em] uppercase text-amber-200 mb-2">
+            <AlertTitle className="text-[10px] font-bold tracking-[0.12em] uppercase text-warning mb-2">
               Recent signals at {contact.company_name ?? 'their company'}
             </AlertTitle>
             <ul className="flex flex-col gap-2">
@@ -290,24 +274,24 @@ export function OutreachClient({
                   <Badge variant="warning" className="shrink-0 uppercase mt-0.5">
                     {s.signalType.replace(/_/g, ' ')}
                   </Badge>
-                  <span className="text-[13px] text-slate-200 leading-snug">{s.summary}</span>
+                  <span className="text-[13px] text-foreground leading-snug">{s.summary}</span>
                 </li>
               ))}
             </ul>
-            <p className="text-[11px] text-amber-200 mt-2 italic">Use a signal as a natural reason to reconnect, not as the pitch.</p>
+            <p className="text-[11px] text-warning mt-2 italic">Use a signal as a natural reason to reconnect, not as the pitch.</p>
           </Alert>
         )}
 
-        <Card variant="glass" className="rounded border-white/15 bg-white/5 p-6 mb-4">
+        <Card variant="glass" className="rounded border-border bg-muted/40 p-6 mb-4">
           <div className="mb-4">
-            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">
               Goal
             </Label>
             <Select
               value={goal}
               onValueChange={(value) => { if (value) { setGoal(value); setCustomGoal('') } }}
             >
-              <SelectTrigger aria-label="Outreach goal" className="w-full border-white/15 bg-slate-900 text-[13px] text-slate-100">
+              <SelectTrigger aria-label="Outreach goal" className="w-full border-border bg-card text-[13px] text-foreground">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -321,21 +305,21 @@ export function OutreachClient({
                 value={customGoal}
                 onChange={e => setCustomGoal(e.target.value)}
                 placeholder="Describe what you want to accomplish"
-                className="w-full mt-2 border-white/15 bg-slate-950/70 text-[13px] text-slate-100 placeholder:text-slate-500"
+                className="w-full mt-2 border-border bg-background/70 text-[13px] text-foreground placeholder:text-muted-foreground"
               />
             )}
           </div>
 
           <div className="mb-5">
-            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">
-              Additional context <span className="font-normal text-slate-300">(optional)</span>
+            <Label className="block text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">
+              Additional context <span className="font-normal text-muted-foreground">(optional)</span>
             </Label>
             <Textarea
               value={additionalContext}
               onChange={e => setAdditionalContext(e.target.value)}
               placeholder="e.g. We met at the CFO Summit last month, they mentioned a transformation role opening up in Q3…"
               rows={3}
-              className="w-full border-white/15 bg-slate-950/70 text-[13px] text-slate-100 placeholder:text-slate-500 resize-none"
+              className="w-full border-border bg-background/70 text-[13px] text-foreground placeholder:text-muted-foreground resize-none"
             />
           </div>
 
@@ -350,9 +334,9 @@ export function OutreachClient({
         </Card>
 
         {draft && (
-          <Card variant="glass" className="rounded border-white/15 bg-white/5 p-6 mb-4">
+          <Card variant="glass" className="rounded border-border bg-muted/40 p-6 mb-4">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Draft</p>
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Draft</p>
               <div className="flex items-center gap-2">
                 {sent ? (
                   <Badge variant="success" className="text-[12px] font-semibold">Marked as sent</Badge>
@@ -362,7 +346,7 @@ export function OutreachClient({
                     variant="outline"
                     onClick={handleMarkSent}
                     disabled={!!loading}
-                    className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15 bg-white/5"
+                    className="text-[12px] font-semibold text-muted-foreground hover:text-foreground border-border bg-muted/40"
                   >
                     {loading === 'sent' ? 'Saving…' : 'Mark as sent'}
                   </Button>
@@ -371,20 +355,20 @@ export function OutreachClient({
                   type="button"
                   variant="outline"
                   onClick={handleCopy}
-                  className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15 bg-white/5"
+                  className="text-[12px] font-semibold text-muted-foreground hover:text-foreground border-border bg-muted/40"
                 >
                   {copied ? 'Copied!' : 'Copy'}
                 </Button>
               </div>
             </div>
 
-            <div className="text-[14px] text-slate-100 leading-relaxed whitespace-pre-wrap mb-4">{draft}</div>
+            <div className="text-[14px] text-foreground leading-relaxed whitespace-pre-wrap mb-4">{draft}</div>
 
             {!loading && (
               <div className="flex gap-2 mb-4">
                 <Button
                   variant="outline"
-                  className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15"
+                  className="text-[12px] font-semibold text-muted-foreground hover:text-foreground border-border"
                   render={<a
                     href={contact.email
                       ? `mailto:${contact.email}?subject=Introduction&body=${encodeURIComponent(draft)}`
@@ -396,7 +380,7 @@ export function OutreachClient({
                 {contact.linkedin_url && (
                   <Button
                     variant="outline"
-                    className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15"
+                    className="text-[12px] font-semibold text-muted-foreground hover:text-foreground border-border"
                     render={<a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer" />}
                   >
                     Open LinkedIn ↗
@@ -406,8 +390,8 @@ export function OutreachClient({
             )}
 
             {showCopyPrompt && !sent && !loading && (
-              <Card variant="glass" className="mb-4 rounded border-white/15 bg-white/5 px-4 py-3 flex items-center justify-between gap-4">
-                <p className="text-[13px] text-slate-300">Paste this into LinkedIn or email, then mark it sent here.</p>
+              <Card variant="glass" className="mb-4 rounded border-border bg-muted/40 px-4 py-3 flex items-center justify-between gap-4">
+                <p className="text-[13px] text-muted-foreground">Paste this into LinkedIn or email, then mark it sent here.</p>
                 <div className="flex items-center gap-2 shrink-0">
                   <Button type="button" onClick={handleMarkSent} className="text-[12px] font-semibold px-3 py-1">
                     Mark as sent
@@ -416,7 +400,7 @@ export function OutreachClient({
                     type="button"
                     variant="outline"
                     onClick={handleRemindLater}
-                    className="text-[12px] font-semibold text-slate-400 hover:text-white border-white/15 bg-white/5"
+                    className="text-[12px] font-semibold text-muted-foreground hover:text-foreground border-border bg-muted/40"
                   >
                     Remind me later
                   </Button>
@@ -445,57 +429,57 @@ export function OutreachClient({
             )}
 
             {!loading && (
-              <Collapsible className="mb-4 border border-white/10 rounded">
+              <Collapsible className="mb-4 border border-border rounded">
                 <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-2.5 text-left bg-transparent cursor-pointer border-0">
-                  <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">
+                  <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">
                     What the AI knew about this draft
                   </span>
-                  <span className="text-[11px] text-slate-300">Details</span>
+                  <span className="text-[11px] text-muted-foreground">Details</span>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="px-4 pb-3 flex flex-col gap-1.5 border-t border-white/10">
+                <CollapsibleContent className="px-4 pb-3 flex flex-col gap-1.5 border-t border-border">
                   {(roleType || fullName) && (
-                    <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                      <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                    <div className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                      <span className="text-muted-foreground shrink-0 mt-0.5">-</span>
                       <span>
                         Your background{roleType ? ` as ${ROLE_TYPE_LABELS[roleType] ?? roleType}` : ''}{fullName ? ` (${fullName})` : ''}
                       </span>
                     </div>
                   )}
-                  <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                    <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                  <div className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                    <span className="text-muted-foreground shrink-0 mt-0.5">-</span>
                     <span>
                       {contact.name}{contact.title ? `, ${contact.title}` : ''}{contact.firm ?? contact.company_name ? ` at ${contact.firm ?? contact.company_name}` : ''}
                     </span>
                   </div>
-                  <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                    <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                  <div className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                    <span className="text-muted-foreground shrink-0 mt-0.5">-</span>
                     <span>Goal: {customGoal.trim() || goal}</span>
                   </div>
                   {contact.channel && (
-                    <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                      <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                    <div className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                      <span className="text-muted-foreground shrink-0 mt-0.5">-</span>
                       <span>Channel: {CHANNEL_LABELS[contact.channel] ?? contact.channel}</span>
                     </div>
                   )}
                   {contact.notes && (
-                    <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                      <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                    <div className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                      <span className="text-muted-foreground shrink-0 mt-0.5">-</span>
                       <span>Contact notes: {contact.notes.slice(0, 120)}{contact.notes.length > 120 ? '…' : ''}</span>
                     </div>
                   )}
                   {additionalContext.trim() && (
-                    <div className="flex items-start gap-2 text-[12px] text-slate-300">
-                      <span className="text-slate-300 shrink-0 mt-0.5">-</span>
+                    <div className="flex items-start gap-2 text-[12px] text-muted-foreground">
+                      <span className="text-muted-foreground shrink-0 mt-0.5">-</span>
                       <span>Your additional context: {additionalContext.trim().slice(0, 120)}</span>
                     </div>
                   )}
-                  <p className="mt-2 text-[11px] text-slate-300">A blank AI window cannot access any of this.</p>
+                  <p className="mt-2 text-[11px] text-muted-foreground">A blank AI window cannot access any of this.</p>
                 </CollapsibleContent>
               </Collapsible>
             )}
 
-            <div className="border-t border-white/10 pt-4">
-              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">Refine</p>
+            <div className="border-t border-border pt-4">
+              <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Refine</p>
               <ToggleGroup
                 value={loading && REFINE_BUTTONS.some(b => b.style === loading) ? [loading] : []}
                 onValueChange={(values) => { if (values[0]) handleRefine(values[0]) }}
@@ -507,7 +491,7 @@ export function OutreachClient({
                     key={style}
                     value={style}
                     disabled={!!loading}
-                    className="text-[12px] font-medium text-slate-300 border-white/15 hover:bg-white/5 hover:border-white/20 bg-white/5 disabled:opacity-40"
+                    className="text-[12px] font-medium text-muted-foreground border-border bg-muted/40 disabled:opacity-40"
                   >
                     {loading === style ? 'Rewriting…' : label}
                   </ToggleGroupItem>
@@ -521,14 +505,14 @@ export function OutreachClient({
                   onKeyDown={e => { if (e.key === 'Enter') handleCustomRefine() }}
                   placeholder="Or describe your edit…"
                   disabled={!!loading}
-                  className="flex-1 border-white/15 text-[13px] text-white placeholder:text-slate-500 disabled:opacity-40"
+                  className="flex-1 border-border text-[13px] text-foreground placeholder:text-muted-foreground disabled:opacity-40"
                 />
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleCustomRefine}
                   disabled={!!loading || !customRefine.trim()}
-                  className="text-[12px] font-medium text-slate-300 border-white/15 hover:bg-white/5 bg-white/5 disabled:opacity-40 shrink-0"
+                  className="text-[12px] font-medium text-muted-foreground border-border bg-muted/40 disabled:opacity-40 shrink-0"
                 >
                   {loading === 'custom' ? 'Rewriting…' : 'Apply'}
                 </Button>
@@ -538,30 +522,30 @@ export function OutreachClient({
         )}
 
         {history.length > 0 && (
-          <Collapsible className="rounded border border-white/15 bg-white/5 overflow-hidden">
+          <Collapsible className="rounded border border-border bg-muted/40 overflow-hidden">
             <CollapsibleTrigger className="w-full px-5 py-3.5 flex items-center justify-between text-left cursor-pointer bg-transparent border-0">
-              <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">
+              <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">
                 Previous drafts ({history.length})
               </span>
-              <span className="text-[11px] text-slate-400">Expand</span>
+              <span className="text-[11px] text-muted-foreground">Expand</span>
             </CollapsibleTrigger>
-            <CollapsibleContent className="divide-y divide-white/5 border-t border-white/10">
+            <CollapsibleContent className="divide-y divide-border border-t border-border">
               {history.map(h => (
                 <div key={h.id} className="px-5 py-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] text-slate-400">{formatDate(h.createdAt)}</span>
+                    <span className="text-[11px] text-muted-foreground">{formatDate(h.createdAt)}</span>
                     <button
                       type="button"
                       onClick={() => setExpandedHistory(expandedHistory === h.id ? null : h.id)}
-                      className="text-[11px] text-slate-400 hover:text-slate-200 bg-transparent border-0 cursor-pointer"
+                      className="text-[11px] text-muted-foreground hover:text-foreground bg-transparent border-0 cursor-pointer"
                     >
                       {expandedHistory === h.id ? 'Collapse' : 'View'}
                     </button>
                   </div>
                   {expandedHistory === h.id ? (
-                    <div className="text-[13px] text-slate-200 leading-relaxed whitespace-pre-wrap">{h.text}</div>
+                    <div className="text-[13px] text-foreground leading-relaxed whitespace-pre-wrap">{h.text}</div>
                   ) : (
-                    <p className="text-[13px] text-slate-400 truncate">{h.text.slice(0, 100)}</p>
+                    <p className="text-[13px] text-muted-foreground truncate">{h.text.slice(0, 100)}</p>
                   )}
                 </div>
               ))}

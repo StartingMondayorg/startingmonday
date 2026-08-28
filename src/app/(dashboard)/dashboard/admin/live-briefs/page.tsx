@@ -3,20 +3,18 @@ import { notFound, redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { Card } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 export const metadata = { title: 'Live Briefs - Starting Monday Admin' }
 
 const STATUS_STYLES: Record<string, string> = {
-  draft: 'bg-slate-100 text-slate-600',
-  reviewing: 'bg-blue-50 text-blue-700',
-  shortlisted: 'bg-indigo-50 text-indigo-700',
-  scanning: 'bg-amber-50 text-amber-700',
-  ready_for_review: 'bg-orange-50 text-orange-700',
-  delivered: 'bg-emerald-50 text-emerald-700',
-  revoked: 'bg-red-50 text-red-700',
-  deleted: 'bg-slate-100 text-slate-400',
+  draft: 'bg-muted text-muted-foreground',
+  reviewing: 'bg-info/10 text-info',
+  shortlisted: 'bg-info/10 text-info',
+  scanning: 'bg-warning/10 text-warning',
+  ready_for_review: 'bg-primary/10 text-primary',
+  delivered: 'bg-success/10 text-success',
+  revoked: 'bg-destructive/10 text-destructive',
+  deleted: 'bg-muted text-muted-foreground',
 }
 
 function label(value: string) {
@@ -69,15 +67,15 @@ export default async function LiveBriefsPage() {
   }, {})
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark text-foreground bg-card">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-slate-400 sm:text-[14px]">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted-foreground sm:text-[14px]">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-slate-400 hover:text-slate-200">Admin</Link>
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white">Dashboard</Link>
+            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground">Admin</Link>
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground">Dashboard</Link>
           </div>
         </div>
       </header>
@@ -85,11 +83,11 @@ export default async function LiveBriefsPage() {
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Operator queue</p>
-            <h1 className="mt-1 text-[26px] font-bold text-slate-900">Live briefs</h1>
-            <p className="mt-1 text-[13px] text-slate-500">{requests.length} request{requests.length === 1 ? '' : 's'} received</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">Operator queue</p>
+            <h1 className="mt-1 text-[26px] font-bold text-foreground">Live briefs</h1>
+            <p className="mt-1 text-[13px] text-muted-foreground">{requests.length} request{requests.length === 1 ? '' : 's'} received</p>
           </div>
-          <Link href="/dashboard/admin/live-briefs/new" className="shrink-0 rounded bg-orange-600 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-orange-700">
+          <Link href="/dashboard/admin/live-briefs/new" className="shrink-0 rounded bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
             New request
           </Link>
         </div>
@@ -97,48 +95,48 @@ export default async function LiveBriefsPage() {
         <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {['draft', 'reviewing', 'scanning', 'delivered'].map((status) => (
             <Card key={status} className="p-3">
-              <div className="text-[20px] font-bold text-slate-900">{statusCounts[status] ?? 0}</div>
-              <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400">{label(status)}</div>
+              <div className="text-[20px] font-bold text-foreground">{statusCounts[status] ?? 0}</div>
+              <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-muted-foreground">{label(status)}</div>
             </Card>
           ))}
         </div>
 
         {requests.length === 0 ? (
           <Card className="p-12 text-center">
-            <p className="text-[14px] text-slate-400">No live brief requests yet.</p>
+            <p className="text-[14px] text-muted-foreground">No live brief requests yet.</p>
           </Card>
         ) : (
           <Card className="overflow-hidden p-0">
             <Table>
               <TableHeader>
-                <TableRow className="bg-slate-50">
-                  <TableHead className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-slate-400">Prospect</TableHead>
-                  <TableHead className="hidden px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-slate-400 sm:table-cell">Received</TableHead>
-                  <TableHead className="px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-slate-400">Status</TableHead>
-                  <TableHead className="hidden px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-slate-400 md:table-cell">Consent</TableHead>
-                  <TableHead className="hidden px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-slate-400 lg:table-cell">CRM</TableHead>
+                <TableRow className="bg-muted">
+                  <TableHead className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-muted-foreground">Prospect</TableHead>
+                  <TableHead className="hidden px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-muted-foreground sm:table-cell">Received</TableHead>
+                  <TableHead className="px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-muted-foreground">Status</TableHead>
+                  <TableHead className="hidden px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-muted-foreground md:table-cell">Consent</TableHead>
+                  <TableHead className="hidden px-4 py-3 text-[10px] font-bold uppercase tracking-[0.09em] text-muted-foreground lg:table-cell">CRM</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {requests.map((request) => (
                   <TableRow key={request.id}>
                     <TableCell className="whitespace-normal px-5 py-3.5">
-                      <Link href={`/dashboard/admin/live-briefs/${request.id}`} className="text-[14px] font-semibold text-slate-900 hover:text-slate-600">{request.prospect_name}</Link>
-                      <div className="mt-0.5 text-[12px] text-slate-400">{request.prospect_email}</div>
-                      <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400">{label(request.request_source)}</div>
+                      <Link href={`/dashboard/admin/live-briefs/${request.id}`} className="text-[14px] font-semibold text-foreground hover:text-muted-foreground">{request.prospect_name}</Link>
+                      <div className="mt-0.5 text-[12px] text-muted-foreground">{request.prospect_email}</div>
+                      <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.08em] text-muted-foreground">{label(request.request_source)}</div>
                     </TableCell>
-                    <TableCell className="hidden px-4 py-3.5 text-[12px] text-slate-500 sm:table-cell">{dateLabel(request.request_received_at)}</TableCell>
+                    <TableCell className="hidden px-4 py-3.5 text-[12px] text-muted-foreground sm:table-cell">{dateLabel(request.request_received_at)}</TableCell>
                     <TableCell className="px-4 py-3.5">
                       <span className={`inline-flex rounded px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${STATUS_STYLES[request.status] ?? STATUS_STYLES.draft}`}>
                         {label(request.status)}
                       </span>
                     </TableCell>
-                    <TableCell className="hidden px-4 py-3.5 text-[12px] text-slate-500 md:table-cell">
-                      <span className="text-emerald-700">Attested</span>
-                      <div className="mt-0.5 max-w-[180px] truncate text-[11px] text-slate-400">{request.consent_source}</div>
+                    <TableCell className="hidden px-4 py-3.5 text-[12px] text-muted-foreground md:table-cell">
+                      <span className="text-success">Attested</span>
+                      <div className="mt-0.5 max-w-[180px] truncate text-[11px] text-muted-foreground">{request.consent_source}</div>
                     </TableCell>
-                    <TableCell className="hidden px-4 py-3.5 text-[12px] text-slate-500 lg:table-cell">
-                      {request.hubspot_contact_id ? <span className="text-emerald-700">Linked · {label(request.hubspot_sync_status)}</span> : <span className="text-slate-400">Not linked</span>}
+                    <TableCell className="hidden px-4 py-3.5 text-[12px] text-muted-foreground lg:table-cell">
+                      {request.hubspot_contact_id ? <span className="text-success">Linked · {label(request.hubspot_sync_status)}</span> : <span className="text-muted-foreground">Not linked</span>}
                     </TableCell>
                   </TableRow>
                 ))}

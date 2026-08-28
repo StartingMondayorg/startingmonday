@@ -1,14 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Toggle } from '@/components/ui/toggle'
-
+import { Badge, Button, Card, Input, Label, Textarea, Toggle } from '@/components/ui'
 export type StarStory = {
   id: string
   situation: string
@@ -58,25 +51,25 @@ function StoryForm({
 
   const canSave = situation.trim() && action.trim() && result.trim()
 
-  const labelCls = 'block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5'
+  const labelCls = 'block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5'
   const inputCls = 'w-full px-3 py-2 text-[13px] resize-none'
 
   return (
-    <Card variant="default" className="gap-4 p-5 bg-slate-50">
+    <Card variant="default" className="gap-4 p-5 bg-muted">
       <div>
-        <Label className={labelCls}>Situation <span className="text-red-500">*</span></Label>
+        <Label className={labelCls}>Situation <span className="text-destructive">*</span></Label>
         <Textarea rows={2} value={situation} onChange={e => setSituation(e.target.value)}
           placeholder="The context and challenge - one or two sentences."
           className={inputCls} />
       </div>
       <div>
-        <Label className={labelCls}>What you did <span className="text-red-500">*</span></Label>
+        <Label className={labelCls}>What you did <span className="text-destructive">*</span></Label>
         <Textarea rows={2} value={action} onChange={e => setAction(e.target.value)}
           placeholder="Your specific decision or action - not the team, you."
           className={inputCls} />
       </div>
       <div>
-        <Label className={labelCls}>Outcome <span className="text-red-500">*</span></Label>
+        <Label className={labelCls}>Outcome <span className="text-destructive">*</span></Label>
         <Textarea rows={2} value={result} onChange={e => setResult(e.target.value)}
           placeholder="Quantified result - dollars, %, time, scope."
           className={inputCls} />
@@ -87,7 +80,7 @@ function StoryForm({
           {tags.map(t => (
             <Badge key={t} variant="secondary" className="h-auto gap-1 px-2 py-0.5 font-semibold">
               {t}
-              <button type="button" onClick={() => removeTag(t)} className="text-slate-400 hover:text-slate-600 leading-none">×</button>
+              <button type="button" onClick={() => removeTag(t)} className="text-muted-foreground leading-none">×</button>
             </Badge>
           ))}
         </div>
@@ -106,7 +99,7 @@ function StoryForm({
               key={t}
               pressed={false}
               onPressedChange={() => addTag(t)}
-              className="h-auto rounded-full px-2 py-0.5 text-[11px] text-slate-500 border border-slate-200 hover:bg-slate-100"
+              className="h-auto rounded-full px-2 py-0.5 text-[11px] text-muted-foreground border border-border hover:bg-muted"
             >
               + {t}
             </Toggle>
@@ -121,7 +114,7 @@ function StoryForm({
         >
           Save story
         </Button>
-        <Button variant="ghost" onClick={onCancel} className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-600 hover:bg-transparent">
+        <Button variant="ghost" onClick={onCancel} className="h-auto p-0 text-[12px] text-muted-foreground hover:bg-transparent">
           Cancel
         </Button>
       </div>
@@ -160,7 +153,7 @@ export default function StarStoriesPanel({
     <div className="flex flex-col gap-3">
       <input type="hidden" name="star_stories_json" value={JSON.stringify(stories)} />
       {stories.length === 0 && !adding && (
-        <p className="text-[13px] text-slate-400 italic">
+        <p className="text-[13px] text-muted-foreground italic">
           No stories saved yet. Add your best 5-8 to make prep briefs specific to your background.
         </p>
       )}
@@ -172,16 +165,16 @@ export default function StarStoriesPanel({
             onCancel={() => setEditId(null)} />
         ) : (
           <Card key={s.id} variant="default" className="gap-0 p-4">
-            <div className="text-[13px] text-slate-700 leading-relaxed mb-1">
-              <span className="font-semibold text-slate-500 text-[10px] tracking-[0.08em] uppercase mr-1.5">Situation</span>
+            <div className="text-[13px] text-muted-foreground leading-relaxed mb-1">
+              <span className="font-semibold text-muted-foreground text-[10px] tracking-[0.08em] uppercase mr-1.5">Situation</span>
               {s.situation}
             </div>
-            <div className="text-[13px] text-slate-700 leading-relaxed mb-1">
-              <span className="font-semibold text-slate-500 text-[10px] tracking-[0.08em] uppercase mr-1.5">Action</span>
+            <div className="text-[13px] text-muted-foreground leading-relaxed mb-1">
+              <span className="font-semibold text-muted-foreground text-[10px] tracking-[0.08em] uppercase mr-1.5">Action</span>
               {s.action}
             </div>
-            <div className="text-[13px] text-slate-700 leading-relaxed mb-2">
-              <span className="font-semibold text-slate-500 text-[10px] tracking-[0.08em] uppercase mr-1.5">Result</span>
+            <div className="text-[13px] text-muted-foreground leading-relaxed mb-2">
+              <span className="font-semibold text-muted-foreground text-[10px] tracking-[0.08em] uppercase mr-1.5">Result</span>
               {s.result}
             </div>
             {s.tags.length > 0 && (
@@ -193,11 +186,11 @@ export default function StarStoriesPanel({
             )}
             <div className="flex items-center gap-3">
               <Button variant="ghost" onClick={() => setEditId(s.id)}
-                className="h-auto p-0 text-[11px] font-semibold text-slate-500 hover:text-slate-700 hover:bg-transparent">
+                className="h-auto p-0 text-[11px] font-semibold text-muted-foreground hover:bg-transparent">
                 Edit
               </Button>
               <Button variant="ghost" onClick={() => handleDelete(s.id)}
-                className="h-auto p-0 text-[11px] font-semibold text-red-400 hover:text-red-600 hover:bg-transparent">
+                className="h-auto p-0 text-[11px] font-semibold text-destructive hover:bg-transparent">
                 Delete
               </Button>
             </div>

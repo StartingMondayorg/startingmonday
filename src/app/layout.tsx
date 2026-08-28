@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { headers } from 'next/headers'
 import { AssistWidget } from "@/app/components/AssistWidget";
 import { PHProvider } from "@/app/components/PosthogProvider";
+import { ThemeProvider } from "@/app/components/ThemeProvider";
 import { getBrandContextFromHosts } from '@/lib/brand'
 import { buildBrandMetadata } from './brand-metadata'
 import "./globals.css";
@@ -48,9 +49,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
+      <body className="min-h-full flex flex-col">
         {/*
           Mounted at the root so every route can capture anonymous visitors.
           user_events cannot: its user_id is NOT NULL and the channel-funnel
@@ -59,10 +61,12 @@ export default function RootLayout({
           layouts, TrackLink's posthog?.capture() silently did nothing on the
           homepage and every persona page (SMK-458).
         */}
-        <PHProvider>
-          {children}
-          <AssistWidget />
-        </PHProvider>
+        <ThemeProvider>
+          <PHProvider>
+            {children}
+            <AssistWidget />
+          </PHProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

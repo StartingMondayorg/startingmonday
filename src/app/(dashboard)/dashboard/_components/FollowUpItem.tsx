@@ -2,9 +2,7 @@
 import { useState, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { markFollowUpDone, updateFollowUp } from '@/app/(dashboard)/dashboard/actions'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-
+import { Button, Input } from '@/components/ui'
 interface Props {
   id: string
   action: string
@@ -57,7 +55,7 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
             name="action"
             defaultValue={action}
             aria-label="Action text"
-            className="border-white/20 bg-slate-900 text-[14px] font-semibold text-slate-100 focus-visible:border-orange-300/60"
+            className="border-border bg-card text-[14px] font-semibold text-foreground focus-visible:border-primary/60"
           />
           <div className="flex items-center gap-3">
             <Input
@@ -65,10 +63,10 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
               name="due_date"
               defaultValue={dueDate}
               aria-label="Due date"
-              className="w-auto border-white/20 bg-slate-900 text-[13px] text-slate-100 focus-visible:border-orange-300/60"
+              className="w-auto border-border bg-card text-[13px] text-foreground focus-visible:border-primary/60"
             />
             {companyName && (
-              <span className="text-[12px] text-slate-400">{companyName}</span>
+              <span className="text-[12px] text-muted-foreground">{companyName}</span>
             )}
             <div className="ml-auto flex items-center gap-2">
               <Button
@@ -83,7 +81,7 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
                 variant="ghost"
                 size="sm"
                 onClick={() => setEditing(false)}
-                className="text-slate-400 hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 Cancel
               </Button>
@@ -101,15 +99,15 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
         onClick={startEdit}
         className="flex-1 min-w-0 text-left group cursor-pointer"
       >
-        <div className="text-[14px] font-semibold text-slate-100 truncate group-hover:text-white">
+        <div className="text-[14px] font-semibold text-muted-foreground truncate group-hover:text-foreground">
           {action}
         </div>
         {companyName && (
-          <div className="text-[12px] text-slate-400 mt-0.5">{companyName}</div>
+          <div className="text-[12px] text-muted-foreground mt-0.5">{companyName}</div>
         )}
       </button>
 
-      <span className={`text-[12px] font-semibold shrink-0 ${isToday ? 'text-slate-400' : 'text-rose-300'}`}>
+      <span className={`text-[12px] font-semibold shrink-0 ${isToday ? 'text-muted-foreground' : 'text-destructive'}`}>
         {dateLabel}
       </span>
 
@@ -119,7 +117,7 @@ export function FollowUpItem({ id, action, dueDate, dateLabel, isToday, companyN
         size="sm"
         onClick={handleDone}
         disabled={donePending}
-        className="text-slate-400 border-white/20 hover:border-white/40 hover:text-slate-200 bg-transparent"
+        className="text-muted-foreground border-border hover:text-foreground bg-transparent"
       >
         {donePending ? '…' : 'Done'}
       </Button>

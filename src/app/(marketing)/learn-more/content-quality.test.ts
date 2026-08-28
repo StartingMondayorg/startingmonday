@@ -91,13 +91,15 @@ describe('learn-more copy relevance and proof discipline', () => {
 })
 
 describe('learn-more brand and production readiness markers', () => {
-  it('uses the shared shell and standard dark-brand tokens', () => {
+  it('uses the shared shell and the standard theme tokens', () => {
     const shellContent = read(SHELL_FILE)
 
     expect(shellContent.includes('PublicPageHeader')).toBe(true)
     expect(shellContent.includes('SiteFooter')).toBe(true)
-    expect(shellContent.includes('bg-slate-950')).toBe(true)
-    expect(shellContent.includes('text-orange-200')).toBe(true)
+    // The shell used to pin bg-slate-950 + text-orange-200. It now states the
+    // same thing in tokens: the page surface and the brand accent.
+    expect(shellContent.includes('bg-background')).toBe(true)
+    expect(shellContent.includes('text-primary')).toBe(true)
   })
 
   it('marks each page with one h1, canonical metadata, and no internal leak strings', () => {

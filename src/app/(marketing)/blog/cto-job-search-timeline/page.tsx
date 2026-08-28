@@ -29,7 +29,7 @@ export default function CtoJobSearchTimelinePage() {
       url="https://startingmonday.app/blog/cto-job-search-timeline"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Ask a company how long a CTO search takes and they will say eight to twelve weeks. That is
           the time from search kickoff to offer acceptance - the company&rsquo;s experience of
@@ -43,7 +43,7 @@ export default function CtoJobSearchTimelinePage() {
           planning a transition.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The two timelines that get confused</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The two timelines that get confused</h2>
 
         <p>
           The company&rsquo;s timeline starts when they engage a search firm or decide to search. The
@@ -68,7 +68,7 @@ export default function CtoJobSearchTimelinePage() {
           preparation by the candidate before anyone knew they were looking.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What determines where you land in the range</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What determines where you land in the range</h2>
 
         <p>
           Three variables dominate.
@@ -100,7 +100,7 @@ export default function CtoJobSearchTimelinePage() {
           behind.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The variables you can control right now</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The variables you can control right now</h2>
 
         <p>
           Network currency has a simple solution and a time cost. Reach out to ten search firm
@@ -125,7 +125,7 @@ export default function CtoJobSearchTimelinePage() {
           acquisitions in your sectors.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The honest answer</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The honest answer</h2>
 
         <p>
           The CTO search that closes in six months is the one where all three variables were in order

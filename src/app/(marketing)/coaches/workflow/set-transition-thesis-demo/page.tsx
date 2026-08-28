@@ -25,26 +25,26 @@ const steps = [
 
 export default function SetTransitionThesisDemoPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto max-w-5xl px-4 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-20">
-        <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-orange-200">Workflow demo 1</p>
-        <h1 className="max-w-4xl font-serif text-[36px] leading-[1.06] text-white sm:text-[52px]">
+        <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">Workflow demo 1</p>
+        <h1 className="max-w-4xl font-serif text-[36px] leading-[1.06] text-foreground sm:text-[52px]">
           Set the transition thesis before outreach.
         </h1>
-        <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-slate-200 sm:text-[19px]">
+        <p className="mt-6 max-w-3xl text-[17px] leading-relaxed text-foreground sm:text-[19px]">
           This demo shows how a coach turns a generic profile into a mandate-ready narrative before first recruiter calls.
         </p>
 
-        <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Example client</p>
-          <p className="mt-2 text-[15px] text-slate-100">{example.client}</p>
-          <p className="mt-3 text-[14px] leading-relaxed text-slate-300">Before: {example.before}</p>
-          <p className="mt-2 text-[14px] leading-relaxed text-slate-200">After: {example.after}</p>
+        <section className="mt-10 rounded-2xl border border-border bg-muted/[0.04] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Example client</p>
+          <p className="mt-2 text-[15px] text-foreground">{example.client}</p>
+          <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">Before: {example.before}</p>
+          <p className="mt-2 text-[14px] leading-relaxed text-foreground">After: {example.after}</p>
         </section>
 
-        <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">How it works</p>
-          <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-slate-200">
+        <section className="mt-4 rounded-2xl border border-border bg-muted/[0.04] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">How it works</p>
+          <ul className="mt-3 space-y-2 text-[14px] leading-relaxed text-foreground">
             {steps.map((step) => (
               <li key={step}>{step}</li>
             ))}
@@ -52,10 +52,10 @@ export default function SetTransitionThesisDemoPage() {
         </section>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/coaches/sample-transition-brief" className="rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400">
+          <Link href="/coaches/sample-transition-brief" className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
             Open full transition brief
           </Link>
-          <Link href="/coaches" className="rounded-full border border-white/18 px-5 py-2.5 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5">
+          <Link href="/coaches" className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40">
             Back to coach workflow
           </Link>
         </div>

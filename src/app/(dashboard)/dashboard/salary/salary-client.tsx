@@ -1,18 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type PushbackItem = { objection: string; response: string }
 
 type SalaryResult = {
@@ -74,7 +62,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
   const [result, setResult]           = useState<SalaryResult | null>(null)
   const [error, setError]             = useState('')
 
-  const labelCls = 'block text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-1.5'
+  const labelCls = 'block text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1.5'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -111,7 +99,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
         {/* Row 1: role + company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label className={labelCls}>Role <span className="text-red-500">*</span></Label>
+            <Label className={labelCls}>Role <span className="text-destructive">*</span></Label>
             <Input
               type="text"
               value={role}
@@ -121,7 +109,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
             />
           </div>
           <div>
-            <Label className={labelCls}>Company <span className="text-red-500">*</span></Label>
+            <Label className={labelCls}>Company <span className="text-destructive">*</span></Label>
             <Input
               type="text"
               value={company}
@@ -135,7 +123,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
         {/* Row 2: level + sector */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label className={labelCls}>Level <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Label className={labelCls}>Level <span className="text-muted-foreground font-normal normal-case tracking-normal">optional</span></Label>
             <Select value={level || '__none__'} onValueChange={v => setLevel(!v || v === '__none__' ? '' : v)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select level…" />
@@ -147,7 +135,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
             </Select>
           </div>
           <div>
-            <Label className={labelCls}>Sector <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Label className={labelCls}>Sector <span className="text-muted-foreground font-normal normal-case tracking-normal">optional</span></Label>
             <Select value={sector || '__none__'} onValueChange={v => setSector(!v || v === '__none__' ? '' : v)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select sector…" />
@@ -163,7 +151,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
         {/* Row 3: company stage + location */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label className={labelCls}>Company stage <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Label className={labelCls}>Company stage <span className="text-muted-foreground font-normal normal-case tracking-normal">optional</span></Label>
             <Select value={companyStage || '__none__'} onValueChange={v => setCompanyStage(!v || v === '__none__' ? '' : v)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select stage…" />
@@ -175,7 +163,7 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
             </Select>
           </div>
           <div>
-            <Label className={labelCls}>Location <span className="text-slate-300 font-normal normal-case tracking-normal">optional</span></Label>
+            <Label className={labelCls}>Location <span className="text-muted-foreground font-normal normal-case tracking-normal">optional</span></Label>
             <Input
               type="text"
               value={location}
@@ -205,47 +193,47 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
 
           {/* Total comp range */}
           <Card className="p-6">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Total cash compensation</p>
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Total cash compensation</p>
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center">
-                <p className="text-[11px] text-slate-400 mb-1">Floor</p>
-                <p className="text-[22px] font-bold text-slate-900">{fmt(result.low)}</p>
+                <p className="text-[11px] text-muted-foreground mb-1">Floor</p>
+                <p className="text-[22px] font-bold text-foreground">{fmt(result.low)}</p>
               </div>
-              <div className="text-center border-x border-slate-100">
-                <p className="text-[11px] text-orange-500 font-semibold mb-1">Target</p>
-                <p className="text-[22px] font-bold text-orange-500">{fmt(result.target)}</p>
+              <div className="text-center border-x border-border">
+                <p className="text-[11px] text-primary font-semibold mb-1">Target</p>
+                <p className="text-[22px] font-bold text-primary">{fmt(result.target)}</p>
               </div>
               <div className="text-center">
-                <p className="text-[11px] text-slate-400 mb-1">Ceiling</p>
-                <p className="text-[22px] font-bold text-slate-900">{fmt(result.ceiling)}</p>
+                <p className="text-[11px] text-muted-foreground mb-1">Ceiling</p>
+                <p className="text-[22px] font-bold text-foreground">{fmt(result.ceiling)}</p>
               </div>
             </div>
             {result.notes && (
-              <p className="text-[13px] text-slate-500 leading-relaxed border-t border-slate-100 pt-4">{result.notes}</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed border-t border-border pt-4">{result.notes}</p>
             )}
           </Card>
 
           {/* Component breakdown */}
           <Card className="p-6">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Compensation breakdown</p>
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Compensation breakdown</p>
             <div className="flex flex-col gap-5">
 
               {/* Base */}
               {result.base && (
                 <div>
-                  <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-2">Base salary</p>
+                  <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Base salary</p>
                   <div className="grid grid-cols-3 gap-3 text-center">
                     <div>
-                      <p className="text-[11px] text-slate-400 mb-0.5">Floor</p>
-                      <p className="text-[16px] font-semibold text-slate-700">{fmt(result.base.low)}</p>
+                      <p className="text-[11px] text-muted-foreground mb-0.5">Floor</p>
+                      <p className="text-[16px] font-semibold text-muted-foreground">{fmt(result.base.low)}</p>
                     </div>
-                    <div className="border-x border-slate-100">
-                      <p className="text-[11px] text-orange-500 mb-0.5">Target</p>
-                      <p className="text-[16px] font-semibold text-orange-500">{fmt(result.base.target)}</p>
+                    <div className="border-x border-border">
+                      <p className="text-[11px] text-primary mb-0.5">Target</p>
+                      <p className="text-[16px] font-semibold text-primary">{fmt(result.base.target)}</p>
                     </div>
                     <div>
-                      <p className="text-[11px] text-slate-400 mb-0.5">Ceiling</p>
-                      <p className="text-[16px] font-semibold text-slate-700">{fmt(result.base.ceiling)}</p>
+                      <p className="text-[11px] text-muted-foreground mb-0.5">Ceiling</p>
+                      <p className="text-[16px] font-semibold text-muted-foreground">{fmt(result.base.ceiling)}</p>
                     </div>
                   </div>
                 </div>
@@ -253,32 +241,32 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
 
               {/* Bonus */}
               {result.bonus && (
-                <div className="border-t border-slate-100 pt-4">
-                  <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-2">Annual bonus</p>
+                <div className="border-t border-border pt-4">
+                  <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Annual bonus</p>
                   <div className="flex gap-6 mb-1.5">
                     <div>
-                      <span className="text-[11px] text-slate-400">Target </span>
-                      <span className="text-[14px] font-semibold text-slate-800">{result.bonus.target_pct}% of base</span>
+                      <span className="text-[11px] text-muted-foreground">Target </span>
+                      <span className="text-[14px] font-semibold text-foreground">{result.bonus.target_pct}% of base</span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-400">Max </span>
-                      <span className="text-[14px] font-semibold text-slate-800">{result.bonus.max_pct}% of base</span>
+                      <span className="text-[11px] text-muted-foreground">Max </span>
+                      <span className="text-[14px] font-semibold text-foreground">{result.bonus.max_pct}% of base</span>
                     </div>
                   </div>
                   {result.bonus.notes && (
-                    <p className="text-[12px] text-slate-400 leading-relaxed">{result.bonus.notes}</p>
+                    <p className="text-[12px] text-muted-foreground leading-relaxed">{result.bonus.notes}</p>
                   )}
                 </div>
               )}
 
               {/* Equity */}
               {result.equity && (
-                <div className="border-t border-slate-100 pt-4">
-                  <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-2">Equity</p>
-                  <p className="text-[14px] font-semibold text-slate-800 mb-1">{result.equity.range}</p>
-                  <p className="text-[12px] text-slate-500 mb-1">{result.equity.vesting}</p>
+                <div className="border-t border-border pt-4">
+                  <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Equity</p>
+                  <p className="text-[14px] font-semibold text-foreground mb-1">{result.equity.range}</p>
+                  <p className="text-[12px] text-muted-foreground mb-1">{result.equity.vesting}</p>
                   {result.equity.notes && (
-                    <p className="text-[12px] text-slate-400 leading-relaxed">{result.equity.notes}</p>
+                    <p className="text-[12px] text-muted-foreground leading-relaxed">{result.equity.notes}</p>
                   )}
                 </div>
               )}
@@ -288,11 +276,11 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
           {/* Negotiation levers */}
           {result.levers?.length > 0 && (
             <Card className="p-6">
-              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Negotiation levers</p>
+              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Negotiation levers</p>
               <ul className="flex flex-col gap-2">
                 {result.levers.map((lever, i) => (
-                  <li key={i} className="flex gap-2.5 text-[13px] text-slate-700 leading-relaxed">
-                    <span className="text-orange-400 mt-px shrink-0">→</span>
+                  <li key={i} className="flex gap-2.5 text-[13px] text-muted-foreground leading-relaxed">
+                    <span className="text-primary mt-px shrink-0">→</span>
                     {lever}
                   </li>
                 ))}
@@ -302,19 +290,19 @@ export function SalaryIntelClient({ defaultCompany, defaultRole }: { defaultComp
 
           {/* Negotiation script */}
           <Card className="p-6">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What to say when they present the offer</p>
-            <p className="text-[14px] text-slate-700 leading-relaxed">{result.negotiation_script}</p>
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">What to say when they present the offer</p>
+            <p className="text-[14px] text-muted-foreground leading-relaxed">{result.negotiation_script}</p>
           </Card>
 
           {/* Pushback responses */}
           {result.pushback_responses?.length > 0 && (
             <Card className="p-6">
-              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-4">Pushback responses</p>
+              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Pushback responses</p>
               <div className="flex flex-col gap-5">
                 {result.pushback_responses.map((item, i) => (
                   <div key={i}>
-                    <p className="text-[12px] font-semibold text-slate-500 mb-1.5">&ldquo;{item.objection}&rdquo;</p>
-                    <p className="text-[14px] text-slate-700 leading-relaxed">{item.response}</p>
+                    <p className="text-[12px] font-semibold text-muted-foreground mb-1.5">&ldquo;{item.objection}&rdquo;</p>
+                    <p className="text-[14px] text-muted-foreground leading-relaxed">{item.response}</p>
                   </div>
                 ))}
               </div>

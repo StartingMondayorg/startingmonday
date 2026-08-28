@@ -1,11 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-
+import { Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type Channel = 'executives' | 'coaches' | 'outplacement' | 'search_firms'
 type Role = 'program_lead' | 'counselor_lead' | 'procurement' | 'sponsor'
 
@@ -90,9 +86,9 @@ export function RoiCalculatorClient() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-5">
       <Card className="rounded-2xl p-5">
-        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-4">Assumptions</p>
+        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Assumptions</p>
 
-        <Label htmlFor="roi-channel" className="block text-[12px] font-semibold text-slate-700 mb-1">Channel</Label>
+        <Label htmlFor="roi-channel" className="block text-[12px] font-semibold text-muted-foreground mb-1">Channel</Label>
         <Select
           value={channel}
           onValueChange={(value) => {
@@ -112,7 +108,7 @@ export function RoiCalculatorClient() {
           </SelectContent>
         </Select>
 
-        <Label htmlFor="roi-role" className="block text-[12px] font-semibold text-slate-700 mb-1">Buyer role</Label>
+        <Label htmlFor="roi-role" className="block text-[12px] font-semibold text-muted-foreground mb-1">Buyer role</Label>
         <Select
           value={role}
           onValueChange={(value) => setRole(value as Role)}
@@ -127,7 +123,7 @@ export function RoiCalculatorClient() {
           </SelectContent>
         </Select>
 
-        <Label htmlFor="roi-participants" className="block text-[12px] font-semibold text-slate-700 mb-1">Participants in cohort</Label>
+        <Label htmlFor="roi-participants" className="block text-[12px] font-semibold text-muted-foreground mb-1">Participants in cohort</Label>
         <Input
           id="roi-participants"
           title="Participants in cohort"
@@ -139,7 +135,7 @@ export function RoiCalculatorClient() {
           className="w-full mb-4"
         />
 
-        <Label htmlFor="roi-avg-salary" className="block text-[12px] font-semibold text-slate-700 mb-1">Average target salary</Label>
+        <Label htmlFor="roi-avg-salary" className="block text-[12px] font-semibold text-muted-foreground mb-1">Average target salary</Label>
         <Input
           id="roi-avg-salary"
           title="Average target salary"
@@ -154,7 +150,7 @@ export function RoiCalculatorClient() {
       </Card>
 
       <Card className="rounded-2xl p-5">
-        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Modeled outputs</p>
+        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Modeled outputs</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
           <MetricCard label="Cycle acceleration" value={pct(model.accelerationPct)} note={`${model.acceleratedWeeks.toFixed(1)} weeks recovered`} />
@@ -175,10 +171,10 @@ export function RoiCalculatorClient() {
 
 function MetricCard({ label, value, note }: { label: string; value: string; note: string }) {
   return (
-    <Card className="rounded-lg p-3 !bg-slate-50">
-      <p className="text-[11px] uppercase tracking-[0.08em] text-slate-500">{label}</p>
-      <p className="text-[20px] font-bold text-slate-900 mt-1">{value}</p>
-      <p className="text-[11px] text-slate-500 mt-1">{note}</p>
+    <Card className="rounded-lg p-3 !bg-muted">
+      <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
+      <p className="text-[20px] font-bold text-foreground mt-1">{value}</p>
+      <p className="text-[11px] text-muted-foreground mt-1">{note}</p>
     </Card>
   )
 }
@@ -186,9 +182,9 @@ function MetricCard({ label, value, note }: { label: string; value: string; note
 function ValuePanel({ title, value, detail }: { title: string; value: string; detail: string }) {
   return (
     <Card className="rounded-lg p-4">
-      <p className="text-[12px] font-semibold text-slate-800">{title}</p>
-      <p className="text-[22px] font-bold text-orange-600 mt-2">{value}</p>
-      <p className="text-[11px] text-slate-500 mt-2">{detail}</p>
+      <p className="text-[12px] font-semibold text-foreground">{title}</p>
+      <p className="text-[22px] font-bold text-primary mt-2">{value}</p>
+      <p className="text-[11px] text-muted-foreground mt-2">{detail}</p>
     </Card>
   )
 }

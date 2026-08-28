@@ -4,9 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
 import { LogoutButton } from '../logout-button'
 import { PositioningCoach } from './positioning-coach'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 export default async function PositioningPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -35,14 +33,14 @@ export default async function PositioningPage() {
   const canAccess = canAccessFeature(sub, 'positioning_coach')
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-card">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/dashboard" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400 hover:text-slate-300 transition-colors">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/dashboard" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground transition-colors">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[12px] text-slate-300 hover:text-white transition-colors">
+            <Link href="/dashboard" className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
               Back to dashboard
             </Link>
             <div className="hidden sm:block">
@@ -54,20 +52,20 @@ export default async function PositioningPage() {
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         <div className="mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-2">Positioning Coach</p>
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Refine your executive story.</h1>
-          <p className="text-[14px] text-slate-500 mt-2 leading-relaxed">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-2">Positioning Coach</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Refine your executive story.</h1>
+          <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed">
             Multi-turn coaching session for pivot framing, level jumps, and gap coaching. Your positioning statement is used in every prep brief, briefing, and outreach draft.
           </p>
         </div>
 
         {!canAccess ? (
-          <Card className="bg-slate-900 p-6 sm:p-8 text-center">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 mb-3">Search plan required</p>
-            <h2 className="text-[20px] font-bold text-white leading-tight mb-3">
+          <Card className="bg-card p-6 sm:p-8 text-center">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Search plan required</p>
+            <h2 className="text-[20px] font-bold text-foreground leading-tight mb-3">
               Positioning Coach is a Search feature.
             </h2>
-            <p className="text-[14px] text-slate-400 leading-relaxed mb-6 max-w-sm mx-auto">
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-6 max-w-sm mx-auto">
               Upgrade to Search to work with a coach on your positioning statement, pivot framing, and executive narrative.
             </p>
             <Button render={<Link href="/settings/billing" />} variant="secondary">

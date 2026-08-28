@@ -3,9 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember, hasAdminHeaderAccess } from '@/lib/staff'
 import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 export const metadata = { title: 'QA - Admin' }
 
 export default async function AdminQaLandingPage() {
@@ -18,16 +16,16 @@ export default async function AdminQaLandingPage() {
 
 	return (
 		<div className={ADMIN_DARK_PAGE_BG}>
-			<header className="border-b border-white/10 bg-slate-950/60 backdrop-blur-xl">
+			<header className="border-b border-border bg-background/60 backdrop-blur-xl">
 				<div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-					<span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 sm:text-[14px]">
-						<span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+					<span className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground sm:text-[14px]">
+						<span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
 					</span>
 					<div className="flex items-center gap-4">
-						<Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 transition-colors hover:text-slate-200">
+						<Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground transition-colors hover:text-foreground">
 							Admin
 						</Link>
-						<Link href="/dashboard/admin/onboarding/qa" className="text-[13px] font-semibold text-orange-300 transition-colors hover:text-orange-200">
+						<Link href="/dashboard/admin/onboarding/qa" className="text-[13px] font-semibold text-primary transition-colors">
 							Onboarding QA
 						</Link>
 					</div>
@@ -36,8 +34,8 @@ export default async function AdminQaLandingPage() {
 
 			<main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
 				<Card variant="glass" className="p-5 mb-6">
-					<h1 className="text-[26px] font-bold leading-tight text-white">Admin QA</h1>
-					<p className="mt-2 text-[13px] leading-relaxed text-slate-300">
+					<h1 className="text-[26px] font-bold leading-tight text-foreground">Admin QA</h1>
+					<p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
 						QA operations are consolidated in the onboarding scorecard and automation reporting surfaces.
 					</p>
 					<div className="mt-5 flex flex-wrap gap-3">

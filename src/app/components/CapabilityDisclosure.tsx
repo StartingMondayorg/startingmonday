@@ -31,33 +31,33 @@ interface CapabilityDisclosureProps {
 
 export function CapabilityDisclosure({ live, roadmap, className = '' }: CapabilityDisclosureProps) {
   return (
-    <div className={`rounded-xl border border-slate-200 bg-white overflow-hidden ${className}`}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-200">
+    <div className={`rounded-xl border border-border bg-card overflow-hidden ${className}`}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border">
         <div className="p-5">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-emerald-600 mb-3">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-success mb-3">
             Live today
           </p>
           <ul className="space-y-2">
             {live.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-[13px] text-slate-700">
-                <span className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" aria-hidden="true">✓</span>
+              <li key={item} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                <span className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" aria-hidden="true">✓</span>
                 {item}
               </li>
             ))}
           </ul>
         </div>
-        <div className="p-5 bg-slate-50">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-amber-600 mb-3">
+        <div className="p-5 bg-muted">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-warning mb-3">
             On the roadmap
           </p>
           <ul className="space-y-2">
             {roadmap.map((item) => (
-              <li key={item.label} className="flex items-start gap-2 text-[13px] text-slate-600">
-                <span className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400" aria-hidden="true">◷</span>
+              <li key={item.label} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+                <span className="mt-0.5 h-4 w-4 flex-shrink-0 text-warning" aria-hidden="true">◷</span>
                 <span>
                   {item.label}
                   {item.eta && (
-                    <span className="ml-1 text-[11px] text-slate-400">({item.eta})</span>
+                    <span className="ml-1 text-[11px] text-muted-foreground">({item.eta})</span>
                   )}
                 </span>
               </li>

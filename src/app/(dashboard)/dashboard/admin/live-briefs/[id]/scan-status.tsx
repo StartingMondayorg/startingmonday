@@ -52,18 +52,18 @@ export default function ScanStatus({ requestId }: { requestId: string }) {
     return () => { active = false; if (timer) clearTimeout(timer) }
   }, [requestId])
 
-  if (message) return <p role="status" className="rounded border border-red-200 bg-red-50 p-4 text-[12px] text-red-700">{message}</p>
+  if (message) return <p role="status" className="rounded border border-destructive/30 bg-destructive/10 p-4 text-[12px] text-destructive">{message}</p>
   if (!data) return null
 
   return (
-    <div className="rounded border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded border border-border bg-card p-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-slate-500">Scan status</h2>
-        <span className="rounded bg-amber-50 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-amber-700">{data.run.status.replaceAll('_', ' ')}</span>
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-muted-foreground">Scan status</h2>
+        <span className="rounded bg-warning/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-warning">{data.run.status.replaceAll('_', ' ')}</span>
       </div>
-      <p className="mt-2 text-[12px] text-slate-500">{data.run.completed_company_count ?? 0} complete · {data.run.blocked_company_count ?? 0} blocked · {data.run.failed_company_count ?? 0} failed · {data.run.selected_company_count} selected</p>
-      {!TERMINAL.has(data.run.status) && <button type="button" onClick={acceptPartial} disabled={accepting} className="mt-4 rounded border border-orange-300 bg-orange-50 px-3 py-2 text-[12px] font-semibold text-orange-800 disabled:opacity-50">{accepting ? 'Accepting…' : 'Accept partial results'}</button>}
-      <ul className="mt-4 divide-y divide-slate-100 rounded border border-slate-200">{data.companies.map((company) => <li key={company.id} className="flex items-center justify-between gap-3 px-3 py-2 text-[12px]"><span className="font-semibold text-slate-800">{company.company_name}</span><span className={company.status === 'failed' || company.status === 'blocked_by_source_policy' ? 'text-red-700' : 'text-slate-500'}>{company.error_class ?? company.status.replaceAll('_', ' ')}</span></li>)}</ul>
+      <p className="mt-2 text-[12px] text-muted-foreground">{data.run.completed_company_count ?? 0} complete · {data.run.blocked_company_count ?? 0} blocked · {data.run.failed_company_count ?? 0} failed · {data.run.selected_company_count} selected</p>
+      {!TERMINAL.has(data.run.status) && <button type="button" onClick={acceptPartial} disabled={accepting} className="mt-4 rounded border border-primary/30 bg-primary/10 px-3 py-2 text-[12px] font-semibold text-primary disabled:opacity-50">{accepting ? 'Accepting…' : 'Accept partial results'}</button>}
+      <ul className="mt-4 divide-y divide-border rounded border border-border">{data.companies.map((company) => <li key={company.id} className="flex items-center justify-between gap-3 px-3 py-2 text-[12px]"><span className="font-semibold text-foreground">{company.company_name}</span><span className={company.status === 'failed' || company.status === 'blocked_by_source_policy' ? 'text-destructive' : 'text-muted-foreground'}>{company.error_class ?? company.status.replaceAll('_', ' ')}</span></li>)}</ul>
     </div>
   )
 }

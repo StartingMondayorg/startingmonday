@@ -2,20 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { TrackLink } from '@/app/components/TrackLink'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, RadioGroup, RadioGroupItem, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type BriefingFrequency = 'daily' | 'weekly'
 
 export function SearchControlsPanel({
@@ -117,12 +104,12 @@ export function SearchControlsPanel({
   return (
     <Card variant="glass" className="p-5 mb-6 sm:mb-8">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Search controls</p>
+        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Search controls</p>
         <TrackLink
           href="/settings/billing"
           event="search_controls_clicked"
           properties={{ target: 'billing' }}
-          className="text-[12px] text-slate-400 hover:text-slate-200 transition-colors"
+          className="text-[12px] text-muted-foreground hover:text-foreground transition-colors"
         >
           Billing &amp; settings →
         </TrackLink>
@@ -130,8 +117,8 @@ export function SearchControlsPanel({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card variant="glass" className="p-4 bg-transparent">
-          <p className="text-[12px] font-semibold text-white mb-2">Pause search</p>
-          <p className="text-[12px] text-slate-400 leading-relaxed mb-3">
+          <p className="text-[12px] font-semibold text-foreground mb-2">Pause search</p>
+          <p className="text-[12px] text-muted-foreground leading-relaxed mb-3">
             Keep major alerts and low-frequency digest active while you take a break.
           </p>
           {!paused ? (
@@ -141,7 +128,7 @@ export function SearchControlsPanel({
                 onValueChange={(value) => setDays(Number(value))}
                 disabled={pausing}
               >
-                <SelectTrigger aria-label="Pause duration" className="bg-slate-900 text-slate-100">
+                <SelectTrigger aria-label="Pause duration" className="bg-card text-foreground">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -185,7 +172,7 @@ export function SearchControlsPanel({
                   disabled={pausing || resuming}
                   variant="outline"
                   size="xs"
-                  className="border-rose-300/40 text-rose-300 hover:bg-rose-500/10"
+                  className="border-destructive/40 text-destructive hover:bg-destructive/10"
                 >
                   Retry
                 </Button>
@@ -195,7 +182,7 @@ export function SearchControlsPanel({
         </Card>
 
         <Card variant="glass" className="p-4 bg-transparent">
-          <p className="text-[12px] font-semibold text-white mb-2">Digest preferences</p>
+          <p className="text-[12px] font-semibold text-foreground mb-2">Digest preferences</p>
           <RadioGroup
             value={frequency}
             onValueChange={(value) => setFrequency(value as BriefingFrequency)}
@@ -203,26 +190,26 @@ export function SearchControlsPanel({
           >
             <div className="flex items-center gap-1.5">
               <RadioGroupItem value="daily" id="frequency-daily" />
-              <Label htmlFor="frequency-daily" className="text-[12px] text-slate-300 font-normal">
+              <Label htmlFor="frequency-daily" className="text-[12px] text-muted-foreground font-normal">
                 Daily briefing
               </Label>
             </div>
             <div className="flex items-center gap-1.5">
               <RadioGroupItem value="weekly" id="frequency-weekly" />
-              <Label htmlFor="frequency-weekly" className="text-[12px] text-slate-300 font-normal">
+              <Label htmlFor="frequency-weekly" className="text-[12px] text-muted-foreground font-normal">
                 Weekly digest
               </Label>
             </div>
           </RadioGroup>
           <div className="flex items-center gap-2 mb-3">
-            <Label htmlFor="briefing-time" className="text-[12px] text-slate-400 font-normal">Time:</Label>
+            <Label htmlFor="briefing-time" className="text-[12px] text-muted-foreground font-normal">Time:</Label>
             <Input
               id="briefing-time"
               type="time"
               value={briefingTime}
               onChange={e => setBriefingTime(e.target.value)}
               disabled={frequency === 'weekly'}
-              className="w-auto bg-slate-900 text-slate-100"
+              className="w-auto bg-card text-foreground"
             />
           </div>
           <Button
@@ -254,7 +241,7 @@ export function SearchControlsPanel({
                   disabled={savingPrefs}
                   variant="outline"
                   size="xs"
-                  className="border-rose-300/40 text-rose-300 hover:bg-rose-500/10"
+                  className="border-destructive/40 text-destructive hover:bg-destructive/10"
                 >
                   Retry save
                 </Button>

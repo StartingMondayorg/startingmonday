@@ -66,6 +66,10 @@ CLAUDE.md
 
 # Supabase CLI version cache, rewritten on every CLI run
 supabase/.temp/
+supabase/.branches/
+
+# scripts/migrate.sh tracks applied migrations here, per machine
+.migrated
 
 # Local dev scripts
 StartingMonday-Dev.bat

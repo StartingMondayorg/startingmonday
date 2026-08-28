@@ -1,21 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-
+import { Alert, AlertDescription, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Button, Card } from '@/components/ui'
 function formatDateTime(iso: string) {
   return new Date(iso).toLocaleString('en-US', {
     month: 'short',
@@ -125,14 +111,14 @@ export function ClientCoachAccessManager() {
   }
 
   if (loading) {
-    return <div className="p-6 text-center text-slate-600">Loading coach access settings...</div>
+    return <div className="p-6 text-center text-muted-foreground">Loading coach access settings...</div>
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Coach Access Management</h2>
-        <p className="text-sm text-slate-600">
+        <h2 className="text-xl font-bold text-foreground mb-2">Coach Access Management</h2>
+        <p className="text-sm text-muted-foreground">
           Control which coaches can view and edit your account data. Coaches can see your
           pipeline, signals, and briefs during active partnerships.
         </p>
@@ -145,9 +131,9 @@ export function ClientCoachAccessManager() {
       )}
 
       {coaches.length === 0 ? (
-        <Card className="p-8 text-center bg-slate-50">
-          <p className="text-slate-600">No coaches have been invited yet.</p>
-          <p className="text-sm text-slate-500 mt-2">
+        <Card className="p-8 text-center bg-muted">
+          <p className="text-muted-foreground">No coaches have been invited yet.</p>
+          <p className="text-sm text-muted-foreground mt-2">
             Coaches will appear here when you invite them to preview your account.
           </p>
         </Card>
@@ -159,18 +145,18 @@ export function ClientCoachAccessManager() {
               className="p-4 flex-row items-center justify-between"
             >
               <div className="flex-1">
-                <p className="font-semibold text-slate-900">{coach.coach_name || coach.member_email}</p>
+                <p className="font-semibold text-foreground">{coach.coach_name || coach.member_email}</p>
                 {coach.coach_name && (
-                  <p className="text-[12px] text-slate-500">{coach.member_email}</p>
+                  <p className="text-[12px] text-muted-foreground">{coach.member_email}</p>
                 )}
-                <div className="flex gap-4 mt-2 text-sm text-slate-600">
+                <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
                   <span>
                     Access:{' '}
                     <span
                       className={
                         coach.coach_access_enabled
-                          ? 'font-medium text-green-600'
-                          : 'font-medium text-slate-400'
+                          ? 'font-medium text-success'
+                          : 'font-medium text-muted-foreground'
                       }
                     >
                       {coach.coach_access_enabled ? 'Enabled' : 'Disabled'}
@@ -179,7 +165,7 @@ export function ClientCoachAccessManager() {
                   {coach.access_level && (
                     <span>
                       Level:{' '}
-                      <span className="font-medium text-slate-900">
+                      <span className="font-medium text-foreground">
                         {coach.access_level === 'read_only' ? 'Read-Only' : 'Read & Edit'}
                       </span>
                     </span>
@@ -187,7 +173,7 @@ export function ClientCoachAccessManager() {
                   {coach.last_accessed_at && (
                     <span>
                       Last accessed:{' '}
-                      <span className="font-medium text-slate-900">
+                      <span className="font-medium text-foreground">
                         {formatDateTime(coach.last_accessed_at)}
                       </span>
                     </span>
@@ -211,7 +197,7 @@ export function ClientCoachAccessManager() {
                   size="sm"
                   className={
                     coach.coach_access_enabled
-                      ? 'border-orange-200 bg-orange-100 text-orange-700 hover:bg-orange-200'
+                      ? 'border-primary/30 bg-primary/10 text-primary-foreground hover:bg-primary'
                       : undefined
                   }
                 >
@@ -248,16 +234,16 @@ export function ClientCoachAccessManager() {
             </Card>
 
             {activityByCoach[coach.coach_id] && (
-              <Card className="mt-2 bg-slate-50 p-3">
-                <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
+              <Card className="mt-2 bg-muted p-3">
+                <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">
                   Recent Coach Activity
                 </p>
                 {activityByCoach[coach.coach_id].length === 0 ? (
-                  <p className="text-[12px] text-slate-500">No activity logged yet.</p>
+                  <p className="text-[12px] text-muted-foreground">No activity logged yet.</p>
                 ) : (
                   <div className="space-y-1.5">
                     {activityByCoach[coach.coach_id].map((item) => (
-                      <p key={item.id} className="text-[12px] text-slate-600">
+                      <p key={item.id} className="text-[12px] text-muted-foreground">
                         {formatDateTime(item.created_at)}: {item.action} {item.table_name.replace('_', ' ')}
                       </p>
                     ))}

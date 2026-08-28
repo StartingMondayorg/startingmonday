@@ -2,10 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useRef, useEffect, useTransition } from 'react'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-
+import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 interface Props {
   q: string
   stage: string
@@ -59,7 +56,7 @@ export function PipelineFilter({ q, stage, stages }: Props) {
   const hasFilters = !!(q || stage)
 
   return (
-    <div className="px-4 sm:px-6 py-3 border-b border-white/10">
+    <div className="px-4 sm:px-6 py-3 border-b border-border">
       <div className="flex items-center gap-2 flex-wrap">
         <Input
           ref={inputRef}
@@ -67,10 +64,10 @@ export function PipelineFilter({ q, stage, stages }: Props) {
           defaultValue={q}
           onChange={onQueryChange}
           placeholder="Search companies…"
-          className="flex-1 min-w-[120px] border-white/15 bg-slate-950/70 text-slate-100 placeholder:text-slate-500 focus-visible:border-white/40"
+          className="flex-1 min-w-[120px] border-border bg-background/70 text-foreground placeholder:text-muted-foreground"
         />
         <Select value={stage || 'all'} onValueChange={onStageChange}>
-          <SelectTrigger aria-label="Filter by stage" className="border-white/15 text-slate-100 bg-slate-900">
+          <SelectTrigger aria-label="Filter by stage" className="border-border text-foreground bg-card">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -81,7 +78,7 @@ export function PipelineFilter({ q, stage, stages }: Props) {
           </SelectContent>
         </Select>
         {hasFilters && (
-          <Button variant="link" size="sm" className="text-slate-400 hover:text-slate-700" render={<a href="/dashboard" />}>
+          <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground" render={<a href="/dashboard" />}>
             Clear
           </Button>
         )}

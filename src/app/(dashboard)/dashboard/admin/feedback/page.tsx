@@ -2,11 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
-
+import { Alert, AlertDescription, Badge, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Feedback Admin - Dashboard',
   description: 'Manage user feedback, track SLAs, and update statuses.',
@@ -76,10 +72,10 @@ export default async function FeedbackAdminPage() {
 
   if (!staffMember) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-muted flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-600">Access denied. Staff only.</p>
-          <Link href="/dashboard" className="text-orange-600 hover:text-orange-700 mt-4 inline-block">
+          <p className="text-muted-foreground">Access denied. Staff only.</p>
+          <Link href="/dashboard" className="text-primary mt-4 inline-block">
             ← Back to Dashboard
           </Link>
         </div>
@@ -141,13 +137,13 @@ export default async function FeedbackAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted">
+      <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-900 hover:text-orange-600 transition-colors">
+          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-foreground hover:text-primary transition-colors">
             ← Admin
           </Link>
-          <h1 className="text-[18px] font-bold text-slate-900">Feedback Management</h1>
+          <h1 className="text-[18px] font-bold text-foreground">Feedback Management</h1>
           <div className="w-16" />
         </div>
       </header>
@@ -156,12 +152,12 @@ export default async function FeedbackAdminPage() {
 {/* SLA Summary Cards */}
         <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {[
-            { label: 'New', count: statusCounts.new, color: 'bg-slate-50 text-slate-700 border-slate-200' },
-            { label: 'Under Review', count: statusCounts.under_review, color: 'bg-blue-50 text-blue-700 border-blue-200' },
-            { label: 'Planned', count: statusCounts.planned, color: 'bg-purple-50 text-purple-700 border-purple-200' },
-            { label: 'In Progress', count: statusCounts.in_progress, color: 'bg-orange-50 text-orange-700 border-orange-200' },
-            { label: 'Shipped', count: statusCounts.shipped, color: 'bg-green-50 text-green-700 border-green-200' },
-            { label: 'Declined', count: statusCounts.declined, color: 'bg-red-50 text-red-700 border-red-200' },
+            { label: 'New', count: statusCounts.new, color: 'bg-muted text-muted-foreground border-border' },
+            { label: 'Under Review', count: statusCounts.under_review, color: 'bg-info/10 text-info border-info/30' },
+            { label: 'Planned', count: statusCounts.planned, color: 'bg-info/10 text-info border-info/30' },
+            { label: 'In Progress', count: statusCounts.in_progress, color: 'bg-primary/10 text-primary border-primary/30' },
+            { label: 'Shipped', count: statusCounts.shipped, color: 'bg-success/10 text-success border-success/30' },
+            { label: 'Declined', count: statusCounts.declined, color: 'bg-destructive/10 text-destructive border-destructive/30' },
           ].map((stat) => (
             <Card key={stat.label} className={`p-3 ${stat.color}`}>
               <p className="text-[11px] font-semibold uppercase mb-1 opacity-75">{stat.label}</p>
@@ -175,8 +171,8 @@ export default async function FeedbackAdminPage() {
           {metrics.filter((m) => m.exceeds24h || m.exceeds7d).length > 0 && (
             <Alert variant="destructive">
               <AlertDescription className="space-y-2">
-                <p className="text-[13px] font-bold text-red-900">🚨 SLA Breaches</p>
-                <ul className="text-[12px] text-red-800 space-y-1">
+                <p className="text-[13px] font-bold text-destructive">🚨 SLA Breaches</p>
+                <ul className="text-[12px] text-destructive space-y-1">
                   {metrics.filter((m) => m.exceeds24h).map((m) => (
                     <li key={m.id}>
                       "{m.title}" - No response for {Math.round(m.hoursOld)} hours
@@ -197,29 +193,29 @@ export default async function FeedbackAdminPage() {
         <Card className="p-0">
           <Table className="text-[12px] text-left">
             <TableHeader>
-              <TableRow className="bg-slate-50">
-                <TableHead className="px-4 py-3 font-semibold text-slate-900">Title</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900">Category</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900">Status</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900">User</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900 text-right">Age</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900 text-right">Votes</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900 text-right">Comments</TableHead>
-                <TableHead className="px-4 py-3 font-semibold text-slate-900">Action</TableHead>
+              <TableRow className="bg-muted">
+                <TableHead className="px-4 py-3 font-semibold text-foreground">Title</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground">Category</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground">Status</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground">User</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground text-right">Age</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground text-right">Votes</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground text-right">Comments</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-foreground">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {metrics.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="px-4 py-6 text-center text-slate-500">
+                  <TableCell colSpan={8} className="px-4 py-6 text-center text-muted-foreground">
                     No feedback items yet
                   </TableCell>
                 </TableRow>
               ) : (
                 metrics.map((item: FeedbackMetric) => (
-                  <TableRow key={item.id} className={item.exceeds24h || item.exceeds7d ? 'bg-red-50' : undefined}>
+                  <TableRow key={item.id} className={item.exceeds24h || item.exceeds7d ? 'bg-destructive/10' : undefined}>
                     <TableCell className="px-4 py-3 max-w-xs truncate">
-                      <span className="font-medium text-slate-900">{item.title}</span>
+                      <span className="font-medium text-foreground">{item.title}</span>
                     </TableCell>
                     <TableCell className="px-4 py-3">
                       <Badge variant="outline">{CATEGORY_LABELS[item.category] || item.category}</Badge>
@@ -233,11 +229,11 @@ export default async function FeedbackAdminPage() {
                       {item.user_profiles?.full_name || 'Unknown'}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">
-                      <span className={item.exceeds24h ? 'text-red-600 font-bold' : ''}>
+                      <span className={item.exceeds24h ? 'text-destructive font-bold' : ''}>
                         {Math.round(item.hoursOld)}h
                       </span>
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-right font-semibold text-slate-900">
+                    <TableCell className="px-4 py-3 text-right font-semibold text-foreground">
                       {item.vote_count}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">
@@ -246,7 +242,7 @@ export default async function FeedbackAdminPage() {
                     <TableCell className="px-4 py-3">
                       <Link
                         href={`/dashboard/admin/feedback/${item.id}`}
-                        className="text-orange-600 hover:text-orange-700 font-semibold text-[11px]"
+                        className="text-primary font-semibold text-[11px]"
                       >
                         Review →
                       </Link>

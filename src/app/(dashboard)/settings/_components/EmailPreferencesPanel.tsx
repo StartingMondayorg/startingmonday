@@ -1,10 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Card, Switch } from '@/components/ui'
 export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: boolean }) {
   const [enabled, setEnabled] = useState(initialEnabled)
   const [saving, setSaving] = useState(false)
@@ -34,25 +31,25 @@ export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: bool
   }
 
   return (
-    <Card variant="glass" className="mb-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-      <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">Email preferences</h2>
+    <Card variant="glass" className="mb-6 p-5 shadow-xl">
+      <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Email preferences</h2>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="max-w-[46ch]">
-          <p className="text-[14px] font-semibold text-white">Trial tips and nudge emails</p>
-          <p className="text-[13px] text-slate-300 mt-0.5 leading-relaxed">
+          <p className="text-[14px] font-semibold text-foreground">Trial tips and nudge emails</p>
+          <p className="text-[13px] text-muted-foreground mt-0.5 leading-relaxed">
             Occasional emails with setup tips during your trial. Your search is private - turn these off anytime with one click.
             Daily briefings are separate and unaffected.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2.5">
-          <span className={`text-[13px] font-semibold ${!enabled ? 'text-white' : 'text-slate-400'}`}>Off</span>
+          <span className={`text-[13px] font-semibold ${!enabled ? 'text-foreground' : 'text-muted-foreground'}`}>Off</span>
           <Switch
             checked={enabled}
             onCheckedChange={toggle}
             disabled={saving}
             aria-label="Trial tip emails"
           />
-          <span className={`text-[13px] font-semibold ${enabled ? 'text-white' : 'text-slate-400'}`}>On</span>
+          <span className={`text-[13px] font-semibold ${enabled ? 'text-foreground' : 'text-muted-foreground'}`}>On</span>
         </div>
       </div>
       {message && (

@@ -50,29 +50,28 @@ const objectionCards = [
 
 export default function SearchFirmsObjectionsPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.2),_transparent_35%),linear-gradient(180deg,_rgba(9,14,26,0.98)_0%,_rgba(10,15,28,0.96)_58%,_rgba(10,15,28,0.98)_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
 
       <main className="px-4 pb-16 pt-16 sm:px-6 sm:pt-20 sm:pb-20">
         <div className="mx-auto max-w-5xl">
-          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-200">Search-firm objections guide</p>
-          <h1 className="max-w-4xl font-serif text-[38px] leading-[1.06] tracking-tight text-white sm:text-[54px]">
+          <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Search-firm objections guide</p>
+          <h1 className="max-w-4xl font-serif text-[38px] leading-[1.06] tracking-tight text-foreground sm:text-[54px]">
             The objections you hear most, and how to answer them with confidence.
           </h1>
-          <p className="mt-6 max-w-3xl text-[18px] leading-relaxed text-slate-200 sm:text-[20px]">
+          <p className="mt-6 max-w-3xl text-[18px] leading-relaxed text-foreground sm:text-[20px]">
             Built for retained-search partners who need concise, decision-grade responses when clients question process, tooling, and outcomes.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/search-firms"
-              className="rounded-full border border-white/18 px-5 py-2.5 text-sm font-semibold text-slate-100 transition-colors hover:border-orange-300/70 hover:bg-white/5"
+              className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
             >
               Back to search-firms page
             </Link>
             <Link
               href="/search-firms/sample-cfo-brief"
-              className="rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-400"
+              className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               View sample CFO brief
             </Link>
@@ -81,15 +80,15 @@ export default function SearchFirmsObjectionsPage() {
 
         <div className="mx-auto mt-10 grid max-w-5xl gap-4">
           {objectionCards.map((card) => (
-            <article key={card.objection} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_18px_56px_rgba(15,23,42,0.22)] backdrop-blur-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">Objection</p>
-              <h2 className="mt-2 text-[22px] font-serif leading-[1.2] text-white">{card.objection}</h2>
+            <article key={card.objection} className="rounded-2xl border border-border bg-muted/[0.04] p-6 shadow-xl backdrop-blur-sm">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">Objection</p>
+              <h2 className="mt-2 text-[22px] font-serif leading-[1.2] text-foreground">{card.objection}</h2>
 
-              <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">How we answer</p>
-              <p className="mt-2 text-[15px] leading-relaxed text-slate-200">{card.response}</p>
+              <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">How we answer</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-foreground">{card.response}</p>
 
-              <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200">What changes in practice</p>
-              <p className="mt-2 text-[14px] leading-relaxed text-slate-300">{card.proof}</p>
+              <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">What changes in practice</p>
+              <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{card.proof}</p>
             </article>
           ))}
         </div>

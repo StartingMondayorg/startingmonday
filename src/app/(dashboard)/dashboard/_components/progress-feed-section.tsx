@@ -1,9 +1,6 @@
 import Link from 'next/link'
-import { signalLabel, SIGNAL_COLORS_DARK } from '@/lib/intelligence/intelligence'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-
+import { signalLabel, SIGNAL_COLORS } from '@/lib/intelligence/intelligence'
+import { Badge, Button, Card } from '@/components/ui'
 type CompanyRef = {
   id: string
   name: string
@@ -64,8 +61,8 @@ function buildFeedItems(props: Props): FeedItem[] {
     id: `follow-up-${followUp.id}`,
     badge: followUp.due_date === props.todayISO ? 'Due Today' : 'Follow-up',
     badgeClassName: followUp.due_date === props.todayISO
-      ? 'bg-rose-500/15 text-rose-200'
-      : 'bg-white/10 text-slate-300',
+      ? 'bg-destructive/10 text-destructive'
+      : 'bg-muted/60 text-muted-foreground',
     title: followUp.action,
     body: followUp.companies?.name
       ? `At ${followUp.companies.name}. Close the loop before newer work crowds it out.`
@@ -78,7 +75,7 @@ function buildFeedItems(props: Props): FeedItem[] {
   const warmPathItems = props.warmPaths.slice(0, props.isExecutiveMode ? 1 : 2).map((warmPath) => ({
     id: `warm-path-${warmPath.contactId}-${warmPath.signal.id}`,
     badge: 'Warm Path',
-    badgeClassName: 'bg-emerald-500/15 text-emerald-200',
+    badgeClassName: 'bg-success/10 text-success',
     title: `${warmPath.contactName} at ${warmPath.companyName}`,
     body: warmPath.signal.signal_summary,
     meta: formatDateLabel(warmPath.signal.signal_date),
@@ -93,7 +90,7 @@ function buildFeedItems(props: Props): FeedItem[] {
     return {
       id: `pattern-${signal.id}`,
       badge: patternName,
-      badgeClassName: 'bg-orange-500/20 text-orange-200',
+      badgeClassName: 'bg-primary/10 text-primary',
       title: signal.companies?.name ?? 'Market pattern detected',
       body: patternBody,
       meta: formatDateLabel(signal.signal_date),
@@ -105,7 +102,7 @@ function buildFeedItems(props: Props): FeedItem[] {
   const signalItems = props.signals.slice(0, props.isExecutiveMode ? 1 : 3).map((signal) => ({
     id: `signal-${signal.id}`,
     badge: signalLabel(signal.signal_type),
-    badgeClassName: SIGNAL_COLORS_DARK[signal.signal_type] ?? 'bg-amber-500/15 text-amber-200',
+    badgeClassName: SIGNAL_COLORS[signal.signal_type] ?? 'bg-warning/10 text-warning',
     title: signal.companies?.name ?? 'Company signal',
     body: signal.signal_summary,
     meta: formatDateLabel(signal.signal_date),
@@ -125,36 +122,36 @@ export function DashboardProgressFeedSection(props: Props) {
 
   return (
     <Card variant="glass" id="progress-feed" className="gap-0 p-0 mb-8">
-      <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between gap-4">
+      <div className="px-6 py-[18px] border-b border-border flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
             Progress Feed
           </h2>
-          <p className="text-[12px] text-slate-400 mt-1">
+          <p className="text-[12px] text-muted-foreground mt-1">
             The shortest path to momentum across due actions, warm openings, and new market movement.
           </p>
         </div>
-        <Link href="/dashboard/briefing" className="text-[12px] text-slate-400 hover:text-slate-200 shrink-0">
+        <Link href="/dashboard/briefing" className="text-[12px] text-muted-foreground hover:text-foreground shrink-0">
           Briefing &rarr;
         </Link>
       </div>
 
-      <div className="divide-y divide-white/10">
+      <div className="divide-y divide-border">
         {items.map((item) => (
           <div key={item.id} className="px-6 py-4 flex items-start gap-4">
-            <Link href={item.href} className="min-w-0 flex-1 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/90">
+            <Link href={item.href} className="min-w-0 flex-1 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-border/90">
               <div className="flex items-center gap-2 flex-wrap mb-1.5">
                 <Badge className={item.badgeClassName}>
                   {item.badge}
                 </Badge>
-                <span className="text-[12px] text-slate-400">{item.meta}</span>
+                <span className="text-[12px] text-muted-foreground">{item.meta}</span>
               </div>
-              <p className="text-[14px] font-semibold text-slate-100 hover:text-white transition-colors">{item.title}</p>
-              <p className="text-[13px] text-slate-400 leading-relaxed mt-1">{item.body}</p>
+              <p className="text-[14px] font-semibold text-muted-foreground hover:text-foreground transition-colors">{item.title}</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mt-1">{item.body}</p>
             </Link>
             <Button
               variant="secondary"
-              className="shrink-0 text-slate-100 bg-white/10 hover:bg-white/20 h-auto px-3 py-1.5"
+              className="shrink-0 text-foreground bg-muted/60 hover:bg-muted/80 h-auto px-3 py-1.5"
               render={<Link href={item.href} />}
             >
               {item.cta}

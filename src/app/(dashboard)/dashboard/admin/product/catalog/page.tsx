@@ -11,13 +11,7 @@ import {
   createCatalogProduct,
   setCatalogProductStatus,
 } from './actions'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
+import { Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from '@/components/ui'
 function createOpsClient() {
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -113,41 +107,41 @@ export default async function AdminMicroProductCatalogPage() {
   const bundleNameById = new Map(bundles.map((b) => [b.id, b.name]))
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin/product" className="text-[12px] font-semibold text-slate-300 hover:text-white">Product Hub</Link>
-            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-slate-400 hover:text-slate-200">Admin</Link>
+            <Link href="/dashboard/admin/product" className="text-[12px] font-semibold text-primary-foreground hover:text-primary-foreground">Product Hub</Link>
+            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-primary-foreground">Admin</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-<h1 className="text-[26px] font-bold text-slate-900">Micro-Product Catalog</h1>
-        <p className="text-[13px] text-slate-500 mt-1.5 mb-6">
+<h1 className="text-[26px] font-bold text-foreground">Micro-Product Catalog</h1>
+        <p className="text-[13px] text-muted-foreground mt-1.5 mb-6">
           Sprint 4 back office for micro-product pricing, bundle templates, and entitlement mapping.
         </p>
 
         <section className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
           <Card className="p-4">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Products</p>
-            <p className="text-[22px] font-bold text-slate-900 mt-1">{products.length}</p>
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Products</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{products.length}</p>
           </Card>
           <Card className="p-4">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Active prices</p>
-            <p className="text-[22px] font-bold text-slate-900 mt-1">{prices.filter((p) => p.is_active).length}</p>
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Active prices</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{prices.filter((p) => p.is_active).length}</p>
           </Card>
           <Card className="p-4">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Bundles</p>
-            <p className="text-[22px] font-bold text-slate-900 mt-1">{bundles.length}</p>
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Bundles</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{bundles.length}</p>
           </Card>
           <Card className="p-4">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500">Entitlements</p>
-            <p className="text-[22px] font-bold text-slate-900 mt-1">{entitlements.length}</p>
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Entitlements</p>
+            <p className="text-[22px] font-bold text-foreground mt-1">{entitlements.length}</p>
           </Card>
         </section>
 
@@ -155,7 +149,7 @@ export default async function AdminMicroProductCatalogPage() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
             <form action={createCatalogProduct}>
               <Card className="p-5 grid grid-cols-1 gap-2">
-                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Create micro-product</h2>
+                <h2 className="text-[12px] font-semibold text-foreground mb-1">Create micro-product</h2>
                 <Input name="slug" placeholder="slug" required />
                 <Input name="name" placeholder="name" required />
                 <Textarea name="summary" placeholder="summary" rows={3} required />
@@ -211,7 +205,7 @@ export default async function AdminMicroProductCatalogPage() {
 
             <form action={createCatalogPrice}>
               <Card className="p-5 grid grid-cols-1 gap-2">
-                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Attach Stripe price</h2>
+                <h2 className="text-[12px] font-semibold text-foreground mb-1">Attach Stripe price</h2>
                 <Select name="micro_product_id" required>
                   <SelectTrigger aria-label="Micro-product" className="w-full">
                     <SelectValue placeholder="Select product" />
@@ -248,7 +242,7 @@ export default async function AdminMicroProductCatalogPage() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
             <form action={createBundleTemplate}>
               <Card className="p-5 grid grid-cols-1 gap-2">
-                <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Create bundle template</h2>
+                <h2 className="text-[12px] font-semibold text-foreground mb-1">Create bundle template</h2>
                 <Input name="slug" placeholder="bundle slug" required />
                 <Input name="name" placeholder="bundle name" required />
                 <div className="grid grid-cols-3 gap-2">
@@ -283,7 +277,7 @@ export default async function AdminMicroProductCatalogPage() {
             <div className="space-y-4">
               <form action={addBundleItem}>
                 <Card className="p-5 grid grid-cols-1 gap-2">
-                  <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Add bundle item</h2>
+                  <h2 className="text-[12px] font-semibold text-foreground mb-1">Add bundle item</h2>
                   <Select name="bundle_id" required>
                     <SelectTrigger aria-label="Bundle template" className="w-full">
                       <SelectValue placeholder="Select bundle" />
@@ -311,7 +305,7 @@ export default async function AdminMicroProductCatalogPage() {
 
               <form action={assignBundleToPartner}>
                 <Card className="p-5 grid grid-cols-1 gap-2">
-                  <h2 className="text-[12px] font-semibold text-slate-900 mb-1">Assign bundle to partner</h2>
+                  <h2 className="text-[12px] font-semibold text-foreground mb-1">Assign bundle to partner</h2>
                   <Input name="partner_email" placeholder="partner email" required />
                   <Select name="bundle_id" required>
                     <SelectTrigger aria-label="Assign bundle template" className="w-full">
@@ -332,11 +326,11 @@ export default async function AdminMicroProductCatalogPage() {
         )}
 
         <Card className="p-0 overflow-hidden mb-6">
-          <div className="px-5 py-3 border-b border-slate-100">
-            <h2 className="text-[12px] font-semibold text-slate-900">Catalog products</h2>
+          <div className="px-5 py-3 border-b border-border">
+            <h2 className="text-[12px] font-semibold text-foreground">Catalog products</h2>
           </div>
           <Table className="text-[12px]">
-            <TableHeader className="bg-slate-50">
+            <TableHeader className="bg-muted">
               <TableRow>
                 <TableHead className="px-5 py-2">Product</TableHead>
                 <TableHead className="px-4 py-2">Channel</TableHead>
@@ -348,13 +342,13 @@ export default async function AdminMicroProductCatalogPage() {
             <TableBody>
               {products.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="px-5 py-2 text-slate-800 whitespace-normal">
+                  <TableCell className="px-5 py-2 text-foreground whitespace-normal">
                     <p className="font-semibold">{product.name}</p>
-                    <p className="text-slate-500">{product.slug}</p>
+                    <p className="text-muted-foreground">{product.slug}</p>
                   </TableCell>
-                  <TableCell className="px-4 py-2 text-slate-700">{product.channel}</TableCell>
-                  <TableCell className="px-4 py-2 text-slate-700">{product.billing_type} / {product.default_interval}</TableCell>
-                  <TableCell className="px-4 py-2 text-slate-700">{product.product_status}</TableCell>
+                  <TableCell className="px-4 py-2 text-muted-foreground">{product.channel}</TableCell>
+                  <TableCell className="px-4 py-2 text-muted-foreground">{product.billing_type} / {product.default_interval}</TableCell>
+                  <TableCell className="px-4 py-2 text-muted-foreground">{product.product_status}</TableCell>
                   <TableCell className="px-5 py-2 text-right">
                     {!isReadOnly && (
                       <form action={setCatalogProductStatus} className="inline-flex items-center gap-2">
@@ -381,28 +375,28 @@ export default async function AdminMicroProductCatalogPage() {
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <Card className="p-5">
-            <h2 className="text-[12px] font-semibold text-slate-900 mb-3">Active Stripe prices</h2>
+            <h2 className="text-[12px] font-semibold text-foreground mb-3">Active Stripe prices</h2>
             <div className="space-y-2 text-[12px]">
-              {prices.length === 0 && <p className="text-slate-500">No pricing records yet.</p>}
+              {prices.length === 0 && <p className="text-muted-foreground">No pricing records yet.</p>}
               {prices.slice(0, 12).map((price) => (
-                <div key={price.id} className="border-b border-slate-100 pb-2">
-                  <p className="font-semibold text-slate-800">{productNameById.get(price.micro_product_id) ?? price.micro_product_id}</p>
-                  <p className="text-slate-500">{price.stripe_price_id}</p>
-                  <p className="text-slate-600">{formatMoney(price.unit_amount_cents)} / {price.interval}{price.stripe_coupon_id ? ` (${price.stripe_coupon_id})` : ''}</p>
+                <div key={price.id} className="border-b border-border pb-2">
+                  <p className="font-semibold text-foreground">{productNameById.get(price.micro_product_id) ?? price.micro_product_id}</p>
+                  <p className="text-muted-foreground">{price.stripe_price_id}</p>
+                  <p className="text-muted-foreground">{formatMoney(price.unit_amount_cents)} / {price.interval}{price.stripe_coupon_id ? ` (${price.stripe_coupon_id})` : ''}</p>
                 </div>
               ))}
             </div>
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-[12px] font-semibold text-slate-900 mb-3">Bundle items</h2>
+            <h2 className="text-[12px] font-semibold text-foreground mb-3">Bundle items</h2>
             <div className="space-y-2 text-[12px]">
-              {bundleItems.length === 0 && <p className="text-slate-500">No bundle items yet.</p>}
+              {bundleItems.length === 0 && <p className="text-muted-foreground">No bundle items yet.</p>}
               {bundleItems.slice(0, 16).map((item) => (
-                <div key={item.id} className="border-b border-slate-100 pb-2">
-                  <p className="font-semibold text-slate-800">{bundleNameById.get(item.bundle_id) ?? item.bundle_id}</p>
-                  <p className="text-slate-600">{productNameById.get(item.micro_product_id) ?? item.micro_product_id}</p>
-                  <p className="text-slate-500">{item.entitlement_key}</p>
+                <div key={item.id} className="border-b border-border pb-2">
+                  <p className="font-semibold text-foreground">{bundleNameById.get(item.bundle_id) ?? item.bundle_id}</p>
+                  <p className="text-muted-foreground">{productNameById.get(item.micro_product_id) ?? item.micro_product_id}</p>
+                  <p className="text-muted-foreground">{item.entitlement_key}</p>
                 </div>
               ))}
             </div>
@@ -410,19 +404,19 @@ export default async function AdminMicroProductCatalogPage() {
         </section>
 
         <Card className="p-5">
-          <h2 className="text-[12px] font-semibold text-slate-900 mb-3">Recent entitlement assignments</h2>
+          <h2 className="text-[12px] font-semibold text-foreground mb-3">Recent entitlement assignments</h2>
           <div className="space-y-2 text-[12px]">
-            {entitlements.length === 0 && <p className="text-slate-500">No entitlement rows yet.</p>}
+            {entitlements.length === 0 && <p className="text-muted-foreground">No entitlement rows yet.</p>}
             {entitlements.map((entitlement) => (
-              <div key={entitlement.id} className="border-b border-slate-100 pb-2">
-                <p className="font-semibold text-slate-800">
+              <div key={entitlement.id} className="border-b border-border pb-2">
+                <p className="font-semibold text-foreground">
                   {productNameById.get(entitlement.micro_product_id) ?? entitlement.micro_product_id}
                 </p>
-                <p className="text-slate-600">
+                <p className="text-muted-foreground">
                   {entitlement.partner_id ? `partner:${entitlement.partner_id}` : `user:${entitlement.user_id}`}
                   {entitlement.source_bundle_id ? ` via ${bundleNameById.get(entitlement.source_bundle_id) ?? entitlement.source_bundle_id}` : ''}
                 </p>
-                <p className="text-slate-500">{entitlement.entitlement_key} - seats {entitlement.seat_limit} - {entitlement.status}</p>
+                <p className="text-muted-foreground">{entitlement.entitlement_key} - seats {entitlement.seat_limit} - {entitlement.status}</p>
               </div>
             ))}
           </div>

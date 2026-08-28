@@ -2,12 +2,7 @@
 import { useState, useTransition, useActionState } from 'react'
 import type { StaffMember, StaffRole } from '@/lib/staff'
 import { addTeamMember, changeTeamRole, removeTeamMember } from './actions'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
+import { Badge, Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type Props = {
   members: StaffMember[]
   currentRole: StaffRole
@@ -46,8 +41,8 @@ function MemberRow({ member, isOwner }: { member: StaffMember; isOwner: boolean 
   return (
     <div className="px-6 py-4 flex items-center gap-4">
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] text-slate-100 truncate">{member.email}</p>
-        {rowError && <p className="text-[11px] text-red-300 mt-0.5">{rowError}</p>}
+        <p className="text-[13px] text-foreground truncate">{member.email}</p>
+        {rowError && <p className="text-[11px] text-destructive mt-0.5">{rowError}</p>}
       </div>
 
       {editing && isOwner ? (
@@ -147,7 +142,7 @@ function AddMemberForm() {
         {isPending ? 'Adding...' : 'Add member'}
       </Button>
       {state.error && (
-        <p className="text-[12px] text-red-300 self-center">{state.error}</p>
+        <p className="text-[12px] text-destructive self-center">{state.error}</p>
       )}
     </form>
   )
@@ -159,21 +154,21 @@ export function TeamClient({ members, currentRole }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <Card variant="glass" className="p-0">
-        <div className="px-6 py-[18px] border-b border-white/10">
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Team Members</span>
+        <div className="px-6 py-[18px] border-b border-border">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Team Members</span>
         </div>
-        <div className="divide-y divide-white/10">
+        <div className="divide-y divide-border">
           {members.map(m => (
             <MemberRow key={m.id} member={m} isOwner={isOwner} />
           ))}
           {members.length === 0 && (
-            <p className="px-6 py-8 text-[13px] text-slate-300">No team members yet.</p>
+            <p className="px-6 py-8 text-[13px] text-muted-foreground">No team members yet.</p>
           )}
         </div>
         {isOwner && (
           <>
-            <div className="border border-white/10 bg-slate-950/60 rounded border-t border-white/10 px-6 py-3">
-              <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Add Member</span>
+            <div className="border border-border bg-background/60 rounded border-t border-border px-6 py-3">
+              <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Add Member</span>
             </div>
             <AddMemberForm />
           </>

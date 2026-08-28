@@ -44,13 +44,13 @@ export default function CioJobSearchTimelinePage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           The honest answer most people do not say out loud: six to eighteen months. The range is that wide
           for a reason, and where you land in it depends on decisions you make before you start - not after.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The timeline nobody posts</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The timeline nobody posts</h2>
 
         <p>
           A CIO search has three phases, and only one of them shows up on the calendar you share with your
@@ -81,10 +81,10 @@ export default function CioJobSearchTimelinePage() {
           is twelve to fifteen.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What determines where you land</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What determines where you land</h2>
 
         <p>
-          <strong className="text-slate-900">Sector.</strong> Healthcare and financial services run long - both
+          <strong className="text-foreground">Sector.</strong> Healthcare and financial services run long - both
           have deeper compliance requirements in the hiring process and more stakeholders in the decision.
           Growth-stage and PE-backed mandates move faster. A PE-backed CIO search can move from first call to
           offer in six weeks when the sponsor has a burning platform and the candidate is already known to the
@@ -92,14 +92,14 @@ export default function CioJobSearchTimelinePage() {
         </p>
 
         <p>
-          <strong className="text-slate-900">Compensation level.</strong> The higher the comp, the longer the
+          <strong className="text-foreground">Compensation level.</strong> The higher the comp, the longer the
           search. A $500K total-comp CIO role at a public company involves the CHRO, the board compensation
           committee, and two or three rounds of executive interviews. Expect twelve to eighteen months. A $350K
           role at a Series D company may move in three.
         </p>
 
         <p>
-          <strong className="text-slate-900">Network temperature.</strong> &ldquo;I know someone at Korn
+          <strong className="text-foreground">Network temperature.</strong> &ldquo;I know someone at Korn
           Ferry&rdquo; is not a warm network. A warm network is one where a specific partner already has your
           name in their system, has met you in the last eighteen months, and would call you first when a
           relevant search opens. Most CIOs significantly overestimate how warm their search firm relationships
@@ -107,7 +107,7 @@ export default function CioJobSearchTimelinePage() {
         </p>
 
         <p>
-          <strong className="text-slate-900">Narrative clarity.</strong> The searches that move fast are the
+          <strong className="text-foreground">Narrative clarity.</strong> The searches that move fast are the
           ones where the candidate can answer three questions cleanly in a thirty-minute first call: What kind
           of mandate are you best at? What have you built that proves it? What are you looking for that you do
           not have now? Candidates who hedge, cover too many bases, or lead with their title instead of their
@@ -121,7 +121,7 @@ export default function CioJobSearchTimelinePage() {
           href="/signup"
         />
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What actually speeds it up</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What actually speeds it up</h2>
 
         <p>
           The fastest CIO searches are won by executives who were already on the short list when the search
@@ -140,7 +140,7 @@ export default function CioJobSearchTimelinePage() {
           Starting Monday tracks the organizational signals that tend to precede CIO searches - board-level
           technology committee changes, transformation announcements, leadership gaps in technology
           functions - so you can watch your target organizations before they post a role. The{' '}
-          <Link href="/for-cio" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-cio" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           assembles your win thesis, likely objections, and questions from the company&rsquo;s actual situation
@@ -148,7 +148,7 @@ export default function CioJobSearchTimelinePage() {
           you wait.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The question worth sitting with</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The question worth sitting with</h2>
 
         <p>
           If a search firm partner called you today about a CIO mandate that opened this morning, how long would

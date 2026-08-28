@@ -1,8 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-
+import { Button } from '@/components/ui'
 export default function ProfileResumeUpload() {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -47,7 +46,7 @@ export default function ProfileResumeUpload() {
         />
       </Button>
       {message && (
-        <p className={`mt-1.5 text-[12px] ${status === 'error' ? 'text-red-600' : 'text-green-700'}`}>
+        <p className={`mt-1.5 text-[12px] ${status === 'error' ? 'text-destructive' : 'text-success'}`}>
           {message}
         </p>
       )}

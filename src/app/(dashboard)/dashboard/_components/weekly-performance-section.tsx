@@ -1,11 +1,7 @@
 import Link from 'next/link'
 import { ActivityChart, type WeekActivity } from '@/app/components/ActivityChart'
 import { PipelineVelocity, type VelocityRow } from '@/app/components/PipelineVelocity'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-
+import { Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type MomentumData = {
   momentum_score: number | null
   momentum_computed_at: string | null
@@ -51,9 +47,9 @@ export function DashboardWeeklyPerformanceSection({
   offerCockpit,
 }: DashboardWeeklyPerformanceSectionProps) {
   const riskTone = {
-    low: 'border-cyan-300/20 bg-cyan-950/20 text-cyan-100 shadow-[0_12px_30px_rgba(2,6,23,0.18)]',
-    medium: 'border-amber-300/30 bg-amber-900/28 text-amber-100 shadow-[0_12px_30px_rgba(2,6,23,0.18)]',
-    high: 'border-rose-300/20 bg-rose-950/28 text-rose-100 shadow-[0_12px_30px_rgba(2,6,23,0.2)]',
+    low: 'border-info/20 bg-info/10 text-info shadow-md',
+    medium: 'border-warning/30 bg-warning/10 text-warning shadow-md',
+    high: 'border-destructive/20 bg-destructive/10 text-destructive shadow-md',
   } as const
 
   return (
@@ -66,24 +62,24 @@ export function DashboardWeeklyPerformanceSection({
           return (
             <Card variant="glass" className="flex-row items-center gap-5 p-5 mb-6 sm:mb-8">
               <div className={`text-[40px] font-bold leading-none tabular-nums shrink-0 ${
-                done >= goal ? 'text-emerald-300' : done > 0 ? 'text-amber-300' : 'text-slate-500'
+                done >= goal ? 'text-success' : done > 0 ? 'text-warning' : 'text-muted-foreground'
               }`}>
                 {done}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-semibold text-white">
+                <div className="text-[13px] font-semibold text-foreground">
                   {done >= goal
                     ? 'Weekly goal hit. Strong week.'
                     : `${remaining} outreach draft${remaining === 1 ? '' : 's'} left to hit your goal.`}
                 </div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Goal: {goal} per week - {done} done since Monday</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Goal: {goal} per week - {done} done since Monday</div>
               </div>
               <form action={onSaveWeeklyGoal} className="shrink-0">
                 <input type="hidden" name="weekly_goal" value={goal === 1 ? 1 : goal + 1} />
                 <Button
                   type="submit"
                   variant="outline"
-                  className="h-auto border-white/20 bg-transparent px-2.5 py-1 text-[11px] text-slate-400 hover:text-slate-200"
+                  className="h-auto border-border bg-transparent px-2.5 py-1 text-[11px] text-muted-foreground hover:text-foreground"
                 >
                   Goal: {goal} &uarr;
                 </Button>
@@ -94,11 +90,11 @@ export function DashboardWeeklyPerformanceSection({
 
         return (
           <Card variant="glass" className="gap-0 p-5 mb-6 sm:mb-8">
-            <p className="text-[13px] font-semibold text-white mb-1">Set a weekly outreach target.</p>
-            <p className="text-[12px] text-slate-400 mb-3 leading-relaxed">A weekly target increases follow-through.</p>
+            <p className="text-[13px] font-semibold text-foreground mb-1">Set a weekly outreach target.</p>
+            <p className="text-[12px] text-muted-foreground mb-3 leading-relaxed">A weekly target increases follow-through.</p>
             <form action={onSaveWeeklyGoal} className="flex items-center gap-3">
               <Select name="weekly_goal" defaultValue="2">
-                <SelectTrigger aria-label="Weekly outreach goal" className="border-white/20 bg-slate-900 px-3 py-2 text-[13px] text-slate-100">
+                <SelectTrigger aria-label="Weekly outreach goal" className="border-border bg-card px-3 py-2 text-[13px] text-foreground">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -122,23 +118,23 @@ export function DashboardWeeklyPerformanceSection({
           <div
             className={`text-[40px] font-bold leading-none tabular-nums shrink-0 ${
               momentumData.momentum_score >= 70
-                ? 'text-emerald-300'
+                ? 'text-success'
                 : momentumData.momentum_score >= 40
-                  ? 'text-amber-300'
-                  : 'text-rose-300'
+                  ? 'text-warning'
+                  : 'text-destructive'
             }`}
           >
             {momentumData.momentum_score}
           </div>
           <div>
-            <div className="text-[13px] font-semibold text-white">
+            <div className="text-[13px] font-semibold text-foreground">
               {momentumData.momentum_score >= 70
                 ? 'Strong cadence. Keep it moving.'
                 : momentumData.momentum_score >= 40
                   ? `Momentum is dropping.${daysSinceLastAction != null ? ` ${daysSinceLastAction}d since your last action.` : ''}`
                   : 'Pace below target. One steady week rebuilds momentum quickly.'}
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">
+            <div className="text-[11px] text-muted-foreground mt-0.5">
               Momentum score
               {momentumData.momentum_computed_at && (
                 <>
@@ -147,13 +143,13 @@ export function DashboardWeeklyPerformanceSection({
                 </>
               )}
             </div>
-            <div className="text-[11px] text-slate-400 mt-1.5">
+            <div className="text-[11px] text-muted-foreground mt-1.5">
               Prefer an external tracker? Try{' '}
-              <a href="https://www.manager-tools.com/2016/09/job-search-tracking" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline hover:text-slate-200">
+              <a href="https://www.manager-tools.com/2016/09/job-search-tracking" target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline hover:text-foreground">
                 Manager Tools
               </a>{' '}
               or{' '}
-              <a href="https://www.manager-tools.com/career-tools-basics" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline hover:text-slate-200">
+              <a href="https://www.manager-tools.com/career-tools-basics" target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline hover:text-foreground">
                 Career Tools
               </a>
             </div>
@@ -162,10 +158,10 @@ export function DashboardWeeklyPerformanceSection({
       )}
 
       {isExecutiveMode && riskItems.length > 0 && (
-        <Card variant="glass" id="risk-engine" className="gap-0 mb-6 sm:mb-8 bg-slate-900/70 p-0">
-          <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between gap-3">
-            <h2 className="text-[13px] font-semibold text-slate-400">Risk signals</h2>
-            <span className="text-[13px] text-slate-400">Operational state from behavior patterns</span>
+        <Card variant="glass" id="risk-engine" className="gap-0 mb-6 sm:mb-8 bg-card/70 p-0">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3">
+            <h2 className="text-[13px] font-semibold text-muted-foreground">Risk signals</h2>
+            <span className="text-[13px] text-muted-foreground">Operational state from behavior patterns</span>
           </div>
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             {riskItems.map((risk) => (
@@ -185,20 +181,20 @@ export function DashboardWeeklyPerformanceSection({
       )}
 
       {offerCockpit.show && (
-        <Card variant="glass" id="offer-cockpit" className="gap-0 mb-6 sm:mb-8 border-slate-700 bg-slate-900 p-0">
-          <div className="px-5 py-4 border-b border-slate-700 flex items-center justify-between gap-3">
-            <h2 className="text-[13px] font-semibold text-orange-400">Offer comparison</h2>
-            <span className="text-[13px] text-slate-300">{offerCockpit.offerCount} offer{offerCockpit.offerCount === 1 ? '' : 's'} in play</span>
+        <Card variant="glass" id="offer-cockpit" className="gap-0 mb-6 sm:mb-8 border-border bg-card p-0">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3">
+            <h2 className="text-[13px] font-semibold text-primary">Offer comparison</h2>
+            <span className="text-[13px] text-muted-foreground">{offerCockpit.offerCount} offer{offerCockpit.offerCount === 1 ? '' : 's'} in play</span>
           </div>
           <div className="p-5 space-y-4">
-            <p className="text-[13px] text-slate-200">
+            <p className="text-[13px] text-foreground">
               {offerCockpit.offerCompanyName
                 ? `Anchor decision quality around the role at ${offerCockpit.offerCompanyName}.`
                 : 'Anchor decision quality around challenge, context, and downside risk.'}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {offerCockpit.contextSignals.map((signal) => (
-                <div key={signal.label} className={`rounded border px-3 py-2 ${signal.ok ? 'border-emerald-700 bg-emerald-950/50 text-emerald-300' : 'border-amber-700 bg-amber-950/40 text-amber-300'}`}>
+                <div key={signal.label} className={`rounded border px-3 py-2 ${signal.ok ? 'border-success/30 bg-success/10 text-success' : 'border-warning/30 bg-warning/10 text-warning'}`}>
                   <p className="text-[11px] font-semibold">{signal.label}</p>
                   <p className="text-[10px] mt-1">{signal.ok ? 'Ready' : 'Needs clarity'}</p>
                 </div>
@@ -208,28 +204,28 @@ export function DashboardWeeklyPerformanceSection({
               <Button
                 variant="outline"
                 render={<Link href="/dashboard/offers" />}
-                className="h-auto min-h-[44px] border-white/15 bg-white/5 px-4 py-2 text-[13px] font-semibold text-slate-100 hover:border-white/30 hover:bg-white/10"
+                className="h-auto min-h-[44px] border-border bg-muted/40 px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-muted/60"
               >
                 Offers
               </Button>
               <Button
                 variant="outline"
                 render={<Link href="/dashboard/strategy" />}
-                className="h-auto min-h-[44px] border-slate-500 px-4 py-2 text-[13px] font-semibold text-slate-200 hover:border-slate-300"
+                className="h-auto min-h-[44px] border-border px-4 py-2 text-[13px] font-semibold text-foreground"
               >
                 Criteria
               </Button>
               <Button
                 variant="outline"
                 render={<Link href="/dashboard/wrap-up" />}
-                className="h-auto min-h-[44px] border-emerald-500 px-4 py-2 text-[13px] font-semibold text-emerald-200 hover:border-emerald-300"
+                className="h-auto min-h-[44px] border-success/30 px-4 py-2 text-[13px] font-semibold text-success"
               >
                 Mark accepted
               </Button>
               <Button
                 variant="outline"
                 render={<Link href="/dashboard/wrap-up" />}
-                className="h-auto min-h-[44px] border-slate-500 px-4 py-2 text-[13px] font-semibold text-slate-200 hover:border-slate-300"
+                className="h-auto min-h-[44px] border-border px-4 py-2 text-[13px] font-semibold text-foreground"
               >
                 Launch 30/60/90 transition
               </Button>
@@ -240,26 +236,26 @@ export function DashboardWeeklyPerformanceSection({
 
       {isExecutiveMode ? (
         <Collapsible>
-          <Card variant="glass" className="gap-0 mb-6 sm:mb-8 bg-slate-900/70 p-0">
+          <Card variant="glass" className="gap-0 mb-6 sm:mb-8 bg-card/70 p-0">
             <CollapsibleTrigger className="w-full cursor-pointer px-5 py-4 flex items-center justify-between">
-              <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Review performance</span>
-              <span className="text-[11px] text-slate-400">Expand</span>
+              <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Review performance</span>
+              <span className="text-[11px] text-muted-foreground">Expand</span>
             </CollapsibleTrigger>
             <CollapsibleContent className="px-5 pb-5">
               <Card variant="glass" id="benchmarks" className="gap-0 px-5 py-4 mb-6">
-                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What works at this level</h2>
+                <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">What works at this level</h2>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="text-[20px] font-bold text-white leading-none">12-18</p>
-                    <p className="text-[12px] text-slate-300 mt-1">target companies in a 90-day search</p>
+                    <p className="text-[20px] font-bold text-foreground leading-none">12-18</p>
+                    <p className="text-[12px] text-muted-foreground mt-1">target companies in a 90-day search</p>
                   </div>
                   <div>
-                    <p className="text-[20px] font-bold text-white leading-none">2-3</p>
-                    <p className="text-[12px] text-slate-300 mt-1">new conversations per week to maintain momentum</p>
+                    <p className="text-[20px] font-bold text-foreground leading-none">2-3</p>
+                    <p className="text-[12px] text-muted-foreground mt-1">new conversations per week to maintain momentum</p>
                   </div>
                   <div>
-                    <p className="text-[20px] font-bold text-white leading-none">72 hrs</p>
-                    <p className="text-[12px] text-slate-300 mt-1">typical response time after a warm intro</p>
+                    <p className="text-[20px] font-bold text-foreground leading-none">72 hrs</p>
+                    <p className="text-[12px] text-muted-foreground mt-1">typical response time after a warm intro</p>
                   </div>
                 </div>
               </Card>
@@ -271,20 +267,20 @@ export function DashboardWeeklyPerformanceSection({
         </Collapsible>
       ) : (
         <>
-          <Card variant="glass" id="benchmarks" className="gap-0 bg-slate-900/70 px-5 py-4 mb-6 sm:mb-8">
-            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-3">What works at this level</h2>
+          <Card variant="glass" id="benchmarks" className="gap-0 bg-card/70 px-5 py-4 mb-6 sm:mb-8">
+            <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">What works at this level</h2>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <p className="text-[20px] font-bold text-white leading-none">12-18</p>
-                <p className="text-[12px] text-slate-300 mt-1">target companies in a 90-day search</p>
+                <p className="text-[20px] font-bold text-foreground leading-none">12-18</p>
+                <p className="text-[12px] text-muted-foreground mt-1">target companies in a 90-day search</p>
               </div>
               <div>
-                <p className="text-[20px] font-bold text-white leading-none">2-3</p>
-                <p className="text-[12px] text-slate-300 mt-1">new conversations per week to maintain momentum</p>
+                <p className="text-[20px] font-bold text-foreground leading-none">2-3</p>
+                <p className="text-[12px] text-muted-foreground mt-1">new conversations per week to maintain momentum</p>
               </div>
               <div>
-                <p className="text-[20px] font-bold text-white leading-none">72 hrs</p>
-                <p className="text-[12px] text-slate-300 mt-1">typical response time after a warm intro</p>
+                <p className="text-[20px] font-bold text-foreground leading-none">72 hrs</p>
+                <p className="text-[12px] text-muted-foreground mt-1">typical response time after a warm intro</p>
               </div>
             </div>
           </Card>

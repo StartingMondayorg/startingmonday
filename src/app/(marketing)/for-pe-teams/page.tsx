@@ -33,27 +33,27 @@ const VALUE_PROPS = [
 
 export default function ForPeTeamsPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/partners" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+          <Link href="/partners" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             Become a partner
           </Link>
         </div>
       </nav>
 
-      <header className="bg-slate-950 px-4 sm:px-6 pt-14 pb-16">
+      <header className="bg-background px-4 sm:px-6 pt-14 pb-16">
         <div className="max-w-2xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
             For PE and Transformation Teams
           </p>
-          <h1 className="text-[30px] sm:text-[38px] font-bold text-white leading-[1.15] tracking-tight mb-5">
+          <h1 className="text-[30px] sm:text-[38px] font-bold text-foreground leading-[1.15] tracking-tight mb-5">
             The search timeline<br />is a risk to the<br />value creation plan.
           </h1>
-          <p className="text-[15px] text-slate-200 leading-relaxed max-w-lg">
+          <p className="text-[15px] text-foreground leading-relaxed max-w-lg">
             Starting Monday equips your executive network with early intelligence on portfolio company signals and preparation that compresses the time from first conversation to close.
           </p>
         </div>
@@ -63,61 +63,61 @@ export default function ForPeTeamsPage() {
         <div className="max-w-2xl mx-auto space-y-16">
 
           <section id="value-props">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-6">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-6">
               Where it matters
             </p>
             <div className="space-y-6">
               {VALUE_PROPS.map((item, i) => (
-                <div key={i} className="border-t border-slate-100 pt-5">
-                  <p className="text-[15px] font-semibold text-slate-900 mb-2">{item.heading}</p>
-                  <p className="text-[14px] text-slate-500 leading-relaxed">{item.body}</p>
+                <div key={i} className="border-t border-border pt-5">
+                  <p className="text-[15px] font-semibold text-foreground mb-2">{item.heading}</p>
+                  <p className="text-[14px] text-muted-foreground leading-relaxed">{item.body}</p>
                 </div>
               ))}
             </div>
           </section>
 
           <section id="partner-model">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-4">
               How it works with your firm
             </p>
-            <p className="text-[14px] text-slate-600 leading-relaxed mb-4">
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-4">
               Operating partners and value creation leads who enroll executives through a shared referral link earn 20% commission on active subscriptions. Preferred partners get consolidated billing, an activation dashboard, and volume pricing starting at 5 seats.
             </p>
-            <p className="text-[13px] text-slate-500 leading-relaxed mb-6">
+            <p className="text-[13px] text-muted-foreground leading-relaxed mb-6">
               Proof point: prepared executive candidates reduce first-round resets, which is one of the largest hidden drivers of mandate cycle delay.
             </p>
-            <p className="text-[14px] text-slate-600 leading-relaxed mb-6">
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
               You can also work with specific portfolio company candidates directly: share a referral link that pre-attributes them to your firm and gives them a dedicated onboarding path.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/partners#apply"
-                className="inline-block bg-orange-500 hover:bg-orange-600 text-slate-900 text-[14px] font-semibold px-6 py-3 rounded transition-colors text-center"
+                className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground text-[14px] font-semibold px-6 py-3 rounded transition-colors text-center"
               >
                 Get started as a partner &rarr;
               </Link>
               <Link
                 href="/for-pe-partners"
-                className="inline-block border border-slate-200 hover:border-slate-400 text-slate-700 text-[14px] px-6 py-3 rounded transition-colors text-center"
+                className="inline-block border border-border text-foreground text-[14px] px-6 py-3 rounded transition-colors text-center"
               >
                 Read the full PE partner guide &rarr;
               </Link>
             </div>
           </section>
 
-          <section id="exec-benefit" className="bg-slate-950 rounded-lg p-8">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">
+          <section id="exec-benefit" className="bg-background rounded-lg p-8">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">
               What your executives get
             </p>
-            <p className="text-[14px] text-slate-200 leading-relaxed mb-5">
+            <p className="text-[14px] text-foreground leading-relaxed mb-5">
               Every executive you enroll gets full platform access: early company signals, daily morning briefings, AI prep briefs before conversations, and a pipeline they can run like a campaign rather than a hope.
             </p>
-            <p className="text-[12px] text-slate-500 leading-relaxed mb-5">
+            <p className="text-[12px] text-muted-foreground leading-relaxed mb-5">
               Confidentiality standard: executive activity is private by default and never exposed to employers or search firms.
             </p>
             <Link
               href="/demo"
-              className="inline-block text-[13px] text-slate-200 border border-slate-600 px-5 py-2.5 rounded hover:border-slate-400 hover:text-white transition-colors"
+              className="inline-block text-[13px] text-muted-foreground border border-border px-5 py-2.5 rounded hover:text-foreground transition-colors"
             >
               See a live demo &rarr;
             </Link>
@@ -126,14 +126,14 @@ export default function ForPeTeamsPage() {
         </div>
       </main>
 
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8">
+      <footer className="bg-background border-t border-border px-4 sm:px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions?{' '}
-            <a href="mailto:contact@startingmonday.app" className="hover:text-slate-200 transition-colors">
+            <a href="mailto:contact@startingmonday.app" className="hover:text-foreground transition-colors">
               contact@startingmonday.app
             </a>
           </p>

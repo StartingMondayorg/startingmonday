@@ -31,27 +31,27 @@ const STRATEGY_MOVES = [
 
 export default function MichaelStrategyBriefPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10 border-b border-slate-800">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10 border-b border-border">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase" aria-label="Go to Starting Monday homepage">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/demo/michael-dashboard" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/demo/michael-dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Michael dashboard
             </Link>
           </div>
         </div>
       </nav>
 
-      <header className="bg-slate-950 px-4 sm:px-6 pt-14 pb-16">
+      <header className="dark text-foreground bg-background px-4 sm:px-6 pt-14 pb-16">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-400 mb-4">Strategy brief demo</p>
-          <h1 className="text-[30px] sm:text-[40px] font-bold text-white leading-[1.12] tracking-tight mb-5">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">Strategy brief demo</p>
+          <h1 className="text-[30px] sm:text-[40px] font-bold text-foreground leading-[1.12] tracking-tight mb-5">
             Michael Torres strategy brief
           </h1>
-          <p className="text-[16px] text-slate-200 leading-relaxed max-w-3xl">
+          <p className="text-[16px] text-foreground leading-relaxed max-w-3xl">
             Candidate: Michael Torres. Target: VP of IT at Salesforce. This is the high-level strategy framing for the room before detailed interview prep.
           </p>
         </div>
@@ -59,25 +59,25 @@ export default function MichaelStrategyBriefPage() {
 
       <main className="px-4 sm:px-6 py-14 sm:py-18">
         <div className="max-w-4xl mx-auto space-y-8">
-          <section className="border border-slate-200 rounded-lg p-6 bg-white">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-4">Positioning thesis</p>
+          <section className="border border-border rounded-lg p-6 bg-card">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-4">Positioning thesis</p>
             <ul className="space-y-2.5">
               {POSITIONING.map((item) => (
-                <li key={item} className="text-[14px] text-slate-800 leading-relaxed flex items-start gap-2.5">
-                  <span className="text-orange-500 mt-0.5">-</span>
+                <li key={item} className="text-[14px] text-foreground leading-relaxed flex items-start gap-2.5">
+                  <span className="text-primary mt-0.5">-</span>
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className="border border-slate-200 rounded-lg p-6 bg-slate-50">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-4">Strategy moves for the conversation</p>
+          <section className="border border-border rounded-lg p-6 bg-muted">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-4">Strategy moves for the conversation</p>
             <div className="space-y-3">
               {STRATEGY_MOVES.map((move) => (
-                <article key={move.title} className="rounded border border-slate-200 bg-white p-4">
-                  <p className="text-[13px] font-semibold text-slate-900 mb-1.5">{move.title}</p>
-                  <p className="text-[13px] text-slate-700 leading-relaxed">{move.detail}</p>
+                <article key={move.title} className="rounded border border-border bg-card p-4">
+                  <p className="text-[13px] font-semibold text-foreground mb-1.5">{move.title}</p>
+                  <p className="text-[13px] text-muted-foreground leading-relaxed">{move.detail}</p>
                 </article>
               ))}
             </div>
@@ -86,13 +86,13 @@ export default function MichaelStrategyBriefPage() {
           <section className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/demo/executive-brief"
-              className="inline-flex items-center justify-center rounded bg-slate-950 text-white text-[13px] font-semibold px-5 py-2.5 hover:bg-slate-800 transition-colors"
+              className="inline-flex items-center justify-center rounded bg-primary text-primary-foreground text-[13px] font-semibold px-5 py-2.5 hover:bg-primary/90 transition-colors"
             >
               Open live interview brief
             </Link>
             <Link
               href="/demo/michael-dashboard"
-              className="inline-flex items-center justify-center rounded border border-slate-300 text-slate-900 text-[13px] font-semibold px-5 py-2.5 hover:border-slate-500 transition-colors"
+              className="inline-flex items-center justify-center rounded border border-border text-foreground text-[13px] font-semibold px-5 py-2.5 transition-colors"
             >
               Open Michael dashboard
             </Link>

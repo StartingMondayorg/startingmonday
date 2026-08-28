@@ -42,21 +42,21 @@ const FEATURES = [
 
 export default function ForFractionalExecutivesPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
-      <nav className="bg-slate-950 sticky top-0 z-10">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/demo" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/demo" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               See a demo
             </Link>
             <Link
               href="/partners"
-              className="text-[13px] font-semibold text-slate-900 bg-orange-500 px-4 py-1.5 rounded hover:bg-orange-600 transition-colors"
+              className="text-[13px] font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded hover:bg-primary/90 transition-colors"
             >
               Become a partner
             </Link>
@@ -67,15 +67,15 @@ export default function ForFractionalExecutivesPage() {
       <main>
 
         {/* Header */}
-        <header className="bg-slate-950 px-4 sm:px-6 pt-14 pb-12">
+        <header className="dark text-foreground bg-background px-4 sm:px-6 pt-14 pb-12">
           <div className="max-w-2xl mx-auto">
-            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
               Partner Guide
             </p>
-            <h1 className="text-[30px] sm:text-[38px] font-bold text-white leading-[1.15] tracking-tight mb-4">
+            <h1 className="text-[30px] sm:text-[38px] font-bold text-foreground leading-[1.15] tracking-tight mb-4">
               Starting Monday for <span className="whitespace-nowrap">Fractional C-suite Technology Networks</span>
             </h1>
-            <p className="text-[16px] text-slate-200 leading-relaxed">
+            <p className="text-[16px] text-foreground leading-relaxed">
               Fractional executives are always searching. The question is whether the search is systematic or reactive.
             </p>
           </div>
@@ -91,26 +91,26 @@ export default function ForFractionalExecutivesPage() {
                 ['1 platform', 'Fractional engagement pipeline and full-time transition support in one place'],
                 ['30 days', 'Practical pilot window for member adoption and outcome review'],
               ].map(([value, label]) => (
-                <div key={value} className="border border-slate-200 rounded-xl p-4 bg-white">
-                  <p className="text-[24px] font-bold text-slate-900 mb-1">{value}</p>
-                  <p className="text-[12px] text-slate-500 leading-relaxed">{label}</p>
+                <div key={value} className="border border-border rounded-xl p-4 bg-card">
+                  <p className="text-[24px] font-bold text-foreground mb-1">{value}</p>
+                  <p className="text-[12px] text-muted-foreground leading-relaxed">{label}</p>
                 </div>
               ))}
             </section>
 
-            <section className="border border-emerald-200 rounded-xl p-5 bg-emerald-50/40">
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-700 mb-2">Trust and operating boundary</p>
-              <p className="text-[13px] text-slate-700 leading-relaxed mb-2">
+            <section className="border border-success/30 rounded-xl p-5 bg-success/10">
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-success mb-2">Trust and operating boundary</p>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-2">
                 Member pipelines, prep materials, and search notes stay private to each account unless the member intentionally shares access. The network gets a partner program, not a hidden backdoor into confidential deal flow.
               </p>
-              <p className="text-[12px] text-slate-600 leading-relaxed">
+              <p className="text-[12px] text-muted-foreground leading-relaxed">
                 Verification path: compare follow-through rate, meeting prep quality, and opportunity recovery over one month before expanding seats across the network.
               </p>
             </section>
 
             {/* What it is */}
-            <section id="network-fit" className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">What Starting Monday is</h2>
+            <section id="network-fit" className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">What Starting Monday is</h2>
               <p>
                 Starting Monday is an AI-powered platform built for C-suite technology executives.
                 It gives them the infrastructure that senior searches require: monitoring of target companies
@@ -125,8 +125,8 @@ export default function ForFractionalExecutivesPage() {
             </section>
 
             {/* The gap */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">The gap it fills</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">The gap it fills</h2>
               <p>
                 A fractional C-suite executive managing three active engagements and fifteen prospective targets is
                 running a business development operation with no infrastructure. They track prospects
@@ -148,18 +148,18 @@ export default function ForFractionalExecutivesPage() {
 
             {/* How networks use it */}
             <section id="network-playbook" className="space-y-6">
-              <h2 className="text-[22px] font-bold text-slate-900">How fractional networks use it</h2>
+              <h2 className="text-[22px] font-bold text-foreground">How fractional networks use it</h2>
               <div className="space-y-8">
                 {FEATURES.map(f => (
-                  <details key={f.name} className="border-l-2 border-orange-500 pl-5 group" open>
+                  <details key={f.name} className="border-l-2 border-primary/30 pl-5 group" open>
                     <summary className="list-none cursor-pointer flex items-center justify-between">
-                      <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-orange-600">{f.name}</p>
-                      <span className="text-slate-500 group-open:rotate-180 transition-transform">v</span>
+                      <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-primary">{f.name}</p>
+                      <span className="text-muted-foreground group-open:rotate-180 transition-transform">v</span>
                     </summary>
                     <div className="mt-2">
-                      <p className="text-[15px] text-slate-700 leading-relaxed mb-2">{f.forNetwork}</p>
-                      <p className="text-[13px] text-slate-500 leading-relaxed">
-                        <span className="font-semibold text-slate-700">Outcome: </span>{f.outcome}
+                      <p className="text-[15px] text-muted-foreground leading-relaxed mb-2">{f.forNetwork}</p>
+                      <p className="text-[13px] text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-muted-foreground">Outcome: </span>{f.outcome}
                       </p>
                     </div>
                   </details>
@@ -168,8 +168,8 @@ export default function ForFractionalExecutivesPage() {
             </section>
 
             {/* What it does not do */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">What it does not do</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">What it does not do</h2>
               <p>
                 Starting Monday does not replace the matchmaking, client relationships, or business
                 development infrastructure that your network provides. It does not source new clients
@@ -183,8 +183,8 @@ export default function ForFractionalExecutivesPage() {
             </section>
 
             {/* For your network */}
-            <section id="network-program" className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">For your network</h2>
+            <section id="network-program" className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">For your network</h2>
               <p>
                 The simplest way to start: make Starting Monday available as a member resource and
                 ask a few members to use it for one month. The feedback from members who have been
@@ -199,33 +199,33 @@ export default function ForFractionalExecutivesPage() {
                   'Apply to the partner program at startingmonday.app/partners to receive your referral link and partner resource kit',
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold shrink-0 mt-0.5">+</span>
-                    <span className="text-slate-700">{item}</span>
+                    <span className="text-primary font-bold shrink-0 mt-0.5">+</span>
+                    <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
             </section>
 
             {/* Apply CTA */}
-            <section className="bg-slate-50 border border-slate-200 rounded-lg p-7">
-              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+            <section className="bg-muted border border-border rounded-lg p-7">
+              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
                 Ready to partner?
               </p>
-              <h2 className="text-[20px] font-bold text-slate-900 mb-3 leading-snug">
+              <h2 className="text-[20px] font-bold text-foreground mb-3 leading-snug">
                 Apply to the partner program
               </h2>
-              <p className="text-[14px] text-slate-500 leading-relaxed mb-6">
+              <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
                 Fill out the application and we will follow up within 2 business days with your referral link, commission tracking, and partner resource kit.
               </p>
               <Link
                 href="/partners#apply"
-                className="inline-block bg-orange-500 text-slate-900 text-[14px] font-bold px-7 py-3 rounded hover:bg-orange-600 transition-colors"
+                className="inline-block bg-primary text-primary-foreground text-[14px] font-bold px-7 py-3 rounded hover:bg-primary/90 transition-colors"
               >
                 Get started now &rarr;
               </Link>
-              <p className="text-[13px] text-slate-200 mt-4">
+              <p className="text-[13px] text-muted-foreground mt-4">
                 Want to see the platform first?{' '}
-                <Link href="/demo" className="text-slate-600 underline hover:text-slate-900 transition-colors">
+                <Link href="/demo" className="text-muted-foreground underline hover:text-foreground transition-colors">
                   Walk through a live demo
                 </Link>
                 .
@@ -238,17 +238,17 @@ export default function ForFractionalExecutivesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8 mt-8">
+      <footer className="dark text-foreground bg-background border-t border-border px-4 sm:px-6 py-8 mt-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions? contact@startingmonday.app
           </p>
         </div>
       
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
 </footer>
 
     </div>

@@ -5,9 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { BOT_SCORE_THRESHOLD } from '@/lib/bot-detection/bot-signals'
 import { ADMIN_DARK_PAGE_BG } from '../admin-dark-theme'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge, Card } from '@/components/ui'
 const OPS_ALERT_SOURCES = [
   'ci_check_runs',
   'lint_typecheck_runs',
@@ -77,23 +75,23 @@ export default async function AdminOperationsPage() {
 
   return (
     <div className={ADMIN_DARK_PAGE_BG}>
-      <header className="bg-slate-900">
+      <header className="bg-card">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400"><span className="text-white">Starting </span><span className="text-orange-500">Monday</span></span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin/revenue" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Revenue</Link>
-            <Link href="/dashboard/admin/product" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Product</Link>
-            <Link href="/dashboard/admin" className="text-[13px] text-slate-300 hover:text-white transition-colors">← Admin</Link>
+            <Link href="/dashboard/admin/revenue" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Revenue</Link>
+            <Link href="/dashboard/admin/product" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Product</Link>
+            <Link href="/dashboard/admin" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">← Admin</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-white leading-tight">Operations Hub</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">Reliability, release quality, and monitoring operations.</p>
-          <p className="text-[13px] text-slate-300 mt-1">
-            Signed in as <span className="font-semibold text-slate-100">{user.email}</span>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Operations Hub</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">Reliability, release quality, and monitoring operations.</p>
+          <p className="text-[13px] text-muted-foreground mt-1">
+            Signed in as <span className="font-semibold text-foreground">{user.email}</span>
             <Badge variant={roleBadgeVariant(staff.role)} className="ml-2">{staff.role}</Badge>
           </p>
         </div>
@@ -107,20 +105,20 @@ export default async function AdminOperationsPage() {
             { label: 'Suspected bot req (24h)', value: suspectedBotRequests ?? 0 },
           ].map((card) => (
             <Card key={card.label} variant="glass" className="p-4">
-              <div className="text-[24px] font-bold text-white leading-none capitalize">{card.value}</div>
-              <div className="text-[13px] text-slate-300 mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
+              <div className="text-[24px] font-bold text-foreground leading-none capitalize">{card.value}</div>
+              <div className="text-[13px] text-muted-foreground mt-1.5 tracking-[0.07em] uppercase">{card.label}</div>
             </Card>
           ))}
         </div>
 
         <Card variant="glass" className="p-5 mb-6">
-          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Role-based quick actions</p>
+          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Role-based quick actions</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {quickActions.map((action) => (
               <Link key={action.href} href={action.href}>
-                <Card variant="glass" className="p-4 border-white/10 bg-slate-950/40 hover:border-white/30 transition-colors">
-                  <p className="text-[13px] font-semibold text-white">{action.label}</p>
-                  <p className="text-[13px] text-slate-300 mt-1.5 leading-relaxed">{action.description}</p>
+                <Card variant="glass" className="p-4 border-border bg-background/40 transition-colors">
+                  <p className="text-[13px] font-semibold text-foreground">{action.label}</p>
+                  <p className="text-[13px] text-muted-foreground mt-1.5 leading-relaxed">{action.description}</p>
                 </Card>
               </Link>
             ))}
@@ -128,23 +126,23 @@ export default async function AdminOperationsPage() {
         </Card>
 
         <Card variant="glass" className="overflow-hidden mb-6">
-          <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Operations alert panel</p>
-            <Link href="/guide" className="text-[13px] text-slate-300 hover:text-white">Runbook {'->'}</Link>
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Operations alert panel</p>
+            <Link href="/guide" className="text-[13px] text-muted-foreground hover:text-foreground">Runbook {'->'}</Link>
           </div>
           {(recentAlerts ?? []).length === 0 ? (
-            <p className="px-5 py-4 text-[13px] text-slate-300">No open operations alerts.</p>
+            <p className="px-5 py-4 text-[13px] text-muted-foreground">No open operations alerts.</p>
           ) : (
-            <div className="divide-y divide-white/10">
+            <div className="divide-y divide-border">
               {(recentAlerts ?? []).map((alert: { id: string; source_table: string; severity: string; message: string; created_at: string }) => (
                 <div key={alert.id} className="px-5 py-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-[13px] font-semibold text-white">{alert.message}</p>
+                    <p className="text-[13px] font-semibold text-foreground">{alert.message}</p>
                     <Badge variant={alert.severity === 'high' ? 'destructive' : alert.severity === 'medium' ? 'warning' : 'secondary'}>
                       {alert.severity}
                     </Badge>
                   </div>
-                  <p className="text-[13px] text-slate-400 mt-1 font-mono">{alert.source_table} - {new Date(alert.created_at).toLocaleString()}</p>
+                  <p className="text-[13px] text-muted-foreground mt-1 font-mono">{alert.source_table} - {new Date(alert.created_at).toLocaleString()}</p>
                 </div>
               ))}
             </div>

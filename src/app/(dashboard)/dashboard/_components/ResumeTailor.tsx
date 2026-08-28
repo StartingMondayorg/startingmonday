@@ -11,15 +11,7 @@ import {
   atsColor,
   downloadDocx,
 } from '../_utils/resume-tailor-utils'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Label, Tabs, TabsList, TabsTrigger, Textarea } from '@/components/ui'
 type Props = {
   resumeText: string
   initialJobDescription?: string
@@ -34,8 +26,8 @@ function BulletList({ text }: { text: string }) {
     <div className="flex flex-col gap-1.5">
       {lines.map((line, i) => (
         <div key={i} className="flex items-start gap-2.5">
-          <span className="text-slate-300 shrink-0 mt-0.5 text-[12px]">-</span>
-          <p className="text-[13px] text-slate-700 leading-relaxed">{line.replace(/^[-*•]\s*/, '')}</p>
+          <span className="text-muted-foreground shrink-0 mt-0.5 text-[12px]">-</span>
+          <p className="text-[13px] text-muted-foreground leading-relaxed">{line.replace(/^[-*•]\s*/, '')}</p>
         </div>
       ))}
     </div>
@@ -238,13 +230,13 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
 
       {/* Input form */}
       <Card variant="default" className="gap-0 p-0">
-        <div className="px-6 py-[18px] border-b border-slate-200">
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Job Description</span>
+        <div className="px-6 py-[18px] border-b border-border">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Job Description</span>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="px-6 pt-5 pb-3">
-            <Label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
-              Target title <span className="text-slate-300 font-normal">(optional)</span>
+            <Label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
+              Target title <span className="text-muted-foreground font-normal">(optional)</span>
             </Label>
             <Input
               type="text"
@@ -256,8 +248,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
             />
           </div>
           <div className="px-6 pb-3">
-            <Label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
-              Job description <span className="text-red-500">*</span>
+            <Label className="mb-1.5 block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
+              Job description <span className="text-destructive">*</span>
             </Label>
             <Textarea
               value={jd}
@@ -269,7 +261,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
             />
           </div>
           <div className="px-6 pb-5 flex items-center justify-between gap-4">
-            <span className="text-[12px] text-slate-400">
+            <span className="text-[12px] text-muted-foreground">
               {jd.length > 0 ? `${jd.length.toLocaleString()} characters` : 'Min. 100 characters'}
             </span>
             <Button type="submit" disabled={!canSubmit} className="h-auto px-5 py-2.5 text-[13px] font-semibold">
@@ -289,7 +281,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
       {/* Loading state while streaming */}
       {streaming && !done && (
         <Card variant="default" className="p-8">
-          <p className="text-[13px] text-slate-400 animate-pulse">Tailoring your resume...</p>
+          <p className="text-[13px] text-muted-foreground animate-pulse">Tailoring your resume...</p>
         </Card>
       )}
 
@@ -301,7 +293,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="rounded border border-slate-200 px-3 py-1.5 text-[12px] font-semibold data-active:border-slate-900 data-active:bg-slate-900 data-active:text-white"
+                className="rounded border border-border px-3 py-1.5 text-[12px] font-semibold data-active:border-border data-active:bg-primary data-active:text-primary-foreground"
               >
                 {tab.label}
               </TabsTrigger>
@@ -316,8 +308,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
           {/* Tailored resume */}
           {parsed.tailored && show('resume') && (
             <Card variant="default" className="gap-0 p-0">
-              <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between gap-4">
-                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Tailored Resume</span>
+              <div className="px-6 py-[18px] border-b border-border flex items-center justify-between gap-4">
+                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Tailored Resume</span>
                 <div className="flex items-center gap-3">
                   <Button variant="outline" onClick={handleCopy} className="h-auto px-3 py-1.5 text-[12px] font-semibold">
                     {copied ? 'Copied!' : 'Copy text'}
@@ -328,16 +320,16 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                 </div>
               </div>
               <div className="px-6 py-6">
-                <pre className="text-[13px] text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">{parsed.tailored}</pre>
+                <pre className="text-[13px] text-foreground leading-relaxed whitespace-pre-wrap font-sans">{parsed.tailored}</pre>
               </div>
             </Card>
           )}
 
           {/* Strengthened resume (shown in resume tab too) */}
           {(strengthenDone || strengthening) && show('resume') && !(activeSection === 'quality') && (
-            <Card variant="default" className="gap-0 p-0 border-emerald-200">
-              <div className="px-6 py-[18px] border-b border-emerald-200 flex items-center justify-between gap-4">
-                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-emerald-600">Strengthened Resume</span>
+            <Card variant="default" className="gap-0 p-0 border-success/30">
+              <div className="px-6 py-[18px] border-b border-success/30 flex items-center justify-between gap-4">
+                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-success">Strengthened Resume</span>
                 {strengthenDone && (
                   <div className="flex items-center gap-3">
                     <Button variant="outline" onClick={handleStrengthenCopy} className="h-auto px-3 py-1.5 text-[12px] font-semibold">
@@ -350,8 +342,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                 )}
               </div>
               <div className="px-6 py-6">
-                {strengthening && <p className="text-[13px] text-slate-400 animate-pulse">Strengthening bullets...</p>}
-                {strengthenDone && <pre className="text-[13px] text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">{strengthenedResume}</pre>}
+                {strengthening && <p className="text-[13px] text-muted-foreground animate-pulse">Strengthening bullets...</p>}
+                {strengthenDone && <pre className="text-[13px] text-foreground leading-relaxed whitespace-pre-wrap font-sans">{strengthenedResume}</pre>}
               </div>
             </Card>
           )}
@@ -359,8 +351,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
           {/* Keyword analysis */}
           {parsed.keywords && show('keywords') && (
             <Card variant="default" className="gap-0 p-0">
-              <div className="px-6 py-[18px] border-b border-slate-200">
-                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Keyword Analysis</span>
+              <div className="px-6 py-[18px] border-b border-border">
+                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Keyword Analysis</span>
               </div>
               <div className="px-6 py-5">
                 {parsed.keywords.split('\n').filter(Boolean).map((line, i) => {
@@ -368,13 +360,13 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   const isMissing = line.toLowerCase().startsWith('missing:')
                   const label = isPresent ? 'Present' : isMissing ? 'Missing' : null
                   const content = line.replace(/^(present|missing):\s*/i, '').trim()
-                  if (!label) return <p key={i} className="text-[13px] text-slate-600 leading-relaxed">{line}</p>
+                  if (!label) return <p key={i} className="text-[13px] text-muted-foreground leading-relaxed">{line}</p>
                   return (
                     <div key={i} className="flex items-start gap-3 mb-3 last:mb-0">
                       <Badge variant={isPresent ? 'success' : 'warning'} className="shrink-0 mt-0.5 h-auto tracking-[0.06em] uppercase px-2 py-0.5">
                         {label}
                       </Badge>
-                      <p className="text-[13px] text-slate-700 leading-relaxed">{content}</p>
+                      <p className="text-[13px] text-muted-foreground leading-relaxed">{content}</p>
                     </div>
                   )
                 })}
@@ -385,8 +377,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
           {/* Key changes */}
           {parsed.changes && show('changes') && (
             <Card variant="default" className="gap-0 p-0">
-              <div className="px-6 py-[18px] border-b border-slate-200">
-                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Key Changes</span>
+              <div className="px-6 py-[18px] border-b border-border">
+                <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Key Changes</span>
               </div>
               <div className="px-6 py-5">
                 <BulletList text={parsed.changes} />
@@ -399,10 +391,10 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
             <>
               {/* Quality check trigger */}
               {!checkDone && !checkStreaming && (
-                <Card variant="default" className="bg-slate-50 p-6 flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <Card variant="default" className="bg-muted p-6 flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
-                    <p className="text-[14px] font-semibold text-slate-900 mb-1">Run quality check</p>
-                    <p className="text-[13px] text-slate-500 leading-relaxed">
+                    <p className="text-[14px] font-semibold text-foreground mb-1">Run quality check</p>
+                    <p className="text-[13px] text-muted-foreground leading-relaxed">
                       Score this resume from three angles: ATS match, recruiter first impression, and hiring manager fit. Flags weak bullets and gaps to cover verbally.
                     </p>
                   </div>
@@ -415,12 +407,12 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
               {/* Quality check streaming */}
               {checkStreaming && !checkDone && (
                 <Card variant="default" className="gap-0 p-0">
-                  <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between">
-                    <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Quality Check</span>
-                    <span className="text-[11px] text-slate-400 animate-pulse">Scoring...</span>
+                  <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
+                    <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Quality Check</span>
+                    <span className="text-[11px] text-muted-foreground animate-pulse">Scoring...</span>
                   </div>
                   <div className="px-6 py-6">
-                    <pre className="text-[13px] text-slate-600 leading-relaxed whitespace-pre-wrap font-sans">{checkRaw}</pre>
+                    <pre className="text-[13px] text-muted-foreground leading-relaxed whitespace-pre-wrap font-sans">{checkRaw}</pre>
                   </div>
                 </Card>
               )}
@@ -437,19 +429,19 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                 <>
                   {/* Score summary row */}
                   <Card variant="default" className="gap-0 p-0">
-                    <div className="px-6 py-[18px] border-b border-slate-200">
-                      <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Quality Check</span>
+                    <div className="px-6 py-[18px] border-b border-border">
+                      <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Quality Check</span>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-slate-100">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-border">
                       <div className="px-6 py-5 text-center">
-                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">ATS Match</p>
+                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">ATS Match</p>
                         <p className={`text-[36px] font-bold leading-none ${atsColor(parseInt(quality.atsScore || '0'))}`}>
                           {quality.atsScore || '?'}
                         </p>
-                        <p className="text-[10px] text-slate-400 mt-1">out of 100</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">out of 100</p>
                       </div>
                       <div className="px-6 py-5 text-center">
-                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">Recruiter</p>
+                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Recruiter</p>
                         {quality.recruiterGrade && (
                           <Badge className={`h-auto text-[28px] font-bold leading-none px-3 py-1 border ${gradeColor(quality.recruiterGrade)}`}>
                             {quality.recruiterGrade}
@@ -457,7 +449,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                         )}
                       </div>
                       <div className="px-6 py-5 text-center">
-                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">Hiring Mgr</p>
+                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Hiring Mgr</p>
                         {quality.hiringManagerGrade && (
                           <Badge className={`h-auto text-[28px] font-bold leading-none px-3 py-1 border ${gradeColor(quality.hiringManagerGrade)}`}>
                             {quality.hiringManagerGrade}
@@ -465,7 +457,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                         )}
                       </div>
                       <div className="px-6 py-5 text-center">
-                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-2">6-Second Test</p>
+                        <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">6-Second Test</p>
                         {quality.sixSecondGrade && (
                           <Badge className={`h-auto text-[28px] font-bold leading-none px-3 py-1 border ${gradeColor(quality.sixSecondGrade)}`}>
                             {quality.sixSecondGrade}
@@ -478,8 +470,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   {/* ATS detail */}
                   {quality.atsNotes && (
                     <Card variant="default" className="gap-0 p-0">
-                      <div className="px-6 py-[18px] border-b border-slate-200">
-                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">ATS Keywords</span>
+                      <div className="px-6 py-[18px] border-b border-border">
+                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">ATS Keywords</span>
                       </div>
                       <div className="px-6 py-5">
                         {quality.atsNotes.split('\n').filter(Boolean).map((line, i) => {
@@ -487,13 +479,13 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                           const isMissing = line.toLowerCase().startsWith('missing:')
                           const label = isPresent ? 'Present' : isMissing ? 'Missing' : null
                           const content = line.replace(/^(present|missing):\s*/i, '').trim()
-                          if (!label) return <p key={i} className="text-[13px] text-slate-600">{line}</p>
+                          if (!label) return <p key={i} className="text-[13px] text-muted-foreground">{line}</p>
                           return (
                             <div key={i} className="flex items-start gap-3 mb-3 last:mb-0">
                               <Badge variant={isPresent ? 'success' : 'warning'} className="shrink-0 mt-0.5 h-auto tracking-[0.06em] uppercase px-2 py-0.5">
                                 {label}
                               </Badge>
-                              <p className="text-[13px] text-slate-700 leading-relaxed">{content}</p>
+                              <p className="text-[13px] text-muted-foreground leading-relaxed">{content}</p>
                             </div>
                           )
                         })}
@@ -505,8 +497,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {quality.recruiterNotes && (
                       <Card variant="default" className="gap-0 p-0">
-                        <div className="px-6 py-[18px] border-b border-slate-200 flex items-center gap-3">
-                          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Recruiter View</span>
+                        <div className="px-6 py-[18px] border-b border-border flex items-center gap-3">
+                          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Recruiter View</span>
                           {quality.recruiterGrade && (
                             <Badge className={`h-auto text-[11px] font-bold px-1.5 py-0.5 border ${gradeColor(quality.recruiterGrade)}`}>
                               {quality.recruiterGrade}
@@ -520,8 +512,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                     )}
                     {quality.hiringManagerNotes && (
                       <Card variant="default" className="gap-0 p-0">
-                        <div className="px-6 py-[18px] border-b border-slate-200 flex items-center gap-3">
-                          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Hiring Manager View</span>
+                        <div className="px-6 py-[18px] border-b border-border flex items-center gap-3">
+                          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Hiring Manager View</span>
                           {quality.hiringManagerGrade && (
                             <Badge className={`h-auto text-[11px] font-bold px-1.5 py-0.5 border ${gradeColor(quality.hiringManagerGrade)}`}>
                               {quality.hiringManagerGrade}
@@ -538,8 +530,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   {/* Weak bullets */}
                   {quality.weakBullets && quality.weakBullets.trim().length > 10 && (
                     <Card variant="default" className="gap-0 p-0">
-                      <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between gap-4">
-                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Bullets to Strengthen</span>
+                      <div className="px-6 py-[18px] border-b border-border flex items-center justify-between gap-4">
+                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Bullets to Strengthen</span>
                         {!strengthenDone && (
                           <Button
                             onClick={handleStrengthen}
@@ -550,7 +542,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                           </Button>
                         )}
                         {strengthenDone && (
-                          <span className="text-[11px] font-semibold text-emerald-600">Resume strengthened</span>
+                          <span className="text-[11px] font-semibold text-success">Resume strengthened</span>
                         )}
                       </div>
                       <div className="px-6 py-5 flex flex-col gap-4">
@@ -559,12 +551,12 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                           const fixLine    = block.match(/FIX:\s*(.+)/i)?.[1]?.trim()
                           if (!bulletLine && !fixLine) return null
                           return (
-                            <Card key={i} variant="default" className="gap-0 p-4 border-slate-100">
+                            <Card key={i} variant="default" className="gap-0 p-4 border-border">
                               {bulletLine && (
-                                <p className="text-[13px] text-slate-500 italic mb-2">&ldquo;{bulletLine}...&rdquo;</p>
+                                <p className="text-[13px] text-muted-foreground italic mb-2">&ldquo;{bulletLine}...&rdquo;</p>
                               )}
                               {fixLine && (
-                                <p className="text-[13px] text-slate-900 leading-relaxed">{fixLine}</p>
+                                <p className="text-[13px] text-foreground leading-relaxed">{fixLine}</p>
                               )}
                             </Card>
                           )
@@ -582,9 +574,9 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
 
                   {/* Strengthened resume (shown in quality tab) */}
                   {(strengthenDone || strengthening) && (
-                    <Card variant="default" className="gap-0 p-0 border-emerald-200">
-                      <div className="px-6 py-[18px] border-b border-emerald-200 flex items-center justify-between gap-4">
-                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-emerald-600">Strengthened Resume</span>
+                    <Card variant="default" className="gap-0 p-0 border-success/30">
+                      <div className="px-6 py-[18px] border-b border-success/30 flex items-center justify-between gap-4">
+                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-success">Strengthened Resume</span>
                         {strengthenDone && (
                           <div className="flex items-center gap-3">
                             <Button variant="outline" onClick={handleStrengthenCopy} className="h-auto px-3 py-1.5 text-[12px] font-semibold">
@@ -597,8 +589,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                         )}
                       </div>
                       <div className="px-6 py-6">
-                        {strengthening && <p className="text-[13px] text-slate-400 animate-pulse">Rewriting weak bullets...</p>}
-                        {strengthenDone && <pre className="text-[13px] text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">{strengthenedResume}</pre>}
+                        {strengthening && <p className="text-[13px] text-muted-foreground animate-pulse">Rewriting weak bullets...</p>}
+                        {strengthenDone && <pre className="text-[13px] text-foreground leading-relaxed whitespace-pre-wrap font-sans">{strengthenedResume}</pre>}
                       </div>
                     </Card>
                   )}
@@ -607,8 +599,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   {quality.verbalCover && (
                     <Alert variant="warning">
                       <AlertDescription>
-                        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-amber-700 mb-2">Cover Verbally in the Room</p>
-                        <p className="text-[12px] text-amber-700 mb-3">These gaps cannot be fixed on paper. Address them proactively in the interview.</p>
+                        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-warning mb-2">Cover Verbally in the Room</p>
+                        <p className="text-[12px] text-warning mb-3">These gaps cannot be fixed on paper. Address them proactively in the interview.</p>
                         <BulletList text={quality.verbalCover} />
                       </AlertDescription>
                     </Alert>
@@ -617,8 +609,8 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   {/* 6-second test */}
                   {quality.sixSecondNotes && (
                     <Card variant="default" className="gap-0 p-0">
-                      <div className="px-6 py-[18px] border-b border-slate-200 flex items-center gap-3">
-                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">6-Second Recruiter Test</span>
+                      <div className="px-6 py-[18px] border-b border-border flex items-center gap-3">
+                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">6-Second Recruiter Test</span>
                         {quality.sixSecondGrade && (
                           <Badge className={`h-auto text-[11px] font-bold px-1.5 py-0.5 border ${gradeColor(quality.sixSecondGrade)}`}>
                             {quality.sixSecondGrade}
@@ -626,7 +618,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                         )}
                       </div>
                       <div className="px-6 py-5">
-                        <p className="text-[13px] text-slate-700 leading-relaxed">{quality.sixSecondNotes}</p>
+                        <p className="text-[13px] text-muted-foreground leading-relaxed">{quality.sixSecondNotes}</p>
                       </div>
                     </Card>
                   )}
@@ -636,7 +628,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                     <Button
                       variant="ghost"
                       onClick={() => { setCheckDone(false); setCheckRaw('') }}
-                      className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-700 hover:bg-transparent"
+                      className="h-auto p-0 text-[12px] text-muted-foreground hover:bg-transparent"
                     >
                       Re-run quality check
                     </Button>
@@ -651,7 +643,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                         setStrengthenRaw('')
                         setActiveSection('all')
                       }}
-                      className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-700 hover:bg-transparent"
+                      className="h-auto p-0 text-[12px] text-muted-foreground hover:bg-transparent"
                     >
                       Update JD and retailor
                     </Button>
@@ -673,7 +665,7 @@ export function ResumeTailor({ resumeText, initialJobDescription = '', companyNa
                   setStrengthenRaw('')
                   setActiveSection('all')
                 }}
-                className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-700 hover:bg-transparent"
+                className="h-auto p-0 text-[12px] text-muted-foreground hover:bg-transparent"
               >
                 Update job description and retailor
               </Button>

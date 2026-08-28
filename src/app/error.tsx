@@ -15,20 +15,20 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans flex items-center justify-center">
+    <div className="min-h-screen bg-muted font-sans flex items-center justify-center">
       <div className="text-center">
-        <h1 className="text-[24px] font-bold text-slate-900">Something went wrong</h1>
-        <p className="text-[14px] text-slate-500 mt-2">An unexpected error occurred.</p>
+        <h1 className="text-[24px] font-bold text-foreground">Something went wrong</h1>
+        <p className="text-[14px] text-muted-foreground mt-2">An unexpected error occurred.</p>
         <div className="flex items-center justify-center gap-4 mt-6">
           <button
             onClick={reset}
-            className="text-[14px] font-semibold text-white bg-slate-900 px-4 py-2.5 rounded hover:bg-slate-700 cursor-pointer border-0"
+            className="text-[14px] font-semibold text-primary-foreground bg-primary px-4 py-2.5 rounded hover:bg-muted cursor-pointer border-0"
           >
             Try again
           </button>
           <Link
             href="/dashboard"
-            className="text-[14px] font-semibold text-slate-600 hover:text-slate-900"
+            className="text-[14px] font-semibold text-muted-foreground hover:text-foreground"
           >
             Go to dashboard
           </Link>

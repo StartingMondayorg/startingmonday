@@ -1,12 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 const INTEREST_OPTIONS = [
   'Executive coaching integration',
   'Coach firm rollout (multiple coaches)',
@@ -18,7 +12,7 @@ const INTEREST_OPTIONS = [
   'Other',
 ]
 
-const LABEL_CLS = 'block text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-1.5'
+const LABEL_CLS = 'block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5'
 
 type PartnersFormProps = {
   introLabel?: string
@@ -75,9 +69,9 @@ export function PartnersForm({
   if (submitted) {
     return (
       <Alert variant="success" className="p-6">
-        <AlertDescription className="text-emerald-700">
-          <p className="text-[15px] font-semibold text-emerald-800 mb-1">Application received.</p>
-          <p className="text-[13px] text-emerald-700">Check your inbox. We will follow up within 2 business days with your partner next steps.</p>
+        <AlertDescription className="text-success">
+          <p className="text-[15px] font-semibold text-success mb-1">Application received.</p>
+          <p className="text-[13px] text-success">Check your inbox. We will follow up within 2 business days with your partner next steps.</p>
         </AlertDescription>
       </Alert>
     )
@@ -85,8 +79,8 @@ export function PartnersForm({
 
   return (
     <Card className="rounded-2xl p-6 sm:p-8">
-      <p className="mb-2 text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">{introLabel}</p>
-      <p className="mb-6 text-[13px] text-slate-500">{introNote}</p>
+      <p className="mb-2 text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">{introLabel}</p>
+      <p className="mb-6 text-[13px] text-muted-foreground">{introNote}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -119,11 +113,11 @@ export function PartnersForm({
         </div>
         <div>
           <Label htmlFor="p-how-heard" className={LABEL_CLS}>
-            Anything we should know before we reply? <span className="font-normal text-slate-300">(optional)</span>
+            Anything we should know before we reply? <span className="font-normal text-muted-foreground">(optional)</span>
           </Label>
           <Input id="p-how-heard" name="how_heard" type="text" placeholder={notesPlaceholder} />
         </div>
-        {error && <p className="text-[13px] text-red-600">{error}</p>}
+        {error && <p className="text-[13px] text-destructive">{error}</p>}
         <Button type="submit" disabled={loading} className="w-full sm:w-auto mt-2">
           {loading ? 'Sending...' : 'Apply now'}
         </Button>

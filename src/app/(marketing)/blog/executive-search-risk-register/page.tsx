@@ -42,9 +42,9 @@ export default function ExecutiveSearchRiskRegisterPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>Most executive campaigns fail through recognizable patterns. A risk register makes those patterns visible before they become expensive.</p>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">10 failure modes to watch</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">10 failure modes to watch</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>Signal detection drift</li>
           <li>Outreach inconsistency</li>
@@ -52,12 +52,12 @@ export default function ExecutiveSearchRiskRegisterPage() {
           <li>Preparation shortcuts before key conversations</li>
           <li>No weekly operating review</li>
         </ul>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Mitigation process</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Mitigation process</h2>
         <p>Assign owner, trigger threshold, and weekly review action per risk. If a threshold is crossed, intervene within one operating cycle.</p>
-        <section className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <h2 className="text-[18px] font-bold text-slate-900 mb-2">Evidence path</h2>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-3">See behavior consistency and implementation evidence that supports risk controls.</p>
-          <Link href="/evidence-hub#behavior-change" className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded hover:bg-slate-700 transition-colors">Review behavior-change evidence</Link>
+        <section className="border border-border rounded-lg p-5 bg-muted">
+          <h2 className="text-[18px] font-bold text-foreground mb-2">Evidence path</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">See behavior consistency and implementation evidence that supports risk controls.</p>
+          <Link href="/evidence-hub#behavior-change" className="inline-block bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 rounded hover:bg-muted transition-colors">Review behavior-change evidence</Link>
         </section>
       </div>
     </BlogPost>

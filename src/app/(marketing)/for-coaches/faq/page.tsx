@@ -159,37 +159,36 @@ const OBJECTIONS = [
 
 export default function CoachFaqPage() {
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[24rem] bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.18),_transparent_36%),linear-gradient(180deg,_rgba(9,14,26,0.96)_0%,_rgba(10,15,28,0.96)_100%)]" />
-      <nav className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/78 backdrop-blur-xl">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <nav className="sticky top-0 z-10 border-b border-border bg-background/78 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/for-coaches" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/for-coaches" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Back to coach page
             </Link>
           </div>
         </div>
       </nav>
 
-      <header className="border-b border-white/10 px-4 sm:px-6 pt-12 pb-16">
+      <header className="border-b border-border px-4 sm:px-6 pt-12 pb-16">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-amber-200 mb-3">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-warning mb-3">
             Coach FAQ
           </p>
-          <h1 className="text-[34px] sm:text-[46px] font-serif font-semibold text-white leading-[1.1] tracking-tight mb-4">
+          <h1 className="text-[34px] sm:text-[46px] font-serif font-semibold text-foreground leading-[1.1] tracking-tight mb-4">
             Answers, objections addressed, and clear boundaries.
           </h1>
-          <p className="text-[15px] text-slate-200 leading-relaxed">
+          <p className="text-[15px] text-foreground leading-relaxed">
             If you cannot find your question here, email us at {CONTACT_EMAIL}.
             If you want the fastest way to judge fit, request the coach preview first.
           </p>
         </div>
       </header>
 
-      <main className="px-4 sm:px-6 py-14 sm:py-20 bg-slate-950/40">
+      <main className="px-4 sm:px-6 py-14 sm:py-20 bg-background/40">
 <div className="max-w-3xl mx-auto">
           <div className="mb-10">
             <CoachValueNudge
@@ -209,16 +208,16 @@ export default function CoachFaqPage() {
               id={category.toLowerCase().replace(/ /g, '-')}
               className="mb-12"
             >
-              <h2 className="text-[22px] font-serif font-semibold text-white mb-6 sticky top-14 bg-slate-950/95 pt-2 pb-3 border-b border-white/10 backdrop-blur-xl">
+              <h2 className="text-[22px] font-serif font-semibold text-foreground mb-6 sticky top-14 bg-background/95 pt-2 pb-3 border-b border-border backdrop-blur-xl">
                 {category}
               </h2>
               <div className="space-y-6">
                 {FAQS.filter((faq) => faq.category === category).map((faq) => (
-                  <div key={faq.id} id={faq.id} className="border border-white/12 rounded-xl p-5 bg-[linear-gradient(145deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] hover:bg-[linear-gradient(145deg,rgba(255,255,255,0.09),rgba(255,255,255,0.05))] transition-colors">
-                    <h3 className="text-[16px] font-semibold text-white mb-3">
+                  <div key={faq.id} id={faq.id} className="border border-border rounded-xl p-5 bg-muted/40 hover:bg-muted/40 transition-colors">
+                    <h3 className="text-[16px] font-semibold text-foreground mb-3">
                       {faq.question}
                     </h3>
-                    <p className="text-[14px] text-slate-200 leading-relaxed">
+                    <p className="text-[14px] text-foreground leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -239,21 +238,21 @@ export default function CoachFaqPage() {
           </section>
 
           {/* Common objections */}
-          <section id="objections" className="mt-16 pt-12 border-t border-white/12">
-            <h2 className="text-[24px] font-serif font-semibold text-white mb-6">
+          <section id="objections" className="mt-16 pt-12 border-t border-border">
+            <h2 className="text-[24px] font-serif font-semibold text-foreground mb-6">
               Common Objections & How to Think About Them
             </h2>
             <div className="space-y-6">
               {OBJECTIONS.map((obj) => (
-                <div key={obj.id} className="border-l-4 border-amber-300/80 bg-[linear-gradient(145deg,rgba(120,53,15,0.18),rgba(120,53,15,0.05))] rounded-r-lg p-5">
+                <div key={obj.id} className="border-l-4 border-warning/80 bg-card/85 rounded-r-lg p-5">
                   <div className="mb-3">
-                    <p className="text-[14px] font-semibold text-amber-100 italic mb-2">
+                    <p className="text-[14px] font-semibold text-warning italic mb-2">
                       "{obj.objection}"
                     </p>
                   </div>
-                  <div className="bg-white/[0.04] border border-amber-200/20 rounded-lg p-4">
-                    <p className="text-[13px] text-slate-200 leading-relaxed">
-                      <span className="font-semibold text-amber-200">Our take: </span>
+                  <div className="bg-muted/[0.04] border border-warning/20 rounded-lg p-4">
+                    <p className="text-[13px] text-foreground leading-relaxed">
+                      <span className="font-semibold text-warning">Our take: </span>
                       {obj.response}
                     </p>
                   </div>
@@ -263,12 +262,12 @@ export default function CoachFaqPage() {
           </section>
 
           {/* Data security deep dive */}
-          <section id="security" className="mt-16 pt-12 border-t border-white/12">
-            <h2 className="text-[24px] font-serif font-semibold text-white mb-4 inline-flex items-center gap-2">
-              <BrandIcon name="security" className="h-5 w-5 text-orange-600" />
+          <section id="security" className="mt-16 pt-12 border-t border-border">
+            <h2 className="text-[24px] font-serif font-semibold text-foreground mb-4 inline-flex items-center gap-2">
+              <BrandIcon name="security" className="h-5 w-5 text-primary" />
               Data Security &amp; Compliance Deep Dive
             </h2>
-            <p className="text-[13px] text-slate-300 mb-6">
+            <p className="text-[13px] text-muted-foreground mb-6">
               The items below are live in production today. Roadmap items are clearly labeled.
             </p>
             <CapabilityDisclosure
@@ -290,36 +289,36 @@ export default function CoachFaqPage() {
               ]}
             />
             <div className="space-y-5">
-              <div className="border border-emerald-200/35 rounded-lg p-5 bg-emerald-200/10">
-                <p className="text-[13px] font-semibold text-emerald-100 mb-2">Encryption</p>
-                <p className="text-[13px] text-emerald-50/95 leading-relaxed">
+              <div className="border border-success/35 rounded-lg p-5 bg-success/10">
+                <p className="text-[13px] font-semibold text-success mb-2">Encryption</p>
+                <p className="text-[13px] text-success/95 leading-relaxed">
                   All data at rest uses AES-256 encryption. All data in transit uses TLS 1.2+. Client data is encrypted in separate database partitions so coaches cannot cross-access data.
                 </p>
               </div>
-              <div className="border border-emerald-200/35 rounded-lg p-5 bg-emerald-200/10">
-                <p className="text-[13px] font-semibold text-emerald-100 mb-2">Access Control</p>
-                <p className="text-[13px] text-emerald-50/95 leading-relaxed">
+              <div className="border border-success/35 rounded-lg p-5 bg-success/10">
+                <p className="text-[13px] font-semibold text-success mb-2">Access Control</p>
+                <p className="text-[13px] text-success/95 leading-relaxed">
                   Role-based access control (RBAC) and row-level security (RLS) in Postgres. Coaches can only query rows their clients have explicitly granted access to. All access is logged with timestamps and IP addresses.
                 </p>
               </div>
-              <div className="border border-emerald-200/35 rounded-lg p-5 bg-emerald-200/10">
-                <p className="text-[13px] font-semibold text-emerald-100 mb-2">Compliance</p>
-                <p className="text-[13px] text-emerald-50/95 leading-relaxed">
+              <div className="border border-success/35 rounded-lg p-5 bg-success/10">
+                <p className="text-[13px] font-semibold text-success mb-2">Compliance</p>
+                <p className="text-[13px] text-success/95 leading-relaxed">
                   We are working toward SOC 2 Type II certification. Data is stored in US-based infrastructure.
                   We are designed with GDPR and CCPA principles; data handling terms are in our privacy policy.
                   Vendor integrations (Supabase, Stripe) maintain their own SOC 2 certifications.
                   Detailed security documentation is available to enterprise partners through our diligence request process.
                 </p>
               </div>
-              <div className="border border-emerald-200/35 rounded-lg p-5 bg-emerald-200/10">
-                <p className="text-[13px] font-semibold text-emerald-100 mb-2">Data Ownership</p>
-                <p className="text-[13px] text-emerald-50/95 leading-relaxed">
+              <div className="border border-success/35 rounded-lg p-5 bg-success/10">
+                <p className="text-[13px] font-semibold text-success mb-2">Data Ownership</p>
+                <p className="text-[13px] text-success/95 leading-relaxed">
                   Clients own their data. They can export at any time via their settings. They can delete their account and all associated data. We do not sell, trade, or use client data for third-party purposes.
                 </p>
               </div>
-              <p className="text-[12px] text-slate-300">
+              <p className="text-[12px] text-muted-foreground">
                 Need a quick shareable trust summary? Use the{' '}
-                <Link href="/for-coaches/trust-pack" className="underline underline-offset-2 text-amber-200 hover:text-amber-100 transition-colors">
+                <Link href="/for-coaches/trust-pack" className="underline underline-offset-2 text-warning transition-colors">
                   Coach Trust Pack
                 </Link>
                 .
@@ -328,10 +327,10 @@ export default function CoachFaqPage() {
           </section>
 
           {/* Still have questions? */}
-          <section className="mt-16 pt-12 border-t border-white/12">
-            <div className="bg-[linear-gradient(155deg,rgba(120,53,15,0.22),rgba(120,53,15,0.06))] border border-amber-200/30 rounded-2xl p-8 text-center">
-              <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-amber-100 mb-2">Still have questions?</p>
-              <h3 className="text-[22px] font-serif font-semibold text-white mb-4">
+          <section className="mt-16 pt-12 border-t border-border">
+            <div className="bg-card/85 border border-warning/30 rounded-2xl p-8 text-center">
+              <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-warning mb-2">Still have questions?</p>
+              <h3 className="text-[22px] font-serif font-semibold text-foreground mb-4">
                 Schedule a call or send us a note.
               </h3>
               <div className="flex flex-wrap justify-center gap-4">
@@ -339,13 +338,13 @@ export default function CoachFaqPage() {
                   href={FAQ_COMPOSE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex px-5 py-2.5 bg-white/10 border border-amber-200/40 text-amber-100 font-semibold rounded-lg hover:bg-white/15 transition-colors"
+                  className="inline-flex px-5 py-2.5 bg-muted/60 border border-warning/40 text-warning font-semibold rounded-lg hover:bg-muted/80 transition-colors"
                 >
                   Email us
                 </a>
                 <Link
                   href="/for-coaches"
-                  className="inline-flex px-5 py-2.5 bg-orange-500 text-slate-950 font-semibold rounded-lg hover:bg-orange-400 transition-colors"
+                  className="inline-flex px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
                 >
                   Back to overview
                 </Link>
@@ -355,24 +354,24 @@ export default function CoachFaqPage() {
         </div>
       </main>
 
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8 mt-20">
+      <footer className="bg-background border-t border-border px-4 sm:px-6 py-8 mt-20">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions?{' '}
-            <a href={CONTACT_COMPOSE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-slate-200 transition-colors">
+            <a href={CONTACT_COMPOSE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               {CONTACT_EMAIL}
             </a>{' '}
             ΓÇó{' '}
-            <a href={FEEDBACK_COMPOSE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-slate-200 transition-colors">
+            <a href={FEEDBACK_COMPOSE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               Send feedback
             </a>
           </p>
         </div>
       
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
 </footer>
     </div>
   )

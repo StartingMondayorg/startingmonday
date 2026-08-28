@@ -17,22 +17,22 @@ export default function PeopleToKnowSection({
   if (entries.length === 0) return null
 
   return (
-    <section className="border-t border-slate-900/15 py-6">
-      <h2 className="text-xl font-semibold text-slate-900">People to know</h2>
-      <div className="mt-4 divide-y divide-slate-900/10 border-y border-slate-900/10">
+    <section className="border-t border-border/15 py-6">
+      <h2 className="text-xl font-semibold text-foreground">People to know</h2>
+      <div className="mt-4 divide-y divide-border/10 border-y border-border/10">
         {entries.map((entry) => {
           const linkedInUrl = buildLinkedInPeopleSearchUrl(entry)
           return (
             <article key={`${entry.companyName}-${entry.roleTitle}`} className="py-5">
-              <h3 className="text-[15px] font-semibold text-slate-900">{entry.roleTitle}</h3>
-              <p className="mt-2 max-w-2xl text-[14px] leading-6 text-slate-700">{entry.whyThem}</p>
+              <h3 className="text-[15px] font-semibold text-foreground">{entry.roleTitle}</h3>
+              <p className="mt-2 max-w-2xl text-[14px] leading-6 text-muted-foreground">{entry.whyThem}</p>
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-semibold">
                 {linkedInUrl && (
-                  <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" onClick={() => onHandoff?.('linkedin')} className="text-orange-700 underline underline-offset-4 hover:text-orange-800">
+                  <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" onClick={() => onHandoff?.('linkedin')} className="text-primary underline underline-offset-4 hover:text-primary/80">
                     Find on LinkedIn
                   </a>
                 )}
-                <a href={APOLLO_PEOPLE_URL} target="_blank" rel="noopener noreferrer" onClick={() => onHandoff?.('apollo')} className="text-slate-700 underline underline-offset-4 hover:text-slate-950">
+                <a href={APOLLO_PEOPLE_URL} target="_blank" rel="noopener noreferrer" onClick={() => onHandoff?.('apollo')} className="text-muted-foreground underline underline-offset-4 hover:text-foreground">
                   Open in your Apollo account
                 </a>
               </div>
@@ -40,7 +40,7 @@ export default function PeopleToKnowSection({
           )
         })}
       </div>
-      <p className="mt-4 max-w-2xl text-[12px] leading-5 text-slate-500">{PEOPLE_TO_KNOW_TRUST_COPY}</p>
+      <p className="mt-4 max-w-2xl text-[12px] leading-5 text-muted-foreground">{PEOPLE_TO_KNOW_TRUST_COPY}</p>
     </section>
   )
 }

@@ -2,12 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Toggle } from '@/components/ui/toggle'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { Badge, Button, Card, Toggle, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 const TALKING_POINTS = [
   {
     title: 'Voss: Tactical Empathy',
@@ -161,44 +156,44 @@ export function CioNotesClient() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-slate-950 border-b border-slate-900 sticky top-0 z-20">
+    <div className="min-h-screen bg-muted text-foreground font-sans">
+      <header className="bg-primary border-b border-border sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-white hover:opacity-80 transition-opacity">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground hover:opacity-80 transition-opacity">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/demo/cio" className="text-[13px] text-slate-400 hover:text-white transition-colors">Presentation page</Link>
+            <Link href="/demo/cio" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">Presentation page</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <Card variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">Kenneth-specific talking points mode</p>
-          <h1 className="text-[28px] sm:text-[34px] font-bold text-slate-900 leading-[1.1] mb-4">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-3">Kenneth-specific talking points mode</p>
+          <h1 className="text-[28px] sm:text-[34px] font-bold text-foreground leading-[1.1] mb-4">
             Kenneth briefing notes and objection handling in one place
           </h1>
-          <p className="text-[15px] text-slate-600 leading-relaxed mb-5 max-w-3xl">
+          <p className="text-[15px] text-muted-foreground leading-relaxed mb-5 max-w-3xl">
             Use this page during the conversation for message discipline tailored to Kenneth's public-sector CIO context, then flip back to presentation for live generation.
           </p>
 
           <div className="flex flex-wrap gap-2 mb-5">
-            <Link href="/demo/cio" className="text-[12px] px-3 py-1.5 rounded border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition-colors">Presentation page</Link>
-            <Link href="/demo/cio/notes" className="text-[12px] px-3 py-1.5 rounded border bg-slate-900 text-white border-slate-900">Talking points page</Link>
+            <Link href="/demo/cio" className="text-[12px] px-3 py-1.5 rounded border bg-card text-muted-foreground border-border hover:bg-muted transition-colors">Presentation page</Link>
+            <Link href="/demo/cio/notes" className="text-[12px] px-3 py-1.5 rounded border bg-primary text-primary-foreground border-border">Talking points page</Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
             {TALKING_POINTS.map((point) => (
-              <Card key={point.title} variant="default" className="bg-slate-50 p-4">
-                <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">{point.title}</p>
-                <p className="text-[13px] text-slate-700 leading-relaxed">{point.body}</p>
+              <Card key={point.title} variant="default" className="bg-muted p-4">
+                <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">{point.title}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{point.body}</p>
               </Card>
             ))}
           </div>
 
-          <Card variant="default" className="!bg-slate-950 !text-slate-100 rounded-xl px-4 py-4 mb-4">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-orange-300 mb-2">Cadence visual (Horstman layer)</p>
+          <Card variant="default" className="!bg-primary !text-primary-foreground rounded-xl px-4 py-4 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-primary mb-2">Cadence visual (Horstman layer)</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {CADENCE_STEPS.map((step) => (
                 <Card key={step} variant="glass" className="rounded p-3 text-[12px] leading-relaxed">
@@ -208,14 +203,14 @@ export function CioNotesClient() {
             </div>
           </Card>
 
-          <Card variant="default" className="mt-5 rounded-xl p-3 bg-slate-50">
-            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-500 mb-2">Presenter quick jump</p>
+          <Card variant="default" className="mt-5 rounded-xl p-3 bg-muted">
+            <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Presenter quick jump</p>
             <div className="flex flex-wrap gap-2">
               {PRESENTER_ANCHORS.map((anchor) => (
                 <a
                   key={anchor.id}
                   href={`#${anchor.id}`}
-                  className="text-[12px] px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 transition-colors"
+                  className="text-[12px] px-3 py-1.5 rounded border border-border bg-card hover:bg-muted text-muted-foreground transition-colors"
                 >
                   {anchor.label}
                 </a>
@@ -225,36 +220,36 @@ export function CioNotesClient() {
         </Card>
 
         <Card id="proof-clarity" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Proof clarity</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Confidence and denominator badges</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Every claim includes denominator and confidence context so proof stays credible under scrutiny.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Proof clarity</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Confidence and denominator badges</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Every claim includes denominator and confidence context so proof stays credible under scrutiny.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROOF_METRICS.map((metric) => (
-              <Card key={metric.label} variant="default" className="p-4 bg-slate-50">
-                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-400 mb-2">{metric.label}</p>
-                <p className="text-[28px] font-bold text-slate-900 leading-none mb-2">{metric.value}</p>
+              <Card key={metric.label} variant="default" className="p-4 bg-muted">
+                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">{metric.label}</p>
+                <p className="text-[28px] font-bold text-foreground leading-none mb-2">{metric.value}</p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  <Badge className="!bg-slate-900 !text-white rounded">n={metric.denominator}</Badge>
+                  <Badge className="!bg-primary !text-primary-foreground rounded">n={metric.denominator}</Badge>
                   <Badge variant="warning" className="rounded">{metric.confidence}</Badge>
                 </div>
-                <p className="text-[12px] text-slate-600 leading-relaxed">{metric.note}</p>
+                <p className="text-[12px] text-muted-foreground leading-relaxed">{metric.note}</p>
               </Card>
             ))}
           </div>
         </Card>
 
         <Card id="pilot-scorecard" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Pilot motion</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">30-day pilot success scorecard</h2>
-          <p className="text-[14px] text-slate-600 mb-4">Use this live during the demo: check boxes as outcomes are met, then decide from evidence.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Pilot motion</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">30-day pilot success scorecard</h2>
+          <p className="text-[14px] text-muted-foreground mb-4">Use this live during the demo: check boxes as outcomes are met, then decide from evidence.</p>
 
           <div className="mb-4">
-            <div className="flex items-center justify-between text-[12px] text-slate-600 mb-1.5">
+            <div className="flex items-center justify-between text-[12px] text-muted-foreground mb-1.5">
               <span>Pilot completion</span>
-              <span className="font-semibold text-slate-900">{pilotCompleted}/3 ({pilotCompletionPct}%)</span>
+              <span className="font-semibold text-foreground">{pilotCompleted}/3 ({pilotCompletionPct}%)</span>
             </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div className={`h-full bg-orange-500 transition-all ${pilotBarWidthClass}`} />
+            <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div className={`h-full bg-primary transition-all ${pilotBarWidthClass}`} />
             </div>
           </div>
 
@@ -262,34 +257,34 @@ export function CioNotesClient() {
             <Toggle
               pressed={pilotScorecard.firstSignalAction}
               onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, firstSignalAction: pressed }))}
-              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstSignalAction ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstSignalAction ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
             >
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 1</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">First signal action in week 1</p>
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Checkpoint 1</p>
+              <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">First signal action in week 1</p>
             </Toggle>
             <Toggle
               pressed={pilotScorecard.firstPrepBrief}
               onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, firstPrepBrief: pressed }))}
-              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstPrepBrief ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.firstPrepBrief ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
             >
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 2</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">First prep brief used before a high-stakes conversation</p>
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Checkpoint 2</p>
+              <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">First prep brief used before a high-stakes conversation</p>
             </Toggle>
             <Toggle
               pressed={pilotScorecard.contextRebuildDrop}
               onPressedChange={(pressed) => setPilotScorecard((prev) => ({ ...prev, contextRebuildDrop: pressed }))}
-              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.contextRebuildDrop ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+              className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${pilotScorecard.contextRebuildDrop ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
             >
-              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Checkpoint 3</p>
-              <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">Context rebuild time reduction documented</p>
+              <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Checkpoint 3</p>
+              <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">Context rebuild time reduction documented</p>
             </Toggle>
           </div>
         </Card>
 
         <Card id="hesitation-mode" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Negotiation support</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Late-stage hesitation mode (Voss)</h2>
-          <p className="text-[14px] text-slate-600 mb-5">One-click scripts for the most common late-stage stalls.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Negotiation support</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Late-stage hesitation mode (Voss)</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">One-click scripts for the most common late-stage stalls.</p>
 
           <ToggleGroup
             value={[activeHesitation]}
@@ -300,21 +295,21 @@ export function CioNotesClient() {
               <ToggleGroupItem
                 key={item.key}
                 value={item.key}
-                className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
+                className={`text-[12px] px-3 py-1.5 rounded border transition-colors ${activeHesitation === item.key ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-border' : 'bg-card text-card-foreground border-border hover:bg-muted'}`}
               >
                 {item.label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
 
-          <Card variant="default" className="rounded p-4 bg-slate-50">
-            <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-2">Live script</p>
-            <p className="text-[14px] text-slate-800 leading-relaxed">{activeScript.script}</p>
+          <Card variant="default" className="rounded p-4 bg-muted">
+            <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-2">Live script</p>
+            <p className="text-[14px] text-foreground leading-relaxed">{activeScript.script}</p>
             <Button
               type="button"
               variant="outline"
               onClick={copyScriptText}
-              className="mt-3 text-[12px] px-3 py-1.5 h-auto rounded border-slate-300 hover:bg-white"
+              className="mt-3 text-[12px] px-3 py-1.5 h-auto rounded border-border hover:bg-card"
             >
               {copiedScript ? 'Copied' : 'Copy script'}
             </Button>
@@ -322,9 +317,9 @@ export function CioNotesClient() {
         </Card>
 
         <Card id="accountability-timeline" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Execution rhythm</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Weekly accountability timeline</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Make operating cadence visible and measurable every week.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Execution rhythm</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Weekly accountability timeline</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Make operating cadence visible and measurable every week.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
             {TIMELINE_STEPS.map((step) => (
               <Toggle
@@ -336,27 +331,27 @@ export function CioNotesClient() {
                     [step.key]: pressed,
                   }))
                 }
-                className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${timelineChecks[step.key] ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+                className={`h-auto min-w-0 block w-full text-left border rounded-lg p-4 transition-colors ${timelineChecks[step.key] ? 'border-success/30 bg-success/10' : 'border-border bg-card hover:bg-muted'}`}
               >
-                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-slate-500 mb-1">Cadence step</p>
-                <p className="text-[13px] text-slate-800 leading-relaxed whitespace-normal">{step.label}</p>
+                <p className="text-[11px] font-bold tracking-[0.07em] uppercase text-muted-foreground mb-1">Cadence step</p>
+                <p className="text-[13px] text-foreground leading-relaxed whitespace-normal">{step.label}</p>
               </Toggle>
             ))}
           </div>
-          <p className="text-[13px] text-slate-700">
+          <p className="text-[13px] text-muted-foreground">
             Weekly cadence completion: <span className="font-semibold">{timelineCompleted}/{TIMELINE_STEPS.length}</span>
           </p>
         </Card>
 
         <Card id="objection-appendix" variant="default" className="rounded-2xl p-6 sm:p-8 shadow-sm mb-8 scroll-mt-24">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">Objections</p>
-          <h2 className="text-[24px] font-bold text-slate-900 leading-tight mb-2">Objection-handling appendix</h2>
-          <p className="text-[14px] text-slate-600 mb-5">Use these responses when concerns come up in real time during the demo.</p>
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">Objections</p>
+          <h2 className="text-[24px] font-bold text-foreground leading-tight mb-2">Objection-handling appendix</h2>
+          <p className="text-[14px] text-muted-foreground mb-5">Use these responses when concerns come up in real time during the demo.</p>
           <div className="space-y-3">
             {OBJECTION_APPENDIX.map((item) => (
-              <Card key={item.objection} variant="default" className="rounded-lg p-4 bg-slate-50">
-                <p className="text-[12px] font-bold text-slate-900 mb-1.5">{item.objection}</p>
-                <p className="text-[13px] text-slate-700 leading-relaxed">{item.response}</p>
+              <Card key={item.objection} variant="default" className="rounded-lg p-4 bg-muted">
+                <p className="text-[12px] font-bold text-foreground mb-1.5">{item.objection}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{item.response}</p>
               </Card>
             ))}
           </div>

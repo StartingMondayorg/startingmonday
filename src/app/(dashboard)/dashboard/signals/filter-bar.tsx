@@ -2,15 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 const ALL = '__none__'
 
 export function SignalFilterBar({
@@ -39,7 +31,7 @@ export function SignalFilterBar({
   return (
     <div className="flex flex-wrap gap-3">
       <Select value={company} onValueChange={(value) => setCompany(value ?? ALL)}>
-        <SelectTrigger aria-label="Filter by company" className="bg-white/5 text-slate-100 border-white/20">
+        <SelectTrigger aria-label="Filter by company" className="bg-muted/40 text-foreground border-border">
           <SelectValue placeholder="All companies" />
         </SelectTrigger>
         <SelectContent>
@@ -51,7 +43,7 @@ export function SignalFilterBar({
       </Select>
 
       <Select value={type} onValueChange={(value) => setType(value ?? ALL)}>
-        <SelectTrigger aria-label="Filter by type" className="bg-white/5 text-slate-100 border-white/20">
+        <SelectTrigger aria-label="Filter by type" className="bg-muted/40 text-foreground border-border">
           <SelectValue placeholder="All types" />
         </SelectTrigger>
         <SelectContent>

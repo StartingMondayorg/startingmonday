@@ -4,9 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { Metadata } from 'next'
 import { WHITE_LABEL_TIERS, WHITE_LABEL_TRACKS, formatDollarAmount, formatWhiteLabelTierPrice, resolveWhiteLabelSettings } from '@/lib/white-label'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge, Card } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Firm Admin View | Starting Monday',
   description: 'Compare by book and by cohort to manage counselor load, quality, and program consistency.',
@@ -291,25 +289,25 @@ export default async function FirmAdminViewPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-slate-900 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/dashboard/outplacement" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <div className="flex items-center gap-4 text-[13px] text-slate-300">
-            <Link href="/dashboard/outplacement/operator" className="hover:text-white transition-colors">Operator console</Link>
-            <Link href="/dashboard/outplacement/counselor" className="hover:text-white transition-colors">Counselor view</Link>
-            <Link href="/dashboard/outplacement/enterprise" className="hover:text-white transition-colors">Enterprise view</Link>
+          <div className="flex items-center gap-4 text-[13px] text-primary-foreground">
+            <Link href="/dashboard/outplacement/operator" className="hover:text-primary-foreground transition-colors">Operator console</Link>
+            <Link href="/dashboard/outplacement/counselor" className="hover:text-primary-foreground transition-colors">Counselor view</Link>
+            <Link href="/dashboard/outplacement/enterprise" className="hover:text-primary-foreground transition-colors">Enterprise view</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         <Card className="px-6 py-5">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Firm admin view</p>
-          <h1 className="text-[24px] font-bold text-slate-900 leading-tight">Compare by book and by cohort</h1>
-          <p className="text-[13px] text-slate-500 mt-1">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-1">Firm admin view</p>
+          <h1 className="text-[24px] font-bold text-foreground leading-tight">Compare by book and by cohort</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">
             Practice leaders can compare counselor load, cohort consistency, and risk patterns without digging into individual participant records.
           </p>
         </Card>
@@ -321,25 +319,25 @@ export default async function FirmAdminViewPage() {
             { label: 'Open exceptions', value: String(openExceptions) },
           ].map((card) => (
             <Card key={card.label} className="p-4">
-              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">{card.label}</p>
-              <p className="mt-1 text-[28px] font-bold text-slate-900">{card.value}</p>
+              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">{card.label}</p>
+              <p className="mt-1 text-[28px] font-bold text-foreground">{card.value}</p>
             </Card>
           ))}
         </section>
 
-        <Card className="border-orange-200 p-5 space-y-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <Card className="border-primary/30 p-5 space-y-5 shadow-md">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">White-label setup</p>
-            <h2 className="text-[18px] font-bold text-slate-900 leading-tight">Partner-branded delivery for mixed-seniority transition programs</h2>
-            <p className="text-[13px] text-slate-500 mt-1 max-w-3xl">
+            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-1">White-label setup</p>
+            <h2 className="text-[18px] font-bold text-foreground leading-tight">Partner-branded delivery for mixed-seniority transition programs</h2>
+            <p className="text-[13px] text-muted-foreground mt-1 max-w-3xl">
               This shared configuration layer keeps the core product consistent while letting each partner control branding, track language, and reporting depth.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {brandingSummary.map((item) => (
-              <Card key={item} className="bg-slate-50 p-4">
-                <p className="text-[13px] font-semibold text-slate-900">{item}</p>
+              <Card key={item} className="bg-muted p-4">
+                <p className="text-[13px] font-semibold text-foreground">{item}</p>
               </Card>
             ))}
           </div>
@@ -348,12 +346,12 @@ export default async function FirmAdminViewPage() {
             <Card className="p-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400">Current saved configuration</p>
-                  <p className="text-[14px] font-semibold text-slate-900 mt-1">{whiteLabelSettings.brandName}</p>
+                  <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Current saved configuration</p>
+                  <p className="text-[14px] font-semibold text-foreground mt-1">{whiteLabelSettings.brandName}</p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 text-[12px] text-slate-500">
-                  <Badge variant="outline" className="bg-slate-50">{whiteLabelSettings.primaryColor}</Badge>
-                  <Badge variant="outline" className="bg-slate-50">{whiteLabelSettings.accentColor}</Badge>
+                <div className="flex flex-wrap items-center gap-2 text-[12px] text-muted-foreground">
+                  <Badge variant="outline" className="bg-muted">{whiteLabelSettings.primaryColor}</Badge>
+                  <Badge variant="outline" className="bg-muted">{whiteLabelSettings.accentColor}</Badge>
                   <span>{whiteLabelSettings.supportEmail}</span>
                 </div>
               </div>
@@ -362,31 +360,31 @@ export default async function FirmAdminViewPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Card className="p-4">
-              <h3 className="text-[12px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Tracks</h3>
+              <h3 className="text-[12px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Tracks</h3>
               <div className="space-y-3">
                 {WHITE_LABEL_TRACKS.map((track) => (
-                  <div key={track.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                    <p className="text-[13px] font-semibold text-slate-900">{track.label}</p>
-                    <p className="text-[12px] text-slate-500 mt-1">{track.summary}</p>
-                    <p className="text-[12px] text-slate-600 mt-2">Milestones: {track.defaultMilestones.join(' · ')}</p>
+                  <div key={track.id} className="rounded-lg border border-border bg-muted p-3">
+                    <p className="text-[13px] font-semibold text-foreground">{track.label}</p>
+                    <p className="text-[12px] text-muted-foreground mt-1">{track.summary}</p>
+                    <p className="text-[12px] text-muted-foreground mt-2">Milestones: {track.defaultMilestones.join(' · ')}</p>
                   </div>
                 ))}
               </div>
             </Card>
 
             <Card className="p-4">
-              <h3 className="text-[12px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-3">Pricing</h3>
+              <h3 className="text-[12px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Pricing</h3>
               <div className="space-y-3">
                 {WHITE_LABEL_TIERS.map((tier) => (
-                  <div key={tier.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                  <div key={tier.id} className="rounded-lg border border-border bg-muted p-3">
                     <div className="flex items-baseline justify-between gap-3">
-                      <p className="text-[13px] font-semibold text-slate-900">{tier.name}</p>
-                      <p className="text-[13px] font-semibold text-slate-900">{formatWhiteLabelTierPrice(tier)}</p>
+                      <p className="text-[13px] font-semibold text-foreground">{tier.name}</p>
+                      <p className="text-[13px] font-semibold text-foreground">{formatWhiteLabelTierPrice(tier)}</p>
                     </div>
-                    <p className="text-[12px] text-slate-500 mt-1">
+                    <p className="text-[12px] text-muted-foreground mt-1">
                       {tier.includedParticipants} included participants · {formatDollarAmount(tier.overageCents)}/participant overage
                     </p>
-                    <p className="text-[12px] text-slate-600 mt-2">{tier.inclusions.join(' · ')}</p>
+                    <p className="text-[12px] text-muted-foreground mt-2">{tier.inclusions.join(' · ')}</p>
                   </div>
                 ))}
               </div>
@@ -395,71 +393,71 @@ export default async function FirmAdminViewPage() {
         </Card>
 
         <Card className="py-0 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Compare by book</h2>
+          <div className="px-5 py-4 border-b border-border">
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Compare by book</h2>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             {BOOK_ROWS.length === 0 ? (
-              <div className="px-5 py-4 text-[13px] text-slate-500">No partner books found for your scope yet.</div>
+              <div className="px-5 py-4 text-[13px] text-muted-foreground">No partner books found for your scope yet.</div>
             ) : BOOK_ROWS.map((row) => (
               <div key={row.book} className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr_1.8fr] gap-3 px-5 py-4">
                 <div>
-                  <p className="text-[14px] font-semibold text-slate-900">{row.book}</p>
-                  <p className="text-[12px] text-slate-500 mt-1">{row.note}</p>
+                  <p className="text-[14px] font-semibold text-foreground">{row.book}</p>
+                  <p className="text-[12px] text-muted-foreground mt-1">{row.note}</p>
                 </div>
-                <div className="text-[13px] text-slate-700">{row.participants} participants</div>
-                <div className="text-[13px] text-slate-700">{row.cohorts} cohorts</div>
-                <div className="text-[13px] font-semibold text-slate-900">On track: {row.on_track}</div>
+                <div className="text-[13px] text-muted-foreground">{row.participants} participants</div>
+                <div className="text-[13px] text-muted-foreground">{row.cohorts} cohorts</div>
+                <div className="text-[13px] font-semibold text-foreground">On track: {row.on_track}</div>
               </div>
             ))}
           </div>
         </Card>
 
         <Card className="py-0 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Benchmark layer</h2>
-            <p className="text-[12px] text-slate-500 mt-1">Partner analytics for recurring cohort benchmarks and delivery variance checks.</p>
+          <div className="px-5 py-4 border-b border-border">
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Benchmark layer</h2>
+            <p className="text-[12px] text-muted-foreground mt-1">Partner analytics for recurring cohort benchmarks and delivery variance checks.</p>
           </div>
-          <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
+          <div className="px-5 py-4 border-b border-border bg-muted">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {BENCHMARK_DEFINITIONS.map((item) => (
                 <Card key={item.metric} className="p-3">
-                  <p className="text-[12px] font-semibold text-slate-800">{item.metric}</p>
-                  <p className="text-[12px] text-slate-500 mt-1">{item.definition}</p>
+                  <p className="text-[12px] font-semibold text-foreground">{item.metric}</p>
+                  <p className="text-[12px] text-muted-foreground mt-1">{item.definition}</p>
                 </Card>
               ))}
             </div>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             {PARTNER_BENCHMARK_ROWS.length === 0 ? (
-              <div className="px-5 py-4 text-[13px] text-slate-500">No benchmark rows available yet.</div>
+              <div className="px-5 py-4 text-[13px] text-muted-foreground">No benchmark rows available yet.</div>
             ) : PARTNER_BENCHMARK_ROWS.map((row) => (
               <div key={row.partnerName} className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-3 px-5 py-4 items-center">
-                <p className="text-[14px] font-semibold text-slate-900">{row.partnerName}</p>
-                <p className="text-[13px] text-slate-700">{row.cohorts} cohorts</p>
-                <p className="text-[13px] text-slate-700">Avg activation {row.avgActivation.toFixed(1)}%</p>
-                <p className="text-[13px] text-slate-700">Variance {row.cohortVariance.toFixed(1)}</p>
-                <p className="text-[13px] text-slate-700">Stalled {row.stalledRate.toFixed(1)}%</p>
+                <p className="text-[14px] font-semibold text-foreground">{row.partnerName}</p>
+                <p className="text-[13px] text-muted-foreground">{row.cohorts} cohorts</p>
+                <p className="text-[13px] text-muted-foreground">Avg activation {row.avgActivation.toFixed(1)}%</p>
+                <p className="text-[13px] text-muted-foreground">Variance {row.cohortVariance.toFixed(1)}</p>
+                <p className="text-[13px] text-muted-foreground">Stalled {row.stalledRate.toFixed(1)}%</p>
               </div>
             ))}
           </div>
         </Card>
 
         <Card className="py-0 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-500">Compare by cohort</h2>
+          <div className="px-5 py-4 border-b border-border">
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Compare by cohort</h2>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             {COHORT_ROWS.length === 0 ? (
-              <div className="px-5 py-4 text-[13px] text-slate-500">No cohorts in review yet.</div>
+              <div className="px-5 py-4 text-[13px] text-muted-foreground">No cohorts in review yet.</div>
             ) : COHORT_ROWS.map((row) => (
               <div key={row.cohort} className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr] gap-3 px-5 py-4 items-center">
                 <div>
-                  <p className="text-[14px] font-semibold text-slate-900">{row.cohort}</p>
-                  <p className="text-[12px] text-slate-500 mt-1">Review activation, action velocity, and narrative drift together.</p>
+                  <p className="text-[14px] font-semibold text-foreground">{row.cohort}</p>
+                  <p className="text-[12px] text-muted-foreground mt-1">Review activation, action velocity, and narrative drift together.</p>
                 </div>
-                <div className="text-[13px] text-slate-700">Activation {row.activation}</div>
-                <div className="text-[13px] text-slate-700">Actions {row.action_rate}/wk</div>
+                <div className="text-[13px] text-muted-foreground">Activation {row.activation}</div>
+                <div className="text-[13px] text-muted-foreground">Actions {row.action_rate}/wk</div>
                 <Badge
                   variant={row.risk === 'on_track' ? 'success' : row.risk === 'watch' ? 'warning' : 'destructive'}
                   className="capitalize justify-self-start"

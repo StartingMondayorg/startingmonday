@@ -2,8 +2,7 @@
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LinkedinImportProgress, type LinkedinImportProgressState } from '@/app/components/LinkedinImportProgress'
-import { Button } from '@/components/ui/button'
-
+import { Button } from '@/components/ui'
 export default function ProfileLinkedinUpload() {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -71,7 +70,7 @@ export default function ProfileLinkedinUpload() {
         </div>
       )}
       {message && (
-        <p className={`mt-1.5 text-[12px] ${status === 'error' ? 'text-red-600' : 'text-green-700'}`}>
+        <p className={`mt-1.5 text-[12px] ${status === 'error' ? 'text-destructive' : 'text-success'}`}>
           {message}
         </p>
       )}

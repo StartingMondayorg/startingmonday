@@ -29,20 +29,20 @@ export default async function CoachClientLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <div className="border-b border-white/10 bg-slate-900/50 backdrop-blur-sm">
+      <div className="border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-5">
           <div className="flex items-center justify-between mb-4">
             <Link
               href="/coach/clients"
-              className="text-[12px] text-slate-400 hover:text-slate-300 transition-colors"
+              className="text-[12px] text-muted-foreground transition-colors"
             >
               ← Back to clients
             </Link>
           </div>
-          <h1 className="text-[24px] font-bold text-white mb-1">{client.name}</h1>
-          <p className="text-[13px] text-slate-400">{client.email}</p>
+          <h1 className="text-[24px] font-bold text-foreground mb-1">{client.name}</h1>
+          <p className="text-[13px] text-muted-foreground">{client.email}</p>
         </div>
       </div>
 

@@ -2,10 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import type { BlogPostMeta } from '@/lib/blog-posts'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-
+import { Button, Card, Input } from '@/components/ui'
 type Result = {
   slug: string
   title: string
@@ -90,8 +87,8 @@ export function BlogChat({
 
   return (
     <Card variant="glass" className="p-5 sm:p-6">
-      <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">{title}</p>
-      <p className="text-[13px] text-slate-300 leading-relaxed mb-4">
+      <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">{title}</p>
+      <p className="text-[13px] text-muted-foreground leading-relaxed mb-4">
         {description}
       </p>
       <form onSubmit={handleSearch} className="flex gap-2 mb-4">
@@ -101,7 +98,7 @@ export function BlogChat({
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 border-slate-700 text-[14px] text-slate-100 placeholder:text-slate-500 focus-visible:border-slate-500 bg-slate-950"
+          className="flex-1 border-border text-[14px] text-foreground placeholder:text-muted-foreground bg-background"
         />
         <Button
           type="submit"
@@ -113,8 +110,8 @@ export function BlogChat({
 
       {searched && answerMode && results !== null && (
         <Card variant="glass" className="mb-4 p-4">
-          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1.5">Answer</p>
-          <p className="text-[13px] text-slate-200 leading-relaxed">
+          <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1.5">Answer</p>
+          <p className="text-[13px] text-foreground leading-relaxed">
             {buildAnswer(query.trim(), results)}
           </p>
         </Card>
@@ -126,11 +123,11 @@ export function BlogChat({
             {results.map(r => (
               <li key={r.slug}>
                 <Link href={`/blog/${r.slug}`} className="group block">
-                  <Card variant="glass" className="p-4 hover:border-slate-500 transition-colors">
-                    <p className="text-[14px] font-semibold text-slate-100 group-hover:text-white leading-snug mb-1">
+                  <Card variant="glass" className="p-4 hover:border-border transition-colors">
+                    <p className="text-[14px] font-semibold text-muted-foreground group-hover:text-foreground leading-snug mb-1">
                       {r.title}
                     </p>
-                    <p className="text-[13px] text-slate-300 leading-relaxed line-clamp-2">
+                    <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2">
                       {r.description}
                     </p>
                   </Card>
@@ -139,7 +136,7 @@ export function BlogChat({
             ))}
           </ul>
         ) : (
-          !answerMode ? <p className="text-[13px] text-slate-300">No matching articles found. Try different keywords.</p> : null
+          !answerMode ? <p className="text-[13px] text-muted-foreground">No matching articles found. Try different keywords.</p> : null
         )
       )}
 

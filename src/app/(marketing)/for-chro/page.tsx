@@ -66,41 +66,41 @@ const REVIEW_TIMELINE = [
 
 export default function ChroSponsorPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="sticky top-0 z-10 border-b border-border bg-muted/95 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold uppercase tracking-[0.14em] transition-opacity hover:opacity-80">
-            <span className="text-slate-900">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/for-outplacement" className="text-[13px] text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href="/for-outplacement" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Partner preview
             </Link>
-            <Link href="/for-outplacement/trust-pack" className="inline-flex items-center justify-center rounded border border-slate-300 px-3 py-2 text-[12px] font-semibold text-slate-700 transition-colors hover:border-slate-500">
+            <Link href="/for-outplacement/trust-pack" className="inline-flex items-center justify-center rounded border border-border px-3 py-2 text-[12px] font-semibold text-muted-foreground transition-colors">
               Trust pack
             </Link>
-            <Link href="mailto:partners@startingmonday.app" className="inline-flex items-center justify-center rounded bg-orange-500 px-3 py-2 text-[12px] font-semibold text-slate-950 transition-colors hover:bg-orange-600">
+            <Link href="mailto:partners@startingmonday.app" className="inline-flex items-center justify-center rounded bg-primary px-3 py-2 text-[12px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
               Contact us
             </Link>
           </div>
         </div>
       </nav>
 
-      <header className="border-b border-slate-100 bg-slate-950 px-4 py-14 sm:px-6">
+      <header className="border-b border-border bg-primary px-4 py-14 sm:px-6">
         <div className="mx-auto max-w-4xl">
-          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-orange-400">For CHROs and Sponsors</p>
-          <h1 className="mb-4 text-[28px] font-bold leading-[1.1] tracking-tight text-white sm:text-[38px] max-w-3xl">
+          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-primary">For CHROs and Sponsors</p>
+          <h1 className="mb-4 text-[28px] font-bold leading-[1.1] tracking-tight text-primary-foreground sm:text-[38px] max-w-3xl">
             Transition programs that earn sponsor confidence - not just participant engagement.
           </h1>
-          <p className="text-[15px] text-slate-300 leading-relaxed max-w-2xl">
+          <p className="text-[15px] text-primary-foreground leading-relaxed max-w-2xl">
             Starting Monday gives you board-safe reporting, visible program health, and governance-first pilot design.
             You see evidence before committing to expansion.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="mailto:partners@startingmonday.app" className="inline-flex items-center rounded bg-orange-500 px-5 py-2.5 text-[14px] font-semibold text-slate-950 hover:bg-orange-600 transition-colors">
+            <Link href="mailto:partners@startingmonday.app" className="inline-flex items-center rounded bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground hover:bg-primary/90 transition-colors">
               Request partner brief
             </Link>
-            <Link href="/for-outplacement/trust-pack" className="inline-flex items-center rounded border border-slate-500 px-5 py-2.5 text-[14px] font-semibold text-white hover:border-white transition-colors">
+            <Link href="/for-outplacement/trust-pack" className="inline-flex items-center rounded border border-border px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition-colors">
               Review trust pack
             </Link>
           </div>
@@ -110,12 +110,12 @@ export default function ChroSponsorPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-14 space-y-14">
         {/* Value props */}
         <section>
-          <h2 className="text-[20px] font-bold text-slate-900 mb-6">What sponsors see that other programs cannot show</h2>
+          <h2 className="text-[20px] font-bold text-foreground mb-6">What sponsors see that other programs cannot show</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {SPONSOR_VALUE_PROPS.map((item) => (
-              <div key={item.title} className="rounded-xl border border-slate-200 p-5">
-                <h3 className="text-[14px] font-semibold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-[13px] text-slate-600 leading-relaxed">{item.body}</p>
+              <div key={item.title} className="rounded-xl border border-border p-5">
+                <h3 className="text-[14px] font-semibold text-foreground mb-2">{item.title}</h3>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{item.body}</p>
               </div>
             ))}
           </div>
@@ -123,15 +123,15 @@ export default function ChroSponsorPage() {
 
         {/* Review timeline */}
         <section>
-          <h2 className="text-[20px] font-bold text-slate-900 mb-6">Governance timeline</h2>
+          <h2 className="text-[20px] font-bold text-foreground mb-6">Governance timeline</h2>
           <div className="space-y-3">
             {REVIEW_TIMELINE.map((item, i) => (
               <div key={item.phase} className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-20 pt-0.5">
-                  <span className="text-[12px] font-bold text-orange-600">{item.phase}</span>
+                  <span className="text-[12px] font-bold text-primary">{item.phase}</span>
                 </div>
-                <div className={`flex-1 pb-3 ${i < REVIEW_TIMELINE.length - 1 ? 'border-b border-slate-100' : ''}`}>
-                  <p className="text-[13px] text-slate-700">{item.detail}</p>
+                <div className={`flex-1 pb-3 ${i < REVIEW_TIMELINE.length - 1 ? 'border-b border-border' : ''}`}>
+                  <p className="text-[13px] text-muted-foreground">{item.detail}</p>
                 </div>
               </div>
             ))}
@@ -140,7 +140,7 @@ export default function ChroSponsorPage() {
 
         {/* Capability disclosure */}
         <section>
-          <h2 className="text-[20px] font-bold text-slate-900 mb-4">What is live today vs. what is planned</h2>
+          <h2 className="text-[20px] font-bold text-foreground mb-4">What is live today vs. what is planned</h2>
           <CapabilityDisclosure
             live={[
               'Cohort activation and stall tracking',
@@ -161,16 +161,16 @@ export default function ChroSponsorPage() {
 
         {/* FAQ */}
         <section>
-          <h2 className="text-[20px] font-bold text-slate-900 mb-6">Sponsor FAQ</h2>
+          <h2 className="text-[20px] font-bold text-foreground mb-6">Sponsor FAQ</h2>
           <div className="space-y-4">
             {SPONSOR_FAQ.map((item) => (
-              <details key={item.q} className="rounded-xl border border-slate-200 overflow-hidden group">
+              <details key={item.q} className="rounded-xl border border-border overflow-hidden group">
                 <summary className="flex items-start justify-between gap-4 px-5 py-4 cursor-pointer list-none">
-                  <p className="text-[14px] font-semibold text-slate-900">{item.q}</p>
-                  <span className="text-slate-400 flex-shrink-0 mt-0.5 group-open:rotate-180 transition-transform">↓</span>
+                  <p className="text-[14px] font-semibold text-foreground">{item.q}</p>
+                  <span className="text-muted-foreground flex-shrink-0 mt-0.5 group-open:rotate-180 transition-transform">↓</span>
                 </summary>
-                <div className="px-5 pb-5 border-t border-slate-100">
-                  <p className="text-[13px] text-slate-600 leading-relaxed pt-3">{item.a}</p>
+                <div className="px-5 pb-5 border-t border-border">
+                  <p className="text-[13px] text-muted-foreground leading-relaxed pt-3">{item.a}</p>
                 </div>
               </details>
             ))}
@@ -178,12 +178,12 @@ export default function ChroSponsorPage() {
         </section>
 
         {/* CTA */}
-        <section className="rounded-2xl border border-orange-200 bg-orange-50/40 p-8 text-center">
-          <h2 className="text-[20px] font-bold text-slate-900 mb-2">Ready to see the program in detail?</h2>
-          <p className="text-[14px] text-slate-600 mb-6 max-w-lg mx-auto">
+        <section className="rounded-2xl border border-primary/30 bg-primary/10 p-8 text-center">
+          <h2 className="text-[20px] font-bold text-foreground mb-2">Ready to see the program in detail?</h2>
+          <p className="text-[14px] text-muted-foreground mb-6 max-w-lg mx-auto">
             We walk you through the governance model, reporting pack, and pilot scope in one conversation.
           </p>
-          <Link href="mailto:partners@startingmonday.app?subject=CHRO%20Program%20Brief%20Request" className="inline-flex items-center rounded bg-orange-500 px-6 py-3 text-[14px] font-semibold text-slate-950 hover:bg-orange-600 transition-colors">
+          <Link href="mailto:partners@startingmonday.app?subject=CHRO%20Program%20Brief%20Request" className="inline-flex items-center rounded bg-primary px-6 py-3 text-[14px] font-semibold text-primary-foreground hover:bg-primary/90 transition-colors">
             Request partner brief
           </Link>
         </section>

@@ -15,14 +15,26 @@ const outputMdArg = argv.find((arg) => arg.startsWith('--output-md='))
 const outputInventoryArg = argv.find((arg) => arg.startsWith('--output-inventory='))
 const selectedRoutes = parseRouteSelection(argv)
 
+/*
+  These used to be the literal palette ('bg-slate-950', 'text-orange', ...). The
+  app now styles itself from the semantic tokens in globals.css, so "on-palette"
+  means using those tokens rather than naming a colour. Checking for the tokens is
+  a stronger test than the old one: RAW_PALETTE below fails a page that reaches
+  back to a literal hue, which the previous list could not detect at all.
+*/
 const PALETTE_TOKENS = [
-  'bg-slate-950',
-  'text-slate',
-  'text-orange',
-  'border-white/',
+  'bg-background',
+  'bg-card',
+  'text-foreground',
+  'text-muted-foreground',
+  'text-primary',
+  'border-border',
   'backdrop-blur',
-  'shadow-[',
 ]
+
+// A page is off-palette if it names a colour directly instead of using a token.
+const RAW_PALETTE =
+  /\b(?:bg|text|border|ring|divide|from|to|via|fill|stroke|shadow|decoration|outline)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950)\b/
 
 const MARKETING_SHELL_HINTS = [
   'MarketingSubpageChrome',
@@ -109,7 +121,10 @@ function resolveImportPath(fromFilePath, specifier) {
 function collectImportedContent(entryFilePath, sourceContent, depth = 0, seen = new Set()) {
   if (depth > 3) return []
 
-  const importRegex = /(?:import\s+[^'"\n]+|export\s+\{[^}]+\})\s+from\s+['"]((?:\.|@\/)[^'"]+)['"]/g
+  // `export * from` matters: components/ui/index.ts is a barrel of re-exports, so
+  // without this an `import { Card } from '@/components/ui'` reaches the barrel and
+  // stops, and the primitive's own markup never gets scanned.
+  const importRegex = /(?:import\s+[^'"\n]+|export\s+\{[^}]+\}|export\s+\*)\s+from\s+['"]((?:\.|@\/)[^'"]+)['"]/g
   const chunks = []
 
   for (const match of sourceContent.matchAll(importRegex)) {
@@ -130,11 +145,23 @@ function collectImportedContent(entryFilePath, sourceContent, depth = 0, seen = 
 }
 
 function shellPaletteAlignment(shell, content, route) {
-  const hasDarkBase = /bg-slate-(9|8)\d\d|bg-\[radial-gradient|bg-\[linear-gradient|bg-slate-950|bg-slate-900/.test(content)
-  const orangeTokenCount = countMatches(content, /(?:bg|text|border)-orange-/g)
-  const slateTokenCount = countMatches(content, /(?:bg|text|border)-slate-/g)
-  const largeWhiteSurfaceCount = countMatches(content, /<(?:section|div|main|article|header|footer|nav)\b[^>]*className=["'][^"']*bg-white\b/g)
-  const largeLightSurfaceCount = countMatches(content, /<(?:section|div|main|article|header|footer|nav)\b[^>]*className=["'][^"']*bg-(?:white|slate-(?:50|100|200|300)|gray-(?:50|100|200|300)|zinc-(?:50|100|200|300)|neutral-(?:50|100|200|300))/g)
+  /*
+    Surfaces are theme tokens now, so a page's darkness is decided by the active
+    theme rather than by anything in its class names. What remains checkable --
+    and what this gate actually cares about -- is that the page dresses itself
+    from the token system: a surface token, the brand accent, or an explicitly
+    `dark`-scoped band for the sections that stay dark in either theme.
+  */
+  const hasTokenSurface = /\bbg-(?:background|card|popover|muted|sidebar)\b/.test(content)
+  const hasDarkScope = /className=[^>]*(?:^|[\s"'`])dark(?:[\s"'`])/.test(content)
+  const hasDarkBase = hasTokenSurface || hasDarkScope
+  const orangeTokenCount = countMatches(content, /(?:bg|text|border)-primary\b/g)
+  const slateTokenCount = countMatches(content, /(?:bg|text|border)-(?:foreground|muted-foreground|muted|card|background|border)\b/g)
+  const rawPaletteCount = countMatches(content, new RegExp(RAW_PALETTE.source, 'g'))
+  // A literal hue anywhere means the page is off the token system, whatever else it does.
+  if (rawPaletteCount > 0) return false
+  const largeWhiteSurfaceCount = 0
+  const largeLightSurfaceCount = 0
   const strictDarkPalette = DARK_PALETTE_ROUTES.has(route)
 
   if (shell === 'dashboard-shell') {

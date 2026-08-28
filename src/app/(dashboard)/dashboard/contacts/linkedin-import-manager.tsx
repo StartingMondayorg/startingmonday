@@ -2,19 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Alert, AlertDescription, Badge, Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type ImportSession = {
   consentId: string | null
   uploadId: string | null
@@ -146,30 +134,30 @@ export function LinkedInImportManager({ sessions }: { sessions: ImportSession[] 
   }
 
   return (
-    <Card variant="glass" className="mb-6 p-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
+    <Card variant="glass" className="mb-6 p-5 shadow-xl">
       <div className="mb-4">
-        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-300">LinkedIn connections</p>
-        <h2 className="mt-1 text-[20px] font-bold text-white">Upload and manage your exported network</h2>
-        <p className="mt-1 text-[13px] text-slate-200">
+        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary">LinkedIn connections</p>
+        <h2 className="mt-1 text-[20px] font-bold text-foreground">Upload and manage your exported network</h2>
+        <p className="mt-1 text-[13px] text-foreground">
           Import the LinkedIn Connections CSV, store it in Supabase, review the audit trail, and use it to find likely warm paths at target companies.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_200px_auto] sm:items-end">
-        <label className="text-[12px] text-slate-200">
+        <label className="text-[12px] text-foreground">
           Connections CSV
           <Input
             type="file"
             accept=".csv,text/csv"
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-            className="mt-1 block min-h-[44px] w-full rounded border border-white/15 bg-slate-950/70 px-3 py-2 text-[13px] text-slate-100 file:mr-3 file:rounded file:border-0 file:bg-orange-500 file:px-3 file:py-1.5 file:text-[12px] file:font-semibold file:text-slate-950"
+            className="mt-1 block min-h-[44px] w-full rounded border border-border bg-background/70 px-3 py-2 text-[13px] text-primary-foreground file:mr-3 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-[12px] file:font-semibold file:text-primary-foreground"
           />
         </label>
 
-        <label className="text-[12px] text-slate-200">
+        <label className="text-[12px] text-foreground">
           Import method
           <Select value={method} onValueChange={(value) => setMethod(value as 'data_export' | 'portability_api')}>
-            <SelectTrigger className="mt-1 block min-h-[44px] w-full rounded border border-white/15 bg-slate-950/70 text-[13px] text-slate-100">
+            <SelectTrigger className="mt-1 block min-h-[44px] w-full rounded border border-border bg-background/70 text-[13px] text-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -189,7 +177,7 @@ export function LinkedInImportManager({ sessions }: { sessions: ImportSession[] 
         </Button>
       </div>
 
-      <p className="mt-2 text-[12px] text-slate-400">
+      <p className="mt-2 text-[12px] text-muted-foreground">
         LinkedIn path: Settings &amp; Privacy → Data privacy → Get a copy of your data → Connections.
       </p>
 
@@ -205,9 +193,9 @@ export function LinkedInImportManager({ sessions }: { sessions: ImportSession[] 
       )}
 
       <div className="mt-5 space-y-3">
-        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-300">Recent import sessions</p>
+        <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Recent import sessions</p>
         {sessions.length === 0 ? (
-          <div className="rounded-xl border border-white/10 bg-slate-950/30 px-4 py-4 text-[13px] text-slate-300">
+          <div className="rounded-xl border border-border bg-background/30 px-4 py-4 text-[13px] text-muted-foreground">
             No LinkedIn connection uploads yet.
           </div>
         ) : (
@@ -216,20 +204,20 @@ export function LinkedInImportManager({ sessions }: { sessions: ImportSession[] 
             const isDeleting = deletingId === (session.consentId ?? session.uploadId)
             const canAudit = Boolean(session.consentId)
             return (
-              <Card key={key} variant="glass" className="rounded-xl border-white/10 bg-slate-950/30 px-4 py-4">
+              <Card key={key} variant="glass" className="rounded-xl border-border bg-background/30 px-4 py-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-[13px] font-semibold text-white">{session.fileName ?? 'Legacy import session'}</p>
+                      <p className="text-[13px] font-semibold text-foreground">{session.fileName ?? 'Legacy import session'}</p>
                       <Badge variant={STATUS_VARIANT[session.status]} className="uppercase">
                         {session.status}
                       </Badge>
                     </div>
-                    <p className="mt-1 text-[12px] text-slate-300">
+                    <p className="mt-1 text-[12px] text-muted-foreground">
                       {session.processedCount || session.rowCount} connection{(session.processedCount || session.rowCount) === 1 ? '' : 's'} · {session.method === 'portability_api' ? 'Portability API' : 'Data export'} · {fmtDate(session.uploadedAt ?? session.consentedAt)}
                     </p>
                     {session.failureReason && (
-                      <p className="mt-1 text-[12px] text-rose-200">{session.failureReason}</p>
+                      <p className="mt-1 text-[12px] text-destructive">{session.failureReason}</p>
                     )}
                   </div>
 
@@ -239,7 +227,7 @@ export function LinkedInImportManager({ sessions }: { sessions: ImportSession[] 
                         type="button"
                         variant="outline"
                         onClick={() => toggleAudit(session.consentId!)}
-                        className="min-h-[36px] border-white/15 bg-white/5 text-[12px] font-semibold text-slate-100 hover:border-white/30 hover:bg-white/10"
+                        className="min-h-[36px] border-border bg-muted/40 text-[12px] font-semibold text-foreground hover:bg-muted/60"
                       >
                         {auditFor === session.consentId ? 'Hide audit' : 'View audit'}
                       </Button>
@@ -257,13 +245,13 @@ export function LinkedInImportManager({ sessions }: { sessions: ImportSession[] 
                 </div>
 
                 {auditFor === session.consentId && canAudit && auditEvents[session.consentId!] && (
-                  <div className="mt-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3">
-                    <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-2">Audit trail</p>
+                  <div className="mt-3 rounded-lg border border-border bg-muted/40 px-3 py-3">
+                    <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Audit trail</p>
                     <ul className="space-y-2">
                       {auditEvents[session.consentId!].map((event) => (
-                        <li key={event.id} className="text-[12px] text-slate-300">
-                          <span className="font-semibold text-white">{event.event_type.replaceAll('_', ' ')}</span>
-                          <span className="text-slate-400"> · {fmtDate(event.occurred_at)}</span>
+                        <li key={event.id} className="text-[12px] text-muted-foreground">
+                          <span className="font-semibold text-foreground">{event.event_type.replaceAll('_', ' ')}</span>
+                          <span className="text-muted-foreground"> · {fmtDate(event.occurred_at)}</span>
                         </li>
                       ))}
                     </ul>

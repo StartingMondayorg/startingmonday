@@ -1,9 +1,5 @@
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-
+import { Badge, Button, Card, Progress } from '@/components/ui'
 type Activation = {
   isComplete: boolean
 }
@@ -30,26 +26,26 @@ export function DashboardIntelSetupSections(props: Props) {
 
   return (
     <Card variant="glass" id="search-setup" className="gap-0 rounded overflow-hidden mb-8 py-0">
-      <div className="px-6 py-[18px] border-b border-white/10">
+      <div className="px-6 py-[18px] border-b border-border">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
             Search setup
           </h2>
-          <Link href="/dashboard/start" className="text-[12px] text-slate-400 hover:text-slate-200 transition-colors">
+          <Link href="/dashboard/start" className="text-[12px] text-muted-foreground hover:text-foreground transition-colors">
             View details &rarr;
           </Link>
         </div>
         <div className="flex items-center gap-3">
           <Progress
             value={(completed / setupSteps.length) * 100}
-            className="flex-1 h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-orange-500"
+            className="flex-1 h-1.5 bg-muted/60 [&_[data-slot=progress-indicator]]:bg-primary"
           />
-          <span className="text-[12px] font-semibold text-slate-300 shrink-0">
+          <span className="text-[12px] font-semibold text-muted-foreground shrink-0">
             {completed} of {setupSteps.length} complete
           </span>
         </div>
       </div>
-      <div className="divide-y divide-white/10">
+      <div className="divide-y divide-border">
         {setupSteps.map((step, i) => (
           <div
             key={i}
@@ -63,7 +59,7 @@ export function DashboardIntelSetupSections(props: Props) {
             </Badge>
             <span
               className={`text-[13px] flex-1 min-w-0 ${
-                step.done ? 'line-through text-slate-400 decoration-slate-500' : 'text-slate-100'
+                step.done ? 'line-through text-muted-foreground decoration-muted-foreground' : 'text-foreground'
               }`}
             >
               {step.label}

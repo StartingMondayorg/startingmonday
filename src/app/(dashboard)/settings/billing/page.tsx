@@ -4,8 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserSubscription } from '@/lib/billing/subscription'
 import { canUserSeeAdminHeader } from '@/lib/staff'
 import { BillingClient } from './billing-client'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription } from '@/components/ui'
 export const metadata = { title: 'Billing - Starting Monday' }
 
 export default async function BillingPage() {
@@ -33,10 +32,10 @@ export default async function BillingPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-4">
         <Alert className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-[12px] font-semibold text-slate-800">Need billing help?</p>
-            <AlertDescription className="text-[12px] text-slate-500">Open the guide with a billing-focused query.</AlertDescription>
+            <p className="text-[12px] font-semibold text-foreground">Need billing help?</p>
+            <AlertDescription className="text-[12px] text-muted-foreground">Open the guide with a billing-focused query.</AlertDescription>
           </div>
-          <Link href="/guide?q=How+do+I+fix+billing+or+subscription+issues%3F" className="text-[12px] font-semibold text-slate-900 hover:text-slate-700 hover:underline">
+          <Link href="/guide?q=How+do+I+fix+billing+or+subscription+issues%3F" className="text-[12px] font-semibold text-foreground hover:text-muted-foreground hover:underline">
             Open Guide
           </Link>
         </Alert>

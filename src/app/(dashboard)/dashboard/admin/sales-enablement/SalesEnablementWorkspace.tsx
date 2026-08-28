@@ -1,27 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from '@/components/ui/table'
+import { Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from '@/components/ui'
 import { DEFAULT_STATE, LOCAL_FALLBACK_KEY, clampScore, weightedScore, type DeliveryModel, type OptionStatus, type VendorOption, type WorkspaceState, type SaveState } from './sales-enablement-data'
 
 function scoreBadgeVariant(score: number): 'success' | 'warning' | 'secondary' {
@@ -152,10 +132,10 @@ export function SalesEnablementWorkspace() {
   return (
     <div className="space-y-6">
       <Card variant="glass" className="p-5">
-        <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Decision Inputs</h2>
+        <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Decision Inputs</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[13px]">
           <div className="flex flex-col gap-1.5">
-            <Label className="block text-slate-300">Primary objective</Label>
+            <Label className="block text-muted-foreground">Primary objective</Label>
             <Input
               value={state.objective}
               onChange={(event) => setState((prev) => ({ ...prev, objective: event.target.value }))}
@@ -164,7 +144,7 @@ export function SalesEnablementWorkspace() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label className="block text-slate-300">Budget ceiling (monthly)</Label>
+            <Label className="block text-muted-foreground">Budget ceiling (monthly)</Label>
             <Input
               type="number"
               min={0}
@@ -175,7 +155,7 @@ export function SalesEnablementWorkspace() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label className="block text-slate-300">Execution mode</Label>
+            <Label className="block text-muted-foreground">Execution mode</Label>
             <Select
               value={state.primaryModel}
               onValueChange={(value) => setState((prev) => ({ ...prev, primaryModel: value as WorkspaceState['primaryModel'] }))}
@@ -193,7 +173,7 @@ export function SalesEnablementWorkspace() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label className="block text-slate-300">Checkpoint window</Label>
+            <Label className="block text-muted-foreground">Checkpoint window</Label>
             <Select
               value={state.checkpointWindow}
               onValueChange={(value) => setState((prev) => ({ ...prev, checkpointWindow: value as WorkspaceState['checkpointWindow'] }))}
@@ -212,7 +192,7 @@ export function SalesEnablementWorkspace() {
         </div>
 
         <div className="mt-4 flex flex-col gap-1.5 text-[13px]">
-          <Label className="block text-slate-300">Qualified meeting definition</Label>
+          <Label className="block text-muted-foreground">Qualified meeting definition</Label>
           <Textarea
             value={state.qualifiedMeetingDefinition}
             onChange={(event) => setState((prev) => ({ ...prev, qualifiedMeetingDefinition: event.target.value }))}
@@ -223,31 +203,31 @@ export function SalesEnablementWorkspace() {
       </Card>
 
       <Card variant="glass" className="overflow-hidden p-0">
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between gap-3">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Option Scorecard</h2>
-          <p className="text-[12px] text-slate-300">Weighted score = Fit 40% + Commercial 35% + Execution 25%</p>
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3">
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Option Scorecard</h2>
+          <p className="text-[12px] text-muted-foreground">Weighted score = Fit 40% + Commercial 35% + Execution 25%</p>
         </div>
 
         <Table className="text-[12px] min-w-[1180px]">
           <TableHeader>
-            <TableRow className="bg-slate-950/60 border-white/10 hover:bg-slate-950/60">
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Option</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Model</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Cost</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Fit</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Commercial</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Execution</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Day 14 target</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Day 30 target</TableHead>
-              <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Weighted</TableHead>
+            <TableRow className="bg-background/60 border-border">
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Option</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Model</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Cost</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Status</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Fit</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Commercial</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Execution</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Day 14 target</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Day 30 target</TableHead>
+              <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right">Weighted</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="divide-y divide-white/10">
+          <TableBody className="divide-y divide-border">
             {state.options.map((option) => {
               const total = weightedScore(option)
               return (
-                <TableRow key={option.id} className="border-white/10 hover:bg-white/5">
+                <TableRow key={option.id} className="border-border hover:bg-muted/40">
                   <TableCell className="px-4 py-2 align-top">
                     <Input
                       value={option.name}
@@ -377,13 +357,13 @@ export function SalesEnablementWorkspace() {
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card variant="glass" className="p-5">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Live Ranking</h2>
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Live Ranking</h2>
           <div className="space-y-2">
             {ranked.map(({ option, score }, index) => (
-              <Card key={option.id} variant="glass" className="border-white/10 bg-slate-950/60 rounded px-3 py-2.5 flex-row items-center justify-between gap-3">
+              <Card key={option.id} variant="glass" className="border-border bg-background/60 rounded px-3 py-2.5 flex-row items-center justify-between gap-3">
                 <div>
-                  <p className="text-[13px] font-semibold text-white">{index + 1}. {option.name}</p>
-                  <p className="text-[12px] text-slate-300">{option.model} • ${option.monthlyCost.toLocaleString()} / mo • {option.status}</p>
+                  <p className="text-[13px] font-semibold text-foreground">{index + 1}. {option.name}</p>
+                  <p className="text-[12px] text-muted-foreground">{option.model} • ${option.monthlyCost.toLocaleString()} / mo • {option.status}</p>
                 </div>
                 <Badge variant={scoreBadgeVariant(score)}>{score}</Badge>
               </Card>
@@ -392,9 +372,9 @@ export function SalesEnablementWorkspace() {
         </Card>
 
         <Card variant="glass" className="p-5 space-y-4">
-          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">Decision Summary</h2>
+          <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Decision Summary</h2>
           <div className="flex flex-col gap-1.5 text-[13px]">
-            <Label className="block text-slate-300">Top choice today</Label>
+            <Label className="block text-muted-foreground">Top choice today</Label>
             <Input
               value={state.todayTopChoice}
               onChange={(event) => setState((prev) => ({ ...prev, todayTopChoice: event.target.value }))}
@@ -404,7 +384,7 @@ export function SalesEnablementWorkspace() {
           </div>
 
           <div className="flex flex-col gap-1.5 text-[13px]">
-            <Label className="block text-slate-300">Backup choice</Label>
+            <Label className="block text-muted-foreground">Backup choice</Label>
             <Input
               value={state.backupChoice}
               onChange={(event) => setState((prev) => ({ ...prev, backupChoice: event.target.value }))}
@@ -414,7 +394,7 @@ export function SalesEnablementWorkspace() {
           </div>
 
           <div className="flex flex-col gap-1.5 text-[13px]">
-            <Label className="block text-slate-300">Next actions</Label>
+            <Label className="block text-muted-foreground">Next actions</Label>
             <Textarea
               value={state.nextActions}
               onChange={(event) => setState((prev) => ({ ...prev, nextActions: event.target.value }))}
@@ -424,13 +404,13 @@ export function SalesEnablementWorkspace() {
           </div>
 
           <div className="flex items-center justify-between pt-1">
-            <p className="text-[11px] text-slate-400">{statusLabel}</p>
+            <p className="text-[11px] text-muted-foreground">{statusLabel}</p>
             <Button
               type="button"
               variant="ghost"
               onClick={resetWorkspace}
               disabled={!canEdit}
-              className="text-[12px] font-semibold text-slate-300 hover:text-white"
+              className="text-[12px] font-semibold text-muted-foreground hover:text-foreground"
             >
               Reset workspace
             </Button>
@@ -439,14 +419,14 @@ export function SalesEnablementWorkspace() {
       </section>
 
       <Card variant="glass" className="p-5">
-        <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-3">Agency vs Freelancer guardrails</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[12px] text-slate-300">
-          <Card variant="glass" className="border-white/10 bg-slate-950/60 rounded p-4">
-            <p className="text-[12px] font-semibold text-slate-100 mb-1.5">When agency is better</p>
+        <h2 className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3">Agency vs Freelancer guardrails</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[12px] text-muted-foreground">
+          <Card variant="glass" className="border-border bg-background/60 rounded p-4">
+            <p className="text-[12px] font-semibold text-foreground mb-1.5">When agency is better</p>
             <p>Use when you need immediate multi-channel coverage, specialist bandwidth, and redundancy if one operator is unavailable.</p>
           </Card>
-          <Card variant="glass" className="border-white/10 bg-slate-950/60 rounded p-4">
-            <p className="text-[12px] font-semibold text-slate-100 mb-1.5">When freelancer is better</p>
+          <Card variant="glass" className="border-border bg-background/60 rounded p-4">
+            <p className="text-[12px] font-semibold text-foreground mb-1.5">When freelancer is better</p>
             <p>Use when you need fast iteration, direct operator access, tighter budget control, and high accountability to one owner metric.</p>
           </Card>
         </div>
