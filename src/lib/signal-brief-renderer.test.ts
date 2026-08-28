@@ -23,6 +23,10 @@ const input: SignalBriefInput = {
         implication: ['What does another quarter of delay cost?', 'What downstream commitment is at risk?'],
         need_payoff: ['What would change if the pressure came off the team?', 'Where would the team reinvest the time?'],
       },
+      evidence: [
+        { date: '2026-08-18', event: 'Scope-merge discussion disclosed', source_url: 'https://example.com/scope-merge' },
+        { date: '2026-08-22', event: 'Leadership transition announced', source_url: 'https://example.com/leadership-transition' },
+      ],
     },
   ],
   method_note: 'Public records only.',
@@ -54,8 +58,7 @@ describe('renderSignalBrief', () => {
   })
 
   it('supports briefs without an optional method note or profiles', () => {
-    const { method_note: _methodNote, profiles: _profiles, ...withoutOptionalSections } = input
-    const html = renderSignalBrief({ ...withoutOptionalSections, profiles: [] })
+    const html = renderSignalBrief({ ...input, method_note: undefined, profiles: [] })
 
     expect(html).not.toContain('Method note')
     expect(html).toContain('<h2>Account briefs</h2>')

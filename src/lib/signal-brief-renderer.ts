@@ -16,6 +16,13 @@ export type SignalBriefProfile = {
   positioning: string
   suggested_move: string
   discovery_questions: SignalBriefDiscoveryQuestions
+  evidence: SignalBriefEvidence[]
+}
+
+export type SignalBriefEvidence = {
+  date: string
+  event: string
+  source_url: string
 }
 
 export type SignalBriefInput = {
@@ -57,8 +64,12 @@ function renderDiscoveryQuestions(questions: SignalBriefDiscoveryQuestions): str
   return `<section class="discovery-questions"><h3>Discovery questions</h3>${DISCOVERY_GROUPS.map(({ key, label }) => `<div class="discovery-group"><h4>${label}</h4>${renderList(questions[key], 'question-list')}</div>`).join('')}</section>`
 }
 
+function renderEvidence(evidence: readonly SignalBriefEvidence[]): string {
+  return `<section class="public-evidence"><h3>Public record</h3>${renderList(evidence.map(item => `${item.date} - ${item.event} (${item.source_url})`), 'evidence-list')}</section>`
+}
+
 function renderProfile(profile: SignalBriefProfile): string {
-  return `<article class="profile"><h2>${escapeHtml(profile.account)}</h2><section><h3>Positioning</h3><p>${escapeHtml(profile.positioning)}</p></section><section><h3>Tactics</h3><p>${escapeHtml(profile.suggested_move)}</p></section>${renderDiscoveryQuestions(profile.discovery_questions)}</article>`
+  return `<article class="profile"><h2>${escapeHtml(profile.account)}</h2>${renderEvidence(profile.evidence)}<section><h3>Positioning</h3><p>${escapeHtml(profile.positioning)}</p></section><section><h3>Tactics</h3><p>${escapeHtml(profile.suggested_move)}</p></section>${renderDiscoveryQuestions(profile.discovery_questions)}</article>`
 }
 
 export function renderSignalBrief(input: SignalBriefInput): string {
