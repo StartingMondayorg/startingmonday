@@ -16,7 +16,7 @@ export function SignalTimelineCard({ proofCase, altText, expanded = false }: Sig
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Signal timeline</p>
           <h2 className="mt-2 text-[20px] font-semibold leading-tight text-foreground sm:text-[22px]">
-            [{proofCase.descriptor}]
+            {proofCase.descriptor}
           </h2>
         </div>
         <span className="rounded-full border border-info/25 bg-info/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-info">

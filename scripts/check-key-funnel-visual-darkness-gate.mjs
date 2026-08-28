@@ -13,7 +13,7 @@ const visualDiscipline = ses?.visualDiscipline ?? {}
 
 /** @type {RouteSpec[]} */
 const SPECS = [
-  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/(marketing)/page.tsx', 'src/app/components/LandingPage.tsx'] },
+  { id: 'homepage-visual-darkness', route: '/', files: ['src/app/(marketing)/page.tsx', 'src/app/components/LandingPage.tsx', 'src/app/components/OpportunityCharts.tsx'] },
   { id: 'pricing-visual-darkness', route: '/pricing', files: ['src/app/(marketing)/pricing/page.tsx', 'src/app/(marketing)/pricing/pricing-cards.tsx'] },
   { id: 'demo-visual-darkness', route: '/demo', files: ['src/app/(marketing)/demo/page.tsx'] },
   { id: 'blog-visual-darkness', route: '/blog', files: ['src/app/(marketing)/blog/page.tsx'] },
@@ -80,6 +80,10 @@ const TOKEN_LUM = parseTokenLuminance()
 
 const BG_TOKENS = ['background', 'card', 'popover', 'muted', 'secondary', 'accent', 'primary', 'destructive', 'success', 'warning', 'info', 'sidebar']
 const TEXT_TOKENS = ['foreground', 'muted-foreground', 'card-foreground', 'popover-foreground', 'primary-foreground', 'secondary-foreground', 'accent-foreground', 'destructive-foreground', 'success-foreground', 'warning-foreground', 'info-foreground', 'primary', 'destructive', 'success', 'warning', 'info']
+
+const FORBIDDEN_TEXT_PATTERNS = [
+  { pattern: /<text\b[^>]*\bfill=["']var\(--border\)/g, description: 'SVG text uses the border token instead of a readable text token' },
+]
 
 const SCALE = {
   50: 0.98,
@@ -245,6 +249,17 @@ function evaluateRoute(spec) {
   const pairFailures = [...new Set([...perTheme.light.failures, ...perTheme.dark.failures])]
 
   const checks = [
+    ...FORBIDDEN_TEXT_PATTERNS.map(({ pattern, description }) => {
+      const matches = combined.match(pattern) ?? []
+      return {
+        id: 'forbidden-text-token',
+        description,
+        value: matches.length,
+        threshold: 0,
+        comparator: '=',
+        passed: matches.length === 0,
+      }
+    }),
     {
       id: 'median-background-luminance',
       description: 'Median background luminance proxy stays above floor.',
