@@ -180,6 +180,8 @@
         "seed:demo": "npx tsx scripts/seed-demo.ts",
         "seed:staging": "node scripts/seed-staging.mjs",
         "seed:staging:apply": "node scripts/seed-staging.mjs --apply",
+        "promote:production": "node scripts/promote-to-production.mjs",
+        "promote:production:apply": "node scripts/promote-to-production.mjs --apply",
         "seed:social": "npx tsx scripts/seed-social-calendar.ts",
         "evals:label-progress": "node scripts/check-prep-brief-label-progress.mjs",
         "evals:label-progress:json": "node scripts/check-prep-brief-label-progress.mjs --json",
