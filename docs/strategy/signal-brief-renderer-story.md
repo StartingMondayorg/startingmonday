@@ -19,6 +19,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - A fail-closed adapter for the selected client-facing prospect-collateral caller boundary.
 - Runtime validation for client economics, exactly-three-item cover sections, grouped SPIN questions, dated evidence, and HTTPS sources.
 - A disabled-by-default internal preview route at `/api/internal/signal-brief/preview` with internal secret/IP authorization, bounded payload size, and no-store responses.
+- A signal-brief quality gate enforcing SPIN question cardinality and investigate-first positioning before rendering.
 
 ## Acceptance evidence
 
@@ -27,6 +28,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Renderer unit tests cover escaping of reader-controlled strings.
 - Adapter tests cover payload mapping and invalid economics, dates, sources, and cover cardinality.
 - Route tests cover authorization precedence, disabled-by-default behavior, malformed JSON, invalid payloads, and successful rendering.
+- Route validation rejects prescriptive positioning and malformed SPIN question structures.
 - TypeScript compilation passes for the new contract.
 
 ## Deliberate boundary

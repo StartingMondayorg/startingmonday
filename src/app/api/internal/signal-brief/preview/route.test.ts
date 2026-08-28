@@ -73,6 +73,21 @@ describe('POST /api/internal/signal-brief/preview', () => {
     expect((await POST(request(JSON.stringify({ ...validPayload, profiles: [] })))).status).toBe(422)
   })
 
+  it('rejects non-SPIN or prescriptive profile content', async () => {
+    validateMock.mockReturnValue(true)
+    vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')
+
+    const response = await POST(request(JSON.stringify({
+      ...validPayload,
+      profiles: [{
+        ...validPayload.profiles[0],
+        positioning: 'You need our managed service.',
+      }],
+    })))
+
+    expect(response.status).toBe(422)
+  })
+
   it('returns rendered HTML for a valid authorized preview', async () => {
     validateMock.mockReturnValue(true)
     vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')

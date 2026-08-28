@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { validateInternalRouteRequest } from '@/lib/internal-route-auth'
 import { isSignalBriefPreviewEnabled } from '@/lib/feature-flags'
 import { adaptSignalBriefPayload, type RawSignalBriefPayload } from '@/lib/signal-brief-adapter'
+import { validateSignalBriefQuality } from '@/lib/signal-brief-quality'
 import { renderSignalBrief } from '@/lib/signal-brief-renderer'
 
 const MAX_BODY_BYTES = 256_000
@@ -40,6 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const input = adaptSignalBriefPayload(payload)
+    validateSignalBriefQuality(input)
     return jsonResponse({ html: renderSignalBrief(input) }, 200)
   } catch (error) {
     return jsonResponse({ error: error instanceof Error ? error.message : 'Invalid signal brief payload' }, 422)
