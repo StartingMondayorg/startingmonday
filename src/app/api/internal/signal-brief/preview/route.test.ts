@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { validateInternalRouteRequest } from '@/lib/internal-route-auth'
+import dataEndureFixture from '../../../../../../tests/fixtures/signal-brief/dataendure-prospect.json'
 import { POST } from './route'
 
 vi.mock('@/lib/internal-route-auth', () => ({
@@ -112,5 +113,19 @@ describe('POST /api/internal/signal-brief/preview', () => {
     expect(body.html).toContain('Public record')
     expect(body.html).toContain('https://example.com/event')
     expect(response.headers.get('cache-control')).toBe('no-store')
+  })
+
+  it('renders the representative public-record fixture through the full caller pipeline', async () => {
+    validateMock.mockReturnValue(true)
+    vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')
+
+    const response = await POST(request(JSON.stringify(dataEndureFixture)))
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.html).toContain('DataEndure')
+    expect(body.html).toContain('2026-08-20')
+    expect(body.html).toContain('$400,000')
+    expect(body.html).toContain('Need-payoff')
   })
 })
