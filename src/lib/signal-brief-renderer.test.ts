@@ -41,6 +41,19 @@ describe('renderSignalBrief', () => {
     expect(html).toContain('20% baseline win rate')
   })
 
+  it('keeps dated public evidence and escapes source URLs', () => {
+    const html = renderSignalBrief({
+      ...input,
+      profiles: [{
+        ...input.profiles[0]!,
+        evidence: [{ date: '2026-08-21', event: 'Public filing', source_url: 'https://example.com/?q=1&mode=public' }],
+      }],
+    })
+
+    expect(html).toContain('2026-08-21 - Public filing')
+    expect(html).toContain('https://example.com/?q=1&amp;mode=public')
+  })
+
   it('uses Tactics and renders discovery questions in SPIN order', () => {
     const html = renderSignalBrief(input)
 

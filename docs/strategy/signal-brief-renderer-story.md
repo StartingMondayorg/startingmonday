@@ -28,6 +28,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Renderer unit tests cover value-cover ordering and expected-value math.
 - Renderer unit tests cover Tactics labeling and SPIN ordering.
 - Renderer unit tests cover escaping of reader-controlled strings.
+- Renderer unit tests cover dated public evidence and escaped source URLs.
 - Adapter tests cover payload mapping and invalid economics, dates, sources, and cover cardinality.
 - Route tests cover authorization precedence, disabled-by-default behavior, malformed JSON, invalid payloads, and successful rendering.
 - Route validation rejects prescriptive positioning and malformed SPIN question structures.
