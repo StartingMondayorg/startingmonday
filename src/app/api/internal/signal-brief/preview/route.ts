@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateInternalRouteRequest } from '@/lib/internal-route-auth'
-import { isSignalBriefPreviewEnabled } from '@/lib/feature-flags'
+import { isSignalBriefPreviewEnabled, isSignalBriefSampleModeEnabled } from '@/lib/feature-flags'
 import { adaptSignalBriefPayload, type RawSignalBriefPayload } from '@/lib/signal-brief-adapter'
 import { validateSignalBriefQuality } from '@/lib/signal-brief-quality'
 import { renderSignalBrief } from '@/lib/signal-brief-renderer'
@@ -41,6 +41,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const input = adaptSignalBriefPayload(payload)
+    if (input.sample_mode?.enabled && !isSignalBriefSampleModeEnabled()) {
+      return jsonResponse({ error: 'Signal brief sample mode is disabled' }, 503)
+    }
     validateSignalBriefQuality(input)
     return jsonResponse({ html: renderSignalBrief(input) }, 200)
   } catch (error) {

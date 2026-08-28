@@ -88,6 +88,18 @@ describe('POST /api/internal/signal-brief/preview', () => {
     expect(response.status).toBe(422)
   })
 
+  it('keeps sample mode disabled behind its own flag', async () => {
+    validateMock.mockReturnValue(true)
+    vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')
+
+    const response = await POST(request(JSON.stringify({
+      ...validPayload,
+      sample_mode: { enabled: true, full_depth_profile_index: 0 },
+    })))
+
+    expect(response.status).toBe(503)
+  })
+
   it('returns rendered HTML for a valid authorized preview', async () => {
     validateMock.mockReturnValue(true)
     vi.stubEnv('SIGNAL_BRIEF_PREVIEW_ENABLED', 'true')

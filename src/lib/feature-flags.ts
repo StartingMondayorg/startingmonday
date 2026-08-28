@@ -13,6 +13,8 @@ export const STARTING_MONDAY_DASHBOARD_SIMPLIFICATION_ENABLED_FLAG = 'NEXT_PUBLI
 
 export const SIGNAL_BRIEF_PREVIEW_ENABLED_FLAG = 'SIGNAL_BRIEF_PREVIEW_ENABLED'
 
+export const SIGNAL_BRIEF_SAMPLE_MODE_ENABLED_FLAG = 'SIGNAL_BRIEF_SAMPLE_MODE_ENABLED'
+
 export function isRelationshipNetworkMatchingEnabled(): boolean {
   return isEnabledFlag(process.env[RELATIONSHIP_NETWORK_MATCHING_ENABLED_FLAG])
 }
@@ -27,4 +29,8 @@ export function isStartingMondayDashboardSimplificationEnabled(): boolean {
 
 export function isSignalBriefPreviewEnabled(): boolean {
   return isEnabledFlag(process.env[SIGNAL_BRIEF_PREVIEW_ENABLED_FLAG])
+}
+
+export function isSignalBriefSampleModeEnabled(): boolean {
+  return isEnabledFlag(process.env[SIGNAL_BRIEF_SAMPLE_MODE_ENABLED_FLAG])
 }

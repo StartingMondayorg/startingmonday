@@ -21,6 +21,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - A disabled-by-default internal preview route at `/api/internal/signal-brief/preview` with internal secret/IP authorization, bounded payload size, and no-store responses.
 - A signal-brief quality gate enforcing SPIN question cardinality and investigate-first positioning before rendering.
 - An explicit request-scoped `sample_mode` policy that renders one selected profile at full depth and all other profiles as account-only teasers.
+- A separate `SIGNAL_BRIEF_SAMPLE_MODE_ENABLED` kill switch so sample rendering cannot be enabled accidentally by request payload alone.
 
 ## Acceptance evidence
 
@@ -31,11 +32,12 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Route tests cover authorization precedence, disabled-by-default behavior, malformed JSON, invalid payloads, and successful rendering.
 - Route validation rejects prescriptive positioning and malformed SPIN question structures.
 - Sample-mode tests prove one full-depth profile and teaser-only output for the remaining profiles.
+- Route tests prove sample mode remains disabled unless its explicit feature flag is enabled.
 - TypeScript compilation passes for the new contract.
 
 ## Deliberate boundary
 
-This slice implements only the pure rendering policy for sample mode. It does not implement pricing menus, billing, subscription terms, pilot-roster focus, or any other recommendation in Adam sections 5-7. Those remain explicit commercial decisions. The first caller is selected as client-facing prospect collateral. The preview endpoint is an internal, feature-disabled integration seam; it is not yet a production prospect workflow.
+This slice implements only the pure rendering policy and kill switch for sample mode. It does not implement pricing menus, billing, subscription terms, pilot-roster focus, or any other recommendation in Adam sections 5-7. Those remain explicit commercial decisions. The first caller is selected as client-facing prospect collateral. The preview endpoint is an internal, feature-disabled integration seam; it is not yet a production prospect workflow.
 
 ## Next integration decision
 
