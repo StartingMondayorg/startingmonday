@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { execSync } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
+import readline from 'node:readline'
 import { isUnitCoverageSourceFile } from './lib/coverage-scope.mjs'
 import { resolveDiffScope } from './lib/git-diff-scope.mjs'
 
@@ -35,37 +36,48 @@ function normalizePath(input) {
   return input.replace(/\\/g, '/').replace(/^\.\//, '')
 }
 
-function parseUnifiedZeroDiff(diffText, includePrefix) {
+/*
+  Only two line types matter here: the `+++ b/<path>` header that names the file
+  and the `@@` hunk header that carries the changed line numbers. Every `+`/`-`
+  content line is discarded. Feeding lines in one at a time rather than parsing
+  one big string keeps memory proportional to the number of changed hunks
+  instead of the byte size of the diff -- which is what let a 3.2MB diff kill
+  this gate when it was read through execSync's 1MiB default maxBuffer.
+*/
+function createHunkCollector(includePrefix) {
   const changed = new Map()
   let currentFile = ''
 
-  for (const rawLine of diffText.split('\n')) {
-    const line = rawLine.trimEnd()
+  return {
+    consume(rawLine) {
+      const line = rawLine.trimEnd()
 
-    if (line.startsWith('+++ b/')) {
-      currentFile = normalizePath(line.slice('+++ b/'.length))
-      continue
-    }
+      if (line.startsWith('+++ b/')) {
+        currentFile = normalizePath(line.slice('+++ b/'.length))
+        return
+      }
 
-    if (!currentFile || !currentFile.startsWith(includePrefix) || !isUnitCoverageSourceFile(currentFile)) continue
+      if (!currentFile || !currentFile.startsWith(includePrefix) || !isUnitCoverageSourceFile(currentFile)) return
 
-    if (!/^@@ /.test(line)) continue
+      if (!/^@@ /.test(line)) return
 
-    const plusMatch = line.match(/\+(\d+)(?:,(\d+))?/)
-    if (!plusMatch) continue
+      const plusMatch = line.match(/\+(\d+)(?:,(\d+))?/)
+      if (!plusMatch) return
 
-    const start = Number(plusMatch[1])
-    const count = plusMatch[2] ? Number(plusMatch[2]) : 1
-    if (count <= 0) continue
+      const start = Number(plusMatch[1])
+      const count = plusMatch[2] ? Number(plusMatch[2]) : 1
+      if (count <= 0) return
 
-    const target = changed.get(currentFile) ?? new Set()
-    for (let i = 0; i < count; i += 1) {
-      target.add(start + i)
-    }
-    changed.set(currentFile, target)
+      const target = changed.get(currentFile) ?? new Set()
+      for (let i = 0; i < count; i += 1) {
+        target.add(start + i)
+      }
+      changed.set(currentFile, target)
+    },
+    result() {
+      return changed
+    },
   }
-
-  return changed
 }
 
 function toWorkspaceRelativeFromSourceFile(sfValue) {
@@ -111,14 +123,41 @@ function parseLcov(lcovText) {
   return coverage
 }
 
-function getDiff(baseRef, headRef) {
+async function collectChangedLines(baseRef, headRef, includePrefix) {
   const range = baseRef ? `${baseRef}...${headRef}` : headRef
-  const cmd = `git diff --unified=0 --no-color ${range} --` +
-    ` "*.ts" "*.tsx" "*.js" "*.jsx"`
-  return execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+  const child = spawn(
+    'git',
+    ['diff', '--unified=0', '--no-color', range, '--', '*.ts', '*.tsx', '*.js', '*.jsx'],
+    { stdio: ['ignore', 'pipe', 'pipe'] },
+  )
+
+  let stderr = ''
+  child.stderr.setEncoding('utf8')
+  child.stderr.on('data', (chunk) => {
+    if (stderr.length < 4096) stderr += chunk
+  })
+
+  // Registered before the read loop so a fast-exiting git cannot fire `close`
+  // before anyone is listening.
+  const exited = new Promise((resolve, reject) => {
+    child.once('error', reject)
+    child.once('close', resolve)
+  })
+
+  const collector = createHunkCollector(includePrefix)
+  for await (const line of readline.createInterface({ input: child.stdout, crlfDelay: Infinity })) {
+    collector.consume(line)
+  }
+
+  const code = await exited
+  if (code !== 0) {
+    throw new Error(`git diff exited with code ${code}${stderr ? `: ${stderr.trim()}` : ''}`)
+  }
+
+  return collector.result()
 }
 
-function main() {
+async function main() {
   const { baseRef, headRef, minCoverage, lcovPath, includePrefix } = parseArgs(process.argv)
   const { effectiveBaseRef, skip, reason } = resolveDiffScope(baseRef, headRef)
 
@@ -132,8 +171,7 @@ function main() {
     throw new Error(`Coverage file not found: ${lcovPath}. Run vitest with coverage before this check.`)
   }
 
-  const diffText = getDiff(effectiveBaseRef, headRef)
-  const changed = parseUnifiedZeroDiff(diffText, includePrefix)
+  const changed = await collectChangedLines(effectiveBaseRef, headRef, includePrefix)
 
   if (changed.size === 0) {
     console.log('diff-coverage: no changed source lines under include prefix; skipping gate')
@@ -198,7 +236,7 @@ function main() {
 }
 
 try {
-  main()
+  await main()
 } catch (error) {
   console.error('diff-coverage gate error:', error instanceof Error ? error.message : String(error))
   process.exit(1)

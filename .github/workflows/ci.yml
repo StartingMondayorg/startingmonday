@@ -336,6 +336,9 @@ jobs:
           fi
           npm run coverage:diff:check -- --base-ref="$BASE_REF" --head-ref="${GITHUB_SHA}" --min-coverage=90
 
+      - name: Diff coverage gate self-test
+        run: npm run test:diff-coverage-gate
+
       # Em-dash check moved to ESLint (no-restricted-syntax in eslint.config.mjs)
       # so violations surface in-editor instead of at CI time.
 

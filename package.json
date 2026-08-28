@@ -70,6 +70,7 @@
         "guard:dashboard-simplification": "node scripts/check-dashboard-simplification-gates.mjs",
         "guard:dashboard-simplification:json": "node scripts/check-dashboard-simplification-gates.mjs --json",
         "test:dashboard-simplification-gate": "node --test scripts/check-dashboard-simplification-gates.test.mjs",
+        "test:diff-coverage-gate": "node --test scripts/check-diff-coverage.test.mjs",
         "seo:crawl:audit": "node scripts/seo/run-crawl-index-audit.mjs",
         "seo:crawl:audit:quick": "node scripts/seo/run-crawl-index-audit.mjs --max-urls 100",
         "test:e2e:monitor:generated": "playwright test tests/e2e/generated --project=smoke",
