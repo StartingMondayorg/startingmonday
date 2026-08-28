@@ -1320,6 +1320,79 @@ cause, affected user counts, and a validation sweep of all active career URLs.
 These are measured facts about the deployed system. No claim here establishes
 that a fix is deployed or that its effect is measured.
 
+#### 16.3.3 Re-plan addendum 2026-08-28 - discovered-source acquisition
+
+Recorded by ENG-SM (Chris Goodwin) on 2026-08-28 under the AGENTS.md
+signal-engine preflight. Pending AO review. Proposes WS2-18.
+
+**Why a further story is required.** WS2-17 assigns one remedy to companies with
+no stored career URL: show the user an honest state and let them supply the URL.
+Section 16.3.2 recorded that decision deliberately, on the grounds that
+backfilling data owned by other people is the wrong correction. That reasoning
+still holds for data the system would have to guess at.
+
+Measurement on 2026-08-28 finds a population it does not cover. The scanner is
+not the only component that resolves a company to a job board. `ats-poller-job`
+probes board tokens from company name and domain, without a career URL, and
+records the result in `ats_boards`. That table currently holds 265 boards with
+`status='active'` (139 greenhouse, 94 ashby, 32 lever).
+
+Every one of the 68 active companies with no career URL already has an
+`ats_boards` row. Thirteen of them carry an active, already-verified board
+token: 9 greenhouse, 3 lever, 1 ashby. The remaining 55 are `not_found` at
+`probe_attempts=2`.
+
+These 13 are not a guess and not a backfill. The board was resolved by an
+existing job, verified by a successful fetch, and stored. `scanCompany` returns
+`{ skipped: true }` for all 13 because it reads only `companies.career_page_url`
+and never consults `ats_boards`. The two components disagree about whether the
+company is reachable, and the more informed one is not consulted.
+
+**Why this is not WS2-15 or WS2-16.** WS2-15 governs how a page is acquired once
+a source is known, and what a render costs. WS2-16 governs whether a stored URL
+is well-formed. Neither governs acquiring a source the user never supplied.
+WS2-18 is proposed rather than stretching either past its stated deliverable.
+
+**Relationship to WS2-17.** Complementary, not competing. WS2-18 removes
+companies from the dark population where an authoritative source already exists;
+WS2-17 surfaces the remainder to the person who can fix them. WS2-18 reduces the
+count WS2-17 must display, and neither depends on the other shipping first.
+
+**Divergence recorded separately.** The two ATS layers have drifted apart and
+this is a WS2-15 concern, not WS2-18. `worker/scanner/ats-adapters.js` supports
+greenhouse, lever, smartrecruiters, bamboohr and workday by URL shape only, with
+no probing and no ashby. `worker/signals/fetch-ats-json.js` supports greenhouse,
+lever and ashby with token probing. 94 active ashby boards are unreadable by the
+user-facing scanner for this reason. Recorded here because it was found by the
+same measurement; it is governed by the WS2-15 adapter-coverage deliverable.
+
+**Proposed story.**
+
+| Story | Owner | Prerequisites | Deliverable | Check / acceptance evidence |
+| --- | --- | --- | --- | --- |
+| WS2-18 Discovered-source acquisition | ENG-SM | WS2-15 telemetry | Scanner resolves a job source from verified `ats_boards` entries when `companies.career_page_url` is absent, with source provenance recorded per scan | A company with no career URL and an active board produces a scan result rather than a skip; the acquisition source is recorded and distinguishes user-supplied from discovered; a company with no career URL and no active board still skips; no scan writes to `companies.career_page_url` |
+
+**Explicitly out of scope.** Resolving a career URL from a company name at
+add-company time was considered and is not proposed. It is inference over
+user-owned data, which is the remedy 16.3.2 rejected, and it is unnecessary for
+the 13 companies where a verified board already exists. If it is revisited it
+requires its own story and its own AO decision.
+
+**Rollback and kill behavior.**
+
+| Story | Rollback / kill behavior |
+| --- | --- |
+| WS2-18 | Discovered-source acquisition is disabled by configuration without redeploy, returning the scanner to career-URL-only resolution. The story never writes to `companies`, so no user-owned row changes and there is nothing to reverse. A board that begins failing is handled by the existing consecutive zero-hit silent-failure alert, and its company returns to the WS2-17 dark population rather than reporting false success. |
+
+**Evidence produced.** Production read-only measurement, 2026-08-28: active
+company counts by career-URL presence, `ats_boards` rows by provider and status,
+the join between no-URL companies and their discovered boards, and the adapter
+provider lists read from both scanner and signals source files. The no-URL
+population was 61 of 198 active companies on 2026-08-21 and is 68 of 200 on
+2026-08-28, across 10 users; WS2-17 has not shipped, so this is not evidence
+about its effect. No claim here establishes that a fix is deployed or that its
+effect is measured.
+
 ### 16.4 WS3 stories - contracts and local ledgers
 
 | Story | Owner | Prerequisites | Deliverable | Check / acceptance evidence |
