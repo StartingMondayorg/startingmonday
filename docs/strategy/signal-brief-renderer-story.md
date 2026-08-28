@@ -18,6 +18,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - HTML escaping for reader, account, positioning, tactic, question, and method-note strings.
 - A fail-closed adapter for the selected client-facing prospect-collateral caller boundary.
 - Runtime validation for client economics, exactly-three-item cover sections, grouped SPIN questions, dated evidence, and HTTPS sources.
+- A disabled-by-default internal preview route at `/api/internal/signal-brief/preview` with internal secret/IP authorization, bounded payload size, and no-store responses.
 
 ## Acceptance evidence
 
@@ -25,12 +26,13 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Renderer unit tests cover Tactics labeling and SPIN ordering.
 - Renderer unit tests cover escaping of reader-controlled strings.
 - Adapter tests cover payload mapping and invalid economics, dates, sources, and cover cardinality.
+- Route tests cover authorization precedence, disabled-by-default behavior, malformed JSON, invalid payloads, and successful rendering.
 - TypeScript compilation passes for the new contract.
 
 ## Deliberate boundary
 
-This slice does not implement sample-mode gating, pricing, subscription terms, pilot-roster focus, or any other recommendation in Adam sections 5-7. Those remain explicit commercial decisions. The first caller is selected as client-facing prospect collateral, but the endpoint/generation caller does not yet exist in this repository; integration remains disabled until that caller and its source JSON are provided.
+This slice does not implement sample-mode gating, pricing, subscription terms, pilot-roster focus, or any other recommendation in Adam sections 5-7. Those remain explicit commercial decisions. The first caller is selected as client-facing prospect collateral. The preview endpoint is an internal, feature-disabled integration seam; it is not yet a production prospect workflow.
 
 ## Next integration decision
 
-Implement the client-facing prospect-collateral caller and map its source payload through `adaptSignalBriefPayload`. The integration must preserve public-record provenance, dated facts, and client configuration boundaries before rendering an artifact. Add an integration test and a rollback/disable control before enabling it for prospects.
+Connect an approved client-facing prospect-collateral producer and map its source payload through `adaptSignalBriefPayload`. The integration must preserve public-record provenance, dated facts, and client configuration boundaries before rendering an artifact. Keep `SIGNAL_BRIEF_PREVIEW_ENABLED=0` until the integration test, rollback/disable drill, and commercial approval are complete.

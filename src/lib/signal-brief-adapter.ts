@@ -80,6 +80,7 @@ function mapImplicationMath(config: RawSignalBriefPayload['client_config']): Sig
 
 export function adaptSignalBriefPayload(payload: RawSignalBriefPayload): SignalBriefInput {
   const config = payload.client_config
+  if (!Array.isArray(payload.profiles) || payload.profiles.length === 0) throw new Error('Signal brief requires at least one profile')
   return {
     title: assertNonEmpty(payload.title, 'title'),
     reader: assertNonEmpty(payload.reader, 'reader'),
