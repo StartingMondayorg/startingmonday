@@ -26,6 +26,10 @@ export type RawSignalBriefPayload = {
     cost_to_reader: string
   }
   profiles: RawSignalBriefAccount[]
+  sample_mode?: {
+    enabled: boolean
+    full_depth_profile_index: number
+  }
   method_note?: string
 }
 
@@ -55,6 +59,17 @@ function assertQuestions(questions: SignalBriefDiscoveryQuestions, account: stri
 function assertTriple(items: string[], field: string): [string, string, string] {
   if (items.length !== 3) throw new Error(`Signal brief field must contain exactly three items: ${field}`)
   return items.map((item, index) => assertNonEmpty(item, `${field}[${index}]`)) as [string, string, string]
+}
+
+function assertSampleMode(sampleMode: RawSignalBriefPayload['sample_mode'], profileCount: number): SignalBriefInput['sample_mode'] {
+  if (!sampleMode) return undefined
+  if (!Number.isInteger(sampleMode.full_depth_profile_index) || sampleMode.full_depth_profile_index < 0 || sampleMode.full_depth_profile_index >= profileCount) {
+    throw new Error('Signal brief full_depth_profile_index must identify one profile')
+  }
+  return {
+    enabled: sampleMode.enabled === true,
+    full_depth_profile_index: sampleMode.full_depth_profile_index,
+  }
 }
 
 function mapProfile(profile: RawSignalBriefAccount): SignalBriefProfile {
@@ -89,6 +104,7 @@ export function adaptSignalBriefPayload(payload: RawSignalBriefPayload): SignalB
     what_it_does: assertTriple(config.what_it_does, 'client_config.what_it_does'),
     cost_to_reader: assertNonEmpty(config.cost_to_reader, 'client_config.cost_to_reader'),
     profiles: payload.profiles.map(mapProfile),
+    sample_mode: assertSampleMode(payload.sample_mode, payload.profiles.length),
     method_note: payload.method_note?.trim() || undefined,
   }
 }

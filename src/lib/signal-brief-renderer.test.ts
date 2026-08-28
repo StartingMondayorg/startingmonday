@@ -63,4 +63,16 @@ describe('renderSignalBrief', () => {
     expect(html).not.toContain('Method note')
     expect(html).toContain('<h2>Account briefs</h2>')
   })
+
+  it('renders exactly one full-depth profile in sample mode', () => {
+    const html = renderSignalBrief({
+      ...input,
+      profiles: [input.profiles[0]!, { ...input.profiles[0]!, account: 'Second account' }],
+      sample_mode: { enabled: true, full_depth_profile_index: 0 },
+    })
+
+    expect(html.match(/<section class="public-evidence">/g)).toHaveLength(1)
+    expect(html).toContain('This profile is available in the full brief.')
+    expect(html).not.toContain('Second account</h2><section class="public-evidence">')
+  })
 })

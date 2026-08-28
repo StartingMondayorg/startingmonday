@@ -59,6 +59,13 @@ describe('adaptSignalBriefPayload', () => {
     })).toThrow(/win_rate/)
   })
 
+  it('rejects a sample-mode profile index outside the profile set', () => {
+    expect(() => adaptSignalBriefPayload({
+      ...payload,
+      sample_mode: { enabled: true, full_depth_profile_index: 99 },
+    })).toThrow(/full_depth_profile_index/)
+  })
+
   it('rejects cover sections that do not contain exactly three items', () => {
     expect(() => adaptSignalBriefPayload({
       ...payload,

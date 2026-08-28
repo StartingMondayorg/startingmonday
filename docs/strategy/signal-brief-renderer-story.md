@@ -20,6 +20,7 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Runtime validation for client economics, exactly-three-item cover sections, grouped SPIN questions, dated evidence, and HTTPS sources.
 - A disabled-by-default internal preview route at `/api/internal/signal-brief/preview` with internal secret/IP authorization, bounded payload size, and no-store responses.
 - A signal-brief quality gate enforcing SPIN question cardinality and investigate-first positioning before rendering.
+- An explicit request-scoped `sample_mode` policy that renders one selected profile at full depth and all other profiles as account-only teasers.
 
 ## Acceptance evidence
 
@@ -29,12 +30,13 @@ As a relationship-driven seller, I need a brief to lead with the commercial prob
 - Adapter tests cover payload mapping and invalid economics, dates, sources, and cover cardinality.
 - Route tests cover authorization precedence, disabled-by-default behavior, malformed JSON, invalid payloads, and successful rendering.
 - Route validation rejects prescriptive positioning and malformed SPIN question structures.
+- Sample-mode tests prove one full-depth profile and teaser-only output for the remaining profiles.
 - TypeScript compilation passes for the new contract.
 
 ## Deliberate boundary
 
-This slice does not implement sample-mode gating, pricing, subscription terms, pilot-roster focus, or any other recommendation in Adam sections 5-7. Those remain explicit commercial decisions. The first caller is selected as client-facing prospect collateral. The preview endpoint is an internal, feature-disabled integration seam; it is not yet a production prospect workflow.
+This slice implements only the pure rendering policy for sample mode. It does not implement pricing menus, billing, subscription terms, pilot-roster focus, or any other recommendation in Adam sections 5-7. Those remain explicit commercial decisions. The first caller is selected as client-facing prospect collateral. The preview endpoint is an internal, feature-disabled integration seam; it is not yet a production prospect workflow.
 
 ## Next integration decision
 
-Connect an approved client-facing prospect-collateral producer and map its source payload through `adaptSignalBriefPayload`. The integration must preserve public-record provenance, dated facts, and client configuration boundaries before rendering an artifact. Keep `SIGNAL_BRIEF_PREVIEW_ENABLED=0` until the integration test, rollback/disable drill, and commercial approval are complete.
+Connect an approved client-facing prospect-collateral producer and map its source payload through `adaptSignalBriefPayload`. The integration must preserve public-record provenance, dated facts, and client configuration boundaries before rendering an artifact. Keep `SIGNAL_BRIEF_PREVIEW_ENABLED=0` until the integration test, rollback/disable drill, and commercial approval are complete. Enable `sample_mode` only from an explicitly approved caller configuration, and add a priced menu only after Rich approves the commercial offer.

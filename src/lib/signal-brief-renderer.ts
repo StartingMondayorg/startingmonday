@@ -33,6 +33,10 @@ export type SignalBriefInput = {
   what_it_does: [string, string, string]
   cost_to_reader: string
   profiles: SignalBriefProfile[]
+  sample_mode?: {
+    enabled: boolean
+    full_depth_profile_index: number
+  }
   method_note?: string
 }
 
@@ -72,9 +76,14 @@ function renderProfile(profile: SignalBriefProfile): string {
   return `<article class="profile"><h2>${escapeHtml(profile.account)}</h2>${renderEvidence(profile.evidence)}<section><h3>Positioning</h3><p>${escapeHtml(profile.positioning)}</p></section><section><h3>Tactics</h3><p>${escapeHtml(profile.suggested_move)}</p></section>${renderDiscoveryQuestions(profile.discovery_questions)}</article>`
 }
 
+function renderProfileTeaser(profile: SignalBriefProfile): string {
+  return `<article class="profile-teaser"><h2>${escapeHtml(profile.account)}</h2><p>This profile is available in the full brief.</p></article>`
+}
+
 export function renderSignalBrief(input: SignalBriefInput): string {
   const expectedValue = input.implication_math.deal_value * input.implication_math.win_rate
-  const profiles = input.profiles.map(renderProfile).join('')
+  const fullDepthIndex = input.sample_mode?.enabled ? input.sample_mode.full_depth_profile_index : -1
+  const profiles = input.profiles.map((profile, index) => input.sample_mode?.enabled && index !== fullDepthIndex ? renderProfileTeaser(profile) : renderProfile(profile)).join('')
   const methodNote = input.method_note ? `<footer><h2>Method note</h2><p>${escapeHtml(input.method_note)}</p></footer>` : ''
 
   return `<main class="signal-brief"><header class="value-cover"><p class="eyebrow">Signal intelligence brief</p><h1>${escapeHtml(input.title)}</h1><p class="reader">Prepared for ${escapeHtml(input.reader)}</p></header><section class="value-cover-problems"><h2>What is already costing your week</h2>${renderList(input.problems, 'problem-list')}</section><section class="value-cover-implication"><h2>Why timing changes the economics</h2><p>${formatCurrency(input.implication_math.deal_value)} average deal value x ${(input.implication_math.win_rate * 100).toFixed(0)}% baseline win rate = <strong>${formatCurrency(expectedValue)}</strong> expected value.</p><p>${escapeHtml(input.implication_math.lift_statement)}</p></section><section class="value-cover-solution"><h2>What this document does about it</h2>${renderList(input.what_it_does, 'solution-list')}</section><section class="value-cover-cost"><h2>What it costs you</h2><p>${escapeHtml(input.cost_to_reader)}</p></section><section class="profiles"><h2>Account briefs</h2>${profiles}</section>${methodNote}</main>`
