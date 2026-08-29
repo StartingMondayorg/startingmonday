@@ -22,6 +22,7 @@
 /test-results
 /tests/e2e/.auth
 /.lighthouseci
+/lighthouserc.shard-*.json
 
 # next.js
 /.next/
