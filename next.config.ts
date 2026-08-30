@@ -42,9 +42,17 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['pdf-parse', 'mammoth'],
+  outputFileTracingExcludes: {
+    '/*': ['./docs/**/*'],
+  },
   outputFileTracingIncludes: {
-    '/dashboard/outreach': ['./docs/outreach/**/*.csv'],
-    '/mauricio-kickoff-execution/apollo-read-access': ['./docs/outreach/**/*.csv'],
+    '/dashboard/admin/guide': [
+      './docs/guide-retrieval-eval.latest.json',
+      './docs/user-guide.manifest.json',
+    ],
+    '/api/\(auth\)/google-calendar/*': ['./docs/operations/reminders/startingmonday-posting-reminders.ics'],
+    '/api/\(ops\)/cron/google-calendar-sync': ['./docs/operations/reminders/startingmonday-posting-reminders.ics'],
+    '/api/\(ops\)/cron/ui-ux-weekly-review': ['./docs/ui-ux-page-scores-2026-05-21.csv'],
   },
   experimental: {
     cpus: RAILWAY_BUILD_CPUS,
