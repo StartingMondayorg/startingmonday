@@ -78,21 +78,23 @@ describe('feature docs', () => {
       },
     }))
 
-    const isolatedModule = await import('./feature-docs')
+    try {
+      const isolatedModule = await import('./feature-docs')
 
-    await expect(isolatedModule.listFeatureDocCards()).resolves.toEqual([
-      expect.objectContaining({
-        slug: 'standalone',
-        title: 'Standalone',
-        summary: 'Bundled summary.',
-        persona: 'cross-persona',
-        category: 'analysis',
-        filePath: '',
-      }),
-    ])
-
-    vi.doUnmock('fs/promises')
-    vi.doUnmock('@/data/features-docs.bundle.json')
-    vi.resetModules()
+      await expect(isolatedModule.listFeatureDocCards()).resolves.toEqual([
+        expect.objectContaining({
+          slug: 'standalone',
+          title: 'Standalone',
+          summary: 'Bundled summary.',
+          persona: 'cross-persona',
+          category: 'analysis',
+          filePath: '',
+        }),
+      ])
+    } finally {
+      vi.doUnmock('fs/promises')
+      vi.doUnmock('@/data/features-docs.bundle.json')
+      vi.resetModules()
+    }
   })
 })
