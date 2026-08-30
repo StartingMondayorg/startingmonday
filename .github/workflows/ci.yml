@@ -209,6 +209,9 @@ jobs:
       - name: Documentation command check
         run: npm run docs:check-commands
 
+      - name: Runtime trace scope contract tests
+        run: npm run test:runtime-trace-scope
+
       - name: Signal-engine master-plan pin guard
         if: github.event_name != 'pull_request' || steps.scoped.outputs.signal_engine_plan == 'true'
         run: npm run guard:signal-engine-plan

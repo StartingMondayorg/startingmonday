@@ -14,6 +14,7 @@
         "railway:preflight": "npm run build",
         "prebuild:guard": "node scripts/prebuild-guard.mjs",
         "guard:runtime-trace-scope": "node scripts/check-runtime-trace-scope.mjs",
+        "test:runtime-trace-scope": "node --test scripts/runtime-trace-scope.test.mjs",
         "start": "next start",
         "lint": "eslint --cache src scripts worker tests",
         "check:pr": "node scripts/pre-pr-check.mjs",
