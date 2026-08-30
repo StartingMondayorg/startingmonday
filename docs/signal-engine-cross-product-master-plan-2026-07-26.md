@@ -673,6 +673,7 @@ row and must re-plan affected stories rather than preserving this assessment.
 | ID | Feature | Classification and provenance | Current disposition | Owning controls / decision |
 | --- | --- | --- | --- | --- |
 | KEX-01 | Starting Monday Contacts / LinkedIn-import / Apollo matching | `KNOWN_EXCEPTION` - founder-authorized pre-guardrail feature. Initial consent, match, audit, and schema implementation committed 2026-05-19 (`2c94eccb`); hybrid LinkedIn-export / Apollo matching foundation committed 2026-06-22 (`bbe4b3f9`). Both predate D15 / Spec 11 section 1 ratification on 2026-07-27 and MSPS-003 application to this scope; this is not classified as a retroactive guardrail violation. | Founder disposition `NARROW` recorded 2026-08-10. REM-01 permanently removes Apollo candidate seeding, provider-derived person rows in scope, and numeric person-score computation/storage/rendering. User-brought export storage and categorical matching survive only as a quarantined, product-local, hard-deletable implementation base behind independent default-OFF `relationship_network_matching_enabled`. No expansion or Phase C use is authorized. WS0-03 inventories code/data/usage; WS0-04 verifies hosted state; WS1-08 governs license, retention, backup, and destruction mechanics. Runtime quarantine and purge completion remain `UNVERIFIED` until evidence is recorded. | WS0-03, WS0-04, WS0-06, WS1-08; AO owns REM-01. G5 verdict (c) decides whether the retained user-export capability may re-enable in its narrowed shape; flag OFF and no provider path are the default/kill behavior. |
+| KEX-02 | Public names and titles at watched companies, for company-level signal evidence (`WS11-01` Names layer / entity resolution cache) | `KNOWN_EXCEPTION` - founder-authorized narrowing of D14/D15 (Spec 11 section 1: no person-level behavioral tracking, company signals only), recorded 2026-08-27 during review of the `WS11-01` Source Coverage & Search Capacity plan. Applies cross-product to both MandateSignal and Starting Monday, not scoped to one repository. | Founder disposition `NARROW` recorded 2026-08-27: publicly available names and titles at watched companies (e.g., executive appointments/departures sourced from EDGAR 8-K 5.02, company newsroom/leadership pages, wire services, and public regional press) are approved for storage and tracking as company-level signal evidence. This does not authorize behavioral tracking, private or inferred data, purchased dossiers, LinkedIn scraping, or any source outside an approved adapter's published record. No numeric person-score, engagement tracking, or cross-session profile of a named individual is authorized under this exception. | `WS11-01` owns the adapter and Names-layer implementation; WS1-08 governs source-rights reconciliation for any new adapter; WS0-03/WS0-04 apply if either product's inventory or hosted state is affected. Reversal trigger: any use beyond storing/displaying a name+title+source+date tuple as company-level evidence requires a new, separately recorded exception. |
 
 ## 6. Target Logical Contracts
 
@@ -1222,6 +1223,7 @@ automation story blocked.
 | WS2-14 MandateSignal governed improvement and independent reconstruction | AO + ENG-MS + DATA + independent reviewer | WS2-12 minimal assurance measured; WS2-13 trigger or accepted critical defect | Two advisory agents initially, registered blinded quality sets, proposal/shadow/promotion workflow, control-correlation review, and quarterly clean-room reconstruction. Four additional agents and long soak remain trigger-deferred | No implementer self-approves evidence or promotion; independent reviewer reconstructs one signal; recommendations are bounded and reversible; long soak begins only with representative measured load and an accepted capacity question |
 | WS2-15 Scanner page-acquisition economics | ENG-SM | WS2-01, WS2-02 | Acquisition-path decision contract plus per-scan path telemetry: authoritative-zero versus lookup-failure distinction, ATS adapter coverage, and render budget per cycle | Per-scan acquisition path recorded in `scan_results`; an ATS returning HTTP 200 with an empty list produces a zero-hit result and zero render calls; render volume per cycle measurably below the recorded pre-change baseline |
 | WS2-16 Source URL integrity | ENG-SM | WS0-03 | Normalization and validation contract for `companies.career_page_url` on write, plus a corrected backfill of existing rows | No stored career URL fails validation; no two companies under one owner silently share a career URL; corrected rows recorded with prior values |
+| WS2-17 Scan outcome visibility | ENG-SM | WS2-16 | Per-company scan health projection derived from `scan_results`, a bounded set of user-facing outcome states, and a career-URL prompt at company-add | Every active company resolves to exactly one displayed state with no empty or ambiguous case; a company with no career URL shows a prompt rather than silence; "working, no roles yet" is visually distinct from every failure state; the count of companies with no career URL falls measurably after the prompt ships |
 
 WS2-10 through WS2-14 are implemented only in the MandateSignal repository.
 They do not create a Starting Monday runtime, data, deployment, or release
@@ -1287,6 +1289,62 @@ windows, 2026-08-20: scan-gap distribution by tier, successful scans per company
 per week against advertised cadence, scan failure causes, and 429 counts grouped
 by acquisition path. These are measured facts about the deployed system. No
 claim here establishes that a fix is deployed or that its effect is measured.
+
+#### 16.3.2 Re-plan addendum 2026-08-21 - scan outcome visibility
+
+Recorded by ENG-SM (Chris Goodwin) on 2026-08-21 under the AGENTS.md
+signal-engine preflight. Pending AO review. Adds WS2-17.
+
+**Why a further story is required.** WS2-16 governs whether a stored career URL
+is well-formed and points at the right company. Measurement taken on 2026-08-21
+shows that URL validity is a small part of the problem it was created to solve.
+
+Of 198 active companies, a validation sweep rejects **4** rows. In the same
+population, **113 companies deliver nothing**: 61 have no career URL at all and
+are silently never scanned, and 52 have a URL but produced no productive scan in
+their last three attempts, across 13 distinct users.
+
+The 52 divide five ways, and the product renders all five identically as
+silence:
+
+| Cause | Companies |
+| --- | --- |
+| Reads correctly, genuinely no matching leadership roles | 22 |
+| Fetch failure, predominantly browserless.io rate limiting | 13 |
+| ATS with no adapter | 7 |
+| Supported ATS, stale token or URL | 5 |
+| Target site blocks automated access | 5 |
+
+A user cannot distinguish "no roles exist" from "we cannot read this page". The
+scanner computes the distinction on every run and discards it at the UI
+boundary. No story in WS2-01 through WS2-16 covers user-visible scan outcome, so
+WS2-17 is added rather than stretching WS2-16 past its stated deliverable.
+
+**Relationship to the existing stories.** WS2-17 depends on WS2-16 for the
+career-URL prompt, and is otherwise independent. It does not require WS2-15
+telemetry, and it improves the user-visible picture regardless of the order in
+which WS2-15, WS2-16 and the browserless.io concurrency work land.
+
+**Effect on WS2-16 scope.** WS2-17 removes the recurring-cleanup justification
+for WS2-16. A user shown an honest failure state corrects their own career URL,
+so backfills against data owned by other people stop being the remedy. WS2-16
+retains validation on write, which prevents the malformed value being stored in
+the first place, and its one-off backfill, which was applied to seven rows on
+2026-08-21. Note four of the rejectable rows are owned by a team member and were
+deliberately left unmodified; WS2-16 reports rows it does not own rather than
+editing them, and WS2-17 is how their owner learns of them.
+
+**Rollback and kill behavior.**
+
+| Story | Rollback / kill behavior |
+| --- | --- |
+| WS2-17 | The scan health projection is derived and additive; it never gates a scan and can be recomputed from `scan_results` at any time. Outcome states degrade to the current silent behavior by configuration without redeploy. The career-URL prompt is dismissible and never blocks company creation. No user-owned data is modified by this story. |
+
+**Evidence produced.** Production read-only measurement, 35-day window,
+2026-08-21: company counts by scan outcome class, dark-company breakdown by
+cause, affected user counts, and a validation sweep of all active career URLs.
+These are measured facts about the deployed system. No claim here establishes
+that a fix is deployed or that its effect is measured.
 
 ### 16.4 WS3 stories - contracts and local ledgers
 
@@ -1360,6 +1418,8 @@ claim here establishes that a fix is deployed or that its effect is measured.
 | WS7-07 Outcome loop | ENG-SM | WS7-02 | Feedback controls and local recipe update | Feedback event and resulting config version are both auditable |
 | WS7-08 Product promotion gate | AO + OPS | WS6-08, WS7-03 through WS7-07 | Cohort rollout decision | Existing release, UX, a11y, performance, privacy and telemetry gates pass |
 | WS7-09 Outreach-assist lift study | AO + DATA | WS7-06, measured cohort | Action, conversion and retention comparison for assisted versus eligible unassisted leads | Rung 3 remains out of backlog until measured positive lift and at least 10 paying customers; confounding and support reported |
+| WS7-10 People to Know hand-off | ENG-SM | DG-PTK-01 through DG-PTK-03; approved UX contract; existing Live Brief delivery | Default-off title/why-them block with allowlisted LinkedIn search and optional plain Apollo account link; no provider fetch or contact data | URL/component/no-contact/no-fetch/no-send tests, count-only telemetry tests, private-brief desktop/mobile checks, and flag-off characterization pass |
+| WS7-11 People to Know cited names | ENG-SM + LEGAL | WS7-10; WS1-08 product-local display decisions; WS2-04/06; DG-PTK-04 | Request/company-role evidence claims with source/date, 90-day re-verification, conflict/retraction handling, title fallback, and human review | Rights, RLS/service-role, retention/deletion, stale/conflict/blocked/uncited fixtures, manual-source trial, collection kill, and Live Brief render evidence pass |
 
 ### 16.9 WS8 stories - MandateSignal projection
 
@@ -1373,6 +1433,8 @@ claim here establishes that a fix is deployed or that its effect is measured.
 | WS8-06 Operator QA and correction | ENG-MS | WS8-03, AUTHZ-04 | Suppress, correct, rescore and rerun with immutable audit | Admin authorization and recent-auth requirements pass |
 | WS8-07 Quality burn-in | AO + OPS | WS8-04 through WS8-06 | Niche-specific usefulness/evidence/freshness/duplicate scorecard | MandateSignal GA control ENG-04 thresholds approved and met before unreviewed delivery |
 | WS8-08 Limited-availability gate | AO | WS8-07 plus GA P0 controls | Launch disposition | This plan records GA register result; it does not override open controls |
+| WS8-09 People to Know hand-off | ENG-MS | DG-PTK-01 through DG-PTK-03; approved UX contract; pinned lead/detail route | Default-off lead-detail title/why-them block with allowlisted LinkedIn search and optional plain Apollo account link, visibly separate from paid contact reveal | URL/component/no-contact/no-fetch/no-send tests prove zero reveal-provider calls, credits, or reveal-ledger writes; tenant denial, mobile/desktop, and flag-off checks pass |
+| WS8-10 People to Know cited names | ENG-MS + LEGAL | WS8-09; D14/D15 classification; DG-PTK-04; source rights; ENG-03/04; AUTHZ-01/02/04; LEG-03/04/05; REL-04 | Tenant/lead-role evidence claims with source/date, 90-day re-verification, contradiction/retraction handling, title fallback, and founder QA | Product-local rights, RLS, retention/deletion, stale/conflict/blocked/uncited fixtures, manual-source trial, collection kill, no reveal coupling, and Limited Availability evidence pass |
 
 ### 16.10 WS9 stories - aggregate learning exchange
 
@@ -1403,6 +1465,19 @@ claim here establishes that a fix is deployed or that its effect is measured.
 | WS10-10 Founder DM queue and outreach event ledger | AO + ENG-MS | WS10-09; MSPS-003 source policy; DG-03 product-local schemas | MandateSignal-local append-only outreach prospect-event and commitment tables, funnel-state promotion, manual reply logging with deterministic next-action routing, a today-queue surface, and a generated tracking-workbook export; no send automation and no cross-product table access | Append-only and RLS tests pass; grep/API inventory proves no automated send path and copy actions never write send state; export is byte-stable for identical inputs; rollback is flag-off plus additive-migration revert |
 | WS10-11 Outreach measurement, quota derivation, and experiment registration | AO + DATA | WS10-10 events; measured context-scan yield | Send quota derived from measured trigger yield before any send-volume gate opens; opener experiments pre-registered (arms, exclusions, reply taxonomy) following the MSPS-DEC-002/003 patterns; attribution and funnel review computed from ledger events | Quota record cites measured yield with denominators; pre-registration commit precedes the first send; kill rules evaluate complete denominators only |
 | WS10-12 Scanner-first sample-brief evidence path | ENG-MS + AO | WS10-09 lane contracts; DG-10 | Feature-flagged engine-first candidate surfacing for sample runs, bounded schema-validated prose generation from verified signal rows only, and coverage-gap records feeding WS1-13 source build-order | Agent-research fallback retained behind the flag; deterministic QA plus founder review on all output (MandateSignal ENG-04); every fallback run produces a gap record; flag-off restores the current path |
+
+### 16.12 WS11 stories - source coverage and search capacity
+
+| Story | Owner | Prerequisites | Deliverable | Check / acceptance evidence |
+| --- | --- | --- | --- | --- |
+| WS11-01 Watchlist-scoped signal orchestration over existing adapters | ENG-SM + ENG-MS (Sol, Teddy) | WS0-03 | A `watchlists`/`watchlist_entries` schema and a thin orchestrator that runs the existing `worker/signals` adapters (SEC EDGAR filings/officers/proxy/activist/insider, PR wire, press room, company news, ATS boards, WARN notices) against watchlist entries instead of the product `companies` table, writing into the existing canonical `upsertCompanyEvent`/`writeSignal` path; no new source-fetching code duplicates an adapter that already exists | A 52-account edition uses fewer than 20 web searches; quiet accounts use zero; each adapter call passes its kill-switch/disable-on-failure test before being marked done |
+| WS11-02 First-observed store and per-source cursors (watchlist-scoped) | ENG-SM + ENG-MS | WS11-01 | Reuse `event-store.js`'s `upsertCompanyEvent` corroboration/dedup model for watchlist entries; add per-adapter cursors (accession number, RSS GUID, page hash) so a run reads only what moved | Edition N+1 does not re-emit events already surfaced in edition N; cost scales with change, not watchlist size |
+| WS11-03 Coverage accounting and search budgeter | ENG-SM + ENG-MS | WS11-01 | `coverage: full \| thin \| failed` per (watchlist entry, source, run) in a new `source_coverage` table; retry queue for thin/failed; per-run search allowance (e.g., 40) allocated act-now-first with every call logged | ≥96% of watchlist accounts `full` per edition; still-thin accounts named in the brief; search log accounts for every call's reason |
+| WS11-04 Tier 2 government/regulatory adapters (breach portals, IDA/zoning agendas, court dockets) | ENG-SM + ENG-MS | WS11-01; WS11-02 | HHS OCR, state AG breach lists, NYDFS/FTC/EPA/SEC litigation feeds; IDA and municipal agenda readers (OCR where needed); CourtListener/class-action trackers. Reuse the existing `fetch-warn-notices.js`/`warn-notice-parsing.js`/`warn-state-feeds.js` for WARN rather than rebuilding | Median lag from public event to first-observed ≤3 days for Tier 1-2 sources; each new adapter ships its kill switch per WS11-01's acceptance bar |
+| WS11-05 Entity resolution cache and Names layer (watchlist-scoped) | ENG-SM + ENG-MS | WS11-01; WS11-02; KEX-02 | Name/org resolution cache (canonical org, aliases, domains, CIK, ticker, newsroom/leadership URLs, ATS provider), re-verified monthly. Reuse `diff-exec-snapshot.js`'s hire/departure diffing for watchlist entries rather than rebuilding; Names layer scoped to publicly available names and titles only | Every act-now item carries at least one named decision-maker from a Tier 1-3 source; no behavioral tracking, private/inferred data, or cross-session person profile is stored, per `KEX-02` |
+| WS11-06 Tier 3 regional press adapters | ENG-SM + ENG-MS | Per-outlet human ToS sign-off recorded (Rich) — review begins Week 1 in parallel with WS11-01, decoupled from Tier 3 build, so sign-off is not the Week 3 bottleneck; A-06 (≤$300/month total, ≤$175/month per outlet) | Subscriber RSS/newsletter parsing for Westfair, Hartford Business Journal, LIBN, Crain's New York, Hearst (CT Insider/Stamford Advocate/NH Register), lohud, Newsday; free regionals (Patch, CT Mirror, CT by the Numbers, Mid Hudson News, RCBJ, Greater Long Island) | No outlet's adapter is engineered before its dated sign-off is recorded; article text is never republished, only cited and linked |
+| WS11-07 Regional recall back-test with independent holdout | AO (Rich or Mo) + DATA | WS11-06 | A 20-item CT/NY private-company IT-leadership-change sample, built and dated independently of the pipeline before pipeline output is reviewed, stored separately from any pipeline-generated candidate list | ≥70% recall against the holdout; a separate automated test fails the build if the holdout file was modified after its recorded creation date |
+| WS11-08 Tier 4 search/news API fallback | ENG-SM + ENG-MS | WS11-03 | GDELT integration; Google Programmable Search/Bing News API/NewsAPI as a bounded, logged fallback; Google Alerts to RSS | Fallback calls only fire within the WS11-03 search budget and only for ambiguity resolution or act-now candidates, never as the primary read path |
 
 ## 17. Existing-System Dependency Inventory
 

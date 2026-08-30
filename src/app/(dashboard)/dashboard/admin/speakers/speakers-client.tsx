@@ -1,22 +1,7 @@
 'use client'
 
 import { Fragment, useState, useRef } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
-
+import { Alert, AlertDescription, Button, Card, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 type Appearance = {
   conference_name: string
   conference_year: number
@@ -51,19 +36,19 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  not_started:    'bg-slate-100 text-slate-500',
-  contacted:      'bg-blue-50 text-blue-700',
-  responded:      'bg-amber-50 text-amber-700',
-  converted:      'bg-green-50 text-green-700',
-  not_interested: 'bg-red-50 text-red-500',
-  skip:           'bg-slate-50 text-slate-400',
+  not_started:    'bg-muted text-muted-foreground',
+  contacted:      'bg-info/10 text-info',
+  responded:      'bg-warning/10 text-warning',
+  converted:      'bg-success/10 text-success',
+  not_interested: 'bg-destructive/10 text-destructive',
+  skip:           'bg-muted text-muted-foreground',
 }
 
 const PRIORITY_LABELS: Record<number, string> = { 1: 'High', 2: 'Medium', 3: 'Low' }
 const PRIORITY_COLORS: Record<number, string> = {
-  1: 'text-orange-600 font-bold',
-  2: 'text-slate-700',
-  3: 'text-slate-400',
+  1: 'text-primary font-bold',
+  2: 'text-muted-foreground',
+  3: 'text-muted-foreground',
 }
 
 export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[] }) {
@@ -172,8 +157,8 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
             value={key}
             className={`text-[12px] font-semibold px-3 py-1.5 rounded border transition-colors ${
               statusFilter === key
-                ? 'bg-slate-900 border-slate-900 text-white hover:bg-slate-900'
-                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-400'
+                ? 'bg-primary aria-pressed:bg-primary border-border text-primary-foreground hover:bg-primary'
+                : 'bg-card border-border text-card-foreground hover:border-border'
             }`}
           >
             {label} <span className="ml-1 opacity-60">{counts[key] ?? 0}</span>
@@ -214,29 +199,29 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
 
       {/* Table */}
       <Card variant="default" className="p-0 overflow-hidden">
-        <div className="px-6 py-[18px] border-b border-slate-200">
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
+        <div className="px-6 py-[18px] border-b border-border">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
             Speakers ({filtered.length})
           </span>
         </div>
 
         {filtered.length === 0 ? (
-          <p className="px-6 py-8 text-[13px] text-slate-400">
+          <p className="px-6 py-8 text-[13px] text-muted-foreground">
             No speakers match this filter. Import a CSV to get started.
           </p>
         ) : (
           <Table className="text-[12px]">
             <TableHeader>
-              <TableRow className="bg-slate-50 border-b border-slate-100">
-                <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Name</TableHead>
-                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Company</TableHead>
-                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Conferences</TableHead>
-                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Priority</TableHead>
-                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
-                <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Notes</TableHead>
+              <TableRow className="bg-muted border-b border-border">
+                <TableHead className="px-6 py-2.5 font-semibold text-muted-foreground">Name</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Company</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Conferences</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Priority</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Status</TableHead>
+                <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Notes</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="divide-y divide-slate-50">
+            <TableBody className="divide-y divide-border">
               {filtered.map(s => {
                 const isExpanded = expandedId === s.id
                 const appearances = [...(s.conference_appearances ?? [])].sort(
@@ -245,40 +230,40 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                 return (
                   <Fragment key={s.id}>
                     <TableRow
-                      className={`cursor-pointer hover:bg-slate-50 transition-colors ${isExpanded ? 'bg-slate-50' : ''}`}
+                      className={`cursor-pointer hover:bg-muted transition-colors ${isExpanded ? 'bg-muted' : ''}`}
                       onClick={() => setExpandedId(isExpanded ? null : s.id)}
                     >
                       <TableCell className="px-6 py-3 whitespace-normal">
-                        <div className="font-semibold text-slate-900">{s.full_name}</div>
-                        {s.title && <div className="text-slate-400 text-[11px] mt-0.5">{s.title}</div>}
+                        <div className="font-semibold text-foreground">{s.full_name}</div>
+                        {s.title && <div className="text-muted-foreground text-[11px] mt-0.5">{s.title}</div>}
                         {s.linkedin_url && (
                           <a
                             href={s.linkedin_url}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="text-[11px] text-blue-600 hover:underline"
+                            className="text-[11px] text-info hover:underline"
                           >
                             LinkedIn
                           </a>
                         )}
                       </TableCell>
                       <TableCell className="px-4 py-3 whitespace-normal">
-                        <div className="text-slate-700">{s.company ?? '-'}</div>
-                        {s.sector && <div className="text-slate-400 text-[11px]">{s.sector}</div>}
+                        <div className="text-muted-foreground">{s.company ?? '-'}</div>
+                        {s.sector && <div className="text-muted-foreground text-[11px]">{s.sector}</div>}
                       </TableCell>
                       <TableCell className="px-4 py-3 whitespace-normal">
                         {appearances.length === 0 ? (
-                          <span className="text-slate-300">-</span>
+                          <span className="text-muted-foreground">-</span>
                         ) : (
                           <div className="space-y-0.5">
                             {appearances.slice(0, 2).map(a => (
-                              <div key={`${a.conference_name}-${a.conference_year}`} className="text-slate-600">
-                                {a.conference_name} <span className="text-slate-400">{a.conference_year}</span>
+                              <div key={`${a.conference_name}-${a.conference_year}`} className="text-muted-foreground">
+                                {a.conference_name} <span className="text-muted-foreground">{a.conference_year}</span>
                               </div>
                             ))}
                             {appearances.length > 2 && (
-                              <div className="text-slate-400">+{appearances.length - 2} more</div>
+                              <div className="text-muted-foreground">+{appearances.length - 2} more</div>
                             )}
                           </div>
                         )}
@@ -321,7 +306,7 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                           </SelectContent>
                         </Select>
                         {s.outreach_date && (
-                          <div className="text-slate-400 text-[11px] mt-0.5">{s.outreach_date}</div>
+                          <div className="text-muted-foreground text-[11px] mt-0.5">{s.outreach_date}</div>
                         )}
                       </TableCell>
                       <TableCell className="px-4 py-3 max-w-[200px] whitespace-normal" onClick={e => e.stopPropagation()}>
@@ -333,28 +318,28 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                       </TableCell>
                     </TableRow>
                     {isExpanded && (
-                      <TableRow className="bg-slate-50">
+                      <TableRow className="bg-muted">
                         <TableCell colSpan={6} className="px-6 py-4 whitespace-normal">
                           <div className="grid grid-cols-2 gap-6">
                             <div>
-                              <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">All Appearances</div>
+                              <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">All Appearances</div>
                               {appearances.length === 0 ? (
-                                <p className="text-[12px] text-slate-400">None recorded.</p>
+                                <p className="text-[12px] text-muted-foreground">None recorded.</p>
                               ) : (
                                 <Table className="text-[12px]">
                                   <TableHeader>
-                                    <TableRow className="text-slate-400">
+                                    <TableRow className="text-muted-foreground">
                                       <TableHead className="pb-1 font-semibold">Conference</TableHead>
                                       <TableHead className="pb-1 font-semibold">Year</TableHead>
                                       <TableHead className="pb-1 font-semibold">Type</TableHead>
                                     </TableRow>
                                   </TableHeader>
-                                  <TableBody className="divide-y divide-slate-100">
+                                  <TableBody className="divide-y divide-border">
                                     {appearances.map(a => (
                                       <TableRow key={`${a.conference_name}-${a.conference_year}`}>
-                                        <TableCell className="py-1.5 text-slate-700">{a.conference_name}</TableCell>
-                                        <TableCell className="py-1.5 text-slate-500">{a.conference_year}</TableCell>
-                                        <TableCell className="py-1.5 text-slate-400 capitalize">{a.session_type ?? '-'}</TableCell>
+                                        <TableCell className="py-1.5 text-muted-foreground">{a.conference_name}</TableCell>
+                                        <TableCell className="py-1.5 text-muted-foreground">{a.conference_year}</TableCell>
+                                        <TableCell className="py-1.5 text-muted-foreground capitalize">{a.session_type ?? '-'}</TableCell>
                                       </TableRow>
                                     ))}
                                   </TableBody>
@@ -363,8 +348,8 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
                             </div>
                             {s.notes && (
                               <div>
-                                <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Notes</div>
-                                <p className="text-[12px] text-slate-600 leading-relaxed">{s.notes}</p>
+                                <div className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Notes</div>
+                                <p className="text-[12px] text-muted-foreground leading-relaxed">{s.notes}</p>
                               </div>
                             )}
                           </div>
@@ -381,15 +366,15 @@ export function SpeakersClient({ initialSpeakers }: { initialSpeakers: Speaker[]
 
       {/* CSV format hint */}
       <Card variant="default" className="mt-6 p-5">
-        <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2">CSV Import Format</div>
-        <p className="text-[12px] text-slate-500 mb-2">
+        <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-2">CSV Import Format</div>
+        <p className="text-[12px] text-muted-foreground mb-2">
           Header row required. Columns (all optional except full_name):
         </p>
-        <code className="block text-[11px] text-slate-600 bg-slate-50 rounded p-3 font-mono leading-relaxed">
+        <code className="block text-[11px] text-muted-foreground bg-muted rounded p-3 font-mono leading-relaxed">
           full_name, first_name, last_name, title, company, linkedin_url, sector, notes, priority (1-3),
           conference_name, year, topic, session_type (keynote/panel/workshop/fireside/lightning/other)
         </code>
-        <p className="text-[12px] text-slate-400 mt-2">
+        <p className="text-[12px] text-muted-foreground mt-2">
           Multiple rows per speaker are allowed (one row per appearance). Speakers are matched by linkedin_url
           when present, otherwise by (full_name, company).
         </p>
@@ -446,11 +431,11 @@ function OutreachNotesCell({
     <Button
       variant="ghost"
       onClick={() => setEditing(true)}
-      className="justify-start text-left text-slate-500 hover:text-slate-900 h-auto w-full px-0 font-normal"
+      className="justify-start text-left text-muted-foreground hover:text-foreground h-auto w-full px-0 font-normal"
     >
       {notes
         ? <span className="line-clamp-2 text-[11px]">{notes}</span>
-        : <span className="text-slate-300 text-[11px] italic">Add notes</span>
+        : <span className="text-muted-foreground text-[11px] italic">Add notes</span>
       }
     </Button>
   )

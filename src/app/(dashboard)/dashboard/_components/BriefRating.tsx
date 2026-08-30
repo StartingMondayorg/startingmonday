@@ -1,8 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-
+import { Button, Textarea } from '@/components/ui'
 export function BriefRating({ briefId }: { briefId: string }) {
   const [stage, setStage] = useState<'idle' | 'feedback' | 'done'>('idle')
   const [feedback, setFeedback] = useState('')
@@ -23,13 +21,13 @@ export function BriefRating({ briefId }: { briefId: string }) {
   }
 
   if (stage === 'done') {
-    return <p className="text-[12px] text-slate-400">Thanks. We track every report and improve the prompts.</p>
+    return <p className="text-[12px] text-muted-foreground">Thanks. We track every report and improve the prompts.</p>
   }
 
   if (stage === 'feedback') {
     return (
       <div className="flex flex-col gap-2 max-w-sm">
-        <p className="text-[12px] text-slate-500">What&apos;s missing from this brief? (optional)</p>
+        <p className="text-[12px] text-muted-foreground">What&apos;s missing from this brief? (optional)</p>
         <Textarea
           value={feedback}
           onChange={e => setFeedback(e.target.value)}
@@ -37,7 +35,7 @@ export function BriefRating({ briefId }: { briefId: string }) {
           maxLength={1000}
           placeholder="Missing context, wrong framing, objections not covered..."
           title="Brief feedback"
-          className="text-[13px] text-slate-800 resize-none placeholder:text-slate-300"
+          className="text-[13px] text-foreground resize-none placeholder:text-muted-foreground"
         />
         <div className="flex items-center gap-2">
           <Button
@@ -53,7 +51,7 @@ export function BriefRating({ briefId }: { briefId: string }) {
             variant="link"
             onClick={() => handleRate(-1)}
             disabled={submitting}
-            className="text-[12px] text-slate-400 hover:text-slate-600 disabled:opacity-40"
+            className="text-[12px] text-muted-foreground disabled:opacity-40"
           >
             Skip
           </Button>
@@ -63,14 +61,14 @@ export function BriefRating({ briefId }: { briefId: string }) {
   }
 
   return (
-    <div className="flex items-center gap-3 text-[12px] text-slate-400">
+    <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
       <span>Useful?</span>
       <Button
         type="button"
         variant="outline"
         onClick={() => handleRate(1)}
         disabled={submitting}
-        className="px-2.5 py-1 text-slate-600 disabled:opacity-40"
+        className="px-2.5 py-1 text-muted-foreground disabled:opacity-40"
       >
         Yes
       </Button>
@@ -79,7 +77,7 @@ export function BriefRating({ briefId }: { briefId: string }) {
         variant="outline"
         onClick={() => setStage('feedback')}
         disabled={submitting}
-        className="px-2.5 py-1 text-slate-600 disabled:opacity-40"
+        className="px-2.5 py-1 text-muted-foreground disabled:opacity-40"
       >
         Flag an issue
       </Button>

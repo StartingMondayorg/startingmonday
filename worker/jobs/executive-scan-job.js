@@ -6,6 +6,7 @@ import { writeScanFailureDeadLetter } from '../lib/scan-dead-letter.js'
 import { scanCompany } from '../scanner/scan-company.js'
 import { RESCAN_WINDOW_DAILY_HOURS } from '../scanner/deduplicate.js'
 import { sendRoleFitAlert } from '../lib/signal-alert.js'
+import { warnIfTruncated } from '../lib/query-limits.js'
 
 const MAX_CONCURRENT_SCANS = 5
 
@@ -20,7 +21,10 @@ async function scanWithRetry(supabase, company, profile) {
       err.message?.includes('ECONNRESET') ||
       err.message?.includes('ENOTFOUND') ||
       err.message?.includes('502') ||
-      err.message?.includes('503')
+      err.message?.includes('503') ||
+      // 429 is a burst ceiling that clears in seconds, not a quota. Without
+      // this the scan was lost for the whole cycle (SMK-472).
+      err.message?.includes('429')
     )
     if (!isTransient) throw err
     logger.warn(`executive-scan-job: transient error for ${company.name}, retrying in 3s`, { error: err.message })
@@ -82,6 +86,8 @@ export async function runExecutiveScanJob() {
     return
   }
 
+  warnIfTruncated(companies, 1000, { job: 'executive-scan-job', query: 'companies' })
+
   const { data: profiles } = await supabase
     .from('user_profiles')
     .select('*')
@@ -101,7 +107,12 @@ export async function runExecutiveScanJob() {
       try {
         const result = await scanWithRetry(supabase, company, profile)
         if (!result.skipped && !result.blocked) {
-          browserlessCalls++
+          // Count a browserless.io call only when a render actually happened.
+          // ATS-feed and plain-fetch scans open no browser, so counting every
+          // scan made recorded usage meaningless (SMK-476).
+          if (result.acquisitionPath === 'render') {
+            browserlessCalls++
+          }
           anthropicCalls += result.hits ?? 0
           const email = userEmailById[company.user_id]
           if (email && result.newMatchTitles?.length > 0) {

@@ -65,17 +65,17 @@ export function parseQualityCheck(raw: string): QualityCheck {
 }
 
 export function gradeColor(grade: string) {
-  return grade === 'A' ? 'text-green-700 bg-green-50 border-green-200'
-    : grade === 'B'    ? 'text-blue-700 bg-blue-50 border-blue-100'
-    : grade === 'C'    ? 'text-amber-700 bg-amber-50 border-amber-200'
-    : 'text-red-700 bg-red-50 border-red-200'
+  return grade === 'A' ? 'text-success bg-success/10 border-success/30'
+    : grade === 'B'    ? 'text-info bg-info/10 border-info/30'
+    : grade === 'C'    ? 'text-warning bg-warning/10 border-warning/30'
+    : 'text-destructive bg-destructive/10 border-destructive/30'
 }
 
 export function atsColor(score: number) {
-  return score >= 85 ? 'text-green-700'
-    : score >= 70    ? 'text-blue-700'
-    : score >= 55    ? 'text-amber-600'
-    : 'text-red-700'
+  return score >= 85 ? 'text-success'
+    : score >= 70    ? 'text-info'
+    : score >= 55    ? 'text-warning'
+    : 'text-destructive'
 }
 
 export async function downloadDocx(text: string, companyName: string, suffix?: string) {

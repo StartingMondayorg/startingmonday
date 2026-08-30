@@ -48,14 +48,14 @@ export function TrackedAccordionItem({ title, summary, detail, href, channel, ro
   }
 
   return (
-    <details className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2" onToggle={handleToggle}>
-      <summary className="cursor-pointer list-none text-[13px] font-semibold text-white flex items-start justify-between gap-3">
+    <details className="rounded-md border border-border bg-primary px-3 py-2" onToggle={handleToggle}>
+      <summary className="cursor-pointer list-none text-[13px] font-semibold text-primary-foreground flex items-start justify-between gap-3">
         <span>{title}</span>
-        <span className="text-[11px] text-orange-300 shrink-0">Learn more</span>
+        <span className="text-[11px] text-primary shrink-0">Learn more</span>
       </summary>
-      <p className="text-[12px] text-slate-300 mt-2 [text-wrap:pretty]">{summary}</p>
-      <p className="text-[12px] text-slate-400 mt-2 [text-wrap:pretty]">{detail}</p>
-      <Link href={href} className="inline-flex mt-2 text-[12px] text-orange-300 hover:text-orange-200 transition-colors">
+      <p className="text-[12px] text-primary-foreground mt-2 [text-wrap:pretty]">{summary}</p>
+      <p className="text-[12px] text-primary-foreground mt-2 [text-wrap:pretty]">{detail}</p>
+      <Link href={href} className="inline-flex mt-2 text-[12px] text-primary transition-colors">
         Open related article
       </Link>
     </details>

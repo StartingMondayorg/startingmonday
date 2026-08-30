@@ -15,40 +15,7 @@ import {
   WEEKDAY_IDS,
   type PartnerProgramSettings,
 } from '@/lib/partner-program-settings'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-
+import { Alert, AlertDescription, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Badge, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Textarea } from '@/components/ui'
 type SeatStatus = {
   profileDone: boolean
   companyAdded: boolean
@@ -303,16 +270,16 @@ export function TeamSettings({
 
   return (
     <div className="flex flex-col gap-6">
-      <Card className="border-orange-200 shadow-[0_10px_30px_rgba(15,23,42,0.04)] p-6">
-        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-orange-500 mb-2">
+      <Card className="border-primary/30 shadow-md p-6">
+        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-primary mb-2">
           White-label admin
         </p>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-2xl">
-            <h2 className="text-[18px] font-bold text-slate-900 leading-tight">
+            <h2 className="text-[18px] font-bold text-foreground leading-tight">
               Brand, track, and pricing settings for partner delivery
             </h2>
-            <p className="text-[13px] text-slate-500 mt-1">
+            <p className="text-[13px] text-muted-foreground mt-1">
               Adjust the delivery brand and program tier without changing the shared core product.
             </p>
           </div>
@@ -326,9 +293,9 @@ export function TeamSettings({
               { label: 'Track', value: getWhiteLabelTrack(WHITE_LABEL_DEFAULT_SETTINGS.trackId).label },
               { label: 'Tier', value: getWhiteLabelTier(WHITE_LABEL_DEFAULT_SETTINGS.tierId).name },
             ]).map((item) => (
-              <Card key={item.label} className="bg-slate-50 p-3">
-                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">{item.label}</p>
-                <p className="mt-1 text-[13px] font-semibold text-slate-900">{item.value}</p>
+              <Card key={item.label} className="bg-muted p-3">
+                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">{item.label}</p>
+                <p className="mt-1 text-[13px] font-semibold text-foreground">{item.value}</p>
               </Card>
             ))}
           </div>
@@ -338,7 +305,7 @@ export function TeamSettings({
           <form onSubmit={handleWhiteLabelSave} className="mt-5 grid grid-cols-1 xl:grid-cols-2 gap-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Brand name</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Brand name</Label>
                 <Input
                   value={whiteLabel.brandName}
                   onChange={(event) => setWhiteLabel((current) => current ? { ...current, brandName: event.target.value } : current)}
@@ -346,7 +313,7 @@ export function TeamSettings({
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Support email</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Support email</Label>
                 <Input
                   type="email"
                   value={whiteLabel.supportEmail}
@@ -355,7 +322,7 @@ export function TeamSettings({
                 />
               </div>
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Track</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Track</Label>
                 <Select
                   value={whiteLabel.trackId}
                   onValueChange={(value) => setWhiteLabel((current) => current ? { ...current, trackId: value as WhiteLabelSettings['trackId'] } : current)}
@@ -371,7 +338,7 @@ export function TeamSettings({
                 </Select>
               </div>
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Tier</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Tier</Label>
                 <Select
                   value={whiteLabel.tierId}
                   onValueChange={(value) => setWhiteLabel((current) => current ? { ...current, tierId: value as WhiteLabelSettings['tierId'] } : current)}
@@ -387,7 +354,7 @@ export function TeamSettings({
                 </Select>
               </div>
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Primary color</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Primary color</Label>
                 <Input
                   type="text"
                   value={whiteLabel.primaryColor}
@@ -396,7 +363,7 @@ export function TeamSettings({
                 />
               </div>
               <div>
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Accent color</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Accent color</Label>
                 <Input
                   type="text"
                   value={whiteLabel.accentColor}
@@ -405,7 +372,7 @@ export function TeamSettings({
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Logo URL</Label>
+                <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Logo URL</Label>
                 <Input
                   type="url"
                   value={whiteLabel.logoUrl ?? ''}
@@ -415,24 +382,24 @@ export function TeamSettings({
               </div>
             </div>
 
-            <Card className="bg-slate-50 p-4 space-y-4">
+            <Card className="bg-muted p-4 space-y-4">
               <div>
-                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Preview</p>
+                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Preview</p>
                 <Card className="p-4">
-                  <p className="text-[12px] font-semibold text-slate-900">{whiteLabel.brandName || WHITE_LABEL_DEFAULT_SETTINGS.brandName}</p>
-                  <p className="text-[12px] text-slate-500 mt-1">{getWhiteLabelTrack(whiteLabel.trackId).summary}</p>
-                  <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-slate-500">
-                    <Badge variant="outline" className="bg-slate-50">{whiteLabel.primaryColor}</Badge>
-                    <Badge variant="outline" className="bg-slate-50">{whiteLabel.accentColor}</Badge>
+                  <p className="text-[12px] font-semibold text-foreground">{whiteLabel.brandName || WHITE_LABEL_DEFAULT_SETTINGS.brandName}</p>
+                  <p className="text-[12px] text-muted-foreground mt-1">{getWhiteLabelTrack(whiteLabel.trackId).summary}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-muted-foreground">
+                    <Badge variant="outline" className="bg-muted">{whiteLabel.primaryColor}</Badge>
+                    <Badge variant="outline" className="bg-muted">{whiteLabel.accentColor}</Badge>
                     <span>{whiteLabel.supportEmail}</span>
                   </div>
                 </Card>
               </div>
               <div>
-                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Selected tier includes</p>
+                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Selected tier includes</p>
                 <ul className="space-y-1.5">
                   {getWhiteLabelTier(whiteLabel.tierId).inclusions.map((item) => (
-                    <li key={item} className="text-[12px] text-slate-600">• {item}</li>
+                    <li key={item} className="text-[12px] text-muted-foreground">• {item}</li>
                   ))}
                 </ul>
               </div>
@@ -452,24 +419,24 @@ export function TeamSettings({
             </Card>
           </form>
         ) : (
-          <Card className="bg-slate-50 mt-5 px-4 py-5 text-[13px] text-slate-500">
+          <Card className="bg-muted mt-5 px-4 py-5 text-[13px] text-muted-foreground">
             White-label settings will appear once a partner workspace is linked to this account.
           </Card>
         )}
       </Card>
 
       <Card className="p-6">
-        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
+        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">
           Program settings
         </p>
-        <p className="text-[12px] text-slate-500 mb-4">
+        <p className="text-[12px] text-muted-foreground mb-4">
           Configure tenant defaults for outplacement program mapping and sponsor report template behavior.
         </p>
 
         {programSettings ? (
           <form onSubmit={handleProgramSettingsSave} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Default program</Label>
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Default program</Label>
               <Select
                 value={programSettings.defaultProgram}
                 onValueChange={(value) => setProgramSettings((current) => current ? { ...current, defaultProgram: value as PartnerProgramSettings['defaultProgram'] } : current)}
@@ -486,7 +453,7 @@ export function TeamSettings({
             </div>
 
             <div>
-              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Sponsor template</Label>
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Sponsor template</Label>
               <Select
                 value={programSettings.sponsorTemplateVariant}
                 onValueChange={(value) => setProgramSettings((current) => current ? { ...current, sponsorTemplateVariant: value as PartnerProgramSettings['sponsorTemplateVariant'] } : current)}
@@ -503,7 +470,7 @@ export function TeamSettings({
             </div>
 
             <div>
-              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Weekly summary day</Label>
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Weekly summary day</Label>
               <Select
                 value={programSettings.weeklySummaryDay}
                 onValueChange={(value) => setProgramSettings((current) => current ? { ...current, weeklySummaryDay: value as PartnerProgramSettings['weeklySummaryDay'] } : current)}
@@ -520,7 +487,7 @@ export function TeamSettings({
             </div>
 
             <div>
-              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-1">Cohort naming prefix</Label>
+              <Label className="block text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">Cohort naming prefix</Label>
               <Input
                 type="text"
                 value={programSettings.cohortNamingPrefix ?? ''}
@@ -546,7 +513,7 @@ export function TeamSettings({
             </div>
           </form>
         ) : (
-          <Card className="bg-slate-50 px-4 py-5 text-[13px] text-slate-500">
+          <Card className="bg-muted px-4 py-5 text-[13px] text-muted-foreground">
             Program settings will appear once a partner workspace is linked to this account.
           </Card>
         )}
@@ -554,10 +521,10 @@ export function TeamSettings({
 
       {initialWhiteLabel && (
         <Card className="p-6">
-          <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
+          <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">
             Partner roles
           </p>
-          <p className="text-[12px] text-slate-500 mb-4">
+          <p className="text-[12px] text-muted-foreground mb-4">
             Assign counselor, sponsor viewer, or participant roles to users in this partner workspace.
             Firm admin can manage all roles.
           </p>
@@ -596,9 +563,9 @@ export function TeamSettings({
           )}
 
           {roles === null ? (
-            <p className="text-[12px] text-slate-400">Loading roles…</p>
+            <p className="text-[12px] text-muted-foreground">Loading roles…</p>
           ) : roles.length === 0 ? (
-            <p className="text-[12px] text-slate-400">No partner roles assigned yet.</p>
+            <p className="text-[12px] text-muted-foreground">No partner roles assigned yet.</p>
           ) : (
             <Card className="overflow-hidden">
               <Table className="text-[12px]">
@@ -617,10 +584,10 @@ export function TeamSettings({
                       <TableCell>
                         <Badge variant="secondary">{role.role}</Badge>
                       </TableCell>
-                      <TableCell className="text-slate-400">{new Date(role.granted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
+                      <TableCell className="text-muted-foreground">{new Date(role.granted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</TableCell>
                       <TableCell className="text-right">
                         <AlertDialog>
-                          <AlertDialogTrigger render={<Button type="button" variant="ghost" size="sm" className="text-destructive hover:text-destructive" />}>
+                          <AlertDialogTrigger render={<Button type="button" variant="ghost" size="sm" className="text-destructive" />}>
                             Revoke
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -649,7 +616,7 @@ export function TeamSettings({
       )}
 
       <Card className="p-6">
-        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-4">
+        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-4">
           Invite a member
         </p>
         <form onSubmit={handleInvite} className="flex gap-3">
@@ -678,10 +645,10 @@ export function TeamSettings({
       </Card>
 
       <Card className="p-6">
-        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500 mb-2">
+        <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">
           Bulk invite
         </p>
-        <p className="text-[12px] text-slate-500 mb-3">
+        <p className="text-[12px] text-muted-foreground mb-3">
           Paste one email per line, or separate with commas.
         </p>
         <form onSubmit={handleBulkInvite} className="flex flex-col gap-3">
@@ -711,8 +678,8 @@ export function TeamSettings({
 
       {seats.length > 0 ? (
         <Card className="overflow-hidden p-0">
-          <div className="px-6 py-3.5 border-b border-slate-100">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
+          <div className="px-6 py-3.5 border-b border-border">
+            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
               Members ({seats.length})
             </p>
           </div>
@@ -721,8 +688,8 @@ export function TeamSettings({
               {seats.map(seat => (
                 <TableRow key={seat.id}>
                   <TableCell className="px-6 py-4 whitespace-normal">
-                    <p className="text-[13px] font-semibold text-slate-900 truncate">{seat.member_email}</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
+                    <p className="text-[13px] font-semibold text-foreground truncate">{seat.member_email}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       {seat.status === 'accepted' && seat.accepted_at
                         ? `Joined ${formatDate(seat.accepted_at)}`
                         : `Invited ${formatDate(seat.invited_at)}`}
@@ -741,7 +708,7 @@ export function TeamSettings({
                   </TableCell>
                   <TableCell className="px-6 py-4 text-right">
                     <AlertDialog>
-                      <AlertDialogTrigger render={<Button type="button" variant="ghost" size="sm" className="text-destructive hover:text-destructive" disabled={removing === seat.id} />}>
+                      <AlertDialogTrigger render={<Button type="button" variant="ghost" size="sm" className="text-destructive" disabled={removing === seat.id} />}>
                         {removing === seat.id ? 'Removing…' : 'Remove'}
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -767,7 +734,7 @@ export function TeamSettings({
         </Card>
       ) : (
         <Card className="px-6 py-10 text-center">
-          <p className="text-[14px] text-slate-500">No members yet. Invite your first member above.</p>
+          <p className="text-[14px] text-muted-foreground">No members yet. Invite your first member above.</p>
         </Card>
       )}
     </div>

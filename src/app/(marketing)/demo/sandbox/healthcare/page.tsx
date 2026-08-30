@@ -85,45 +85,45 @@ const ROLE_FIT = [
 
 export default function HealthcareSandboxPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-6 py-10 sm:py-14">
         <header className="mb-10">
-          <p className="text-[11px] tracking-[0.08em] text-emerald-300">Private demo sandbox</p>
+          <p className="text-[11px] tracking-[0.08em] text-success">Private demo sandbox</p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
             Healthcare Executive Search Proof Sandbox
           </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
             This sandbox is designed for coach-led healthcare executive transitions. It shows how Starting Monday
             turns early signal detection into concrete outreach strategy before roles are posted publicly.
           </p>
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2 text-xs text-muted-foreground">
             Built for private pilot discussions and evidence walkthroughs with executive coaches and recruiting partners.
           </p>
           <p className="sr-only">Private by default. We do not share your data with recruiters, employers, or third parties.</p>
         </header>
 
-        <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-emerald-300">Cohort profile</h2>
+        <section className="mb-8 rounded-xl border border-border bg-muted/[0.03] p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-success">Cohort profile</h2>
           <div className="mt-4 grid gap-6 sm:grid-cols-3">
             <div>
-              <h3 className="text-xs font-semibold tracking-[0.08em] text-slate-400">Target roles</h3>
-              <ul className="mt-2 space-y-2 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Target roles</h3>
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {COHORT_PROFILE.targetRoles.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-xs font-semibold tracking-[0.08em] text-slate-400">Differentiators</h3>
-              <ul className="mt-2 space-y-2 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Differentiators</h3>
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {COHORT_PROFILE.differentiators.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-xs font-semibold tracking-[0.08em] text-slate-400">Search constraints</h3>
-              <ul className="mt-2 space-y-2 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Search constraints</h3>
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {COHORT_PROFILE.constraints.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}
@@ -132,12 +132,12 @@ export default function HealthcareSandboxPage() {
           </div>
         </section>
 
-        <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-emerald-300">Role-fit scoreboard</h2>
+        <section className="mb-8 rounded-xl border border-border bg-muted/[0.03] p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-success">Role-fit scoreboard</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[680px] border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-slate-400">
+                <tr className="border-b border-border text-muted-foreground">
                   <th className="px-3 py-2 font-semibold">Role</th>
                   <th className="px-3 py-2 font-semibold">Fit</th>
                   <th className="px-3 py-2 font-semibold">Why</th>
@@ -145,10 +145,10 @@ export default function HealthcareSandboxPage() {
               </thead>
               <tbody>
                 {ROLE_FIT.map((row) => (
-                  <tr key={row.role} className="border-b border-white/5 align-top text-slate-200">
+                  <tr key={row.role} className="border-b border-border align-top text-foreground">
                     <td className="px-3 py-2">{row.role}</td>
                     <td className="px-3 py-2">{row.score}</td>
-                    <td className="px-3 py-2 text-slate-300">{row.rationale}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{row.rationale}</td>
                   </tr>
                 ))}
               </tbody>
@@ -156,24 +156,24 @@ export default function HealthcareSandboxPage() {
           </div>
         </section>
 
-        <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-emerald-300">
+        <section className="mb-8 rounded-xl border border-border bg-muted/[0.03] p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-success">
             Healthcare signal board
           </h2>
           <div className="mt-4 space-y-4">
             {HEALTHCARE_SIGNALS.map((row) => (
-              <article key={row.signal} className="rounded-lg border border-white/10 bg-slate-900/70 p-4">
-                <h3 className="text-sm font-semibold text-white">{row.signal}</h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-200">Why it matters: </span>
+              <article key={row.signal} className="rounded-lg border border-border bg-card/70 p-4">
+                <h3 className="text-sm font-semibold text-foreground">{row.signal}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Why it matters: </span>
                   {row.whyItMatters}
                 </p>
-                <p className="mt-1.5 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-200">Coach angle: </span>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Coach angle: </span>
                   {row.coachAngle}
                 </p>
-                <p className="mt-1.5 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-200">Next action: </span>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Next action: </span>
                   {row.nextAction}
                 </p>
               </article>
@@ -181,9 +181,9 @@ export default function HealthcareSandboxPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-emerald-300">Pilot script cue card</h2>
-          <ol className="mt-3 space-y-2 text-sm text-slate-200">
+        <section className="rounded-xl border border-success/30 bg-success/10 p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-success">Pilot script cue card</h2>
+          <ol className="mt-3 space-y-2 text-sm text-foreground">
             <li>1. Lead with one role-fit claim and one signal-backed timing claim.</li>
             <li>2. Show one healthcare case from the 20-case draw with source transparency.</li>
             <li>3. End with a 30-45 day pilot scorecard definition before any expansion ask.</li>
@@ -191,13 +191,13 @@ export default function HealthcareSandboxPage() {
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/demo"
-              className="inline-flex items-center rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold tracking-[0.04em] text-slate-950 hover:bg-emerald-300"
+              className="inline-flex items-center rounded-full bg-success px-4 py-2 text-xs font-semibold tracking-[0.04em] text-success-foreground hover:bg-success/90"
             >
               Return to main demo
             </Link>
             <Link
               href="/signup?from=demo"
-              className="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold tracking-[0.04em] text-white hover:border-white/40"
+              className="inline-flex items-center rounded-full border border-border px-4 py-2 text-xs font-semibold tracking-[0.04em] text-foreground"
             >
               Start trial
             </Link>

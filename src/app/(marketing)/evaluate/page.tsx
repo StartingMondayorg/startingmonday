@@ -50,42 +50,42 @@ export default function EvaluatePage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-16 sm:px-8 sm:py-20">
       <header className="space-y-4">
-        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           Public Evaluator Page
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           The operating system for your next executive move.
         </h1>
-        <p className="max-w-3xl text-base leading-7 text-slate-700 sm:text-lg">
+        <p className="max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">
           This page exists so evaluators, reviewers, and AI tools can reliably read core positioning
           without touching sensitive application routes.
         </p>
-        <p className="max-w-3xl text-sm leading-7 text-slate-600">
+        <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
           Outcome metric: this read-only page reduces evaluator friction and keeps private user routes out of review workflows.
         </p>
       </header>
 
       <section id="evaluator-core" className="mt-10 grid gap-6">
         {sections.map((section) => (
-          <article key={section.title} className="rounded-xl border border-slate-200 bg-white p-6">
-            <h2 className="text-xl font-semibold text-slate-900">{section.title}</h2>
-            <p className="mt-2 text-slate-700">{section.body}</p>
+          <article key={section.title} className="rounded-xl border border-border bg-card p-6">
+            <h2 className="text-xl font-semibold text-foreground">{section.title}</h2>
+            <p className="mt-2 text-muted-foreground">{section.body}</p>
           </article>
         ))}
       </section>
 
-      <section id="evaluator-reading" className="mt-10 rounded-xl border border-slate-200 bg-slate-50 p-6">
-        <h2 className="text-xl font-semibold text-slate-900">Further Reading</h2>
-        <p className="mt-2 text-slate-700">
+      <section id="evaluator-reading" className="mt-10 rounded-xl border border-border bg-muted p-6">
+        <h2 className="text-xl font-semibold text-foreground">Further Reading</h2>
+        <p className="mt-2 text-muted-foreground">
           For product details, use the public pages below.
         </p>
-        <p className="mt-2 text-slate-700">CTA: get started now from any public page when you are ready to test the live workflow.</p>
+        <p className="mt-2 text-muted-foreground">CTA: get started now from any public page when you are ready to test the live workflow.</p>
         <div className="mt-4 flex flex-wrap gap-4">
-          <Link href="/" className="text-sm font-semibold text-slate-900 underline underline-offset-4">
+          <Link href="/" className="text-sm font-semibold text-foreground underline underline-offset-4">
             Homepage
           </Link>
 
-          <Link href="/demo" className="text-sm font-semibold text-slate-900 underline underline-offset-4">
+          <Link href="/demo" className="text-sm font-semibold text-foreground underline underline-offset-4">
             Demo
           </Link>
         </div>

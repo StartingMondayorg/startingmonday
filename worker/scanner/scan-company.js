@@ -38,15 +38,23 @@ export async function scanCompany(supabase, company, userProfile, { rescanWindow
     //    SmartRecruiters, BambooHR) — reliable and cheap. Fall back to fetching and
     //    extracting the career page (with browserless.io render) for non-ATS boards.
     let text
+    let acquisitionPath
+    let atsProvider = null
+    let renderMs = null
     const atsFeed = await fetchAtsJobs(career_page_url)
     if (atsFeed && atsFeed.jobs.length) {
       logger.info('scanner: using ATS feed', { companyId, userId, companyName: name, ats: atsFeed.ats, jobCount: atsFeed.jobs.length })
       text = jobsToText(atsFeed.jobs)
+      acquisitionPath = 'ats_feed'
+      atsProvider = atsFeed.ats
     } else {
       logger.info('scanner: fetching career page', { companyId, userId, companyName: name, careerPageUrl: career_page_url })
-      const html = await fetchPage(career_page_url)
-      text = extractText(html)
+      const fetched = await fetchPage(career_page_url)
+      text = extractText(fetched.html)
+      acquisitionPath = fetched.via
+      renderMs = fetched.renderMs
     }
+    logger.info('scanner: text acquired', { companyId, userId, companyName: name, acquisitionPath, atsProvider, renderMs })
 
     // 4. Detect candidate titles
     const candidates = detectRoles(text, userProfile)
@@ -77,7 +85,7 @@ export async function scanCompany(supabase, company, userProfile, { rescanWindow
         : `No matches among ${scoredHits.length} ${scoredHits.length === 1 ? 'posting' : 'postings'} detected`
 
     // 7. Write one scan_results row
-    await writeScanResult(supabase, { companyId, userId, hits: scoredHits, aiScore, aiSummary })
+    await writeScanResult(supabase, { companyId, userId, hits: scoredHits, aiScore, aiSummary, acquisitionPath, atsProvider, renderMs })
     await updateCompanyScanTime(supabase, companyId)
     checkAndAlertScanFailures(supabase, { companyId, companyName: name, userId }).catch(() => {})
 
@@ -94,7 +102,7 @@ export async function scanCompany(supabase, company, userProfile, { rescanWindow
     }
 
     logger.info('scanner: scan complete', { companyId, userId, companyName: name, matchCount: matches.length, newHitCount: newHits.length })
-    return { hits: scoredHits.length, matches: matches.length, newHits: newHits.length, newMatchTitles }
+    return { hits: scoredHits.length, matches: matches.length, newHits: newHits.length, newMatchTitles, acquisitionPath, renderMs }
   } catch (error) {
     if (error instanceof BlockedError) {
       logger.warn('scanner: blocked by site', { companyId, userId, companyName: name, error: error.message })

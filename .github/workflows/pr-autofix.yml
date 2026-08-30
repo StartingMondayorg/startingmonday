@@ -354,12 +354,12 @@ jobs:
 
       - name: Update elite mobile visual snapshots
         env:
-          PLAYWRIGHT_BASE_URL: https://starting-monday-staging.up.railway.app
+          PLAYWRIGHT_BASE_URL: ${{ vars.STAGING_BASE_URL }}
         run: npx playwright test tests/e2e/mobile-elite-visual.spec.ts --project=mobile-iphone --project=mobile-android --workers=1 --update-snapshots
 
       - name: Re-run elite mobile visual suite
         env:
-          PLAYWRIGHT_BASE_URL: https://starting-monday-staging.up.railway.app
+          PLAYWRIGHT_BASE_URL: ${{ vars.STAGING_BASE_URL }}
         run: node scripts/check-mobile-elite-visual-gate.mjs
 
       - name: Commit and push updated elite baselines

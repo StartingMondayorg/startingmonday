@@ -7,15 +7,7 @@ import { todayInTz } from '@/lib/date'
 import { PREVIEW_CHARS } from '@/lib/ai/ai-limits'
 import { LogSignalForm } from '@/app/(dashboard)/dashboard/_components/LogSignalForm'
 import { ScanPoller } from '@/app/(dashboard)/dashboard/_components/ScanPoller'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Alert, AlertDescription, AlertTitle, Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 import {
   DOC_LABELS,
   CHANNEL,
@@ -223,16 +215,16 @@ export default async function CompanyPage({
       : null
 
   return (
-    <div className="relative min-h-screen bg-slate-950 font-sans text-slate-100">
+    <div className="relative min-h-screen bg-background font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/72 backdrop-blur-xl">
+      <header className="border-b border-border bg-background/72 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] font-bold tracking-[0.16em] uppercase text-slate-300">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] font-bold tracking-[0.16em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Link
             href="/dashboard"
-            className="text-[13px] text-slate-400 hover:text-slate-300 transition-colors"
+            className="text-[13px] text-muted-foreground transition-colors"
           >
             ← Dashboard
           </Link>
@@ -251,9 +243,9 @@ export default async function CompanyPage({
         />
         <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
           <div>
-            <h1 className="text-[26px] font-bold text-white leading-tight">{company.name}</h1>
+            <h1 className="text-[26px] font-bold text-foreground leading-tight">{company.name}</h1>
             {company.sector && (
-              <p className="text-[13px] text-slate-400 mt-1.5">{company.sector}</p>
+              <p className="text-[13px] text-muted-foreground mt-1.5">{company.sector}</p>
             )}
           </div>
           <div className="flex items-center gap-3 flex-wrap">
@@ -273,7 +265,7 @@ export default async function CompanyPage({
 
           {/* Edit form */}
           <Card variant="glass" id="company-details" className="rounded p-5 sm:p-8">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-5">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-5">
               Company details
             </h2>
 
@@ -303,27 +295,27 @@ export default async function CompanyPage({
             ) : null}
 
             <Card variant="glass" className="mb-5 rounded p-4">
-              <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Current snapshot</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[13px] text-slate-300">
-                <p><span className="font-semibold text-slate-300">Stage:</span> {(STAGES.find((s) => s.value === company.stage)?.label) ?? company.stage}</p>
-                <p><span className="font-semibold text-slate-300">Fit score:</span> {company.fit_score != null ? `${company.fit_score}/10` : 'Not set'}</p>
-                <p><span className="font-semibold text-slate-300">Sector:</span> {company.sector ?? 'Not set'}</p>
-                <p><span className="font-semibold text-slate-300">Size:</span> {company.company_size ?? 'Not set'}</p>
+              <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Current snapshot</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[13px] text-muted-foreground">
+                <p><span className="font-semibold text-muted-foreground">Stage:</span> {(STAGES.find((s) => s.value === company.stage)?.label) ?? company.stage}</p>
+                <p><span className="font-semibold text-muted-foreground">Fit score:</span> {company.fit_score != null ? `${company.fit_score}/10` : 'Not set'}</p>
+                <p><span className="font-semibold text-muted-foreground">Sector:</span> {company.sector ?? 'Not set'}</p>
+                <p><span className="font-semibold text-muted-foreground">Size:</span> {company.company_size ?? 'Not set'}</p>
               </div>
             </Card>
 
-            <Collapsible className="border border-white/10 rounded">
-              <CollapsibleTrigger className="w-full cursor-pointer px-4 py-3 bg-white/5 border-b border-white/10 flex items-center justify-between">
-                <span className="text-[13px] font-semibold text-slate-300">Edit company profile</span>
-                <span className="text-[13px] text-slate-400">Open fields</span>
+            <Collapsible className="border border-border rounded">
+              <CollapsibleTrigger className="w-full cursor-pointer px-4 py-3 bg-muted/40 border-b border-border flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-muted-foreground">Edit company profile</span>
+                <span className="text-[13px] text-muted-foreground">Open fields</span>
               </CollapsibleTrigger>
 
               <CollapsibleContent>
               <form action={updateCompany.bind(null, id)} className="flex flex-col gap-5 p-4 sm:p-5">
 
               <div>
-                <Label htmlFor="company-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
-                  Company name <span className="text-red-500">*</span>
+                <Label htmlFor="company-name" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
+                  Company name <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="company-name"
@@ -331,17 +323,17 @@ export default async function CompanyPage({
                   type="text"
                   required
                   defaultValue={company.name}
-                  className="w-full text-white"
+                  className="w-full text-foreground"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="stage" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label htmlFor="stage" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                     Stage
                   </Label>
                   <Select name="stage" defaultValue={company.stage}>
-                    <SelectTrigger id="stage" className="w-full text-white bg-white/5">
+                    <SelectTrigger id="stage" className="w-full text-foreground bg-muted/40">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -353,8 +345,8 @@ export default async function CompanyPage({
                 </div>
 
                 <div>
-                  <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
-                    Fit score <span className="text-slate-300 font-normal">(1–10)</span>
+                  <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
+                    Fit score <span className="text-muted-foreground font-normal">(1–10)</span>
                   </Label>
                   <Input
                     name="fit_score"
@@ -363,15 +355,15 @@ export default async function CompanyPage({
                     max="10"
                     defaultValue={company.fit_score ?? ''}
                     placeholder="-"
-                    className="w-full text-white placeholder:text-slate-300"
+                    className="w-full text-foreground placeholder:text-muted-foreground"
                   />
-                  <p className="mt-1.5 text-[13px] text-slate-400">1 = weak fit &middot; 10 = dream company</p>
+                  <p className="mt-1.5 text-[13px] text-muted-foreground">1 = weak fit &middot; 10 = dream company</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                     Sector
                   </Label>
                   <Input
@@ -379,15 +371,15 @@ export default async function CompanyPage({
                     type="text"
                     defaultValue={company.sector ?? ''}
                     placeholder="e.g. Healthcare, Fintech"
-                    className="w-full text-white placeholder:text-slate-300"
+                    className="w-full text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="edit_company_size" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                  <Label htmlFor="edit_company_size" className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                     Company size
                   </Label>
                   <Select name="company_size" defaultValue={company.company_size ?? 'unset'}>
-                    <SelectTrigger id="edit_company_size" className="w-full text-white bg-white/5">
+                    <SelectTrigger id="edit_company_size" className="w-full text-foreground bg-muted/40">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -401,7 +393,7 @@ export default async function CompanyPage({
               </div>
 
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Company website
                 </Label>
                 <Input
@@ -409,13 +401,13 @@ export default async function CompanyPage({
                   type="text"
                   defaultValue={company.company_url ?? ''}
                   placeholder="acme.com or https://acme.com"
-                  className="w-full text-white placeholder:text-slate-300"
+                  className="w-full text-foreground placeholder:text-muted-foreground"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Main URL - used to discover press room and leadership page</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Main URL - used to discover press room and leadership page</p>
               </div>
 
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Career page URL
                 </Label>
                 <Input
@@ -423,13 +415,13 @@ export default async function CompanyPage({
                   type="text"
                   defaultValue={company.career_page_url ?? ''}
                   placeholder="acme.com/careers or https://acme.com/careers"
-                  className="w-full text-white placeholder:text-slate-300"
+                  className="w-full text-foreground placeholder:text-muted-foreground"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Used in job scans - runs Mon / Wed / Fri</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Used in job scans - runs Mon / Wed / Fri</p>
               </div>
 
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   LinkedIn company URL
                 </Label>
                 <Input
@@ -437,13 +429,13 @@ export default async function CompanyPage({
                   type="text"
                   defaultValue={company.linkedin_url ?? ''}
                   placeholder="linkedin.com/company/acme"
-                  className="w-full text-white placeholder:text-slate-300"
+                  className="w-full text-foreground placeholder:text-muted-foreground"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Used to detect executive hires and departures</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Used to detect executive hires and departures</p>
               </div>
 
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Crunchbase permalink
                 </Label>
                 <Input
@@ -451,13 +443,13 @@ export default async function CompanyPage({
                   type="text"
                   defaultValue={company.crunchbase_id ?? ''}
                   placeholder="e.g. acme-corp"
-                  className="w-full text-white placeholder:text-slate-300"
+                  className="w-full text-foreground placeholder:text-muted-foreground"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Last segment of the Crunchbase URL - crunchbase.com/organization/<span className="font-medium text-slate-400">acme-corp</span>. Enables funding round signals.</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Last segment of the Crunchbase URL - crunchbase.com/organization/<span className="font-medium text-muted-foreground">acme-corp</span>. Enables funding round signals.</p>
               </div>
 
               <div>
-                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-1.5">
+                <Label className="block text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Notes
                 </Label>
                 <Textarea
@@ -465,39 +457,39 @@ export default async function CompanyPage({
                   rows={4}
                   defaultValue={company.notes ?? ''}
                   placeholder={notesPlaceholder}
-                  className="w-full text-white placeholder:text-slate-300 resize-none"
+                  className="w-full text-foreground placeholder:text-muted-foreground resize-none"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Your notes are private. Only you can read them.</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Your notes are private. Only you can read them.</p>
               </div>
 
               <CompanyCompetitiveField competitiveContext={company.competitive_context} />
 
-              <div className="pt-1 border-t border-white/10">
-                <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-2">Interview Notes</p>
+              <div className="pt-1 border-t border-border">
+                <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-primary mb-2">Interview Notes</p>
                 <Textarea
                   name="interview_notes"
                   rows={5}
                   defaultValue={company.interview_notes ?? ''}
                   placeholder={'Add notes after each conversation. What was asked, what landed, what surprised you, who was in the room, what you want to prep differently next time.\n\nSeparate entries by stage or date - e.g. "Recruiter screen 5/7:" then "Hiring manager 5/14:"'}
-                  className="w-full text-white placeholder:text-slate-300 resize-y"
+                  className="w-full text-foreground placeholder:text-muted-foreground resize-y"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Private. Each entry sharpens your next prep brief based on what actually happened.</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Private. Each entry sharpens your next prep brief based on what actually happened.</p>
               </div>
 
               {company.stage === 'offer' && (
                 <CompanyOfferFields company={company} companyName={company.name} />
               )}
 
-              <div className="pt-1 border-t border-white/10">
-                <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-orange-500 mb-2">What I&rsquo;m Looking For Here</p>
+              <div className="pt-1 border-t border-border">
+                <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-primary mb-2">What I&rsquo;m Looking For Here</p>
                 <Textarea
                   name="role_watch_description"
                   rows={3}
                   defaultValue={company.role_watch_description ?? ''}
                   placeholder="e.g. A CTO or VP Engineering role overseeing platform, specifically where they need someone to scale the team post-Series B and modernize the data stack..."
-                  className="w-full text-white placeholder:text-slate-300 resize-none"
+                  className="w-full text-foreground placeholder:text-muted-foreground resize-none"
                 />
-                <p className="mt-1.5 text-[13px] text-slate-400">Used by the job scanner to match roles semantically, not just by keyword. More specific beats generic.</p>
+                <p className="mt-1.5 text-[13px] text-muted-foreground">Used by the job scanner to match roles semantically, not just by keyword. More specific beats generic.</p>
               </div>
 
               <div>
@@ -510,9 +502,9 @@ export default async function CompanyPage({
               </CollapsibleContent>
             </Collapsible>
 
-            <div className="mt-8 pt-6 border-t border-white/10">
+            <div className="mt-8 pt-6 border-t border-border">
               <form action={archiveCompany.bind(null, id)}>
-                <Button type="submit" variant="outline" className="hover:text-red-400 hover:border-red-500/30">
+                <Button type="submit" variant="outline" className="hover:text-destructive hover:border-destructive/30">
                   Archive company
                 </Button>
               </form>
@@ -522,14 +514,14 @@ export default async function CompanyPage({
           {/* Follow-ups sidebar */}
           <div className="flex flex-col gap-4">
 
-            <Collapsible className="bg-white/5 border border-white/10 rounded overflow-hidden">
-              <CollapsibleTrigger className="w-full cursor-pointer px-5 py-4 border-b border-white/10 flex items-center justify-between">
-                <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Open Actions</span>
-                <span className="text-[13px] text-slate-400">{(followUps ?? []).length}</span>
+            <Collapsible className="bg-muted/40 border border-border rounded overflow-hidden">
+              <CollapsibleTrigger className="w-full cursor-pointer px-5 py-4 border-b border-border flex items-center justify-between">
+                <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Open Actions</span>
+                <span className="text-[13px] text-muted-foreground">{(followUps ?? []).length}</span>
               </CollapsibleTrigger>
               <CollapsibleContent>
               {followUps && followUps.length > 0 ? (
-                <div className="divide-y divide-white/10">
+                <div className="divide-y divide-border">
                   {followUps.map(fu => {
                     const isOverdue = fu.due_date < todayISO
                     const isToday = fu.due_date === todayISO
@@ -540,13 +532,13 @@ export default async function CompanyPage({
                     const actionText = fu.action.replace(/\s*(?:--|-)?\s*(?:it\s+)?has been \d+ days? since[^.]*\.?/i, '').trim() || fu.action
                     return (
                       <div key={fu.id} className="px-5 py-3.5">
-                        <div className="text-[13px] font-semibold text-white mb-1.5">{actionText}</div>
+                        <div className="text-[13px] font-semibold text-foreground mb-1.5">{actionText}</div>
                         <div className="flex items-center justify-between">
-                          <span className={`text-[13px] font-semibold ${isOverdue || isToday ? 'text-red-400' : 'text-slate-400'}`}>
+                          <span className={`text-[13px] font-semibold ${isOverdue || isToday ? 'text-destructive' : 'text-muted-foreground'}`}>
                             {dateLabel}
                           </span>
                           <form action={markFollowUpDone.bind(null, fu.id, id)}>
-                            <Button type="submit" variant="outline" size="sm" className="text-slate-400 hover:text-slate-200">
+                            <Button type="submit" variant="outline" size="sm" className="text-muted-foreground hover:text-foreground">
                               Done
                             </Button>
                           </form>
@@ -556,7 +548,7 @@ export default async function CompanyPage({
                   })}
                 </div>
               ) : (
-                <div className="px-5 py-6 text-[13px] text-slate-400">
+                <div className="px-5 py-6 text-[13px] text-muted-foreground">
                   No open actions.
                 </div>
               )}
@@ -575,12 +567,12 @@ export default async function CompanyPage({
         />
 
         {/* Contacts */}
-        <section id="people" className="mt-6 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+        <section id="people" className="mt-6 bg-muted/40 border border-border rounded overflow-hidden">
+          <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
               People
             </h2>
-            <span className="text-[13px] text-slate-400">
+            <span className="text-[13px] text-muted-foreground">
               {(contacts ?? []).length} {(contacts ?? []).length === 1 ? 'contact' : 'contacts'}
             </span>
           </div>
@@ -596,15 +588,15 @@ export default async function CompanyPage({
         <Accordion className="mt-6 flex flex-col gap-6">
 
         {/* Documents */}
-        <AccordionItem value="documents" id="documents" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
+        <AccordionItem value="documents" id="documents" className="border-b-0 bg-muted/40 border border-border rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-border flex items-center justify-between hover:no-underline [&>svg]:hidden">
             <div>
-              <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+              <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
                 Documents
               </span>
-              <div className="text-[13px] text-slate-400 mt-0.5">Job descriptions improve prep-brief quality.</div>
+              <div className="text-[13px] text-muted-foreground mt-0.5">Job descriptions improve prep-brief quality.</div>
             </div>
-            <span className="text-[13px] text-slate-400 shrink-0">
+            <span className="text-[13px] text-muted-foreground shrink-0">
               {(documents ?? []).length} {(documents ?? []).length === 1 ? 'document' : 'documents'}
             </span>
           </AccordionTrigger>
@@ -614,17 +606,17 @@ export default async function CompanyPage({
         </AccordionItem>
 
         {/* Scan results */}
-        <AccordionItem value="job-scan" id="job-scan" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+        <AccordionItem value="job-scan" id="job-scan" className="border-b-0 bg-muted/40 border border-border rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-border flex items-center justify-between hover:no-underline [&>svg]:hidden">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
               Job Scan
             </h2>
             {latestScan ? (
-              <span className="text-[13px] text-slate-400">
+              <span className="text-[13px] text-muted-foreground">
                 Last scanned {new Date(latestScan.scanned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </span>
             ) : (
-              <span className="text-[13px] text-slate-400">Scans run Mon / Wed / Fri</span>
+              <span className="text-[13px] text-muted-foreground">Scans run Mon / Wed / Fri</span>
             )}
           </AccordionTrigger>
           <AccordionContent className="pb-0">
@@ -636,9 +628,9 @@ export default async function CompanyPage({
               scanHistory={scanHistory}
             />
 
-            <div className="px-6 py-5 border-t border-white/10 bg-slate-50/60">
-              <p className="text-[12px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-2">Report a role we missed</p>
-              <p className="text-[13px] text-slate-400 mb-3">Paste a leadership role URL. We verify it and feed confirmed misses back into scanner training.</p>
+            <div className="px-6 py-5 border-t border-border bg-muted/60">
+              <p className="text-[12px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-2">Report a role we missed</p>
+              <p className="text-[13px] text-muted-foreground mb-3">Paste a leadership role URL. We verify it and feed confirmed misses back into scanner training.</p>
               {missedRoleMsg ? (
                 <Alert variant={missed === '1' ? 'success' : 'destructive'} className="mb-3">
                   <AlertDescription>{missedRoleMsg}</AlertDescription>
@@ -649,14 +641,14 @@ export default async function CompanyPage({
                   type="text"
                   name="role_url"
                   placeholder="https://boards.greenhouse.io/company/jobs/12345"
-                  className="w-full text-white placeholder:text-slate-400"
+                  className="w-full text-foreground placeholder:text-muted-foreground"
                   required
                 />
                 <Input
                   type="text"
                   name="role_title"
                   placeholder="Optional title"
-                  className="w-full text-white placeholder:text-slate-400"
+                  className="w-full text-foreground placeholder:text-muted-foreground"
                 />
                 <Button type="submit">
                   Submit
@@ -667,9 +659,9 @@ export default async function CompanyPage({
         </AccordionItem>
 
         {/* Signals */}
-        <AccordionItem value="signals" id="signals" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+        <AccordionItem value="signals" id="signals" className="border-b-0 bg-muted/40 border border-border rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-border flex items-center justify-between hover:no-underline [&>svg]:hidden">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
               Company Signals
             </h2>
             <LogSignalForm companyId={company.id} />
@@ -684,15 +676,15 @@ export default async function CompanyPage({
         </AccordionItem>
 
         {/* Interview Logs */}
-        <AccordionItem value="interview-sessions" id="interview-sessions" className="border-b-0 bg-white/5 border border-white/10 rounded overflow-hidden">
-          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-white/10 flex items-center justify-between hover:no-underline [&>svg]:hidden">
+        <AccordionItem value="interview-sessions" id="interview-sessions" className="border-b-0 bg-muted/40 border border-border rounded overflow-hidden">
+          <AccordionTrigger className="cursor-pointer px-6 py-[18px] border-b border-border flex items-center justify-between hover:no-underline [&>svg]:hidden">
             <div>
-              <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">
+              <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
                 Interview Sessions
               </h2>
-              <p className="text-[13px] text-slate-400 mt-0.5">Each session sharpens the next prep brief.</p>
+              <p className="text-[13px] text-muted-foreground mt-0.5">Each session sharpens the next prep brief.</p>
             </div>
-            <span className="text-[13px] text-slate-400 shrink-0">
+            <span className="text-[13px] text-muted-foreground shrink-0">
               {interviewLogs.length} {interviewLogs.length === 1 ? 'session' : 'sessions'}
             </span>
           </AccordionTrigger>

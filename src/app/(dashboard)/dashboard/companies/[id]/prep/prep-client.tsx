@@ -20,15 +20,7 @@ import {
   ROLE_MODE_OPTIONS,
   STAGE_OPTIONS,
 } from './prep-config'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Card, Input, ScrollArea, Textarea, ToggleGroup, ToggleGroupItem } from '@/components/ui'
 function PulsingDots({ dotClassName = 'w-1.5 h-1.5', className = '' }: { dotClassName?: string; className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
@@ -78,9 +70,9 @@ function originClassLabel(originClass: ClaimOriginClass) {
 }
 
 function originClassClassName(originClass: ClaimOriginClass) {
-  if (originClass === 'user_provided') return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-  if (originClass === 'system_detected') return 'bg-blue-500/10 text-blue-300 border-blue-500/30'
-  return 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+  if (originClass === 'user_provided') return 'bg-success/10 text-success border-success/30'
+  if (originClass === 'system_detected') return 'bg-info/10 text-info border-info/30'
+  return 'bg-warning/10 text-warning border-warning/30'
 }
 
 function buildClaimOriginLookup(text: string): Record<string, ClaimOriginClass> {
@@ -128,7 +120,7 @@ function TraceLabel({
         type="button"
         variant="ghost"
         onClick={onClick}
-        className="h-auto rounded-4xl p-0 bg-transparent hover:bg-transparent"
+        className="h-auto rounded-4xl p-0 bg-transparent"
       >
         {badge}
       </Button>
@@ -154,8 +146,8 @@ function SourceLegend({
     { key: 'inferred', label: 'Inferred', count: counts.inferred },
   ]
   return (
-    <div className="mb-5 rounded border border-white/10 bg-white/5 p-3">
-      <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Source Legend</p>
+    <div className="mb-5 rounded border border-border bg-muted/40 p-3">
+      <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Source Legend</p>
       <ToggleGroup
         value={[traceFilter]}
         onValueChange={(values) => { const next = values[0] as TraceFilter | undefined; if (next) onChangeFilter(next) }}
@@ -167,12 +159,12 @@ function SourceLegend({
             value={button.key}
             className={`h-auto gap-1 rounded border px-2 py-1 text-[10px] font-semibold tracking-[0.04em] uppercase transition-colors ${
               traceFilter === button.key
-                ? 'bg-orange-500 text-slate-950 border-orange-500'
-                : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'
+                ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                : 'bg-muted/40 text-foreground border-border hover:border-border'
             }`}
           >
             <span>{button.label}</span>
-            <span className={`rounded px-1.5 py-[1px] ${traceFilter === button.key ? 'bg-slate-700 text-slate-100' : 'bg-white/10 text-slate-400'}`}>
+            <span className={`rounded px-1.5 py-[1px] ${traceFilter === button.key ? 'bg-muted text-foreground' : 'bg-muted/60 text-muted-foreground'}`}>
               {button.count}
             </span>
           </ToggleGroupItem>
@@ -199,7 +191,7 @@ function renderBrief(
     if (line.trim() === '---' || line.trim() === '***') return null
     if (line.startsWith('## ')) {
       return (
-        <h2 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mt-10 mb-4 first:mt-0 pb-2 border-b border-white/10">
+        <h2 key={i} className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mt-10 mb-4 first:mt-0 pb-2 border-b border-border">
           {line.slice(3)}
         </h2>
       )
@@ -213,8 +205,8 @@ function renderBrief(
           <div className="mb-1.5">
             <TraceLabel originClass={originClass} onClick={() => onTraceLabelClick(originClass)} />
           </div>
-          <div className="flex gap-2.5 text-[14px] text-slate-300 leading-relaxed">
-          <span className="text-slate-300 shrink-0 select-none mt-0.5">-</span>
+          <div className="flex gap-2.5 text-[14px] text-muted-foreground leading-relaxed">
+          <span className="text-muted-foreground shrink-0 select-none mt-0.5">-</span>
           <BoldText text={line.slice(2)} />
           </div>
         </div>
@@ -229,7 +221,7 @@ function renderBrief(
         <div className="mb-1.5">
           <TraceLabel originClass={originClass} onClick={() => onTraceLabelClick(originClass)} />
         </div>
-        <p className="text-[14px] text-slate-300 leading-relaxed mb-0">
+        <p className="text-[14px] text-muted-foreground leading-relaxed mb-0">
           <BoldText text={line} />
         </p>
       </div>
@@ -285,7 +277,7 @@ function ResourcePanel({ brief }: { brief: string }) {
 
   return (
     <Card variant="glass" className="p-6 mb-4">
-      <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-4">
+      <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-4">
         Further Reading
       </p>
       <div className="flex flex-col gap-3">
@@ -298,11 +290,11 @@ function ResourcePanel({ brief }: { brief: string }) {
             className="group flex items-start gap-3 no-underline"
           >
             <div className="min-w-0">
-              <div className="text-[13px] font-semibold text-white group-hover:text-slate-200 transition-colors">
+              <div className="text-[13px] font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
                 {r.title}
-                <span className="ml-1.5 text-[11px] font-normal text-slate-400">{r.source} ↗</span>
+                <span className="ml-1.5 text-[11px] font-normal text-muted-foreground">{r.source} ↗</span>
               </div>
-              <div className="text-[12px] text-slate-400 mt-0.5 leading-relaxed">{r.description}</div>
+              <div className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">{r.description}</div>
             </div>
           </a>
         ))}
@@ -441,11 +433,11 @@ function OnDemandPanel({
   const claimOriginCounts = useMemo(() => buildClaimOriginCounts(content), [content])
   return (
     <Card variant="glass" className="gap-0 p-0 mb-4">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border">
         <div>
-          <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400">{title}</p>
+          <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">{title}</p>
           {!content && !loading && (
-            <p className="text-[12px] text-slate-400 mt-0.5">{description}</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">{description}</p>
           )}
         </div>
         <Button
@@ -453,7 +445,7 @@ function OnDemandPanel({
           variant="outline"
           onClick={onGenerate}
           disabled={loading}
-          className="shrink-0 text-slate-400 hover:text-slate-200"
+          className="shrink-0 text-muted-foreground hover:text-foreground"
         >
           {loading ? 'Generating…' : content ? 'Regenerate' : 'Generate'}
         </Button>
@@ -464,7 +456,7 @@ function OnDemandPanel({
         </div>
       )}
       {error && !content && (
-        <div className="px-6 py-4 text-[13px] text-red-400">{error}</div>
+        <div className="px-6 py-4 text-[13px] text-destructive">{error}</div>
       )}
       {(content || (loading && content)) && (
         <div className="px-6 py-5">
@@ -478,7 +470,7 @@ function OnDemandPanel({
               <div className="mt-2">
                 <Button
                   variant="outline"
-                  className="text-[11px] text-amber-200 border-amber-500/40 hover:bg-amber-500/20"
+                  className="text-[11px] text-warning border-warning/40 hover:bg-warning/20"
                   render={<Link href={addEvidenceHref ?? '#'} />}
                 >
                   Add evidence
@@ -493,10 +485,10 @@ function OnDemandPanel({
           />
           {renderBrief(content, traceFilter, onTraceLabelClick)}
           {loading && (
-            <span className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />
+            <span className="inline-block w-0.5 h-4 bg-muted animate-pulse ml-0.5 align-middle" />
           )}
           {!loading && (
-            <p className="mt-5 pt-3 border-t border-white/10 text-[11px] text-slate-400">
+            <p className="mt-5 pt-3 border-t border-border text-[11px] text-muted-foreground">
               AI-generated - use as input, not advice. Verify facts before any conversation.
             </p>
           )}
@@ -1019,16 +1011,16 @@ export function PrepClient({
   }, [brief, isLowConfidence, companyId, roleMode, interviewStage, briefConfidence?.band])
 
   return (
-    <div className="relative min-h-screen bg-slate-950 font-sans text-slate-100">
+    <div className="relative min-h-screen bg-background font-sans text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/72 backdrop-blur-xl no-print">
+      <header className="border-b border-border bg-background/72 backdrop-blur-xl no-print">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-300">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Link
             href={`/dashboard/companies/${companyId}`}
-            className="text-[13px] text-slate-400 hover:text-slate-300 transition-colors"
+            className="text-[13px] text-muted-foreground transition-colors"
           >
             ← {companyName}
           </Link>
@@ -1040,8 +1032,8 @@ export function PrepClient({
         <div className="mb-6 sm:mb-8 no-print">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-5">
             <div>
-              <h1 className="text-[26px] font-bold text-white leading-tight">Interview Prep</h1>
-              <p className="text-[13px] text-slate-400 mt-1.5">{companyName} · {stageLabel}</p>
+              <h1 className="text-[26px] font-bold text-foreground leading-tight">Interview Prep</h1>
+              <p className="text-[13px] text-muted-foreground mt-1.5">{companyName} · {stageLabel}</p>
             </div>
             <div className="flex flex-col items-stretch sm:items-end gap-2 shrink-0">
               <Input
@@ -1050,7 +1042,7 @@ export function PrepClient({
                 onChange={e => setPostingUrl(e.target.value)}
                 placeholder="Paste job posting URL (optional)"
                 disabled={busy}
-                className="text-[12px] text-slate-300 placeholder:text-slate-400 w-full sm:w-72 focus-visible:border-slate-400"
+                className="text-[12px] text-muted-foreground placeholder:text-muted-foreground w-full sm:w-72 focus-visible:border-border"
               />
               <div className="flex gap-2">
                 <Button
@@ -1070,7 +1062,7 @@ export function PrepClient({
                         void handleMarkReviewed()
                       }}
                       disabled={markingReviewed || reviewedBriefId === (briefId ?? '__reviewed__')}
-                      className="shrink-0 text-[13px] text-slate-300 hover:text-slate-200"
+                      className="shrink-0 text-[13px] text-muted-foreground hover:text-foreground"
                       title="Mark this prep brief as reviewed"
                     >
                       {reviewedBriefId === (briefId ?? '__reviewed__') ? 'Reviewed' : markingReviewed ? 'Saving…' : 'Mark reviewed'}
@@ -1080,7 +1072,7 @@ export function PrepClient({
                       variant="outline"
                       onClick={handleDownload}
                       disabled={downloading || exportBlockedByConfidence}
-                      className="shrink-0 text-[13px] text-slate-300 hover:text-slate-200"
+                      className="shrink-0 text-[13px] text-muted-foreground hover:text-foreground"
                       title="Download as Word document"
                     >
                       {downloading ? '…' : 'Word'}
@@ -1092,7 +1084,7 @@ export function PrepClient({
                         void handlePdfExport()
                       }}
                       disabled={exportBlockedByConfidence}
-                      className="shrink-0 text-[13px] text-slate-300 hover:text-slate-200"
+                      className="shrink-0 text-[13px] text-muted-foreground hover:text-foreground"
                       title="Save as PDF"
                     >
                       PDF
@@ -1104,7 +1096,7 @@ export function PrepClient({
           </div>
 
           <div>
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Interview stage</p>
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Interview stage</p>
             <ToggleGroup
               value={[interviewStage]}
               onValueChange={(values) => { const next = values[0] as InterviewStage | undefined; if (next) setInterviewStage(next) }}
@@ -1117,8 +1109,8 @@ export function PrepClient({
                   value={opt.value}
                   className={`h-auto text-[12px] font-medium px-3 py-1.5 rounded border transition-colors ${
                     interviewStage === opt.value
-                      ? 'bg-orange-500 text-slate-950 border-orange-500'
-                      : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30 hover:text-slate-200'
+                      ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                      : 'bg-muted/40 text-foreground border-border hover:text-foreground'
                   }`}
                 >
                   {opt.label}
@@ -1128,7 +1120,7 @@ export function PrepClient({
           </div>
 
           <div className="mt-4">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-2">Role mode</p>
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-2">Role mode</p>
             <ToggleGroup
               value={[roleMode]}
               onValueChange={(values) => { const next = values[0] as PrepRoleMode | undefined; if (next) setRoleMode(next) }}
@@ -1141,8 +1133,8 @@ export function PrepClient({
                   value={opt.value}
                   className={`h-auto text-[12px] font-medium px-3 py-1.5 rounded border transition-colors ${
                     roleMode === opt.value
-                      ? 'bg-orange-500 text-slate-950 border-orange-500'
-                      : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30 hover:text-slate-200'
+                      ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30'
+                      : 'bg-muted/40 text-foreground border-border hover:text-foreground'
                   }`}
                 >
                   {opt.label}
@@ -1155,7 +1147,7 @@ export function PrepClient({
         {firstCompany && !brief && (
           <Alert variant="warning" className="mb-6 px-6 py-5">
             <AlertTitle className="text-[10px] tracking-[0.14em] uppercase">Your first intelligence brief</AlertTitle>
-            <p className="text-[14px] font-semibold text-white mb-1">
+            <p className="text-[14px] font-semibold text-foreground mb-1">
               {loading ? `Building your brief on ${companyName}...` : `Ready to brief you on ${companyName}.`}
             </p>
             <AlertDescription className="text-[13px] leading-relaxed">
@@ -1168,8 +1160,8 @@ export function PrepClient({
 
         {exportGateError && (
           <Alert variant={exportGateError.type === 'sensitive' ? 'destructive' : 'warning'} className="mb-4 px-5 py-4">
-            <p className="text-[12px] font-semibold text-white">{exportGateError.message}</p>
-            <ul className="mt-2 space-y-1.5 text-[12px] text-slate-300">
+            <p className="text-[12px] font-semibold text-foreground">{exportGateError.message}</p>
+            <ul className="mt-2 space-y-1.5 text-[12px] text-muted-foreground">
               {exportGateError.remediation.slice(0, 6).map((item) => (
                 <li key={item}>- {item}</li>
               ))}
@@ -1251,25 +1243,25 @@ export function PrepClient({
           return (
             <Card variant="glass" className="mb-4 px-5 py-4">
               <div className="flex items-baseline justify-between gap-4 mb-3">
-                <p className="text-[12px] font-bold tracking-[0.1em] uppercase text-slate-300">Brief readiness</p>
-                <Badge variant="outline" className="text-slate-400">{readyCount} of {items.length} inputs ready</Badge>
+                <p className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Brief readiness</p>
+                <Badge variant="outline" className="text-muted-foreground">{readyCount} of {items.length} inputs ready</Badge>
               </div>
               <div className="flex flex-col gap-2">
                 {items.map(i => (
                   <div key={i.key} className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-2.5 min-w-0">
-                      <span aria-hidden className={`mt-0.5 text-[13px] leading-none ${i.state === 'ready' ? 'text-emerald-400' : i.state === 'partial' ? 'text-amber-300' : 'text-slate-500'}`}>
+                      <span aria-hidden className={`mt-0.5 text-[13px] leading-none ${i.state === 'ready' ? 'text-success' : i.state === 'partial' ? 'text-warning' : 'text-muted-foreground'}`}>
                         {i.state === 'ready' ? '\u2713' : i.state === 'partial' ? '\u25D0' : '\u25CB'}
                       </span>
                       <div className="min-w-0">
-                        <p className={`text-[12px] font-semibold ${i.state === 'missing' ? 'text-amber-300' : 'text-slate-200'}`}>{i.label}</p>
-                        <p className="text-[12px] text-slate-400 leading-snug">{i.message}</p>
+                        <p className={`text-[12px] font-semibold ${i.state === 'missing' ? 'text-warning' : 'text-foreground'}`}>{i.label}</p>
+                        <p className="text-[12px] text-muted-foreground leading-snug">{i.message}</p>
                       </div>
                     </div>
                     {i.state !== 'ready' && (
                       <Button
                         variant="outline"
-                        className="shrink-0 text-[11px] text-slate-200 whitespace-nowrap"
+                        className="shrink-0 text-[11px] text-foreground whitespace-nowrap"
                         render={<Link href={i.href} />}
                       >
                         {i.cta}
@@ -1278,7 +1270,7 @@ export function PrepClient({
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-[11px] text-slate-500">
+              <p className="mt-3 text-[11px] text-muted-foreground">
                 You can generate the brief now. Each input you add makes it more specific to you.
               </p>
             </Card>
@@ -1287,7 +1279,7 @@ export function PrepClient({
 
         {!brief && !busy && !error && (
           <Card variant="glass" className="p-8 sm:p-10 text-center">
-            <p className="text-[14px] text-slate-400">
+            <p className="text-[14px] text-muted-foreground">
               Generates an elite brief using your pipeline data, company notes, scan results, and known contacts.
             </p>
           </Card>
@@ -1295,7 +1287,7 @@ export function PrepClient({
 
         {!brief && !busy && error && (
           <Card variant="glass" className="p-8 sm:p-10 text-center">
-            <p className="text-[14px] text-slate-400">
+            <p className="text-[14px] text-muted-foreground">
               Click Generate to try again.
             </p>
           </Card>
@@ -1319,7 +1311,7 @@ export function PrepClient({
             </div>
             <Button
               variant="outline"
-              className="shrink-0 text-[12px] text-amber-200 border-amber-500/40 hover:border-amber-500"
+              className="shrink-0 text-[12px] text-warning border-warning/40 hover:border-warning/30"
               render={<Link href="/dashboard/profile#section-resume" />}
             >
               Add resume →
@@ -1337,13 +1329,13 @@ export function PrepClient({
               >
                 <ToggleGroupItem
                   value="tonight"
-                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'tonight' ? 'bg-orange-500 text-slate-950 border-orange-500' : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'}`}
+                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'tonight' ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30' : 'bg-muted/40 text-foreground border-border hover:border-border'}`}
                 >
                   Tonight view
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="full"
-                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'full' ? 'bg-orange-500 text-slate-950 border-orange-500' : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/30'}`}
+                  className={`h-auto text-[11px] font-semibold rounded px-2.5 py-1 ${briefViewMode === 'full' ? 'bg-primary aria-pressed:bg-primary text-primary-foreground border-primary/30' : 'bg-muted/40 text-foreground border-border hover:border-border'}`}
                 >
                   Full dossier
                 </ToggleGroupItem>
@@ -1351,19 +1343,19 @@ export function PrepClient({
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Brief confidence</p>
-                <p className="text-[14px] font-semibold text-white mt-1">
+                <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Brief confidence</p>
+                <p className="text-[14px] font-semibold text-foreground mt-1">
                   {briefConfidenceCopy?.confidenceLabel}
                 </p>
               </div>
-              <div className="text-[12px] text-slate-300">
+              <div className="text-[12px] text-muted-foreground">
                 {briefConfidenceCopy?.detail}
               </div>
             </div>
             {isLowConfidence && (
-              <div className="mt-3 pt-3 border-t border-amber-500/30">
-                <p className="text-[12px] font-semibold text-amber-200 mb-1.5">Low confidence remediation required before export</p>
-                <ul className="text-[12px] text-amber-300 space-y-1.5">
+              <div className="mt-3 pt-3 border-t border-warning/30">
+                <p className="text-[12px] font-semibold text-warning mb-1.5">Low confidence remediation required before export</p>
+                <ul className="text-[12px] text-warning space-y-1.5">
                   {briefConfidence.remediation.map((item) => (
                     <li key={item}>- {item}</li>
                   ))}
@@ -1381,7 +1373,7 @@ export function PrepClient({
                       interview_stage: interviewStage,
                     })
                   }}
-                  className="mt-3 text-[12px] text-amber-200 border-amber-500/40 hover:bg-amber-500/20"
+                  className="mt-3 text-[12px] text-warning border-warning/40 hover:bg-warning/20"
                 >
                   Acknowledge and allow export
                 </Button>
@@ -1399,10 +1391,10 @@ export function PrepClient({
             />
             {renderBrief(displayedBrief, traceFilter, handleTraceLabelClick)}
             {busy && (
-              <span className="inline-block w-0.5 h-4 bg-slate-400 animate-pulse ml-0.5 align-middle" />
+              <span className="inline-block w-0.5 h-4 bg-muted animate-pulse ml-0.5 align-middle" />
             )}
             {!busy && (
-              <p className="mt-6 pt-4 border-t border-white/10 text-[11px] text-slate-400">
+              <p className="mt-6 pt-4 border-t border-border text-[11px] text-muted-foreground">
                 AI-generated - use as input, not advice. Verify facts before any conversation.
               </p>
             )}
@@ -1417,15 +1409,15 @@ export function PrepClient({
 
         {briefId && !busy && (
           <Card variant="glass" className="mb-4 p-4 no-print">
-            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">Post-interview outcome</p>
-            <p className="mt-1 text-[13px] text-slate-300">Log the result after this conversation to improve efficacy tracking.</p>
+            <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Post-interview outcome</p>
+            <p className="mt-1 text-[13px] text-muted-foreground">Log the result after this conversation to improve efficacy tracking.</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => { void handleLogOutcome('advanced') }}
                 disabled={!!outcomeLogging}
-                className="text-[12px] border-emerald-300 text-emerald-300 hover:bg-emerald-500/10"
+                className="text-[12px] border-success/30 text-success hover:bg-success/10"
               >
                 {outcomeLogging === 'advanced' ? 'Saving…' : 'Advanced'}
               </Button>
@@ -1434,7 +1426,7 @@ export function PrepClient({
                 variant="outline"
                 onClick={() => { void handleLogOutcome('offer') }}
                 disabled={!!outcomeLogging}
-                className="text-[12px] border-blue-300 text-blue-300 hover:bg-blue-500/10"
+                className="text-[12px] border-info/30 text-info hover:bg-info/10"
               >
                 {outcomeLogging === 'offer' ? 'Saving…' : 'Offer'}
               </Button>
@@ -1443,13 +1435,13 @@ export function PrepClient({
                 variant="outline"
                 onClick={() => { void handleLogOutcome('rejected') }}
                 disabled={!!outcomeLogging}
-                className="text-[12px] border-amber-500/40 text-amber-300 hover:bg-amber-500/10"
+                className="text-[12px] border-warning/40 text-warning hover:bg-warning/10"
               >
                 {outcomeLogging === 'rejected' ? 'Saving…' : 'Rejected'}
               </Button>
             </div>
             {outcomeLogged && (
-              <p className="mt-2 text-[12px] text-slate-400">Outcome saved: {outcomeLogged}.</p>
+              <p className="mt-2 text-[12px] text-muted-foreground">Outcome saved: {outcomeLogged}.</p>
             )}
           </Card>
         )}
@@ -1480,14 +1472,14 @@ export function PrepClient({
           if (top.length === 0) return null
           return (
             <Card variant="glass" className="mb-4 p-5 no-print">
-              <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">What would sharpen the next brief</p>
+              <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">What would sharpen the next brief</p>
               <div className="flex flex-col gap-2.5">
                 {top.map((n, i) => (
                   <div key={i} className="flex items-start justify-between gap-4">
-                    <p className="text-[13px] text-slate-300">{n.message}</p>
+                    <p className="text-[13px] text-muted-foreground">{n.message}</p>
                     <Button
                       variant="outline"
-                      className="shrink-0 text-[11px] text-slate-300 whitespace-nowrap"
+                      className="shrink-0 text-[11px] text-muted-foreground whitespace-nowrap"
                       render={<Link href={n.href} />}
                     >
                       {n.cta}
@@ -1628,7 +1620,7 @@ export function PrepClient({
 
         {brief && !loading && (
           <Card variant="glass" className="p-6 mb-4 no-print">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-3">
+            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">
               Ask about this brief
             </p>
             {chatMessages.length > 0 && (
@@ -1638,8 +1630,8 @@ export function PrepClient({
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[85%] rounded-lg px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${
                         msg.role === 'user'
-                          ? 'bg-orange-500 text-slate-950'
-                          : 'bg-white/5 border border-white/10 text-slate-200'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted/40 border border-border text-foreground'
                       }`}>
                         {msg.content}
                         {msg.role === 'assistant' && msg.content === '' && chatLoading && (
@@ -1664,7 +1656,7 @@ export function PrepClient({
                   : 'Ask a follow-up...'}
                 rows={2}
                 disabled={chatLoading || loading}
-                className="flex-1 text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none"
+                className="flex-1 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:border-border resize-none"
               />
               <Button
                 type="button"
@@ -1675,13 +1667,13 @@ export function PrepClient({
                 {chatLoading ? '…' : 'Ask'}
               </Button>
             </div>
-            <p className="mt-2 text-[11px] text-slate-300">Enter to send · Shift+Enter for new line</p>
+            <p className="mt-2 text-[11px] text-muted-foreground">Enter to send · Shift+Enter for new line</p>
           </Card>
         )}
 
         {brief && !loading && (
           <Card variant="glass" className="p-6 no-print">
-            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-400 mb-3">
+            <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-3">
               Refine this brief
             </p>
             <div className="flex flex-wrap gap-2 mb-3">
@@ -1695,7 +1687,7 @@ export function PrepClient({
                   type="button"
                   variant="outline"
                   onClick={() => { setRefineInput(chip); refineRef.current?.focus() }}
-                  className="rounded-full text-[12px] text-slate-400 hover:text-slate-200"
+                  className="rounded-full text-[12px] text-muted-foreground hover:text-foreground"
                 >
                   {chip}
                 </Button>
@@ -1712,7 +1704,7 @@ export function PrepClient({
                 placeholder="Or type your own refinement request..."
                 rows={2}
                 disabled={refining}
-                className="flex-1 rounded-lg text-[13px] text-white placeholder:text-slate-300 focus-visible:border-slate-400 resize-none"
+                className="flex-1 rounded-lg text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:border-border resize-none"
               />
               <Button
                 type="button"
@@ -1723,14 +1715,14 @@ export function PrepClient({
                 {refining ? 'Refining…' : 'Refine'}
               </Button>
             </div>
-            <p className="mt-2 text-[11px] text-slate-300">Enter to submit · Shift+Enter for new line</p>
+            <p className="mt-2 text-[11px] text-muted-foreground">Enter to submit · Shift+Enter for new line</p>
           </Card>
         )}
 
         {brief && (
           <Card variant="glass" className="mt-6 px-6 py-5 no-print">
             <div className="flex items-center justify-between gap-4 mb-3">
-              <p className="text-[13px] text-slate-300 font-semibold">
+              <p className="text-[13px] text-muted-foreground font-semibold">
                 Draft outreach from this brief
               </p>
               {!outreachDraft && !outreachLoading && (
@@ -1739,7 +1731,7 @@ export function PrepClient({
                   variant="outline"
                   onClick={handleGenerateOutreach}
                   disabled={outreachLoading}
-                  className="shrink-0 text-[12px] text-white"
+                  className="shrink-0 text-[12px] text-foreground"
                 >
                   Generate →
                 </Button>
@@ -1747,16 +1739,16 @@ export function PrepClient({
             </div>
 
             {outreachLoading && !outreachDraft && (
-              <p className="text-[13px] text-slate-400 italic">Drafting outreach…</p>
+              <p className="text-[13px] text-muted-foreground italic">Drafting outreach…</p>
             )}
 
             {outreachError && (
-              <p className="text-[13px] text-red-400">{outreachError}</p>
+              <p className="text-[13px] text-destructive">{outreachError}</p>
             )}
 
             {outreachDraft && (
               <div>
-                <p className="text-[14px] text-slate-200 leading-relaxed whitespace-pre-wrap mb-4">
+                <p className="text-[14px] text-foreground leading-relaxed whitespace-pre-wrap mb-4">
                   {outreachDraft}
                 </p>
                 <div className="flex items-center gap-3 flex-wrap">
@@ -1764,7 +1756,7 @@ export function PrepClient({
                     type="button"
                     variant="outline"
                     onClick={handleCopyOutreach}
-                    className="text-[12px] text-white"
+                    className="text-[12px] text-foreground"
                   >
                     {outreachCopied ? 'Copied!' : 'Copy'}
                   </Button>
@@ -1774,27 +1766,27 @@ export function PrepClient({
                       variant="outline"
                       onClick={handleLogOutreach}
                       disabled={outreachLogLoading}
-                      className="text-[12px] text-slate-400 hover:text-slate-200"
+                      className="text-[12px] text-muted-foreground hover:text-foreground"
                     >
                       {outreachLogLoading ? 'Logging…' : 'Log as sent'}
                     </Button>
                   )}
                   {outreachLogged && (
-                    <span className="text-[12px] font-semibold text-green-400">Logged</span>
+                    <span className="text-[12px] font-semibold text-success">Logged</span>
                   )}
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={handleGenerateOutreach}
                     disabled={outreachLoading}
-                    className="text-[12px] text-slate-400 hover:text-slate-200"
+                    className="text-[12px] text-muted-foreground hover:text-foreground"
                   >
                     Regenerate
                   </Button>
                   {!hasContacts && (
                     <Link
                       href={`/dashboard/companies/${companyId}`}
-                      className="text-[12px] text-slate-400 hover:text-slate-200 transition-colors"
+                      className="text-[12px] text-muted-foreground hover:text-foreground transition-colors"
                     >
                       Add a contact to log this →
                     </Link>
@@ -1804,7 +1796,7 @@ export function PrepClient({
             )}
 
             {!outreachDraft && !outreachLoading && !outreachError && (
-              <p className="text-[12px] text-slate-400">
+              <p className="text-[12px] text-muted-foreground">
                 Generates a 3-sentence message grounded in this company&apos;s signals and your prep brief.
                 {!hasContacts && ' Add a contact at ' + companyName + ' to log the outreach after.'}
               </p>

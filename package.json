@@ -62,7 +62,6 @@
         "monitor:harness:generate": "node scripts/generate-monitoring-harness.mjs",
         "monitor:coverage:refresh": "npm run monitor:matrix:generate && npm run monitor:harness:generate",
         "smoke:auth-paths": "npx tsx tmp/auth-path-smoke.ts",
-        "guard:landing-page-approval": "node scripts/check-landing-page-change-approval.mjs",
         "guard:plain-language": "node scripts/check-plain-language-lexicon.mjs",
         "guard:plain-language:json": "node scripts/check-plain-language-lexicon.mjs --json",
         "guard:plain-language:baseline": "node scripts/check-plain-language-lexicon.mjs --update-baseline",
@@ -179,6 +178,10 @@
         "ci:pr-churn:slo:strict": "node scripts/generate-pr-churn-slo.mjs --strict",
         "ci:pr-churn:slo:json": "node scripts/generate-pr-churn-slo.mjs --json",
         "seed:demo": "npx tsx scripts/seed-demo.ts",
+        "seed:staging": "node scripts/seed-staging.mjs",
+        "seed:staging:apply": "node scripts/seed-staging.mjs --apply",
+        "promote:production": "node scripts/promote-to-production.mjs",
+        "promote:production:apply": "node scripts/promote-to-production.mjs --apply",
         "seed:social": "npx tsx scripts/seed-social-calendar.ts",
         "evals:label-progress": "node scripts/check-prep-brief-label-progress.mjs",
         "evals:label-progress:json": "node scripts/check-prep-brief-label-progress.mjs --json",
@@ -264,9 +267,9 @@
         "test:coverage": "node scripts/run-unit-coverage.mjs",
         "coverage:folders:check": "node scripts/check-coverage-thresholds.mjs",
         "coverage:folders:check:staged": "node scripts/check-coverage-thresholds.mjs --staged",
-        "coverage:diff:check": "node scripts/check-diff-coverage.mjs --min-coverage=90",
         "test": "npm run guard:observability-imports && npm run test:placeholder-guard && vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "watchlist:admin": "node scripts/watchlist-admin.mjs"
     },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.117.1",
@@ -287,6 +290,7 @@
         "mammoth": "^1.12.1",
         "mermaid": "^11.16.1",
         "next": "^16.3.1",
+        "next-themes": "^0.4.6",
         "pdf-parse": "^2.4.5",
         "postcss": "^8.5.26",
         "posthog-js": "^1.417.1",

@@ -1,11 +1,6 @@
 'use client'
 import { useState, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card } from '@/components/ui/card'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-
+import { Alert, AlertDescription, AlertTitle, Button, Card, Label, Textarea } from '@/components/ui'
 interface Props {
   defaultValue: string
   resumeText: string
@@ -71,7 +66,7 @@ export function PositioningGeneratorTextarea({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <Label htmlFor="positioning_summary" className="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">
+        <Label htmlFor="positioning_summary" className="text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
           Positioning summary
         </Label>
         <Button
@@ -79,7 +74,7 @@ export function PositioningGeneratorTextarea({
           variant="link"
           onClick={handleGenerate}
           disabled={loading}
-          className="h-auto p-0 text-[11px] font-semibold text-orange-600 hover:text-orange-700"
+          className="h-auto p-0 text-[11px] font-semibold text-primary"
         >
           {loading ? 'Generating...' : 'Generate from resume'}
         </Button>
@@ -97,13 +92,13 @@ export function PositioningGeneratorTextarea({
       />
 
       {error && (
-        <p className="mt-1.5 text-[12px] text-red-600">{error}</p>
+        <p className="mt-1.5 text-[12px] text-destructive">{error}</p>
       )}
 
       {suggestion && (
-        <Card className="mt-2 border-orange-200 bg-orange-50 p-4">
-          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-orange-500 mb-2">Generated suggestion</p>
-          <p className="text-[13px] text-slate-700 leading-relaxed mb-3">{suggestion}</p>
+        <Card className="mt-2 border-primary/30 bg-primary/10 p-4">
+          <p className="text-[10px] font-bold tracking-[0.1em] uppercase text-primary mb-2">Generated suggestion</p>
+          <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">{suggestion}</p>
           <div className="flex items-center gap-3">
             <Button type="button" size="sm" onClick={handleUse}>
               Use this
@@ -113,7 +108,7 @@ export function PositioningGeneratorTextarea({
               variant="ghost"
               size="sm"
               onClick={() => { setSuggestion(''); setGaps([]) }}
-              className="text-slate-400 hover:text-slate-600"
+              className="text-muted-foreground"
             >
               Discard
             </Button>
@@ -152,13 +147,13 @@ export function PositioningGeneratorTextarea({
       )}
 
       {!value && !suggestion && (
-        <div className="mt-2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded text-[12px] text-slate-500 leading-relaxed">
-          <span className="font-semibold text-slate-400 uppercase tracking-wide text-[10px]">Example</span>
+        <div className="mt-2 px-3 py-2.5 bg-muted border border-border rounded text-[12px] text-muted-foreground leading-relaxed">
+          <span className="font-semibold text-muted-foreground uppercase tracking-wide text-[10px]">Example</span>
           <p className="mt-1">Transformation CIO with 18 years leading enterprise technology modernization in healthcare and financial services. Known for delivering large-scale ERP migrations and building platform engineering teams from scratch. Seeking CIO and VP Technology roles at growth-stage companies where I can drive digital transformation.</p>
         </div>
       )}
 
-      <p className="mt-1.5 text-[12px] text-slate-400">Used to personalize interview prep briefs and chat context.</p>
+      <p className="mt-1.5 text-[12px] text-muted-foreground">Used to personalize interview prep briefs and chat context.</p>
     </div>
   )
 }

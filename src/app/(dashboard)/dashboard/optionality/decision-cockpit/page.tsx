@@ -8,16 +8,16 @@ import { ExecutiveDecisionCockpit } from '@/app/(dashboard)/dashboard/_component
  */
 export default function OptionalityDecisionCockpitPage() {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-screen bg-muted font-sans">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-4">
         <div className="mb-4">
-          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">
+          <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-1">
             Decision Cockpit
           </p>
-          <h1 className="text-[22px] font-bold text-slate-900 leading-tight">
+          <h1 className="text-[22px] font-bold text-foreground leading-tight">
             Target and offer evaluation
           </h1>
-          <p className="text-[13px] text-slate-500 mt-1">
+          <p className="text-[13px] text-muted-foreground mt-1">
             Score targets against what matters, set hard constraints, and capture pre/post interview reflections.
           </p>
         </div>

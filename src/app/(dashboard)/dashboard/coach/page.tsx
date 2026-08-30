@@ -2,28 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from '@/components/ui/pagination'
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
-
+import { Alert, AlertDescription, Badge, Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Input, Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 type CommandCenterClient = {
   user_id: string
   name: string | null
@@ -185,71 +164,71 @@ export default function CoachDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(193,127,59,0.12),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_26%),linear-gradient(180deg,_#0b1220_0%,_#0a1020_46%,_#0b1324_100%)] font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             &larr; Dashboard
           </Link>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-        <div className="mb-6 rounded-2xl border border-white/15 bg-white/5 px-5 py-5 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-          <div className="text-[13px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-1">Coach</div>
-          <h1 className="text-[26px] font-bold text-white leading-tight">Portfolio Command Center</h1>
-          <p className="text-[13px] text-slate-200 mt-1">
+        <div className="mb-6 rounded-2xl border border-border bg-muted/40 px-5 py-5 shadow-xl backdrop-blur-md">
+          <div className="text-[13px] font-bold tracking-[0.14em] uppercase text-primary mb-1">Coach</div>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Portfolio Command Center</h1>
+          <p className="text-[13px] text-foreground mt-1">
             {clients.length} client{clients.length !== 1 ? 's' : ''} under your account.
           </p>
         </div>
 
         {!loading && commandCenter && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <div className="rounded-2xl border border-white/15 bg-white/5 p-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300">Total clients</p>
-              <p className="text-[24px] font-bold text-white mt-1 tabular-nums">{commandCenter.portfolio.total_clients}</p>
+            <div className="rounded-2xl border border-border bg-muted/40 p-3 shadow-xl backdrop-blur-md">
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground">Total clients</p>
+              <p className="text-[24px] font-bold text-foreground mt-1 tabular-nums">{commandCenter.portfolio.total_clients}</p>
             </div>
-            <div className="rounded-2xl border border-red-300/20 bg-red-500/10 p-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-red-200">High risk</p>
-              <p className="text-[24px] font-bold text-red-100 mt-1 tabular-nums">{commandCenter.portfolio.urgency.high}</p>
+            <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-3 shadow-xl backdrop-blur-md">
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-destructive">High risk</p>
+              <p className="text-[24px] font-bold text-destructive mt-1 tabular-nums">{commandCenter.portfolio.urgency.high}</p>
             </div>
-            <div className="rounded-2xl border border-amber-300/20 bg-amber-500/10 p-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-amber-200">Stale data</p>
-              <p className="text-[24px] font-bold text-amber-100 mt-1 tabular-nums">{commandCenter.freshness_sla.stale_clients}</p>
+            <div className="rounded-2xl border border-warning/20 bg-warning/10 p-3 shadow-xl backdrop-blur-md">
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-warning">Stale data</p>
+              <p className="text-[24px] font-bold text-warning mt-1 tabular-nums">{commandCenter.freshness_sla.stale_clients}</p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/5 p-3 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-slate-300">Avg risk</p>
-              <p className="text-[24px] font-bold text-white mt-1 tabular-nums">{commandCenter.portfolio.average_risk_score}</p>
+            <div className="rounded-2xl border border-border bg-muted/40 p-3 shadow-xl backdrop-blur-md">
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase text-muted-foreground">Avg risk</p>
+              <p className="text-[24px] font-bold text-foreground mt-1 tabular-nums">{commandCenter.portfolio.average_risk_score}</p>
             </div>
           </div>
         )}
 
         {!loading && commandCenter?.monitoring && (
-          <div className="rounded-2xl border border-white/15 bg-white/5 p-4 mb-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-            <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-2">Route performance</h2>
+          <div className="rounded-2xl border border-border bg-muted/40 p-4 mb-6 shadow-xl backdrop-blur-md">
+            <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-2">Route performance</h2>
             <div className="grid sm:grid-cols-5 gap-3">
               <div>
-                <p className="text-[13px] uppercase tracking-[0.08em] text-slate-400">Route fetch</p>
-                <p className="text-[14px] font-semibold text-white tabular-nums">{commandCenter.monitoring.fetch_ms}ms</p>
+                <p className="text-[13px] uppercase tracking-[0.08em] text-muted-foreground">Route fetch</p>
+                <p className="text-[14px] font-semibold text-foreground tabular-nums">{commandCenter.monitoring.fetch_ms}ms</p>
               </div>
               <div>
-                <p className="text-[13px] uppercase tracking-[0.08em] text-slate-400">Home load</p>
-                <p className="text-[14px] font-semibold text-white tabular-nums">{homeLoadMs ?? '-'}ms</p>
+                <p className="text-[13px] uppercase tracking-[0.08em] text-muted-foreground">Home load</p>
+                <p className="text-[14px] font-semibold text-foreground tabular-nums">{homeLoadMs ?? '-'}ms</p>
               </div>
               <div>
-                <p className="text-[13px] uppercase tracking-[0.08em] text-slate-400">Budget</p>
-                <p className="text-[14px] font-semibold text-white tabular-nums">{commandCenter.monitoring.budget_ms}ms</p>
+                <p className="text-[13px] uppercase tracking-[0.08em] text-muted-foreground">Budget</p>
+                <p className="text-[14px] font-semibold text-foreground tabular-nums">{commandCenter.monitoring.budget_ms}ms</p>
               </div>
               <div>
-                <p className="text-[13px] uppercase tracking-[0.08em] text-slate-400">Client rows</p>
-                <p className="text-[14px] font-semibold text-white tabular-nums">{commandCenter.monitoring.payload_clients}</p>
+                <p className="text-[13px] uppercase tracking-[0.08em] text-muted-foreground">Client rows</p>
+                <p className="text-[14px] font-semibold text-foreground tabular-nums">{commandCenter.monitoring.payload_clients}</p>
               </div>
               <div>
-                <p className="text-[13px] uppercase tracking-[0.08em] text-slate-400">Upcoming rows</p>
-                <p className="text-[14px] font-semibold text-white tabular-nums">{commandCenter.monitoring.payload_sessions}</p>
+                <p className="text-[13px] uppercase tracking-[0.08em] text-muted-foreground">Upcoming rows</p>
+                <p className="text-[14px] font-semibold text-foreground tabular-nums">{commandCenter.monitoring.payload_sessions}</p>
               </div>
             </div>
           </div>
@@ -257,14 +236,14 @@ export default function CoachDashboard() {
 
         {!loading && (atRisk.length > 0 || overdue.length > 0) && (
           <Alert variant="warning" className="mb-6 backdrop-blur-md">
-            <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-amber-200 mb-2">Needs Attention</h2>
+            <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-warning mb-2">Needs Attention</h2>
             {atRisk.length > 0 && (
-              <AlertDescription className="text-slate-100 mb-1">
+              <AlertDescription className="text-foreground mb-1">
                 <span className="font-semibold">{atRisk.length}</span> client{atRisk.length !== 1 ? 's' : ''} in high-risk status.
               </AlertDescription>
             )}
             {overdue.length > 0 && (
-              <AlertDescription className="text-slate-100">
+              <AlertDescription className="text-foreground">
                 <span className="font-semibold">{overdue.length}</span> client{overdue.length !== 1 ? 's' : ''} with overdue actions.
               </AlertDescription>
             )}
@@ -273,24 +252,24 @@ export default function CoachDashboard() {
 
         {!loading && commandCenter && (
           <div className="grid lg:grid-cols-3 gap-4 mb-6">
-            <Collapsible className="rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <CollapsibleTrigger className="group flex w-full items-center cursor-pointer text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">
+            <Collapsible className="rounded-2xl border border-border bg-muted/40 p-4 shadow-xl backdrop-blur-md">
+              <CollapsibleTrigger className="group flex w-full items-center cursor-pointer text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">
                 <span className="group-data-panel-open:hidden">▶ Upcoming sessions</span>
                 <span className="hidden group-data-panel-open:inline">▼ Upcoming sessions</span>
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-3">
                 {commandCenter.upcoming_sessions.length === 0 ? (
-                  <p className="text-[13px] text-slate-300">No upcoming sessions or due touchpoints in the current window.</p>
+                  <p className="text-[13px] text-muted-foreground">No upcoming sessions or due touchpoints in the current window.</p>
                 ) : (
                   <div className="space-y-3">
                     {commandCenter.upcoming_sessions.slice(0, 6).map(session => (
-                      <div key={`${session.user_id}-${session.scheduled_for}`} className="border border-white/10 rounded-lg bg-slate-950/30 p-3">
+                      <div key={`${session.user_id}-${session.scheduled_for}`} className="border border-border rounded-lg bg-background/30 p-3">
                         <div className="flex items-center justify-between gap-3">
-                          <p className="text-[13px] font-semibold text-white truncate">{session.name ?? session.email ?? 'Client'}</p>
+                          <p className="text-[13px] font-semibold text-foreground truncate">{session.name ?? session.email ?? 'Client'}</p>
                           <Badge variant={urgencyBadgeVariant(session.urgency)} className="uppercase tracking-[0.08em]">{session.urgency}</Badge>
                         </div>
-                        <p className="text-[13px] text-slate-300 mt-0.5">Due {session.scheduled_for ?? 'TBD'}{session.owner ? ` · Owner: ${session.owner}` : ''}</p>
-                        {session.action && <p className="text-[13px] text-slate-100 mt-1">{session.action}</p>}
+                        <p className="text-[13px] text-muted-foreground mt-0.5">Due {session.scheduled_for ?? 'TBD'}{session.owner ? ` · Owner: ${session.owner}` : ''}</p>
+                        {session.action && <p className="text-[13px] text-foreground mt-1">{session.action}</p>}
                       </div>
                     ))}
                   </div>
@@ -298,53 +277,53 @@ export default function CoachDashboard() {
               </CollapsibleContent>
             </Collapsible>
 
-            <div className="rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">Priority action queue</h2>
+            <div className="rounded-2xl border border-border bg-muted/40 p-4 shadow-xl backdrop-blur-md">
+              <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Priority action queue</h2>
               {actionQueue.length === 0 ? (
-                <p className="text-[13px] text-slate-300">No open actions. Weekly review queue is clear.</p>
+                <p className="text-[13px] text-muted-foreground">No open actions. Weekly review queue is clear.</p>
               ) : (
                 <div className="space-y-3">
                   {actionQueue.map(client => (
-                    <div key={client.user_id} className="border border-white/10 rounded-lg bg-slate-950/30 p-3">
+                    <div key={client.user_id} className="border border-border rounded-lg bg-background/30 p-3">
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-[13px] font-semibold text-white truncate">{client.name ?? client.email ?? 'Client'}</p>
+                        <p className="text-[13px] font-semibold text-foreground truncate">{client.name ?? client.email ?? 'Client'}</p>
                         <Badge variant={urgencyBadgeVariant(client.urgency)} className="uppercase tracking-[0.08em]">{client.urgency}</Badge>
                       </div>
-                      <p className="text-[13px] text-slate-100 mt-1">{client.next_action?.action}</p>
-                      <p className="text-[13px] text-slate-300 mt-0.5">Due {client.next_action?.due_date ?? 'TBD'}{client.next_action?.owner ? ` · Owner: ${client.next_action.owner}` : ''}</p>
+                      <p className="text-[13px] text-foreground mt-1">{client.next_action?.action}</p>
+                      <p className="text-[13px] text-muted-foreground mt-0.5">Due {client.next_action?.due_date ?? 'TBD'}{client.next_action?.owner ? ` · Owner: ${client.next_action.owner}` : ''}</p>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="rounded-2xl border border-white/15 bg-white/5 p-4 shadow-[0_22px_66px_rgba(15,23,42,0.18)] backdrop-blur-md">
-              <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">Weekly review state</h2>
+            <div className="rounded-2xl border border-border bg-muted/40 p-4 shadow-xl backdrop-blur-md">
+              <h2 className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Weekly review state</h2>
               {reviewsWithState.length === 0 ? (
-                <p className="text-[13px] text-slate-300">No saved weekly reviews with state signals yet.</p>
+                <p className="text-[13px] text-muted-foreground">No saved weekly reviews with state signals yet.</p>
               ) : (
                 <div className="space-y-3">
                   <div className="grid grid-cols-3 gap-2 text-center">
-                    <div className="rounded border border-white/10 bg-slate-950/30 px-2 py-2">
-                      <p className="text-[11px] text-slate-400">Low</p>
-                      <p className="text-[15px] font-bold text-white tabular-nums">{confidenceCounts.low}</p>
+                    <div className="rounded border border-border bg-background/30 px-2 py-2">
+                      <p className="text-[11px] text-muted-foreground">Low</p>
+                      <p className="text-[15px] font-bold text-foreground tabular-nums">{confidenceCounts.low}</p>
                     </div>
-                    <div className="rounded border border-white/10 bg-slate-950/30 px-2 py-2">
-                      <p className="text-[11px] text-slate-400">Steady</p>
-                      <p className="text-[15px] font-bold text-white tabular-nums">{confidenceCounts.steady}</p>
+                    <div className="rounded border border-border bg-background/30 px-2 py-2">
+                      <p className="text-[11px] text-muted-foreground">Steady</p>
+                      <p className="text-[15px] font-bold text-foreground tabular-nums">{confidenceCounts.steady}</p>
                     </div>
-                    <div className="rounded border border-white/10 bg-slate-950/30 px-2 py-2">
-                      <p className="text-[11px] text-slate-400">Strong</p>
-                      <p className="text-[15px] font-bold text-white tabular-nums">{confidenceCounts.strong}</p>
+                    <div className="rounded border border-border bg-background/30 px-2 py-2">
+                      <p className="text-[11px] text-muted-foreground">Strong</p>
+                      <p className="text-[15px] font-bold text-foreground tabular-nums">{confidenceCounts.strong}</p>
                     </div>
                   </div>
-                  <p className="text-[12px] text-slate-300">
+                  <p className="text-[12px] text-muted-foreground">
                     Momentum: {momentumCounts.slowing} slowing, {momentumCounts.building} building, {momentumCounts.accelerating} accelerating.
                   </p>
-                  <p className="text-[12px] text-slate-300">
-                    Narrative drift flagged for <span className="font-semibold text-white tabular-nums">{narrativeDriftCount}</span> client{narrativeDriftCount !== 1 ? 's' : ''}.
+                  <p className="text-[12px] text-muted-foreground">
+                    Narrative drift flagged for <span className="font-semibold text-foreground tabular-nums">{narrativeDriftCount}</span> client{narrativeDriftCount !== 1 ? 's' : ''}.
                   </p>
-                  <p className="text-[12px] text-slate-400">
+                  <p className="text-[12px] text-muted-foreground">
                     Coverage: {reviewsWithState.length}/{clients.length} active clients.
                   </p>
                 </div>
@@ -353,41 +332,41 @@ export default function CoachDashboard() {
           </div>
         )}
 
-        <Card variant="glass" className="gap-0 overflow-hidden mb-8 py-0 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
+        <Card variant="glass" className="gap-0 overflow-hidden mb-8 py-0 shadow-xl">
           {loading ? (
-            <div className="px-6 py-10 text-center text-[13px] text-slate-300">Loading clients...</div>
+            <div className="px-6 py-10 text-center text-[13px] text-muted-foreground">Loading clients...</div>
           ) : error ? (
-            <div className="px-6 py-10 text-center text-[13px] text-red-200">{error}</div>
+            <div className="px-6 py-10 text-center text-[13px] text-destructive">{error}</div>
           ) : clients.length === 0 ? (
             <div className="px-6 py-10 text-center">
-              <p className="text-[14px] text-slate-200 mb-1">No clients yet.</p>
-              <p className="text-[13px] text-slate-400">Invite a client below to get started.</p>
+              <p className="text-[14px] text-foreground mb-1">No clients yet.</p>
+              <p className="text-[13px] text-muted-foreground">Invite a client below to get started.</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-white/10 hover:bg-transparent">
-                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-6 py-3">Client</TableHead>
-                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Level</TableHead>
-                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Risk</TableHead>
-                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Urgency</TableHead>
-                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Overdue</TableHead>
-                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-4 py-3">Next action + activity</TableHead>
-                  <TableHead className="text-right text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 px-6 py-3">Actions</TableHead>
+                <TableRow className="border-b border-border hover:bg-transparent">
+                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-6 py-3">Client</TableHead>
+                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-4 py-3">Level</TableHead>
+                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-4 py-3">Risk</TableHead>
+                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-4 py-3">Urgency</TableHead>
+                  <TableHead className="text-center text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-4 py-3">Overdue</TableHead>
+                  <TableHead className="text-left text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-4 py-3">Next action + activity</TableHead>
+                  <TableHead className="text-right text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground px-6 py-3">Actions</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className="divide-y divide-white/10">
+              <TableBody className="divide-y divide-border">
                 {clients.map(client => (
-                  <TableRow key={client.user_id} className={`border-white/10 hover:bg-white/5 ${client.urgency === 'high' || client.risk_inputs.overdue_actions > 0 ? 'bg-amber-500/10' : 'bg-slate-950/20'}`}>
+                  <TableRow key={client.user_id} className={`border-border hover:bg-muted/40 ${client.urgency === 'high' || client.risk_inputs.overdue_actions > 0 ? 'bg-warning/10' : 'bg-background/20'}`}>
                     <TableCell className="whitespace-normal px-6 py-4">
-                      <p className="text-[14px] font-semibold text-white">{client.name ?? '(not onboarded)'}</p>
-                      <p className="text-[13px] text-slate-400">{client.email ?? '-'}</p>
+                      <p className="text-[14px] font-semibold text-foreground">{client.name ?? '(not onboarded)'}</p>
+                      <p className="text-[13px] text-muted-foreground">{client.email ?? '-'}</p>
                     </TableCell>
                     <TableCell className="px-4 py-4">
-                      <span className="text-[13px] text-slate-300">{client.persona ? (PERSONA_LABELS[client.persona] ?? client.persona) : '-'}</span>
+                      <span className="text-[13px] text-muted-foreground">{client.persona ? (PERSONA_LABELS[client.persona] ?? client.persona) : '-'}</span>
                     </TableCell>
                     <TableCell className="px-4 py-4 text-center">
-                      <span className="text-[13px] font-bold text-white tabular-nums">{client.risk_score}</span>
+                      <span className="text-[13px] font-bold text-foreground tabular-nums">{client.risk_score}</span>
                     </TableCell>
                     <TableCell className="px-4 py-4 text-center">
                       <Badge variant={urgencyBadgeVariant(client.urgency)} className="uppercase tracking-[0.08em]">{client.urgency}</Badge>
@@ -395,37 +374,37 @@ export default function CoachDashboard() {
                     <TableCell className="px-4 py-4 text-center">
                       {client.risk_inputs.overdue_actions > 0
                         ? <Badge variant="destructive" className="tabular-nums">{client.risk_inputs.overdue_actions}</Badge>
-                        : <span className="text-[13px] text-slate-300">-</span>
+                        : <span className="text-[13px] text-muted-foreground">-</span>
                       }
                     </TableCell>
                     <TableCell className="whitespace-normal px-4 py-4">
                       {client.next_action?.action ? (
                         <div className="space-y-0.5">
-                          <p className="text-[13px] font-semibold text-white truncate max-w-[220px]">{client.next_action.action}</p>
-                          <p className="text-[13px] text-slate-300">
+                          <p className="text-[13px] font-semibold text-foreground truncate max-w-[220px]">{client.next_action.action}</p>
+                          <p className="text-[13px] text-muted-foreground">
                             {client.next_action.owner ? `Owner: ${client.next_action.owner}` : 'Owner: unassigned'}
                           </p>
-                          <p className={`text-[13px] ${client.next_action.due_date && client.next_action.due_date < new Date().toISOString().split('T')[0] ? 'text-red-200' : 'text-slate-300'}`}>
+                          <p className={`text-[13px] ${client.next_action.due_date && client.next_action.due_date < new Date().toISOString().split('T')[0] ? 'text-destructive' : 'text-muted-foreground'}`}>
                             Due {client.next_action.due_date ?? 'TBD'}{client.next_action.status ? ` · ${client.next_action.status}` : ''}
                           </p>
-                          <p className="text-[13px] text-slate-400">
+                          <p className="text-[13px] text-muted-foreground">
                             Last activity {client.last_activity_at ? client.last_activity_at.slice(0, 10) : 'none'} · lag {client.risk_inputs.days_since_activity}d
                           </p>
                         </div>
                       ) : (
-                        <span className="text-[13px] text-slate-300">-</span>
+                        <span className="text-[13px] text-muted-foreground">-</span>
                       )}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-right">
                       {client.user_id ? (
                         <Link
                           href={`/dashboard/coach/${client.user_id}`}
-                          className="text-[13px] font-semibold text-slate-200 hover:text-white underline underline-offset-2"
+                          className="text-[13px] font-semibold text-muted-foreground hover:text-foreground underline underline-offset-2"
                         >
                           View Data
                         </Link>
                       ) : (
-                        <span className="text-[13px] text-slate-300">-</span>
+                        <span className="text-[13px] text-muted-foreground">-</span>
                       )}
                     </TableCell>
                   </TableRow>
@@ -435,8 +414,8 @@ export default function CoachDashboard() {
           )}
 
           {!loading && commandCenter?.pagination && commandCenter.pagination.total_pages > 1 && (
-            <div className="border-t border-white/10 px-6 py-3 flex items-center justify-between">
-              <p className="text-[13px] text-slate-300">
+            <div className="border-t border-border px-6 py-3 flex items-center justify-between">
+              <p className="text-[13px] text-muted-foreground">
                 Page {commandCenter.pagination.page} of {commandCenter.pagination.total_pages} · {commandCenter.pagination.total_clients} clients
               </p>
               <Pagination className="mx-0 w-auto justify-end">
@@ -446,7 +425,7 @@ export default function CoachDashboard() {
                       href="#"
                       onClick={(e) => { e.preventDefault(); if (commandCenter.pagination.has_previous) setPage((prev) => Math.max(1, prev - 1)) }}
                       aria-disabled={!commandCenter.pagination.has_previous}
-                      className={`text-slate-200 border-white/15 hover:border-white/30 ${!commandCenter.pagination.has_previous ? 'pointer-events-none opacity-40' : ''}`}
+                      className={`text-foreground border-border ${!commandCenter.pagination.has_previous ? 'pointer-events-none opacity-40' : ''}`}
                     />
                   </PaginationItem>
                   <PaginationItem>
@@ -454,7 +433,7 @@ export default function CoachDashboard() {
                       href="#"
                       onClick={(e) => { e.preventDefault(); if (commandCenter.pagination.has_next) setPage((prev) => prev + 1) }}
                       aria-disabled={!commandCenter.pagination.has_next}
-                      className={`text-slate-200 border-white/15 hover:border-white/30 ${!commandCenter.pagination.has_next ? 'pointer-events-none opacity-40' : ''}`}
+                      className={`text-foreground border-border ${!commandCenter.pagination.has_next ? 'pointer-events-none opacity-40' : ''}`}
                     />
                   </PaginationItem>
                 </PaginationContent>
@@ -463,15 +442,15 @@ export default function CoachDashboard() {
           )}
         </Card>
 
-        <Card variant="glass" className="p-6 shadow-[0_22px_66px_rgba(15,23,42,0.18)]">
-          <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-slate-300 mb-3">Invite a client</p>
+        <Card variant="glass" className="p-6 shadow-xl">
+          <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">Invite a client</p>
           <form onSubmit={sendInvite} className="flex gap-3 items-start">
             <Input
               type="email"
               value={inviteEmail}
               onChange={e => setInviteEmail(e.target.value)}
               placeholder="client@email.com"
-              className="flex-1 border-white/15 text-slate-100 bg-slate-950/70"
+              className="flex-1 border-border text-foreground bg-background/70"
             />
             <Button
               type="submit"
@@ -491,7 +470,7 @@ export default function CoachDashboard() {
               <AlertDescription>{inviteError}</AlertDescription>
             </Alert>
           )}
-          <p className="text-[13px] text-slate-300 mt-3">
+          <p className="text-[13px] text-muted-foreground mt-3">
             Your client will receive an email to create their account under your coaching relationship. Up to {Math.max(0, 10 - clients.length)} seat{Math.max(0, 10 - clients.length) !== 1 ? 's' : ''} remaining.
           </p>
         </Card>

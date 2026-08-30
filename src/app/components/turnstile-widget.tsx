@@ -115,8 +115,8 @@ export default function TurnstileWidget({ onTokenChange, onStatusChange }: Turns
   return (
     <div className="space-y-2">
       <div ref={containerRef} />
-      {loadError ? <p className="text-[12px] text-red-600">{loadError}</p> : null}
-      <p className="text-[11px] text-slate-400">Complete the security check before signing in.</p>
+      {loadError ? <p className="text-[12px] text-destructive">{loadError}</p> : null}
+      <p className="text-[11px] text-muted-foreground">Complete the security check before signing in.</p>
     </div>
   )
 }

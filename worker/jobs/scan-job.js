@@ -6,6 +6,7 @@ import { scanCompany } from '../scanner/scan-company.js'
 import { rescanWindowHoursForTier } from '../scanner/deduplicate.js'
 import { writeScanFailureDeadLetter } from '../lib/scan-dead-letter.js'
 import { notify } from '../lib/notify.js'
+import { warnIfTruncated } from '../lib/query-limits.js'
 
 const MAX_CONCURRENT_SCANS = 10
 
@@ -20,7 +21,10 @@ async function scanWithRetry(supabase, company, profile, options) {
       err.message?.includes('ECONNRESET') ||
       err.message?.includes('ENOTFOUND') ||
       err.message?.includes('502') ||
-      err.message?.includes('503')
+      err.message?.includes('503') ||
+      // 429 is a burst ceiling that clears in seconds, not a quota. Without
+      // this the scan was lost for the whole cycle (SMK-472).
+      err.message?.includes('429')
     )
     if (!isTransient) throw err
 
@@ -67,6 +71,8 @@ export async function runScanJob() {
       return
     }
 
+    warnIfTruncated(activeUsers, 2000, { job: 'scan-job', query: 'active_users' })
+
     // Executive and campaign users scan daily. All others scan Mon/Wed/Fri only.
     const DAILY_TIERS = new Set(['executive', 'campaign'])
     const tierByUserId = Object.fromEntries((activeUsers ?? []).map(u => [u.id, u.subscription_tier]))
@@ -96,6 +102,7 @@ export async function runScanJob() {
     }
 
     companies = companiesData ?? []
+    warnIfTruncated(companies, 5000, { job: 'scan-job', query: 'companies' })
 
     if (!companies.length) {
       logger.info('scan-job: no active companies — done')
@@ -127,7 +134,12 @@ export async function runScanJob() {
         try {
           const result = await scanWithRetry(supabase, company, profile, { rescanWindowHours })
           if (!result.skipped && !result.blocked) {
-            browserlessCalls++
+            // Count a browserless.io call only when a render actually happened.
+            // ATS-feed and plain-fetch scans open no browser, so counting every
+            // scan made recorded usage meaningless (SMK-476).
+            if (result.acquisitionPath === 'render') {
+              browserlessCalls++
+            }
             anthropicCalls += result.hits ?? 0
           }
           return result

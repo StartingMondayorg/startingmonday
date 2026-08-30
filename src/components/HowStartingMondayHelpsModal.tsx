@@ -76,28 +76,28 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
       <button
         type="button"
         onClick={open}
-        className="inline-flex items-center justify-center bg-white text-slate-900 text-[14px] font-bold px-6 py-3 rounded hover:bg-slate-200 transition-colors"
+        className="inline-flex items-center justify-center bg-primary text-primary-foreground text-[14px] font-bold px-6 py-3 rounded hover:bg-muted transition-colors"
       >
         See how Starting Monday can help me
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4" role="dialog" aria-modal="true" aria-label="Starting Monday intake modal">
-          <div className="w-full max-w-2xl rounded-xl border border-slate-700 bg-slate-900 p-5 sm:p-7">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-4" role="dialog" aria-modal="true" aria-label="Starting Monday intake modal">
+          <div className="w-full max-w-2xl rounded-xl border border-border bg-card p-5 sm:p-7">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-300 mb-2">Step {step} of {STEP_COUNT}</p>
-                <h3 className="text-[24px] font-bold text-white leading-tight">See how Starting Monday can help you</h3>
-                <p className="text-[14px] text-slate-300 mt-2">Tell us a little about your search. We will suggest target companies, show where Starting Monday helps most, and give you a sample first brief.</p>
-                <p className="text-[12px] text-slate-400 mt-1">About 2 minutes. No credit card. Private by default.</p>
+                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-2">Step {step} of {STEP_COUNT}</p>
+                <h3 className="text-[24px] font-bold text-foreground leading-tight">See how Starting Monday can help you</h3>
+                <p className="text-[14px] text-muted-foreground mt-2">Tell us a little about your search. We will suggest target companies, show where Starting Monday helps most, and give you a sample first brief.</p>
+                <p className="text-[12px] text-muted-foreground mt-1">About 2 minutes. No credit card. Private by default.</p>
               </div>
-              <button type="button" onClick={close} className="text-slate-400 hover:text-white text-[12px] font-semibold">Close</button>
+              <button type="button" onClick={close} className="text-muted-foreground hover:text-foreground text-[12px] font-semibold">Close</button>
             </div>
 
             {step === 1 && (
               <fieldset>
-                <legend className="text-[14px] font-semibold text-white">What best describes your situation?</legend>
-                <p className="text-[12px] text-slate-400 mt-1 mb-3">This helps us tailor suggestions and the first brief.</p>
+                <legend className="text-[14px] font-semibold text-foreground">What best describes your situation?</legend>
+                <p className="text-[12px] text-muted-foreground mt-1 mb-3">This helps us tailor suggestions and the first brief.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {[
                     ['planning', 'Still employed and planning'],
@@ -106,7 +106,7 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
                     ['monitoring', 'Monitoring the market'],
                     ['unsure', 'Not sure yet'],
                   ].map(([value, label]) => (
-                    <label key={value} className="rounded border border-slate-700 p-3 text-[13px] text-slate-200 hover:border-orange-400 cursor-pointer">
+                    <label key={value} className="rounded border border-border p-3 text-[13px] text-foreground hover:border-primary/30 cursor-pointer">
                       <input
                         type="radio"
                         name="situation"
@@ -124,8 +124,8 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
 
             {step === 2 && (
               <fieldset>
-                <legend className="text-[14px] font-semibold text-white">What role are you targeting?</legend>
-                <p className="text-[12px] text-slate-400 mt-1 mb-3">Choose the level closest to your next move.</p>
+                <legend className="text-[14px] font-semibold text-foreground">What role are you targeting?</legend>
+                <p className="text-[12px] text-muted-foreground mt-1 mb-3">Choose the level closest to your next move.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {[
                     ['c_suite', 'CIO / CTO / CISO'],
@@ -133,7 +133,7 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
                     ['director_to_vp', 'Director to VP'],
                     ['other_senior', 'Other senior leadership role'],
                   ].map(([value, label]) => (
-                    <label key={value} className="rounded border border-slate-700 p-3 text-[13px] text-slate-200 hover:border-orange-400 cursor-pointer">
+                    <label key={value} className="rounded border border-border p-3 text-[13px] text-foreground hover:border-primary/30 cursor-pointer">
                       <input
                         type="radio"
                         name="role"
@@ -151,8 +151,8 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
 
             {step === 3 && (
               <fieldset>
-                <legend className="text-[14px] font-semibold text-white">What should we use to tailor this?</legend>
-                <p className="text-[12px] text-slate-400 mt-1 mb-3">Use one or both. You can skip this and continue.</p>
+                <legend className="text-[14px] font-semibold text-foreground">What should we use to tailor this?</legend>
+                <p className="text-[12px] text-muted-foreground mt-1 mb-3">Use one or both. You can skip this and continue.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {[
                     ['resume', 'Upload resume'],
@@ -160,7 +160,7 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
                     ['both', 'Upload both'],
                     ['skip', 'Skip for now'],
                   ].map(([value, label]) => (
-                    <label key={value} className="rounded border border-slate-700 p-3 text-[13px] text-slate-200 hover:border-orange-400 cursor-pointer">
+                    <label key={value} className="rounded border border-border p-3 text-[13px] text-foreground hover:border-primary/30 cursor-pointer">
                       <input
                         type="radio"
                         name="source"
@@ -178,21 +178,21 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
 
             {step === 4 && (
               <div>
-                <label htmlFor="company-input" className="text-[14px] font-semibold text-white block">Any companies already on your list?</label>
-                <p className="text-[12px] text-slate-400 mt-1 mb-3">Optional. Add a few if you have them. We will suggest more based on your background and target role.</p>
+                <label htmlFor="company-input" className="text-[14px] font-semibold text-foreground block">Any companies already on your list?</label>
+                <p className="text-[12px] text-muted-foreground mt-1 mb-3">Optional. Add a few if you have them. We will suggest more based on your background and target role.</p>
                 <textarea
                   id="company-input"
                   value={intake.companies}
                   onChange={(event) => setIntake((current) => ({ ...current, companies: event.target.value }))}
                   placeholder="Example: Adobe, Workday, ServiceNow"
-                  className="w-full min-h-[84px] rounded border border-slate-700 bg-slate-950 text-slate-100 text-[13px] p-3 outline-none focus:border-orange-400"
+                  className="w-full min-h-[84px] rounded border border-border bg-background text-foreground text-[13px] p-3 outline-none focus:border-primary/30"
                 />
-                <div className="mt-4 rounded border border-slate-700 bg-slate-950/60 p-3">
-                  <p className="text-[12px] font-semibold text-orange-300 mb-2">Suggested target companies</p>
-                  <p className="text-[12px] text-slate-400 mb-2">Accept, reject, or edit these. This is a starting point.</p>
+                <div className="mt-4 rounded border border-border bg-background/60 p-3">
+                  <p className="text-[12px] font-semibold text-primary mb-2">Suggested target companies</p>
+                  <p className="text-[12px] text-muted-foreground mb-2">Accept, reject, or edit these. This is a starting point.</p>
                   <div className="flex flex-wrap gap-2">
                     {suggestedCompanies.map((company) => (
-                      <span key={company} className="text-[12px] px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-200">{company}</span>
+                      <span key={company} className="text-[12px] px-2 py-1 rounded bg-muted border border-border text-foreground">{company}</span>
                     ))}
                   </div>
                 </div>
@@ -201,8 +201,8 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
 
             {step === 5 && (
               <fieldset>
-                <legend className="text-[14px] font-semibold text-white">What do you want most right now?</legend>
-                <p className="text-[12px] text-slate-400 mt-1 mb-3">Pick the biggest immediate win.</p>
+                <legend className="text-[14px] font-semibold text-foreground">What do you want most right now?</legend>
+                <p className="text-[12px] text-muted-foreground mt-1 mb-3">Pick the biggest immediate win.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {[
                     ['target_companies', 'Better target companies'],
@@ -211,7 +211,7 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
                     ['weekly_discipline', 'Better weekly discipline'],
                     ['full_os', 'A full search operating system'],
                   ].map(([value, label]) => (
-                    <label key={value} className="rounded border border-slate-700 p-3 text-[13px] text-slate-200 hover:border-orange-400 cursor-pointer">
+                    <label key={value} className="rounded border border-border p-3 text-[13px] text-foreground hover:border-primary/30 cursor-pointer">
                       <input
                         type="radio"
                         name="need"
@@ -229,23 +229,23 @@ export function HowStartingMondayHelpsModal({ sourcePage = '/' }: { sourcePage?:
 
             <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <button type="button" onClick={back} disabled={step === 1} className="px-4 py-2 rounded border border-slate-700 text-[13px] text-slate-200 disabled:opacity-40">
+                <button type="button" onClick={back} disabled={step === 1} className="px-4 py-2 rounded border border-border text-[13px] text-foreground disabled:opacity-40">
                   Back
                 </button>
                 {step < STEP_COUNT ? (
-                  <button type="button" onClick={next} disabled={!canContinue} className="px-4 py-2 rounded bg-orange-500 hover:bg-orange-600 text-[13px] font-semibold text-slate-900 disabled:opacity-40">
+                  <button type="button" onClick={next} disabled={!canContinue} className="px-4 py-2 rounded bg-primary hover:bg-primary/90 text-[13px] font-semibold text-primary-foreground disabled:opacity-40">
                     Next
                   </button>
                 ) : (
                   <a
                     href={`/concierge?program=beta&from=landing-help-modal&source=${encodeURIComponent(sourcePage)}`}
-                    className="px-4 py-2 rounded bg-orange-500 hover:bg-orange-600 text-[13px] font-semibold text-slate-900"
+                    className="px-4 py-2 rounded bg-primary hover:bg-primary/90 text-[13px] font-semibold text-primary-foreground"
                   >
                     Get my suggestions
                   </a>
                 )}
               </div>
-              <button type="button" onClick={close} className="text-[12px] text-slate-400 hover:text-slate-200">Skip and browse</button>
+              <button type="button" onClick={close} className="text-[12px] text-muted-foreground hover:text-foreground">Skip and browse</button>
             </div>
           </div>
         </div>

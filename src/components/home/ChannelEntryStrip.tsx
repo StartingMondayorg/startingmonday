@@ -15,9 +15,9 @@ export function ChannelEntryStrip() {
   const title = variant === 'emphasis' ? 'Pick your channel and move fast' : 'Choose your channel'
 
   return (
-    <section className="border-b border-white/10 bg-slate-950/80 px-4 py-5 sm:px-6 backdrop-blur-xl">
+    <section className="border-b border-border bg-background/80 px-4 py-5 sm:px-6 backdrop-blur-xl">
       <div className="max-w-5xl mx-auto">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
           {title}
         </p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -33,12 +33,12 @@ export function ChannelEntryStrip() {
                 source_page: '/',
                 experiment_variant: experimentEnabled ? variant : 'disabled',
               }}
-              className="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:border-orange-300/60 hover:bg-white/10"
+              className="block rounded-2xl border border-border bg-muted/40 px-4 py-3 transition-colors hover:border-primary/60 hover:bg-muted/60"
             >
-              <p className="text-[13px] font-semibold text-white">{spec.label}</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-slate-300">{spec.hero}</p>
-              <p className="mt-2 text-[11px] text-orange-200">{spec.trust}</p>
-              <p className="mt-2 text-[12px] text-slate-400">{spec.primaryCtaLabel}</p>
+              <p className="text-[13px] font-semibold text-foreground">{spec.label}</p>
+              <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{spec.hero}</p>
+              <p className="mt-2 text-[11px] text-primary">{spec.trust}</p>
+              <p className="mt-2 text-[12px] text-muted-foreground">{spec.primaryCtaLabel}</p>
             </TrackLink>
           ))}
         </div>

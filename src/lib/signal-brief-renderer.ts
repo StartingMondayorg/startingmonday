@@ -1,0 +1,90 @@
+export type SignalBriefDiscoveryQuestions = {
+  situation: string[]
+  problem: string[]
+  implication: string[]
+  need_payoff: string[]
+}
+
+export type SignalBriefImplicationMath = {
+  deal_value: number
+  win_rate: number
+  lift_statement: string
+}
+
+export type SignalBriefProfile = {
+  account: string
+  positioning: string
+  suggested_move: string
+  discovery_questions: SignalBriefDiscoveryQuestions
+  evidence: SignalBriefEvidence[]
+}
+
+export type SignalBriefEvidence = {
+  date: string
+  event: string
+  source_url: string
+}
+
+export type SignalBriefInput = {
+  title: string
+  reader: string
+  problems: [string, string, string]
+  implication_math: SignalBriefImplicationMath
+  what_it_does: [string, string, string]
+  cost_to_reader: string
+  profiles: SignalBriefProfile[]
+  sample_mode?: {
+    enabled: boolean
+    full_depth_profile_index: number
+  }
+  method_note?: string
+}
+
+const DISCOVERY_GROUPS: Array<{ key: keyof SignalBriefDiscoveryQuestions; label: string }> = [
+  { key: 'situation', label: 'Situation' },
+  { key: 'problem', label: 'Problem' },
+  { key: 'implication', label: 'Implication' },
+  { key: 'need_payoff', label: 'Need-payoff' },
+]
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+}
+
+function renderList(items: readonly string[], className: string): string {
+  return `<ul class="${className}">${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+}
+
+function renderDiscoveryQuestions(questions: SignalBriefDiscoveryQuestions): string {
+  return `<section class="discovery-questions"><h3>Discovery questions</h3>${DISCOVERY_GROUPS.map(({ key, label }) => `<div class="discovery-group"><h4>${label}</h4>${renderList(questions[key], 'question-list')}</div>`).join('')}</section>`
+}
+
+function renderEvidence(evidence: readonly SignalBriefEvidence[]): string {
+  return `<section class="public-evidence"><h3>Public record</h3>${renderList(evidence.map(item => `${item.date} - ${item.event} (${item.source_url})`), 'evidence-list')}</section>`
+}
+
+function renderProfile(profile: SignalBriefProfile): string {
+  return `<article class="profile"><h2>${escapeHtml(profile.account)}</h2>${renderEvidence(profile.evidence)}<section><h3>Positioning</h3><p>${escapeHtml(profile.positioning)}</p></section><section><h3>Tactics</h3><p>${escapeHtml(profile.suggested_move)}</p></section>${renderDiscoveryQuestions(profile.discovery_questions)}</article>`
+}
+
+function renderProfileTeaser(profile: SignalBriefProfile): string {
+  return `<article class="profile-teaser"><h2>${escapeHtml(profile.account)}</h2><p>This profile is available in the full brief.</p></article>`
+}
+
+export function renderSignalBrief(input: SignalBriefInput): string {
+  const expectedValue = input.implication_math.deal_value * input.implication_math.win_rate
+  const fullDepthIndex = input.sample_mode?.enabled ? input.sample_mode.full_depth_profile_index : -1
+  const profiles = input.profiles.map((profile, index) => input.sample_mode?.enabled && index !== fullDepthIndex ? renderProfileTeaser(profile) : renderProfile(profile)).join('')
+  const methodNote = input.method_note ? `<footer><h2>Method note</h2><p>${escapeHtml(input.method_note)}</p></footer>` : ''
+
+  return `<main class="signal-brief"><header class="value-cover"><p class="eyebrow">Signal intelligence brief</p><h1>${escapeHtml(input.title)}</h1><p class="reader">Prepared for ${escapeHtml(input.reader)}</p></header><section class="value-cover-problems"><h2>What is already costing your week</h2>${renderList(input.problems, 'problem-list')}</section><section class="value-cover-implication"><h2>Why timing changes the economics</h2><p>${formatCurrency(input.implication_math.deal_value)} average deal value x ${(input.implication_math.win_rate * 100).toFixed(0)}% baseline win rate = <strong>${formatCurrency(expectedValue)}</strong> expected value.</p><p>${escapeHtml(input.implication_math.lift_statement)}</p></section><section class="value-cover-solution"><h2>What this document does about it</h2>${renderList(input.what_it_does, 'solution-list')}</section><section class="value-cover-cost"><h2>What it costs you</h2><p>${escapeHtml(input.cost_to_reader)}</p></section><section class="profiles"><h2>Account briefs</h2>${profiles}</section>${methodNote}</main>`
+}

@@ -3,18 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
-
+import { Alert, AlertDescription, Badge, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 type OutreachLogRow = {
   sent_at: string
   delivery_status: string | null
@@ -261,53 +250,53 @@ export default async function OutreachAnalyticsPage() {
   const followupTemplateRows = bulkFollowups30d.slice(0, 20)
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-primary">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Admin</Link>
+            <Link href="/dashboard/admin" className="text-[13px] font-semibold text-primary-foreground transition-colors">Admin</Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-6">
 <div>
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Outreach Performance</h1>
-          <p className="text-[13px] text-slate-500 mt-1.5">Outbound metrics and growth.</p>
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Outreach Performance</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">Outbound metrics and growth.</p>
         </div>
 
         <section id="kpis" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card variant="default" className="p-5">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Live Sends (7d)</h2>
-            <p className="text-[24px] font-bold text-slate-900">{sent7d}</p>
-            <p className="text-[13px] text-slate-500 mt-1">Delivery rate: {deliveryRate7d}%</p>
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Live Sends (7d)</h2>
+            <p className="text-[24px] font-bold text-foreground">{sent7d}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Delivery rate: {deliveryRate7d}%</p>
           </Card>
           <Card variant="default" className="p-5">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Delivery Issues (7d)</h2>
-            <p className="text-[24px] font-bold text-slate-900">{bounced7d + unconfirmed7d}</p>
-            <p className="text-[13px] text-slate-500 mt-1">Bounced: {bounced7d} · Unconfirmed: {unconfirmed7d}</p>
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Delivery Issues (7d)</h2>
+            <p className="text-[24px] font-bold text-foreground">{bounced7d + unconfirmed7d}</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Bounced: {bounced7d} · Unconfirmed: {unconfirmed7d}</p>
           </Card>
           <Card variant="default" className="p-5">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Response Rate</h2>
-            <p className="text-[24px] font-bold text-slate-900">{responseRate}%</p>
-            <p className="text-[13px] text-slate-500 mt-1">Conversations + meetings / contacted</p>
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Response Rate</h2>
+            <p className="text-[24px] font-bold text-foreground">{responseRate}%</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Conversations + meetings / contacted</p>
           </Card>
           <Card variant="default" className="p-5">
-            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400 mb-1">Meetings Set Rate</h2>
-            <p className="text-[24px] font-bold text-slate-900">{meetingRate}%</p>
-            <p className="text-[13px] text-slate-500 mt-1">Meetings / contacted prospects</p>
+            <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-1">Meetings Set Rate</h2>
+            <p className="text-[24px] font-bold text-foreground">{meetingRate}%</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Meetings / contacted prospects</p>
           </Card>
         </section>
 
         <section id="outreach-funnel" className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Outreach Funnel</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Outreach Funnel</h2>
             </div>
-            <div className="px-5 py-4 text-[13px] text-slate-700 grid grid-cols-2 gap-y-2">
+            <div className="px-5 py-4 text-[13px] text-muted-foreground grid grid-cols-2 gap-y-2">
               <div>Prospects</div><div className="font-semibold text-right">{byStatus.prospect}</div>
               <div>Reached out</div><div className="font-semibold text-right">{byStatus.reached_out}</div>
               <div>In conversation</div><div className="font-semibold text-right">{byStatus.in_conversation}</div>
@@ -317,29 +306,29 @@ export default async function OutreachAnalyticsPage() {
           </Card>
 
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Sends by Channel (7d)</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Sends by Channel (7d)</h2>
             </div>
             <div className="px-5 py-4">
               {channelRows.length === 0 ? (
-                <p className="text-[13px] text-slate-500">No live sends in the last 7 days.</p>
+                <p className="text-[13px] text-muted-foreground">No live sends in the last 7 days.</p>
               ) : (
                 <Table className="text-[13px]">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-slate-400">Channel</TableHead>
-                      <TableHead className="text-right text-slate-400">Sent</TableHead>
-                      <TableHead className="text-right text-slate-400">Delivered</TableHead>
-                      <TableHead className="text-right text-slate-400">Bounced</TableHead>
+                      <TableHead className="text-muted-foreground">Channel</TableHead>
+                      <TableHead className="text-right text-muted-foreground">Sent</TableHead>
+                      <TableHead className="text-right text-muted-foreground">Delivered</TableHead>
+                      <TableHead className="text-right text-muted-foreground">Bounced</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {channelRows.map(row => (
                       <TableRow key={row.channel}>
-                        <TableCell className="text-slate-700">{channelLabel(row.channel)}</TableCell>
-                        <TableCell className="text-right text-slate-900 font-semibold">{row.sent}</TableCell>
-                        <TableCell className="text-right text-slate-900 font-semibold">{row.delivered}</TableCell>
-                        <TableCell className="text-right text-slate-900 font-semibold">{row.bounced}</TableCell>
+                        <TableCell className="text-muted-foreground">{channelLabel(row.channel)}</TableCell>
+                        <TableCell className="text-right text-foreground font-semibold">{row.sent}</TableCell>
+                        <TableCell className="text-right text-foreground font-semibold">{row.delivered}</TableCell>
+                        <TableCell className="text-right text-foreground font-semibold">{row.bounced}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -351,10 +340,10 @@ export default async function OutreachAnalyticsPage() {
 
         <section id="customer-growth" className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">New Customers (30d)</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">New Customers (30d)</h2>
             </div>
-            <div className="px-5 py-4 text-[13px] text-slate-700 grid grid-cols-2 gap-y-2">
+            <div className="px-5 py-4 text-[13px] text-muted-foreground grid grid-cols-2 gap-y-2">
               <div>New trial users</div><div className="font-semibold text-right">{newTrialUsers30d}</div>
               <div>New paid users</div><div className="font-semibold text-right">{newPaidUsers30d}</div>
               <div>New paid · Monitor</div><div className="font-semibold text-right">{newPaidByTier.monitor}</div>
@@ -362,14 +351,14 @@ export default async function OutreachAnalyticsPage() {
               <div>New paid · Executive</div><div className="font-semibold text-right">{newPaidByTier.executive}</div>
               <div>Potential outreach-attributed signups</div><div className="font-semibold text-right">{outreachAttributed30d}</div>
             </div>
-            <div className="px-5 pb-4 text-[13px] text-slate-400">Outreach attribution is email-match based and directional.</div>
+            <div className="px-5 pb-4 text-[13px] text-muted-foreground">Outreach attribution is email-match based and directional.</div>
           </Card>
 
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Current Customer Base</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Current Customer Base</h2>
             </div>
-            <div className="px-5 py-4 text-[13px] text-slate-700 grid grid-cols-2 gap-y-2">
+            <div className="px-5 py-4 text-[13px] text-muted-foreground grid grid-cols-2 gap-y-2">
               <div>Trialing now</div><div className="font-semibold text-right">{trialingCount ?? 0}</div>
               <div>Active paid now</div><div className="font-semibold text-right">{activeCount ?? 0}</div>
               <div>Active · Monitor</div><div className="font-semibold text-right">{activeMonitorCount ?? 0}</div>
@@ -378,10 +367,10 @@ export default async function OutreachAnalyticsPage() {
             </div>
 
             <div className="px-5 pb-4">
-              <p className="text-[13px] text-slate-400 mb-2">Top signup sources (30d)</p>
+              <p className="text-[13px] text-muted-foreground mb-2">Top signup sources (30d)</p>
               <div className="flex flex-wrap gap-2">
                 {topSignupSources.length === 0 ? (
-                  <span className="text-[13px] text-slate-500">No recent signups.</span>
+                  <span className="text-[13px] text-muted-foreground">No recent signups.</span>
                 ) : topSignupSources.map(([source, count]) => (
                   <Badge key={source} variant="secondary">{source}: {count}</Badge>
                 ))}
@@ -392,13 +381,13 @@ export default async function OutreachAnalyticsPage() {
 
         <section id="linkedin-engagement" className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">LinkedIn Engagement (30d)</h2>
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">LinkedIn Engagement (30d)</h2>
               {postsSynced.length > 0 && (
                 <Badge variant="success">API synced</Badge>
               )}
             </div>
-            <div className="px-5 py-4 text-[13px] text-slate-700 grid grid-cols-2 gap-y-2">
+            <div className="px-5 py-4 text-[13px] text-muted-foreground grid grid-cols-2 gap-y-2">
               <div>Posts published</div><div className="font-semibold text-right">{postedSocial.length}</div>
               <div>Posts with LinkedIn URN</div><div className="font-semibold text-right">{postsWithUrn.length}</div>
               <div>Posts with API engagement</div><div className="font-semibold text-right">{postsSynced.length}</div>
@@ -412,8 +401,8 @@ export default async function OutreachAnalyticsPage() {
               )}
               {parsedEngagementPosts > 0 && (
                 <>
-                  <div className="text-slate-400">Manual notes (unsynced)</div>
-                  <div className="font-semibold text-right text-slate-400">{parsedEngagementPosts} posts</div>
+                  <div className="text-muted-foreground">Manual notes (unsynced)</div>
+                  <div className="font-semibold text-right text-muted-foreground">{parsedEngagementPosts} posts</div>
                 </>
               )}
             </div>
@@ -442,12 +431,12 @@ export default async function OutreachAnalyticsPage() {
 
           {/* Engagement trend bar chart - inline SVG, no client bundle needed */}
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Engagement Trend (last 20 posts)</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Engagement Trend (last 20 posts)</h2>
             </div>
             <div className="px-5 py-5">
               {chartPosts.length === 0 ? (
-                <p className="text-[13px] text-slate-500">No posted data yet.</p>
+                <p className="text-[13px] text-muted-foreground">No posted data yet.</p>
               ) : (
                 <svg viewBox={`0 0 ${chartPosts.length * 22} 80`} className="w-full h-20">
                   {chartPosts.map((p, i) => {
@@ -460,14 +449,14 @@ export default async function OutreachAnalyticsPage() {
                       <g key={p.post_date}>
                         {barH > 0 && (
                           <>
-                            <rect x={x} y={72 - likeH} width={16} height={likeH} fill="#6366f1" rx={2} />
-                            <rect x={x} y={72 - likeH - commentH} width={16} height={commentH} fill="#f97316" rx={2} />
+                            <rect x={x} y={72 - likeH} width={16} height={likeH} fill="var(--info)" rx={2} />
+                            <rect x={x} y={72 - likeH - commentH} width={16} height={commentH} fill="var(--primary)" rx={2} />
                           </>
                         )}
                         {barH === 0 && (
-                          <rect x={x} y={71} width={16} height={1} fill="#e2e8f0" />
+                          <rect x={x} y={71} width={16} height={1} fill="var(--border)" />
                         )}
-                        <text x={x + 8} y={80} textAnchor="middle" fontSize={7} fill="#94a3b8">
+                        <text x={x + 8} y={80} textAnchor="middle" fontSize={7} fill="var(--muted-foreground)">
                           {p.post_date.slice(5)}
                         </text>
                       </g>
@@ -476,14 +465,14 @@ export default async function OutreachAnalyticsPage() {
                 </svg>
               )}
               <div className="flex items-center gap-4 mt-2">
-                <Badge variant="outline" className="text-[13px] text-slate-500 gap-1.5">
-                  <span className="inline-block w-3 h-3 rounded-sm bg-indigo-500" />Likes
+                <Badge variant="outline" className="text-[13px] text-muted-foreground gap-1.5">
+                  <span className="inline-block w-3 h-3 rounded-sm bg-info" />Likes
                 </Badge>
-                <Badge variant="outline" className="text-[13px] text-slate-500 gap-1.5">
-                  <span className="inline-block w-3 h-3 rounded-sm bg-orange-500" />Comments
+                <Badge variant="outline" className="text-[13px] text-muted-foreground gap-1.5">
+                  <span className="inline-block w-3 h-3 rounded-sm bg-primary" />Comments
                 </Badge>
                 {postsSynced.length === 0 && (
-                  <span className="text-[13px] text-slate-400 ml-auto">Awaiting API sync</span>
+                  <span className="text-[13px] text-muted-foreground ml-auto">Awaiting API sync</span>
                 )}
               </div>
             </div>
@@ -492,27 +481,27 @@ export default async function OutreachAnalyticsPage() {
 
         <section id="delivery-failures" className="grid grid-cols-1 gap-4">
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Recent Delivery Failures (7d)</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Recent Delivery Failures (7d)</h2>
             </div>
             <div className="px-5 py-4">
               {recentFailures.length === 0 ? (
-                <p className="text-[13px] text-slate-500">No bounced or complaint events in the last 7 days.</p>
+                <p className="text-[13px] text-muted-foreground">No bounced or complaint events in the last 7 days.</p>
               ) : (
                 <Table className="text-[13px]">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-slate-400">Recipient</TableHead>
-                      <TableHead className="text-slate-400">Channel</TableHead>
-                      <TableHead className="text-slate-400">Status</TableHead>
+                      <TableHead className="text-muted-foreground">Recipient</TableHead>
+                      <TableHead className="text-muted-foreground">Channel</TableHead>
+                      <TableHead className="text-muted-foreground">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {recentFailures.map((row, idx) => (
                       <TableRow key={`${row.recipient_email ?? 'na'}-${idx}`}>
-                        <TableCell className="text-slate-700">{row.recipient_name || row.recipient_email || 'Unknown'}</TableCell>
-                        <TableCell className="text-slate-700">{channelLabel(row.outreach_channel)}</TableCell>
-                        <TableCell className="text-slate-900 font-semibold">{row.delivery_status ?? 'unknown'}</TableCell>
+                        <TableCell className="text-muted-foreground">{row.recipient_name || row.recipient_email || 'Unknown'}</TableCell>
+                        <TableCell className="text-muted-foreground">{channelLabel(row.outreach_channel)}</TableCell>
+                        <TableCell className="text-foreground font-semibold">{row.delivery_status ?? 'unknown'}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -524,45 +513,45 @@ export default async function OutreachAnalyticsPage() {
 
         <section id="followup-template-source" className="grid grid-cols-1 gap-4">
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Follow-up Template Source Verification (30d)</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Follow-up Template Source Verification (30d)</h2>
             </div>
-            <div className="px-5 py-4 text-[13px] text-slate-700 grid grid-cols-2 lg:grid-cols-4 gap-y-2">
+            <div className="px-5 py-4 text-[13px] text-muted-foreground grid grid-cols-2 lg:grid-cols-4 gap-y-2">
               <div>Total bulk follow-up sends</div><div className="font-semibold text-right">{bulkFollowups30d.length}</div>
               <div>Latest template engine</div><div className="font-semibold text-right">{latestTemplateCount}</div>
               <div>Custom input</div><div className="font-semibold text-right">{customInputCount}</div>
               <div>Unknown source</div><div className="font-semibold text-right">{unknownTemplateCount}</div>
               <div>Latest-template rate</div><div className="font-semibold text-right">{latestTemplateRate}%</div>
             </div>
-            <div className="px-5 pb-4 text-[13px] text-slate-400">
+            <div className="px-5 pb-4 text-[13px] text-muted-foreground">
               Bulk follow-up sends are expected to use template_source latest_template_engine.
             </div>
           </Card>
 
           <Card variant="default" className="overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">Recent Bulk Follow-up Template Source Rows</h2>
+            <div className="px-5 py-4 border-b border-border">
+              <h2 className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">Recent Bulk Follow-up Template Source Rows</h2>
             </div>
             <div className="px-5 py-4">
               {followupTemplateRows.length === 0 ? (
-                <p className="text-[13px] text-slate-500">No bulk follow-up live sends found in the last 30 days.</p>
+                <p className="text-[13px] text-muted-foreground">No bulk follow-up live sends found in the last 30 days.</p>
               ) : (
                 <Table className="text-[13px]">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-slate-400">Recipient</TableHead>
-                      <TableHead className="text-slate-400">Channel</TableHead>
-                      <TableHead className="text-slate-400">Template Source</TableHead>
-                      <TableHead className="text-slate-400">Template Step</TableHead>
+                      <TableHead className="text-muted-foreground">Recipient</TableHead>
+                      <TableHead className="text-muted-foreground">Channel</TableHead>
+                      <TableHead className="text-muted-foreground">Template Source</TableHead>
+                      <TableHead className="text-muted-foreground">Template Step</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {followupTemplateRows.map((row, idx) => (
                       <TableRow key={`${row.recipient_email ?? 'na'}-${idx}`}>
-                        <TableCell className="text-slate-700">{row.recipient_name || row.recipient_email || 'Unknown'}</TableCell>
-                        <TableCell className="text-slate-700">{channelLabel(row.outreach_channel)}</TableCell>
-                        <TableCell className="text-slate-900 font-semibold">{row.webhook_payload?.template_source ?? 'unknown'}</TableCell>
-                        <TableCell className="text-slate-700">{row.webhook_payload?.template_step ?? 'n/a'}</TableCell>
+                        <TableCell className="text-muted-foreground">{row.recipient_name || row.recipient_email || 'Unknown'}</TableCell>
+                        <TableCell className="text-muted-foreground">{channelLabel(row.outreach_channel)}</TableCell>
+                        <TableCell className="text-foreground font-semibold">{row.webhook_payload?.template_source ?? 'unknown'}</TableCell>
+                        <TableCell className="text-muted-foreground">{row.webhook_payload?.template_step ?? 'n/a'}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -574,21 +563,21 @@ export default async function OutreachAnalyticsPage() {
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link href="/dashboard/outreach">
-            <Card variant="default" className="p-4 hover:border-slate-300 transition-colors">
-              <p className="text-[13px] font-semibold text-slate-900">Open Outreach Hub</p>
-              <p className="text-[13px] text-slate-500 mt-1">Manage queue, send messages, and update statuses.</p>
+            <Card variant="default" className="p-4 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground">Open Outreach Hub</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Manage queue, send messages, and update statuses.</p>
             </Card>
           </Link>
           <Link href="/dashboard/admin/social">
-            <Card variant="default" className="p-4 hover:border-slate-300 transition-colors">
-              <p className="text-[13px] font-semibold text-slate-900">Open LinkedIn Social</p>
-              <p className="text-[13px] text-slate-500 mt-1">Review drafts, posting history, and engagement notes.</p>
+            <Card variant="default" className="p-4 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground">Open LinkedIn Social</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Review drafts, posting history, and engagement notes.</p>
             </Card>
           </Link>
           <Link href="/dashboard/admin/customers">
-            <Card variant="default" className="p-4 hover:border-slate-300 transition-colors">
-              <p className="text-[13px] font-semibold text-slate-900">Open Customers</p>
-              <p className="text-[13px] text-slate-500 mt-1">Inspect trial and paid customer details.</p>
+            <Card variant="default" className="p-4 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground">Open Customers</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Inspect trial and paid customer details.</p>
             </Card>
           </Link>
         </section>

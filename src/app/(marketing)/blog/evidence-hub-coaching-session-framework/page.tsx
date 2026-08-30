@@ -42,18 +42,18 @@ export default function EvidenceHubCoachingSessionFrameworkPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>Weekly coaching is strongest when each session maps evidence to one decision and one execution commitment.</p>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Session design</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Session design</h2>
         <p>Start with one claim from the Evidence Hub, discuss current context, and define a concrete action tied to that claim.</p>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Assignment structure</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Assignment structure</h2>
         <p>Every session should end with one measurable assignment, due date, and quality bar for completion.</p>
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Progress review loop</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Progress review loop</h2>
         <p>Review completion weekly, adapt constraints, and carry forward only actions that improve decision quality and momentum.</p>
-        <section className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <h2 className="text-[18px] font-bold text-slate-900 mb-2">Evidence path</h2>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-3">See coaching mechanism evidence and outcome conditions in detail.</p>
-          <Link href="/evidence-hub#coaching-effectiveness" className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded hover:bg-slate-700 transition-colors">Review coaching-effectiveness evidence</Link>
+        <section className="border border-border rounded-lg p-5 bg-muted">
+          <h2 className="text-[18px] font-bold text-foreground mb-2">Evidence path</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">See coaching mechanism evidence and outcome conditions in detail.</p>
+          <Link href="/evidence-hub#coaching-effectiveness" className="inline-block bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 rounded hover:bg-muted transition-colors">Review coaching-effectiveness evidence</Link>
         </section>
       </div>
     </BlogPost>

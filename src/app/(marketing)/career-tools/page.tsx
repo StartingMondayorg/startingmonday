@@ -33,21 +33,21 @@ const WHAT_CHANGES = [
 
 export default function CareerToolsPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
-      <nav className="bg-slate-950 sticky top-0 z-10">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="inline-flex items-center min-h-[48px] px-1 text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/login" className="inline-flex items-center min-h-[48px] px-2 text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/login" className="inline-flex items-center min-h-[48px] px-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Log in
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center min-h-[48px] text-[13px] font-semibold text-slate-900 bg-orange-500 px-4 rounded hover:bg-orange-600 transition-colors"
+              className="inline-flex items-center min-h-[48px] text-[13px] font-semibold text-primary-foreground bg-primary px-4 rounded hover:bg-primary/90 transition-colors"
             >
               Try free
             </Link>
@@ -58,15 +58,15 @@ export default function CareerToolsPage() {
       <main>
 
         {/* Header */}
-        <header className="bg-slate-950 px-4 sm:px-6 pt-14 pb-12">
+        <header className="dark text-foreground bg-background px-4 sm:px-6 pt-14 pb-12">
           <div className="max-w-2xl mx-auto">
-            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
               For Career Tools listeners
             </p>
-            <h1 className="text-[30px] sm:text-[38px] font-bold text-white leading-[1.15] tracking-tight mb-4">
+            <h1 className="text-[30px] sm:text-[38px] font-bold text-foreground leading-[1.15] tracking-tight mb-4">
               The job search changes when you reach the C-suite.
             </h1>
-            <p className="text-[16px] text-slate-200 leading-relaxed">
+            <p className="text-[16px] text-foreground leading-relaxed">
               Most of what you know about running a job search stops working at the senior executive level.
               Starting Monday is built for the search that actually exists at VP and above.
             </p>
@@ -79,17 +79,17 @@ export default function CareerToolsPage() {
 
             {/* What changes */}
             <section className="space-y-6">
-              <h2 className="text-[22px] font-bold text-slate-900">What changes at the C-suite level</h2>
+              <h2 className="text-[22px] font-bold text-foreground">What changes at the C-suite level</h2>
               <div className="space-y-3">
                 {WHAT_CHANGES.map((item, i) => (
-                  <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-0 border border-slate-200 rounded-lg overflow-hidden">
-                    <div className="bg-slate-50 px-5 py-4">
-                      <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-200 mb-1">What you were taught</p>
-                      <p className="text-[14px] text-slate-500 leading-relaxed">{item.before}</p>
+                  <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-0 border border-border rounded-lg overflow-hidden">
+                    <div className="bg-muted px-5 py-4">
+                      <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-1">What you were taught</p>
+                      <p className="text-[14px] text-muted-foreground leading-relaxed">{item.before}</p>
                     </div>
-                    <div className="bg-white px-5 py-4 border-t sm:border-t-0 sm:border-l border-slate-200">
-                      <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-orange-500 mb-1">What is actually true</p>
-                      <p className="text-[14px] text-slate-700 leading-relaxed">{item.after}</p>
+                    <div className="bg-card px-5 py-4 border-t sm:border-t-0 sm:border-l border-border">
+                      <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-primary mb-1">What is actually true</p>
+                      <p className="text-[14px] text-muted-foreground leading-relaxed">{item.after}</p>
                     </div>
                   </div>
                 ))}
@@ -97,8 +97,8 @@ export default function CareerToolsPage() {
             </section>
 
             {/* What Starting Monday does */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">What Starting Monday does</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">What Starting Monday does</h2>
               <p>
                 Starting Monday is the infrastructure layer for a senior executive search. It does
                 four things that are difficult to do manually at the scale a VP or C-suite search
@@ -124,8 +124,8 @@ export default function CareerToolsPage() {
                   },
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold shrink-0 mt-0.5">+</span>
-                    <span className="text-slate-700">
+                    <span className="text-primary font-bold shrink-0 mt-0.5">+</span>
+                    <span className="text-muted-foreground">
                       <span className="font-semibold">{item.label}: </span>{item.body}
                     </span>
                   </li>
@@ -134,8 +134,8 @@ export default function CareerToolsPage() {
             </section>
 
             {/* Who it is for */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">Who it is for</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">Who it is for</h2>
               <p>
                 Starting Monday was built for C-suite and near-C-suite technology executives: CIOs, CTOs,
                 VPs of Technology, CISOs, CDOs, and VP of Engineering. If you are at that level
@@ -150,9 +150,9 @@ export default function CareerToolsPage() {
             </section>
 
             {/* Blog links */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">Start with these</h2>
-              <p className="text-[14px] text-slate-500">
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">Start with these</h2>
+              <p className="text-[14px] text-muted-foreground">
                 The blog covers how the senior executive search actually works. No resume tips.
                 No generic interview advice.
               </p>
@@ -165,7 +165,7 @@ export default function CareerToolsPage() {
                   { href: '/blog/retained-search-firms', label: 'How to Work with Retained Search Firms Without Losing Leverage' },
                 ].map(link => (
                   <li key={link.href}>
-                    <Link href={link.href} className="inline-flex items-center py-2.5 text-[15px] font-semibold text-slate-900 hover:text-slate-600 transition-colors">
+                    <Link href={link.href} className="inline-flex items-center py-2.5 text-[15px] font-semibold text-foreground hover:text-muted-foreground transition-colors">
                       {link.label} &rarr;
                     </Link>
                   </li>
@@ -174,28 +174,28 @@ export default function CareerToolsPage() {
             </section>
 
             {/* Promo */}
-            <section className="bg-slate-50 border border-slate-200 rounded-lg p-7">
-              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+            <section className="bg-muted border border-border rounded-lg p-7">
+              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
                 For Career Tools listeners
               </p>
-              <h2 className="text-[20px] font-bold text-slate-900 mb-3 leading-snug">
+              <h2 className="text-[20px] font-bold text-foreground mb-3 leading-snug">
                 Start with a free 30-day trial
               </h2>
-              <p className="text-[14px] text-slate-500 leading-relaxed mb-6">
+              <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
                 No credit card required. Sign up, build your target company list, and see what
                 the search looks like when it runs on infrastructure instead of memory.
-                Use code <span className="font-bold text-slate-700">CAREERTOOLS</span> for an
+                Use code <span className="font-bold text-muted-foreground">CAREERTOOLS</span> for an
                 extended trial.
               </p>
               <Link
                 href="/signup"
-                className="inline-flex items-center min-h-[48px] bg-orange-500 text-slate-900 text-[14px] font-bold px-7 rounded hover:bg-orange-600 transition-colors"
+                className="inline-flex items-center min-h-[48px] bg-primary text-primary-foreground text-[14px] font-bold px-7 rounded hover:bg-primary/90 transition-colors"
               >
                 Start free trial &rarr;
               </Link>
-              <p className="text-[13px] text-slate-200 mt-4">
+              <p className="text-[13px] text-muted-foreground mt-4">
                 Want to see it first?{' '}
-                <Link href="/demo?full=1" className="inline-flex items-center py-2 text-slate-600 underline hover:text-slate-900 transition-colors">
+                <Link href="/demo?full=1" className="inline-flex items-center py-2 text-muted-foreground underline hover:text-foreground transition-colors">
                   Walk through a live demo
                 </Link>
                 .
@@ -208,17 +208,17 @@ export default function CareerToolsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8 mt-8">
+      <footer className="dark text-foreground bg-background border-t border-border px-4 sm:px-6 py-8 mt-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="inline-flex items-center min-h-[48px] px-1 text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions? contact@startingmonday.app
           </p>
         </div>
       
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
 </footer>
 
     </div>

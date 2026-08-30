@@ -1,10 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Toggle } from '@/components/ui/toggle'
-
+import { Button, Card, Toggle } from '@/components/ui'
 type Recruiter = { name: string; focus: string }
 type Suggestions = { companies: string[]; recruiters: Recruiter[] }
 
@@ -66,23 +63,23 @@ export function SuggestionCards() {
 
   return (
     <Card variant="default" className="gap-0 p-0 mb-8">
-      <div className="px-6 py-[18px] border-b border-slate-200 flex items-center justify-between">
+      <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400">
+          <span className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
             Suggestions
           </span>
-          <p className="text-[12px] text-slate-400 mt-0.5">Based on your profile. Dismiss when you no longer need this.</p>
+          <p className="text-[12px] text-muted-foreground mt-0.5">Based on your profile. Dismiss when you no longer need this.</p>
         </div>
-        <Button variant="ghost" onClick={dismiss} className="h-auto p-0 text-[12px] text-slate-400 hover:text-slate-600 hover:bg-transparent">
+        <Button variant="ghost" onClick={dismiss} className="h-auto p-0 text-[12px] text-muted-foreground hover:bg-transparent">
           Dismiss
         </Button>
       </div>
 
-      <div className="divide-y divide-slate-50">
+      <div className="divide-y divide-border">
 
         {data.companies.length > 0 && (
           <div className="px-6 py-5">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">
               Companies to add to your watchlist
             </p>
             <div className="flex flex-wrap gap-2">
@@ -98,10 +95,10 @@ export function SuggestionCards() {
                     className={[
                       'h-auto gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px]',
                       isAdded
-                        ? 'border-emerald-300 bg-emerald-50 text-emerald-700 cursor-default'
+                        ? 'border-success/30 bg-success/10 text-success cursor-default'
                         : isAdding
-                        ? 'border-slate-200 bg-slate-50 text-slate-400 cursor-wait'
-                        : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50',
+                        ? 'border-border bg-muted text-muted-foreground cursor-wait'
+                        : 'border-border bg-card text-muted-foreground hover:border-border hover:bg-muted',
                     ].join(' ')}
                   >
                     <span className="text-[11px]">{isAdded ? '✓' : isAdding ? '...' : '+'}</span>
@@ -111,9 +108,9 @@ export function SuggestionCards() {
               })}
             </div>
             {added.size > 0 && (
-              <p className="text-[12px] text-slate-400 mt-3">
+              <p className="text-[12px] text-muted-foreground mt-3">
                 Added to your pipeline.{' '}
-                <Link href="/dashboard" className="text-slate-600 underline underline-offset-2">
+                <Link href="/dashboard" className="text-muted-foreground underline underline-offset-2">
                   View companies
                 </Link>
                 {' '}to add their career page URLs.
@@ -124,14 +121,14 @@ export function SuggestionCards() {
 
         {data.recruiters.length > 0 && (
           <div className="px-6 py-5">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-3">
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-3">
               Executive search firms for your sector
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {data.recruiters.map(r => (
                 <div key={r.name} className="flex items-start gap-2">
-                  <span className="text-[13px] font-semibold text-slate-900 shrink-0">{r.name}</span>
-                  <span className="text-[13px] text-slate-400">{r.focus}</span>
+                  <span className="text-[13px] font-semibold text-foreground shrink-0">{r.name}</span>
+                  <span className="text-[13px] text-muted-foreground">{r.focus}</span>
                 </div>
               ))}
             </div>

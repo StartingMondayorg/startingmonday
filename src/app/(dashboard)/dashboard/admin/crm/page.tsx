@@ -6,12 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { ROUTING_THRESHOLDS } from '@/lib/intelligence/lead-scoring'
 import { runLeadScoringNow } from './actions'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table'
-
+import { Alert, AlertDescription, Badge, Button, Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 type LeadRow = {
   id: string
   name: string
@@ -135,13 +130,13 @@ export default async function AdminCrmPage({
     .sort((a, b) => b[1].count - a[1].count)
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,146,60,0.18),_transparent_28%),linear-gradient(180deg,#0f172a_0%,#111827_45%,#020617_100%)] font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-300">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">
+          <Link href="/dashboard/admin" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
             ← Admin
           </Link>
         </div>
@@ -150,8 +145,8 @@ export default async function AdminCrmPage({
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-[26px] font-bold text-white leading-tight">CRM</h1>
-            <p className="text-[13px] text-slate-300 mt-1.5">Lead score, channel mix, and queue routing dashboard.</p>
+            <h1 className="text-[26px] font-bold text-foreground leading-tight">CRM</h1>
+            <p className="text-[13px] text-muted-foreground mt-1.5">Lead score, channel mix, and queue routing dashboard.</p>
           </div>
           <form action={runLeadScoringNow}>
             <Button type="submit">
@@ -163,21 +158,21 @@ export default async function AdminCrmPage({
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <h2 className="sr-only">Quick actions</h2>
           <Link href="/dashboard/contacts">
-            <Card variant="glass" className="p-4 hover:border-white/30 transition-colors">
-              <p className="text-[13px] font-semibold text-white">Open contacts</p>
-              <p className="text-[13px] text-slate-300 mt-1">Review active contacts and outreach status.</p>
+            <Card variant="glass" className="p-4 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground">Open contacts</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Review active contacts and outreach status.</p>
             </Card>
           </Link>
           <Link href="/dashboard/outreach">
-            <Card variant="glass" className="p-4 hover:border-white/30 transition-colors">
-              <p className="text-[13px] font-semibold text-white">Open outreach</p>
-              <p className="text-[13px] text-slate-300 mt-1">Run sends and clear follow-up queue.</p>
+            <Card variant="glass" className="p-4 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground">Open outreach</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Run sends and clear follow-up queue.</p>
             </Card>
           </Link>
           <Link href="/dashboard/admin/outreach-analytics">
-            <Card variant="glass" className="p-4 hover:border-white/30 transition-colors">
-              <p className="text-[13px] font-semibold text-white">Open analytics</p>
-              <p className="text-[13px] text-slate-300 mt-1">Compare delivery and response trends.</p>
+            <Card variant="glass" className="p-4 hover:border-border transition-colors">
+              <p className="text-[13px] font-semibold text-foreground">Open analytics</p>
+              <p className="text-[13px] text-muted-foreground mt-1">Compare delivery and response trends.</p>
             </Card>
           </Link>
         </section>
@@ -201,27 +196,27 @@ export default async function AdminCrmPage({
         )}
 
         <Card variant="glass" id="crm-run-log" className="p-0 mb-6">
-          <div className="px-6 py-[14px] border-b border-white/10">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Scoring execution log</h2>
+          <div className="px-6 py-[14px] border-b border-border">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Scoring execution log</h2>
           </div>
           {runs.length === 0 ? (
-            <p className="px-6 py-6 text-[13px] text-slate-400">No scoring runs logged yet.</p>
+            <p className="px-6 py-6 text-[13px] text-muted-foreground">No scoring runs logged yet.</p>
           ) : (
             <Table className="text-[13px]">
               <TableHeader>
-                <TableRow className="bg-white/5">
-                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Time</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Trigger</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Status</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Processed</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Updated</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Details</TableHead>
+                <TableRow className="bg-muted/40">
+                  <TableHead className="px-6 py-2.5 font-semibold text-muted-foreground">Time</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Trigger</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Status</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right">Processed</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right">Updated</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {runs.map((run) => (
                   <TableRow key={run.id}>
-                    <TableCell className="px-6 py-3 text-slate-200">
+                    <TableCell className="px-6 py-3 text-foreground">
                       {new Date(run.created_at).toLocaleString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -229,15 +224,15 @@ export default async function AdminCrmPage({
                         minute: '2-digit',
                       })}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-slate-300 uppercase tracking-wide text-[13px]">{run.trigger}</TableCell>
+                    <TableCell className="px-4 py-3 text-muted-foreground uppercase tracking-wide text-[13px]">{run.trigger}</TableCell>
                     <TableCell className="px-4 py-3">
                       <Badge variant={run.status === 'success' ? 'success' : 'destructive'}>
                         {run.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-right font-semibold text-white">{run.processed}</TableCell>
-                    <TableCell className="px-4 py-3 text-right font-semibold text-white">{run.updated}</TableCell>
-                    <TableCell className="px-4 py-3 text-slate-300 whitespace-normal">{run.error_message ?? 'OK'}</TableCell>
+                    <TableCell className="px-4 py-3 text-right font-semibold text-foreground">{run.processed}</TableCell>
+                    <TableCell className="px-4 py-3 text-right font-semibold text-foreground">{run.updated}</TableCell>
+                    <TableCell className="px-4 py-3 text-muted-foreground whitespace-normal">{run.error_message ?? 'OK'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -247,86 +242,86 @@ export default async function AdminCrmPage({
 
         <section id="crm-kpis" className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
           <Card variant="glass" className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Total leads</p>
-            <p className="text-[30px] font-bold text-white mt-2 leading-none">{totalLeads}</p>
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Total leads</p>
+            <p className="text-[30px] font-bold text-foreground mt-2 leading-none">{totalLeads}</p>
           </Card>
-          <Card variant="glass" className="border-red-300/20 bg-red-500/10 p-5">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-red-100">Hot queue</p>
-            <p className="text-[30px] font-bold text-red-100 mt-2 leading-none">{queueCounts.hot}</p>
+          <Card variant="glass" className="border-destructive/20 bg-destructive/10 p-5">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-destructive">Hot queue</p>
+            <p className="text-[30px] font-bold text-destructive mt-2 leading-none">{queueCounts.hot}</p>
           </Card>
-          <Card variant="glass" className="border-amber-300/20 bg-amber-500/10 p-5">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-amber-100">Warm queue</p>
-            <p className="text-[30px] font-bold text-amber-100 mt-2 leading-none">{queueCounts.warm}</p>
+          <Card variant="glass" className="border-warning/20 bg-warning/10 p-5">
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-warning">Warm queue</p>
+            <p className="text-[30px] font-bold text-warning mt-2 leading-none">{queueCounts.warm}</p>
           </Card>
           <Card variant="glass" className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-300">Nurture queue</p>
-            <p className="text-[30px] font-bold text-slate-200 mt-2 leading-none">{queueCounts.nurture}</p>
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Nurture queue</p>
+            <p className="text-[30px] font-bold text-foreground mt-2 leading-none">{queueCounts.nurture}</p>
           </Card>
         </section>
 
         <section id="crm-channel-mix" className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <Card variant="glass" className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Customers by channel</p>
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">Customers by channel</p>
             <div className="space-y-2">
               {sortedChannelTotals.map(([channel, stats]) => (
                 <div key={channel} className="flex items-center justify-between text-[13px]">
-                  <span className="text-slate-200 font-medium">{channel}</span>
-                  <span className="text-slate-300">{stats.count}</span>
+                  <span className="text-foreground font-medium">{channel}</span>
+                  <span className="text-muted-foreground">{stats.count}</span>
                 </div>
               ))}
               {sortedChannelTotals.length === 0 && (
-                <p className="text-[13px] text-slate-400">No leads yet.</p>
+                <p className="text-[13px] text-muted-foreground">No leads yet.</p>
               )}
             </div>
           </Card>
 
           <Card variant="glass" className="p-5">
-            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Top score by channel</p>
+            <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">Top score by channel</p>
             <div className="space-y-2">
               {topChannels.map(([channel, stats]) => (
                 <div key={channel} className="flex items-center justify-between text-[13px]">
-                  <span className="text-slate-200 font-medium">{channel}</span>
+                  <span className="text-foreground font-medium">{channel}</span>
                   <Badge variant={scoreBadgeVariant(stats.topScore)}>
                     {stats.topScore}
                   </Badge>
                 </div>
               ))}
               {topChannels.length === 0 && (
-                <p className="text-[13px] text-slate-400">No channel scoring data yet.</p>
+                <p className="text-[13px] text-muted-foreground">No channel scoring data yet.</p>
               )}
             </div>
           </Card>
         </section>
 
         <Card variant="glass" className="p-5 mb-6">
-          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-4">Lead age cohorts</p>
+          <p className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-4">Lead age cohorts</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {(Object.keys(byAge) as Array<keyof typeof byAge>).map((bucket) => (
-              <Card key={bucket} className="border border-white/10 bg-transparent p-4 text-slate-100">
-                <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-slate-400">{bucket}</p>
-                <p className="text-[24px] font-bold text-white mt-1 leading-none">{byAge[bucket].count}</p>
-                <p className="text-[13px] text-slate-300 mt-1">Avg score: {byAge[bucket].avgScore}</p>
-                <p className="text-[13px] text-slate-300">Top score: {byAge[bucket].topScore}</p>
+              <Card key={bucket} className="border border-border bg-transparent p-4 text-foreground">
+                <p className="text-[13px] font-bold tracking-[0.12em] uppercase text-muted-foreground">{bucket}</p>
+                <p className="text-[24px] font-bold text-foreground mt-1 leading-none">{byAge[bucket].count}</p>
+                <p className="text-[13px] text-muted-foreground mt-1">Avg score: {byAge[bucket].avgScore}</p>
+                <p className="text-[13px] text-muted-foreground">Top score: {byAge[bucket].topScore}</p>
               </Card>
             ))}
           </div>
         </Card>
 
         <Card variant="glass" id="crm-top-leads" className="p-0">
-          <div className="px-6 py-[14px] border-b border-white/10">
-            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-slate-400">Top lead scores</h2>
+          <div className="px-6 py-[14px] border-b border-border">
+            <h2 className="text-[13px] font-bold tracking-[0.14em] uppercase text-muted-foreground">Top lead scores</h2>
           </div>
           {topLeads.length === 0 ? (
-            <p className="px-6 py-8 text-[13px] text-slate-400">No scored leads yet.</p>
+            <p className="px-6 py-8 text-[13px] text-muted-foreground">No scored leads yet.</p>
           ) : (
             <Table className="text-[13px]">
               <TableHeader>
-                <TableRow className="bg-white/5">
-                  <TableHead className="px-6 py-2.5 font-semibold text-slate-400">Name</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Title</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Channel</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400">Queue</TableHead>
-                  <TableHead className="px-4 py-2.5 font-semibold text-slate-400 text-right">Score</TableHead>
+                <TableRow className="bg-muted/40">
+                  <TableHead className="px-6 py-2.5 font-semibold text-muted-foreground">Name</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Title</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Channel</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground">Queue</TableHead>
+                  <TableHead className="px-4 py-2.5 font-semibold text-muted-foreground text-right">Score</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -334,10 +329,10 @@ export default async function AdminCrmPage({
                   const score = lead.lead_score ?? 0
                   return (
                     <TableRow key={lead.id}>
-                      <TableCell className="px-6 py-3 font-semibold text-white">{lead.name}</TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300">{lead.title ?? '\u2014'}</TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300">{channelLabel(lead.channel)}</TableCell>
-                      <TableCell className="px-4 py-3 text-slate-300 capitalize">{lead.lead_queue ?? 'nurture'}</TableCell>
+                      <TableCell className="px-6 py-3 font-semibold text-foreground">{lead.name}</TableCell>
+                      <TableCell className="px-4 py-3 text-muted-foreground">{lead.title ?? '\u2014'}</TableCell>
+                      <TableCell className="px-4 py-3 text-muted-foreground">{channelLabel(lead.channel)}</TableCell>
+                      <TableCell className="px-4 py-3 text-muted-foreground capitalize">{lead.lead_queue ?? 'nurture'}</TableCell>
                       <TableCell className="px-4 py-3 text-right">
                         <Badge variant={scoreBadgeVariant(score)}>
                           {score}

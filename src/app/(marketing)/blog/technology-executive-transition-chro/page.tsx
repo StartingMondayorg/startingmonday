@@ -29,7 +29,7 @@ export default function TechnologyExecutiveTransitionChroPage() {
       url="https://startingmonday.app/blog/technology-executive-transition-chro"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most outplacement programs were not designed for technology executive searches.
           They were designed for general executive transition. The resume review is the same.
@@ -46,7 +46,7 @@ export default function TechnologyExecutiveTransitionChroPage() {
           of failure is not fit. It is preparation.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Why technology executive searches are different</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Why technology executive searches are different</h2>
 
         <p>
           A CIO or CTO interview is not a general executive interview. The hiring committee
@@ -73,7 +73,7 @@ export default function TechnologyExecutiveTransitionChroPage() {
           That timing problem requires intelligence infrastructure - not a job board.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What standard outplacement misses</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What standard outplacement misses</h2>
 
         <p>
           Standard outplacement programs are built around three deliverables: a revised resume,
@@ -102,7 +102,7 @@ export default function TechnologyExecutiveTransitionChroPage() {
           A job board does not help the executive get there first.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What adequate transition support looks like</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What adequate transition support looks like</h2>
 
         <p>
           Technology executives in transition need four things that general outplacement does
@@ -137,7 +137,7 @@ export default function TechnologyExecutiveTransitionChroPage() {
           executive moving on days when the sessions are not scheduled.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How CHROs can influence outcomes</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How CHROs can influence outcomes</h2>
 
         <p>
           The CHRO is upstream of every outplacement decision. That positioning creates leverage
@@ -171,7 +171,7 @@ export default function TechnologyExecutiveTransitionChroPage() {
         <p>
           Starting Monday was built specifically for VP and C-suite technology executives in
           active search. The{' '}
-          <a href="/partners" className="text-slate-900 font-semibold underline underline-offset-2 hover:text-orange-600 transition-colors">
+          <a href="/partners" className="text-foreground font-semibold underline underline-offset-2 hover:text-primary transition-colors">
             partner program
           </a>
           {' '}includes arrangements for CHROs who want to include Starting Monday in their

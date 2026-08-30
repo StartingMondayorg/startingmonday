@@ -36,7 +36,7 @@ export default function CioBoardPresentationPage() {
       url="https://startingmonday.app/blog/cio-board-presentation"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           The first board presentation as a new CIO is not a technology briefing. The audience has
           heard hundreds of technology briefings. Most of them learned to stop listening.
@@ -48,7 +48,7 @@ export default function CioBoardPresentationPage() {
           be that you can close those two gaps. Everything else is detail.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Know what kind of board you are presenting to</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Know what kind of board you are presenting to</h2>
 
         <p>
           Not all boards engage with technology the same way. A board with an audit committee that has
@@ -62,7 +62,7 @@ export default function CioBoardPresentationPage() {
           delivered yet. That conversation shapes the entire presentation.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The structure that works</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The structure that works</h2>
 
         <p>
           The presentations that land follow a simple architecture. Start with the business situation,
@@ -76,7 +76,7 @@ export default function CioBoardPresentationPage() {
           That is a five-slide presentation. Most new CIOs bring twenty.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The questions behind the questions</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The questions behind the questions</h2>
 
         <p>
           Boards ask different questions than the questions they appear to be asking. When a board
@@ -90,7 +90,7 @@ export default function CioBoardPresentationPage() {
           The answer to the real question is your judgment.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The 90-day framing</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The 90-day framing</h2>
 
         <p>
           New CIOs who present to the board in the first ninety days have a structural advantage. The
@@ -103,7 +103,7 @@ export default function CioBoardPresentationPage() {
           the framing shifts. You are no longer assessing. You are accountable.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What to leave out entirely</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What to leave out entirely</h2>
 
         <p>
           Leave out the technology detail. Leave out the vendor names unless a vendor is a strategic
@@ -116,7 +116,7 @@ export default function CioBoardPresentationPage() {
           the platform migration means for the company&rsquo;s ability to serve customers in two years.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The practice you need before you walk in</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The practice you need before you walk in</h2>
 
         <p>
           Practice the three hardest questions you expect and your answers to each one. Do it out loud,
@@ -129,7 +129,7 @@ export default function CioBoardPresentationPage() {
           tell you if the framing is off before the room does.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday assembles</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday assembles</h2>
 
         <p>
           Walking into a board presentation without knowing what the board has been worried about is
@@ -141,7 +141,7 @@ export default function CioBoardPresentationPage() {
 
         <p>
           The{' '}
-          <Link href="/for-cio" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-cio" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           builds that context from the company&rsquo;s actual history in sixty seconds, so the first

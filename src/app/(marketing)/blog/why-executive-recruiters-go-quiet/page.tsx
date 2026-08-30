@@ -43,7 +43,7 @@ export default function WhyExecutiveRecruitersGoQuietPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
 
         <p>
           Executive recruiters and hiring leaders do not usually go quiet because you are underqualified. They go quiet because
@@ -54,7 +54,7 @@ export default function WhyExecutiveRecruitersGoQuietPage() {
           If your outreach looks like polished competence without contextual relevance, it blends into the same stack as everyone else.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What is happening on their side</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What is happening on their side</h2>
 
         <p>
           Most senior hiring processes run under three constraints at once: time pressure, political pressure, and uncertainty about fit.
@@ -65,7 +65,7 @@ export default function WhyExecutiveRecruitersGoQuietPage() {
           Good outreach answers that hidden question quickly.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Why typical outreach underperforms</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Why typical outreach underperforms</h2>
 
         <ul className="list-disc pl-5 space-y-2">
           <li>It starts with biography instead of relevance to current business pressure.</li>
@@ -78,7 +78,7 @@ export default function WhyExecutiveRecruitersGoQuietPage() {
           At senior levels, messaging that feels broad is interpreted as low signal even when the underlying candidate is strong.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">A better outreach frame for C-suite and VP roles</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">A better outreach frame for C-suite and VP roles</h2>
 
         <p>
           Use this three-part structure:
@@ -97,27 +97,27 @@ export default function WhyExecutiveRecruitersGoQuietPage() {
           how I would approach your first 90 days scenario."
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to improve response rates this week</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to improve response rates this week</h2>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">1. Rewrite opening lines around their context</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">1. Rewrite opening lines around their context</h3>
 
         <p>
           Start with a relevant company or role signal, not a self-introduction block.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">2. Cut every message to five to seven sentences</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">2. Cut every message to five to seven sentences</h3>
 
         <p>
           Brevity signals confidence and respect for executive time.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">3. Match evidence to role mandate</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">3. Match evidence to role mandate</h3>
 
         <p>
           A CFO outreach note should not read like a CTO note. A COO note should not read like a CHRO note. Use role-specific proof.
         </p>
 
-        <h3 className="text-[18px] font-bold text-slate-900 pt-2">4. Follow up with new signal, not repetition</h3>
+        <h3 className="text-[18px] font-bold text-foreground pt-2">4. Follow up with new signal, not repetition</h3>
 
         <p>
           If you follow up, add new context: recent earnings call language, leadership changes, or strategic announcements.

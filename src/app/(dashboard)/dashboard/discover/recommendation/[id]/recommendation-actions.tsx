@@ -4,17 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { SuggestedPerson } from '@/lib/enrichment'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
+import { Button, Card, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type Props = {
   companyName: string
   sector: string
@@ -76,14 +66,14 @@ export function RecommendationActions({ companyName, sector, suggestedPeople }: 
   return (
     <div className="flex flex-col gap-3">
       {suggestedPeople.length > 0 && (
-        <Card variant="default" className="bg-slate-50 p-3">
-          <p className="text-[12px] font-semibold text-slate-700 mb-2">Add each recommended person, then paste their LinkedIn URL.</p>
-          <Label htmlFor="discover-person-picker" className="text-[12px] text-slate-500 font-normal">Suggested person</Label>
+        <Card variant="default" className="bg-muted p-3">
+          <p className="text-[12px] font-semibold text-muted-foreground mb-2">Add each recommended person, then paste their LinkedIn URL.</p>
+          <Label htmlFor="discover-person-picker" className="text-[12px] text-muted-foreground font-normal">Suggested person</Label>
           <Select
             value={String(selectedPersonIndex)}
             onValueChange={(value) => setSelectedPersonIndex(Number(value))}
           >
-            <SelectTrigger id="discover-person-picker" className="mt-1 w-full bg-white text-slate-700">
+            <SelectTrigger id="discover-person-picker" className="mt-1 w-full bg-card text-muted-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -133,8 +123,8 @@ export function RecommendationActions({ companyName, sector, suggestedPeople }: 
         </Button>
       </div>
 
-      {message && <p className="text-[12px] text-slate-500">{message}</p>}
-      {!selectedPerson && <p className="text-[12px] text-slate-500">No suggested people available for direct actions yet.</p>}
+      {message && <p className="text-[12px] text-muted-foreground">{message}</p>}
+      {!selectedPerson && <p className="text-[12px] text-muted-foreground">No suggested people available for direct actions yet.</p>}
     </div>
   )
 }

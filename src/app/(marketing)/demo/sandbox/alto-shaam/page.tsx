@@ -85,45 +85,45 @@ const ROLE_FIT = [
 
 export default function AltoShaamSandboxPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-6 py-10 sm:py-14">
         <header className="mb-10">
-          <p className="text-[11px] tracking-[0.08em] text-orange-300">Private demo sandbox</p>
+          <p className="text-[11px] tracking-[0.08em] text-primary">Private demo sandbox</p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
             Alto-Shaam Candidate Match and Signal Walkthrough
           </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
             This page is a meeting-ready sandbox built from an anonymized candidate profile to demonstrate how
             Starting Monday maps resume evidence to role-fit and signal-driven outreach strategy.
           </p>
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2 text-xs text-muted-foreground">
             Source basis: anonymized profile and target-company list prepared for demo validation.
           </p>
           <p className="sr-only">Private by default. We do not share your data with recruiters, employers, or third parties.</p>
         </header>
 
-        <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-orange-300">Candidate snapshot</h2>
+        <section className="mb-8 rounded-xl border border-border bg-muted/[0.03] p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-primary">Candidate snapshot</h2>
           <div className="mt-4 grid gap-6 sm:grid-cols-3">
             <div>
-              <h3 className="text-xs font-semibold tracking-[0.08em] text-slate-400">Target roles</h3>
-              <ul className="mt-2 space-y-2 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Target roles</h3>
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {CANDIDATE_SNAPSHOT.targetRoles.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-xs font-semibold tracking-[0.08em] text-slate-400">Differentiators</h3>
-              <ul className="mt-2 space-y-2 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Differentiators</h3>
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {CANDIDATE_SNAPSHOT.differentiators.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-xs font-semibold tracking-[0.08em] text-slate-400">Search constraints</h3>
-              <ul className="mt-2 space-y-2 text-sm text-slate-200">
+              <h3 className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Search constraints</h3>
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {CANDIDATE_SNAPSHOT.constraints.map((item) => (
                   <li key={item}>- {item}</li>
                 ))}
@@ -132,12 +132,12 @@ export default function AltoShaamSandboxPage() {
           </div>
         </section>
 
-        <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-orange-300">Role-fit scoreboard</h2>
+        <section className="mb-8 rounded-xl border border-border bg-muted/[0.03] p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-primary">Role-fit scoreboard</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[680px] border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-slate-400">
+                <tr className="border-b border-border text-muted-foreground">
                   <th className="px-3 py-2 font-semibold">Role</th>
                   <th className="px-3 py-2 font-semibold">Fit</th>
                   <th className="px-3 py-2 font-semibold">Why</th>
@@ -145,10 +145,10 @@ export default function AltoShaamSandboxPage() {
               </thead>
               <tbody>
                 {ROLE_FIT.map((row) => (
-                  <tr key={row.role} className="border-b border-white/5 align-top text-slate-200">
+                  <tr key={row.role} className="border-b border-border align-top text-foreground">
                     <td className="px-3 py-2">{row.role}</td>
                     <td className="px-3 py-2">{row.score}</td>
-                    <td className="px-3 py-2 text-slate-300">{row.rationale}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{row.rationale}</td>
                   </tr>
                 ))}
               </tbody>
@@ -156,24 +156,24 @@ export default function AltoShaamSandboxPage() {
           </div>
         </section>
 
-        <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-orange-300">
+        <section className="mb-8 rounded-xl border border-border bg-muted/[0.03] p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-primary">
             Alto-Shaam signal board (what was not shown live)
           </h2>
           <div className="mt-4 space-y-4">
             {ALTO_SHAAM_SIGNALS.map((row) => (
-              <article key={row.signal} className="rounded-lg border border-white/10 bg-slate-900/70 p-4">
-                <h3 className="text-sm font-semibold text-white">{row.signal}</h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-200">Why it matters: </span>
+              <article key={row.signal} className="rounded-lg border border-border bg-card/70 p-4">
+                <h3 className="text-sm font-semibold text-foreground">{row.signal}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Why it matters: </span>
                   {row.whyItMatters}
                 </p>
-                <p className="mt-1.5 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-200">Candidate angle: </span>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Candidate angle: </span>
                   {row.candidateAngle}
                 </p>
-                <p className="mt-1.5 text-sm text-slate-300">
-                  <span className="font-semibold text-slate-200">Next action: </span>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">Next action: </span>
                   {row.nextAction}
                 </p>
               </article>
@@ -181,9 +181,9 @@ export default function AltoShaamSandboxPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-orange-400/30 bg-orange-500/10 p-5 sm:p-6">
-          <h2 className="text-sm font-semibold tracking-[0.08em] text-orange-300">Demo script cue card</h2>
-          <ol className="mt-3 space-y-2 text-sm text-slate-200">
+        <section className="rounded-xl border border-primary/30 bg-primary/10 p-5 sm:p-6">
+          <h2 className="text-sm font-semibold tracking-[0.08em] text-primary">Demo script cue card</h2>
+          <ol className="mt-3 space-y-2 text-sm text-foreground">
             <li>1. Start with role-fit scoreboard to establish strategic-match thesis in under 90 seconds.</li>
             <li>2. Walk signal board and tie each signal to one concrete outreach move.</li>
             <li>3. Close with candidate differentiation: operator credibility + consultative commercial execution.</li>
@@ -191,13 +191,13 @@ export default function AltoShaamSandboxPage() {
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/demo"
-              className="inline-flex items-center rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold tracking-[0.04em] text-slate-950 hover:bg-orange-400"
+              className="inline-flex items-center rounded-full bg-primary px-4 py-2 text-xs font-semibold tracking-[0.04em] text-primary-foreground hover:bg-primary/90"
             >
               Return to main demo
             </Link>
             <Link
               href="/signup?from=demo"
-              className="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold tracking-[0.04em] text-white hover:border-white/40"
+              className="inline-flex items-center rounded-full border border-border px-4 py-2 text-xs font-semibold tracking-[0.04em] text-foreground"
             >
               Start trial
             </Link>

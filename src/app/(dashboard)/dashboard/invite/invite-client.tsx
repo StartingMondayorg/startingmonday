@@ -1,9 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card, Input } from '@/components/ui'
 export function InviteClient({
   userId,
   existingUrl,
@@ -40,7 +37,7 @@ export function InviteClient({
 
   return (
     <Card className="p-6 mb-6">
-      <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400 mb-4">Your invite link</p>
+      <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground mb-4">Your invite link</p>
 
       {url ? (
         <>
@@ -50,7 +47,7 @@ export function InviteClient({
               value={url}
               title="Your invite link"
               aria-label="Your invite link"
-              className="flex-1 text-[13px] text-slate-600 bg-slate-50"
+              className="flex-1 text-[13px] text-muted-foreground bg-muted"
             />
             <Button
               type="button"
@@ -63,32 +60,32 @@ export function InviteClient({
           </div>
 
           {referralCount > 0 && (
-            <p className="text-[13px] text-slate-500">
-              <span className="font-semibold text-slate-700">{referralCount}</span>{' '}
+            <p className="text-[13px] text-muted-foreground">
+              <span className="font-semibold text-muted-foreground">{referralCount}</span>{' '}
               {referralCount === 1 ? 'person has' : 'people have'} signed up through your link.
             </p>
           )}
 
           <div className="mt-4 flex flex-col gap-2">
-            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-slate-400">Share via</p>
+            <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-muted-foreground">Share via</p>
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
-                className="text-[12px] font-semibold text-slate-600"
+                className="text-[12px] font-semibold text-muted-foreground"
                 render={<a href={`mailto:?subject=You should check out Starting Monday&body=I've been using Starting Monday to run my executive search - it monitors target companies, surfaces roles before they're posted, and generates prep briefs in about a minute. Thought you'd find it useful.%0A%0A${encodeURIComponent(url)}`} />}
               >
                 Email
               </Button>
               <Button
                 variant="outline"
-                className="text-[12px] font-semibold text-slate-600"
+                className="text-[12px] font-semibold text-muted-foreground"
                 render={<a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" />}
               >
                 LinkedIn
               </Button>
               <Button
                 variant="outline"
-                className="text-[12px] font-semibold text-slate-600"
+                className="text-[12px] font-semibold text-muted-foreground"
                 render={<a href={`https://twitter.com/intent/tweet?text=I've been using Starting Monday for my executive search - monitors target companies and generates prep briefs in about a minute.&url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" />}
               >
                 X / Twitter

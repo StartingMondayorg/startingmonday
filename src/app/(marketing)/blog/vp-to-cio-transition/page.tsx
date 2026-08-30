@@ -36,7 +36,7 @@ export default function VpToCioTransitionPage() {
       url="https://startingmonday.app/blog/vp-to-cio-transition"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           The executives who make the VP-to-CIO move well understand something that the ones who stall do not: it is
           not a promotion. It is a repositioning. The skills that made you excellent at VP level are necessary but not
@@ -44,7 +44,7 @@ export default function VpToCioTransitionPage() {
           relationship with the organizations that fill those roles.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What actually changes in the CIO seat</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What actually changes in the CIO seat</h2>
 
         <p>
           At the VP level, you are accountable for a function. You deliver on a scope. You are evaluated on
@@ -65,7 +65,7 @@ export default function VpToCioTransitionPage() {
           true, the narrative work is harder.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What search firms look for</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What search firms look for</h2>
 
         <p>
           The search firms that fill CIO mandates are looking for candidates who have already crossed the line in
@@ -86,7 +86,7 @@ export default function VpToCioTransitionPage() {
           worked do.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The organizations most likely to take the bet</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The organizations most likely to take the bet</h2>
 
         <p>
           Not every company will consider a VP making the first CIO move. The organizations that do tend to share
@@ -106,7 +106,7 @@ export default function VpToCioTransitionPage() {
           is primarily sitting CIOs. The sequencing matters.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The narrative work that has to happen first</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The narrative work that has to happen first</h2>
 
         <p>
           The most common mistake VP candidates make is updating their resume and starting to apply. That is the
@@ -126,7 +126,7 @@ export default function VpToCioTransitionPage() {
           this. They call when the urgency is acute, which is exactly when the relationship is worth the least.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What Starting Monday tracks</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What Starting Monday tracks</h2>
 
         <p>
           Starting Monday watches for the organizational signals that precede CIO mandates at companies where a
@@ -137,7 +137,7 @@ export default function VpToCioTransitionPage() {
 
         <p>
           The{' '}
-          <Link href="/for-executives" className="text-slate-900 underline hover:text-slate-600 transition-colors">
+          <Link href="/for-executives" className="text-foreground underline hover:text-muted-foreground transition-colors">
             prep brief
           </Link>{' '}
           assembles your win thesis, likely objections, and company-specific questions in sixty seconds. The
@@ -145,7 +145,7 @@ export default function VpToCioTransitionPage() {
           wait.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The question worth sitting with</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The question worth sitting with</h2>
 
         <p>
           If a search firm partner called you today and asked you to describe your current scope in CIO terms, how

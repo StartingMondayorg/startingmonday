@@ -29,9 +29,9 @@ export type ChannelMap = {
 export const CHANNEL_MAPS: Record<ChannelKey, ChannelMap> = {
   coaches: {
     label: 'Executive Coaches',
-    accent: 'text-amber-200',
-    border: 'border-amber-400/40',
-    glow: 'shadow-[0_24px_90px_rgba(245,158,11,0.18)]',
+    accent: 'text-warning',
+    border: 'border-warning/40',
+    glow: 'shadow-2xl',
     intro:
       'Coach operating rhythm from session prep to sponsor readout, with visibility to client progress between sessions.',
     status: 'ready',
@@ -134,9 +134,9 @@ export const CHANNEL_MAPS: Record<ChannelKey, ChannelMap> = {
   },
   outplacement: {
     label: 'Outplacement Programs',
-    accent: 'text-sky-200',
-    border: 'border-sky-400/40',
-    glow: 'shadow-[0_24px_90px_rgba(56,189,248,0.18)]',
+    accent: 'text-info',
+    border: 'border-info/40',
+    glow: 'shadow-2xl',
     intro:
       'Outplacement delivery flow from cohort activation to sponsor decision gates, with evidence supporting expand, hold, or close decisions.',
     status: 'ready',
@@ -239,9 +239,9 @@ export const CHANNEL_MAPS: Record<ChannelKey, ChannelMap> = {
   },
   executives: {
     label: 'Executives',
-    accent: 'text-violet-200',
-    border: 'border-violet-400/35',
-    glow: 'shadow-[0_24px_90px_rgba(139,92,246,0.16)]',
+    accent: 'text-info',
+    border: 'border-info/35',
+    glow: 'shadow-2xl',
     intro:
       'Executive transition flow across leadership, technical leadership, and delivery leadership lanes: identify signals early, manage communications, and act before shortlist closure.',
     status: 'ready',
@@ -343,9 +343,9 @@ export const CHANNEL_MAPS: Record<ChannelKey, ChannelMap> = {
   },
   search_firms: {
     label: 'Search Firms',
-    accent: 'text-emerald-200',
-    border: 'border-emerald-400/35',
-    glow: 'shadow-[0_24px_90px_rgba(16,185,129,0.16)]',
+    accent: 'text-success',
+    border: 'border-success/35',
+    glow: 'shadow-2xl',
     intro:
       'Retained-search operating flow from mandate intake through shortlist review, with boardroom accountability for cycle speed and quality.',
     status: 'ready',

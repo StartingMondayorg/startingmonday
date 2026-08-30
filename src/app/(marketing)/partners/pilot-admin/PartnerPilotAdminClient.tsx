@@ -1,10 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-
+import { Badge, Button, Card } from '@/components/ui'
 type Seat = {
   owner: string
   activeClients: number
@@ -105,25 +102,25 @@ export default function PartnerPilotAdminClient() {
     <>
       <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Card variant="glass" className="rounded-xl p-4">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">Seats total</p>
-          <p className="mt-2 text-[24px] font-semibold text-white">{summary?.seats_total ?? 0}</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-primary">Seats total</p>
+          <p className="mt-2 text-[24px] font-semibold text-foreground">{summary?.seats_total ?? 0}</p>
         </Card>
         <Card variant="glass" className="rounded-xl p-4">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">Seats active rate</p>
-          <p className="mt-2 text-[24px] font-semibold text-white">{summary?.seats_active_rate ?? 0}%</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-primary">Seats active rate</p>
+          <p className="mt-2 text-[24px] font-semibold text-foreground">{summary?.seats_active_rate ?? 0}%</p>
         </Card>
         <Card variant="glass" className="rounded-xl p-4">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">At-risk seats</p>
-          <p className="mt-2 text-[24px] font-semibold text-white">{summary?.at_risk_seats ?? 0}</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-primary">At-risk seats</p>
+          <p className="mt-2 text-[24px] font-semibold text-foreground">{summary?.at_risk_seats ?? 0}</p>
         </Card>
         <Card variant="glass" className="rounded-xl p-4">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-orange-200">Weekly actions total</p>
-          <p className="mt-2 text-[24px] font-semibold text-white">{summary?.weekly_actions_total ?? 0}</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-primary">Weekly actions total</p>
+          <p className="mt-2 text-[24px] font-semibold text-foreground">{summary?.weekly_actions_total ?? 0}</p>
         </Card>
       </section>
 
-      {loading ? <p className="mt-5 text-[13px] text-slate-300">Loading seat activity...</p> : null}
-      {error ? <p className="mt-5 text-[13px] text-rose-300">{error}</p> : null}
+      {loading ? <p className="mt-5 text-[13px] text-muted-foreground">Loading seat activity...</p> : null}
+      {error ? <p className="mt-5 text-[13px] text-destructive">{error}</p> : null}
 
       {hasSeats ? (
         <section className="mt-5 grid gap-3">
@@ -132,12 +129,12 @@ export default function PartnerPilotAdminClient() {
             return (
               <Card key={seat.owner} variant="glass" className="rounded-xl p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h2 className="text-[14px] font-semibold text-white">{seat.owner}</h2>
-                  <Badge variant="outline" className="rounded-full !border-white/15 !bg-white/[0.06] px-2.5 py-1 text-[11px] font-semibold text-orange-200">{seat.status}</Badge>
+                  <h2 className="text-[14px] font-semibold text-foreground">{seat.owner}</h2>
+                  <Badge variant="outline" className="rounded-full !border-border !bg-muted/[0.06] px-2.5 py-1 text-[11px] font-semibold text-primary">{seat.status}</Badge>
                 </div>
-                <p className="mt-2 text-[13px] text-slate-200">Active clients: {seat.activeClients}</p>
-                <p className="mt-1 text-[13px] text-slate-200">Weekly relationship actions: {seat.weeklyActions}</p>
-                <p className="mt-1 text-[12px] text-slate-300">Last update: {seat.lastUpdatedAt ?? 'no updates logged yet'}</p>
+                <p className="mt-2 text-[13px] text-foreground">Active clients: {seat.activeClients}</p>
+                <p className="mt-1 text-[13px] text-foreground">Weekly relationship actions: {seat.weeklyActions}</p>
+                <p className="mt-1 text-[12px] text-muted-foreground">Last update: {seat.lastUpdatedAt ?? 'no updates logged yet'}</p>
 
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Button
@@ -145,7 +142,7 @@ export default function PartnerPilotAdminClient() {
                     variant="outline"
                     disabled={savingSeat === seat.owner || !isAtRisk}
                     onClick={() => updateSeatStatus(seat, 'active')}
-                    className="rounded-full !border-white/20 !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-slate-100 hover:!border-orange-300/70 hover:!bg-white/5"
+                    className="rounded-full !border-border !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-foreground hover:!border-primary/70 hover:!bg-muted/40"
                   >
                     {savingSeat === seat.owner ? 'Saving...' : 'Mark active'}
                   </Button>
@@ -154,7 +151,7 @@ export default function PartnerPilotAdminClient() {
                     variant="outline"
                     disabled={savingSeat === seat.owner || isAtRisk}
                     onClick={() => updateSeatStatus(seat, 'at_risk')}
-                    className="rounded-full !border-white/20 !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-slate-100 hover:!border-orange-300/70 hover:!bg-white/5"
+                    className="rounded-full !border-border !bg-transparent px-3 py-1.5 text-[12px] font-semibold !text-foreground hover:!border-primary/70 hover:!bg-muted/40"
                   >
                     {savingSeat === seat.owner ? 'Saving...' : 'Mark at risk'}
                   </Button>

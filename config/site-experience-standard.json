@@ -70,7 +70,9 @@
       "maxConcurrentAnimations": 6,
       "maxDurationMs": 450,
       "layoutShiftingAnimationAllowed": false
-    }
+    },
+    "minApcaProxy": 40,
+    "minApcaProxyNote": "Calibrated for token pairs, not page extremes: the gate now measures text against the surface it actually sits on, where the stock shadcn muted-foreground-on-card pairing scores 44.4 (4.73:1 real WCAG). A floor of 45 would reject the design system default; 40 still catches the low-contrast pairings this gate exists to stop."
   },
   "journeySynthetic": {
     "defaultThresholds": {

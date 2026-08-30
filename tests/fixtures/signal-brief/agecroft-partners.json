@@ -1,0 +1,58 @@
+{
+  "title": "Agecroft Partners signal brief",
+  "reader": "Agecroft Partners leadership team",
+  "client_config": {
+    "avg_deal_value": 2000000,
+    "win_rate": 0.2,
+    "lift_statement": "A timely conversation can shape how the firm turns its institutional reach into the next growth opportunity.",
+    "problems": [
+      "A market or allocator trigger may reach another advisory firm first.",
+      "The right relationship to build before a mandate forms is not always visible.",
+      "Important account and media signals are difficult to monitor consistently."
+    ],
+    "what_it_does": [
+      "Ranks dated public signals by decision relevance.",
+      "Connects public events to named decision-path people.",
+      "Tracks changes across watched accounts until something moves."
+    ],
+    "cost_to_reader": "About 10 minutes weekly; no new system is required for the internal preview."
+  },
+  "profiles": [
+    {
+      "account": "Agecroft Partners",
+      "positioning": "The public record suggests a durable thought-leadership and institutional-distribution opportunity; confirm the current growth pressure in discovery.",
+      "suggested_move": "Start with an investigating conversation about which allocator, manager, or media relationships matter most before proposing a service.",
+      "discovery_questions": {
+        "situation": [
+          "Is the alternative-investment newsletter still a primary growth channel since its 2021 launch?",
+          "Which senior leader currently owns the next institutional relationship or distribution priority?"
+        ],
+        "problem": [
+          "Where is the firm losing visibility before a manager or allocator conversation forms?",
+          "Which relationship signals are hardest for the team to monitor consistently?",
+          "What demand or mandate timing is currently arriving too late?"
+        ],
+        "implication": [
+          "What does a late introduction cost when another advisory firm is already in the conversation?",
+          "Which growth initiative would slow if the relevant relationship signal were missed?"
+        ],
+        "need_payoff": [
+          "If the team saw those relationship signals earlier, where would it invest the saved attention?",
+          "What would make an earlier, better-timed conversation materially valuable?"
+        ]
+      },
+      "evidence": [
+        {
+          "date": "2021-01-25",
+          "event": "Agecroft founder Don Steinbrugge appeared on Bloomberg Radio discussing hedge-fund trends",
+          "source_url": "https://www.bloomberg.com/news/audio/2021-01-25/trends-for-hedge-funds-in-2021-agecroft-s-steinbrugge-radio"
+        },
+        {
+          "date": "2021-01-01",
+          "event": "Agecroft states that its Alternative Investment Industry Newsletter was established in 2021",
+          "source_url": "https://agecroftpartners.com/"
+        }
+      ]
+    }
+  ]
+}

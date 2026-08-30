@@ -2,8 +2,7 @@
 import { useTransition } from 'react'
 import { updateProspectStage } from './actions'
 import type { STAGES } from './page'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 type Props = {
   id: string
   stage: string

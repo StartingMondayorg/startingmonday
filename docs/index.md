@@ -14,14 +14,14 @@ Documents indexed: **1160**
 | [evidence/](evidence/) | Validation artifacts, readiness records, source-rights evidence, and proof cases. | 37 |
 | [status/](status/) | Generated or dated operational summaries, checkpoints, and phase closeouts. | 148 |
 | [operations/](operations/) | Runbooks, monitoring, support, reliability, and recurring operating procedures. | 2 |
-| [content/](content/) | Marketing copy, editorial work, synthetic council reviews, and publishing assets. | 97 |
+| [content/](content/) | Marketing copy, editorial work, synthetic council reviews, and publishing assets. | 98 |
 | [research/](research/) | Market research, source maps, behavioral research, and analysis. | 3 |
 | [outreach/](outreach/) | Outreach playbooks, templates, contact exports, and campaign artifacts. | 49 |
 | [onboarding/](onboarding/) | Setup, first-use, user guides, and onboarding flows. | 15 |
 | [business/](business/) | Commercial strategy, sales plans, partner materials, and business assets. | 31 |
 | [archive/](archive/) | Historical documents retained for provenance but not active operating guidance. | 3 |
 | [inbox/](inbox/) | Newly received documents awaiting review or classification. | 8 |
-| [other/](other/) | Documents that do not yet fit a maintained domain. | 582 |
+| [other/](other/) | Documents that do not yet fit a maintained domain. | 588 |
 
 ## Documents
 
@@ -37,9 +37,11 @@ Documents indexed: **1160**
 ### strategy
 
 - [strategy/30-day-execution-plan.md](strategy/30-day-execution-plan.md) — 30-Day Execution Plan (Monitor-First)
+- [strategy/adam-review-changes-v1-1.md](strategy/adam-review-changes-v1-1.md) — Brief Template & GTM Changes — from the Adam Weiss Sales Review
 - [strategy/agent-graph-design-spec-2026-06-13.md](strategy/agent-graph-design-spec-2026-06-13.md) — Agent Graph Design Spec
 - [strategy/agent-graph-implementation-tickets-2026-06-13.md](strategy/agent-graph-implementation-tickets-2026-06-13.md) — Agent Graph Implementation Tickets
 - [strategy/anne-applebaum-email-template-review-2026-05-26.md](strategy/anne-applebaum-email-template-review-2026-05-26.md) — Anne Applebaum Review of Email Templates
+- [strategy/apollo-partnership-inquiry-2026-08-21.md](strategy/apollo-partnership-inquiry-2026-08-21.md) — Apollo Partnership Inquiry
 - [strategy/archetypes/branding-archetype.md](strategy/archetypes/branding-archetype.md) — Branding Archetype
 - [strategy/archetypes/luxury-brand-archetype.md](strategy/archetypes/luxury-brand-archetype.md) — Luxury Brand Archetype
 - [strategy/archetypes/product-archetype.md](strategy/archetypes/product-archetype.md) — Product Archetype
@@ -140,8 +142,10 @@ Documents indexed: **1160**
 - [strategy/executive-momentum-intelligence-scorecard.md](strategy/executive-momentum-intelligence-scorecard.md) — EMI Weekly Scorecard Template
 - [strategy/four-channel-customer-journey-implementation-backlog-2026-06-08.md](strategy/four-channel-customer-journey-implementation-backlog-2026-06-08.md) — Four-Channel Customer Journey Implementation Backlog
 - [strategy/four-channel-now-tranche-kickoff-2026-06-08.md](strategy/four-channel-now-tranche-kickoff-2026-06-08.md) — Four-Channel Now Tranche Kickoff
+- [strategy/gtm-plan-v1.md](strategy/gtm-plan-v1.md) — Signal Briefs — Go-to-Market Plan v1 (one-pager for Sol's review)
 - [strategy/integrated-transition-system-gap-closure-plan-2026-06-15.md](strategy/integrated-transition-system-gap-closure-plan-2026-06-15.md) — Integrated Transition System Gap Closure Plan (2026-06-15)
 - [strategy/jira-vscode-api-setup-checklist-2026-06-04.md](strategy/jira-vscode-api-setup-checklist-2026-06-04.md) — Jira + VS Code Integration Checklist (Concrete Setup)
+- [strategy/john-dunn-adi-signal-brief-2026-08-28.md](strategy/john-dunn-adi-signal-brief-2026-08-28.md) — ADI Global Distribution
 - [strategy/landing-page/landing-page-audit-report.md](strategy/landing-page/landing-page-audit-report.md) — Landing Page Audit Report
 - [strategy/landing-page/landing-page-competitive-analysis-2026-06-26.md](strategy/landing-page/landing-page-competitive-analysis-2026-06-26.md) — Landing Page Competitive Analysis
 - [strategy/landing-page/landing-page-redesign-plan.md](strategy/landing-page/landing-page-redesign-plan.md) — Landing Page Redesign Plan - June 19, 2026
@@ -172,6 +176,8 @@ Documents indexed: **1160**
 - [strategy/outreach-email-synthetic-council-2026-05-27.md](strategy/outreach-email-synthetic-council-2026-05-27.md) — Outreach Email Synthetic Council - 2026-05-27
 - [strategy/outreach-pipeline-review-answers-2026-08-04.md](strategy/outreach-pipeline-review-answers-2026-08-04.md) — Founder Answers: Outreach Pipeline Technical Review, Section 10
 - [strategy/outreach-pipeline-technical-review-2026-08-03.md](strategy/outreach-pipeline-technical-review-2026-08-03.md) — MandateSignal Outreach-to-Revenue Pipeline: Technical Review Document
+- [strategy/people-to-know-execution-preflight-2026-08-21.md](strategy/people-to-know-execution-preflight-2026-08-21.md) — People to Know Execution Preflight
+- [strategy/people-to-know-source-rights-decision-2026-08-21.md](strategy/people-to-know-source-rights-decision-2026-08-21.md) — Starting Monday People to Know Source Rights Decision
 - [strategy/persona-council-effectiveness-audit-2026-05-26.md](strategy/persona-council-effectiveness-audit-2026-05-26.md) — Persona Council Effectiveness Audit - 2026-05-26
 - [strategy/persona-council-ejes-micro-pass-2026-05-26.md](strategy/persona-council-ejes-micro-pass-2026-05-26.md) — Persona Council EJES Micro-Pass - 2026-05-26
 - [strategy/persona-council-ejes-second-pass-2026-05-26.md](strategy/persona-council-ejes-second-pass-2026-05-26.md) — Persona Council EJES Second Pass - 2026-05-26
@@ -181,6 +187,7 @@ Documents indexed: **1160**
 - [strategy/rem-01-apollo-purge-inventory-2026-08-10.md](strategy/rem-01-apollo-purge-inventory-2026-08-10.md) — REM-01 Apollo Purge Inventory (2026-08-10)
 - [strategy/sales-marketing-plan-v1.1-2026-08-03.md](strategy/sales-marketing-plan-v1.1-2026-08-03.md) — Sales & Marketing Plan — Starting Monday + MandateSignal
 - [strategy/selected-ideas-implementation-plan-2026-06-13.md](strategy/selected-ideas-implementation-plan-2026-06-13.md) — Selected Ideas Implementation Plan
+- [strategy/signal-brief-renderer-story.md](strategy/signal-brief-renderer-story.md) — Signal Brief Renderer Story
 - [strategy/slack-channel-naming-pack-2026-06-04.md](strategy/slack-channel-naming-pack-2026-06-04.md) — Slack Channel Naming and Description Pack
 - [strategy/slack-notification-policy-ui-2026-06-04.md](strategy/slack-notification-policy-ui-2026-06-04.md) — Slack Notification Policy for UI Delivery
 - [strategy/sm-hero-implementation-plan-2026-08-18.md](strategy/sm-hero-implementation-plan-2026-08-18.md) — Starting Monday Hero Evidence Surface Implementation Plan
@@ -193,6 +200,7 @@ Documents indexed: **1160**
 - [strategy/smk-402-wedge-scorecard-ops-spec.md](strategy/smk-402-wedge-scorecard-ops-spec.md) — SMK-402 Wedge Scorecard Ops Spec
 - [strategy/sol-clarity-brief-startingmonday.md](strategy/sol-clarity-brief-startingmonday.md) — Build Brief for Sol — Starting Monday Clarity Pass (v2)
 - [strategy/sol-dashboard-simplification-brief-2026-08-19.md](strategy/sol-dashboard-simplification-brief-2026-08-19.md) — Build Brief for Sol — Dashboard Simplification (Three Zones)
+- [strategy/solpeopletoknowbrief20260821_1.md](strategy/solpeopletoknowbrief20260821_1.md) — Build Brief for Sol — People to Know: Public Names + Guided Hand-off
 - [strategy/sprint-7-carry-forward-shortlist-2026-05-31.md](strategy/sprint-7-carry-forward-shortlist-2026-05-31.md) — Sprint 7 Carry-Forward Shortlist (2026-05-31)
 - [strategy/sprint-plan.md](strategy/sprint-plan.md) — Sprint Plan
 - [strategy/starting-monday-vs-top-10-luxury-sites-2026-06-13.md](strategy/starting-monday-vs-top-10-luxury-sites-2026-06-13.md) — Starting Monday vs Top 10 Luxury Brand Sites (Luxury Feel)
@@ -488,6 +496,7 @@ Documents indexed: **1160**
 - [content/release-note-2026-07-03-sitewide-execution-epic.md](content/release-note-2026-07-03-sitewide-execution-epic.md) — Release Note - Sitewide Execution Epic Rollout
 - [content/release-note-2026-07-17-sitewide-execution-epic.md](content/release-note-2026-07-17-sitewide-execution-epic.md) — Release Note - Manager Tools Launch Readiness and CI/Monitoring Hardening
 - [content/release-note-2026-08-10-sitewide-execution-epic.md](content/release-note-2026-08-10-sitewide-execution-epic.md) — Release Note - Compatibility Sunset Readiness and Migration Controls
+- [content/release-note-2026-08-27-sitewide-execution-epic.md](content/release-note-2026-08-27-sitewide-execution-epic.md) — Release Note - Watchlist-Scoped Source Coverage and Adapter Controls
 - [content/revenue-economics-synthetic-council.md](content/revenue-economics-synthetic-council.md) — Revenue and Economics Synthetic Council
 - [content/sales-marketing-synthetic-council.md](content/sales-marketing-synthetic-council.md) — The Starting Monday Synthetic Council
 - [content/site-review-may-2026-full-council-v6.md](content/site-review-may-2026-full-council-v6.md) — Synthetic Council Full Site Review v6 (May 13, 2026)
@@ -683,6 +692,7 @@ Documents indexed: **1160**
 - [chris-signal-source-inventory-2026-08-14.md](chris-signal-source-inventory-2026-08-14.md) — Signal Source Inventory and Decision Quality
 - [chris-slack-summary-2026-06-08.md](chris-slack-summary-2026-06-08.md) — Starting Monday: 3-Day Summary for Chris
 - [chris-vscode-workspace-setup.md](chris-vscode-workspace-setup.md) — Chris Setup Guide: Match Rich's VS Code Workspace
+- [ci-test-reliability-cleanup-2026-08-20.md](ci-test-reliability-cleanup-2026-08-20.md) — CI & Test Reliability Cleanup — 2026-08-20
 - [coach-ai-agent-decision-gate-2026-07.md](coach-ai-agent-decision-gate-2026-07.md) — Coach AI Agent Decision Gate (No-Build Until Validation)
 - [coach-and-outplacement-persona-deep-dive-2026-06-15.md](coach-and-outplacement-persona-deep-dive-2026-06-15.md) — Coach and Outplacement Persona Deep Dive (2026-06-15)
 - [coach-council-epic.md](coach-council-epic.md) — Coach Conversion Epic
@@ -816,7 +826,7 @@ Documents indexed: **1160**
 - [development/migration-rollbacks/161_meeting_debriefs.md](development/migration-rollbacks/161_meeting_debriefs.md) — 161_meeting_debriefs rollback
 - [development/migration-rollbacks/166_rem01_remove_apollo_relationship_sources.md](development/migration-rollbacks/166_rem01_remove_apollo_relationship_sources.md) — Migration 166 Rollback and Recovery
 - [development/migration-rollbacks/167_monitoring_alert_state_compat_rls.md](development/migration-rollbacks/167_monitoring_alert_state_compat_rls.md) — 167_monitoring_alert_state_compat_rls rollback
-- [development/migration-rollbacks/167_rem01_categorical_linkedin_matching.md](development/migration-rollbacks/167_rem01_categorical_linkedin_matching.md) — Migration 167 Rollback and Recovery
+- [development/migration-rollbacks/1671_rem01_categorical_linkedin_matching.md](development/migration-rollbacks/1671_rem01_categorical_linkedin_matching.md) — Migration 1671 Rollback and Recovery
 - [development/migration-rollbacks/168_onboarding_completion_resume_state.md](development/migration-rollbacks/168_onboarding_completion_resume_state.md) — Migration 168 rollback
 - [development/migration-rollbacks/169_backtest_matching_dimensions.md](development/migration-rollbacks/169_backtest_matching_dimensions.md) — 169_backtest_matching_dimensions rollback
 - [development/migration-rollbacks/170_exec_search_lag_matching.md](development/migration-rollbacks/170_exec_search_lag_matching.md) — 170_exec_search_lag_matching rollback
@@ -824,7 +834,12 @@ Documents indexed: **1160**
 - [development/migration-rollbacks/172_canonical_cik_reconciliation.md](development/migration-rollbacks/172_canonical_cik_reconciliation.md) — Migration 172 Rollback: Canonical CIK Reconciliation
 - [development/migration-rollbacks/173_person_signal_rights_containment.md](development/migration-rollbacks/173_person_signal_rights_containment.md) — Migration 173 Rollback: Person-Signal Rights Containment
 - [development/migration-rollbacks/175_lead_scoring_runs_rls.md](development/migration-rollbacks/175_lead_scoring_runs_rls.md) — Migration 175 Rollback: lead_scoring_runs RLS
+- [development/migration-rollbacks/178_live_brief_handoff_metrics.md](development/migration-rollbacks/178_live_brief_handoff_metrics.md) — Migration 178: Live Brief Handoff Metrics
+- [development/migration-rollbacks/179_retire_placeholder_billing_offers.md](development/migration-rollbacks/179_retire_placeholder_billing_offers.md) — Migration 179: Retire Placeholder Billing Offers
+- [development/migration-rollbacks/180_watchlist_source_coverage.md](development/migration-rollbacks/180_watchlist_source_coverage.md) — 180_watchlist_source_coverage rollback
+- [development/migration-rollbacks/181_watchlist_names_layer.md](development/migration-rollbacks/181_watchlist_names_layer.md) — 181_watchlist_names_layer rollback
 - [development/migration-rollbacks/README.md](development/migration-rollbacks/README.md) — Migration rollback playbooks
+- [development/signal-brief-preview-rollback.md](development/signal-brief-preview-rollback.md) — Signal Brief Preview Disable and Rollback
 - [development/SMK-349-pre-pr-check-suite.md](development/SMK-349-pre-pr-check-suite.md) — SMK-349: Pre-PR Check Suite
 - [development/tickets/DEV-EMI-410-service-token-smoke-auth.md](development/tickets/DEV-EMI-410-service-token-smoke-auth.md) — DEV-EMI-410: Replace Cookie-Based EMI Smoke Auth with Service Token
 - [diagrams/authentication.md](diagrams/authentication.md) — Authentication

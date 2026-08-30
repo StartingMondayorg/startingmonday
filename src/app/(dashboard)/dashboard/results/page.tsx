@@ -1,16 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Card } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-
+import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
 export const metadata = { title: 'Results - Dashboard' }
 
 type CompanyRow = {
@@ -171,13 +162,13 @@ export default async function DashboardResultsPage() {
   }).reverse()
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <div className="min-h-screen bg-background text-foreground font-sans">
+      <header className="border-b border-border bg-background/80 backdrop-blur">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard" className="text-[13px] font-semibold text-slate-300 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
             Dashboard
           </Link>
         </div>
@@ -185,80 +176,80 @@ export default async function DashboardResultsPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-7">
-          <h1 className="text-[28px] font-bold text-white leading-tight">Results</h1>
-          <p className="text-[13px] text-slate-300 mt-1.5">
+          <h1 className="text-[28px] font-bold text-foreground leading-tight">Results</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">
             Real performance rollup for {firstName}{daysInMarket !== null ? ` · Day ${daysInMarket + 1} of search` : ''}
           </p>
         </div>
 
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           <Card variant="glass" className="p-4">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Pipeline active</p>
-            <p className="text-[24px] font-bold text-white mt-1">{activePipelinePct}%</p>
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Pipeline active</p>
+            <p className="text-[24px] font-bold text-foreground mt-1">{activePipelinePct}%</p>
           </Card>
           <Card variant="glass" className="p-4">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Contacts per company</p>
-            <p className="text-[24px] font-bold text-white mt-1">{contactsPerCompany}</p>
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Contacts per company</p>
+            <p className="text-[24px] font-bold text-foreground mt-1">{contactsPerCompany}</p>
           </Card>
           <Card variant="glass" className="p-4">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Signal → draft (14d)</p>
-            <p className="text-[24px] font-bold text-white mt-1">{signalToDraftPct}%</p>
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Signal → draft (14d)</p>
+            <p className="text-[24px] font-bold text-foreground mt-1">{signalToDraftPct}%</p>
           </Card>
           <Card variant="glass" className="p-4">
-            <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Due now</p>
-            <p className="text-[24px] font-bold text-white mt-1">{dueNow}</p>
+            <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Due now</p>
+            <p className="text-[24px] font-bold text-foreground mt-1">{dueNow}</p>
           </Card>
         </section>
 
         <Card variant="glass" className="overflow-hidden mb-6">
-          <div className="px-5 py-3 border-b border-white/10">
-            <h2 className="text-[13px] font-semibold text-slate-200">42-day production totals</h2>
+          <div className="px-5 py-3 border-b border-border">
+            <h2 className="text-[13px] font-semibold text-foreground">42-day production totals</h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Companies</p>
-              <p className="text-[20px] font-bold text-white mt-1">{totalCompanies}</p>
+              <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Companies</p>
+              <p className="text-[20px] font-bold text-foreground mt-1">{totalCompanies}</p>
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Contact adds</p>
-              <p className="text-[20px] font-bold text-white mt-1">{contactAdds42d}</p>
+              <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Contact adds</p>
+              <p className="text-[20px] font-bold text-foreground mt-1">{contactAdds42d}</p>
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Prep briefs</p>
-              <p className="text-[20px] font-bold text-white mt-1">{prepBriefs42d}</p>
+              <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Prep briefs</p>
+              <p className="text-[20px] font-bold text-foreground mt-1">{prepBriefs42d}</p>
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.1em] text-slate-400">Outreach drafts</p>
-              <p className="text-[20px] font-bold text-white mt-1">{outreachBriefs42d}</p>
+              <p className="text-[11px] uppercase tracking-[0.1em] text-muted-foreground">Outreach drafts</p>
+              <p className="text-[20px] font-bold text-foreground mt-1">{outreachBriefs42d}</p>
             </div>
           </div>
         </Card>
 
         <Card variant="glass" className="overflow-hidden">
-          <div className="px-5 py-3 border-b border-white/10">
-            <h2 className="text-[13px] font-semibold text-slate-200">Weekly trend (last 6 weeks)</h2>
+          <div className="px-5 py-3 border-b border-border">
+            <h2 className="text-[13px] font-semibold text-foreground">Weekly trend (last 6 weeks)</h2>
           </div>
           <Table className="text-[13px]">
-            <TableHeader className="bg-white/5 border-b border-white/10 text-slate-300">
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="px-5 py-2 text-left text-slate-300">Week</TableHead>
-                <TableHead className="px-4 py-2 text-right text-slate-300">Signals</TableHead>
-                <TableHead className="px-4 py-2 text-right text-slate-300">Contact adds</TableHead>
-                <TableHead className="px-5 py-2 text-right text-slate-300">Outreach drafts</TableHead>
+            <TableHeader className="bg-muted/40 border-b border-border text-muted-foreground">
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="px-5 py-2 text-left text-muted-foreground">Week</TableHead>
+                <TableHead className="px-4 py-2 text-right text-muted-foreground">Signals</TableHead>
+                <TableHead className="px-4 py-2 text-right text-muted-foreground">Contact adds</TableHead>
+                <TableHead className="px-5 py-2 text-right text-muted-foreground">Outreach drafts</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {weeklyRows.map((row) => (
-                <TableRow key={row.label} className="border-white/10 hover:bg-white/5">
-                  <TableCell className="px-5 py-2 text-slate-200 whitespace-normal">{row.label}</TableCell>
-                  <TableCell className="px-4 py-2 text-right text-slate-300">{row.signalsWeek}</TableCell>
-                  <TableCell className="px-4 py-2 text-right text-slate-300">{row.contactsWeek}</TableCell>
-                  <TableCell className="px-5 py-2 text-right text-slate-300">{row.briefsWeek}</TableCell>
+                <TableRow key={row.label} className="border-border hover:bg-muted/40">
+                  <TableCell className="px-5 py-2 text-foreground whitespace-normal">{row.label}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-muted-foreground">{row.signalsWeek}</TableCell>
+                  <TableCell className="px-4 py-2 text-right text-muted-foreground">{row.contactsWeek}</TableCell>
+                  <TableCell className="px-5 py-2 text-right text-muted-foreground">{row.briefsWeek}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          <div className="px-5 py-3 border-t border-white/10 text-[12px] text-slate-400">
+          <div className="px-5 py-3 border-t border-border text-[12px] text-muted-foreground">
             Signals observed: {signals42d} in last 42 days.
           </div>
         </Card>

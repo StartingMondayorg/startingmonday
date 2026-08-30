@@ -84,30 +84,30 @@ const SCORE_DIMENSIONS = [
 
 export default function CoachPrepWorksheetPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10 print:hidden">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10 print:hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span>
-            <span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span>
+            <span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/for-coaches" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/for-coaches" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Back to for-coaches
             </Link>
-            <Link href="/" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               Back home
             </Link>
           </div>
         </div>
       </nav>
 
-      <header className="bg-slate-950 px-4 sm:px-6 pt-10 pb-12 print:bg-white print:pt-0 print:pb-6">
+      <header className="bg-primary px-4 sm:px-6 pt-10 pb-12 print:bg-card print:pt-0 print:pb-6">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3 print:text-slate-600">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3 print:text-primary-foreground">
             Executive Coaching Operating Worksheet
           </p>
-          <h1 className="mb-4 font-bold tracking-tight leading-[1.02] text-white print:text-slate-900">
+          <h1 className="mb-4 font-bold tracking-tight leading-[1.02] text-primary-foreground print:text-primary-foreground">
             <span className="block text-[26px] sm:text-[32px]">
               Coach in strategy mode.
             </span>
@@ -115,12 +115,12 @@ export default function CoachPrepWorksheetPage() {
               Execute with measurable follow-through.
             </span>
           </h1>
-          <p className="max-w-3xl text-[15px] leading-relaxed text-slate-200 print:text-slate-700">
+          <p className="max-w-3xl text-[15px] leading-relaxed text-primary-foreground print:text-primary-foreground">
             Built for executive-transition coaching, where clear mandate, sharper narrative, and seven-day follow-through matter most.
           </p>
-          <div className="mt-5 rounded-lg border border-slate-700 bg-slate-950/60 p-4 print:border-slate-200 print:bg-white">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-orange-300 print:text-slate-600">BLUF</p>
-            <p className="text-[13px] text-slate-200 mt-2 leading-relaxed print:text-slate-700">
+          <div className="mt-5 rounded-lg border border-border bg-primary/10 p-4 print:border-border print:bg-card">
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-primary print:text-muted-foreground">BLUF</p>
+            <p className="text-[13px] text-muted-foreground mt-2 leading-relaxed print:text-muted-foreground">
               Use one worksheet per session. Define one strategic outcome, rehearse one high-stakes exchange, and leave
               with actions that have owners and dates.
             </p>
@@ -140,9 +140,9 @@ export default function CoachPrepWorksheetPage() {
           />
         </section>
 
-        <section className="border border-slate-200 rounded-2xl p-5 sm:p-6 bg-slate-50 mb-8">
-          <h2 className="text-[15px] font-semibold text-slate-900 mb-3">Session Header</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[13px] text-slate-700">
+        <section className="border border-border rounded-2xl p-5 sm:p-6 bg-muted mb-8">
+          <h2 className="text-[15px] font-semibold text-foreground mb-3">Session Header</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[13px] text-muted-foreground">
             <p>Coach: ________________________________</p>
             <p>Client: ________________________________</p>
             <p>Date: _________________________________</p>
@@ -153,14 +153,14 @@ export default function CoachPrepWorksheetPage() {
 
         <div className="space-y-7">
           {WORKSHEET_SECTIONS.map((section) => (
-            <section key={section.title} className="border border-slate-200 rounded-2xl p-5 sm:p-6 bg-white">
-              <h2 className="text-[17px] font-semibold text-slate-900 mb-1">{section.title}</h2>
-              <p className="text-[13px] text-slate-500 mb-4">{section.purpose}</p>
-              <ul className="space-y-3 text-[13px] text-slate-700">
+            <section key={section.title} className="border border-border rounded-2xl p-5 sm:p-6 bg-card">
+              <h2 className="text-[17px] font-semibold text-foreground mb-1">{section.title}</h2>
+              <p className="text-[13px] text-muted-foreground mb-4">{section.purpose}</p>
+              <ul className="space-y-3 text-[13px] text-muted-foreground">
                 {section.prompts.map((prompt) => (
                   <li key={prompt}>
-                    <p className="font-medium text-slate-800">{prompt}</p>
-                    <p className="mt-1 text-slate-200">______________________________________________________________________________</p>
+                    <p className="font-medium text-foreground">{prompt}</p>
+                    <p className="mt-1 text-muted-foreground">______________________________________________________________________________</p>
                   </li>
                 ))}
               </ul>
@@ -168,21 +168,21 @@ export default function CoachPrepWorksheetPage() {
           ))}
         </div>
 
-        <section className="border border-orange-200 rounded-2xl p-5 sm:p-6 bg-orange-50/40 mt-8">
-          <h2 className="text-[17px] font-semibold text-slate-900 mb-3">Session Quality Scorecard (1-5)</h2>
-          <p className="text-[13px] text-slate-600 mb-4">
+        <section className="border border-primary/30 rounded-2xl p-5 sm:p-6 bg-primary/10 mt-8">
+          <h2 className="text-[17px] font-semibold text-foreground mb-3">Session Quality Scorecard (1-5)</h2>
+          <p className="text-[13px] text-muted-foreground mb-4">
             Score quickly at close. Any dimension below 3 becomes a required focus area in the next prep cycle.
           </p>
-          <div className="space-y-2 text-[13px] text-slate-700">
+          <div className="space-y-2 text-[13px] text-muted-foreground">
             {SCORE_DIMENSIONS.map((item) => (
-              <div key={item} className="flex items-center justify-between border border-orange-100 bg-white rounded-lg px-3 py-2">
+              <div key={item} className="flex items-center justify-between border border-primary/30 bg-card rounded-lg px-3 py-2">
                 <span>{item}</span>
                 <span>1 2 3 4 5</span>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-[13px] text-slate-700">Overall session quality score: ______ / 25</p>
-          <p className="mt-2 text-[13px] text-slate-700">Most important improvement before next session: _________________________________</p>
+          <p className="mt-4 text-[13px] text-muted-foreground">Overall session quality score: ______ / 25</p>
+          <p className="mt-2 text-[13px] text-muted-foreground">Most important improvement before next session: _________________________________</p>
         </section>
 
         <section className="mt-8 print:hidden">
@@ -197,18 +197,18 @@ export default function CoachPrepWorksheetPage() {
         </section>
       </main>
 
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8 print:hidden">
+      <footer className="dark text-foreground bg-background border-t border-border px-4 sm:px-6 py-8 print:hidden">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-200">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <div className="flex items-center gap-4 text-[12px] text-slate-200">
-            <Link href="/for-coaches" className="hover:text-slate-200 transition-colors">for-coaches</Link>
-            <Link href="/" className="hover:text-slate-200 transition-colors">Back home</Link>
+          <div className="flex items-center gap-4 text-[12px] text-foreground">
+            <Link href="/for-coaches" className="hover:text-foreground transition-colors">for-coaches</Link>
+            <Link href="/" className="hover:text-foreground transition-colors">Back home</Link>
           </div>
         </div>
       
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
 </footer>
     </div>
   )

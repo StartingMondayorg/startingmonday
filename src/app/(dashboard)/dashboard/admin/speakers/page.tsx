@@ -4,8 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getStaffMember } from '@/lib/staff'
 import { SpeakersClient } from './speakers-client'
-import { Card } from '@/components/ui/card'
-
+import { Card } from '@/components/ui'
 export default async function SpeakersPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -34,17 +33,17 @@ export default async function SpeakersPage() {
   ).size
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin/customers" className="text-[12px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Customers</Link>
-            <Link href="/dashboard/admin/social" className="text-[12px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Social</Link>
-            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-slate-400 hover:text-slate-200 transition-colors">Admin</Link>
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">Dashboard</Link>
+            <Link href="/dashboard/admin/customers" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Customers</Link>
+            <Link href="/dashboard/admin/social" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Social</Link>
+            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Admin</Link>
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
           </div>
         </div>
       </header>
@@ -52,8 +51,8 @@ export default async function SpeakersPage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 
         <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-slate-900 leading-tight">Conference Speakers</h1>
-          <p className="text-[13px] text-slate-500 mt-1.5">
+          <h1 className="text-[26px] font-bold text-foreground leading-tight">Conference Speakers</h1>
+          <p className="text-[13px] text-muted-foreground mt-1.5">
             Target list for prospecting. Import a speaker CSV, track outreach status, export to Sales Navigator.
           </p>
         </div>
@@ -68,10 +67,10 @@ export default async function SpeakersPage() {
             { label: 'Conferences',       value: conferences },
           ].map(({ label, value }) => (
             <Card key={label} className="p-5">
-              <div className={`text-[28px] font-bold ${label === 'Converted' && value > 0 ? 'text-green-600' : label === 'High priority' && value > 0 ? 'text-orange-500' : 'text-slate-900'}`}>
+              <div className={`text-[28px] font-bold ${label === 'Converted' && value > 0 ? 'text-success' : label === 'High priority' && value > 0 ? 'text-primary' : 'text-foreground'}`}>
                 {value}
               </div>
-              <div className="text-[12px] text-slate-400 mt-1">{label}</div>
+              <div className="text-[12px] text-muted-foreground mt-1">{label}</div>
             </Card>
           ))}
         </div>

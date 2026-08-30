@@ -1,6 +1,5 @@
 'use client'
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
-
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui'
 const FAQS = [
   {
     q: 'How do I get started?',
@@ -74,13 +73,13 @@ const FAQS = [
 
 export function FaqAccordion() {
   return (
-    <Accordion className="divide-y divide-slate-100">
+    <Accordion className="divide-y divide-border">
       {FAQS.map((faq, i) => (
         <AccordionItem key={i} value={String(i)} className="border-b-0">
-          <AccordionTrigger className="px-6 py-4 text-[14px] font-semibold text-slate-900 hover:bg-slate-50 hover:no-underline">
+          <AccordionTrigger className="px-6 py-4 text-[14px] font-semibold text-foreground hover:bg-muted hover:no-underline">
             {faq.q}
           </AccordionTrigger>
-          <AccordionContent className="px-6 pb-5 text-[14px] text-slate-600 leading-relaxed">
+          <AccordionContent className="px-6 pb-5 text-[14px] text-muted-foreground leading-relaxed">
             {faq.a}
           </AccordionContent>
         </AccordionItem>

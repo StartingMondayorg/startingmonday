@@ -37,21 +37,21 @@ const FEATURES = [
 
 export default function ForPePartnersPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-background font-sans">
 
       {/* Nav */}
-      <nav className="bg-slate-950 sticky top-0 z-10">
+      <nav className="dark text-foreground bg-background sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-5">
-            <Link href="/demo?from=pe-partners" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/demo?from=pe-partners" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               See a demo
             </Link>
             <Link
               href="/partners?from=pe-partners"
-              className="text-[13px] font-semibold text-slate-900 bg-orange-500 px-4 py-1.5 rounded hover:bg-orange-600 transition-colors"
+              className="text-[13px] font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded hover:bg-primary/90 transition-colors"
             >
               Become a partner
             </Link>
@@ -62,15 +62,15 @@ export default function ForPePartnersPage() {
       <main>
 
         {/* Header */}
-        <header className="bg-slate-950 px-4 sm:px-6 pt-14 pb-12">
+        <header className="dark text-foreground bg-background px-4 sm:px-6 pt-14 pb-12">
           <div className="max-w-2xl mx-auto">
-            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-4">
+            <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-4">
               Partner Guide
             </p>
-            <h1 className="text-[30px] sm:text-[38px] font-bold text-white leading-[1.15] tracking-tight mb-4">
+            <h1 className="text-[30px] sm:text-[38px] font-bold text-foreground leading-[1.15] tracking-tight mb-4">
               Starting Monday for <span className="whitespace-nowrap">PE Operating Partners</span>
             </h1>
-            <p className="text-[16px] text-slate-200 leading-relaxed">
+            <p className="text-[16px] text-foreground leading-relaxed">
               The search timeline for technology executive roles is a risk to the value creation plan. Starting Monday compresses it - from the candidate side.
             </p>
           </div>
@@ -81,8 +81,8 @@ export default function ForPePartnersPage() {
           <div className="max-w-2xl mx-auto space-y-14">
 
             {/* What it is */}
-            <section className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">What Starting Monday is</h2>
+            <section className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">What Starting Monday is</h2>
               <p>
                 Starting Monday is an AI-powered search platform built for VP and C-suite technology
                 executives in active career transition. It gives them the intelligence infrastructure
@@ -98,8 +98,8 @@ export default function ForPePartnersPage() {
             </section>
 
             {/* The gap */}
-            <section id="timeline-problem" className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">The timeline problem</h2>
+            <section id="timeline-problem" className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">The timeline problem</h2>
               <p>
                 A portfolio company technology leadership gap has a direct cost. Every week without
                 a CIO or VP of Technology in place is a week the value creation plan slips. The
@@ -116,21 +116,21 @@ export default function ForPePartnersPage() {
                 Starting Monday does not replace the search firm. It gives the executive the
                 preparation infrastructure to show up as the right person when the moment comes.
               </p>
-              <p className="text-[13px] text-slate-500">
+              <p className="text-[13px] text-muted-foreground">
                 Evidence cue: compressing first-round decision quality reduces avoidable mandate resets.
               </p>
             </section>
 
             {/* How operating partners use it */}
             <section id="partner-usage" className="space-y-6">
-              <h2 className="text-[22px] font-bold text-slate-900">How operating partners use it</h2>
+              <h2 className="text-[22px] font-bold text-foreground">How operating partners use it</h2>
               <div className="space-y-8">
                 {FEATURES.map(f => (
-                  <div key={f.name} className="border-l-2 border-orange-500 pl-5">
-                    <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-orange-600 mb-2">{f.name}</p>
-                    <p className="text-[15px] text-slate-700 leading-relaxed mb-2">{f.forFirm}</p>
-                    <p className="text-[13px] text-slate-500 leading-relaxed">
-                      <span className="font-semibold text-slate-700">Outcome: </span>{f.outcome}
+                  <div key={f.name} className="border-l-2 border-primary/30 pl-5">
+                    <p className="text-[13px] font-bold tracking-[0.1em] uppercase text-primary mb-2">{f.name}</p>
+                    <p className="text-[15px] text-muted-foreground leading-relaxed mb-2">{f.forFirm}</p>
+                    <p className="text-[13px] text-muted-foreground leading-relaxed">
+                      <span className="font-semibold text-muted-foreground">Outcome: </span>{f.outcome}
                     </p>
                   </div>
                 ))}
@@ -138,8 +138,8 @@ export default function ForPePartnersPage() {
             </section>
 
             {/* For your network */}
-            <section id="network" className="space-y-4 text-[15px] text-slate-700 leading-relaxed">
-              <h2 className="text-[22px] font-bold text-slate-900">For your executive network</h2>
+            <section id="network" className="space-y-4 text-[15px] text-muted-foreground leading-relaxed">
+              <h2 className="text-[22px] font-bold text-foreground">For your executive network</h2>
               <p>
                 PE operating partners typically maintain relationships with 20 to 50 senior technology
                 executives who may be candidates for portfolio company roles over time. Starting Monday
@@ -158,33 +158,33 @@ export default function ForPePartnersPage() {
                   'Partner program: apply at startingmonday.app/partners for your referral link and partner resource kit for your executive network',
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold shrink-0 mt-0.5">+</span>
-                    <span className="text-slate-700">{item}</span>
+                    <span className="text-primary font-bold shrink-0 mt-0.5">+</span>
+                    <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
             </section>
 
             {/* Apply CTA */}
-            <section id="partner-cta" className="bg-slate-50 border border-slate-200 rounded-lg p-7">
-              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+            <section id="partner-cta" className="bg-muted border border-border rounded-lg p-7">
+              <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
                 Ready to partner?
               </p>
-              <h2 className="text-[20px] font-bold text-slate-900 mb-3 leading-snug">
+              <h2 className="text-[20px] font-bold text-foreground mb-3 leading-snug">
                 Apply to the partner program
               </h2>
-              <p className="text-[14px] text-slate-500 leading-relaxed mb-6">
+              <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
                 Fill out the application and we will follow up within 2 business days with your referral link, commission tracking, and partner resource kit.
               </p>
               <Link
                 href="/partners#apply"
-                className="inline-block bg-orange-500 text-slate-900 text-[14px] font-bold px-7 py-3 rounded hover:bg-orange-600 transition-colors"
+                className="inline-block bg-primary text-primary-foreground text-[14px] font-bold px-7 py-3 rounded hover:bg-primary/90 transition-colors"
               >
                 Get started now &rarr;
               </Link>
-              <p className="text-[13px] text-slate-200 mt-4">
+              <p className="text-[13px] text-muted-foreground mt-4">
                 Want to see the platform first?{' '}
-                <Link href="/demo?from=pe-partners" className="text-slate-600 underline hover:text-slate-900 transition-colors">
+                <Link href="/demo?from=pe-partners" className="text-muted-foreground underline hover:text-foreground transition-colors">
                   Walk through a live demo
                 </Link>
                 .
@@ -197,17 +197,17 @@ export default function ForPePartnersPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-slate-800 px-4 sm:px-6 py-8 mt-8">
+      <footer className="dark text-foreground bg-background border-t border-border px-4 sm:px-6 py-8 mt-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-muted-foreground">
             Questions? contact@startingmonday.app
           </p>
         </div>
       
-          <p className="text-[11px] text-slate-500 mt-2">Privacy-first by design.</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Privacy-first by design.</p>
 </footer>
 
     </div>

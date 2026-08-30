@@ -42,38 +42,38 @@ export default function CSuiteSearch90DayPlanPage() {
       }}
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most executive campaigns underperform because all phases are blended together. Better outcomes come from sequencing work by phase.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Days 1-30: setup quality</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Days 1-30: setup quality</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>Define target scope and role narrative.</li>
           <li>Build initial target-company and relationship map.</li>
           <li>Establish weekly review cadence and scorecard.</li>
         </ul>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Days 31-60: momentum quality</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Days 31-60: momentum quality</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>Expand qualified outreach based on signal changes.</li>
           <li>Increase prep depth for active conversation tracks.</li>
           <li>Trim low-probability tracks to protect focus.</li>
         </ul>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Days 61-90: conversion quality</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Days 61-90: conversion quality</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>Prioritize mandate-fit opportunities over activity volume.</li>
           <li>Upgrade objection handling and board-facing narrative.</li>
           <li>Use weekly retrospectives to prevent execution drift.</li>
         </ul>
 
-        <section className="border border-slate-200 rounded-lg p-5 bg-slate-50">
-          <h2 className="text-[18px] font-bold text-slate-900 mb-2">Evidence path</h2>
-          <p className="text-[14px] text-slate-600 leading-relaxed mb-3">
+        <section className="border border-border rounded-lg p-5 bg-muted">
+          <h2 className="text-[18px] font-bold text-foreground mb-2">Evidence path</h2>
+          <p className="text-[14px] text-muted-foreground leading-relaxed mb-3">
             For consistency and implementation evidence behind this phased model, review the section below.
           </p>
-          <Link href="/evidence-hub#behavior-change" className="inline-block bg-slate-900 text-white text-[13px] font-semibold px-4 py-2 rounded hover:bg-slate-700 transition-colors">
+          <Link href="/evidence-hub#behavior-change" className="inline-block bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2 rounded hover:bg-muted transition-colors">
             Review behavior-change evidence
           </Link>
         </section>

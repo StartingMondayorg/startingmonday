@@ -254,23 +254,23 @@ export default async function ExecutiveLanePage(
         experimentVariant="control"
       />
 
-      <section className="bg-slate-950 px-4 pb-14 sm:px-6 sm:pb-16">
-        <div className="mx-auto max-w-5xl rounded-[1.5rem] border border-white/12 bg-slate-900/55 p-5 shadow-[0_22px_72px_rgba(15,23,42,0.24)] sm:p-6">
-          <p className="mb-2 text-[13px] font-bold uppercase tracking-[0.14em] text-orange-200">Lane curriculum set</p>
-          <h2 className="text-[22px] font-bold leading-snug text-white">Lane curriculum: focused guide, article, and chat coach prompt</h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-slate-200/90">
+      <section className="bg-background px-4 pb-14 sm:px-6 sm:pb-16">
+        <div className="mx-auto max-w-5xl rounded-[1.5rem] border border-border bg-card/55 p-5 shadow-xl sm:p-6">
+          <p className="mb-2 text-[13px] font-bold uppercase tracking-[0.14em] text-primary">Lane curriculum set</p>
+          <h2 className="text-[22px] font-bold leading-snug text-foreground">Lane curriculum: focused guide, article, and chat coach prompt</h2>
+          <p className="mt-2 text-[14px] leading-relaxed text-foreground/90">
             Start with one fast article, one focused guide, and one guided chat sequence tailored to this role lane.
           </p>
 
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {tutorials.map((asset) => (
-              <article key={asset.title} className="rounded-2xl border border-white/10 bg-white/[0.05] p-4">
-                <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-slate-100">{tutorialFormatLabel(asset)}</p>
-                <p className="mt-2 text-[13px] font-semibold text-white">{asset.title}</p>
-                <p className="mt-2 text-[13px] leading-relaxed text-slate-100">{asset.description}</p>
+              <article key={asset.title} className="rounded-2xl border border-border bg-muted/[0.05] p-4">
+                <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-foreground">{tutorialFormatLabel(asset)}</p>
+                <p className="mt-2 text-[13px] font-semibold text-foreground">{asset.title}</p>
+                <p className="mt-2 text-[13px] leading-relaxed text-foreground">{asset.description}</p>
                 <Link
                   href={asset.href}
-                  className="mt-3 inline-flex items-center rounded bg-orange-400 px-3 py-2 text-[13px] font-semibold text-slate-950 hover:bg-orange-300 transition-colors"
+                  className="mt-3 inline-flex items-center rounded bg-primary px-3 py-2 text-[13px] font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
                   {asset.ctaLabel}
                 </Link>
@@ -278,14 +278,14 @@ export default async function ExecutiveLanePage(
             ))}
           </div>
 
-          <div className="mt-5 rounded-xl border border-white/15 bg-slate-950/60 p-4">
-            <p className="text-[13px] font-bold uppercase tracking-[0.1em] text-slate-100 mb-2">Trust and source note</p>
-            <p className="text-[13px] leading-relaxed text-slate-200">
+          <div className="mt-5 rounded-xl border border-border bg-background/60 p-4">
+            <p className="text-[13px] font-bold uppercase tracking-[0.1em] text-foreground mb-2">Trust and source note</p>
+            <p className="text-[13px] leading-relaxed text-foreground">
               Lane tutorials are role-specific guidance assets. They do not guarantee interview outcomes and should be used with your own judgment.
               Source path: in-product lane tutorial set ({inAppTutorials.length} assets) plus method controls.
             </p>
-            <p className="mt-2 text-[13px] text-slate-100">
-              <Link href="/evidence-hub#behavior-change" className="underline underline-offset-2 hover:text-white">Evidence Hub</Link>
+            <p className="mt-2 text-[13px] text-foreground">
+              <Link href="/evidence-hub#behavior-change" className="underline underline-offset-2 hover:text-foreground">Evidence Hub</Link>
             </p>
           </div>
         </div>

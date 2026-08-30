@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Card } from '@/components/ui/card'
+import { Card } from '@/components/ui'
 import { LogoutButton } from '../logout-button'
 
 export const metadata = { title: 'Progress - Starting Monday' }
@@ -46,13 +46,13 @@ export default async function DashboardProgressPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-100">
-      <header className="border-b border-white/10 bg-slate-950/80">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="border-b border-border bg-background/80">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-4 px-4 sm:px-6">
-          <Link href="/dashboard" className="text-[13px] font-bold uppercase tracking-[0.16em] text-white/90">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <Link href="/dashboard" className="text-[13px] font-bold uppercase tracking-[0.16em] text-foreground/90">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/dashboard" className="ml-auto text-[12px] font-semibold text-slate-300 hover:text-white">
+          <Link href="/dashboard" className="ml-auto text-[12px] font-semibold text-muted-foreground hover:text-foreground">
             Dashboard
           </Link>
           <LogoutButton label="Sign out" />
@@ -60,11 +60,11 @@ export default async function DashboardProgressPage() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
-        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200/90">Progress</p>
-        <h1 className="mt-2 font-serif text-[30px] font-bold leading-tight text-white sm:text-[42px]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary/90">Progress</p>
+        <h1 className="mt-2 font-serif text-[30px] font-bold leading-tight text-foreground sm:text-[42px]">
           Search activity and operating health.
         </h1>
-        <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-300">
+        <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
           The primary dashboard stays focused on today. This page keeps the quieter activity and progress signals available when you want to review them.
         </p>
 
@@ -73,9 +73,9 @@ export default async function DashboardProgressPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {metrics.map((metric) => (
               <Link key={metric.label} href={metric.href} className="group block">
-                <Card variant="glass" className="h-full p-5 transition-colors group-hover:border-white/25">
-                  <p className="text-[26px] font-bold text-white">{metric.value}</p>
-                  <p className="mt-1 text-[13px] text-slate-300">{metric.label}</p>
+                <Card variant="glass" className="h-full p-5 transition-colors group-hover:border-border">
+                  <p className="text-[26px] font-bold text-foreground">{metric.value}</p>
+                  <p className="mt-1 text-[13px] text-muted-foreground">{metric.label}</p>
                 </Card>
               </Link>
             ))}

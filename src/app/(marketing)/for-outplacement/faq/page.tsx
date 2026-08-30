@@ -123,29 +123,29 @@ const OBJECTIONS = [
 
 export default function OutplacementFaqPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="bg-slate-950 sticky top-0 z-10">
+    <div className="min-h-screen bg-background font-sans">
+      <nav className="bg-primary sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/for-outplacement" className="text-[13px] text-slate-200 hover:text-white transition-colors">
+            <Link href="/for-outplacement" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
               Back to outplacement page
             </Link>
           </div>
         </div>
       </nav>
 
-      <header className="bg-slate-950 px-4 sm:px-6 pt-12 pb-16">
+      <header className="bg-primary px-4 sm:px-6 pt-12 pb-16">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-orange-500 mb-3">
+          <p className="text-[11px] font-bold tracking-[0.16em] uppercase text-primary mb-3">
             Outplacement FAQ
           </p>
-          <h1 className="text-[32px] sm:text-[42px] font-bold text-white leading-[1.15] tracking-tight mb-4">
+          <h1 className="text-[32px] sm:text-[42px] font-bold text-primary-foreground leading-[1.15] tracking-tight mb-4">
             Questions, objections, and rollout clarity for partner firms.
           </h1>
-          <p className="text-[15px] text-slate-200 leading-relaxed">
+          <p className="text-[15px] text-primary-foreground leading-relaxed">
             If you cannot find your question here, contact us at contact@startingmonday.app.
           </p>
         </div>
@@ -153,21 +153,21 @@ export default function OutplacementFaqPage() {
 
       <main className="px-4 sm:px-6 py-14 sm:py-20">
 <div className="max-w-3xl mx-auto">
-          <div className="mb-12 pb-8 border-b border-slate-200">
-            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 mb-4">Quick jump:</p>
+          <div className="mb-12 pb-8 border-b border-border">
+            <p className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-4">Quick jump:</p>
             <div className="flex flex-wrap gap-2">
               {Array.from(new Set(FAQS.map((faq) => faq.category))).map((category) => (
                 <a
                   key={category}
                   href={`#${category.toLowerCase().replace(/ /g, '-')}`}
-                  className="inline-flex px-3 py-1.5 text-[12px] font-medium border border-slate-300 rounded-full hover:border-orange-400 hover:bg-orange-50/30 transition-colors text-slate-600 hover:text-orange-700"
+                  className="inline-flex px-3 py-1.5 text-[12px] font-medium border border-border rounded-full hover:border-primary/30 hover:bg-primary/30 transition-colors text-muted-foreground hover:text-primary"
                 >
                   {category}
                 </a>
               ))}
               <a
                 href="#objections"
-                className="inline-flex px-3 py-1.5 text-[12px] font-medium border border-slate-300 rounded-full hover:border-orange-400 hover:bg-orange-50/30 transition-colors text-slate-600 hover:text-orange-700"
+                className="inline-flex px-3 py-1.5 text-[12px] font-medium border border-border rounded-full hover:border-primary/30 hover:bg-primary/30 transition-colors text-muted-foreground hover:text-primary"
               >
                 Common objections
               </a>
@@ -176,57 +176,57 @@ export default function OutplacementFaqPage() {
 
           {Array.from(new Set(FAQS.map((faq) => faq.category))).map((category) => (
             <section key={category} id={category.toLowerCase().replace(/ /g, '-')} className="mb-12">
-              <h2 className="text-[20px] font-bold text-slate-900 mb-6 sticky top-14 bg-white pt-2 pb-3 border-b border-orange-200">
+              <h2 className="text-[20px] font-bold text-foreground mb-6 sticky top-14 bg-card pt-2 pb-3 border-b border-primary/30">
                 {category}
               </h2>
               <div className="space-y-6">
                 {FAQS.filter((faq) => faq.category === category).map((faq) => (
-                  <div key={faq.id} id={faq.id} className="border border-slate-200 rounded-xl p-5 bg-slate-50">
-                    <h3 className="text-[15px] font-semibold text-slate-900 mb-3">{faq.question}</h3>
-                    <p className="text-[14px] text-slate-700 leading-relaxed">{faq.answer}</p>
+                  <div key={faq.id} id={faq.id} className="border border-border rounded-xl p-5 bg-muted">
+                    <h3 className="text-[15px] font-semibold text-foreground mb-3">{faq.question}</h3>
+                    <p className="text-[14px] text-muted-foreground leading-relaxed">{faq.answer}</p>
                   </div>
                 ))}
               </div>
             </section>
           ))}
 
-          <section id="objections" className="mt-16 pt-12 border-t border-slate-300">
-            <h2 className="text-[20px] font-bold text-slate-900 mb-6">Common objections</h2>
+          <section id="objections" className="mt-16 pt-12 border-t border-border">
+            <h2 className="text-[20px] font-bold text-foreground mb-6">Common objections</h2>
             <div className="space-y-6">
               {OBJECTIONS.map((item) => (
-                <div key={item.objection} className="border-l-4 border-orange-500 bg-orange-50/40 rounded-r-lg p-5">
-                  <p className="text-[14px] font-semibold text-slate-900 mb-3">{item.objection}</p>
-                  <div className="bg-white border border-orange-100 rounded-lg p-4">
-                    <p className="text-[13px] text-slate-700 leading-relaxed">{item.response}</p>
+                <div key={item.objection} className="border-l-4 border-primary/30 bg-primary/10 rounded-r-lg p-5">
+                  <p className="text-[14px] font-semibold text-foreground mb-3">{item.objection}</p>
+                  <div className="bg-card border border-primary/30 rounded-lg p-4">
+                    <p className="text-[13px] text-muted-foreground leading-relaxed">{item.response}</p>
                   </div>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="mt-14 border border-slate-200 rounded-2xl p-6 bg-slate-50">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-3">Next step</p>
-            <p className="text-[14px] text-slate-600 leading-relaxed mb-5">
+          <section className="mt-14 border border-border rounded-2xl p-6 bg-muted">
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-primary mb-3">Next step</p>
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">
               If this aligns with your delivery model, review pricing and pilot structure on the economics page.
             </p>
             <div className="flex flex-wrap gap-4 text-[13px]">
-              <Link href="/for-outplacement/economics" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+              <Link href="/for-outplacement/economics" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
                 View outplacement economics
               </Link>
-              <Link href="/for-outplacement/runbook" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+              <Link href="/for-outplacement/runbook" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
                 Open pilot runbook and templates
               </Link>
-              <Link href="/for-outplacement/executive-summary" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+              <Link href="/for-outplacement/executive-summary" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
                 View committee one-pager
               </Link>
-              <Link href="/for-outplacement/trust-pack" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+              <Link href="/for-outplacement/trust-pack" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
                 Open trust and governance pack
               </Link>
-              <Link href="/for-outplacement" className="text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
+              <Link href="/for-outplacement" className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors">
                 Return to outplacement preview
               </Link>
             </div>
-            <p className="text-[12px] text-slate-500 leading-relaxed mt-4">
+            <p className="text-[12px] text-muted-foreground leading-relaxed mt-4">
               Decision without pressure: if pilot pass criteria are not met, close with no expansion commitment.
             </p>
           </section>

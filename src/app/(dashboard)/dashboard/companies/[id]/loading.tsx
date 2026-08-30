@@ -1,14 +1,13 @@
 ﻿import { Skeleton } from '@/app/(dashboard)/dashboard/_components/Skeleton'
-import { Card } from '@/components/ui/card'
-
+import { Card } from '@/components/ui'
 export default function CompanyDetailLoading() {
   return (
-    <div className="relative min-h-screen bg-slate-950 font-sans text-slate-100">
+    <div className="relative min-h-screen bg-background font-sans text-foreground">
 
-      <header className="bg-slate-900">
+      <header className="bg-card">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-300">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <Skeleton className="h-3 w-20" />
         </div>
@@ -45,11 +44,11 @@ export default function CompanyDetailLoading() {
           </Card>
 
           <Card variant="glass" className="gap-0 p-0 overflow-hidden">
-            <div className="px-6 py-[18px] border-b border-white/10 flex items-center justify-between">
+            <div className="px-6 py-[18px] border-b border-border flex items-center justify-between">
               <Skeleton className="h-2.5 w-24" />
               <Skeleton className="h-2.5 w-16" />
             </div>
-            <div className="divide-y divide-white/10">
+            <div className="divide-y divide-border">
               {[1, 2, 3].map(i => (
                 <div key={i} className="px-6 py-4 flex items-center gap-4">
                   <Skeleton className="h-4 w-48" />

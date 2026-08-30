@@ -1,7 +1,5 @@
 ﻿import Link from 'next/link'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, Button } from '@/components/ui'
 type ContactLite = {
   id: string
   outreach_status: string | null
@@ -27,8 +25,8 @@ export function CompanyNextActionBanner(props: Props) {
     return (
       <Alert className="mt-6 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1">
-          <p className="text-[13px] font-semibold text-white">Two things move this forward.</p>
-          <p className="text-[12px] text-slate-400 mt-0.5">Add a contact at {props.companyName} and run a prep brief before your first conversation.</p>
+          <p className="text-[13px] font-semibold text-foreground">Two things move this forward.</p>
+          <p className="text-[12px] text-muted-foreground mt-0.5">Add a contact at {props.companyName} and run a prep brief before your first conversation.</p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <Button variant="outline" render={<Link href="#add-contact-form" />}>

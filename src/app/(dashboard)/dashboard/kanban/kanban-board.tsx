@@ -30,19 +30,19 @@ const STAGES: { key: string; label: string }[] = [
 ]
 
 const STAGE_ACCENT: Record<string, string> = {
-  watching:     'border-slate-200',
-  researching:  'border-blue-200',
-  applied:      'border-indigo-200',
-  interviewing: 'border-amber-200',
-  offer:        'border-green-200',
+  watching:     'border-border',
+  researching:  'border-info/30',
+  applied:      'border-info/30',
+  interviewing: 'border-warning/30',
+  offer:        'border-success/30',
 }
 
 const STAGE_HEADER: Record<string, string> = {
-  watching:     'text-slate-500',
-  researching:  'text-blue-600',
-  applied:      'text-indigo-600',
-  interviewing: 'text-amber-600',
-  offer:        'text-green-600',
+  watching:     'text-muted-foreground',
+  researching:  'text-info',
+  applied:      'text-info',
+  interviewing: 'text-warning',
+  offer:        'text-success',
 }
 
 const PREP_STAGES = new Set(['interviewing', 'applied', 'offer'])
@@ -51,27 +51,27 @@ function CompanyCard({ company, isDragging = false, hasSalaryIntel = false }: { 
   const showPrep = !isDragging && PREP_STAGES.has(company.stage)
   const showSalary = !isDragging && company.stage === 'offer'
   return (
-    <div className={`bg-white border rounded p-3.5 shadow-sm hover:shadow-md transition-shadow ${isDragging ? 'opacity-50 rotate-1 shadow-lg' : 'border-slate-200'}`}>
+    <div className={`bg-card border rounded p-3.5 shadow-sm hover:shadow-md transition-shadow ${isDragging ? 'opacity-50 rotate-1 shadow-lg' : 'border-border'}`}>
       <Link
         href={`/dashboard/companies/${company.id}`}
         onClick={e => { if (isDragging) e.preventDefault() }}
         className="block"
       >
-        <p className="text-[13px] font-semibold text-slate-900 leading-tight truncate">{company.name}</p>
+        <p className="text-[13px] font-semibold text-foreground leading-tight truncate">{company.name}</p>
         {company.sector && (
-          <p className="text-[11px] text-slate-400 mt-0.5 truncate">{company.sector}</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{company.sector}</p>
         )}
         {company.fit_score !== null && (
-          <p className="text-[12px] font-bold text-slate-700 mt-2">Fit: {company.fit_score}</p>
+          <p className="text-[12px] font-bold text-muted-foreground mt-2">Fit: {company.fit_score}</p>
         )}
       </Link>
       {(showPrep || showSalary) && (
-        <div className="mt-2.5 border-t border-slate-100 pt-2.5 flex items-center gap-3">
+        <div className="mt-2.5 border-t border-border pt-2.5 flex items-center gap-3">
           {showPrep && (
             <Link
               href={`/dashboard/companies/${company.id}/prep`}
               onClick={e => e.stopPropagation()}
-              className="text-[11px] font-semibold text-amber-700 hover:text-amber-900"
+              className="text-[11px] font-semibold text-warning"
             >
               Prep brief →
             </Link>
@@ -82,7 +82,7 @@ function CompanyCard({ company, isDragging = false, hasSalaryIntel = false }: { 
                 ? `/dashboard/salary?company=${encodeURIComponent(company.name)}`
                 : '/settings/billing'}
               onClick={e => e.stopPropagation()}
-              className="text-[11px] font-semibold text-green-700 hover:text-green-900"
+              className="text-[11px] font-semibold text-success"
             >
               Salary intel →
             </Link>
@@ -122,19 +122,19 @@ function DroppableColumn({
   hasSalaryIntel: boolean
 }) {
   const { setNodeRef } = useDroppable({ id: stage.key })
-  const accent = STAGE_ACCENT[stage.key] ?? 'border-slate-200'
-  const header = STAGE_HEADER[stage.key] ?? 'text-slate-500'
+  const accent = STAGE_ACCENT[stage.key] ?? 'border-border'
+  const header = STAGE_HEADER[stage.key] ?? 'text-muted-foreground'
 
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded border-t-2 ${accent} bg-slate-50 min-h-[400px] transition-colors ${isOver ? 'bg-slate-100 ring-2 ring-slate-300 ring-inset' : ''}`}
+      className={`flex flex-col rounded border-t-2 ${accent} bg-muted min-h-[400px] transition-colors ${isOver ? 'bg-muted ring-2 ring-border ring-inset' : ''}`}
     >
-      <div className="px-3 py-3 flex items-center justify-between border-b border-slate-200 bg-white rounded-t">
+      <div className="px-3 py-3 flex items-center justify-between border-b border-border bg-card rounded-t">
         <span className={`text-[11px] font-bold tracking-[0.1em] uppercase ${header}`}>
           {stage.label}
         </span>
-        <span className="text-[11px] text-slate-400">{companies.length}</span>
+        <span className="text-[11px] text-muted-foreground">{companies.length}</span>
       </div>
       <div className="flex flex-col gap-2.5 p-3 flex-1">
         {companies.map(co => (
@@ -142,7 +142,7 @@ function DroppableColumn({
         ))}
         {companies.length === 0 && (
           <div className="flex-1 flex items-center justify-center">
-            <span className="text-[12px] text-slate-300">Drop here</span>
+            <span className="text-[12px] text-muted-foreground">Drop here</span>
           </div>
         )}
       </div>

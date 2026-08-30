@@ -15,8 +15,9 @@ test('Outreach Canary: server template draft + dry-run gate pass', async ({ page
   const rowCount = await rows.count()
   test.skip(rowCount === 0, 'Skipping outreach canary: no outreach rows available in this environment')
 
-  await rows.first().click()
-  const selectedRowText = await page.locator('button.bg-slate-50').first().innerText()
+  const selectedRow = rows.first()
+  const selectedRowText = await selectedRow.innerText()
+  await selectedRow.click()
   const selectedLines = selectedRowText
     .split('\n')
     .map(line => line.trim())
@@ -30,7 +31,7 @@ test('Outreach Canary: server template draft + dry-run gate pass', async ({ page
   const emailTo = selectedLines.find(line => /@/.test(line)) ?? ''
 
   const channelButtonText = await page
-    .locator('button.bg-slate-900.text-white')
+    .locator('[aria-pressed="true"]')
     .first()
     .innerText()
     .catch(() => 'Executives')

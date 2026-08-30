@@ -74,22 +74,21 @@ const meetingClose =
 
 export default function ExecutiveRecruiterDemoPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,_rgba(194,119,49,0.24),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(255,255,255,0.08),_transparent_32%)]" />
+    <div className="min-h-screen bg-background text-foreground">
 
-      <header className="border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
+      <header className="border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <Link href="/" className="text-[10px] font-bold tracking-[0.16em] text-white hover:opacity-80">
-            <span className="text-white">Starting </span>
-            <span className="text-orange-500">Monday</span>
+          <Link href="/" className="text-[10px] font-bold tracking-[0.16em] text-foreground hover:opacity-80">
+            <span className="text-foreground">Starting </span>
+            <span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/search-firms" className="text-[13px] text-slate-300 hover:text-white">
+            <Link href="/search-firms" className="text-[13px] text-muted-foreground hover:text-foreground">
               Search-firm overview
             </Link>
             <a
               href="https://app-na2.hubspot.com/meetings/246442927"
-              className="rounded-full bg-orange-500 px-4 py-1.5 text-[13px] font-semibold text-slate-950 hover:bg-orange-400"
+              className="rounded-full bg-primary px-4 py-1.5 text-[13px] font-semibold text-primary-foreground hover:bg-primary/90"
             >
               Book follow-up
             </a>
@@ -100,60 +99,60 @@ export default function ExecutiveRecruiterDemoPage() {
       <main className="px-4 pb-20 pt-12 sm:px-6 sm:pt-16">
         <div className="mx-auto max-w-6xl">
           <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-7 shadow-[0_22px_80px_rgba(15,23,42,0.35)] sm:p-9">
-              <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-200">Starting Monday for executive recruiters</p>
-              <h1 className="max-w-3xl font-serif text-[36px] leading-[1.04] tracking-tight text-white sm:text-[52px]">
+            <div className="rounded-3xl border border-border bg-muted/[0.03] p-7 shadow-2xl sm:p-9">
+              <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Starting Monday for executive recruiters</p>
+              <h1 className="max-w-3xl font-serif text-[36px] leading-[1.04] tracking-tight text-foreground sm:text-[52px]">
                 Show outcomes, not software.
               </h1>
-              <p className="mt-5 max-w-3xl text-[18px] leading-relaxed text-slate-200">
+              <p className="mt-5 max-w-3xl text-[18px] leading-relaxed text-foreground">
                 Starting Monday gives retained-search teams a practical operating layer for better shortlist confidence, faster qualified conversations, and less partner rework.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href={demoSteps[0].href}
-                  className="rounded-full bg-orange-500 px-5 py-2.5 text-[13px] font-semibold text-slate-950 hover:bg-orange-400"
+                  className="rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   Explore recruiter workflow
                 </Link>
                 <Link
                   href="/search-firms/sample-cfo-brief"
-                  className="rounded-full border border-white/20 px-5 py-2.5 text-[13px] font-semibold text-slate-100 hover:border-orange-300/70 hover:bg-white/5"
+                  className="rounded-full border border-border px-5 py-2.5 text-[13px] font-semibold text-foreground hover:border-primary/70 hover:bg-muted/40"
                 >
                   Open sample brief
                 </Link>
               </div>
             </div>
 
-            <aside className="rounded-3xl border border-orange-200/25 bg-orange-200/10 p-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-orange-100">Pilot outcome</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-slate-100">
+            <aside className="rounded-3xl border border-primary/25 bg-primary/10 p-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Pilot outcome</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-foreground">
                 A 14-day pilot tied to one live mandate, one named sponsor, and one decision checkpoint.
               </p>
-              <p className="mt-2 rounded-xl border border-white/10 bg-slate-950/45 p-4 text-[13px] leading-relaxed text-slate-100">
+              <p className="mt-2 rounded-xl border border-border bg-background/45 p-4 text-[13px] leading-relaxed text-foreground">
                 {meetingClose}
               </p>
             </aside>
           </section>
 
-          <section className="mt-10 rounded-3xl border border-white/10 bg-slate-900/55 p-6 sm:p-8">
+          <section className="mt-10 rounded-3xl border border-border bg-card/55 p-6 sm:p-8">
             <div className="mb-5 flex items-center justify-between gap-4">
-              <h2 className="font-serif text-[30px] leading-tight text-white">Executive recruiter walkthrough</h2>
-              <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-slate-400">Five linked views</p>
+              <h2 className="font-serif text-[30px] leading-tight text-foreground">Executive recruiter walkthrough</h2>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Five linked views</p>
             </div>
             <div className="space-y-4">
               {demoSteps.map((step, idx) => (
-                <article key={step.title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                <article key={step.title} className="rounded-2xl border border-border bg-muted/[0.02] p-5">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-200">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
                       Step {idx + 1}
                     </p>
                   </div>
-                  <h3 className="text-[20px] font-semibold text-white">{step.title}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-slate-200">{step.summary}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-slate-400">Why it matters: {step.whyItMatters}</p>
+                  <h3 className="text-[20px] font-semibold text-foreground">{step.title}</h3>
+                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">{step.summary}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">Why it matters: {step.whyItMatters}</p>
                   <Link
                     href={step.href}
-                    className="mt-4 inline-flex items-center rounded-full border border-white/20 px-4 py-1.5 text-[12px] font-semibold text-slate-100 hover:border-orange-300/70 hover:bg-white/5"
+                    className="mt-4 inline-flex items-center rounded-full border border-border px-4 py-1.5 text-[12px] font-semibold text-foreground hover:border-primary/70 hover:bg-muted/40"
                   >
                     {step.cta}
                   </Link>
@@ -163,24 +162,24 @@ export default function ExecutiveRecruiterDemoPage() {
           </section>
 
           <section className="mt-10 grid gap-6 lg:grid-cols-2">
-            <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-              <h2 className="font-serif text-[30px] leading-tight text-white">Proof points to emphasize</h2>
-              <ul className="mt-4 space-y-3 text-[14px] leading-relaxed text-slate-200">
+            <article className="rounded-3xl border border-border bg-muted/[0.03] p-6">
+              <h2 className="font-serif text-[30px] leading-tight text-foreground">Proof points to emphasize</h2>
+              <ul className="mt-4 space-y-3 text-[14px] leading-relaxed text-foreground">
                 {proofPoints.map((point) => (
                   <li key={point} className="flex gap-3">
-                    <span className="text-orange-300">+</span>
+                    <span className="text-primary">+</span>
                     <span>{point}</span>
                   </li>
                 ))}
               </ul>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-              <h2 className="font-serif text-[30px] leading-tight text-white">Operating principles</h2>
-              <ul className="mt-4 space-y-3 text-[14px] leading-relaxed text-slate-200">
+            <article className="rounded-3xl border border-border bg-muted/[0.03] p-6">
+              <h2 className="font-serif text-[30px] leading-tight text-foreground">Operating principles</h2>
+              <ul className="mt-4 space-y-3 text-[14px] leading-relaxed text-foreground">
                 {operatingPrinciples.map((principle) => (
                   <li key={principle} className="flex gap-3">
-                    <span className="text-orange-300">+</span>
+                    <span className="text-primary">+</span>
                     <span>{principle}</span>
                   </li>
                 ))}

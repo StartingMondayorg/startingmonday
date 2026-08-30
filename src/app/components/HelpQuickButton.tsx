@@ -29,7 +29,7 @@ export function HelpQuickButton({
       event="help_quick_button_clicked"
       properties={{ source }}
       className={[
-        'fixed bottom-32 sm:bottom-10 left-4 sm:left-6 z-40 inline-flex items-center rounded-full border border-white/15 bg-slate-950/80 px-3 py-2 text-[12px] font-semibold text-slate-200 shadow-[0_12px_28px_rgba(15,23,42,0.35)] backdrop-blur hover:border-white/35 hover:text-white transition-all',
+        'fixed bottom-32 sm:bottom-10 left-4 sm:left-6 z-40 inline-flex items-center rounded-full border border-border bg-background/80 px-3 py-2 text-[12px] font-semibold text-muted-foreground shadow-md backdrop-blur hover:text-foreground transition-all',
         hideNearFooter ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 pointer-events-auto translate-y-0',
       ].join(' ')}
     >

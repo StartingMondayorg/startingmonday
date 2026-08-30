@@ -2,12 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Card } from '@/components/ui/card'
-
+import { Alert, AlertDescription, Button, Card, Input, Label } from '@/components/ui'
 type Props = {
   bundleSlug: string
   buttonLabel?: string
@@ -60,7 +55,7 @@ export function CoachBundleCheckoutButton({
   return (
     <div className="space-y-3">
       <Card className="gap-1.5 p-3">
-        <Label htmlFor={`discount-code-${bundleSlug}`} className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-600">
+        <Label htmlFor={`discount-code-${bundleSlug}`} className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
           Discount code
         </Label>
         <Input

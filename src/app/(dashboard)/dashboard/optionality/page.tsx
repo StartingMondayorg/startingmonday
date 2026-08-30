@@ -3,11 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { LIFECYCLE_TEMPLATES, LIFECYCLE_STATE_DESCRIPTIONS } from '@/lib/executive-lifecycle'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-
+import { Alert, AlertDescription, AlertTitle, Badge, Button, Card } from '@/components/ui'
 export const metadata: Metadata = {
   title: 'Optionality Mode | Starting Monday',
   description: 'Quietly monitor the market, warm key relationships, and stay ready - without signaling departure.',
@@ -40,13 +36,13 @@ export default async function OptionalityModePage() {
   )!
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-slate-900 sticky top-0 z-10">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="dark text-foreground bg-card sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
-          <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
             Dashboard
           </Link>
         </div>
@@ -57,13 +53,13 @@ export default async function OptionalityModePage() {
         <Card className="px-6 py-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-orange-500 mb-2">
+              <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-primary mb-2">
                 Optionality Mode - In-Role (Quiet)
               </p>
-              <h1 className="text-[26px] font-bold text-slate-900 leading-tight">
+              <h1 className="text-[26px] font-bold text-foreground leading-tight">
                 Good to see you, {firstName}.
               </h1>
-              <p className="text-[14px] text-slate-500 mt-2 leading-relaxed max-w-xl">
+              <p className="text-[14px] text-muted-foreground mt-2 leading-relaxed max-w-xl">
                 {LIFECYCLE_STATE_DESCRIPTIONS.optionality}
               </p>
             </div>
@@ -87,11 +83,11 @@ export default async function OptionalityModePage() {
 
         {/* Weekly focus */}
         <Card className="px-5 py-5">
-          <h2 className="text-[13px] font-bold text-slate-700 mb-3">This week&apos;s focus</h2>
+          <h2 className="text-[13px] font-bold text-muted-foreground mb-3">This week&apos;s focus</h2>
           <ul className="space-y-2">
             {template.weeklyFocus.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-[13px] text-slate-700">
-                <span className="mt-0.5 h-5 w-5 rounded-full bg-orange-100 text-orange-600 text-[10px] font-bold flex items-center justify-center flex-shrink-0">→</span>
+              <li key={item} className="flex items-start gap-3 text-[13px] text-muted-foreground">
+                <span className="mt-0.5 h-5 w-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0">→</span>
                 {item}
               </li>
             ))}
@@ -99,12 +95,12 @@ export default async function OptionalityModePage() {
         </Card>
 
         {/* Session opening prompts */}
-        <Card className="bg-slate-50 px-5 py-5">
-          <h2 className="text-[13px] font-bold text-slate-700 mb-3">Coach session opening prompts</h2>
+        <Card className="bg-muted px-5 py-5">
+          <h2 className="text-[13px] font-bold text-muted-foreground mb-3">Coach session opening prompts</h2>
           <ul className="space-y-2">
             {template.sessionOpeningPrompts.map((prompt) => (
-              <li key={prompt} className="flex items-start gap-3 text-[13px] text-slate-600 italic">
-                <span className="text-slate-400 mt-0.5 not-italic">?</span>
+              <li key={prompt} className="flex items-start gap-3 text-[13px] text-muted-foreground italic">
+                <span className="text-muted-foreground mt-0.5 not-italic">?</span>
                 {prompt}
               </li>
             ))}
@@ -119,9 +115,9 @@ export default async function OptionalityModePage() {
             { href: '/dashboard/post-landing', label: 'Post-landing mode', desc: '30/60/90 day onboarding plan' },
           ].map(({ href, label, desc }) => (
             <Link key={href} href={href} className="group">
-              <Card className="px-4 py-4 hover:border-orange-300 transition-colors">
-                <p className="text-[13px] font-semibold text-slate-900 group-hover:text-orange-700 transition-colors">{label}</p>
-                <p className="text-[12px] text-slate-500 mt-1 leading-relaxed">{desc}</p>
+              <Card className="px-4 py-4 hover:border-primary/30 transition-colors">
+                <p className="text-[13px] font-semibold text-foreground group-hover:text-primary transition-colors">{label}</p>
+                <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">{desc}</p>
               </Card>
             </Link>
           ))}
@@ -130,8 +126,8 @@ export default async function OptionalityModePage() {
         {/* Switch to active search */}
         <Card className="px-5 py-4 flex-row items-center justify-between gap-4">
           <div>
-            <p className="text-[13px] font-semibold text-slate-800">Ready to go active?</p>
-            <p className="text-[12px] text-slate-500 mt-0.5">Switch to Active when urgency increases.</p>
+            <p className="text-[13px] font-semibold text-foreground">Ready to go active?</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">Switch to Active when urgency increases.</p>
           </div>
           <Button variant="outline" className="flex-shrink-0" render={<Link href="/dashboard" />}>
             Active dashboard →

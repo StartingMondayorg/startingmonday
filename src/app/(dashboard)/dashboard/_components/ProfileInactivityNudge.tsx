@@ -1,8 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
+import { Button, Card } from '@/components/ui'
 export function ProfileInactivityNudge({ formId }: { formId: string }) {
   const [visible, setVisible] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -37,7 +35,7 @@ export function ProfileInactivityNudge({ formId }: { formId: string }) {
       variant="glass"
       className="fixed bottom-0 left-0 right-0 z-50 rounded-none border-x-0 border-b-0 px-6 py-4 flex-row items-center justify-between gap-4 shadow-lg"
     >
-      <p className="text-[13px] text-slate-300">
+      <p className="text-[13px] text-muted-foreground">
         Still with you. Save your progress so far.
       </p>
       <div className="flex items-center gap-3 shrink-0">
@@ -45,7 +43,7 @@ export function ProfileInactivityNudge({ formId }: { formId: string }) {
           type="button"
           variant="ghost"
           onClick={() => setVisible(false)}
-          className="text-[12px] text-slate-400 hover:text-slate-200"
+          className="text-[12px] text-muted-foreground"
         >
           Dismiss
         </Button>

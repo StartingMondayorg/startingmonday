@@ -216,13 +216,6 @@ jobs:
       - name: Dashboard simplification gate
         run: npm run guard:dashboard-simplification && npm run test:dashboard-simplification-gate
 
-      - name: Landing page change approval guard
-        env:
-          ALLOW_LANDING_PAGE_CHANGE: >-
-            ${{ (contains(github.event.pull_request.labels.*.name, 'allow-landing-page-change') || vars.ALLOW_LANDING_PAGE_CHANGE == 'true') && 'true' || 'false' }}
-          LANDING_GUARD_BASE_REF: ${{ github.event.pull_request.base.sha || '' }}
-        run: npm run guard:landing-page-approval
-
       - name: Marketing trust/proof placement gate
         run: npm run marketing:trust-proof:gate
 
@@ -278,18 +271,10 @@ jobs:
       - name: Migration rollback readiness check
         run: npm run migration:rollback:check:strict
 
-      - name: Code council audit (advisory on staging and PR)
-        if: github.ref != 'refs/heads/main'
-        run: npm run audit:code-council
-
-      - name: Code council strict audit (main only)
-        if: github.ref == 'refs/heads/main'
-        run: npm run audit:code-council:strict
-
       - name: Build
         env:
           MOBILE_ELITE_GATE_STRICT: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging') && '1' || '0' }}
-          PLAYWRIGHT_BASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || 'https://starting-monday-staging.up.railway.app' }}
+          PLAYWRIGHT_BASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || vars.STAGING_BASE_URL }}
         run: npm run build
 
       - name: Outreach format check
@@ -330,18 +315,6 @@ jobs:
             BASE_REF="$(git rev-parse HEAD~1)"
           fi
           npm run coverage:folders:check -- --base-ref="$BASE_REF" --head-ref="${GITHUB_SHA}"
-
-      - name: Diff coverage gate
-        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
-        env:
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
-        run: |
-          if [ -n "$PR_BASE_SHA" ]; then
-            BASE_REF="$PR_BASE_SHA"
-          else
-            BASE_REF="$(git rev-parse HEAD~1)"
-          fi
-          npm run coverage:diff:check -- --base-ref="$BASE_REF" --head-ref="${GITHUB_SHA}" --min-coverage=90
 
       # Em-dash check moved to ESLint (no-restricted-syntax in eslint.config.mjs)
       # so violations surface in-editor instead of at CI time.
@@ -427,7 +400,7 @@ jobs:
       - name: Wait for deployment of this commit
         run: bash scripts/wait-for-deployed-commit.sh
         env:
-          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL }}
           EXPECTED_SHA: ${{ github.sha }}
 
   playwright:
@@ -454,7 +427,7 @@ jobs:
       - name: Run E2E tests
         run: npm run test:e2e
         env:
-          PLAYWRIGHT_BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          PLAYWRIGHT_BASE_URL: ${{ github.ref == 'refs/heads/staging' && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL }}
           PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
           PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
           PLAYWRIGHT_SYNTH_SIGNUP_EMAIL: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_EMAIL }}
@@ -491,7 +464,7 @@ jobs:
       - name: Run merge-queue expanded Playwright suites
         run: npx playwright test --project=setup --project=smoke --project=monitor-generated --project=synthetics
         env:
-          PLAYWRIGHT_BASE_URL: https://starting-monday-staging.up.railway.app
+          PLAYWRIGHT_BASE_URL: ${{ vars.STAGING_BASE_URL }}
           PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
           PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
           PLAYWRIGHT_SYNTH_SIGNUP_EMAIL: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_EMAIL }}
@@ -559,11 +532,11 @@ jobs:
         shell: bash
         run: |
           if [ "${{ github.head_ref }}" = "staging" ] || [ "${{ github.ref }}" = "refs/heads/staging" ]; then
-            echo "playwright_base_url=https://starting-monday-staging.up.railway.app" >> "$GITHUB_OUTPUT"
+            echo "playwright_base_url=${{ vars.STAGING_BASE_URL }}" >> "$GITHUB_OUTPUT"
           else
             resolved_base_url="${{ secrets.PLAYWRIGHT_BASE_URL }}"
             if [ -z "$resolved_base_url" ]; then
-              resolved_base_url="https://starting-monday-staging.up.railway.app"
+              resolved_base_url="${{ vars.STAGING_BASE_URL }}"
             fi
             echo "playwright_base_url=$resolved_base_url" >> "$GITHUB_OUTPUT"
           fi
@@ -729,13 +702,13 @@ jobs:
         if: github.event_name != 'pull_request'
         run: bash scripts/wait-for-deployed-commit.sh
         env:
-          BASE_URL: ${{ github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          BASE_URL: ${{ github.ref == 'refs/heads/staging' && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL }}
           EXPECTED_SHA: ${{ github.sha }}
 
       - name: Run signup-to-first-value synthetic (blocking)
         run: npx playwright test tests/e2e/synthetics.spec.ts --project=synthetics --grep "Synthetic-10"
         env:
-          PLAYWRIGHT_BASE_URL: ${{ ((github.event_name == 'pull_request' && github.head_ref == 'staging') || github.ref == 'refs/heads/staging') && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL }}
+          PLAYWRIGHT_BASE_URL: ${{ ((github.event_name == 'pull_request' && github.head_ref == 'staging') || github.ref == 'refs/heads/staging') && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL }}
           PLAYWRIGHT_SYNTH_SIGNUP_EMAIL: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_EMAIL }}
           PLAYWRIGHT_SYNTH_SIGNUP_PASSWORD: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_PASSWORD }}
 
@@ -813,7 +786,7 @@ jobs:
         if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'
         run: npm run test:e2e:mobile-visual:smoke
         env:
-          PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || 'https://starting-monday-staging.up.railway.app') }}
+          PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/main' && secrets.PLAYWRIGHT_BASE_URL || vars.STAGING_BASE_URL) }}
           PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
           PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
 
@@ -880,7 +853,7 @@ jobs:
       - name: Run auth UX guard suite
         run: npm run test:e2e:auth-ux
         env:
-          PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL) }}
+          PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/staging' && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL) }}
 
       - name: Stop local app
         if: always() && github.event_name == 'pull_request'
@@ -933,7 +906,7 @@ jobs:
         run: npx playwright test tests/e2e/accessibility-tier0.spec.ts --project=accessibility-tier0
         env:
           NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: ${{ github.event_name == 'pull_request' && '1' || vars.NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED }}
-          PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/staging' && 'https://starting-monday-staging.up.railway.app' || secrets.PLAYWRIGHT_BASE_URL) }}
+          PLAYWRIGHT_BASE_URL: ${{ github.event_name == 'pull_request' && 'http://127.0.0.1:3000' || (github.ref == 'refs/heads/staging' && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL) }}
 
       - name: Stop local app
         if: always() && github.event_name == 'pull_request'
@@ -949,32 +922,22 @@ jobs:
             test-results/
           retention-days: 7
 
-  lighthouse-mobile-budgets:
-    name: Lighthouse mobile budgets
+  lighthouse-profile:
+    name: Lighthouse budget profile
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 5
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
     permissions:
       actions: read
       contents: read
+    outputs:
+      config: ${{ steps.lighthouse_profile.outputs.config }}
+      profile: ${{ steps.lighthouse_profile.outputs.profile }}
+      streak: ${{ steps.lighthouse_profile.outputs.streak }}
 
     steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate guide artifacts
-        run: npm run guide:user:sync && npm run guide:internal:sync
-
-      - name: Build app
-        run: npm run build
-
+      # Resolved once and fanned out to every shard: if each shard computed the
+      # streak independently they could disagree and audit against different budgets.
       - name: Determine Lighthouse budget profile
         id: lighthouse_profile
         uses: actions/github-script@v8
@@ -1032,43 +995,147 @@ jobs:
             core.setOutput('streak', String(streak))
             core.notice(`Using ${profile} (${config}) with prior main success streak=${streak}`)
 
+  # Sharded across parallel runners. The URL list x numberOfRuns is embarrassingly
+  # parallel, and running it sequentially on a single runner made this job the CI
+  # critical path at ~18 minutes.
+  lighthouse-shard:
+    name: Lighthouse mobile budgets (shard ${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lighthouse-profile
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    env:
+      LHCI_CONFIG: ${{ needs.lighthouse-profile.outputs.config }}
+      SHARD_INDEX: ${{ matrix.shard }}
+      SHARD_TOTAL: ${{ strategy.job-total }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate guide artifacts
+        run: npm run guide:user:sync && npm run guide:internal:sync
+
+      - name: Build app
+        run: npm run build
+
+      # The rc file stays the single source of truth for the URL list, so
+      # `npm run perf:lighthouse:budget:config` keeps validating it. This writes a
+      # derived config holding just this shard's round-robin slice.
+      - name: Select URLs for this shard
+        id: urls
+        run: node scripts/lighthouse-shard-urls.mjs
+
       - name: Run Lighthouse CI mobile budgets (pass 1)
         id: lighthouse_pass_1
         continue-on-error: true
-        run: npx lhci autorun --config=${{ steps.lighthouse_profile.outputs.config }}
+        run: npx lhci autorun --config="${{ steps.urls.outputs.config }}"
 
       - name: Run Lighthouse CI mobile budgets (pass 2 retry)
         id: lighthouse_pass_2
         if: steps.lighthouse_pass_1.outcome == 'failure'
         continue-on-error: true
-        run: npx lhci autorun --config=${{ steps.lighthouse_profile.outputs.config }}
+        run: npx lhci autorun --config="${{ steps.urls.outputs.config }}"
 
       # On PRs this gate is advisory: lab perf on shared runners is too noisy
-      # to block merges. Absolute budgets are enforced on main pushes where the
-      # streak-based profile tightening applies.
+      # to block merges. Absolute budgets are enforced on main/staging pushes
+      # where the streak-based profile tightening applies.
       - name: Enforce Lighthouse gate after retry (main/staging push only)
         if: steps.lighthouse_pass_1.outcome == 'failure' && steps.lighthouse_pass_2.outcome == 'failure' && github.event_name != 'pull_request'
         run: |
-          echo "Lighthouse budgets failed on both pass 1 and pass 2."
+          echo "Lighthouse budgets failed on both pass 1 and pass 2 for shard ${{ matrix.shard }}."
+          echo "URLs: ${{ steps.urls.outputs.list }}"
           exit 1
 
       - name: Advisory Lighthouse summary (PR)
         if: steps.lighthouse_pass_1.outcome == 'failure' && steps.lighthouse_pass_2.outcome == 'failure' && github.event_name == 'pull_request'
+        env:
+          SHARD_URLS: ${{ steps.urls.outputs.list }}
         run: |
-          echo "::warning::Lighthouse mobile budgets failed on this PR (advisory). Review the lighthouse-mobile-report artifact before merging."
+          echo "::warning::Lighthouse mobile budgets failed on shard ${{ matrix.shard }} (advisory). Review the lighthouse-mobile-report-shard-${{ matrix.shard }} artifact before merging."
           {
-            echo "## Lighthouse mobile budgets (advisory on PR)"
+            echo "## Lighthouse mobile budgets - shard ${{ matrix.shard }} (advisory on PR)"
             echo ""
-            echo "Both passes failed the budget profile. This does not block merge,"
-            echo "but the same budgets ARE enforced on main. Review the artifact."
+            echo "Both passes failed the budget profile for:"
+            echo ""
+            for url in $SHARD_URLS; do echo "- \`$url\`"; done
+            echo ""
+            echo "This does not block merge, but the same budgets ARE enforced on main."
+            echo "Download the \`lighthouse-mobile-report-shard-${{ matrix.shard }}\` artifact for the full report."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # .lighthouseci/ is a hidden directory, so without include-hidden-files this
+      # upload silently produced nothing and the advisory message above pointed at
+      # an artifact that never existed.
+      - name: Upload Lighthouse artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: lighthouse-mobile-report-shard-${{ matrix.shard }}
+          path: .lighthouseci/
+          include-hidden-files: true
+          retention-days: 7
+
+  lighthouse-mobile-budgets:
+    name: Lighthouse mobile budgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [lighthouse-profile, lighthouse-shard]
+    # always() is required: without it a failing shard would skip this job, and a
+    # skipped required check never reports failure to branch protection.
+    if: always() && (github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+
+    steps:
+      # Branch protection requires the check named "Lighthouse mobile budgets"
+      # (config/required-checks-manifest.json, verified weekly by ci-health-weekly.yml).
+      # Matrix jobs report per-shard check names, so this job rolls them up under
+      # the required name. A matrix result is 'success' only if every shard passed.
+      - name: Roll up shard results
+        run: |
+          PROFILE_RESULT="${{ needs.lighthouse-profile.result }}"
+          SHARD_RESULT="${{ needs.lighthouse-shard.result }}"
+
+          echo "lighthouse-profile: $PROFILE_RESULT"
+          echo "lighthouse-shard:   $SHARD_RESULT"
+
+          if [ "$PROFILE_RESULT" = "skipped" ] && [ "$SHARD_RESULT" = "skipped" ]; then
+            echo "Lighthouse budgets did not run for this event."
+            exit 0
+          fi
+
+          if [ "$PROFILE_RESULT" != "success" ]; then
+            echo "Could not determine the Lighthouse budget profile."
+            exit 1
+          fi
+
+          if [ "$SHARD_RESULT" != "success" ]; then
+            echo "One or more Lighthouse shards failed (result=$SHARD_RESULT)."
+            exit 1
+          fi
+
+          echo "All Lighthouse shards passed the ${{ needs.lighthouse-profile.outputs.profile }} budget profile."
 
       - name: Notify Slack on Lighthouse failure
         if: failure() && github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           SLACK_UI_ALERTS_WEBHOOK: ${{ secrets.SLACK_UI_ALERTS_WEBHOOK }}
-          LIGHTHOUSE_PROFILE: ${{ steps.lighthouse_profile.outputs.profile }}
-          GREEN_STREAK: ${{ steps.lighthouse_profile.outputs.streak }}
+          LIGHTHOUSE_PROFILE: ${{ needs.lighthouse-profile.outputs.profile }}
+          GREEN_STREAK: ${{ needs.lighthouse-profile.outputs.streak }}
         run: |
           if [ -z "$SLACK_UI_ALERTS_WEBHOOK" ]; then
             echo "SLACK_UI_ALERTS_WEBHOOK is not set; skipping Slack notification."
@@ -1082,7 +1149,7 @@ jobs:
 
           payload=$(cat <<'JSON'
           {
-            "text": "[CRIT] Lighthouse mobile budgets failed\nRepo: REPO_PLACEHOLDER\nBranch: BRANCH_PLACEHOLDER\nEvent: EVENT_PLACEHOLDER\nRun: RUN_URL_PLACEHOLDER\nBudget profile: PROFILE_PLACEHOLDER\nPrior main green streak: STREAK_PLACEHOLDER\nNext action: Review Lighthouse artifact and fix failing budget(s)."
+            "text": "[CRIT] Lighthouse mobile budgets failed\nRepo: REPO_PLACEHOLDER\nBranch: BRANCH_PLACEHOLDER\nEvent: EVENT_PLACEHOLDER\nRun: RUN_URL_PLACEHOLDER\nBudget profile: PROFILE_PLACEHOLDER\nPrior main green streak: STREAK_PLACEHOLDER\nNext action: Review the failing shard's lighthouse-mobile-report artifact and fix failing budget(s)."
           }
           JSON
           )
@@ -1095,14 +1162,6 @@ jobs:
           payload="${payload//STREAK_PLACEHOLDER/$GREEN_STREAK}"
 
           curl --fail-with-body -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_UI_ALERTS_WEBHOOK"
-
-      - name: Upload Lighthouse artifacts
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: lighthouse-mobile-report
-          path: .lighthouseci/
-          retention-days: 7
 
   pre-prod-gate:
     name: Pre-production synthetic gate

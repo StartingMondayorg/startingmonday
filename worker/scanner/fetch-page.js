@@ -1,6 +1,29 @@
 import { logger } from '../lib/logger.js'
+import { createLimiter } from '../lib/concurrency.js'
 
 const BROWSERLESS_URL = 'https://production-sfo.browserless.io/chromium/content'
+
+// browserless.io caps how many browsers may be open at once -- 10 on the
+// Prototyping annual plan, 2 on the free plan we were on until 2026-08-20.
+// Exceeding it returns 429 immediately, which is what produced 148 of the 152
+// rate-limit errors in the 35 days before the upgrade.
+//
+// Every render in the worker funnels through this one limiter: scan-job,
+// executive-scan-job and the /trigger-scan endpoint, which has no limiter of
+// its own. Bounding here rather than per job means the ceiling holds however
+// the cron schedule is arranged, and however many callers are added later.
+//
+// Default is deliberately conservative: an unset variable must never be able to
+// exceed the smallest plan we might be on.
+// Unparseable or unset falls back to the conservative default; an explicit
+// number is honoured but never allowed below 1, which would stall every render.
+// `|| 3` would have been wrong here: it treats an explicit 0 as unset.
+const configuredConcurrency = Number.parseInt(process.env.BROWSERLESS_MAX_CONCURRENCY ?? '', 10)
+export const MAX_RENDER_CONCURRENCY = Math.max(
+  1,
+  Number.isNaN(configuredConcurrency) ? 3 : configuredConcurrency,
+)
+const renderLimit = createLimiter(MAX_RENDER_CONCURRENCY)
 
 // Block private/internal addresses to prevent SSRF attacks.
 function isAllowedUrl(urlStr) {
@@ -80,6 +103,11 @@ export class BlockedError extends Error {
 //    If it 403s, the site is actively blocking bots — no point trying browserless.io.
 //    If it returns substantial content, use it and skip the browserless.io credit.
 // 2. browserless.io (JS-rendered) — for SPA career pages or when plain fetch returns sparse HTML.
+//
+// Returns { html, via, renderMs }. `via` is 'direct_fetch' or 'render'; callers
+// record it so render spend is measurable (SMK-476). Only 'render' costs a
+// browserless.io unit — treating every scan as a render is what made the usage
+// counter meaningless.
 export async function fetchPage(url) {
   if (!isAllowedUrl(url)) {
     throw new Error(`fetchPage: blocked URL — ${url}`)
@@ -106,7 +134,7 @@ export async function fetchPage(url) {
       // escalate to browserless.io (raw length alone would wrongly accept it).
       if (!isSpaHost(url) && visibleTextLength(html) >= MIN_VISIBLE_TEXT) {
         logger.info('fetch-page: plain fetch used', { url, htmlLength: html.length })
-        return html
+        return { html, via: 'direct_fetch', renderMs: null }
       }
       logger.info('fetch-page: shell/SPA detected, escalating to browserless', {
         url, host: hostOf(url), htmlLength: html.length, visibleText: visibleTextLength(html),
@@ -125,7 +153,19 @@ export async function fetchPage(url) {
     throw new Error('No BROWSERLESS_API_KEY configured')
   }
 
-  return fetchViaBrowserless(url, apiKey)
+  // renderMs is measured inside the limiter so it records browser time, not
+  // time spent queued. A browserless.io unit is 30s of browser time, so queue
+  // wait must not inflate it.
+  let renderMs = null
+  const html = await renderLimit(async () => {
+    const startedAt = Date.now()
+    try {
+      return await fetchViaBrowserless(url, apiKey)
+    } finally {
+      renderMs = Date.now() - startedAt
+    }
+  })
+  return { html, via: 'render', renderMs }
 }
 
 async function fetchViaBrowserless(url, apiKey) {

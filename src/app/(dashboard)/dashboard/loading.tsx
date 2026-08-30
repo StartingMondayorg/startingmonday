@@ -1,14 +1,12 @@
-﻿import { Card } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-
+﻿import { Card, Skeleton } from '@/components/ui'
 export default function DashboardLoading() {
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
+    <div className="min-h-screen bg-muted font-sans">
 
-      <header className="bg-slate-900">
+      <header className="bg-primary">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
+            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
         </div>
       </header>

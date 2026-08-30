@@ -29,7 +29,7 @@ export default function CioVsCtoPage() {
       url="https://startingmonday.app/blog/cio-vs-cto-which-role"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Two titles, one domain, and a distinction that matters more than most technology executives
           realize.
@@ -48,7 +48,7 @@ export default function CioVsCtoPage() {
           examine it.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the CIO role actually is</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the CIO role actually is</h2>
 
         <p>
           The CIO runs technology as a capability that serves the business. The business has
@@ -70,7 +70,7 @@ export default function CioVsCtoPage() {
           These are operational and governance questions, and the CIO lives inside them.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What the CTO role actually is</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What the CTO role actually is</h2>
 
         <p>
           The CTO makes technology the business, or a major competitive weapon externally. Their
@@ -88,7 +88,7 @@ export default function CioVsCtoPage() {
           build on.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Three tests that tell you which seat you are in</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Three tests that tell you which seat you are in</h2>
 
         <p>
           Who are you most effective with? The CIO&rsquo;s highest-leverage relationships are
@@ -114,7 +114,7 @@ export default function CioVsCtoPage() {
           go to thinking. The frustration pattern is a reliable signal about fit.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">When people pursue the wrong seat</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">When people pursue the wrong seat</h2>
 
         <p>
           The most common error is the technology executive who has spent twenty years in a CIO-track
@@ -138,7 +138,7 @@ export default function CioVsCtoPage() {
           answered before either. The title traveled. The experience did not.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">A note on job descriptions that blur the line</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">A note on job descriptions that blur the line</h2>
 
         <p>
           Some organizations post CTO roles that are actually CIO roles, and vice versa. The job
@@ -153,7 +153,7 @@ export default function CioVsCtoPage() {
           profile is not a fit problem that conversation can fix.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The clarity that changes the search</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The clarity that changes the search</h2>
 
         <p>
           An executive who knows which seat they are in - not just by title, but by the work they

@@ -35,7 +35,7 @@ export default function TargetCompanyListPage() {
       url="https://startingmonday.app/blog/target-company-list"
     >
       <h1 className="sr-only">{post.title}</h1>
-      <div className="space-y-6 text-[15px] text-slate-700 leading-relaxed">
+      <div className="space-y-6 text-[15px] text-muted-foreground leading-relaxed">
         <p>
           Most CIOs start an executive search by updating their resume. The ones who land fastest
           start by making a list.
@@ -48,7 +48,7 @@ export default function TargetCompanyListPage() {
           playing it.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">Why the list has to come first</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">Why the list has to come first</h2>
 
         <p>
           A senior technology search is not a job application process. It is an influence campaign.
@@ -65,7 +65,7 @@ export default function TargetCompanyListPage() {
           The list determines what you are paying attention to.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What belongs on the list</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What belongs on the list</h2>
 
         <p>
           Start with companies you would say yes to before the salary is negotiated. This is a
@@ -105,7 +105,7 @@ export default function TargetCompanyListPage() {
           the company should not be on the list.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">How to find the companies</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">How to find the companies</h2>
 
         <p>
           The list is built from five sources. The discipline is to work all five rather than
@@ -150,7 +150,7 @@ export default function TargetCompanyListPage() {
           reach broader coverage.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">What you do with the list</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">What you do with the list</h2>
 
         <p>
           A list is static. The signal is in what changes.
@@ -170,7 +170,7 @@ export default function TargetCompanyListPage() {
           Watch the list. Know when something moves. Be ready when it does.
         </p>
 
-        <h2 className="text-[22px] font-bold text-slate-900 pt-4">The only version of ready that matters</h2>
+        <h2 className="text-[22px] font-bold text-foreground pt-4">The only version of ready that matters</h2>
 
         <p>
           Most CIO candidates position themselves as available and excellent. That is necessary but

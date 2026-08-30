@@ -109,18 +109,18 @@ export default async function TeamSettingsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-slate-900">
+    <div className="min-h-screen bg-muted font-sans">
+      <header className="bg-card">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-slate-400">
-            <span className="text-white">Starting </span><span className="text-orange-500">Monday</span>
+          <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground">
+            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[13px] text-slate-300 hover:text-white transition-colors">
+            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
               &larr; Dashboard
             </Link>
             {isRothschildAdmin && (
-              <Link href="/dashboard/admin" className="text-[12px] font-semibold text-orange-400 hover:text-orange-300 transition-colors">
+              <Link href="/dashboard/admin" className="text-[12px] font-semibold text-primary transition-colors">
                 Admin
               </Link>
             )}
@@ -130,8 +130,8 @@ export default async function TeamSettingsPage() {
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         <div className="mb-8">
-          <h1 className="text-[26px] font-bold text-slate-900">Team</h1>
-          <p className="text-[13px] text-slate-500 mt-1">
+          <h1 className="text-[26px] font-bold text-foreground">Team</h1>
+          <p className="text-[13px] text-muted-foreground mt-1">
             Invite members and track their search activation.
           </p>
         </div>
