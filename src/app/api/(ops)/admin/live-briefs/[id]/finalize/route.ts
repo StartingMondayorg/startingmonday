@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { Json } from '@/lib/supabase/database.types'
 import { requireLiveBriefMutationAccess } from '@/lib/live-brief-auth'
 import { hashLiveBriefArtifact, LIVE_BRIEF_ARTIFACT_MAX_BYTES } from '@/lib/live-brief-artifact'
 
@@ -34,7 +35,7 @@ export async function POST(
     return NextResponse.json({ error: 'brief_payload exceeds the 512 KB limit' }, { status: 413 })
   }
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: current, error: requestError } = await admin
     .from('live_brief_requests')
     .select('status')
@@ -61,7 +62,7 @@ export async function POST(
     .insert({
       request_id: id,
       version,
-      brief_payload: body.brief_payload,
+      brief_payload: body.brief_payload as Json,
       content_hash: hashLiveBriefArtifact(body.brief_payload),
       finalized_by_user_id: auth.userId,
     })

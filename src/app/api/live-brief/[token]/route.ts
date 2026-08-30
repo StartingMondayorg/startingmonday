@@ -13,14 +13,14 @@ export async function GET(
     return NextResponse.json({ error: 'Delivery not found' }, { status: 404 })
   }
 
-  const admin = createAdminClient() as any
+  const admin = createAdminClient()
   const { data: delivery, error: deliveryError } = await admin
     .from('live_brief_deliveries')
     .select('id,request_id,artifact_id,expires_at,revoked_at,first_opened_at,view_count')
     .eq('token_digest', hashLiveBriefDeliveryToken(token))
     .maybeSingle()
 
-  if (deliveryError || !delivery || delivery.revoked_at || new Date(delivery.expires_at).getTime() <= Date.now()) {
+  if (deliveryError || !delivery || !delivery.artifact_id || delivery.revoked_at || new Date(delivery.expires_at).getTime() <= Date.now()) {
     return NextResponse.json({ error: 'Delivery not found' }, { status: 404 })
   }
 
