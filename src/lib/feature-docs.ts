@@ -137,7 +137,7 @@ export const FEATURE_DOCS: FeatureDocMeta[] = [
 ]
 
 function absolutePath(relativePath: string): string {
-  return path.join(process.cwd(), relativePath)
+  return path.join(/* turbopackIgnore: true */ process.cwd(), relativePath)
 }
 
 function bundledEntryForSlug(slug: string): BundledFeatureDocEntry | null {

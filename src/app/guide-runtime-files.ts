@@ -9,7 +9,7 @@ export async function readGuideRuntimeFile(fileName: string): Promise<string> {
 
   for (const filePath of candidates) {
     try {
-      return await readFile(filePath, 'utf8')
+      return await readFile(/* turbopackIgnore: true */ filePath, 'utf8')
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
     }

@@ -48,7 +48,7 @@ async function findSuffixCompatibleFile(baseDir: string, requestedName: string):
 async function readCsvFromDirectory(baseDir: string, fileName: string): Promise<CsvSummary | null> {
   const directPath = path.join(baseDir, fileName)
   try {
-    return parseCsv(await readFile(directPath, 'utf8'))
+    return parseCsv(await readFile(/* turbopackIgnore: true */ directPath, 'utf8'))
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
   }
@@ -56,7 +56,7 @@ async function readCsvFromDirectory(baseDir: string, fileName: string): Promise<
   const fallbackName = await findSuffixCompatibleFile(baseDir, fileName)
   if (!fallbackName) return null
 
-  return parseCsv(await readFile(path.join(baseDir, fallbackName), 'utf8'))
+  return parseCsv(await readFile(/* turbopackIgnore: true */ path.join(/* turbopackIgnore: true */ baseDir, fallbackName), 'utf8'))
 }
 
 function normalizeKeyToken(value: string | undefined): string {
