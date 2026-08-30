@@ -27,7 +27,7 @@ jobs:
   canary-gate:
     name: Canary gate
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v5
@@ -39,6 +39,16 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Wait for exact production release
+        env:
+          RELEASE_MONITOR_BASE_URL: https://startingmonday.app
+          RELEASE_EXPECTED_SHA: ${{ github.sha }}
+          RELEASE_EXPECTED_HERO_PRIMARY: Be on the shortlist before the role is posted.
+          RELEASE_EXPECTED_HERO_SECONDARY: Starting Monday reads public signals. Leadership changes, funding, expansion, filings.
+          RELEASE_TIMEOUT_SECONDS: "900"
+          RELEASE_INTERVAL_SECONDS: "20"
+        run: npm run monitor:release:parity
 
       - name: Required standards gate (production)
         env:
