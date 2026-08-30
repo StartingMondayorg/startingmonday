@@ -368,6 +368,8 @@ jobs:
         run: |
           set -euo pipefail
           if ! git diff --quiet -- tests/e2e/__screenshots__/; then
+            npm run guide:user:sync
+            npm run guide:internal:sync
             npm run docs:index
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
