@@ -6,17 +6,17 @@ How we work together without stepping on each other.
 
 ## The One Rule
 
-**Push to main = deploy to production.** Railway auto-deploys on every push. There is no manual deploy step, no staging-to-production promotion script. When your code is on main, it's live.
+**Production moves only through the guarded promotion script.** Railway deploys `main` to staging and deploys the customer-facing web service from `production`. After staging runs the exact `main` SHA, `node scripts/promote-to-production.mjs --apply` fast-forwards `production` to that commit.
 
-This means: do not push to main until you are confident the code works.
+The script is a dry run unless `--apply` is present. It refuses divergent histories and refuses a SHA that staging has not actually run. Do not use `--skip-staging-check` outside an owner-directed production incident.
 
 ---
 
 ## Branch Strategy
 
 ```
-main          → production (startingmonday.app)
-staging       → staging environment (staging.startingmonday.app)
+main          → staging web and worker services
+production    → customer web (startingmonday.app)
 feature/*     → your work in progress
 fix/*         → bug fixes
 ```
@@ -26,10 +26,12 @@ fix/*         → bug fixes
 1. Pull latest main: `git pull origin main`
 2. Create a feature branch: `git checkout -b feature/activation-progress-tracker`
 3. Build, commit as you go
-4. When ready to test in staging: `git push origin feature/activation-progress-tracker && git checkout staging && git merge feature/activation-progress-tracker && git push origin staging`
-5. Verify on staging.startingmonday.app
-6. Open a PR to main, or merge directly if it's a straightforward change
-7. After merging to main: `git branch -d feature/activation-progress-tracker`
+4. Open a PR to `main` and let protected checks complete
+5. After merge, verify the exact `main` SHA on staging
+6. Run `node scripts/promote-to-production.mjs` to review the release
+7. Run `node scripts/promote-to-production.mjs --apply` to fast-forward `production`
+8. Verify the production deploy marker and post-deploy gates
+9. Delete the merged feature branch
 
 ---
 
@@ -38,6 +40,7 @@ fix/*         → bug fixes
 URL: **staging.startingmonday.app** (set up on Railway, separate service)
 
 The staging environment is identical to production except:
+
 - Connects to the staging Supabase project (separate DB, no real user data)
 - Uses test Stripe keys (use Stripe test cards, no real charges)
 - Uses a separate Anthropic API key (same API, separate budget tracking)
@@ -49,9 +52,10 @@ The staging environment is identical to production except:
 3. In Railway staging service: set all env vars pointing to staging versions of each service
 4. In Cloudflare DNS: add a CNAME for `staging.startingmonday.app` pointing to the Railway staging domain
 
-Once set up, every push to the `staging` branch auto-deploys to staging.
+Every protected merge to `main` auto-deploys to staging. The production service does not deploy until the guarded promotion advances `production`.
 
 **Staging Stripe test cards:**
+
 - Success: `4242 4242 4242 4242`
 - Decline: `4000 0000 0000 0002`
 - Requires auth: `4000 0025 0000 3155`
@@ -109,6 +113,7 @@ When in doubt, ask. A 2-minute Slack message saves a 2-hour rework.
 ## Before You Merge to Main
 
 Checklist:
+
 - [ ] `npm run typecheck` passes with zero errors
 - [ ] `npm test` passes
 - [ ] Tested locally on localhost:3000
@@ -125,16 +130,18 @@ For production bugs that need immediate fixing:
 
 1. Branch from main: `git checkout -b fix/description main`
 2. Fix the bug
-3. Push directly to main after confirming it works: `git push origin fix/description:main`
-4. Delete the branch
+3. Open a protected PR to `main` and merge after required checks pass
+4. Verify the exact merge SHA on staging and run the guarded production promotion
+5. Delete the branch
 
-Don't spend time on staging review for genuine hotfixes. Move fast and fix the production issue.
+The `--skip-staging-check` escape hatch requires explicit owner direction and is reserved for incidents where staging is unavailable for reasons unrelated to the release.
 
 ---
 
 ## Access You Need
 
 Rich will set these up before your first day:
+
 - [ ] GitHub: added as collaborator on `richrothschild/startingmonday` (write access)
 - [ ] Railway: added to the project as a team member
 - [ ] Supabase: added to both production and staging projects
