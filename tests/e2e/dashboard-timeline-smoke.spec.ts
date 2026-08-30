@@ -1,9 +1,10 @@
 import { test, expect, type Page } from '@playwright/test'
+import { selectCompanyStage } from './company-form.helpers'
 
 async function createCampaign(page: Page, name: string) {
   await page.goto('/dashboard/companies/new')
   await page.fill('input[name="name"]', name)
-  await page.selectOption('select[name="stage"]', 'watching')
+  await selectCompanyStage(page, 'Watching')
   await page.fill('input[name="sector"]', 'Technology')
   await page.click('button[type="submit"]')
   await page.waitForURL(/\/dashboard\//, { timeout: 20_000 }).catch(() => {})

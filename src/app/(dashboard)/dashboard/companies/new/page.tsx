@@ -87,11 +87,11 @@ export default async function AddCompanyPage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
+                <Label htmlFor="company-stage" className="block text-[11px] font-bold tracking-[0.08em] uppercase text-muted-foreground mb-1.5">
                   Stage
                 </Label>
                 <Select name="stage" defaultValue="watching">
-                  <SelectTrigger className="w-full text-[14px] text-foreground focus-visible:border-primary/30 bg-card/70">
+                  <SelectTrigger id="company-stage" className="w-full text-[14px] text-foreground focus-visible:border-primary/30 bg-card/70">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
