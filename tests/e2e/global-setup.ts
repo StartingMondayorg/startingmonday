@@ -1,7 +1,6 @@
 import { test as setup, type Page } from '@playwright/test'
 import path from 'path'
 import { existsSync } from 'node:fs'
-import { selectCompanyStage } from './company-form.helpers'
 
 const authFile = path.join(__dirname, '.auth/user.json')
 
@@ -21,7 +20,6 @@ async function ensureMonitoringAnchorCompany(page: Page) {
   if (!formReady) return
 
   await page.fill('input[name="name"]', 'Synthetic Monitoring Anchor')
-  await selectCompanyStage(page, 'Interviewing')
   await page.fill('input[name="sector"]', 'Technology')
   await page.click('button[type="submit"]')
   await page.waitForURL(/\/dashboard\//, { timeout: 20_000 }).catch(() => {})
