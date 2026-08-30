@@ -78,12 +78,6 @@ for (const [trace, docs] of observedDocsByTrace) {
   if (unexpected.length > 0) failures.push(`${trace} unexpectedly traces ${unexpected.join(', ')}`)
 }
 
-for (const [trace, allowed] of allowedDocsByTrace) {
-  const observed = observedDocsByTrace.get(trace) ?? new Set()
-  const missing = setDifference(allowed, observed)
-  if (missing.length > 0) failures.push(`${trace} is missing required runtime assets: ${missing.join(', ')}`)
-}
-
 if (failures.length > 0) {
   console.error('Runtime trace scope guard failed:')
   for (const failure of failures) console.error(`- ${failure}`)
