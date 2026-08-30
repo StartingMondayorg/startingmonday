@@ -1123,6 +1123,7 @@ measurement gate, or promote a model without the accountable human decision.
 | DG-11 | Shared package extraction | Defer until two stable compatible contract releases | AO + ENG leads | Post Wave 5 | Continue independent adapters |
 | DG-12 | Public calibration claims | Quarterly, supported cohorts only, approved clean-source inputs | AO + LEGAL + DATA | Before PUB-01 | No public accuracy claim |
 | DG-13 | Portfolio and engine stewardship | Seerique is a DBA/brand of Rothschild Investments, LLC and may steward the logical engine; no third runtime, database, or implied legal/data-controller boundary | AO | Accepted 2026-07-27; review before any entity, contract, IP, or shared-repository change | Rothschild Investments, LLC remains the legal owner/steward and product-local boundaries remain authoritative |
+| DG-14 | Cross-product cost governance and decision authority | Product-local event ledgers, finance-only actuals and approved monthly aggregates; Rich is sole approver for revenue recognition, retention, allocation, budgets, reserves and cost actions | AO | Accepted for governance execution 2026-08-30; before WS0-10 exit and any downstream cost implementation | No shared database, finance credential in product runtime, automated cross-product export, budget/hold, or runtime implementation; applicable law, contracts, DG-01/03/10 and product launch controls remain authoritative |
 
 Decision records must include date, participants, alternatives, rationale,
 affected controls, review date, and reversal trigger.
@@ -1147,6 +1148,35 @@ substitute for repository-wide release gates.
 | WS0-07 Establish evidence repository | OPS | WS0-02 | Index naming convention, immutable run metadata, retention | One sample control can be reconstructed from index to raw artifact |
 | WS0-08 Baseline product and engine metrics | OPS | WS0-04 | Seven-day baseline where available | Freshness, failures, duplicates, labels, backtests, lead usefulness and delivery metrics carry timestamps and denominators |
 | WS0-09 Record independent engine baselines | ENG-SM + ENG-MS | WS0-05 | Product-local baseline SHA and compatibility version | A change in one engine does not alter the other's baseline; re-verification is required only when that product adopts a contract or backport change |
+| WS0-10 Cross-product cost governance and actuals baseline | AO + OPS | DG-03, DG-14, WS0-02; MandateSignal COST-00 no-displacement record | Versioned cost taxonomy, provider actuals/materiality ledger, cash/accrual and allocation policy inputs, provider capability/fallback records, aggregate allowed/forbidden-field contract, and downstream product-local story re-plan | At least 90% of estimated cash spend is represented by actual evidence; shared/unallocated cash remains explicit; material missing providers have owners/deadlines; no runtime, schema, credential, schedule, budget, hold, or automated cross-product export change occurs |
+
+#### 16.1.1 Re-plan note 2026-08-30 - cross-product cost observability
+
+MandateSignal Jira `MS-23` and
+`docs/readiness/cost-00-owner-decision-and-no-displacement-2026-08-30.md`
+record owner authorization for governance, inventory and existing-evidence
+collection only. The reviewed baseline found incomplete product-local model
+usage coverage and provider cash actuals that cannot yet be attributed between
+products. `WS2-13` remains limited to MandateSignal assurance economics and
+does not authorize the wider business-cost program.
+
+`WS0-10` closes the governance and actuals gap. It does not authorize a finance
+runtime, provider credential, shared cost database, product migration,
+scheduled collector, budget/hold, model change or automated export. Starting
+Monday and MandateSignal retain separate event-level usage ledgers, databases,
+credentials, deployments and releases. Any later finance process may consume
+provider invoices/card records and approved monthly product aggregates only;
+it must not query either product database or ingest customer-, user-, person-,
+prompt-, output-, claim-, source URL-, lead-, opportunity- or artifact-level
+records.
+
+Downstream product telemetry, provider collectors, aggregate exporters,
+reporting, budgets and optimization require separately reviewable stories.
+MandateSignal runtime work additionally requires its applicable story Ready
+state and a fresh dated GA P0 no-displacement approval. Until DG-01's allowed
+field boundary closes for the proposed automated aggregate, no automated
+cross-product export occurs. Manual owner-reviewed finance actuals may be
+combined outside product runtimes without creating a product data dependency.
 
 ### 16.2 WS1 stories - measurement gates
 
