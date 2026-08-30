@@ -12,6 +12,7 @@
  */
 
 import { test, expect, type Page } from '@playwright/test'
+import { selectCompanyStage } from './company-form.helpers'
 
 const SLO_TTFC_MS = process.env.CI ? 20_000 : 10_000   // CI is noisier; keep strict local SLO.
 const TOTAL_TIMEOUT_MS = 60_000
@@ -30,7 +31,7 @@ test('prep brief TTFC meets SLO (< 10s)', async ({ page }) => {
   // Create a company to run prep against
   await page.goto('/dashboard/companies/new')
   await page.fill('input[name="name"]', name)
-  await page.selectOption('select[name="stage"]', 'interviewing')
+  await selectCompanyStage(page, 'Interviewing')
   await page.click('button[type="submit"]')
   await page.waitForURL(/\/dashboard/, { timeout: 15_000 })
 

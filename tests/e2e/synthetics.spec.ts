@@ -27,6 +27,7 @@
  */
 
 import { test, expect, type Page } from '@playwright/test'
+import { selectCompanyStage } from './company-form.helpers'
 import { requireAuthSessionOrSkip } from './synthetics-shared'
 import fs from 'node:fs'
 
@@ -545,7 +546,7 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
   const companyNameInput = page.locator('input[name="name"], #company-name').first()
   await expect(companyNameInput, 'Synthetic-10 expected company name input on add-company form').toBeVisible()
   await companyNameInput.fill(syntheticCompany)
-  await page.selectOption('select[name="stage"]', 'interviewing')
+  await selectCompanyStage(page, 'Interviewing')
 
   const createRequest = page.waitForRequest((req) => {
     if (req.method() !== 'POST') return false

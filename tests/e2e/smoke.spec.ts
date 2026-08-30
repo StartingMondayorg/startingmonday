@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { selectCompanyStage } from './company-form.helpers'
 
 const ts = () => Date.now()
 
@@ -70,7 +71,7 @@ test('add company appears in pipeline then can be archived', async ({ page }) =>
   // Submit new company form — action redirects to /dashboard on success
   await page.goto('/dashboard/companies/new')
   await page.fill('input[name="name"]', name)
-  await page.selectOption('select[name="stage"]', 'interviewing')
+  await selectCompanyStage(page, 'Interviewing')
   await page.fill('input[name="sector"]', 'Technology')
   await page.click('button[type="submit"]')
   // Action may redirect to /dashboard or /dashboard/companies/{id}?scanning=1
@@ -164,7 +165,7 @@ test('prep brief generates content', async ({ page }) => {
   // Create company
   await page.goto('/dashboard/companies/new')
   await page.fill('input[name="name"]', name)
-  await page.selectOption('select[name="stage"]', 'interviewing')
+  await selectCompanyStage(page, 'Interviewing')
   await page.click('button[type="submit"]')
   // Action may redirect to /dashboard or /dashboard/companies/{id}?scanning=1
   await page.waitForURL(/\/dashboard/, { timeout: 15_000 })
