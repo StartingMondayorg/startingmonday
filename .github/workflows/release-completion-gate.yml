@@ -2,7 +2,7 @@ name: Release Completion Gate
 
 on:
   push:
-    branches: [main]
+    branches: [production]
   workflow_dispatch:
 
 permissions:
@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
+          node-version: "22"
           cache: npm
 
       - name: Install dependencies
@@ -30,10 +30,10 @@ jobs:
           RELEASE_MONITOR_BASE_URL: https://startingmonday.app
           RELEASE_EXPECTED_SHA: ${{ github.sha }}
           RELEASE_EXPECTED_HERO_PRIMARY: Be on the shortlist before the role is posted.
-          RELEASE_EXPECTED_HERO_SECONDARY: Reputation opens doors. Timing decides outcomes.
-          RELEASE_TIMEOUT_SECONDS: '900'
-          RELEASE_INTERVAL_SECONDS: '20'
-          RELEASE_OUTPUT_JSON: '1'
+          RELEASE_EXPECTED_HERO_SECONDARY: Starting Monday reads public signals. Leadership changes, funding, expansion, filings.
+          RELEASE_TIMEOUT_SECONDS: "900"
+          RELEASE_INTERVAL_SECONDS: "20"
+          RELEASE_OUTPUT_JSON: "1"
         run: |
           set -o pipefail
           npm run --silent monitor:release:parity:json | tee release-completion-gate.json

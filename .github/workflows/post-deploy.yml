@@ -1,11 +1,12 @@
 name: Post-Deploy Gate
 
-# Triggered by Railway deployment events via GitHub deployment_status webhook.
-# Runs the full P0 synthetic suite against production immediately after deploy.
+# Triggered when the staging-verified release is promoted to the production
+# branch. Runs the full P0 synthetic suite while Railway deploys that exact SHA.
 # If 2+ consecutive post-deploy synthetics fail, sends a rollback alert.
 
 on:
-  deployment_status:
+  push:
+    branches: [production]
   workflow_dispatch:
     inputs:
       environment:
@@ -17,27 +18,14 @@ permissions:
   contents: read
   deployments: write
 
-# Several services share the production environment and each emits its own
-# deployment_status for the same commit, so a single push fires this workflow
-# more than once. Collapse those to the newest — the gate gives the same answer
-# each time, and running it three times against production is pure waste.
+# One production-branch promotion owns one customer-web release.
 concurrency:
-  group: post-deploy-${{ github.event.deployment.sha || github.sha }}
+  group: post-deploy-${{ github.sha }}
   cancel-in-progress: true
 
 jobs:
   canary-gate:
     name: Canary gate
-    # Only run when a deployment to the production environment succeeds.
-    #
-    # Railway reports the environment as '<project> / <environment>'. Production
-    # arrives as 'ample-blessing / production' and staging as
-    # 'ample-blessing / staging', so an exact match separates them; substring
-    # tests cannot, because the production string contains 'ample-blessing' too.
-    if: >
-      (github.event_name == 'workflow_dispatch') ||
-      (github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'ample-blessing / production')
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -46,8 +34,8 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -81,7 +69,7 @@ jobs:
         id: canary_smoke
         env:
           MONITOR_BASE_URL: https://startingmonday.app
-          MONITOR_OUTPUT_JSON: '1'
+          MONITOR_OUTPUT_JSON: "1"
         run: npm run monitor:smoke:json
 
       - name: Run outreach canary test
@@ -134,14 +122,8 @@ jobs:
           }" "$SLACK_WEBHOOK_URL"
 
   post-deploy-synthetics:
-    # Only run when a deployment to the production environment succeeds.
-    # Exact match — see the note on canary-gate above.
-    if: >
-      (github.event_name == 'workflow_dispatch') ||
-      (github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'ample-blessing / production')
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     needs: [canary-gate]
 
     steps:
@@ -149,8 +131,8 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -167,12 +149,12 @@ jobs:
         id: release_parity
         env:
           RELEASE_MONITOR_BASE_URL: https://startingmonday.app
-          RELEASE_EXPECTED_SHA: ${{ github.event.deployment.sha || github.sha }}
+          RELEASE_EXPECTED_SHA: ${{ github.sha }}
           RELEASE_EXPECTED_HERO_PRIMARY: Be on the shortlist before the role is posted.
-          RELEASE_EXPECTED_HERO_SECONDARY: Reputation opens doors. Timing decides outcomes.
-          RELEASE_TIMEOUT_SECONDS: '900'
-          RELEASE_INTERVAL_SECONDS: '20'
-          RELEASE_OUTPUT_JSON: '1'
+          RELEASE_EXPECTED_HERO_SECONDARY: Starting Monday reads public signals. Leadership changes, funding, expansion, filings.
+          RELEASE_TIMEOUT_SECONDS: "900"
+          RELEASE_INTERVAL_SECONDS: "20"
+          RELEASE_OUTPUT_JSON: "1"
         run: |
           set -o pipefail
           npm run --silent monitor:release:parity:json | tee release-completion-gate.json
@@ -203,7 +185,7 @@ jobs:
         env:
           EMI_SMOKE_BASE_URL: https://startingmonday.app
           EMI_SMOKE_TOKEN: ${{ secrets.EMI_SMOKE_TOKEN }}
-          EMI_SMOKE_OUTPUT_JSON: '1'
+          EMI_SMOKE_OUTPUT_JSON: "1"
         run: |
           set -o pipefail
           node scripts/emi-postdeploy-smoke.mjs --json | tee emi-postdeploy-smoke.json
@@ -283,7 +265,7 @@ jobs:
           PASSED="${{ steps.synthetics.outputs.passed || '?' }}"
           FAILED="${{ steps.synthetics.outputs.failed || '?' }}"
           SHA="${{ github.sha }}"
-          ENV="${{ github.event.deployment.environment || 'production' }}"
+          ENV="production"
           EMI_STATUS="${{ steps.emi_smoke.outcome || 'unknown' }}"
           RELEASE_PARITY_STATUS="${{ steps.release_parity.outcome || 'unknown' }}"
           EMI_FAILURES=""
@@ -384,19 +366,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: [canary-gate]
-    # Run after a successful Railway production deployment, once the canary is green.
-    # Exact match — see the note on canary-gate above.
-    if: >
-      github.event.deployment_status.state == 'success' &&
-      github.event.deployment.environment == 'ample-blessing / production'
 
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
