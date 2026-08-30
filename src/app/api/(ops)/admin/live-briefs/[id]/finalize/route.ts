@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { Json } from '@/lib/supabase/database.types'
 import { requireLiveBriefMutationAccess } from '@/lib/live-brief-auth'
 import { hashLiveBriefArtifact, LIVE_BRIEF_ARTIFACT_MAX_BYTES } from '@/lib/live-brief-artifact'
-import type { Json } from '@/lib/supabase/database.types'
 
 export const dynamic = 'force-dynamic'
 

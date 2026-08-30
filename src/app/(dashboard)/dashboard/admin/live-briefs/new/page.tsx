@@ -53,13 +53,13 @@ export default function NewLiveBriefPage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted font-sans">
-      <header className="bg-primary">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="bg-foreground text-background">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-primary-foreground sm:text-[14px]">
-            <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
+          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted sm:text-[14px]">
+            <span>Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/admin/live-briefs" className="text-[12px] font-semibold text-primary-foreground">Live briefs</Link>
+          <Link href="/dashboard/admin/live-briefs" className="text-[12px] font-semibold text-muted hover:text-background">Live briefs</Link>
         </div>
       </header>
 
@@ -82,7 +82,7 @@ export default function NewLiveBriefPage() {
               <Field label="LinkedIn URL" value={form.linkedin_url} onChange={(value) => update('linkedin_url', value)} />
               <Field label="Location preference" value={form.location_preference} onChange={(value) => update('location_preference', value)} />
               <Field label="Target role lane" value={form.target_role_lane} onChange={(value) => update('target_role_lane', value)} />
-              <label className="block text-[12px] font-semibold text-muted-foreground">Request source<select value={form.request_source} onChange={(event) => update('request_source', event.target.value)} className="mt-1.5 block h-10 w-full rounded border border-border bg-card px-3 text-[13px] font-normal text-foreground outline-none focus:border-primary/30"><option value="inbound_email">Inbound email</option><option value="call">Call</option><option value="referral">Referral</option><option value="other">Other</option></select></label>
+              <label className="block text-[12px] font-semibold text-foreground">Request source<select value={form.request_source} onChange={(event) => update('request_source', event.target.value)} className="mt-1.5 block h-10 w-full rounded border border-border bg-background px-3 text-[13px] font-normal text-foreground outline-none focus:border-primary"><option value="inbound_email">Inbound email</option><option value="call">Call</option><option value="referral">Referral</option><option value="other">Other</option></select></label>
             </div>
           </section>
 
@@ -92,13 +92,13 @@ export default function NewLiveBriefPage() {
               <Field label="Encrypted source record reference" required value={form.source_text_encrypted_ref} onChange={(value) => update('source_text_encrypted_ref', value)} />
               <Field label="How consent was given" required value={form.consent_source} onChange={(value) => update('consent_source', value)} />
               <Field label="Consent attested at" required type="datetime-local" value={form.consent_attested_at} onChange={(value) => update('consent_attested_at', value)} />
-              <label className="block text-[12px] font-semibold text-muted-foreground">Operator notes<textarea value={form.operator_notes} onChange={(event) => update('operator_notes', event.target.value)} rows={4} className="mt-1.5 block w-full rounded border border-border px-3 py-2 text-[13px] font-normal text-foreground outline-none focus:border-primary/30" /></label>
+              <label className="block text-[12px] font-semibold text-foreground">Operator notes<textarea value={form.operator_notes} onChange={(event) => update('operator_notes', event.target.value)} rows={4} className="mt-1.5 block w-full rounded border border-border bg-background px-3 py-2 text-[13px] font-normal text-foreground outline-none focus:border-primary" /></label>
             </div>
           </section>
 
-          {error && <p role="alert" className="rounded border border-destructive/30 bg-destructive/10 px-4 py-3 text-[13px] text-destructive">{error}</p>}
+          {error && <p role="alert" className="rounded border border-destructive/20 bg-destructive/10 px-4 py-3 text-[13px] text-destructive">{error}</p>}
           <div className="flex justify-end gap-3">
-            <Link href="/dashboard/admin/live-briefs" className="rounded border border-border bg-card px-4 py-2 text-[13px] font-semibold text-muted-foreground hover:bg-muted">Cancel</Link>
+            <Link href="/dashboard/admin/live-briefs" className="rounded border border-border bg-card px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-muted">Cancel</Link>
             <button type="submit" disabled={saving} className="rounded bg-primary px-5 py-2 text-[13px] font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60">{saving ? 'Creating…' : 'Create request'}</button>
           </div>
         </form>
@@ -108,5 +108,5 @@ export default function NewLiveBriefPage() {
 }
 
 function Field({ label, value, onChange, type = 'text', required = false }: { label: string; value: string; onChange: (value: string) => void; type?: string; required?: boolean }) {
-  return <label className="block text-[12px] font-semibold text-muted-foreground">{label}{required && <span className="ml-1 text-primary">*</span>}<input required={required} type={type} value={value} onChange={(event) => onChange(event.target.value)} className="mt-1.5 block h-10 w-full rounded border border-border px-3 text-[13px] font-normal text-foreground outline-none focus:border-primary/30" /></label>
+  return <label className="block text-[12px] font-semibold text-foreground">{label}{required && <span className="ml-1 text-primary">*</span>}<input required={required} type={type} value={value} onChange={(event) => onChange(event.target.value)} className="mt-1.5 block h-10 w-full rounded border border-border bg-background px-3 text-[13px] font-normal text-foreground outline-none focus:border-primary" /></label>
 }

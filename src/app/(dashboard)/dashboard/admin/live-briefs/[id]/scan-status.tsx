@@ -52,14 +52,14 @@ export default function ScanStatus({ requestId }: { requestId: string }) {
     return () => { active = false; if (timer) clearTimeout(timer) }
   }, [requestId])
 
-  if (message) return <p role="status" className="rounded border border-destructive/30 bg-destructive/10 p-4 text-[12px] text-destructive">{message}</p>
+  if (message) return <p role="status" className="rounded border border-destructive/20 bg-destructive/10 p-4 text-[12px] text-destructive">{message}</p>
   if (!data) return null
 
   return (
     <div className="rounded border border-border bg-card p-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-[13px] font-bold uppercase tracking-[0.1em] text-muted-foreground">Scan status</h2>
-        <span className="rounded bg-warning/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-warning">{data.run.status.replaceAll('_', ' ')}</span>
+        <span className="rounded bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary">{data.run.status.replaceAll('_', ' ')}</span>
       </div>
       <p className="mt-2 text-[12px] text-muted-foreground">{data.run.completed_company_count ?? 0} complete · {data.run.blocked_company_count ?? 0} blocked · {data.run.failed_company_count ?? 0} failed · {data.run.selected_company_count} selected</p>
       {!TERMINAL.has(data.run.status) && <button type="button" onClick={acceptPartial} disabled={accepting} className="mt-4 rounded border border-primary/30 bg-primary/10 px-3 py-2 text-[12px] font-semibold text-primary disabled:opacity-50">{accepting ? 'Accepting…' : 'Accept partial results'}</button>}

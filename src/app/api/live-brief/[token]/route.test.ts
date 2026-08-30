@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { NextRequest } from 'next/server'
 
 const mocked = vi.hoisted(() => ({ createAdminClient: vi.fn() }))
@@ -37,7 +37,6 @@ function configureAdmin({ revoked = null as string | null, expired = false, even
 }
 
 beforeEach(() => vi.clearAllMocks())
-afterEach(() => vi.unstubAllEnvs())
 
 describe('GET /api/live-brief/[token]', () => {
   it('returns not found for malformed, expired, or revoked tokens', async () => {
@@ -54,7 +53,6 @@ describe('GET /api/live-brief/[token]', () => {
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toEqual({
       delivery_id: 'delivery-1',
-      capabilities: { people_to_know_handoff: false },
       artifact: { version: 1, brief_payload: { title: 'VP' }, content_hash: 'a'.repeat(64) },
     })
     expect(update).toHaveBeenCalledWith(expect.objectContaining({ view_count: 1 }))
@@ -66,15 +64,5 @@ describe('GET /api/live-brief/[token]', () => {
     update.mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: new Error('telemetry failed') }) })
     const response = await GET(request(), context)
     expect(response.status).toBe(500)
-  })
-
-  it('exposes the handoff capability only when explicitly enabled', async () => {
-    vi.stubEnv('LIVE_BRIEF_PEOPLE_HANDOFF_ENABLED', 'true')
-    configureAdmin()
-
-    const response = await GET(request(), context)
-    const result = await response.json()
-
-    expect(result.capabilities).toEqual({ people_to_know_handoff: true })
   })
 })

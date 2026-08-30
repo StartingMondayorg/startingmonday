@@ -42,7 +42,7 @@ function text(value: unknown, maxLength: number): string | null {
   return result && result.length <= maxLength ? result : null
 }
 
-function parseCompanies(value: unknown): { companies?: ParsedCompany[]; error?: string } {
+function parseCompanies(value: unknown): { companies: ParsedCompany[]; error?: never } | { companies?: never; error: string } {
   if (!Array.isArray(value) || value.length < 1 || value.length > 10) {
     return { error: 'companies must contain between 1 and 10 selected companies' }
   }
@@ -119,7 +119,8 @@ export async function POST(
     ? payload.idempotency_key
     : crypto.randomUUID()
   const parsedCompanies = parseCompanies(payload?.companies)
-  if (parsedCompanies.error) return NextResponse.json({ error: parsedCompanies.error }, { status: 400 })
+  if ('error' in parsedCompanies) return NextResponse.json({ error: parsedCompanies.error }, { status: 400 })
+  const companies = parsedCompanies.companies
 
   const admin = createAdminClient()
   const { data: existingRun, error: existingError } = await admin
@@ -147,7 +148,7 @@ export async function POST(
       request_id: id,
       idempotency_key: idempotencyKey,
       created_by_user_id: auth.userId,
-      selected_company_count: parsedCompanies.companies!.length,
+      selected_company_count: companies.length,
     })
     .select('id,status')
     .single()
@@ -155,7 +156,7 @@ export async function POST(
 
   const { error: companiesError } = await admin
     .from('live_brief_scan_companies')
-    .insert(parsedCompanies.companies!.map((company) => ({ ...company, run_id: run.id })))
+    .insert(companies.map((company) => ({ ...company, run_id: run.id })))
   if (companiesError) {
     await admin.from('live_brief_scan_runs').delete().eq('id', run.id)
     return NextResponse.json({ error: 'Unable to queue selected companies' }, { status: 500 })

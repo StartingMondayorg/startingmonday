@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { Card } from '@/components/ui'
+import { Card } from '@/components/ui/card'
 import ProfileEditor from './profile-editor'
 import ActionPanel from './action-panel'
 import ShortlistEditor from './shortlist-editor'
@@ -62,15 +62,15 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
   if (!request) notFound()
 
   return (
-    <div className="min-h-screen bg-muted font-sans">
-      <header className="dark text-foreground bg-card">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="bg-foreground text-background">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted-foreground sm:text-[14px]">
-            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
+          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted sm:text-[14px]">
+            <span>Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin/live-briefs" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground">Live briefs</Link>
-            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground">Dashboard</Link>
+            <Link href="/dashboard/admin/live-briefs" className="text-[12px] font-semibold text-muted hover:text-background">Live briefs</Link>
+            <Link href="/dashboard" className="text-[13px] text-muted hover:text-background">Dashboard</Link>
           </div>
         </div>
       </header>
@@ -83,7 +83,7 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
             <h1 className="mt-1 text-[26px] font-bold text-foreground">{request.prospect_name}</h1>
             <p className="mt-1 text-[13px] text-muted-foreground">{request.prospect_email}</p>
           </div>
-          <span className="dark rounded bg-card px-3 py-2 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground">{request.status.replaceAll('_', ' ')}</span>
+          <span className="rounded bg-foreground px-3 py-2 text-[11px] font-bold uppercase tracking-[0.08em] text-background">{request.status.replaceAll('_', ' ')}</span>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[1fr_1.3fr]">

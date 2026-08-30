@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { hashLiveBriefDeliveryToken } from '@/lib/live-brief-delivery'
-import { peopleToKnowHandoffEnabled } from '@/lib/people-to-know-handoff'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,7 +55,6 @@ export async function GET(
 
   return NextResponse.json({
     delivery_id: delivery.id,
-    capabilities: { people_to_know_handoff: peopleToKnowHandoffEnabled() },
     artifact: {
       version: artifact.version,
       brief_payload: artifact.brief_payload,

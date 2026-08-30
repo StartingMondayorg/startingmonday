@@ -3,16 +3,18 @@ import { notFound, redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { getStaffMember } from '@/lib/staff'
-import { Card, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui'
+import { Card } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+
 export const metadata = { title: 'Live Briefs - Starting Monday Admin' }
 
 const STATUS_STYLES: Record<string, string> = {
   draft: 'bg-muted text-muted-foreground',
-  reviewing: 'bg-info/10 text-info',
-  shortlisted: 'bg-info/10 text-info',
-  scanning: 'bg-warning/10 text-warning',
+  reviewing: 'bg-secondary text-secondary-foreground',
+  shortlisted: 'bg-accent text-accent-foreground',
+  scanning: 'bg-muted text-foreground',
   ready_for_review: 'bg-primary/10 text-primary',
-  delivered: 'bg-success/10 text-success',
+  delivered: 'bg-primary/10 text-primary',
   revoked: 'bg-destructive/10 text-destructive',
   deleted: 'bg-muted text-muted-foreground',
 }
@@ -67,15 +69,15 @@ export default async function LiveBriefsPage() {
   }, {})
 
   return (
-    <div className="min-h-screen bg-muted font-sans">
-      <header className="dark text-foreground bg-card">
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <header className="bg-foreground text-background">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted-foreground sm:text-[14px]">
-            <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
+          <span className="text-[13px] font-bold uppercase tracking-[0.14em] text-muted sm:text-[14px]">
+            <span>Starting </span><span className="text-primary">Monday</span>
           </span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground">Admin</Link>
-            <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground">Dashboard</Link>
+            <Link href="/dashboard/admin" className="text-[12px] font-semibold text-muted hover:text-background">Admin</Link>
+            <Link href="/dashboard" className="text-[13px] text-muted hover:text-background">Dashboard</Link>
           </div>
         </div>
       </header>
@@ -132,11 +134,11 @@ export default async function LiveBriefsPage() {
                       </span>
                     </TableCell>
                     <TableCell className="hidden px-4 py-3.5 text-[12px] text-muted-foreground md:table-cell">
-                      <span className="text-success">Attested</span>
+                      <span className="text-primary">Attested</span>
                       <div className="mt-0.5 max-w-[180px] truncate text-[11px] text-muted-foreground">{request.consent_source}</div>
                     </TableCell>
                     <TableCell className="hidden px-4 py-3.5 text-[12px] text-muted-foreground lg:table-cell">
-                      {request.hubspot_contact_id ? <span className="text-success">Linked · {label(request.hubspot_sync_status)}</span> : <span className="text-muted-foreground">Not linked</span>}
+                      {request.hubspot_contact_id ? <span className="text-primary">Linked · {label(request.hubspot_sync_status)}</span> : <span className="text-muted-foreground">Not linked</span>}
                     </TableCell>
                   </TableRow>
                 ))}
