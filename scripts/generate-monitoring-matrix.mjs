@@ -35,7 +35,15 @@ function normalizeRouteFromPage(filePath) {
 
 function normalizeApiFromRoute(filePath) {
   const rel = path.relative(path.join(appDir, 'api'), filePath).replace(/\\/g, '/')
-  return `/api/${rel.replace(/\/route\.ts$/, '')}`
+  // Route groups like (account)/(ai) organize files but never appear in the
+  // URL; keeping them generated /api/(account)/... contract checks that all
+  // 404ed against production.
+  const segments = rel
+    .replace(/\/route\.ts$/, '')
+    .split('/')
+    .filter(Boolean)
+    .filter((seg) => !(seg.startsWith('(') && seg.endsWith(')')))
+  return `/api/${segments.join('/')}`
 }
 
 function parseMethods(filePath) {
