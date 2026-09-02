@@ -13,7 +13,7 @@ export default function CompanyDetailLoading() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
 
         {/* Company header */}
         <div className="mb-8">
@@ -65,7 +65,7 @@ export default function CompanyDetailLoading() {
           </Card>
 
         </div>
-      </main>
+      </div>
     </div>
   )
 }
