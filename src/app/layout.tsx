@@ -41,11 +41,16 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildBrandMetadata(brand)
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // CSP nonce generated per-request in src/proxy.ts. Next.js attaches it to its
+  // own framework scripts automatically, but next-themes' pre-paint theme script
+  // is injected outside that plumbing, so it must receive the nonce explicitly
+  // or the browser blocks it (SMK-490).
+  const nonce = (await headers()).get('x-nonce') ?? undefined
   return (
     <html
       lang="en"
@@ -61,7 +66,7 @@ export default function RootLayout({
           layouts, TrackLink's posthog?.capture() silently did nothing on the
           homepage and every persona page (SMK-458).
         */}
-        <ThemeProvider>
+        <ThemeProvider nonce={nonce}>
           <PHProvider>
             {children}
             <AssistWidget />
