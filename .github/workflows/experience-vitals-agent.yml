@@ -39,8 +39,9 @@ jobs:
       - name: Run experience vitals agent
         env:
           PLAYWRIGHT_BASE_URL: https://startingmonday.app
-          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
-          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
+          # Production probe credentials (PROD_*); the unprefixed secrets point at staging.
+          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PROD_PLAYWRIGHT_TEST_EMAIL }}
+          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PROD_PLAYWRIGHT_TEST_PASSWORD }}
           SLACK_UI_DELIVERY_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_UI_DELIVERY_CHANNEL: reliability---service

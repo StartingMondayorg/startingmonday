@@ -63,8 +63,10 @@ jobs:
         id: synthetics
         env:
           PLAYWRIGHT_BASE_URL: https://startingmonday.app
-          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
-          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
+          # Production probe credentials (PROD_*); the unprefixed secrets point at staging.
+          # With the staging creds this suite silently skipped every auth-gated spec.
+          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PROD_PLAYWRIGHT_TEST_EMAIL }}
+          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PROD_PLAYWRIGHT_TEST_PASSWORD }}
           PLAYWRIGHT_SYNTH_SIGNUP_EMAIL: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_EMAIL }}
           PLAYWRIGHT_SYNTH_SIGNUP_PASSWORD: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_PASSWORD }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}

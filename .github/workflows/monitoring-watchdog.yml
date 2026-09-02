@@ -40,15 +40,15 @@ jobs:
           script: |
             const workflows = [
               { id: 'ci.yml', name: 'CI', maxAgeMinutes: null, requireSuccess: false },
-              { id: 'monitoring.yml', name: 'Production Monitoring', maxAgeMinutes: 90, requireSuccess: true, consecutiveFailureThreshold: 2 },
-              // Runs every 15m; 90m window absorbs routine GitHub scheduler delays (observed 60m+) like the other frequent monitors.
-              { id: 'data-integrity-alerts.yml', name: 'Data Integrity Alerts', maxAgeMinutes: 90, requireSuccess: true },
-              { id: 'deployment-watchdog.yml', name: 'Deployment Watchdog', maxAgeMinutes: 90, requireSuccess: true },
-              { id: 'fast-burn-alert.yml', name: 'Fast-Burn Alert', maxAgeMinutes: 90, requireSuccess: true },
-              { id: 'dependency-health.yml', name: 'Dependency Health', maxAgeMinutes: 90, requireSuccess: true },
-              // Synthetics runs every 5 minutes, but GitHub scheduled workflows can drift significantly during incidents.
-              // Use a wider threshold to prevent false watchdog pages while still detecting real monitoring stalls.
-              { id: 'production-synthetics.yml', name: 'Production Synthetics', maxAgeMinutes: 120, requireSuccess: true },
+              // Frequent monitors use a 5h window: observed GitHub cron drift reaches
+              // 143-254 minutes off-hours (SMK-451), so 90-120m windows paged on
+              // scheduler delay rather than real monitoring stalls.
+              { id: 'monitoring.yml', name: 'Production Monitoring', maxAgeMinutes: 60 * 5, requireSuccess: true, consecutiveFailureThreshold: 2 },
+              { id: 'data-integrity-alerts.yml', name: 'Data Integrity Alerts', maxAgeMinutes: 60 * 5, requireSuccess: true },
+              { id: 'deployment-watchdog.yml', name: 'Deployment Watchdog', maxAgeMinutes: 60 * 5, requireSuccess: true },
+              { id: 'fast-burn-alert.yml', name: 'Fast-Burn Alert', maxAgeMinutes: 60 * 5, requireSuccess: true },
+              { id: 'dependency-health.yml', name: 'Dependency Health', maxAgeMinutes: 60 * 5, requireSuccess: true },
+              { id: 'production-synthetics.yml', name: 'Production Synthetics', maxAgeMinutes: 60 * 5, requireSuccess: true },
               { id: 'dashboard-behavior-baseline.yml', name: 'Dashboard Behavior Baseline Agent', maxAgeMinutes: 60 * 30, requireSuccess: true },
               { id: 'trust-integrity-agent.yml', name: 'Trust Integrity Agent', maxAgeMinutes: 60 * 30, requireSuccess: true },
               // Runs every 2h; a window equal to the cadence flags every scheduler delay as stale. 5h allows ~2 missed slots.
@@ -67,7 +67,7 @@ jobs:
               { id: 'trust-weekly-issues-report.yml', name: 'Trust Weekly Issues Report', maxAgeMinutes: 60 * 24 * 8, requireSuccess: true },
               { id: 'trust-monthly-trends-report.yml', name: 'Trust Monthly Trends Report', maxAgeMinutes: 60 * 24 * 40, requireSuccess: true },
               { id: 'route-inventory-agent.yml', name: 'Route Inventory Agent', maxAgeMinutes: 60 * 30, requireSuccess: true },
-              { id: 'luxury-page-sentinel.yml', name: 'Luxury Page Sentinel', maxAgeMinutes: 120, requireSuccess: false, consecutiveFailureThreshold: 3 },
+              { id: 'luxury-page-sentinel.yml', name: 'Luxury Page Sentinel', maxAgeMinutes: 60 * 5, requireSuccess: false, consecutiveFailureThreshold: 3 },
               { id: 'security-weekly.yml', name: 'Weekly security audit', maxAgeMinutes: 60 * 24 * 10, requireSuccess: false },
               { id: 'watermark-audit.yml', name: 'Monthly Watermark Documentation Audit', maxAgeMinutes: 60 * 24 * 40, requireSuccess: false },
             ]
