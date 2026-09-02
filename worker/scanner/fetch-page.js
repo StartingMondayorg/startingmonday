@@ -1,7 +1,25 @@
 import { logger } from '../lib/logger.js'
 import { createLimiter } from '../lib/concurrency.js'
 
-const BROWSERLESS_URL = 'https://production-sfo.browserless.io/chromium/content'
+const BROWSERLESS_BASE = 'https://production-sfo.browserless.io'
+const BROWSERLESS_CONTENT_URL = `${BROWSERLESS_BASE}/chromium/content`
+const BROWSERLESS_FUNCTION_URL = `${BROWSERLESS_BASE}/function`
+
+// Render mode (SMK-489 item 1). 'innertext' (default) asks the browser for
+// document.body.innerText via the /function API: browser-computed visible text
+// with real line breaks, independent of markup minification and respecting CSS
+// visibility. 'content' is the legacy /chromium/content serialized-DOM path,
+// kept as a config rollback that needs no redeploy (WS2-15 kill behavior).
+// Both endpoints bill the same way: one browser session per call.
+export function renderMode() {
+  return process.env.BROWSERLESS_RENDER_MODE === 'content' ? 'content' : 'innertext'
+}
+
+// Statuses that mean the /function endpoint itself is unavailable or rejected
+// our code, not that the target page failed. Only these trigger the one-shot
+// fallback to /chromium/content; a page-level failure would fail there too and
+// falling back on it would double unit spend for nothing.
+const FUNCTION_UNAVAILABLE_STATUSES = new Set([400, 404, 405, 501])
 
 // browserless.io caps how many browsers may be open at once -- 10 on the
 // Prototyping annual plan, 2 on the free plan we were on until 2026-08-20.
@@ -104,10 +122,15 @@ export class BlockedError extends Error {
 //    If it returns substantial content, use it and skip the browserless.io credit.
 // 2. browserless.io (JS-rendered) — for SPA career pages or when plain fetch returns sparse HTML.
 //
-// Returns { html, via, renderMs }. `via` is 'direct_fetch' or 'render'; callers
-// record it so render spend is measurable (SMK-476). Only 'render' costs a
-// browserless.io unit — treating every scan as a render is what made the usage
-// counter meaningless.
+// Returns { content, kind, via, renderMs }.
+//   kind: 'html' (needs extractText) or 'text' (browser-computed visible text,
+//         needs only normalizeText). SMK-489: the render path returns 'text'
+//         by default so line structure comes from the browser, not from
+//         whitespace that happened to survive in the markup.
+//   via:  'direct_fetch' or 'render'; callers record it so render spend is
+//         measurable (SMK-476). Only 'render' costs a browserless.io unit --
+//         treating every scan as a render is what made the usage counter
+//         meaningless.
 export async function fetchPage(url) {
   if (!isAllowedUrl(url)) {
     throw new Error(`fetchPage: blocked URL — ${url}`)
@@ -134,7 +157,7 @@ export async function fetchPage(url) {
       // escalate to browserless.io (raw length alone would wrongly accept it).
       if (!isSpaHost(url) && visibleTextLength(html) >= MIN_VISIBLE_TEXT) {
         logger.info('fetch-page: plain fetch used', { url, htmlLength: html.length })
-        return { html, via: 'direct_fetch', renderMs: null }
+        return { content: html, kind: 'html', via: 'direct_fetch', renderMs: null }
       }
       logger.info('fetch-page: shell/SPA detected, escalating to browserless', {
         url, host: hostOf(url), htmlLength: html.length, visibleText: visibleTextLength(html),
@@ -157,19 +180,50 @@ export async function fetchPage(url) {
   // time spent queued. A browserless.io unit is 30s of browser time, so queue
   // wait must not inflate it.
   let renderMs = null
-  const html = await renderLimit(async () => {
+  const rendered = await renderLimit(async () => {
     const startedAt = Date.now()
     try {
-      return await fetchViaBrowserless(url, apiKey)
+      return await renderViaBrowserless(url, apiKey)
     } finally {
       renderMs = Date.now() - startedAt
     }
   })
-  return { html, via: 'render', renderMs }
+  return { content: rendered.content, kind: rendered.kind, via: 'render', renderMs }
 }
 
-async function fetchViaBrowserless(url, apiKey) {
-  const res = await fetch(`${BROWSERLESS_URL}?token=${apiKey}`, {
+// Runs inside the render limiter. Prefers browser-computed innerText; falls
+// back to serialized DOM only when the /function endpoint itself is
+// unavailable (never on a page-level failure).
+async function renderViaBrowserless(url, apiKey) {
+  if (renderMode() === 'innertext') {
+    const res = await fetch(`${BROWSERLESS_FUNCTION_URL}?token=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code: INNER_TEXT_FUNCTION,
+        context: { url },
+      }),
+      signal: AbortSignal.timeout(30000),
+    })
+
+    if (BLOCKED_STATUSES.has(res.status)) {
+      throw new BlockedError(url, res.status)
+    }
+
+    if (res.ok) {
+      return { content: await res.text(), kind: 'text' }
+    }
+
+    const body = await res.text()
+    if (!FUNCTION_UNAVAILABLE_STATUSES.has(res.status)) {
+      throw new Error(`browserless.io function ${res.status}: ${body.slice(0, 200)}`)
+    }
+    logger.warn('fetch-page: /function unavailable, falling back to /chromium/content', {
+      url, status: res.status, body: body.slice(0, 200),
+    })
+  }
+
+  const res = await fetch(`${BROWSERLESS_CONTENT_URL}?token=${apiKey}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -188,5 +242,16 @@ async function fetchViaBrowserless(url, apiKey) {
     throw new Error(`browserless.io ${res.status}: ${body.slice(0, 200)}`)
   }
 
-  return res.text()
+  return { content: await res.text(), kind: 'html' }
 }
+
+// ESM module the browserless.io /function API executes in its own runtime.
+// Returns document.body.innerText: real line breaks at block boundaries,
+// hidden elements excluded, independent of markup minification.
+const INNER_TEXT_FUNCTION = `
+export default async function ({ page, context }) {
+  await page.goto(context.url, { waitUntil: 'networkidle2', timeout: 25000 });
+  const text = await page.evaluate(() => document.body ? document.body.innerText : '');
+  return { data: text, type: 'text/plain' };
+}
+`

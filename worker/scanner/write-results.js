@@ -5,12 +5,22 @@ import { logger } from '../lib/logger.js'
 // raw_hits: JSONB array of { title, score, is_match, summary }
 // ai_score: highest match score found (0-100)
 // ai_summary: plain-text summary of findings
-// status: 'success' | 'blocked' | 'error'
-// acquisition_path: 'ats_feed' | 'direct_fetch' | 'render' — only 'render' spends
+// status: 'success' | 'blocked' | 'error' | 'extraction_failed'
+// acquisition_path: 'ats_feed' | 'direct_fetch' | 'render' -- only 'render' spends
 //   a browserless.io unit (SMK-476)
 // render_ms: duration of the browserless.io call; a unit is 30s of browser time
+// extracted_chars / extracted_line_count / extracted_max_line_chars: text-shape
+//   telemetry per scan (SMK-489 item 4), so collapsed extraction stays measurable
 
-export async function writeScanResult(supabase, { companyId, userId, hits, aiScore, aiSummary, acquisitionPath = null, atsProvider = null, renderMs = null }) {
+function shapeColumns(textShape) {
+  return {
+    extracted_chars: textShape?.chars ?? null,
+    extracted_line_count: textShape?.lineCount ?? null,
+    extracted_max_line_chars: textShape?.maxLineChars ?? null,
+  }
+}
+
+export async function writeScanResult(supabase, { companyId, userId, hits, aiScore, aiSummary, acquisitionPath = null, atsProvider = null, renderMs = null, textShape = null }) {
   const { error } = await supabase.from('scan_results').insert({
     company_id: companyId,
     user_id: userId,
@@ -22,8 +32,31 @@ export async function writeScanResult(supabase, { companyId, userId, hits, aiSco
     acquisition_path: acquisitionPath,
     ats_provider: atsProvider,
     render_ms: renderMs,
+    ...shapeColumns(textShape),
   })
   if (error) throw new Error(`Failed to write scan result: ${error.message}`)
+}
+
+// SMK-489 item 3: the scan acquired content but extraction collapsed it into an
+// unreadable shape. This is a distinct failure outcome, never a success with
+// zero hits, so per-company health reporting (SMK-478) can see it.
+export async function writeScanExtractionFailure(supabase, { companyId, userId, acquisitionPath = null, atsProvider = null, renderMs = null, textShape = null }) {
+  const shape = textShape ?? {}
+  const { error } = await supabase.from('scan_results').insert({
+    company_id: companyId,
+    user_id: userId,
+    scanned_at: new Date().toISOString(),
+    status: 'extraction_failed',
+    raw_hits: [],
+    ai_score: 0,
+    ai_summary: 'Career page content could not be parsed into readable lines; no verdict on open roles',
+    error_message: `Degenerate extraction shape: ${shape.chars ?? '?'} chars in ${shape.lineCount ?? '?'} line(s), longest line ${shape.maxLineChars ?? '?'} chars`.slice(0, 500),
+    acquisition_path: acquisitionPath,
+    ats_provider: atsProvider,
+    render_ms: renderMs,
+    ...shapeColumns(textShape),
+  })
+  if (error) throw new Error(`Failed to write extraction failure: ${error.message}`)
 }
 
 export async function updateCompanyScanTime(supabase, companyId) {
