@@ -37,7 +37,7 @@ it('skips a non-queued live-brief run without scanning', async () => {
 it('maps company scan outcomes into live-brief rows and completes the run', async () => {
   state.scanLiveBriefCompany.mockReset()
   state.scanLiveBriefCompany
-    .mockResolvedValueOnce({ status: 'complete', evidence: [{ title: 'VP Operations' }], observedAt: '2026-08-20T00:00:00.000Z' })
+    .mockResolvedValueOnce({ status: 'complete', evidence: [{ title: 'VP Operations' }], observedAt: '2026-08-20T00:00:00.000Z', acquisitionPath: 'render', renderMs: 2400 })
     .mockResolvedValueOnce({ status: 'blocked_by_source_policy', evidence: [], errorClass: 'robots_blocked' })
 
   const updates = []
@@ -77,6 +77,9 @@ it('maps company scan outcomes into live-brief rows and completes the run', asyn
   assert.equal(updates.some(([kind, value]) => kind === 'request' && value.status === 'ready_for_review'), true)
   assert.equal(updates.some(([kind, value]) => kind === 'company' && value.status === 'complete'), true)
   assert.equal(updates.some(([kind, value]) => kind === 'company' && value.status === 'blocked_by_source_policy'), true)
+  // SMK-489 item 5: the writer records acquisition path and render duration.
+  assert.equal(updates.some(([kind, value]) => kind === 'company' && value.acquisition_path === 'render' && value.render_ms === 2400), true)
+  assert.equal(updates.some(([kind, value]) => kind === 'company' && value.status === 'blocked_by_source_policy' && value.acquisition_path === null), true)
   assert.equal(events.length, 1)
   assert.equal(events[0].request_id, 'request-1')
   assert.equal(events[0].event_type, 'scan_completed')
