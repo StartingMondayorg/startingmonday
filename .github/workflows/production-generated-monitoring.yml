@@ -36,8 +36,9 @@ jobs:
         id: generated
         env:
           PLAYWRIGHT_BASE_URL: https://startingmonday.app
-          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
-          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
+          # Production probe credentials (PROD_*); the unprefixed secrets point at staging.
+          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PROD_PLAYWRIGHT_TEST_EMAIL }}
+          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PROD_PLAYWRIGHT_TEST_PASSWORD }}
         run: |
           npx playwright test --project=monitor-generated \
             --reporter=json 2>/dev/null > generated-monitoring-results.json || true

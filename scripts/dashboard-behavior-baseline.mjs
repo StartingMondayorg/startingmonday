@@ -36,6 +36,28 @@ async function waitForBriefingSettled(page) {
   return Date.now() - startedAt
 }
 
+// The signals filter bar renders shadcn/Base UI Select components (PR #426),
+// not native <select> elements, so `select[name=...] option` never matches.
+// The trigger is a combobox named by its aria-label; opening it renders the
+// options (including the leading "All ..." item, matching the old native
+// option count) into a popup listbox.
+async function countFilterOptions(page, triggerLabel) {
+  const trigger = page.getByRole('combobox', { name: triggerLabel }).first()
+  try {
+    await trigger.waitFor({ state: 'visible', timeout: 10000 })
+    await trigger.click()
+    const options = page.getByRole('option')
+    await options.first().waitFor({ state: 'visible', timeout: 5000 })
+    const count = await options.count()
+    await page.keyboard.press('Escape')
+    await options.first().waitFor({ state: 'hidden', timeout: 5000 }).catch(() => null)
+    return count
+  } catch {
+    await page.keyboard.press('Escape').catch(() => null)
+    return 0
+  }
+}
+
 async function measureRoute(page, route) {
   const startedAt = Date.now()
   const response = await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 30000 })
@@ -59,12 +81,13 @@ async function measureRoute(page, route) {
   }
 
   if (route === '/dashboard/signals') {
-    const companyOptions = await page.locator('select[name="company"] option').count()
-    const typeOptions = await page.locator('select[name="type"] option').count()
-    const runButtonVisible = await page.getByRole('button', { name: /Run signal scan now/i }).isVisible().catch(() => false)
+    const runButtonVisible = await page.getByRole('button', { name: /Run signal scan now/i }).first()
+      .waitFor({ state: 'visible', timeout: 10000 })
+      .then(() => true)
+      .catch(() => false)
 
-    result.signalsCompanyOptions = companyOptions
-    result.signalsTypeOptions = typeOptions
+    result.signalsCompanyOptions = await countFilterOptions(page, 'Filter by company')
+    result.signalsTypeOptions = await countFilterOptions(page, 'Filter by type')
     result.hasRunSignalsButton = runButtonVisible
   }
 

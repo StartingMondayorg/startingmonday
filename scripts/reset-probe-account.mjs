@@ -21,6 +21,12 @@ const targetEmail = [
   .find((value) => value.length > 0) ?? ''
 const dryRun = (process.env.PROBE_RESET_DRY_RUN ?? 'false').trim().toLowerCase() === 'true'
 
+// The company Playwright global-setup seeds so authenticated monitoring agents
+// always find at least one active company (see tests/e2e/global-setup.ts).
+// The capacity reset must not archive it: doing so left the probe account with
+// zero companies and made the dashboard behavior baseline signals checks flap.
+const anchorCompanyName = (process.env.PROBE_ANCHOR_COMPANY_NAME ?? 'Synthetic Monitoring Anchor').trim()
+
 function requireEnv(name, value) {
   if (!value) throw new Error(`Missing required environment variable: ${name}`)
 }
@@ -100,6 +106,7 @@ async function main() {
       .update({ archived_at: new Date().toISOString() })
       .eq('user_id', user.id)
       .is('archived_at', null)
+      .neq('name', anchorCompanyName)
       .select('id')
 
     if (archiveResult.error) throw archiveResult.error
