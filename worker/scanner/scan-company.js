@@ -1,11 +1,11 @@
 import { isAllowedByRobots } from './robots-check.js'
 import { fetchPage, BlockedError } from './fetch-page.js'
-import { extractText } from './extract-text.js'
+import { extractText, normalizeText, textShape, isDegenerateTextShape } from './extract-text.js'
 import { fetchAtsJobs, jobsToText } from './ats-adapters.js'
 import { detectRoles } from './detect-roles.js'
 import { scoreHit } from './score-hit.js'
 import { wasRecentlyScanned, getPreviousHitTitles, RESCAN_WINDOW_STANDARD_HOURS } from './deduplicate.js'
-import { writeScanResult, updateCompanyScanTime, writeScanBlocked, writeScanError, checkAndAlertScanFailures } from './write-results.js'
+import { writeScanResult, updateCompanyScanTime, writeScanBlocked, writeScanError, writeScanExtractionFailure, checkAndAlertScanFailures } from './write-results.js'
 import { resolveCanonicalCompany } from '../lib/canonical-company.js'
 import { recordRoleOpening, inferRoleFamilyFromTitle, isLeadershipTitle } from '../lib/outcome-labels.js'
 import { logger } from '../lib/logger.js'
@@ -50,11 +50,26 @@ export async function scanCompany(supabase, company, userProfile, { rescanWindow
     } else {
       logger.info('scanner: fetching career page', { companyId, userId, companyName: name, careerPageUrl: career_page_url })
       const fetched = await fetchPage(career_page_url)
-      text = extractText(fetched.html)
+      text = fetched.kind === 'text' ? normalizeText(fetched.content) : extractText(fetched.content)
       acquisitionPath = fetched.via
       renderMs = fetched.renderMs
     }
-    logger.info('scanner: text acquired', { companyId, userId, companyName: name, acquisitionPath, atsProvider, renderMs })
+    const shape = textShape(text)
+    logger.info('scanner: text acquired', { companyId, userId, companyName: name, acquisitionPath, atsProvider, renderMs, ...shape })
+
+    // SMK-489 item 3: a degenerate shape means the page had content we could
+    // not parse into lines. Recording that as success with zero hits is a
+    // false authoritative zero, so it gets a distinct extraction-failure
+    // outcome instead and never reaches detection.
+    if (isDegenerateTextShape(shape)) {
+      logger.warn('scanner: degenerate extraction shape, recording extraction failure', {
+        companyId, userId, companyName: name, acquisitionPath, ...shape,
+      })
+      await writeScanExtractionFailure(supabase, { companyId, userId, acquisitionPath, atsProvider, renderMs, textShape: shape })
+      await updateCompanyScanTime(supabase, companyId)
+      checkAndAlertScanFailures(supabase, { companyId, companyName: name, userId }).catch(() => {})
+      return { extractionFailed: true, acquisitionPath, renderMs }
+    }
 
     // 4. Detect candidate titles
     const candidates = detectRoles(text, userProfile)
@@ -85,7 +100,7 @@ export async function scanCompany(supabase, company, userProfile, { rescanWindow
         : `No matches among ${scoredHits.length} ${scoredHits.length === 1 ? 'posting' : 'postings'} detected`
 
     // 7. Write one scan_results row
-    await writeScanResult(supabase, { companyId, userId, hits: scoredHits, aiScore, aiSummary, acquisitionPath, atsProvider, renderMs })
+    await writeScanResult(supabase, { companyId, userId, hits: scoredHits, aiScore, aiSummary, acquisitionPath, atsProvider, renderMs, textShape: shape })
     await updateCompanyScanTime(supabase, companyId)
     checkAndAlertScanFailures(supabase, { companyId, companyName: name, userId }).catch(() => {})
 

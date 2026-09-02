@@ -40,6 +40,10 @@ export async function runLiveBriefScanJob(runId) {
       evidence_summary: result.evidence,
       error_class: result.errorClass ?? null,
       observed_at: result.observedAt ?? new Date().toISOString(),
+      // SMK-489 item 5: record how the text was acquired so live-brief scans
+      // are visible to acquisition-path analysis (WS2-15 telemetry).
+      acquisition_path: result.acquisitionPath ?? null,
+      render_ms: result.renderMs ?? null,
     }).eq('id', company.id)
     return result
   })))
