@@ -131,7 +131,7 @@ export function DashboardProgressFeedSection(props: Props) {
             The shortest path to momentum across due actions, warm openings, and new market movement.
           </p>
         </div>
-        <Link href="/dashboard/briefing" className="text-[12px] text-muted-foreground hover:text-foreground shrink-0">
+        <Link href="/dashboard/briefing" className="inline-flex min-h-[32px] items-center text-[12px] text-muted-foreground hover:text-foreground shrink-0">
           Briefing &rarr;
         </Link>
       </div>
