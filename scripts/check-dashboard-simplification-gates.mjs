@@ -53,6 +53,18 @@ for (const pattern of manifest.forbiddenPatterns) {
 for (const boundaryPath of manifest.stateBoundaries ?? []) {
   const boundarySource = fs.readFileSync(path.join(root, boundaryPath), 'utf8')
   const mainCount = (boundarySource.match(/<main\b/g) ?? []).length
+  if (path.basename(boundaryPath).startsWith('loading.')) {
+    // Loading fallbacks coexist in the DOM with the page's own main landmark
+    // during Suspense streaming (SMK-491), so they must not declare one.
+    if (mainCount !== 0) {
+      violations.push({
+        type: 'state-landmark',
+        file: boundaryPath,
+        message: `${boundaryPath} is a loading fallback and must not declare a main landmark (it coexists with the page's main during streaming); found ${mainCount}.`,
+      })
+    }
+    continue
+  }
   const usesSharedRouteError = /<RouteError\b/.test(boundarySource)
   if (mainCount !== 1 && !usesSharedRouteError) {
     violations.push({
