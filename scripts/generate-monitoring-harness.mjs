@@ -54,6 +54,10 @@ const ACTION_OVERRIDES = {
     expectedStatuses: [401, 404],
     note: 'Route is not deployed on production at this time and may return auth-first 401',
   },
+  '/api/billing/portal': {
+    expectedStatuses: [200, 401, 404],
+    note: 'Returns 404 (No billing account found) when the monitoring user has no Stripe customer, expected for the probe account',
+  },
   '/api/partners/report': {
     expectedStatuses: [410],
     note: 'Retired endpoint intentionally returns 410 Gone',

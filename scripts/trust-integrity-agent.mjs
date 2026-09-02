@@ -45,6 +45,11 @@ function extractDashboardSignalCount(text) {
   const direct = text.match(/Signals\s+this\s+week:\s*(\d+)/i)
   if (direct) return Number.parseInt(direct[1], 10)
 
+  // The feature-flagged simplified dashboard renders the count as a stat
+  // tile: the number on its own line followed by "new signals this week".
+  const statTile = text.match(/(\d+)\s*\n?\s*new\s+signals?\s+this\s+week/i)
+  if (statTile) return Number.parseInt(statTile[1], 10)
+
   const fallback = text.match(/(\d+)\s+fresh\s+signal(?:s)?\s+and\s+\d+\s+overdue\s+follow-up/i)
   if (fallback) return Number.parseInt(fallback[1], 10)
 
@@ -74,6 +79,12 @@ async function evaluateRoute(page, routeConfig, titlePatternTemplate = '{label} 
   const status = response?.status() ?? 0
 
   await page.locator('main').first().waitFor({ state: 'visible', timeout: 15000 })
+
+  // Streamed routes (for example /dashboard/signals) keep their Suspense
+  // loading fallback, including its own main landmark, in the DOM until the
+  // stream settles. Measure the settled page like the server-rendered routes,
+  // not the fallback skeleton.
+  await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => null)
 
   const title = await page.title()
   const mainCount = await page.locator('main').count()

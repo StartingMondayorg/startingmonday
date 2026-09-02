@@ -42,8 +42,11 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          PLAYWRIGHT_SYNTH_SIGNUP_EMAIL: ${{ secrets.PLAYWRIGHT_SYNTH_SIGNUP_EMAIL }}
-          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
+          # The reset targets the PRODUCTION Supabase instance, so it must use the
+          # production probe account. PLAYWRIGHT_SYNTH_SIGNUP_EMAIL and the unprefixed
+          # PLAYWRIGHT_TEST_EMAIL were repointed at staging accounts on 2026-08-28 and
+          # no longer exist in prod, which made every scheduled reset fail.
+          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PROD_PLAYWRIGHT_TEST_EMAIL }}
           PROBE_ACCOUNT_EMAIL: ${{ github.event.inputs.probe_email }}
           PROBE_RESET_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: node scripts/reset-probe-account.mjs
