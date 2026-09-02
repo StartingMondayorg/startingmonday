@@ -32,10 +32,14 @@ test('dashboard simplification gate rejects an added zone', () => {
   )
 })
 
-test('dashboard simplification gate rejects a loading boundary without main', () => {
+test('dashboard simplification gate rejects a loading boundary that declares a main landmark', () => {
+  // Loading fallbacks must not declare a main landmark: during Suspense
+  // streaming they coexist with the page's own main (SMK-491). The gate is
+  // regex-based, so swapping only the opening tag is sufficient to trip it.
   const loadingPath = path.join(root, 'src', 'app', '(dashboard)', 'dashboard', 'loading.tsx')
   const original = fs.readFileSync(loadingPath, 'utf8')
-  const replacement = original.replace('<main ', '<section ').replace('</main>', '</section>')
+  const replacement = original.replace('<div aria-busy="true"', '<main aria-busy="true"')
+  assert.notEqual(replacement, original)
   fs.writeFileSync(loadingPath, replacement)
 
   try {

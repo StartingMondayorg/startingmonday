@@ -10,7 +10,7 @@ export default function StartLoading() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
         {/* Title skeleton */}
         <div className="mb-8">
           <Skeleton className="h-8 w-56 mb-3" />
@@ -44,7 +44,7 @@ export default function StartLoading() {
             </Card>
           ))}
         </div>
-      </main>
+      </div>
     </div>
   )
 }

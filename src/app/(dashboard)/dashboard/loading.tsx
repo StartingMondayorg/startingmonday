@@ -11,7 +11,7 @@ export default function DashboardLoading() {
         </div>
       </header>
 
-      <main aria-busy="true" aria-live="polite" className="max-w-4xl mx-auto px-6 py-10">
+      <div aria-busy="true" aria-live="polite" className="max-w-4xl mx-auto px-6 py-10">
         <Skeleton className="h-7 w-48 mb-8" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {[1, 2, 3, 4].map(i => (
@@ -27,7 +27,7 @@ export default function DashboardLoading() {
             <Skeleton key={i} className="h-4 w-full mb-3" />
           ))}
         </Card>
-      </main>
+      </div>
     </div>
   )
 }
