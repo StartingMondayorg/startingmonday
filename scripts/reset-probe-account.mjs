@@ -58,6 +58,7 @@ function buildMarkdown(report) {
   lines.push(`Active companies before: ${report.activeCompaniesBefore}`)
   lines.push(`Companies archived: ${report.archivedCompanies}`)
   lines.push(`First company milestone reset: ${report.firstCompanyMilestoneReset}`)
+  lines.push(`Onboarding marked complete: ${report.onboardingMarkedComplete}`)
   lines.push('')
   return `${lines.join('\n')}\n`
 }
@@ -73,6 +74,7 @@ function buildSlackText(report) {
     `Active companies before: ${report.activeCompaniesBefore}`,
     `Companies archived: ${report.archivedCompanies}`,
     `First-company milestone reset: ${report.firstCompanyMilestoneReset}`,
+    `Onboarding marked complete: ${report.onboardingMarkedComplete}`,
   ].join('\n')
 }
 
@@ -99,8 +101,23 @@ async function main() {
 
   let archivedCompanies = 0
   let firstCompanyMilestoneReset = false
+  let onboardingMarkedComplete = false
 
   if (!dryRun) {
+    // Authenticated monitoring agents are redirected to /onboarding whenever
+    // user_profiles.onboarding_completed_at is null, which strands every
+    // dashboard contract check. The reset keeps the probe account in a
+    // monitoring-ready state, so it repairs that flag when it is missing.
+    const profileRepair = await admin
+      .from('user_profiles')
+      .update({ onboarding_completed_at: new Date().toISOString() })
+      .eq('user_id', user.id)
+      .is('onboarding_completed_at', null)
+      .select('user_id')
+
+    if (profileRepair.error) throw profileRepair.error
+    onboardingMarkedComplete = Array.isArray(profileRepair.data) && profileRepair.data.length > 0
+
     const archiveResult = await admin
       .from('companies')
       .update({ archived_at: new Date().toISOString() })
@@ -132,6 +149,7 @@ async function main() {
     activeCompaniesBefore,
     archivedCompanies,
     firstCompanyMilestoneReset,
+    onboardingMarkedComplete,
   }
 
   writeLatestReportFiles({
