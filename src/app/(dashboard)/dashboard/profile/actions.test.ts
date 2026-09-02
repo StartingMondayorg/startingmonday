@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const state = vi.hoisted(() => ({
   getUser: vi.fn(),
   upsert: vi.fn(),
+  captureServerEvent: vi.fn(),
   redirect: vi.fn(),
   revalidatePath: vi.fn(),
 }))
@@ -10,7 +11,7 @@ const state = vi.hoisted(() => ({
 vi.mock('next/navigation', () => ({ redirect: state.redirect }))
 vi.mock('next/cache', () => ({ revalidatePath: state.revalidatePath }))
 vi.mock('@/lib/events', () => ({ logEvent: vi.fn() }))
-vi.mock('@/lib/posthog-server', () => ({ captureServerEvent: vi.fn() }))
+vi.mock('@/lib/posthog-server', () => ({ captureServerEvent: state.captureServerEvent }))
 vi.mock('@/lib/supabase/server', () => ({
   createClient: async () => ({
     auth: { getUser: state.getUser },
@@ -53,5 +54,18 @@ describe('profile posture persistence', () => {
       expect.objectContaining({ search_posture: null }),
       { onConflict: 'user_id' },
     )
+  })
+
+  it('logs a structured failure without exposing the database message', async () => {
+    state.upsert.mockResolvedValue({ error: { code: 'PGRST204', message: "Could not find the 'search_posture' column" } })
+
+    await saveProfile(formData('exploring'))
+
+    expect(state.captureServerEvent).toHaveBeenCalledWith('user-1', 'profile_save_failed', {
+      code: 'PGRST204',
+      phase: 'profile_upsert',
+    })
+    expect(state.redirect).toHaveBeenCalledWith('/dashboard/profile?error=profile_save_failed')
+    expect(state.redirect).not.toHaveBeenCalledWith(expect.stringContaining('search_posture'))
   })
 })
