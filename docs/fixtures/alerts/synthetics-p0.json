@@ -1,0 +1,19 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000001.000100",
+  "bot_id": "B_ALERTBOT",
+  "text": "P0 Synthetic failure - 2/8 checks failed",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "P0 Synthetic Failure - Sev-1" } },
+    { "type": "section", "fields": [
+      { "type": "mrkdwn", "text": "*Failed checks:* 2/8" },
+      { "type": "mrkdwn", "text": "*Deploy SHA:* 63b5144c" },
+      { "type": "mrkdwn", "text": "*Briefing settle:* P50 210ms | P95 880ms" },
+      { "type": "mrkdwn", "text": "*Journey risk:* 42/100 (elevated)" },
+      { "type": "mrkdwn", "text": "*Tests:* - tests/e2e/briefing.spec.ts - tests/e2e/auth.spec.ts" },
+      { "type": "mrkdwn", "text": "*Runbooks:* docs/sre/runbooks/" }
+    ] },
+    { "type": "section", "text": { "type": "mrkdwn", "text": "<https://github.com/StartingMondayorg/startingmonday/actions/runs/123|View synthetic run logs>" } }
+  ]
+}
