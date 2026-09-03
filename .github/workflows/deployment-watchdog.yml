@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Validate monitoring secret
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
             echo "Missing required secret: SLACK_WEBHOOK_URL"
@@ -80,7 +80,7 @@ jobs:
       - name: Alert when pushed SHA did not reach production
         if: steps.parity.outputs.result == 'timeout'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           SHA="${{ steps.parity.outputs.sha || github.sha }}"
           STATES="${{ steps.parity.outputs.states || 'none' }}"
@@ -120,7 +120,7 @@ jobs:
     steps:
       - name: Validate monitoring secret
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
             echo "Missing required secret: SLACK_WEBHOOK_URL"
@@ -172,7 +172,7 @@ jobs:
       - name: Alert when latest production commit has not deployed
         if: steps.watchdog.outputs.should_alert == 'true'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           SHA="${{ steps.watchdog.outputs.sha }}"
           AGE="${{ steps.watchdog.outputs.age_minutes }}"

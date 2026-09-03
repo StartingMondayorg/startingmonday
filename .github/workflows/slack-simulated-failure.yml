@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Validate webhook secret exists
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
             echo "SLACK_WEBHOOK_URL is missing"
@@ -27,7 +27,7 @@ jobs:
       - name: Send simulated failure notification
         uses: slackapi/slack-github-action@v1.24.0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {

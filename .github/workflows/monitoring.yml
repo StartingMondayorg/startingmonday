@@ -103,7 +103,7 @@ jobs:
       - name: Send Slack notification on failure
         if: failure()
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "🚨 Production smoke check failed",
