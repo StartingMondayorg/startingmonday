@@ -149,7 +149,13 @@ export async function saveProfile(formData: FormData) {
       { onConflict: 'user_id' }
     )
 
-  if (upsertError) redirect(`/dashboard/profile?error=${encodeURIComponent(upsertError.message)}`)
+  if (upsertError) {
+    const details = { code: upsertError.code ?? null, phase: 'profile_upsert' }
+    captureServerEvent(user.id, 'profile_save_failed', details)
+    console.error(JSON.stringify({ event: 'profile_save_failed', userId: user.id, ...details }))
+    redirect('/dashboard/profile?error=profile_save_failed')
+    return
+  }
 
   // Snapshot positioning to narrative_versions if it changed
   if (positioningSummary) {

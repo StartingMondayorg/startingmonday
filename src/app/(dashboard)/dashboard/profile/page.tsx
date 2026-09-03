@@ -139,7 +139,7 @@ export default async function ProfilePage({
 
         <Card variant="glass" id="profile-editor" className="p-8 max-w-xl shadow-lg">
           {saved && <Alert variant="success" className="mb-6"><AlertDescription>Profile saved.</AlertDescription></Alert>}
-          {saveError && <Alert variant="destructive" className="mb-6"><AlertDescription>Save failed: {decodeURIComponent(saveError)}</AlertDescription></Alert>}
+          {saveError && <Alert variant="destructive" className="mb-6"><AlertDescription>We could not save your profile. Please try again. If the problem continues, contact support.</AlertDescription></Alert>}
 
           <form id="profile-form" action={saveProfile} className="flex flex-col gap-6">
             <section id="section-identity">
