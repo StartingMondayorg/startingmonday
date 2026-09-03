@@ -102,6 +102,80 @@ these workflows don't cover them. Verify those by invoking their destinations di
 Note that `alert-simulate` does *not* test delivery -- it only previews how an anomaly detector
 would score historical data, and sends nothing.
 
+## Manual setup (no API available)
+
+Two pieces of this system cannot be configured programmatically. The Sentry MCP exposes only
+`find_alert_rules` and `get_alert_rule` -- no create/update for issue or metric rules -- and
+Sentry's metric-alert REST endpoint now returns `410 This API no longer exists`. Railway has no
+webhook API at all. Both are UI-only, so they are written out here rather than scripted.
+
+### 3. Sentry issue alert -> #alerts-prod
+
+Rule `3379165`, "Send a notification for high priority issues"
+(<https://starting-monday.sentry.io/monitors/alerts/3379165/>). It was auto-created at
+onboarding on 2026-05-05 and never edited.
+
+**Current:** fires on *new* **and existing** high-priority issues; action is Email to issue
+owners. Firing on existing issues is the dangerous half -- the top unresolved issue has ~9,900
+events, so an alert on existing issues is an alert that can fire thousands of times for one bug.
+
+**Target:** first-seen only, error level, production, posting to `#alerts-prod`.
+
+1. Install the Slack integration first, or there will be no Slack action to pick:
+   Settings -> Integrations -> Slack -> Add to Slack, authorize the workspace. For a private
+   channel, also `/invite` the Sentry app into it.
+2. Open the rule and Edit.
+3. **Environment**: `production`. (Verified safe: 9,908 of 9,908 events carry
+   `environment: production`, so this filter excludes nothing that matters.)
+4. **WHEN** -- remove `Existing high priority issue`. Keep a first-seen trigger only
+   (`A new issue is created`, or `New high priority issue` to preserve the priority filter).
+5. **IF** -- add `The event's level is equal to error`.
+6. **THEN** -- remove the Email action, add `Send a Slack notification` to `#alerts-prod`.
+7. **Action interval**: 1 hour, so one noisy issue cannot flood the channel.
+8. Save, then use **Send Test Notification** to confirm it lands in `#alerts-prod`.
+
+**Then check the uptime monitor still routes.** Uptime monitor `9718173` reports downtime by
+opening a Sentry issue, which is delivered by issue alert rules -- so narrowing this rule can
+narrow uptime alerting as a side effect. After saving, confirm an uptime issue would still
+match (it must be `level: error` and count as newly created). If it does not, give uptime its
+own rule rather than loosening this one; the two have different noise profiles and should not
+share a filter.
+
+### 4. Railway deploy webhook -> #alerts-prod
+
+Railway transforms webhook payloads for known destinations ("Muxers"), and Slack is supported,
+so a `hooks.slack.com` URL can be pasted in directly -- no middleware or reformatting.
+
+1. Open the **`ample-blessing`** project -- see the warning below.
+2. Settings -> Webhooks -> paste the `#alerts-prod` incoming webhook URL.
+3. Optionally narrow which events to send. The available classes are deployment status changes,
+   volume usage alerts, and CPU/RAM monitor alerts. Deployment failures are the ones that belong
+   in `#alerts-prod`; successes do not -- a notification that arrives when nothing is wrong is
+   what taught everyone to ignore the old channel.
+4. Save.
+
+**Do not trust a failed `Test Webhook`.** Railway sends test payloads from the browser, so CORS
+routinely makes a working webhook report a delivery failure. Verify with a real deploy instead.
+
+Delivery is best-effort: 30-second timeout, 3 retries with backoff, and a URL that fails ~100
+times in 6 hours is muted for 24 hours. Treat a deploy webhook as a prompt to look, never as the
+system of record.
+
+**Warning -- pick the right project.** Four Railway projects contain a service named some
+variant of "startingmonday", and only one is live:
+
+| Project | Service | State |
+|---|---|---|
+| `ample-blessing` | `startingmonday`, `Starting-Monday-worker-sub`, 4 cron services | **live** |
+| `startingmonday-worker` | `startingmonday-worker` | dead -- last 5 deploys all FAILED, 2026-05-25 |
+| `steadfast-reprieve` | `startingmonday` | stale -- last deploy 2026-07-26, empty secrets |
+| `blissful-upliftment` | `startingmonday` | unverified |
+
+Production was identified by matching the live `/api/health` commit and uptime against
+deployment `bca937d9` in `ample-blessing`. Configuring a webhook on any of the other three
+produces a project that looks monitored and never sends anything, which is worse than no webhook
+at all. Deleting the dead projects is the durable fix.
+
 ## Deliberately not alerted
 
 - **Green builds.** `ci.yml`'s "Post Slack summary" step was guarded by the *negation* of the
