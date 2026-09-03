@@ -95,7 +95,7 @@ export function DashboardStatusBanners({
                   {!step.done && (
                     <Link
                       href={step.href}
-                      className="mt-1 inline-flex text-[12px] font-semibold text-primary"
+                      className="mt-1 inline-flex min-h-[32px] items-center text-[12px] font-semibold text-primary"
                     >
                       {step.cta} →
                     </Link>

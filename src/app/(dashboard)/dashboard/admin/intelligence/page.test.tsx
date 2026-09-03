@@ -61,7 +61,10 @@ describe('AdminIntelligencePage', () => {
     })
   })
 
-  it('renders evidence-bounded role context for staff', async () => {
+  // The dynamic import pays the page's full transform/instrumentation cost
+  // inside the test timer; under `vitest run --coverage` on Windows that
+  // alone can exceed the 5s default, so give this test explicit headroom.
+  it('renders evidence-bounded role context for staff', { timeout: 30000 }, async () => {
     const { default: AdminIntelligencePage } = await import('./page')
     const html = renderToStaticMarkup(await AdminIntelligencePage())
 
