@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Validate Slack webhook
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
             echo "Missing required secret: SLACK_WEBHOOK_URL"
@@ -29,7 +29,7 @@ jobs:
       - name: Send Slack alert for failed deployment
         uses: slackapi/slack-github-action@v1.24.0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {

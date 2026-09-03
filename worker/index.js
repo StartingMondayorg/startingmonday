@@ -283,6 +283,59 @@ const JOB_TIMEOUTS_MS = {
 const DEFAULT_JOB_TIMEOUT_MS = 5 * 60_000
 JOB_TIMEOUTS_MS['watchlist-scan-job'] = 15 * 60_000
 
+// Sentry cron monitors. These jobs are the ones whose *silence* is itself an
+// incident: every other alert we have fires when a job runs and fails, so a
+// worker that dies quietly is invisible until a customer notices. A missed or
+// over-running check-in opens a Sentry issue, which routes to Slack like any
+// other production issue.
+//
+// `schedule` must match the cron.schedule() expression for the same job --
+// worker/cron-monitors.test.js fails the build if the two drift apart.
+// checkinMargin (how late a run may start) and maxRuntime (how long it may run
+// before it counts as failed) are both in minutes; maxRuntime sits above the
+// job's entry in JOB_TIMEOUTS_MS so the in-process timeout trips first and
+// reports a real error rather than letting Sentry infer one.
+const CRON_MONITORS = {
+  'briefing-job':       { schedule: '*/5 * * * *',    checkinMargin: 5,  maxRuntime: 5 },
+  'scan-job':           { schedule: '0 8 * * 1,3,5',  checkinMargin: 30, maxRuntime: 15 },
+  'signal-job':         { schedule: '30 8 * * 1,3,5', checkinMargin: 30, maxRuntime: 10 },
+  'usage-monitor-job':  { schedule: '0 9 * * *',      checkinMargin: 30, maxRuntime: 10 },
+  'dlq-monitor-job':    { schedule: '25 * * * *',     checkinMargin: 10, maxRuntime: 10 },
+  'edgar-watchdog-job': { schedule: '10 * * * *',     checkinMargin: 10, maxRuntime: 10 },
+}
+
+// Opens a check-in and returns its id, or undefined when the job has no
+// monitor. The upsert config means the monitor appears in Sentry on first
+// check-in, so there is nothing to create by hand.
+function startCheckIn(name) {
+  const monitor = CRON_MONITORS[name]
+  if (!monitor) return undefined
+  try {
+    return Sentry.captureCheckIn(
+      { monitorSlug: name, status: 'in_progress' },
+      {
+        schedule: { type: 'crontab', value: monitor.schedule },
+        checkinMargin: monitor.checkinMargin,
+        maxRuntime: monitor.maxRuntime,
+        timezone: 'UTC',
+      },
+    )
+  } catch (err) {
+    logger.warn(`${name}: could not open Sentry check-in`, { error: err.message })
+    return undefined
+  }
+}
+
+// Never let a monitoring failure take down the job it is monitoring.
+function closeCheckIn(name, checkInId, status) {
+  if (!checkInId) return
+  try {
+    Sentry.captureCheckIn({ checkInId, monitorSlug: name, status })
+  } catch (err) {
+    logger.warn(`${name}: could not close Sentry check-in`, { error: err.message })
+  }
+}
+
 function shouldNotifyFailure(key) {
   const now = Date.now()
   const last = lastFailureNotifyAt.get(key) ?? 0
@@ -300,15 +353,18 @@ async function runJob(name, fn) {
   const start = Date.now()
   const timeoutMs = JOB_TIMEOUTS_MS[name] ?? DEFAULT_JOB_TIMEOUT_MS
   const timeoutErr = Object.assign(new Error('job_timeout'), { isTimeout: true })
+  const checkInId = startCheckIn(name)
   try {
     await Promise.race([
       fn(),
       new Promise((_, reject) => setTimeout(() => reject(timeoutErr), timeoutMs)),
     ])
     jobStatus[name] = 'idle'
+    closeCheckIn(name, checkInId, 'ok')
     logger.info(`${name}: finished`, { ms: Date.now() - start })
   } catch (err) {
     jobStatus[name] = 'idle'
+    closeCheckIn(name, checkInId, 'error')
     if (err.isTimeout) {
       logger.error(`${name}: timed out`, { event: 'job_timeout', job: name, timeout_ms: timeoutMs })
       if (shouldNotifyFailure(`${name}:timeout`)) {

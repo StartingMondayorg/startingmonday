@@ -1362,7 +1362,7 @@ jobs:
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.24.0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
@@ -1527,7 +1527,7 @@ jobs:
         if: steps.summary.outputs.status == 'FAIL' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
         uses: slackapi/slack-github-action@v1.24.0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {

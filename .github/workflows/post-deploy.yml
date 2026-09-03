@@ -114,7 +114,7 @@ jobs:
       - name: Alert on canary failure
         if: failure()
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data "{
@@ -315,7 +315,7 @@ jobs:
       - name: Alert on post-deploy synthetic failure
         if: steps.synthetics.outputs.failed > 0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           FAILED="${{ steps.synthetics.outputs.failed }}"
           TOTAL="${{ steps.synthetics.outputs.total }}"

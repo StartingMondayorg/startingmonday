@@ -92,7 +92,7 @@ jobs:
       - name: Send Sev-1 fast-burn alert
         if: steps.burn.outputs.fast_burn == 'true'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           MONITORING_CONSECUTIVE="${{ steps.burn.outputs.monitoring_consecutive_fails }}"
           SYNTHETIC_CONSECUTIVE="${{ steps.burn.outputs.synthetic_consecutive_fails }}"

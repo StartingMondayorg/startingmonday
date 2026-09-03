@@ -1,37 +1,57 @@
 name: Slack Alert Test
 
+# Smoke test for alert delivery. Alert routing fails silently -- a rotated or
+# deleted webhook looks exactly like "nothing has gone wrong lately" -- so this
+# is the only way to tell a quiet channel from a broken one. Run it against each
+# tier after rotating secrets or changing routing. See docs/alerting.md.
+
 on:
   workflow_dispatch:
+    inputs:
+      tier:
+        description: 'Which alert channel to test'
+        required: true
+        default: digest
+        type: choice
+        options:
+          - digest
+          - eng
+          - prod
 
 jobs:
   send-test-alert:
     name: Send test alert to Slack
     runs-on: ubuntu-latest
 
+    env:
+      # Falls through to the digest webhook if the selected tier's secret is
+      # unset, which is the same behaviour the real alert steps have.
+      SLACK_WEBHOOK_URL: >-
+        ${{ (inputs.tier == 'prod' && secrets.SLACK_ALERTS_PROD_WEBHOOK_URL)
+         || (inputs.tier == 'eng' && secrets.SLACK_ALERTS_ENG_WEBHOOK_URL)
+         || secrets.SLACK_WEBHOOK_URL }}
+
     steps:
       - name: Validate webhook secret exists
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "SLACK_WEBHOOK_URL is missing"
+            echo "No webhook resolved for tier '${{ inputs.tier }}'."
+            echo "Expected one of SLACK_ALERTS_PROD_WEBHOOK_URL, SLACK_ALERTS_ENG_WEBHOOK_URL, SLACK_WEBHOOK_URL."
             exit 1
           fi
 
       - name: Send Slack test notification
         uses: slackapi/slack-github-action@v1.24.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
-              "text": "✅ Slack deployment alert test",
+              "text": "✅ Slack alert test (${{ inputs.tier }} tier)",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "✅ Slack Alert Test"
+                    "text": "✅ Slack Alert Test — ${{ inputs.tier }} tier"
                   }
                 },
                 {
@@ -39,11 +59,11 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Repository:*\n${{ github.repository }}"
+                      "text": "*Tier:*\n${{ inputs.tier }}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch:*\n${{ github.ref_name }}"
+                      "text": "*Repository:*\n${{ github.repository }}"
                     },
                     {
                       "type": "mrkdwn",
@@ -52,6 +72,15 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "This is a routing test, not a real alert. If you see it in the wrong channel, the tier secret is pointed at the wrong webhook."
                     }
                   ]
                 }
