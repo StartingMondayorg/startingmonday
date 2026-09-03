@@ -104,6 +104,11 @@ would score historical data, and sends nothing.
 
 ## Deliberately not alerted
 
+- **Green builds.** `ci.yml`'s "Post Slack summary" step was guarded by the *negation* of the
+  failure condition, so it posted on every passing run on every branch. It now fires only on a
+  failure off main/staging; main/staging failures are handled by the step above it, so the two
+  never double-post. A CI notification that arrives when nothing is wrong is the fastest way to
+  make people stop reading the channel.
 - **PR test failures.** They belong in the PR, where the author already sees them. Routing
   them to Slack trains everyone to ignore the channel. Only `main`-branch CI failure alerts,
   because that blocks everyone.

@@ -1571,8 +1571,13 @@ jobs:
               ]
             }
 
+      # Failures only. This used to be the negation of the step above, which
+      # meant it fired on every green build on every branch -- the bulk of the
+      # CI noise in Slack. Main/staging failures are handled by that step, so
+      # this covers the remaining case (a failure off those branches) without
+      # double-posting. See docs/alerting.md.
       - name: Post Slack summary
-        if: "!(steps.summary.outputs.status == 'FAIL' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'))"
+        if: "steps.summary.outputs.status == 'FAIL' && !(github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SUMMARY_TEXT: ${{ steps.summary.outputs.summary }}
