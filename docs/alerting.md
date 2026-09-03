@@ -197,3 +197,10 @@ at all. Deleting the dead projects is the durable fix.
    volume first. Most bad alerts are correct logic with a threshold nobody measured.
 3. Give it an owner and a runbook line here.
 4. If it can't be acted on, it's a dashboard, not an alert.
+5. Make it self-sufficient. An alert must name what broke and link straight to it --
+   an alert that only says something failed costs a person the same investigation every
+   time it fires. `ci.yml`'s failure alert resolves the failed jobs from the Actions API
+   and links each one's logs directly, rather than pointing at a run overview.
+6. Keep step references inside their own job. `steps.<id>.outputs.*` does not cross job
+   boundaries: it renders as an empty string, so the alert still sends and still looks
+   fine in the workflow file -- it just arrives with blank fields.

@@ -1299,6 +1299,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy-ready, predeploy-gates, semgrep, playwright, mobile-visual-smoke, auth-ux-guard, accessibility-tier0, lighthouse-mobile-budgets, pre-prod-gate]
     if: failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
+    permissions:
+      contents: read
+      actions: read
 
     steps:
       - name: Build summary message
@@ -1326,38 +1329,47 @@ jobs:
           echo "$SUMMARY" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
-      - name: Determine failed job
+      - name: Determine failed jobs
         id: failed-job
         if: steps.summary.outputs.status == 'FAIL'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [[ "${{ needs.deploy-ready.result }}" == "failure" ]]; then
-            echo "job_name=Wait for deployment of this commit" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.predeploy-gates.result }}" == "failure" ]]; then
-            echo "job_name=Predeploy gates (lint, typecheck, build, smoke)" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.pre-prod-gate.result }}" == "failure" ]]; then
-            echo "job_name=Pre-production synthetic gate" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.semgrep.result }}" == "failure" ]]; then
-            echo "job_name=Semgrep security scan" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.playwright.result }}" == "failure" ]]; then
-            echo "job_name=Playwright E2E" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.mobile-visual-smoke.result }}" == "failure" ]]; then
-            echo "job_name=Mobile visual smoke" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.auth-ux-guard.result }}" == "failure" ]]; then
-            echo "job_name=Auth UX guard" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.accessibility-tier0.result }}" == "failure" ]]; then
-            echo "job_name=Tier-0 accessibility gate" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ needs.lighthouse-mobile-budgets.result }}" == "failure" ]]; then
-            echo "job_name=Lighthouse mobile budgets" >> $GITHUB_OUTPUT
-            echo "job_link=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
+          # Ask the API which jobs failed instead of walking a hardcoded needs.*
+          # table. The old version reported only the first match and pointed
+          # every job at the run overview, so the alert never said where to click.
+          rows=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" \
+                   --paginate \
+                   -q '.jobs[] | select(.conclusion == "failure") | "\(.name)\t\(.html_url)"' \
+                 2>/dev/null || true)
+
+          names=""
+          links=""
+          count=0
+          while IFS=$'\t' read -r name url; do
+            [ -z "$name" ] && continue
+            count=$((count + 1))
+            names="${names}${name}, "
+            # Literal backslash-n: this lands inside a JSON string, so it has to
+            # stay an escape sequence rather than become a real newline.
+            links="${links}• <${url}|${name}>\\n"
+          done <<< "$rows"
+
+          if [ "$count" -eq 0 ]; then
+            names="could not resolve failed job names"
+            links="• <${RUN_URL}|View run>\\n"
           fi
+
+          # printf, not echo: job_links carries literal backslash-n sequences that
+          # must survive into the JSON payload, and some shells' echo expands them
+          # into real newlines, which would break the payload.
+          {
+            printf 'job_name=%s\n' "${names%, }"
+            printf 'job_links=%s\n' "$links"
+            printf 'job_count=%s\n' "$count"
+            printf 'run_url=%s\n' "$RUN_URL"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.24.0
@@ -1366,13 +1378,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "❌ CI Build Failed",
+              "text": "❌ CI failed on ${{ github.ref_name }} — ${{ steps.failed-job.outputs.job_name }}",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "❌ CI Build Failed"
+                    "text": "❌ CI failed on ${{ github.ref_name }}"
                   }
                 },
                 {
@@ -1388,11 +1400,11 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Failed Job:*\n${{ steps.failed-job.outputs.job_name }}"
+                      "text": "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                      "text": "*Failed jobs:*\n${{ steps.failed-job.outputs.job_count }}"
                     }
                   ]
                 },
@@ -1400,8 +1412,28 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<${{ steps.failed-job.outputs.job_link }}|View full build logs →>"
+                    "text": "*Logs for each failed job:*\n${{ steps.failed-job.outputs.job_links }}"
                   }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": { "type": "plain_text", "text": "Run overview" },
+                      "url": "${{ steps.failed-job.outputs.run_url }}"
+                    },
+                    {
+                      "type": "button",
+                      "text": { "type": "plain_text", "text": "Artifacts & reports" },
+                      "url": "${{ steps.failed-job.outputs.run_url }}#artifacts"
+                    },
+                    {
+                      "type": "button",
+                      "text": { "type": "plain_text", "text": "Commit diff" },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+                    }
+                  ]
                 }
               ]
             }
@@ -1522,54 +1554,6 @@ jobs:
         run: |
           echo "Email policy decision: ${{ steps.email-policy.outputs.reason }}"
           echo "failure_streak=${{ steps.email-policy.outputs.failure_streak }} threshold=${{ steps.email-policy.outputs.threshold }}"
-
-      - name: Post Slack alert (failure on main/staging)
-        if: steps.summary.outputs.status == 'FAIL' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
-        uses: slackapi/slack-github-action@v1.24.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
-        with:
-          payload: |
-            {
-              "text": "❌ CI Build Failed",
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "❌ CI Build Failed"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n`${{ github.ref_name }}`"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n${{ github.actor }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Failed Job:*\n${{ steps.failed-job.outputs.job_name }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "<${{ steps.failed-job.outputs.job_link }}|View full build logs →>"
-                  }
-                }
-              ]
-            }
 
       # Failures only. This used to be the negation of the step above, which
       # meant it fired on every green build on every branch -- the bulk of the
