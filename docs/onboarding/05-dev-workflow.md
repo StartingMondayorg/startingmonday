@@ -8,7 +8,27 @@ How we work together without stepping on each other.
 
 **Production moves only through the guarded promotion script.** Railway deploys `main` to staging and deploys the customer-facing web service from `production`. After staging runs the exact `main` SHA, `node scripts/promote-to-production.mjs --apply` fast-forwards `production` to that commit.
 
-The script is a dry run unless `--apply` is present. It refuses divergent histories and refuses a SHA that staging has not actually run. Do not use `--skip-staging-check` outside an owner-directed production incident.
+The script is a dry run unless `--apply` is present. It refuses divergent histories, refuses a commit that is not on `main`, and refuses a SHA that staging has not actually run. Do not use `--skip-staging-check` outside an owner-directed production incident.
+
+### Promoting to a specific commit
+
+By default the target is `main`'s HEAD. Pass `--to <commit-ish>` to name a commit instead — for the two cases where HEAD is the wrong answer:
+
+```bash
+# main has moved on; ship only up to a commit you trust
+node scripts/promote-to-production.mjs --to 370edcc4
+node scripts/promote-to-production.mjs --to 370edcc4 --apply
+
+# roll production back to where it was
+node scripts/promote-to-production.mjs --to 63b5144c --rollback
+node scripts/promote-to-production.mjs --to 63b5144c --rollback --apply
+```
+
+The target must be an ancestor of `origin/main`, so production can never run code that is not merged. Moving production **backwards** rewrites the branch, so it needs `--rollback` on top of `--apply`; the push uses `--force-with-lease` and aborts if someone else promoted while you were looking.
+
+A rollback skips the staging gate, because its target already ran in production. It prints the migrations that landed after the target instead — those are **already applied** to the production database and rolling the code back does not undo them. Read that list before applying.
+
+**How the staging gate works.** It reads Railway's staging deployment history for the exact commit. In Railway's model `SUCCESS` is only ever the currently-active deployment and `REMOVED` means "built, ran, later superseded", so both count as proof the commit ran; `FAILED` is durable and blocks the promotion. Checking for `SUCCESS` alone would pass only `main`'s HEAD. The gate needs the Railway CLI installed and logged in (`railway login`); use `--history-limit <n>` if the commit is older than the default 100-deployment search window.
 
 ---
 
@@ -28,7 +48,7 @@ fix/*         → bug fixes
 3. Build, commit as you go
 4. Open a PR to `main` and let protected checks complete
 5. After merge, verify the exact `main` SHA on staging
-6. Run `node scripts/promote-to-production.mjs` to review the release
+6. Run `node scripts/promote-to-production.mjs` to review the release (add `--to <sha>` to stop short of `main` HEAD)
 7. Run `node scripts/promote-to-production.mjs --apply` to fast-forward `production`
 8. Verify the production deploy marker and post-deploy gates
 9. Delete the merged feature branch
