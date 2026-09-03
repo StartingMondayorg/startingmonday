@@ -49,3 +49,10 @@ test('rejects unexpected docs assets on an allowed route', async () => {
     await rm(root, { recursive: true, force: true })
   }
 })
+
+// TEMPORARY -- deliberate failure to verify the CI -> Slack failure path still
+// fires after ddf9cab2 inverted the "Post Slack summary" guard. This branch and
+// its PR are throwaway; delete both once the alert is confirmed.
+test('DELIBERATE FAILURE: verifying CI Slack failure path', () => {
+  assert.equal('ci-alerting-failure-path', 'this-should-fail')
+})
