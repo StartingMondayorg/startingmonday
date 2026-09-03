@@ -775,15 +775,21 @@ jobs:
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui == 'true'
         run: npm run guide:user:sync && npm run guide:internal:sync
 
+      # NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED=1 matches production and staging
+      # (SMK-487 flag parity): shared smoke baselines are authored against the
+      # evidence hero, so the PR-local build must render the same variant.
       - name: Build PR branch for local E2E
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui == 'true'
         env:
           MOBILE_ELITE_GATE_STRICT: '0'
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
         run: npm run build
 
       - name: Start app for local E2E
         if: github.event_name == 'pull_request' && steps.scope.outputs.public_shared_ui == 'true'
         uses: ./.github/actions/start-local-app
+        env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
 
       - name: Run mobile visual smoke snapshots
         if: github.event_name != 'pull_request' || steps.scope.outputs.public_shared_ui == 'true'

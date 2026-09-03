@@ -278,7 +278,9 @@ test.describe('UX reliability — auth and form edge cases', () => {
     await expect(page).toHaveURL(/\/login/, { timeout: 15_000 })
     await expect(page.locator('h1')).toBeVisible()
     await expect(page.locator('body')).not.toContainText(/500|internal server error|unhandled/i)
-    await expect(page.locator('[role="alert"]')).not.toBeVisible()
+    // Exclude the always-mounted Next.js route announcer (empty framework
+    // a11y live region); only user-facing alerts should fail this check.
+    await expect(page.locator('[role="alert"]:not(#__next-route-announcer__)')).not.toBeVisible()
 
     await ctx.close()
   })

@@ -211,8 +211,8 @@ test('prep brief generates content', async ({ page }) => {
   }
 
   // Wait for content (h2) or error banner — whichever appears first
-  await page.locator('h2, [role="alert"]').first().waitFor({ state: 'visible', timeout: 90_000 })
-  const prepErrorBanner = page.locator('[role="alert"]')
+  await page.locator('h2, [role="alert"]:not(#__next-route-announcer__)').first().waitFor({ state: 'visible', timeout: 90_000 })
+  const prepErrorBanner = page.locator('[role="alert"]:not(#__next-route-announcer__)')
   if (await prepErrorBanner.isVisible().catch(() => false)) {
     const errorText = await prepErrorBanner.textContent().catch(() => '')
     test.skip(true, `Skipping prep brief assertion due runtime API error: ${errorText ?? ''}`)
@@ -244,12 +244,12 @@ test('strategy brief generates content', async ({ page }) => {
 
   // Wait for streaming h2 or error banner
   try {
-    await page.locator('h2, [role="alert"]').first().waitFor({ state: 'visible', timeout: 90_000 })
+    await page.locator('h2, [role="alert"]:not(#__next-route-announcer__)').first().waitFor({ state: 'visible', timeout: 90_000 })
   } catch {
     test.skip(true, 'Skipping strategy brief assertion: no generated content within timeout window')
   }
 
-  const strategyErrorBanner = page.locator('[role="alert"]')
+  const strategyErrorBanner = page.locator('[role="alert"]:not(#__next-route-announcer__)')
   if (await strategyErrorBanner.isVisible().catch(() => false)) {
     const errorText = await strategyErrorBanner.textContent().catch(() => '')
     test.skip(true, `Skipping strategy brief assertion due runtime API error: ${errorText ?? ''}`)
