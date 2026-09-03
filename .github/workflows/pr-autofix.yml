@@ -250,15 +250,20 @@ jobs:
 
       # Baselines are authored against the PR's own build in CI's Ubuntu
       # rendering environment - the same environment the PR checks use.
+      # NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED=1 matches production and staging
+      # (SMK-487 flag parity) so authored baselines show the evidence hero.
       - name: Generate guide artifacts
         run: npm run guide:user:sync && npm run guide:internal:sync
 
       - name: Build PR branch
         env:
           MOBILE_ELITE_GATE_STRICT: '0'
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
         run: npm run build
 
       - name: Start app
+        env:
+          NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED: '1'
         run: |
           npm run start -- --hostname 127.0.0.1 --port 3000 > /tmp/next-start.log 2>&1 &
           echo $! > /tmp/next-start.pid

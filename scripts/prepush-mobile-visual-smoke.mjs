@@ -53,8 +53,8 @@ cd /tmp/startingmonday
 npm ci
 npm run guide:user:sync
 npm run guide:internal:sync
-MOBILE_ELITE_GATE_STRICT=0 npm run build
-npm run start -- --hostname 0.0.0.0 --port 3000 > /tmp/next-start.log 2>&1 &
+MOBILE_ELITE_GATE_STRICT=0 NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED=1 npm run build
+NEXT_PUBLIC_SM_HERO_EVIDENCE_ENABLED=1 npm run start -- --hostname 0.0.0.0 --port 3000 > /tmp/next-start.log 2>&1 &
 server_pid=$!
 trap 'kill "$server_pid" 2>/dev/null || true' EXIT
 ready=false

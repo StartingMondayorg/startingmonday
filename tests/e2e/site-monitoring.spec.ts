@@ -22,7 +22,11 @@ for (const journey of publicJourneys) {
     await expectJourneyHealthy(page, guards)
 
     await expect(page.locator('body')).not.toContainText(/404/i)
-    await expect(page.locator('[role="alert"]')).toHaveCount(0)
+    // Next.js App Router always mounts an empty route announcer live region
+    // (div#__next-route-announcer__[role="alert"]) after hydration since the
+    // Aug 14 2026 dependency wave. It is a framework a11y feature, not a
+    // user-facing alert, so exclude it from the "no alerts" contract.
+    await expect(page.locator('[role="alert"]:not(#__next-route-announcer__)')).toHaveCount(0)
   })
 }
 
@@ -97,6 +101,6 @@ test.describe('authenticated monitoring journeys', () => {
     await expect(page.locator('h1').first()).toBeVisible()
     await expect(page.getByRole('link', { name: /Interview prep|Run interview prep/i }).first()).toBeVisible()
     await expect(page.locator('body')).not.toContainText(/404/i)
-    await expect(page.locator('[role="alert"]')).toHaveCount(0)
+    await expect(page.locator('[role="alert"]:not(#__next-route-announcer__)')).toHaveCount(0)
   })
 })
