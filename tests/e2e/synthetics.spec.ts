@@ -623,7 +623,7 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
   const landedOnErrorRoute = createResultPath === '/dashboard/companies/new' && !!createError
 
   const createHeading = (await page.locator('h1').first().textContent().catch(() => null))?.trim() ?? null
-  const createAlertText = (await page.locator('[role="alert"]').first().textContent().catch(() => null))?.trim() ?? null
+  const createAlertText = (await page.locator('[role="alert"]:not(#__next-route-announcer__)').first().textContent().catch(() => null))?.trim() ?? null
   console.log('Synthetic-10:create-company-state', {
     url: page.url(),
     path: createResultPath,
@@ -673,8 +673,8 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
     await generateButton.click()
   }
 
-  await page.locator('h2, [role="alert"]').first().waitFor({ state: 'visible', timeout: 90_000 })
-  const prepError = page.locator('[role="alert"]')
+  await page.locator('h2, [role="alert"]:not(#__next-route-announcer__)').first().waitFor({ state: 'visible', timeout: 90_000 })
+  const prepError = page.locator('[role="alert"]:not(#__next-route-announcer__)')
   const hasPrepError = await prepError.isVisible().catch(() => false)
   expect(hasPrepError, 'Synthetic-10 should not hit prep error state').toBe(false)
 

@@ -66,7 +66,7 @@ test('prep brief TTFC meets SLO (< 10s)', async ({ page }) => {
   console.log(`Prep brief TTFC: ${ttfc}ms (SLO: ${SLO_TTFC_MS}ms)`)
 
   // Check for API errors first — a fast error is not a passing SLO
-  const hasError = await page.locator('[role="alert"]').isVisible()
+  const hasError = await page.locator('[role="alert"]:not(#__next-route-announcer__)').isVisible()
   expect(hasError, 'Prep brief returned an error').toBe(false)
 
   // SLO assertion
