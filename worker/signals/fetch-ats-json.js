@@ -240,11 +240,21 @@ async function probeWorkdayToken(token) {
 // Per-provider probe: returns the board token to store on success, throws on
 // a miss. For most providers the probe token is the board token; Workday
 // resolves a composite host/site token.
+//
+// SmartRecruiters answers HTTP 200 with {content: [], totalFound: 0} for ANY
+// company identifier (verified live 2026-09-04), so an empty feed proves
+// nothing there: the probe requires at least one posting or every company
+// would false-positive as an active zero-job SmartRecruiters board. Boards
+// known from career_page_url skip this gate and may legitimately be empty.
 const PROBERS = {
   greenhouse: async (token) => { await fetchGreenhouse(token); return token },
   lever: async (token) => { await fetchLever(token); return token },
   ashby: async (token) => { await fetchAshby(token); return token },
-  smartrecruiters: async (token) => { await fetchSmartRecruiters(token); return token },
+  smartrecruiters: async (token) => {
+    const openings = await fetchSmartRecruiters(token)
+    if (openings.length === 0) throw new Error('ats_probe_miss:smartrecruiters')
+    return token
+  },
   bamboohr: async (token) => { await fetchBambooHr(token); return token },
   workday: probeWorkdayToken,
 }

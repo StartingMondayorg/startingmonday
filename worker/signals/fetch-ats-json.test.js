@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { detectProviderFromUrl, candidateTokens, PROBE_PROVIDERS, providerSetMissing } from './fetch-ats-json.js'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { detectProviderFromUrl, candidateTokens, PROBE_PROVIDERS, providerSetMissing, probeAtsBoard } from './fetch-ats-json.js'
 import { ADAPTER_PROVIDERS } from '../scanner/ats-adapters.js'
 
 // SMK-486: the poller's prober and the scanner's adapters must search the
@@ -112,6 +112,42 @@ describe('detectProviderFromUrl', () => {
     expect(detectProviderFromUrl('https://smartrecruiters.com.evil.com/Acme')).toBeNull()
     expect(detectProviderFromUrl('https://acme.bamboohr.com.evil.com/careers')).toBeNull()
     expect(detectProviderFromUrl('https://acme.wd1.myworkdayjobs.com.evil.com/External')).toBeNull()
+  })
+})
+
+// SmartRecruiters answers 200 with an empty feed for ANY company identifier,
+// so an empty feed must not count as a discovered board (SMK-486).
+describe('probeAtsBoard vs SmartRecruiters empty-feed false positives', () => {
+  afterEach(() => vi.unstubAllGlobals())
+
+  const jsonResponse = (body) => ({
+    ok: true,
+    status: 200,
+    json: async () => body,
+  })
+
+  it('does not report an active board when SmartRecruiters returns its empty page', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url) => {
+      if (String(url).includes('api.smartrecruiters.com')) {
+        return jsonResponse({ offset: 0, limit: 100, totalFound: 0, content: [] })
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    }))
+    expect(await probeAtsBoard({ name: 'Acme', domain: 'acme.com', careerPageUrl: null })).toBeNull()
+  })
+
+  it('detects SmartRecruiters when the feed carries at least one posting', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url) => {
+      if (String(url).includes('api.smartrecruiters.com')) {
+        return jsonResponse({ offset: 0, limit: 100, totalFound: 1, content: [{ name: 'COO', ref: 'https://x/1' }] })
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    }))
+    expect(await probeAtsBoard({ name: 'Acme', domain: 'acme.com', careerPageUrl: null })).toEqual({
+      provider: 'smartrecruiters',
+      token: 'acme',
+      via: 'probe',
+    })
   })
 })
 
