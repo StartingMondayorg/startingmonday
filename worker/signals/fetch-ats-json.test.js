@@ -1,5 +1,43 @@
-import { describe, it, expect } from 'vitest'
-import { detectProviderFromUrl, candidateTokens } from './fetch-ats-json.js'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { detectProviderFromUrl, candidateTokens, PROBE_PROVIDERS, providerSetMissing, probeAtsBoard } from './fetch-ats-json.js'
+import { ADAPTER_PROVIDERS } from '../scanner/ats-adapters.js'
+
+// SMK-486: the poller's prober and the scanner's adapters must search the
+// same provider set. A not_found recorded after searching fewer providers
+// than the scanner recognizes overstates what was checked. This fails when
+// either list gains a provider the other lacks.
+describe('provider parity between prober and scanner adapters', () => {
+  it('prober searches every provider the scanner adapters recognize', () => {
+    expect([...PROBE_PROVIDERS].sort()).toEqual([...ADAPTER_PROVIDERS].sort())
+  })
+
+  it('neither list carries duplicates', () => {
+    expect(new Set(PROBE_PROVIDERS).size).toBe(PROBE_PROVIDERS.length)
+    expect(new Set(ADAPTER_PROVIDERS).size).toBe(ADAPTER_PROVIDERS.length)
+  })
+})
+
+describe('providerSetMissing (re-probe-once gate)', () => {
+  it('treats a null recorded set as outdated (rows predating recording)', () => {
+    expect(providerSetMissing(null)).toBe(true)
+    expect(providerSetMissing(undefined)).toBe(true)
+  })
+
+  it('treats the pre-widening three-provider set as outdated', () => {
+    expect(providerSetMissing(['greenhouse', 'lever', 'ashby'])).toBe(true)
+  })
+
+  it('is satisfied by the current probe set, so a re-probe happens exactly once', () => {
+    // After the one re-probe the row records PROBE_PROVIDERS; the gate then
+    // stays closed until the provider list widens again.
+    expect(providerSetMissing([...PROBE_PROVIDERS])).toBe(false)
+    expect(providerSetMissing([...PROBE_PROVIDERS, 'somefutureprovider'])).toBe(false)
+  })
+
+  it('reopens when the current list gains a provider the record lacks', () => {
+    expect(providerSetMissing([...PROBE_PROVIDERS], [...PROBE_PROVIDERS, 'icims'])).toBe(true)
+  })
+})
 
 describe('detectProviderFromUrl', () => {
   it('detects greenhouse-hosted boards', () => {
@@ -27,6 +65,40 @@ describe('detectProviderFromUrl', () => {
     })
   })
 
+  it('detects smartrecruiters-hosted boards', () => {
+    expect(detectProviderFromUrl('https://careers.smartrecruiters.com/MastechDigital')).toEqual({
+      provider: 'smartrecruiters',
+      token: 'MastechDigital',
+    })
+    expect(detectProviderFromUrl('https://jobs.smartrecruiters.com/Acme/123-vp-eng')).toEqual({
+      provider: 'smartrecruiters',
+      token: 'Acme',
+    })
+  })
+
+  it('detects bamboohr-hosted boards', () => {
+    expect(detectProviderFromUrl('https://mylogically.bamboohr.com/careers')).toEqual({
+      provider: 'bamboohr',
+      token: 'mylogically',
+    })
+    expect(detectProviderFromUrl('https://www.bamboohr.com/careers')).toBeNull()
+    expect(detectProviderFromUrl('https://bamboohr.com/careers')).toBeNull()
+  })
+
+  it('detects workday-hosted boards with a composite host/site token', () => {
+    expect(detectProviderFromUrl('https://evolent.wd1.myworkdayjobs.com/External')).toEqual({
+      provider: 'workday',
+      token: 'evolent.wd1.myworkdayjobs.com/External',
+    })
+    // a leading locale segment is skipped when resolving the site
+    expect(detectProviderFromUrl('https://acme.wd5.myworkdayjobs.com/en-US/Careers')).toEqual({
+      provider: 'workday',
+      token: 'acme.wd5.myworkdayjobs.com/Careers',
+    })
+    // no site segment -> cannot build a feed URL
+    expect(detectProviderFromUrl('https://acme.wd5.myworkdayjobs.com/')).toBeNull()
+  })
+
   it('returns null for non-ATS urls', () => {
     expect(detectProviderFromUrl('https://acme.com/careers')).toBeNull()
     expect(detectProviderFromUrl('not a url')).toBeNull()
@@ -37,6 +109,45 @@ describe('detectProviderFromUrl', () => {
     expect(detectProviderFromUrl('https://greenhouse.io.evil.com/acme')).toBeNull()
     expect(detectProviderFromUrl('https://evil-lever.co.attacker.net/acme')).toBeNull()
     expect(detectProviderFromUrl('https://notashbyhq.com/acme')).toBeNull()
+    expect(detectProviderFromUrl('https://smartrecruiters.com.evil.com/Acme')).toBeNull()
+    expect(detectProviderFromUrl('https://acme.bamboohr.com.evil.com/careers')).toBeNull()
+    expect(detectProviderFromUrl('https://acme.wd1.myworkdayjobs.com.evil.com/External')).toBeNull()
+  })
+})
+
+// SmartRecruiters answers 200 with an empty feed for ANY company identifier,
+// so an empty feed must not count as a discovered board (SMK-486).
+describe('probeAtsBoard vs SmartRecruiters empty-feed false positives', () => {
+  afterEach(() => vi.unstubAllGlobals())
+
+  const jsonResponse = (body) => ({
+    ok: true,
+    status: 200,
+    json: async () => body,
+  })
+
+  it('does not report an active board when SmartRecruiters returns its empty page', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url) => {
+      if (String(url).includes('api.smartrecruiters.com')) {
+        return jsonResponse({ offset: 0, limit: 100, totalFound: 0, content: [] })
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    }))
+    expect(await probeAtsBoard({ name: 'Acme', domain: 'acme.com', careerPageUrl: null })).toBeNull()
+  })
+
+  it('detects SmartRecruiters when the feed carries at least one posting', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url) => {
+      if (String(url).includes('api.smartrecruiters.com')) {
+        return jsonResponse({ offset: 0, limit: 100, totalFound: 1, content: [{ name: 'COO', ref: 'https://x/1' }] })
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    }))
+    expect(await probeAtsBoard({ name: 'Acme', domain: 'acme.com', careerPageUrl: null })).toEqual({
+      provider: 'smartrecruiters',
+      token: 'acme',
+      via: 'probe',
+    })
   })
 })
 

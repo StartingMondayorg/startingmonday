@@ -26,6 +26,17 @@ test('detectAts recognizes Lever / SmartRecruiters / BambooHR', () => {
   assert.equal(bb.endpoint, 'https://mylogically.bamboohr.com/careers/list')
 })
 
+test('detectAts recognizes Ashby boards (SMK-486)', () => {
+  const a = detectAts('https://jobs.ashbyhq.com/linear')
+  assert.equal(a?.name, 'ashby')
+  assert.equal(a.endpoint, 'https://api.ashbyhq.com/posting-api/job-board/linear')
+  assert.deepEqual(
+    a.adapter.parse({ jobs: [{ title: 'Head of Engineering', location: 'Remote', jobUrl: 'https://x/1' }] }),
+    [{ title: 'Head of Engineering', location: 'Remote', url: 'https://x/1' }],
+  )
+  assert.equal(detectAts('https://notashbyhq.com/acme'), null)
+})
+
 test('detectAts recognizes Workday and builds the CXS POST endpoint', () => {
   const wd = detectAts('https://evolent.wd1.myworkdayjobs.com/External')
   assert.equal(wd?.name, 'workday')
