@@ -1,13 +1,14 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { asLooseSupabaseClient, parseAutomationBody, requireAutomationAccess } from '@/lib/admin-automation-route'
+import { isMeasuredStatus } from '@/lib/emi-kpi'
 
 type JobStatus = 'ok' | 'failed'
 
 type SnapshotRow = {
   metric_name: string
   metric_value: number | null
-  metric_status: 'ok' | 'no_data' | 'query_error'
+  metric_status: 'ok' | 'no_data' | 'query_error' | 'insufficient_data'
   week_start: string
   week_end: string
   generated_at: string
@@ -41,14 +42,17 @@ const rerunSchema = z.object({
 //
 // What remains is instrumentation freshness, which needs no baseline: a metric
 // that reports no_data or query_error for two consecutive weeks has stopped
-// being measured and needs a human. Value-level regression detection returns in
-// SMK-445, once the underlying metrics are computed correctly.
+// being measured and needs a human. An insufficient_data snapshot with a
+// value still counts as measured (SMK-445): the instrumentation works, the
+// sample is just under the floor.
+//
+// proof_assets_published_count and b2b_pilot_conversion_percent left the
+// automated metric set in SMK-445 (Jira comment 10973): they measured seed
+// data and are tracked manually now, so this job no longer watches them.
 const TRACKED_METRICS = [
   'emi_language_adoption_percent',
   'assessment_completion_percent',
   'day7_return_percent',
-  'proof_assets_published_count',
-  'b2b_pilot_conversion_percent',
   'tier1_claim_compliance_percent',
 ] as const
 
@@ -68,8 +72,7 @@ function classifyMetric(metricName: string, rows: SnapshotRow[]): FreshnessResul
 
   let consecutiveNullWeeks = 0
   for (const row of rows.slice(0, NULL_STREAK_WEEKS)) {
-    const isNullish = row.metric_status !== 'ok' || row.metric_value === null
-    if (!isNullish) break
+    if (isMeasuredStatus(row.metric_status, row.metric_value)) break
     consecutiveNullWeeks += 1
   }
 
@@ -85,11 +88,11 @@ function classifyMetric(metricName: string, rows: SnapshotRow[]): FreshnessResul
     }
   }
 
-  const isNullish = latest.metric_status !== 'ok' || latest.metric_value === null
+  const measured = isMeasuredStatus(latest.metric_status, latest.metric_value)
 
   return {
     metricName,
-    currentValue: isNullish ? null : Number(latest.metric_value),
+    currentValue: measured ? Number(latest.metric_value) : null,
     metricStatus: latest.metric_status,
     freshnessStatus: consecutiveNullWeeks >= NULL_STREAK_WEEKS ? 'stale' : 'fresh',
     latestWeekEnd: latest.week_end,

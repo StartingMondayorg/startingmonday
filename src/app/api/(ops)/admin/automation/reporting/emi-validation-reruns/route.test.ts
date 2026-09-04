@@ -19,7 +19,7 @@ import { POST } from './route'
 type SnapshotFixture = {
   metric_name: string
   metric_value: number | null
-  metric_status: 'ok' | 'no_data' | 'query_error'
+  metric_status: 'ok' | 'no_data' | 'query_error' | 'insufficient_data'
   week_start: string
   week_end: string
   generated_at: string
@@ -49,8 +49,6 @@ const HEALTHY_SNAPSHOTS: SnapshotFixture[] = [
   snapshot('emi_language_adoption_percent', 33.33),
   snapshot('assessment_completion_percent', 100),
   snapshot('day7_return_percent', 8.33),
-  snapshot('proof_assets_published_count', 3),
-  snapshot('b2b_pilot_conversion_percent', 28.57),
   snapshot('tier1_claim_compliance_percent', 100),
 ]
 
@@ -134,8 +132,6 @@ describe('emi validation reruns reporting route', () => {
       snapshot('emi_language_adoption_percent', 33.33),
       snapshot('assessment_completion_percent', null, 'no_data'),
       snapshot('day7_return_percent', 8.33),
-      snapshot('proof_assets_published_count', 3),
-      snapshot('b2b_pilot_conversion_percent', 28.57),
       snapshot('tier1_claim_compliance_percent', 100),
     ], 'run_3')
 
@@ -175,6 +171,24 @@ describe('emi validation reruns reporting route', () => {
     })
   })
 
+  it('treats insufficient_data with a value as measured, not stale', async () => {
+    mockTables([
+      ...HEALTHY_SNAPSHOTS.filter((row) => row.metric_name !== 'day7_return_percent'),
+      snapshot('day7_return_percent', 100, 'insufficient_data', '2026-05-25'),
+      snapshot('day7_return_percent', 50, 'insufficient_data', '2026-05-18'),
+    ], 'run_7')
+
+    const response = await postRequest()
+
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      status: 'ok',
+      nullStreakCount: 0,
+      staleMetrics: [],
+    })
+  })
+
   it('does not compare values against a hardcoded baseline', async () => {
     // A metric moving far from its historical value is not a failure on its own.
     // Value-level regression detection was retired in SMK-444.
@@ -182,8 +196,6 @@ describe('emi validation reruns reporting route', () => {
       snapshot('emi_language_adoption_percent', 99.9),
       snapshot('assessment_completion_percent', 12),
       snapshot('day7_return_percent', 91.4),
-      snapshot('proof_assets_published_count', 41),
-      snapshot('b2b_pilot_conversion_percent', 0.5),
       snapshot('tier1_claim_compliance_percent', 3),
     ], 'run_5')
 
