@@ -1,7 +1,9 @@
 # Multi-Session Orchestration Framework
 
-Version 1, adopted 2026-09-01. Owner: Chris. Evolved from the Aug 16 2026 orchestrator/wave workflow;
-this version adds isolated worktrees, live agent messaging, and committed kickoff briefs.
+Version 2, adopted 2026-09-04 after the wave 2026-09-01 retro. Owner: Chris. Evolved from the
+Aug 16 2026 orchestrator/wave workflow; version 1 added isolated worktrees, live agent messaging,
+and committed kickoff briefs. Version 2 adds the watching rule, the emergency lane, and the
+promote step (see the wave 2026-09-01 Outcomes section for the evidence behind each change).
 
 The active wave manifest lives in `docs/orchestration/waves/` (one file per wave, dated).
 Kickoff briefs for each ticket live inside the wave manifest.
@@ -30,6 +32,9 @@ via ListAgents). The orchestrator treats it as one of the WIP slots.
 - At most 3 tickets in flight (workers + tracked sessions combined).
 - At most 2 PRs waiting on Rich: `gh pr list --search "review-requested:richrothschild state:open"`.
 - One ticket = one branch = one small PR.
+- Emergency lane (added v2): a defect that blocks CI or deploys for every branch may exceed the
+  PR limit by exactly one; mark it as the emergency lane in the manifest and tell Rich which PR
+  jumps the queue.
 
 ## Worker lifecycle
 
@@ -42,6 +47,11 @@ via ListAgents). The orchestrator treats it as one of the WIP slots.
    title `type(SMK-XX): description`, body includes `Closes SMK-XX`. Transition ticket to In Review.
 6. Report back: what changed, evidence lines from checks run, PR URL, anything Unverified,
    any remaining gate state. The orchestrator never accepts a completion claim without evidence.
+7. Watching rule (added v2): workers must NOT hold background watchers across turn boundaries;
+   a worker's background children die when its turn ends, and every wave-1 worker stalled on
+   this. When waiting on CI or a dispatched run, either wait synchronously (short waits) or end
+   the turn with findings plus the run IDs; the orchestrator owns all watching and re-dispatches
+   the worker when runs settle.
 
 ## Orchestrator loop
 
@@ -80,3 +90,13 @@ via ListAgents). The orchestrator treats it as one of the WIP slots.
 - Background workers stall on permission prompts; keep the project allowlist current
   (`/fewer-permission-prompts`) before launching a wave.
 - Railway MCP writes fail; use the Railway CLI for config changes.
+- Promote step (added v2): merged to main is NOT shipped. Production Railway deploys the
+  `production` branch; advancing it is a deploy (Chris/Rich approval, see Escalation) via the
+  promote workflow added by SMK-465 (PR 507). CLAUDE.md's older main-auto-deploys mapping is
+  stale. After any promote, verify /api/health serves the promoted commit; Railway can mark a
+  deploy SKIPPED and leave prod on the old build.
+- Windows worktree hook friction (wave-1 evidence, tracked in SMK-494): the docs:index freshness
+  check false-fails on CRLF, the Docker-only pre-push visual smoke cannot run without Docker
+  (run the other pre-push guards manually and disclose the single-check bypass in the PR), and
+  a coverage-gate test can time out under instrumentation. Do not let these push workers toward
+  blanket --no-verify.
