@@ -1,6 +1,11 @@
-// T3.4 — ATS JSON pollers (Greenhouse, Lever, Ashby). Structured job feeds
-// replace HTML scraping where available: postings carry stable URLs and
-// open timestamps that feed the outcome labeler directly.
+// T3.4 — ATS JSON pollers. Structured job feeds replace HTML scraping where
+// available: postings carry stable URLs and open timestamps that feed the
+// outcome labeler directly.
+//
+// SMK-486: the provider set here must stay in lockstep with the scanner's
+// adapter set (worker/scanner/ats-adapters.js). A parity test pins the two
+// lists together; when one side gains a provider, the other must gain it in
+// the same change or the test fails.
 //
 // Detection happens two ways:
 // 1. career_page_url already points at an ATS-hosted board (fast path)
@@ -21,8 +26,13 @@ function withTimeout(ms = 12000) {
   return AbortSignal.timeout(ms)
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url, { signal: withTimeout() })
+async function fetchJson(url, { method = 'GET', body = null } = {}) {
+  const response = await fetch(url, {
+    method,
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+    signal: withTimeout(),
+  })
   if (!response.ok) throw new Error(`ats_fetch_failed:${response.status}`)
   return response.json()
 }
@@ -56,7 +66,35 @@ export function detectProviderFromUrl(careerPageUrl) {
     return org ? { provider: 'ashby', token: org } : null
   }
 
+  if (isHostOrSubdomain(host, 'smartrecruiters.com')) {
+    const company = pathParts[0]
+    if (!company || company === 'embed') return null
+    return { provider: 'smartrecruiters', token: company }
+  }
+
+  if (host !== 'bamboohr.com' && isHostOrSubdomain(host, 'bamboohr.com')) {
+    const sub = host.slice(0, -'.bamboohr.com'.length)
+    if (!sub || sub === 'www') return null
+    return { provider: 'bamboohr', token: sub }
+  }
+
+  if (host.endsWith('.myworkdayjobs.com')) {
+    // Workday boards live at {tenant}.wd{N}.myworkdayjobs.com/{site}; the feed
+    // needs both host and site, so the token is composite: "host/site".
+    // A leading locale segment (en-US) is skipped when resolving the site.
+    const site = pathParts.find((s) => !/^[a-z]{2}-[A-Z]{2}$/.test(s))
+    if (!site || !isWorkdayHost(host)) return null
+    return { provider: 'workday', token: `${host}/${site}` }
+  }
+
   return null
+}
+
+// {tenant}.wd{N}.myworkdayjobs.com and nothing else. The Workday token embeds
+// a hostname, so this guard keeps a stored board_token from steering the
+// poller at an arbitrary host.
+function isWorkdayHost(host) {
+  return /^[a-z0-9-]+\.wd\d+\.myworkdayjobs\.com$/.test(host)
 }
 
 // Candidate board tokens for probing, derived from company name and domain.
@@ -113,13 +151,103 @@ async function fetchAshby(org) {
   }))
 }
 
+async function fetchSmartRecruiters(company) {
+  const payload = await fetchJson(`https://api.smartrecruiters.com/v1/companies/${encodeURIComponent(company)}/postings?limit=100`)
+  // A live board always carries a content array; anything else is not a board.
+  if (!Array.isArray(payload?.content)) throw new Error('ats_bad_shape:smartrecruiters')
+  return payload.content.map((job) => ({
+    role_title: job.name,
+    role_url: job.ref ?? null,
+    opened_on: job.releasedDate ? new Date(job.releasedDate).toISOString().slice(0, 10) : null,
+    raw: job,
+  }))
+}
+
+async function fetchBambooHr(sub) {
+  if (!/^[a-z0-9.-]+$/i.test(sub)) throw new Error('ats_bad_token:bamboohr')
+  const payload = await fetchJson(`https://${sub}.bamboohr.com/careers/list`)
+  if (!Array.isArray(payload?.result)) throw new Error('ats_bad_shape:bamboohr')
+  return payload.result.map((job) => ({
+    role_title: job.jobOpeningName,
+    role_url: job.id ? `https://${sub}.bamboohr.com/careers/${job.id}` : null,
+    opened_on: null, // the BambooHR list payload carries no posting date
+    raw: job,
+  }))
+}
+
+// token format: "{tenant}.wd{N}.myworkdayjobs.com/{site}"
+async function fetchWorkday(token) {
+  const [host, site] = String(token ?? '').split('/')
+  if (!site || !isWorkdayHost(host)) throw new Error('ats_bad_token:workday')
+  const tenant = host.split('.')[0]
+  const payload = await fetchJson(`https://${host}/wday/cxs/${tenant}/${encodeURIComponent(site)}/jobs`, {
+    method: 'POST',
+    body: { appliedFacets: {}, limit: 20, offset: 0, searchText: '' },
+  })
+  if (!Array.isArray(payload?.jobPostings)) throw new Error('ats_bad_shape:workday')
+  return payload.jobPostings.map((job) => ({
+    role_title: job.title,
+    role_url: job.externalPath ? `https://${host}/${site}${job.externalPath}` : null,
+    opened_on: null, // the Workday list payload has no machine-readable date
+    raw: job,
+  }))
+}
+
 const FETCHERS = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
   ashby: fetchAshby,
+  smartrecruiters: fetchSmartRecruiters,
+  bamboohr: fetchBambooHr,
+  workday: fetchWorkday,
 }
 
-const PROVIDERS = Object.keys(FETCHERS)
+// The provider set the prober searches. Kept in parity with the scanner's
+// ADAPTER_PROVIDERS (worker/scanner/ats-adapters.js) by a test.
+export const PROBE_PROVIDERS = Object.keys(FETCHERS)
+const PROVIDERS = PROBE_PROVIDERS
+
+// True when a recorded decided-against provider set is missing providers the
+// prober now searches. Null/unknown means the row predates recording (the
+// original three-provider prober) and is treated as outdated. SMK-486.
+export function providerSetMissing(recordedProviders, currentProviders = PROBE_PROVIDERS) {
+  const recorded = Array.isArray(recordedProviders) ? recordedProviders : []
+  return currentProviders.some((provider) => !recorded.includes(provider))
+}
+
+// Workday cannot be probed with a bare token: the host embeds an unknowable
+// cluster number and the feed needs a site name. Bounded guessing: common
+// clusters, then common site names. A missing tenant fails DNS fast; a wrong
+// site 404s. Returns the composite token or throws.
+const WORKDAY_CLUSTERS = [1, 2, 3, 5]
+async function probeWorkdayToken(token) {
+  if (!/^[a-z0-9-]+$/.test(token)) throw new Error('ats_bad_token:workday')
+  for (const cluster of WORKDAY_CLUSTERS) {
+    const host = `${token}.wd${cluster}.myworkdayjobs.com`
+    for (const site of [token, 'External', 'careers']) {
+      const composite = `${host}/${site}`
+      try {
+        await fetchWorkday(composite)
+        return composite
+      } catch {
+        // wrong cluster or site; keep going
+      }
+    }
+  }
+  throw new Error('ats_probe_miss:workday')
+}
+
+// Per-provider probe: returns the board token to store on success, throws on
+// a miss. For most providers the probe token is the board token; Workday
+// resolves a composite host/site token.
+const PROBERS = {
+  greenhouse: async (token) => { await fetchGreenhouse(token); return token },
+  lever: async (token) => { await fetchLever(token); return token },
+  ashby: async (token) => { await fetchAshby(token); return token },
+  smartrecruiters: async (token) => { await fetchSmartRecruiters(token); return token },
+  bamboohr: async (token) => { await fetchBambooHr(token); return token },
+  workday: probeWorkdayToken,
+}
 
 // Fetches all postings for a known board; returns leadership postings only.
 // Never throws — an unreachable board yields an empty list.
@@ -145,11 +273,11 @@ export async function probeAtsBoard({ name, domain, careerPageUrl }) {
   for (const token of candidateTokens({ name, domain })) {
     for (const provider of PROVIDERS) {
       try {
-        const openings = await FETCHERS[provider](token)
-        // A live board returns an array (possibly empty). Errors throw above.
-        if (Array.isArray(openings)) return { provider, token, via: 'probe' }
+        // A live board resolves to a stored token. Misses throw.
+        const boardToken = await PROBERS[provider](token)
+        return { provider, token: boardToken, via: 'probe' }
       } catch {
-        // 404 / non-JSON → not this provider+token; keep probing
+        // 404 / non-JSON / bad shape → not this provider+token; keep probing
       }
     }
   }
