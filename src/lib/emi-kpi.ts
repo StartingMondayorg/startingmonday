@@ -2,7 +2,7 @@
 //
 // The weekly KPI job (weekly-kpi-summaries) sources every user-denominated
 // metric from server-side aggregate RPCs (emi_kpi_event_funnel,
-// emi_kpi_day7_cohort in migration 184) and applies the rules here:
+// emi_kpi_day7_cohort in migration 185) and applies the rules here:
 // - a ratio can never exceed 100 percent,
 // - denominators below EMI_KPI_MIN_DENOMINATOR are 'insufficient_data'
 //   (computed and snapshotted, but excluded from pass/fail scoring),

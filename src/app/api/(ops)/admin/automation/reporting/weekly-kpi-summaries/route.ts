@@ -10,7 +10,7 @@ import {
   weekRange,
 } from '@/lib/emi-kpi'
 
-// SMK-445: metrics are computed from server-side aggregates (migration 184
+// SMK-445: metrics are computed from server-side aggregates (migration 185
 // RPCs) that exclude synthetic accounts (users.is_synthetic) and guarantee
 // numerator <= denominator. Ratios with a denominator under
 // EMI_KPI_MIN_DENOMINATOR snapshot as 'insufficient_data' and are excluded
