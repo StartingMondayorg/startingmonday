@@ -1,0 +1,16 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000009.000100",
+  "bot_id": "B_SENTRY",
+  "app_id": "A_SENTRY",
+  "text": "",
+  "attachments": [
+    {
+      "title": "TypeError: Cannot read properties of undefined (reading 'id')",
+      "title_link": "https://sentry.io/organizations/startingmonday/issues/6412887301/?referrer=slack",
+      "text": "src/app/api/(ai)/chat/route.ts in POST at line 272",
+      "footer": "startingmonday | production | level:error"
+    }
+  ]
+}

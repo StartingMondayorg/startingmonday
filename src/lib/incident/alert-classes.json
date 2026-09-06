@@ -1,0 +1,72 @@
+{
+  "$comment": "Routing manifest for the agentic incident loop. An unknown class is notify-only, so promoting a class to agent-actionable is a reviewed one-line data change rather than a code change. See docs/sre/runbooks/agent-incident-loop.md.",
+  "version": 1,
+  "default": { "mode": "notify-only" },
+  "global": { "max_daily_dispatches": 6 },
+  "classes": {
+    "app-error-new": {
+      "mode": "diagnose-and-patch",
+      "why": "A Sentry stack trace names a file and line in this repo. This is the class the loop exists for.",
+      "min_consecutive": 1,
+      "cooldown_minutes": 60,
+      "max_daily_dispatches": 3
+    },
+    "post-deploy-synthetics": {
+      "mode": "diagnose-and-patch",
+      "why": "Richest payload we author: deploy SHA plus named failing tests, and it is regression-shaped against a known diff.",
+      "min_consecutive": 1,
+      "cooldown_minutes": 60,
+      "max_daily_dispatches": 3
+    },
+    "synthetics-p0": {
+      "mode": "diagnose-and-patch",
+      "why": "Agent-actionable only for a partial failure. All checks failing means the site is down, which is infrastructure, not code.",
+      "min_consecutive": 2,
+      "require": { "not_all_failing": true },
+      "cooldown_minutes": 120,
+      "max_daily_dispatches": 2
+    },
+    "app-error-rate": {
+      "mode": "diagnose-only",
+      "why": "A rate spike is not one fixable frame. Correlate and file; do not patch.",
+      "cooldown_minutes": 120,
+      "max_daily_dispatches": 2
+    },
+    "smoke-failure": {
+      "mode": "notify-only",
+      "why": "monitoring.yml sends only a branch name and a run URL. There is nothing to diagnose until that payload carries the failing check."
+    },
+    "canary-gate": {
+      "mode": "notify-only",
+      "why": "post-deploy.yml sends no SHA and no test names, so two canary failures are indistinguishable."
+    },
+    "deploy-stalled": {
+      "mode": "notify-only",
+      "why": "Railway or infrastructure. No code change resolves it.",
+      "runbook": "docs/sre/runbooks/deployment-stalled.md"
+    },
+    "sha-not-live": {
+      "mode": "notify-only",
+      "why": "Same as deploy-stalled.",
+      "runbook": "docs/sre/runbooks/deployment-stalled.md"
+    },
+    "uptime": {
+      "mode": "notify-only",
+      "why": "The site is down. Page a human; do not spend 20 minutes diagnosing."
+    },
+    "fast-burn": {
+      "mode": "notify-only",
+      "why": "Composite signal already requiring 3+2 consecutive failures. The decision it demands is rollback, which is a human call."
+    }
+  },
+  "suppressions": [
+    {
+      "$comment": "Seeded before Stage 2 so the loop's first act is not fanning out duplicate work on problems already diagnosed. Both fields are required: nothing is muted without an owner and an expiry.",
+      "alert_class": "smoke-failure",
+      "signal_key": "monitoring:main",
+      "until": "2026-10-15",
+      "jira": "SMK-UNFILED",
+      "why": "Monitoring Watchdog / Production Generated Monitoring failures trace to the CSP nonce fix (370edcc4) which is on main but not yet deployed."
+    }
+  ]
+}
