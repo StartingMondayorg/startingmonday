@@ -1,0 +1,11 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000007.000100",
+  "bot_id": "B_ALERTBOT",
+  "text": "⚠️ Canary gate failed",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "⚠️ Canary Gate Failed" } },
+    { "type": "section", "text": { "type": "mrkdwn", "text": "Production canary checks failed before the full post-deploy synthetic suite could run.\n<https://github.com/StartingMondayorg/startingmonday/actions/runs/789|View canary gate run>" } }
+  ]
+}

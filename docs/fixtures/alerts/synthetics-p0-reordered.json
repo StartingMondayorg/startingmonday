@@ -1,0 +1,16 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000002.000100",
+  "bot_id": "B_ALERTBOT",
+  "text": "P0 Synthetic failure - 2/8 checks failed",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "P0 Synthetic Failure - Sev-1" } },
+    { "type": "section", "fields": [
+      { "type": "mrkdwn", "text": "*Failed checks:* 2/8" },
+      { "type": "mrkdwn", "text": "*Deploy SHA:* 7e73a5c2" },
+      { "type": "mrkdwn", "text": "*Journey risk:* 51/100 (high)" },
+      { "type": "mrkdwn", "text": "*Tests:* - tests/e2e/auth.spec.ts - tests/e2e/briefing.spec.ts" }
+    ] }
+  ]
+}

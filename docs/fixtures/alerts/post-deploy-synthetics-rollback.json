@@ -1,0 +1,16 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000003.000100",
+  "bot_id": "B_ALERTBOT",
+  "text": "🔴 ROLLBACK REQUIRED — Post-Deploy P0 Synthetics Failed (2nd consecutive)",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "🔴 ROLLBACK REQUIRED — Post-Deploy P0 Synthetics Failed (2nd consecutive)" } },
+    { "type": "section", "fields": [
+      { "type": "mrkdwn", "text": "*Failed checks:* 3/8" },
+      { "type": "mrkdwn", "text": "*Deploy SHA:* bca937d9" },
+      { "type": "mrkdwn", "text": "*Tests:* checkout.spec.ts|briefing.spec.ts" }
+    ] },
+    { "type": "section", "text": { "type": "mrkdwn", "text": "*Automatic rollback recommended.* Initiate in Railway: Deployments > prior deploy > Redeploy" } }
+  ]
+}

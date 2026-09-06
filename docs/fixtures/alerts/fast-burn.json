@@ -1,0 +1,11 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000008.000100",
+  "bot_id": "B_ALERTBOT",
+  "text": "P0 FAST-BURN ALERT — overlapping monitoring and synthetic failures",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "🔥 P0 Fast-Burn Alert — Sev-1" } },
+    { "type": "section", "text": { "type": "mrkdwn", "text": "*Monitoring failures:* 3 consecutive\n*Synthetics failures:* 2 consecutive\n\nMonitoring: 3 consecutive failure(s) from 6 runs | Synthetics: 2 consecutive failure(s) from 4 runs.\n\n*Immediate action required.* See runbook: docs/sre/runbooks/" } }
+  ]
+}

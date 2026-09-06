@@ -1,0 +1,16 @@
+{
+  "type": "message",
+  "channel": "C_ALERTS_PROD",
+  "ts": "1760000005.000100",
+  "bot_id": "B_ALERTBOT",
+  "text": "Pushed SHA did not reach production",
+  "blocks": [
+    { "type": "header", "text": { "type": "plain_text", "text": "Pushed SHA did not reach production" } },
+    { "type": "section", "fields": [
+      { "type": "mrkdwn", "text": "*SHA:* <https://github.com/StartingMondayorg/startingmonday/commit/14d7ac9dbbbb|14d7ac9d>" },
+      { "type": "mrkdwn", "text": "*Result:* timeout" },
+      { "type": "mrkdwn", "text": "*State:* marker:http-502" },
+      { "type": "mrkdwn", "text": "*Branch:* production" }
+    ] }
+  ]
+}
