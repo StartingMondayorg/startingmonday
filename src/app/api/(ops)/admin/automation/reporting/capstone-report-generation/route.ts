@@ -1,11 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { asLooseSupabaseClient, parseAutomationBody, requireAutomationAccess } from '@/lib/admin-automation-route'
+import { isMeasuredStatus } from '@/lib/emi-kpi'
 
 type SnapshotRow = {
   metric_name: string
   metric_value: number | null
-  metric_status: 'ok' | 'no_data' | 'query_error'
+  metric_status: 'ok' | 'no_data' | 'query_error' | 'insufficient_data'
   week_end: string
   generated_at: string
 }
@@ -16,12 +17,12 @@ const payloadSchema = z.object({
 
 const SPRINT_KEY = 'sprint_6_capstone_report'
 const JOB_NAME = 'emi-capstone-report-generation'
+// proof_assets_published_count and b2b_pilot_conversion_percent left the
+// automated metric set in SMK-445 (Jira comment 10973): tracked manually now.
 const REQUIRED_METRICS = [
   'emi_language_adoption_percent',
   'assessment_completion_percent',
   'day7_return_percent',
-  'proof_assets_published_count',
-  'b2b_pilot_conversion_percent',
   'tier1_claim_compliance_percent',
 ] as const
 
@@ -65,9 +66,11 @@ export async function POST(request: NextRequest) {
       REQUIRED_METRICS.map((metric) => [metric, latestByMetric.get(metric)?.metric_value ?? null]),
     )
 
+    // insufficient_data still counts as measured (SMK-445): the pipeline
+    // produced a value, the sample is just under the scoring floor.
     const readyCount = REQUIRED_METRICS.filter((metric) => {
       const row = latestByMetric.get(metric)
-      return row?.metric_status === 'ok' && row.metric_value !== null
+      return row ? isMeasuredStatus(row.metric_status, row.metric_value) : false
     }).length
 
     const payload = {
