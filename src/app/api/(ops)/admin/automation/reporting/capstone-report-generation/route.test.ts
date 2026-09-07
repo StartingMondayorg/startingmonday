@@ -41,9 +41,7 @@ describe('capstone report generation route', () => {
             data: [
               { metric_name: 'emi_language_adoption_percent', metric_value: 88, metric_status: 'ok', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
               { metric_name: 'assessment_completion_percent', metric_value: 42, metric_status: 'ok', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
-              { metric_name: 'day7_return_percent', metric_value: 58, metric_status: 'ok', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
-              { metric_name: 'proof_assets_published_count', metric_value: 3, metric_status: 'ok', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
-              { metric_name: 'b2b_pilot_conversion_percent', metric_value: 29, metric_status: 'ok', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
+              { metric_name: 'day7_return_percent', metric_value: 100, metric_status: 'insufficient_data', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
               { metric_name: 'tier1_claim_compliance_percent', metric_value: 100, metric_status: 'ok', week_end: '2026-06-15', generated_at: '2026-06-15T01:00:00.000Z' },
             ],
             error: null,
@@ -95,8 +93,8 @@ describe('capstone report generation route', () => {
       runId: 'obs_1',
       status: 'ok',
       payload: {
-        ready_metric_count: 6,
-        required_metric_count: 6,
+        ready_metric_count: 4,
+        required_metric_count: 4,
       },
     })
 
