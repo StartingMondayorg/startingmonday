@@ -1,5 +1,7 @@
-// T3.4 — ATS poller: polls Greenhouse/Lever/Ashby JSON boards for leadership
-// postings. Board discovery is cached in ats_boards: companies are probed at
+// T3.4 — ATS poller: polls ATS JSON boards (the PROBE_PROVIDERS set in
+// worker/signals/fetch-ats-json.js, kept in parity with the scanner's
+// adapters) for leadership postings.
+// Board discovery is cached in ats_boards: companies are probed at
 // most MAX_PROBE_ATTEMPTS times (URL detection first, then token probing),
 // after which known boards are polled directly every run. Companies without a
 // career_page_url are still covered via domain/name token probing.
@@ -13,7 +15,7 @@
 import { logger } from '../lib/logger.js'
 import { getSupabase } from '../lib/supabase.js'
 import { resolveCanonicalCompany, clearCanonicalCache, extractDomain } from '../lib/canonical-company.js'
-import { probeAtsBoard, fetchBoardOpenings } from '../signals/fetch-ats-json.js'
+import { probeAtsBoard, fetchBoardOpenings, PROBE_PROVIDERS, providerSetMissing } from '../signals/fetch-ats-json.js'
 import { inferRoleFamilyFromTitle, recordRoleOpening } from '../lib/outcome-labels.js'
 
 const ATS_POLLER_LOCK_KEY = 9315702442n
@@ -37,6 +39,7 @@ export async function runAtsPollerJob() {
     companies: 0,
     referenceCompanies: 0,
     probed: 0,
+    reprobedAfterWidening: 0,
     boardsDetected: 0,
     boardsPolled: 0,
     openingsSeen: 0,
@@ -116,17 +119,25 @@ export async function runAtsPollerJob() {
 async function getOrDetectBoard(supabase, canonicalCompanyId, company, stats, takeProbeSlot) {
   const { data: existing } = await supabase
     .from('ats_boards')
-    .select('id, provider, board_token, status, probe_attempts')
+    .select('id, provider, board_token, status, probe_attempts, probed_providers')
     .eq('canonical_company_id', canonicalCompanyId)
     .maybeSingle()
 
   if (existing?.status === 'active' && existing.provider && existing.board_token) {
     return { provider: existing.provider, token: existing.board_token }
   }
-  if (existing && existing.probe_attempts >= MAX_PROBE_ATTEMPTS) return null
+
+  // SMK-486: a not_found decided against a narrower provider set than the
+  // prober now searches gets exactly one re-probe. The upsert below records
+  // the current set, so the row cannot qualify again until the set widens.
+  const staleProviderSet = existing?.status === 'not_found'
+    && providerSetMissing(existing.probed_providers)
+
+  if (existing && existing.probe_attempts >= MAX_PROBE_ATTEMPTS && !staleProviderSet) return null
   if (!takeProbeSlot()) return null
 
   stats.probed++
+  if (staleProviderSet && existing.probe_attempts >= MAX_PROBE_ATTEMPTS) stats.reprobedAfterWidening++
   const detected = await probeAtsBoard({
     name: company.name,
     domain: extractDomain(company.company_url),
@@ -140,6 +151,10 @@ async function getOrDetectBoard(supabase, canonicalCompanyId, company, stats, ta
     board_token: detected?.token ?? null,
     status: detected ? 'active' : 'not_found',
     detected_via: detected?.via ?? null,
+    // The provider set this probe searched. For a not_found row this is the
+    // set the decision was made against; a future provider-list widening
+    // re-probes exactly the rows whose recorded set is narrower. SMK-486.
+    probed_providers: PROBE_PROVIDERS,
     probe_attempts: (existing?.probe_attempts ?? 0) + 1,
     last_probed_at: now,
     updated_at: now,

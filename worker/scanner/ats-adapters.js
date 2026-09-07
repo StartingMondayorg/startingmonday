@@ -1,8 +1,8 @@
 // ATS adapters: pull structured job listings straight from an applicant-tracking
 // system's public JSON API instead of scraping a JS-rendered career page.
 //
-// Why: modern ATS career boards (Greenhouse, Lever, SmartRecruiters, BambooHR,
-// Workday, ...) render their job lists client-side, often inside iframes or via
+// Why: modern ATS career boards (Greenhouse, Lever, Ashby, SmartRecruiters,
+// BambooHR, Workday, ...) render their job lists client-side, often inside iframes or via
 // delayed XHR. A headless render (browserless.io) returns the shell but rarely the job
 // text, so the scanner detects zero roles. Each of these ATS, however, exposes a
 // documented, unauthenticated JSON endpoint that returns clean listings — far more
@@ -75,6 +75,24 @@ const ADAPTERS = [
     },
   },
   {
+    name: 'ashby',
+    resolve(url) {
+      const h = hostOf(url)
+      if (h !== 'ashbyhq.com' && !h.endsWith('.ashbyhq.com')) return null
+      const org = pathSegments(url)[0]
+      if (!org) return null
+      // Official public posting API: https://developers.ashbyhq.com/docs/public-job-posting-api
+      return { url: `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(org)}` }
+    },
+    parse(data) {
+      return (data?.jobs ?? []).map((j) => ({
+        title: j.title,
+        location: j.location ?? null,
+        url: j.jobUrl ?? j.applyUrl ?? null,
+      }))
+    },
+  },
+  {
     name: 'smartrecruiters',
     resolve(url) {
       const h = hostOf(url)
@@ -134,6 +152,11 @@ const ADAPTERS = [
     },
   },
 ]
+
+// The provider set the scanner recognizes. Kept in parity with the ATS
+// prober's PROBE_PROVIDERS (worker/signals/fetch-ats-json.js) by a test:
+// a provider added on one side must be added on the other. SMK-486.
+export const ADAPTER_PROVIDERS = ADAPTERS.map((adapter) => adapter.name)
 
 // Detect which ATS (if any) a career-page URL belongs to.
 export function detectAts(url) {
