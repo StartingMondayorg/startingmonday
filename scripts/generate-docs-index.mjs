@@ -62,15 +62,19 @@ function walk(dir) {
 
 // Generated artifacts that are gitignored to avoid merge conflicts but are
 // rebuilt in CI and belong in the index. These stay listed even though git
-// reports them as ignored.
-const ALWAYS_INDEX = new Set([
-  'user-guide.md',
-  'user-guide.index.json',
-  'user-guide.manifest.json',
-  'internal-guide.md',
-  'internal-guide.index.json',
-  'internal-guide.manifest.json',
-  'internal-system-summary.md',
+// reports them as ignored, and they stay listed even when the sync scripts
+// have not run locally (fresh worktrees do not have them on disk). The
+// fallback titles must match the H1 emitted by scripts/user-guide-sync.ts and
+// scripts/internal-guide-sync.ts; a null fallback uses the filename-derived
+// title, which is what generation produces for non-markdown files anyway.
+const ALWAYS_INDEX = new Map([
+  ['user-guide.md', 'Starting Monday User Guide'],
+  ['user-guide.index.json', null],
+  ['user-guide.manifest.json', null],
+  ['internal-guide.md', 'Starting Monday Internal Guide'],
+  ['internal-guide.index.json', null],
+  ['internal-guide.manifest.json', null],
+  ['internal-system-summary.md', 'Starting Monday Internal System Summary'],
 ])
 
 // Local-only files under docs/ (Office exports, PDFs, personal drafts) are
@@ -104,7 +108,10 @@ function domainFor(relativePath) {
 
 function displayTitle(relativePath) {
   const fullPath = path.join(ROOT, 'docs', relativePath)
-  if (path.extname(relativePath).toLowerCase() === '.md') {
+  if (!fs.existsSync(fullPath)) {
+    const fallback = ALWAYS_INDEX.get(relativePath)
+    if (fallback) return fallback
+  } else if (path.extname(relativePath).toLowerCase() === '.md') {
     const firstHeading = fs.readFileSync(fullPath, 'utf8').match(/^#\s+(.+)$/m)?.[1]?.trim()
     if (firstHeading) return firstHeading
   }
@@ -116,8 +123,14 @@ function linkFor(relativePath) {
 }
 
 function generate() {
-  const walked = walk(DOCS_DIR)
-    .map((filePath) => path.relative(DOCS_DIR, filePath).replace(/\\/g, '/'))
+  const walked = [
+    ...new Set([
+      ...walk(DOCS_DIR).map((filePath) => path.relative(DOCS_DIR, filePath).replace(/\\/g, '/')),
+      // Always-indexed generated artifacts belong in the index even on
+      // machines where the sync scripts have not produced them yet.
+      ...ALWAYS_INDEX.keys(),
+    ]),
+  ]
     .filter((relativePath) => relativePath !== 'index.md')
     .sort((a, b) => a.localeCompare(b))
 
@@ -159,10 +172,17 @@ function generate() {
   return `${lines.join('\n')}\n`
 }
 
+// Line endings carry no meaning here: git checkouts with core.autocrlf write
+// docs/index.md with CRLF on Windows while the generator emits LF, and that
+// difference alone must not read as staleness. Compare normalized content.
+function normalizeEol(text) {
+  return text.replace(/\r\n/g, '\n')
+}
+
 const output = generate()
 if (CHECK_ONLY) {
   const current = fs.existsSync(OUTPUT) ? fs.readFileSync(OUTPUT, 'utf8') : ''
-  if (current !== output) {
+  if (normalizeEol(current) !== normalizeEol(output)) {
     console.error('docs:index is stale; run npm run docs:index')
     process.exit(1)
   }
