@@ -18,7 +18,8 @@
       "mcp__railway__list_variables",
       "mcp__railway__list_deployments",
       "mcp__railway__list_services",
-      "mcp__railway__environment_status"
+      "mcp__railway__environment_status",
+      "Read(//c/Users/msn/AppData/Local/Temp/**)"
     ]
   }
 }
