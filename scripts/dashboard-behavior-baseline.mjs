@@ -2,6 +2,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import { pathToFileURL } from 'node:url'
 import { chromium } from 'playwright'
 import { postSlackText, writeLatestReportFiles } from './lib/agent-report-kit.mjs'
 
@@ -58,11 +59,27 @@ async function countFilterOptions(page, triggerLabel) {
   }
 }
 
-async function measureRoute(page, route) {
+// options.streamed marks routes that stream body content through a Suspense
+// boundary after the shell (currently /dashboard/briefing, via its AI-generated
+// body). For those routes the HTML stream stays open until the streamed content
+// arrives, so a 'domcontentloaded' wait only resolves when the stream closes.
+// That booked the whole AI generation into loadMs (against the 5000ms shell
+// budget, SMK-497) while settledMs, whose 18000ms budget exists precisely for
+// the streamed body, measured an already-settled page (~0ms). Streamed routes
+// therefore measure loadMs as navigation commit + visible shell (<main> is in
+// the shell, not in the briefing loading state), and let the settled wait own
+// the streamed tail. Non-streamed routes keep full-document semantics.
+export async function measureRoute(page, route, options = {}) {
+  const streamed = options.streamed === true
   const startedAt = Date.now()
-  const response = await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 30000 })
-  const loadMs = Date.now() - startedAt
+  const response = await page.goto(route, {
+    waitUntil: streamed ? 'commit' : 'domcontentloaded',
+    timeout: 30000,
+  })
   const status = response?.status() ?? 0
+
+  await page.locator('main').first().waitFor({ state: 'visible', timeout: 15000 })
+  const loadMs = Date.now() - startedAt
 
   const result = {
     route,
@@ -73,8 +90,6 @@ async function measureRoute(page, route) {
     signalsTypeOptions: null,
     hasRunSignalsButton: null,
   }
-
-  await page.locator('main').first().waitFor({ state: 'visible', timeout: 15000 })
 
   if (route === '/dashboard/briefing') {
     result.settledMs = await waitForBriefingSettled(page)
@@ -238,7 +253,10 @@ async function run() {
     const routeErrors = []
     for (const route of targetRoutes) {
       try {
-        const result = await measureRoute(page, route)
+        // Routes with a settle budget stream body content after the shell;
+        // see the measureRoute note on loadMs vs settledMs semantics.
+        const streamed = typeof baseline.routes?.[route]?.maxSettleMs === 'number'
+        const result = await measureRoute(page, route, { streamed })
         results.push(result)
       } catch (error) {
         // A single broken route must not kill the run before the report is
@@ -291,7 +309,12 @@ async function run() {
   }
 }
 
-run().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error))
-  process.exit(1)
-})
+const invokedAsScript = process.argv[1]
+  && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+
+if (invokedAsScript) {
+  run().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error))
+    process.exit(1)
+  })
+}
