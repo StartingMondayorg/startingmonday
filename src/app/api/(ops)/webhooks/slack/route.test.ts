@@ -13,18 +13,24 @@ vi.mock('@supabase/supabase-js', () => ({ createClient: () => supabaseStub }))
 // Minimal Supabase stub: records calls and lets each test decide what claim returns.
 let claimResult: { data: unknown; error: unknown } = { data: null, error: null }
 let budgetResult: { data: unknown; error: unknown } = { data: true, error: null }
+let insertResult: { error: unknown } = { error: null }
 const inserted: Array<{ table: string; row: unknown }> = []
 const supabaseStub = {
   from: (table: string) => ({
     insert: (row: unknown) => {
       inserted.push({ table, row })
-      return Promise.resolve({ error: null })
+      return Promise.resolve(insertResult)
     },
     update: () => ({ eq: () => Promise.resolve({ error: null }) }),
   }),
   rpc: (fn: string) =>
     Promise.resolve(fn === 'claim_agent_incident' ? claimResult : budgetResult),
 }
+
+// The route's only output on the deferred path is its log line, so the tests
+// read those directly. Every log is one JSON object with a `stage`.
+let logged: Array<Record<string, unknown>> = []
+const stages = () => logged.map(entry => entry.stage)
 
 const { POST, shouldIgnore } = await import('./route')
 const { signSlackRequest } = await import('@/lib/slack-signature')
@@ -49,6 +55,11 @@ async function drainAfter() {
 }
 
 beforeEach(() => {
+  logged = []
+  vi.spyOn(console, 'log').mockImplementation((line: unknown) => {
+    try { logged.push(JSON.parse(String(line))) } catch { /* not our JSON */ }
+  })
+  insertResult = { error: null }
   vi.stubEnv('SLACK_SIGNING_SECRET', SECRET)
   vi.stubEnv('SLACK_ALERTS_PROD_CHANNEL_ID', CHANNEL)
   vi.stubEnv('AGENT_RESPONDER_ENABLED', '1')
@@ -131,6 +142,68 @@ describe('POST /api/webhooks/slack', () => {
     await post(sentryAlert)
     await drainAfter()
     expect(dispatchIncident).not.toHaveBeenCalled()
+  })
+})
+
+describe('failure reporting', () => {
+  // Regression guard. These four paths all end in "stop and do nothing", so
+  // from the outside they are indistinguishable -- the log line is the only
+  // thing that says why. A missing table once masqueraded as routine Slack
+  // retry traffic for six days because two of them shared a label.
+
+  it('reports a genuine Slack retry as a duplicate', async () => {
+    insertResult = { error: { code: '23505', message: 'duplicate key value violates unique constraint' } }
+    await post(sentryAlert)
+    await drainAfter()
+    expect(stages()).toContain('duplicate_delivery')
+    expect(dispatchIncident).not.toHaveBeenCalled()
+  })
+
+  it('reports a missing table as a failure, NOT as a duplicate', async () => {
+    insertResult = { error: { code: '42P01', message: 'relation "agent_slack_events" does not exist' } }
+    await post(sentryAlert)
+    await drainAfter()
+    expect(stages()).toContain('event_claim_failed')
+    expect(stages()).not.toContain('duplicate_delivery')
+    // and the real cause is carried, not swallowed
+    const entry = logged.find(l => l.stage === 'event_claim_failed')!
+    expect(entry.code).toBe('42P01')
+    expect(String(entry.message)).toContain('does not exist')
+    expect(dispatchIncident).not.toHaveBeenCalled()
+  })
+
+  it('reports a broken budget check separately from a spent budget', async () => {
+    budgetResult = { data: null, error: { code: '42883', message: 'function does not exist' } }
+    await post(sentryAlert)
+    await drainAfter()
+    expect(stages()).toContain('budget_check_failed')
+    expect(stages()).not.toContain('budget_exhausted')
+    expect(dispatchIncident).not.toHaveBeenCalled()
+  })
+
+  it('reports a spent budget as exhausted', async () => {
+    budgetResult = { data: false, error: null }
+    await post(sentryAlert)
+    await drainAfter()
+    expect(stages()).toContain('budget_exhausted')
+    expect(stages()).not.toContain('budget_check_failed')
+  })
+
+  it('carries the error code when the incident claim itself fails', async () => {
+    claimResult = { data: null, error: { code: '42P01', message: 'relation "agent_incidents" does not exist' } }
+    await post(sentryAlert)
+    await drainAfter()
+    const entry = logged.find(l => l.stage === 'claim_failed')!
+    expect(entry.code).toBe('42P01')
+    expect(dispatchIncident).not.toHaveBeenCalled()
+  })
+
+  it('separates an empty claim result from a claim error', async () => {
+    claimResult = { data: [], error: null }
+    await post(sentryAlert)
+    await drainAfter()
+    expect(stages()).toContain('claim_empty')
+    expect(stages()).not.toContain('claim_failed')
   })
 })
 

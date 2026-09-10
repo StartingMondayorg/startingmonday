@@ -75,7 +75,16 @@ async function handleEvent(envelope: SlackEnvelope): Promise<void> {
   if (eventId) {
     const { error } = await supabase.from('agent_slack_events').insert({ event_id: eventId })
     if (error) {
-      log('duplicate_delivery', { event_id: eventId })
+      // Postgres 23505 is unique_violation: Slack retried a delivery we already
+      // handled, which is routine and uninteresting. Every other error -- a
+      // missing table, bad credentials, a network fault -- is a real failure,
+      // and labelling it a duplicate hides it. An unapplied migration sat behind
+      // this exact label for six days looking like ordinary retry traffic.
+      if (error.code === '23505') {
+        log('duplicate_delivery', { event_id: eventId })
+      } else {
+        log('event_claim_failed', { event_id: eventId, code: error.code, message: error.message })
+      }
       return
     }
   }
@@ -99,10 +108,15 @@ async function handleEvent(envelope: SlackEnvelope): Promise<void> {
     p_evidence: safeEvidence,
   })
 
-  if (error || !data?.[0]) {
-    // Fail closed: the incident where the database is down must not also be the
-    // incident where an unbounded agent fires.
-    log('claim_failed', { event_id: eventId, fingerprint: fp, error: error?.message })
+  // Fail closed throughout: the incident where the database is down must not
+  // also be the incident where an unbounded agent fires. But say which failure
+  // it was -- these two look identical from the outside and are not.
+  if (error) {
+    log('claim_failed', { event_id: eventId, fingerprint: fp, code: error.code, message: error.message })
+    return
+  }
+  if (!data?.[0]) {
+    log('claim_empty', { event_id: eventId, fingerprint: fp })
     return
   }
 
@@ -129,8 +143,15 @@ async function handleEvent(envelope: SlackEnvelope): Promise<void> {
   const { data: allowed, error: budgetError } = await supabase.rpc('consume_agent_dispatch_budget', {
     p_limit: globalDailyLimit(),
   })
-  if (budgetError || allowed !== true) {
-    log('budget_exhausted', { fingerprint: fp, limit: globalDailyLimit(), error: budgetError?.message })
+  if (budgetError) {
+    // A budget check that failed is not a budget that was spent. Conflating
+    // them would quietly report "we are at the daily cap" every time the
+    // database was unreachable.
+    log('budget_check_failed', { fingerprint: fp, code: budgetError.code, message: budgetError.message })
+    return
+  }
+  if (allowed !== true) {
+    log('budget_exhausted', { fingerprint: fp, limit: globalDailyLimit() })
     return
   }
 

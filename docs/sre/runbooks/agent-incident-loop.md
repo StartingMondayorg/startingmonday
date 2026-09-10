@@ -4,8 +4,10 @@ An alert lands in `#alerts-prod`, a Slack event reaches this app, and — once t
 later stages are enabled — a Claude agent diagnoses the failure, files an SMK
 bug, opens a draft PR, and replies in the alert's own thread.
 
-**Current stage: 0 (receiver only).** Nothing dispatches. `AGENT_RESPONDER_ENABLED`
-is `0` and the GitHub App does not exist yet.
+**Current stage: 2 (diagnose only).** The responder runs Claude against an
+incident and replies in the alert's own Slack thread. It files no Jira ticket and
+opens no pull request. Automated dispatch stays off until `AGENT_RESPONDER_ENABLED`
+is set to `1`; manual runs work regardless.
 
 ## Kill switch
 
@@ -34,6 +36,52 @@ There is no second switch to find. If the loop is misbehaving, this is the one.
 6. `claim_agent_incident()` upserts one row per fingerprint, atomically.
 7. `decideDispatch()` applies the manifest, then `consume_agent_dispatch_budget()`
    applies the global daily cap.
+
+## The responder (`.github/workflows/agent-incident-responder.yml`)
+
+Triggered by `repository_dispatch: prod-alert` from the receiver, or manually:
+
+```bash
+gh workflow run agent-incident-responder.yml -f fingerprint=<fingerprint>
+```
+
+Manual runs bypass the kill switch on purpose, so the loop stays testable while
+automated dispatch is disabled. Automated runs do not.
+
+**Two jobs, and the split is the security boundary.** Alert evidence comes from
+outside this repository and can contain text shaped like instructions.
+
+| Job | Holds | Runs the model |
+|---|---|---|
+| `investigate` | `ANTHROPIC_API_KEY`, Supabase read | yes |
+| `publish` | `SLACK_BOT_TOKEN`, Supabase write | **no** |
+
+So a prompt injection in an alert payload reaches a job with no credential that
+can write anywhere, and the job that can write never sees a model.
+
+The agent runs with `--allowedTools "Read,Glob,Grep"`. It cannot edit, commit or
+push at this stage even if it decides it wants to.
+
+### The output contract
+
+The agent must return one JSON object: `verdict`, `summary`, `reasoning`,
+`files`, optional `suggested_fix`. `src/lib/incident/diagnosis.ts` parses and
+validates it, then `assertPublishable()` re-scans the *rendered* message with the
+same patterns used at ingest and refuses to post on a hit. The prompt tells the
+agent not to leak; that gate is what enforces it.
+
+`reasoning` is required for **every** verdict, including `not-code-fixable`.
+Without that, the negative verdict becomes a free pass for anything that looks
+hard.
+
+### When the agent fails
+
+`publish` runs even when `investigate` fails, reads the incident from the
+database rather than the artifact, and posts a failure notice in the thread.
+There is no automatic retry: a failed run during a live incident is a signal for
+a human, not a reason to spend again. An alert that receives no reply at all is
+indistinguishable from the loop being switched off, which is why the failure path
+still posts.
 
 ## Fingerprints, and why storms are cheap
 
@@ -99,13 +147,27 @@ use, so a classification bug fails CI before it reaches production.
 
 ## When something looks wrong
 
-| Symptom | Where to look |
-|---|---|
-| Alerts in Slack, no incident rows | Slack app Event Subscriptions — is the Request URL still verified? Check `stage: rejected` logs for `signature_mismatch`. |
-| `stage: unclassified` in logs | An alert payload changed. Add a fixture and a rule to `classify.ts`. |
-| Same problem filed twice | Fingerprint too narrow — a volatile field crept into `signal_key`. |
-| Nothing dispatches | `AGENT_RESPONDER_ENABLED`, then `no_dispatch` log lines, which name the exact reason. |
-| Dispatches stopped mid-day | `budget_exhausted`. Daily cap in `alert-classes.json` → `global.max_daily_dispatches`. |
+Every path that stops processing logs a distinct `stage`. They all look the same
+from outside — the alert simply does not become an incident — so the stage is the
+only thing that says why. Read it before changing anything.
+
+| `stage` | Meaning | Action |
+|---|---|---|
+| `rejected` | Signature check failed. `reason` says `missing_signing_secret` (not configured) or `signature_mismatch` (wrong value). | Compare `SLACK_SIGNING_SECRET` in Railway against Slack → Basic Information. |
+| `ignored` | Deliberate. `reason` gives the filter: `routing_test`, `thread_reply`, `other_channel`. | Nothing. This is the system working. |
+| `duplicate_delivery` | Slack retried a delivery already handled (Postgres `23505`). | Nothing. Routine. |
+| `event_claim_failed` | A **real** database error on the retry-dedup table. `code` and `message` carry the cause. | `42P01` means migration `1681` was never applied. |
+| `unclassified` | An alert payload we do not recognise. | Add a fixture to `docs/fixtures/alerts/` and a rule to `classify.ts`. |
+| `claim_failed` | Database error creating the incident. `code`/`message` carry the cause. | As above. |
+| `claim_empty` | The RPC ran but returned no row. | Check `claim_agent_incident` is the current definition. |
+| `no_dispatch` | Gated on purpose. `reason` names which gate. | `responder_disabled` means the kill switch is off — expected before Stage 2. |
+| `budget_check_failed` | The budget RPC itself errored. **Not** a spent budget. | Check `consume_agent_dispatch_budget` exists. |
+| `budget_exhausted` | Genuinely at the daily cap. | `alert-classes.json` → `global.max_daily_dispatches`. |
+| `dispatch_failed` | GitHub rejected the `repository_dispatch`. | Check `AGENT_APP_ID` / `AGENT_APP_PRIVATE_KEY` and app install. |
+
+`duplicate_delivery` and `event_claim_failed` were once a single label, and an
+unapplied migration hid behind it for six days looking like ordinary retry
+traffic. Keep failures and routine outcomes on separate stages.
 
 All receiver logs are single-line JSON with `"scope":"slack-incident-webhook"`
 and a `stage` field.
