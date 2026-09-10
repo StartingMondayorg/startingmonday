@@ -73,6 +73,18 @@ function shortSha(value: string | null): string | null {
   return match ? match[0].toLowerCase().slice(0, 8) : null
 }
 
+/**
+ * Sentry's "Send Test Notification" produces a message indistinguishable from a
+ * real exception by permalink alone -- which is how one consumed a full agent
+ * dispatch on 2026-09-10. Sentry marks a manually triggered test with a rule id
+ * of -1 in both the block metadata and the issue link; a configured alert rule
+ * always has a real id.
+ */
+export function isSentryTestNotification(haystack: string): boolean {
+  if (!/sentry\.io/i.test(haystack)) return false
+  return /alert_rule_id=-1(?![0-9])/.test(haystack) || /"rule"\s*:\s*-1(?![0-9])/.test(haystack)
+}
+
 export function classify(event: SlackMessageEvent): Classification | null {
   const text = flattenText(event)
   if (!text.trim()) return null
