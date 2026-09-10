@@ -1,13 +1,15 @@
 name: Agent Incident Responder
 
-# Stage 2 of the agentic incident loop: DIAGNOSE ONLY.
-# It reads an incident, asks Claude what happened, and replies in the alert's
-# own Slack thread. It files no ticket and opens no pull request.
+# Stages 2-4 of the agentic incident loop.
 #
-# The two jobs are split on purpose. Alert evidence originates outside this
-# repository and can contain text shaped like instructions, so the job that
-# runs the model holds no credential that can write anywhere, and the job that
-# holds the Slack token and database credentials never invokes the model.
+#   prepare      files the Jira ticket        (Jira + Supabase creds, no model)
+#   investigate  asks Claude what happened    (model only, NO write credentials)
+#   publish      opens the PR, replies        (App + Slack creds, no model)
+#
+# The split is the security boundary. Alert evidence originates outside this
+# repository and can contain text shaped like instructions, so the job that runs
+# the model holds no credential that can write anywhere -- not GitHub, not Slack,
+# not Jira. The jobs that hold credentials never invoke a model.
 #
 # Runbook: docs/sre/runbooks/agent-incident-loop.md
 
@@ -17,79 +19,136 @@ on:
   workflow_dispatch:
     inputs:
       fingerprint:
-        description: 'Incident fingerprint to diagnose (from agent_incidents)'
+        description: 'Incident fingerprint (from agent_incidents)'
         required: true
         type: string
+      mode:
+        description: 'diagnose-only reports; diagnose-and-patch may open a draft PR'
+        required: true
+        default: diagnose-only
+        type: choice
+        options: [diagnose-only, diagnose-and-patch]
 
-# One run per incident, and never cancel one midway: a half-finished
-# investigation that has already posted to Slack is worse than a slow one.
 concurrency:
   group: agent-responder-${{ github.event.client_payload.fingerprint || inputs.fingerprint }}
   cancel-in-progress: false
 
 jobs:
-  investigate:
-    name: Diagnose incident
+  prepare:
+    name: File incident ticket
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-
-    # No write scope, and deliberately no Slack or GitHub App credentials.
+    timeout-minutes: 10
     permissions:
       contents: read
 
     outputs:
       fingerprint: ${{ steps.resolve.outputs.fingerprint }}
+      mode: ${{ steps.resolve.outputs.mode }}
+      jira_key: ${{ steps.ticket.outputs.jira_key }}
 
     steps:
-      - name: Resolve fingerprint and check the kill switch
+      - name: Resolve inputs and check the kill switch
         id: resolve
         env:
-          # A repository variable, not a secret, so its state is visible at a
-          # glance and can be flipped without knowing a value.
           ENABLED: ${{ vars.AGENT_RESPONDER_ENABLED }}
           EVENT: ${{ github.event_name }}
           FROM_DISPATCH: ${{ github.event.client_payload.fingerprint }}
           FROM_INPUT: ${{ inputs.fingerprint }}
+          MODE_DISPATCH: ${{ github.event.client_payload.mode }}
+          MODE_INPUT: ${{ inputs.mode }}
         run: |
           set -euo pipefail
           fingerprint="${FROM_DISPATCH:-$FROM_INPUT}"
-          if [ -z "$fingerprint" ]; then
-            echo "::error::no fingerprint supplied"
-            exit 1
-          fi
+          [ -n "$fingerprint" ] || { echo "::error::no fingerprint supplied"; exit 1; }
 
-          # The kill switch stops automated runs. A manual workflow_dispatch is
-          # an explicit human act and is allowed through so the loop stays
-          # testable while disabled.
+          mode="${MODE_DISPATCH:-$MODE_INPUT}"
+          case "$mode" in
+            diagnose-and-patch|diagnose-only) ;;
+            *) mode="diagnose-only" ;;   # unknown mode must never widen scope
+          esac
+
+          # The kill switch stops automated runs. A manual dispatch is an
+          # explicit human act and is allowed through, so the loop stays
+          # testable while automated dispatch is disabled.
           if [ "$EVENT" = "repository_dispatch" ] && [ "$ENABLED" != "1" ]; then
             echo "::error::AGENT_RESPONDER_ENABLED is not 1 - refusing automated run"
             exit 1
           fi
 
           echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
-          echo "Diagnosing $fingerprint (trigger: $EVENT)"
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "Incident $fingerprint, mode $mode (trigger: $EVENT)"
 
       - uses: actions/checkout@v5
-
       - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+        with: { node-version: '22', cache: 'npm' }
+      - run: npm ci
 
       - name: Fetch incident
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npx tsx scripts/agent-response/fetch-incident.ts --fingerprint "${{ steps.resolve.outputs.fingerprint }}" --out incident.json
+
+      - name: File Jira ticket
+        id: ticket
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
         run: |
-          npx tsx scripts/agent-response/fetch-incident.ts \
-            --fingerprint "${{ steps.resolve.outputs.fingerprint }}" \
-            --out incident.json
+          set -euo pipefail
+          npx tsx scripts/agent-response/build-ticket-body.ts \
+            --incident incident.json --summary-out summary.txt --body-out ticket.txt
+
+          # Fail fast rather than produce an orphan PR: a branch with no SMK key
+          # violates the commit convention and cannot be merged.
+          node scripts/jira/create-jira-issue.mjs \
+            --summary "$(cat summary.txt)" \
+            --description-file ticket.txt \
+            --issue-type Bug \
+            --labels "agent-response,alert-class:$(node -p "require('./incident.json').alert_class")" \
+            --json > ticket.json
+
+          key=$(node -p "require('./ticket.json').key")
+          echo "jira_key=$key" >> "$GITHUB_OUTPUT"
+          echo "Filed $key"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: incident-context-${{ steps.resolve.outputs.fingerprint }}
+          path: incident.json
+          retention-days: 14
+
+  investigate:
+    name: Diagnose incident
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    # No write scope. Deliberately no Slack, Jira or GitHub App credentials:
+    # this is the only job that processes untrusted alert text through a model.
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: '22', cache: 'npm' }
+      - run: npm ci
+
+      - uses: actions/download-artifact@v6
+        with:
+          name: incident-context-${{ needs.prepare.outputs.fingerprint }}
 
       - name: Build prompt
-        run: npx tsx scripts/agent-response/build-incident-prompt.ts --incident incident.json > prompt.txt
+        run: |
+          npx tsx scripts/agent-response/build-incident-prompt.ts \
+            --incident incident.json \
+            --mode "${{ needs.prepare.outputs.mode }}" \
+            --jira "${{ needs.prepare.outputs.jira_key }}" > prompt.txt
 
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code
@@ -97,39 +156,58 @@ jobs:
       - name: Diagnose
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODE: ${{ needs.prepare.outputs.mode }}
         run: |
           set -euo pipefail
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::error::ANTHROPIC_API_KEY is required"
-            exit 1
-          fi
-          # Read-only tools. This stage cannot edit, commit or push even if the
-          # model decides it wants to.
-          claude --allowedTools "Read,Glob,Grep" --print "$(cat prompt.txt)" > agent-output.txt
-          echo "--- first 40 lines of agent output ---"
-          head -40 agent-output.txt
+          [ -n "$ANTHROPIC_API_KEY" ] || { echo "::error::ANTHROPIC_API_KEY is required"; exit 1; }
 
-      - name: Upload investigation
+          if [ "$MODE" = "diagnose-and-patch" ]; then
+            TOOLS="Read,Glob,Grep,Edit,Write"
+          else
+            TOOLS="Read,Glob,Grep"
+          fi
+          echo "tools: $TOOLS"
+          claude --allowedTools "$TOOLS" --print "$(cat prompt.txt)" > agent-output.txt
+          echo "--- first 40 lines ---"; head -40 agent-output.txt
+
+      - name: Capture patch
+        run: |
+          # -N stages new files as empty so they appear in the diff.
+          git add -A -N
+          git diff > agent.patch
+          if [ -s agent.patch ]; then
+            echo "patch: $(wc -l < agent.patch) lines"
+          else
+            echo "no changes made"
+          fi
+
+      - name: Validate patch
+        if: needs.prepare.outputs.mode == 'diagnose-and-patch'
+        run: |
+          # Advisory here so a rejected patch still reaches publish and gets a
+          # thread reply. publish revalidates before applying anything.
+          if [ -s agent.patch ]; then
+            npx tsx scripts/agent-response/check-agent-patch.ts --patch agent.patch || true
+          fi
+
+      - uses: actions/upload-artifact@v6
         if: always()
-        uses: actions/upload-artifact@v6
         with:
-          name: incident-diagnosis-${{ steps.resolve.outputs.fingerprint }}
+          name: incident-diagnosis-${{ needs.prepare.outputs.fingerprint }}
           path: |
             incident.json
             prompt.txt
             agent-output.txt
+            agent.patch
           retention-days: 14
 
   publish:
-    name: Post diagnosis to Slack thread
-    needs: investigate
-    # Runs even when the investigation failed: an alert that gets no reply at
-    # all is indistinguishable from the loop being switched off.
-    if: always() && needs.investigate.result != 'skipped'
+    name: Publish result
+    needs: [prepare, investigate]
+    if: always() && needs.prepare.result == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
-    # Holds the Slack token and database credentials. Never invokes the model.
     permissions:
       contents: read
 
@@ -140,44 +218,64 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
     steps:
+      - name: Mint GitHub App token
+        id: app
+        if: needs.investigate.result == 'success' && needs.prepare.outputs.mode == 'diagnose-and-patch'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.AGENT_APP_ID }}
+          private-key: ${{ secrets.AGENT_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v5
+        with:
+          # The App identity is what makes pull_request fire on the agent's PR,
+          # so the five required checks actually run. GITHUB_TOKEN would not.
+          token: ${{ steps.app.outputs.token || github.token }}
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-          cache: 'npm'
+        with: { node-version: '22', cache: 'npm' }
+      - run: npm ci
 
-      - name: Install dependencies
-        run: npm ci
-
-      # Read the incident from the database rather than the artifact, so the
-      # failure path still works when the investigation never produced one.
       - name: Fetch incident
-        run: |
-          npx tsx scripts/agent-response/fetch-incident.ts \
-            --fingerprint "${{ needs.investigate.outputs.fingerprint }}" \
-            --out incident.json
+        run: npx tsx scripts/agent-response/fetch-incident.ts --fingerprint "${{ needs.prepare.outputs.fingerprint }}" --out incident.json
 
-      - name: Download investigation
+      - uses: actions/download-artifact@v6
         if: needs.investigate.result == 'success'
-        uses: actions/download-artifact@v6
         with:
-          name: incident-diagnosis-${{ needs.investigate.outputs.fingerprint }}
-          # incident.json is already fetched above; only the agent output matters.
+          name: incident-diagnosis-${{ needs.prepare.outputs.fingerprint }}
           merge-multiple: true
 
-      - name: Publish diagnosis
+      - name: Open draft pull request
+        id: pr
+        if: needs.investigate.result == 'success' && needs.prepare.outputs.mode == 'diagnose-and-patch'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          if [ -s agent.patch ]; then
+            npx tsx scripts/agent-response/open-fix-pr.ts \
+              --incident incident.json \
+              --patch agent.patch \
+              --diagnosis agent-output.txt \
+              --jira "${{ needs.prepare.outputs.jira_key }}"
+          else
+            echo "agent made no changes; nothing to open"
+          fi
+
+      - name: Post diagnosis to the alert thread
         if: needs.investigate.result == 'success'
         run: |
           npx tsx scripts/agent-response/publish-diagnosis.ts \
             --incident incident.json \
             --diagnosis agent-output.txt \
-            --dry-run
+            --jira "${{ needs.prepare.outputs.jira_key }}" \
+            --pr "${{ steps.pr.outputs.pr_url }}"
 
       - name: Report a failed investigation in the thread
-        if: needs.investigate.result != 'success' || failure()
+        if: needs.investigate.result != 'success'
         run: |
           npx tsx scripts/agent-response/publish-diagnosis.ts \
             --incident incident.json \
-            --failed "The investigation job did not complete successfully." \
-            --dry-run
+            --jira "${{ needs.prepare.outputs.jira_key }}" \
+            --failed "The investigation job did not complete successfully."

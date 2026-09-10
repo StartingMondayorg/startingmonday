@@ -1,9 +1,48 @@
 #!/usr/bin/env node
+// Create a Jira issue.
+//
+// Positional (original interface, still supported):
+//   node scripts/jira/create-jira-issue.mjs "Summary" "Description" "IssueType"
+//
+// Flags (added for the incident loop, which needs multi-paragraph bodies,
+// labels, and a machine-readable result):
+//   --summary "..."            required in flag mode
+//   --description-file PATH    body text; blank lines separate ADF paragraphs
+//   --description "..."        single-paragraph body
+//   --labels a,b,c
+//   --issue-type Bug           default: Task
+//   --json                     print {key,url} instead of prose
 
-const [,, summary, description = '', issueType = 'Task'] = process.argv
+import { readFileSync } from 'node:fs'
+
+const argv = process.argv.slice(2)
+const useFlags = argv.some(a => a.startsWith('--'))
+
+const flag = (name) => {
+  const i = argv.indexOf(`--${name}`)
+  return i === -1 ? undefined : argv[i + 1]
+}
+const has = (name) => argv.includes(`--${name}`)
+
+let summary, descriptionText, issueType, labels, asJson
+
+if (useFlags) {
+  summary = flag('summary')
+  descriptionText = flag('description-file')
+    ? readFileSync(flag('description-file'), 'utf8')
+    : (flag('description') ?? '')
+  issueType = flag('issue-type') ?? 'Task'
+  labels = (flag('labels') ?? '').split(',').map(s => s.trim()).filter(Boolean)
+  asJson = has('json')
+} else {
+  ;[summary, descriptionText = '', issueType = 'Task'] = argv
+  labels = []
+  asJson = false
+}
 
 if (!summary) {
-  console.error('Usage: node scripts/jira/create-jira-issue.mjs "Summary" "Description" "IssueType"')
+  console.error('Usage: create-jira-issue.mjs "Summary" "Description" "IssueType"')
+  console.error('   or: create-jira-issue.mjs --summary "..." [--description-file PATH] [--labels a,b] [--issue-type Bug] [--json]')
   process.exit(1)
 }
 
@@ -17,25 +56,36 @@ if (!baseUrl || !email || !apiToken || !projectKey) {
   process.exit(1)
 }
 
+// Atlassian Document Format. Blank lines separate paragraphs; a single newline
+// inside a paragraph becomes a hard break, so evidence blocks keep their shape.
+function toAdf(text) {
+  const blocks = text.split(/\n{2,}/).map(b => b.trim()).filter(Boolean)
+  if (blocks.length === 0) blocks.push('No description provided.')
+
+  return {
+    type: 'doc',
+    version: 1,
+    content: blocks.map(block => {
+      const lines = block.split('\n')
+      const content = []
+      lines.forEach((line, i) => {
+        if (i > 0) content.push({ type: 'hardBreak' })
+        if (line) content.push({ type: 'text', text: line })
+      })
+      return { type: 'paragraph', content: content.length ? content : [{ type: 'text', text: ' ' }] }
+    }),
+  }
+}
+
 const auth = Buffer.from(`${email}:${apiToken}`).toString('base64')
 
 const body = {
   fields: {
     project: { key: projectKey },
     summary,
-    description: {
-      type: 'doc',
-      version: 1,
-      content: [
-        {
-          type: 'paragraph',
-          content: description
-            ? [{ type: 'text', text: description }]
-            : [{ type: 'text', text: 'No description provided.' }],
-        },
-      ],
-    },
+    description: toAdf(descriptionText),
     issuetype: { name: issueType },
+    ...(labels.length ? { labels } : {}),
   },
 }
 
@@ -65,5 +115,9 @@ try {
   process.exit(0)
 }
 
-console.log(`Created issue: ${data.key}`)
-console.log(`${baseUrl}/browse/${data.key}`)
+if (asJson) {
+  console.log(JSON.stringify({ key: data.key, url: `${baseUrl}/browse/${data.key}` }))
+} else {
+  console.log(`Created issue: ${data.key}`)
+  console.log(`${baseUrl}/browse/${data.key}`)
+}

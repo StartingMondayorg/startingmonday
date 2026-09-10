@@ -101,21 +101,34 @@ export function renderThreadMessage(input: {
   alertClass: string
   runUrl?: string
   dryRun?: boolean
+  jiraKey?: string
+  jiraUrl?: string
+  prUrl?: string
+  mentionChannel?: boolean
 }): string {
-  const { diagnosis, alertClass, runUrl, dryRun } = input
+  const { diagnosis, alertClass, runUrl, dryRun, jiraKey, jiraUrl, prUrl, mentionChannel } = input
   const lines = [
+    // Only ping when there is something for a person to act on. A diagnosis
+    // with no PR is information, not a request.
+    mentionChannel && prUrl ? '<!channel>' : '',
     `${VERDICT_LABEL[diagnosis.verdict]}  ·  \`${alertClass}\``,
     '',
     diagnosis.summary,
     '',
     `*Why:* ${diagnosis.reasoning}`,
-  ]
+  ].filter((line, index) => line !== '' || index > 0)
 
   if (diagnosis.files.length) {
     lines.push('', `*Files:* ${diagnosis.files.slice(0, 8).map(f => `\`${f}\``).join(', ')}`)
   }
   if (diagnosis.suggested_fix) {
     lines.push('', `*Suggested fix:* ${diagnosis.suggested_fix}`)
+  }
+  if (jiraKey) {
+    lines.push('', jiraUrl ? `*Ticket:* <${jiraUrl}|${jiraKey}>` : `*Ticket:* ${jiraKey}`)
+  }
+  if (prUrl) {
+    lines.push(`*Fix:* <${prUrl}|draft PR> - needs review before it can merge.`)
   }
   if (dryRun) {
     lines.push('', '_Dry run: no ticket filed and no PR opened._')

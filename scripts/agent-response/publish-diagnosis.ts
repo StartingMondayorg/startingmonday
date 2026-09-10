@@ -20,6 +20,8 @@ const dryRun = args.includes('--dry-run')
 // Set when the investigation itself failed. We still owe the thread a reply --
 // silence after an alert is indistinguishable from the loop being switched off.
 const failureNotice = flag('failed')
+const jiraKey = flag('jira') || undefined
+const prUrl = flag('pr') || undefined
 
 const incident = JSON.parse(readFileSync(flag('incident') ?? 'incident.json', 'utf8'))
 
@@ -58,6 +60,14 @@ async function main(): Promise<void> {
       alertClass: incident.alert_class,
       runUrl,
       dryRun,
+      jiraKey,
+      jiraUrl: jiraKey && process.env.JIRA_BASE_URL
+        ? `${process.env.JIRA_BASE_URL}/browse/${jiraKey}`
+        : undefined,
+      prUrl,
+      // Off by default. Pinging a channel is the one step that can annoy
+      // people, so it is earned rather than assumed.
+      mentionChannel: process.env.AGENT_MENTION_CHANNEL === '1',
     })
 
     // The agent is instructed not to leak. This is what enforces it.
@@ -114,7 +124,7 @@ async function main(): Promise<void> {
       to_status: status,
       actor: 'responder',
       run_id: process.env.GITHUB_RUN_ID ?? null,
-      detail: { verdict, dry_run: dryRun },
+      detail: { verdict, dry_run: dryRun, jira_key: jiraKey ?? null, pr_url: prUrl ?? null },
     })
   }
 }

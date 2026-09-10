@@ -1,0 +1,50 @@
+name: Agent PR Guard
+
+# main requires 5 status checks but ZERO approving reviews, and the repository
+# allows auto-merge. Draft status is what actually stops an agent PR from
+# merging; this is the backstop for the moment someone marks one ready.
+#
+# pull_request_target so the guard runs from main's definition rather than from
+# the PR branch. It reads no PR content and runs no code from the branch.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review, labeled, unlabeled, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  guard:
+    name: Agent PR requires human review
+    runs-on: ubuntu-latest
+    # Only agent PRs. Everything else passes untouched.
+    if: contains(github.event.pull_request.labels.*.name, 'agent-authored')
+    timeout-minutes: 5
+
+    steps:
+      - name: Refuse an unreviewed agent PR
+        env:
+          IS_DRAFT: ${{ github.event.pull_request.draft }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          echo "PR #${NUMBER}  draft=${IS_DRAFT}  labels=${LABELS}"
+
+          if [ "$IS_DRAFT" = "true" ]; then
+            echo "Draft: GitHub will not merge it. Guard satisfied."
+            exit 0
+          fi
+
+          case ",${LABELS}," in
+            *,human-reviewed,*)
+              echo "Marked human-reviewed. Guard satisfied."
+              exit 0
+              ;;
+          esac
+
+          echo "::error::This PR was opened by the incident agent and is no longer a draft."
+          echo "::error::Add the 'human-reviewed' label once a person has actually read the diff."
+          exit 1

@@ -99,6 +99,38 @@ describe('renderThreadMessage', () => {
       .toContain('Dry run')
   })
 
+  it('links the Jira ticket and the draft PR', () => {
+    const text = renderThreadMessage({
+      diagnosis: parsed(), alertClass: 'app-error-new',
+      jiraKey: 'SMK-123', jiraUrl: 'https://x.atlassian.net/browse/SMK-123',
+      prUrl: 'https://github.com/o/r/pull/42',
+    })
+    expect(text).toContain('SMK-123')
+    expect(text).toContain('/pull/42')
+    expect(text).toContain('needs review')
+  })
+
+  it('only pings the channel when there is a PR to review', () => {
+    // A diagnosis with no fix is information, not a request for someone's
+    // attention. Pinging for it is how a channel gets muted.
+    const withPr = renderThreadMessage({
+      diagnosis: parsed(), alertClass: 'x', mentionChannel: true,
+      prUrl: 'https://github.com/o/r/pull/42',
+    })
+    const withoutPr = renderThreadMessage({
+      diagnosis: parsed(), alertClass: 'x', mentionChannel: true,
+    })
+    expect(withPr).toContain('<!channel>')
+    expect(withoutPr).not.toContain('<!channel>')
+  })
+
+  it('never pings when the mention flag is off, even with a PR', () => {
+    const text = renderThreadMessage({
+      diagnosis: parsed(), alertClass: 'x', prUrl: 'https://github.com/o/r/pull/42',
+    })
+    expect(text).not.toContain('<!channel>')
+  })
+
   it('caps length so Slack never rejects the post', () => {
     const text = renderThreadMessage({ diagnosis: parsed({ reasoning: 'x'.repeat(9000) }), alertClass: 'x' })
     expect(text.length).toBeLessThanOrEqual(3820)
