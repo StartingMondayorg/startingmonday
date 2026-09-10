@@ -226,6 +226,35 @@ describe('shouldIgnore', () => {
     expect(shouldIgnore({ ...base, text: '✅ Slack alert test (prod tier)' }, CHANNEL)).toBe('routing_test')
   })
 
+  it('ignores a Sentry test notification, so exercising the integration is free', () => {
+    const sentryTest = {
+      type: 'message',
+      channel: CHANNEL,
+      text: '[javascript-nextjs] Test Issue',
+      blocks: [{
+        type: 'section',
+        block_id: '{"issue":7724840387,"rule":-1}',
+        text: { type: 'mrkdwn', text: '<https://starting-monday.sentry.io/issues/7724840387/?alert_rule_id=-1|*Test Issue*>' },
+      }],
+    }
+    expect(shouldIgnore(sentryTest, CHANNEL)).toBe('sentry_test_notification')
+  })
+
+  it('still accepts a real Sentry alert whose content is only in blocks', () => {
+    // The filter reads flattened text now, so a message with empty top-level
+    // text must still pass through rather than being silently dropped.
+    const realAlert = {
+      type: 'message',
+      channel: CHANNEL,
+      text: '',
+      blocks: [{
+        type: 'section',
+        text: { type: 'mrkdwn', text: '<https://sentry.io/organizations/sm/issues/6412887301/?alert_rule_id=3379165|TypeError>' },
+      }],
+    }
+    expect(shouldIgnore(realAlert, CHANNEL)).toBeNull()
+  })
+
   it('ignores edits and deletions', () => {
     expect(shouldIgnore({ ...base, subtype: 'message_changed' }, CHANNEL)).toBe('subtype_message_changed')
   })

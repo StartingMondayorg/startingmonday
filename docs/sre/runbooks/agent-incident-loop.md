@@ -122,6 +122,21 @@ a human, not a reason to spend again. An alert that receives no reply at all is
 indistinguishable from the loop being switched off, which is why the failure path
 still posts.
 
+### Sentry test notifications
+
+Sentry's **Send Test Notification** produces a message that is indistinguishable
+from a real exception by permalink alone. One reached `#alerts-prod` on
+2026-09-10 and consumed a full agent dispatch before being correctly diagnosed as
+a test.
+
+`isSentryTestNotification()` now filters them, keying on the rule id of `-1` that
+Sentry uses for a manually triggered test (present in both the block metadata and
+the issue link). A configured alert rule always carries a real id.
+
+So exercising the Sentry-to-Slack wiring is free. The captured payload is
+committed at `docs/fixtures/alerts/sentry-test-notification.json`, and the tests
+assert in both directions -- that it is caught, and that a genuine alert is not.
+
 ## Fingerprints, and why storms are cheap
 
 `fingerprint = sha256(alert_class + '|' + signal_key)[:32]`
@@ -193,7 +208,7 @@ only thing that says why. Read it before changing anything.
 | `stage` | Meaning | Action |
 |---|---|---|
 | `rejected` | Signature check failed. `reason` says `missing_signing_secret` (not configured) or `signature_mismatch` (wrong value). | Compare `SLACK_SIGNING_SECRET` in Railway against Slack → Basic Information. |
-| `ignored` | Deliberate. `reason` gives the filter: `routing_test`, `thread_reply`, `other_channel`. | Nothing. This is the system working. |
+| `ignored` | Deliberate. `reason` gives the filter: `routing_test`, `thread_reply`, `other_channel`, `sentry_test_notification`. | Nothing. This is the system working. |
 | `duplicate_delivery` | Slack retried a delivery already handled (Postgres `23505`). | Nothing. Routine. |
 | `event_claim_failed` | A **real** database error on the retry-dedup table. `code` and `message` carry the cause. | `42P01` means migration `1681` was never applied. |
 | `unclassified` | An alert payload we do not recognise. | Add a fixture to `docs/fixtures/alerts/` and a rule to `classify.ts`. |

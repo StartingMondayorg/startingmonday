@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { classify, extractField, flattenText } from './classify'
+import { classify, extractField, flattenText, isSentryTestNotification } from './classify'
 import { fingerprint } from './fingerprint'
 
 // Fixtures are the same files the Stage 0 replay harness posts at the live
@@ -65,6 +65,28 @@ describe('classify', () => {
 
   it('collapses every canary failure into one bucket, since the payload has no discriminator', () => {
     expect(classify(fixture('canary-gate'))!.signalKey).toBe('canary-gate')
+  })
+})
+
+describe('isSentryTestNotification', () => {
+  // A real test notification that reached #alerts-prod and consumed an agent
+  // dispatch. The fixture is the captured payload, not a reconstruction.
+  it('recognises the real captured test notification', () => {
+    expect(isSentryTestNotification(flattenText(fixture('sentry-test-notification')))).toBe(true)
+  })
+
+  it('does not flag a genuine Sentry issue alert', () => {
+    expect(isSentryTestNotification(flattenText(fixture('app-error-new')))).toBe(false)
+  })
+
+  it('does not flag a real alert whose rule id merely starts with -1', () => {
+    // -1 must be the whole id, not a prefix of -1234.
+    expect(isSentryTestNotification('https://sentry.io/x?alert_rule_id=-1234')).toBe(false)
+    expect(isSentryTestNotification('{"issue":1,"rule":-1234}  sentry.io')).toBe(false)
+  })
+
+  it('ignores rule:-1 appearing outside a Sentry message', () => {
+    expect(isSentryTestNotification('some log line with "rule": -1 in it')).toBe(false)
   })
 })
 
