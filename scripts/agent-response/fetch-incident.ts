@@ -3,6 +3,9 @@
 // through a workflow input, where it could be interpolated into a shell command.
 //
 //   npx tsx scripts/agent-response/fetch-incident.ts --fingerprint <fp> --out incident.json
+//
+// Everything async lives inside main(). tsx transforms a plain .ts file in a
+// CommonJS package as CJS, which rejects top-level await outright.
 
 import { writeFileSync } from 'node:fs'
 import { createClient } from '@supabase/supabase-js'
@@ -13,36 +16,35 @@ const flag = (name: string) => {
   return i === -1 ? undefined : args[i + 1]
 }
 
-const fingerprint = flag('fingerprint')
-const out = flag('out') ?? 'incident.json'
+async function main(): Promise<void> {
+  const fingerprint = flag('fingerprint')
+  const out = flag('out') ?? 'incident.json'
 
-if (!fingerprint) {
-  console.error('Usage: fetch-incident.ts --fingerprint <fp> [--out incident.json]')
-  process.exit(1)
+  if (!fingerprint) {
+    throw new Error('Usage: fetch-incident.ts --fingerprint <fp> [--out incident.json]')
+  }
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) {
+    throw new Error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required')
+  }
+
+  const supabase = createClient(url, key)
+  const { data, error } = await supabase
+    .from('agent_incidents')
+    .select('*')
+    .eq('fingerprint', fingerprint)
+    .maybeSingle()
+
+  if (error) throw new Error(`incident lookup failed: ${error.code} ${error.message}`)
+  if (!data) throw new Error(`no incident with fingerprint ${fingerprint}`)
+
+  writeFileSync(out, JSON.stringify(data, null, 2))
+  console.log(`incident ${fingerprint} (${data.alert_class}, seen ${data.occurrence_count}x) -> ${out}`)
 }
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-if (!url || !key) {
-  console.error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required')
+main().catch((error: Error) => {
+  console.error(error.message)
   process.exit(1)
-}
-
-const supabase = createClient(url, key)
-const { data, error } = await supabase
-  .from('agent_incidents')
-  .select('*')
-  .eq('fingerprint', fingerprint)
-  .maybeSingle()
-
-if (error) {
-  console.error(`incident lookup failed: ${error.code} ${error.message}`)
-  process.exit(1)
-}
-if (!data) {
-  console.error(`no incident with fingerprint ${fingerprint}`)
-  process.exit(1)
-}
-
-writeFileSync(out, JSON.stringify(data, null, 2))
-console.log(`incident ${fingerprint} (${data.alert_class}, seen ${data.occurrence_count}x) -> ${out}`)
+})

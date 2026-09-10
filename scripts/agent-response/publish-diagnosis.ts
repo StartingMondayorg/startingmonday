@@ -28,91 +28,98 @@ function fail(reason: string): never {
   process.exit(1)
 }
 
-const runUrl = process.env.GITHUB_RUN_ID
-  ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-  : undefined
+async function main(): Promise<void> {
+  const runUrl = process.env.GITHUB_RUN_ID
+    ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+    : undefined
 
-let text: string
-let verdict: string
+  let text: string
+  let verdict: string
 
-if (failureNotice) {
-  // No automatic retry: a failed agent run during a live incident is a signal
-  // for a human, not a reason to spend again.
-  verdict = 'agent_failed'
-  text = [
-    ':warning: The incident agent could not complete.',
-    '',
-    failureNotice,
-    '',
-    'No retry will be attempted.',
-    runUrl ? `<${runUrl}|View agent run>` : '',
-  ].filter(Boolean).join('\n')
-} else {
-  const rawOutput = readFileSync(flag('diagnosis') ?? 'agent-output.txt', 'utf8')
-  const parsed = parseDiagnosis(rawOutput)
-  if (!parsed.ok) fail(`agent output did not match the contract - ${parsed.error}`)
-  verdict = parsed.diagnosis.verdict
-  text = renderThreadMessage({
-    diagnosis: parsed.diagnosis,
-    alertClass: incident.alert_class,
-    runUrl,
-    dryRun,
+  if (failureNotice) {
+    // No automatic retry: a failed agent run during a live incident is a signal
+    // for a human, not a reason to spend again.
+    verdict = 'agent_failed'
+    text = [
+      ':warning: The incident agent could not complete.',
+      '',
+      failureNotice,
+      '',
+      'No retry will be attempted.',
+      runUrl ? `<${runUrl}|View agent run>` : '',
+    ].filter(Boolean).join('\n')
+  } else {
+    const rawOutput = readFileSync(flag('diagnosis') ?? 'agent-output.txt', 'utf8')
+    const parsed = parseDiagnosis(rawOutput)
+    if (!parsed.ok) fail(`agent output did not match the contract - ${parsed.error}`)
+    verdict = parsed.diagnosis.verdict
+    text = renderThreadMessage({
+      diagnosis: parsed.diagnosis,
+      alertClass: incident.alert_class,
+      runUrl,
+      dryRun,
+    })
+
+    // The agent is instructed not to leak. This is what enforces it.
+    const safety = assertPublishable(text)
+    if (!safety.safe) {
+      fail(
+        `output safety gate blocked the message (${safety.hits.join(', ')}). ` +
+        'Nothing was posted. Inspect the run artifact.',
+      )
+    }
+  }
+
+  const token = process.env.SLACK_BOT_TOKEN
+  const channel = incident.slack_channel_id || process.env.SLACK_ALERTS_PROD_CHANNEL_ID
+  if (!token) fail('SLACK_BOT_TOKEN is required')
+  if (!channel) fail('no channel on the incident and SLACK_ALERTS_PROD_CHANNEL_ID is unset')
+  if (!incident.slack_thread_ts) fail('incident has no slack_thread_ts to reply under')
+
+  const response = await fetch('https://slack.com/api/chat.postMessage', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({
+      channel,
+      thread_ts: incident.slack_thread_ts,
+      text,
+      unfurl_links: false,
+    }),
   })
 
-  // The agent is instructed not to leak. This is what enforces it.
-  const safety = assertPublishable(text)
-  if (!safety.safe) {
-    fail(
-      `output safety gate blocked the message (${safety.hits.join(', ')}). ` +
-      'Nothing was posted. Inspect the run artifact.',
-    )
+  const result = (await response.json()) as { ok: boolean; error?: string; ts?: string }
+  if (!result.ok) fail(`slack rejected the reply: ${result.error}`)
+  console.log(`posted ${verdict} to thread ${incident.slack_thread_ts}`)
+
+  // Record the outcome. A failure here must not look like a failure to diagnose,
+  // so it is reported separately and does not retract the Slack reply.
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (url && key) {
+    const supabase = createClient(url, key)
+    const status = failureNotice ? 'agent_failed' : 'diagnosed'
+    const { error } = await supabase
+      .from('agent_incidents')
+      .update({
+        status,
+        ...(failureNotice ? {} : { verdict }),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('fingerprint', incident.fingerprint)
+    if (error) console.error(`warning: incident status not updated - ${error.code} ${error.message}`)
+
+    await supabase.from('agent_incident_events').insert({
+      fingerprint: incident.fingerprint,
+      from_status: incident.status,
+      to_status: status,
+      actor: 'responder',
+      run_id: process.env.GITHUB_RUN_ID ?? null,
+      detail: { verdict, dry_run: dryRun },
+    })
   }
 }
 
-const token = process.env.SLACK_BOT_TOKEN
-const channel = incident.slack_channel_id || process.env.SLACK_ALERTS_PROD_CHANNEL_ID
-if (!token) fail('SLACK_BOT_TOKEN is required')
-if (!channel) fail('no channel on the incident and SLACK_ALERTS_PROD_CHANNEL_ID is unset')
-if (!incident.slack_thread_ts) fail('incident has no slack_thread_ts to reply under')
-
-const response = await fetch('https://slack.com/api/chat.postMessage', {
-  method: 'POST',
-  headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json; charset=utf-8' },
-  body: JSON.stringify({
-    channel,
-    thread_ts: incident.slack_thread_ts,
-    text,
-    unfurl_links: false,
-  }),
+main().catch((error: Error) => {
+  console.error(error.message)
+  process.exit(1)
 })
-
-const result = (await response.json()) as { ok: boolean; error?: string; ts?: string }
-if (!result.ok) fail(`slack rejected the reply: ${result.error}`)
-console.log(`posted ${verdict} to thread ${incident.slack_thread_ts}`)
-
-// Record the outcome. A failure here must not look like a failure to diagnose,
-// so it is reported separately and does not retract the Slack reply.
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-if (url && key) {
-  const supabase = createClient(url, key)
-  const status = failureNotice ? 'agent_failed' : 'diagnosed'
-  const { error } = await supabase
-    .from('agent_incidents')
-    .update({
-      status,
-      ...(failureNotice ? {} : { verdict }),
-      updated_at: new Date().toISOString(),
-    })
-    .eq('fingerprint', incident.fingerprint)
-  if (error) console.error(`warning: incident status not updated - ${error.code} ${error.message}`)
-
-  await supabase.from('agent_incident_events').insert({
-    fingerprint: incident.fingerprint,
-    from_status: incident.status,
-    to_status: status,
-    actor: 'responder',
-    run_id: process.env.GITHUB_RUN_ID ?? null,
-    detail: { verdict, dry_run: dryRun },
-  })
-}
