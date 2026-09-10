@@ -17,6 +17,11 @@ const flag = (name: string) => {
   return i === -1 ? undefined : args[i + 1]
 }
 
+// Identity the commits are attributed to. Overridable so a differently-named
+// App does not silently produce unlinked commits.
+const BOT_LOGIN = process.env.AGENT_BOT_LOGIN ?? 'starting-monday-agent[bot]'
+const BOT_USER_ID = process.env.AGENT_BOT_USER_ID ?? '327657813'
+
 function sh(cmd: string, cmdArgs: string[]): string {
   return execFileSync(cmd, cmdArgs, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
 }
@@ -65,8 +70,11 @@ function main(): void {
 
   const branch = `agent/${jiraKey.toLowerCase()}-${incident.fingerprint.slice(0, 8)}`
 
-  sh('git', ['config', 'user.name', 'starting-monday-agent[bot]'])
-  sh('git', ['config', 'user.email', 'starting-monday-agent[bot]@users.noreply.github.com'])
+  // The numeric prefix is what links these commits to the bot account. Without
+  // it GitHub renders them as an unlinked author with no avatar or profile.
+  // 327657813 is the user id of starting-monday-agent[bot].
+  sh('git', ['config', 'user.name', BOT_LOGIN])
+  sh('git', ['config', 'user.email', `${BOT_USER_ID}+${BOT_LOGIN}@users.noreply.github.com`])
   sh('git', ['checkout', '-b', branch])
   sh('git', ['apply', '--whitespace=nowarn', patchPath])
   sh('git', ['add', '-A'])
