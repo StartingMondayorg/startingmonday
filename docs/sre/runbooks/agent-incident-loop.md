@@ -4,8 +4,10 @@ An alert lands in `#alerts-prod`, a Slack event reaches this app, and — once t
 later stages are enabled — a Claude agent diagnoses the failure, files an SMK
 bug, opens a draft PR, and replies in the alert's own thread.
 
-**Current stage: 0 (receiver only).** Nothing dispatches. `AGENT_RESPONDER_ENABLED`
-is `0` and the GitHub App does not exist yet.
+**Current stage: 2 (diagnose only).** The responder runs Claude against an
+incident and replies in the alert's own Slack thread. It files no Jira ticket and
+opens no pull request. Automated dispatch stays off until `AGENT_RESPONDER_ENABLED`
+is set to `1`; manual runs work regardless.
 
 ## Kill switch
 
@@ -34,6 +36,52 @@ There is no second switch to find. If the loop is misbehaving, this is the one.
 6. `claim_agent_incident()` upserts one row per fingerprint, atomically.
 7. `decideDispatch()` applies the manifest, then `consume_agent_dispatch_budget()`
    applies the global daily cap.
+
+## The responder (`.github/workflows/agent-incident-responder.yml`)
+
+Triggered by `repository_dispatch: prod-alert` from the receiver, or manually:
+
+```bash
+gh workflow run agent-incident-responder.yml -f fingerprint=<fingerprint>
+```
+
+Manual runs bypass the kill switch on purpose, so the loop stays testable while
+automated dispatch is disabled. Automated runs do not.
+
+**Two jobs, and the split is the security boundary.** Alert evidence comes from
+outside this repository and can contain text shaped like instructions.
+
+| Job | Holds | Runs the model |
+|---|---|---|
+| `investigate` | `ANTHROPIC_API_KEY`, Supabase read | yes |
+| `publish` | `SLACK_BOT_TOKEN`, Supabase write | **no** |
+
+So a prompt injection in an alert payload reaches a job with no credential that
+can write anywhere, and the job that can write never sees a model.
+
+The agent runs with `--allowedTools "Read,Glob,Grep"`. It cannot edit, commit or
+push at this stage even if it decides it wants to.
+
+### The output contract
+
+The agent must return one JSON object: `verdict`, `summary`, `reasoning`,
+`files`, optional `suggested_fix`. `src/lib/incident/diagnosis.ts` parses and
+validates it, then `assertPublishable()` re-scans the *rendered* message with the
+same patterns used at ingest and refuses to post on a hit. The prompt tells the
+agent not to leak; that gate is what enforces it.
+
+`reasoning` is required for **every** verdict, including `not-code-fixable`.
+Without that, the negative verdict becomes a free pass for anything that looks
+hard.
+
+### When the agent fails
+
+`publish` runs even when `investigate` fails, reads the incident from the
+database rather than the artifact, and posts a failure notice in the thread.
+There is no automatic retry: a failed run during a live incident is a signal for
+a human, not a reason to spend again. An alert that receives no reply at all is
+indistinguishable from the loop being switched off, which is why the failure path
+still posts.
 
 ## Fingerprints, and why storms are cheap
 

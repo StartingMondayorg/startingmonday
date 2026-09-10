@@ -1,0 +1,183 @@
+name: Agent Incident Responder
+
+# Stage 2 of the agentic incident loop: DIAGNOSE ONLY.
+# It reads an incident, asks Claude what happened, and replies in the alert's
+# own Slack thread. It files no ticket and opens no pull request.
+#
+# The two jobs are split on purpose. Alert evidence originates outside this
+# repository and can contain text shaped like instructions, so the job that
+# runs the model holds no credential that can write anywhere, and the job that
+# holds the Slack token and database credentials never invokes the model.
+#
+# Runbook: docs/sre/runbooks/agent-incident-loop.md
+
+on:
+  repository_dispatch:
+    types: [prod-alert]
+  workflow_dispatch:
+    inputs:
+      fingerprint:
+        description: 'Incident fingerprint to diagnose (from agent_incidents)'
+        required: true
+        type: string
+
+# One run per incident, and never cancel one midway: a half-finished
+# investigation that has already posted to Slack is worse than a slow one.
+concurrency:
+  group: agent-responder-${{ github.event.client_payload.fingerprint || inputs.fingerprint }}
+  cancel-in-progress: false
+
+jobs:
+  investigate:
+    name: Diagnose incident
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    # No write scope, and deliberately no Slack or GitHub App credentials.
+    permissions:
+      contents: read
+
+    outputs:
+      fingerprint: ${{ steps.resolve.outputs.fingerprint }}
+
+    steps:
+      - name: Resolve fingerprint and check the kill switch
+        id: resolve
+        env:
+          # A repository variable, not a secret, so its state is visible at a
+          # glance and can be flipped without knowing a value.
+          ENABLED: ${{ vars.AGENT_RESPONDER_ENABLED }}
+          EVENT: ${{ github.event_name }}
+          FROM_DISPATCH: ${{ github.event.client_payload.fingerprint }}
+          FROM_INPUT: ${{ inputs.fingerprint }}
+        run: |
+          set -euo pipefail
+          fingerprint="${FROM_DISPATCH:-$FROM_INPUT}"
+          if [ -z "$fingerprint" ]; then
+            echo "::error::no fingerprint supplied"
+            exit 1
+          fi
+
+          # The kill switch stops automated runs. A manual workflow_dispatch is
+          # an explicit human act and is allowed through so the loop stays
+          # testable while disabled.
+          if [ "$EVENT" = "repository_dispatch" ] && [ "$ENABLED" != "1" ]; then
+            echo "::error::AGENT_RESPONDER_ENABLED is not 1 - refusing automated run"
+            exit 1
+          fi
+
+          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
+          echo "Diagnosing $fingerprint (trigger: $EVENT)"
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch incident
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          npx tsx scripts/agent-response/fetch-incident.ts \
+            --fingerprint "${{ steps.resolve.outputs.fingerprint }}" \
+            --out incident.json
+
+      - name: Build prompt
+        run: npx tsx scripts/agent-response/build-incident-prompt.ts --incident incident.json > prompt.txt
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Diagnose
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY is required"
+            exit 1
+          fi
+          # Read-only tools. This stage cannot edit, commit or push even if the
+          # model decides it wants to.
+          claude --allowedTools "Read,Glob,Grep" --print "$(cat prompt.txt)" > agent-output.txt
+          echo "--- first 40 lines of agent output ---"
+          head -40 agent-output.txt
+
+      - name: Upload investigation
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: incident-diagnosis-${{ steps.resolve.outputs.fingerprint }}
+          path: |
+            incident.json
+            prompt.txt
+            agent-output.txt
+          retention-days: 14
+
+  publish:
+    name: Post diagnosis to Slack thread
+    needs: investigate
+    # Runs even when the investigation failed: an alert that gets no reply at
+    # all is indistinguishable from the loop being switched off.
+    if: always() && needs.investigate.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Holds the Slack token and database credentials. Never invokes the model.
+    permissions:
+      contents: read
+
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      SLACK_ALERTS_PROD_CHANNEL_ID: ${{ secrets.SLACK_ALERTS_PROD_CHANNEL_ID }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Read the incident from the database rather than the artifact, so the
+      # failure path still works when the investigation never produced one.
+      - name: Fetch incident
+        run: |
+          npx tsx scripts/agent-response/fetch-incident.ts \
+            --fingerprint "${{ needs.investigate.outputs.fingerprint }}" \
+            --out incident.json
+
+      - name: Download investigation
+        if: needs.investigate.result == 'success'
+        uses: actions/download-artifact@v6
+        with:
+          name: incident-diagnosis-${{ needs.investigate.outputs.fingerprint }}
+          # incident.json is already fetched above; only the agent output matters.
+          merge-multiple: true
+
+      - name: Publish diagnosis
+        if: needs.investigate.result == 'success'
+        run: |
+          npx tsx scripts/agent-response/publish-diagnosis.ts \
+            --incident incident.json \
+            --diagnosis agent-output.txt \
+            --dry-run
+
+      - name: Report a failed investigation in the thread
+        if: needs.investigate.result != 'success' || failure()
+        run: |
+          npx tsx scripts/agent-response/publish-diagnosis.ts \
+            --incident incident.json \
+            --failed "The investigation job did not complete successfully." \
+            --dry-run
