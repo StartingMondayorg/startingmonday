@@ -1,0 +1,28 @@
+{
+  "$comment": "Captured verbatim from a real Sentry 'Send Test Notification' that reached #alerts-prod on 2026-09-10 and consumed an agent dispatch. rule:-1 and alert_rule_id=-1 are Sentry's markers for a manually triggered test rather than a configured rule.",
+  "type": "message",
+  "channel": "C0BUWPS1YNM",
+  "ts": "1789069225.922619",
+  "bot_id": "B_SENTRY",
+  "text": "[javascript-nextjs] Test Issue",
+  "blocks": [
+    {
+      "type": "section",
+      "block_id": "{\"issue\":7724840387,\"rule\":-1}",
+      "text": {
+        "type": "mrkdwn",
+        "text": "<https://starting-monday.sentry.io/issues/7724840387/?referrer=slack&amp;alert_rule_id=-1&amp;alert_type=issue|*Test Issue*>"
+      }
+    },
+    {
+      "type": "section",
+      "block_id": "3J5qB",
+      "text": { "type": "mrkdwn", "text": "../../sentry/scripts/views.js in poll" }
+    },
+    {
+      "type": "context",
+      "block_id": "5RPrQ",
+      "elements": [ { "type": "mrkdwn", "text": "State: *New*   First Seen: *1 minute ago*" } ]
+    }
+  ]
+}

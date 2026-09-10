@@ -1,7 +1,7 @@
 import { after, type NextRequest, NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { verifySlackSignature } from '@/lib/slack-signature'
-import { classify, type SlackMessageEvent } from '@/lib/incident/classify'
+import { classify, flattenText, isSentryTestNotification, type SlackMessageEvent } from '@/lib/incident/classify'
 import { fingerprint } from '@/lib/incident/fingerprint'
 import { redactRecord } from '@/lib/incident/redact'
 import { decideDispatch, globalDailyLimit } from '@/lib/incident/config'
@@ -51,9 +51,13 @@ export function shouldIgnore(event: SlackMessageEvent | undefined, channelId: st
   if (event.thread_ts) return 'thread_reply'
   if (event.subtype && event.subtype !== 'bot_message') return `subtype_${event.subtype}`
 
-  const text = event.text ?? ''
+  // Flattened rather than event.text alone: Sentry puts its content in blocks
+  // and attachments, leaving the top-level text empty or minimal.
+  const text = flattenText(event)
   if (/Slack Alert Test|Slack alert test/i.test(text)) return 'routing_test'
   if (/Simulated/i.test(text)) return 'simulated'
+  // Exercising the Sentry integration must not cost an agent run.
+  if (isSentryTestNotification(text)) return 'sentry_test_notification'
   return null
 }
 
