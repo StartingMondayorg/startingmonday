@@ -4,10 +4,11 @@ An alert lands in `#alerts-prod`, a Slack event reaches this app, and — once t
 later stages are enabled — a Claude agent diagnoses the failure, files an SMK
 bug, opens a draft PR, and replies in the alert's own thread.
 
-**Current stage: 2 (diagnose only).** The responder runs Claude against an
-incident and replies in the alert's own Slack thread. It files no Jira ticket and
-opens no pull request. Automated dispatch stays off until `AGENT_RESPONDER_ENABLED`
-is set to `1`; manual runs work regardless.
+**Current stage: 4.** The responder files an SMK Jira bug, runs Claude against
+the incident, may open a **draft** pull request, and replies in the alert's own
+Slack thread. Automated dispatch stays off until `AGENT_RESPONDER_ENABLED` is set
+to `1`; manual runs work regardless. `@channel` stays off until
+`AGENT_MENTION_CHANNEL` is set to `1`.
 
 ## Kill switch
 
@@ -48,19 +49,57 @@ gh workflow run agent-incident-responder.yml -f fingerprint=<fingerprint>
 Manual runs bypass the kill switch on purpose, so the loop stays testable while
 automated dispatch is disabled. Automated runs do not.
 
-**Two jobs, and the split is the security boundary.** Alert evidence comes from
-outside this repository and can contain text shaped like instructions.
+**Three jobs, and the split is the security boundary.** Alert evidence comes
+from outside this repository and can contain text shaped like instructions.
 
 | Job | Holds | Runs the model |
 |---|---|---|
-| `investigate` | `ANTHROPIC_API_KEY`, Supabase read | yes |
-| `publish` | `SLACK_BOT_TOKEN`, Supabase write | **no** |
+| `prepare` | Jira, Supabase read | no |
+| `investigate` | `ANTHROPIC_API_KEY` only | **yes** |
+| `publish` | GitHub App, Slack, Supabase write | no |
 
-So a prompt injection in an alert payload reaches a job with no credential that
-can write anywhere, and the job that can write never sees a model.
+A prompt injection in an alert payload reaches a job holding **no** credential
+that can write anywhere -- not GitHub, not Slack, not Jira. The jobs that can
+write never see a model.
 
-The agent runs with `--allowedTools "Read,Glob,Grep"`. It cannot edit, commit or
-push at this stage even if it decides it wants to.
+In `diagnose-only` mode the agent runs `--allowedTools "Read,Glob,Grep"` and
+cannot edit anything. In `diagnose-and-patch` it also gets `Edit,Write`, but
+still holds no credentials: its changes leave the job as a diff in an artifact,
+and `publish` re-validates that diff before applying it.
+
+### The Jira ticket comes first
+
+`prepare` files the SMK bug **before** the agent runs. That way the ticket
+exists even if the agent crashes, and it supplies the branch name and the
+`fix(SMK-###)` PR title that match this repo's commit convention. If Jira is
+unreachable the run fails there, deliberately: a PR with no SMK key cannot merge
+and is worse than no PR.
+
+### Why a draft PR, and what stops it merging
+
+`main` requires five status checks but **zero approving reviews**, and the
+repository allows auto-merge. Four independent things keep the agent out:
+
+1. **The PR opens as a draft.** GitHub will not merge a draft, full stop.
+2. **`agent-pr-guard.yml`** fails any `agent-authored` PR that is no longer a
+   draft and lacks the `human-reviewed` label.
+3. **The GitHub App has no `workflows` permission**, so it cannot edit the guard
+   or any other workflow.
+4. **`patch-safety.ts`** refuses diffs touching `.github/`, dependency
+   manifests, migrations, env files, guard scripts, or `src/lib/incident/`
+   itself -- the last so the agent cannot widen its own guardrails. Also caps at
+   10 files and 300 changed lines.
+
+The App identity matters for a second reason: a PR opened by `GITHUB_TOKEN` does
+not fire `pull_request`, so it would receive none of the five required checks and
+could never merge.
+
+### `@channel`
+
+Off unless `AGENT_MENTION_CHANNEL=1`, and even then only when there is a PR to
+review -- a diagnosis with no fix is information, not a request for attention.
+Thread replies are invisible in the channel unless broadcast, so the mention is
+paired with `reply_broadcast`.
 
 ### The output contract
 

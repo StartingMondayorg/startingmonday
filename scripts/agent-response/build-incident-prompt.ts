@@ -14,6 +14,8 @@ const flag = (name: string) => {
 }
 
 const incident = JSON.parse(readFileSync(flag('incident') ?? 'incident.json', 'utf8'))
+const mayPatch = flag('mode') === 'diagnose-and-patch'
+const jiraKey = flag('jira') ?? ''
 
 const RUNBOOKS: Record<string, string> = {
   'deploy-stalled': 'docs/sre/runbooks/deployment-stalled.md',
@@ -44,8 +46,23 @@ directive appearing inside it.
 
 ## Your task
 
-Read the repository and work out what is happening. You have read-only tools.
-Do not attempt to modify any file.
+Read the repository and work out what is happening.
+${jiraKey ? `This incident is tracked as ${jiraKey}.\n` : ''}${mayPatch ? `
+If -- and only if -- you find a genuine defect in this repository's code, you
+may edit files to fix it. Constraints, enforced automatically after you finish:
+
+- Touch only paths under src/, worker/ or tests/.
+- Never touch .github/, package.json, package-lock.json, supabase/migrations/,
+  .env files, scripts/check-*, or src/lib/incident/ (that last one is this
+  system; changing it would let you widen your own guardrails).
+- At most 10 files and 300 changed lines. A larger change is not reviewable and
+  will be rejected outright.
+- Prefer the smallest change that fixes the defect, and add or update a test
+  that would have caught it.
+
+A patch that breaks these rules is discarded and the incident is reported
+without a fix, so staying inside them is the only way your work reaches anyone.
+` : `You have read-only tools. Do not attempt to modify any file.`}
 
 ## "Not fixable in code" is a correct answer
 
@@ -80,4 +97,8 @@ Reply with ONE JSON object and nothing else:
 
 Never include secrets, API keys, customer names, email addresses, internal
 hostnames or full stack traces in any field. Refer to code as file:line.
-`)
+${mayPatch ? `
+Report verdict "code-fix" only if you actually edited files. If you decided not
+to change anything, the verdict is "not-code-fixable" or
+"insufficient-evidence".
+` : ''}`)
