@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
-import { pathToFileURL } from 'node:url'
 import { buildOutreachLogCursorFilter, checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -66,6 +65,4 @@ async function main() {
   }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch(e => { console.error(e); process.exit(1) })
-}
+main().catch(e => { console.error(e); process.exit(1) })
