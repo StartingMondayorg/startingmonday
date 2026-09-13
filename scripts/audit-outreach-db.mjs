@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 import { pathToFileURL } from 'node:url'
-import { checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
+import { buildOutreachLogCursorFilter, checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -18,9 +18,11 @@ async function main() {
   const nowMs = Date.now()
   const lookbackEndIso = new Date(nowMs).toISOString()
   const lookbackStartIso = new Date(nowMs - lookbackDays * 24 * 60 * 60 * 1000).toISOString()
-  let from = 0, pageSize = 1000, scanned = 0, failures = 0
+  let pageSize = 1000, scanned = 0, failures = 0
+  let lastSentAt = null
+  let lastId = null
   while (true) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('outreach_logs')
       .select('id, sent_at, message_body, subject, sender_email')
       .eq('sender_email', 'richard@startingmonday.app')
@@ -29,7 +31,12 @@ async function main() {
       .not('message_body', 'is', null)
       .order('sent_at', { ascending: true })
       .order('id', { ascending: true })
-      .range(from, from + pageSize - 1)
+      .limit(pageSize)
+
+    const cursorFilter = buildOutreachLogCursorFilter(lastSentAt, lastId)
+    if (cursorFilter) query = query.or(cursorFilter)
+
+    const { data, error } = await query
     if (error) {
       console.error('Failed to query outreach_logs:', error.message)
       process.exit(1)
@@ -46,8 +53,10 @@ async function main() {
         console.log(`[${row.id}] ${errors.join(', ')}`)
       }
     }
+    const lastRow = rows[rows.length - 1]
+    lastSentAt = lastRow?.sent_at ?? null
+    lastId = lastRow?.id ?? null
     if (rows.length < pageSize) break
-    from += pageSize
   }
   if (failures) {
     console.error(`\nFAIL: ${failures} of ${scanned} outreach_log rows failed DB audit in the last ${lookbackDays} day(s).`)

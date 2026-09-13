@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
+import { buildOutreachLogCursorFilter, checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
 
 test('resolveLookbackDays defaults to 7 when unset', () => {
   assert.equal(resolveLookbackDays(undefined), 7)
@@ -44,4 +44,12 @@ test('checkSignature validates required signoff block', () => {
 test('checkForbidden detects banned outreach phrases', () => {
   assert.equal(checkForbidden('I hope this finds you well'), true)
   assert.equal(checkForbidden('Specific and direct outreach copy'), false)
+})
+
+test('buildOutreachLogCursorFilter creates keyset pagination clause', () => {
+  assert.equal(
+    buildOutreachLogCursorFilter('2026-09-13T00:00:00.000Z', 'abc-123'),
+    'sent_at.gt.2026-09-13T00:00:00.000Z,and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.abc-123)',
+  )
+  assert.equal(buildOutreachLogCursorFilter(null, 'abc-123'), null)
 })
