@@ -21,7 +21,7 @@ export function checkForbidden(text) {
 
 export function buildOutreachLogCursorFilter(lastSentAt, lastId) {
   if (!lastSentAt || !lastId) return null
-  const sentAt = `"${String(lastSentAt).replace(/"/g, '\\"')}"`
-  const id = `"${String(lastId).replace(/"/g, '\\"')}"`
+  const sentAt = encodeURIComponent(String(lastSentAt))
+  const id = encodeURIComponent(String(lastId))
   return `sent_at.gt.${sentAt},and(sent_at.eq.${sentAt},id.gt.${id})`
 }
