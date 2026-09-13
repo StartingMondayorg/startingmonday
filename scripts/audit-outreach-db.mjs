@@ -33,13 +33,13 @@ async function main() {
     .not('message_body', 'is', null)
     .order('sent_at', { ascending: true })
     .order('id', { ascending: true })
-    .limit(maxAuditRows)
+    .limit(maxAuditRows + 1)
   if (error) {
     console.error('Failed to query outreach_logs:', error.message)
     process.exit(1)
   }
   const rows = data ?? []
-  if (rows.length >= maxAuditRows) {
+  if (rows.length > maxAuditRows) {
     console.error(`Query reached row limit (${maxAuditRows}); narrow the audit window or increase maxAuditRows.`)
     process.exit(1)
   }
