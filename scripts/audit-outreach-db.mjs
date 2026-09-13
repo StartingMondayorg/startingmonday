@@ -30,6 +30,7 @@ async function main() {
     .eq('sender_email', 'richard@startingmonday.app')
     .gte('sent_at', lookbackStartIso)
     .lte('sent_at', lookbackEndIso)
+    .not('sent_at', 'is', null)
     .not('message_body', 'is', null)
     .order('sent_at', { ascending: true })
     .order('id', { ascending: true })
