@@ -25,10 +25,3 @@ export function computeLookbackWindow(nowMs, lookbackDays) {
     startIso: new Date(nowMs - lookbackDays * 24 * 60 * 60 * 1000).toISOString(),
   }
 }
-
-export function buildKeysetCursorDisjunction(lastSentAt, lastId) {
-  if (lastSentAt == null || lastSentAt === '' || lastId == null || lastId === '') return null
-  const sentAt = encodeURIComponent(String(lastSentAt))
-  const id = encodeURIComponent(String(lastId))
-  return `or(and(sent_at.eq.${sentAt},id.gt.${id}),sent_at.gt.${sentAt})`
-}
