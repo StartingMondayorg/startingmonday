@@ -15,6 +15,7 @@ const supabase = createClient(supabaseUrl, serviceRoleKey)
 
 async function main() {
   const lookbackDays = resolveLookbackDays()
+  const lookbackEndIso = new Date().toISOString()
   const lookbackStartIso = new Date(Date.now() - lookbackDays * 24 * 60 * 60 * 1000).toISOString()
   let from = 0, pageSize = 1000, scanned = 0, failures = 0
   while (true) {
@@ -23,6 +24,7 @@ async function main() {
       .select('id, sent_at, message_body, subject, sender_email')
       .eq('sender_email', 'richard@startingmonday.app')
       .gte('sent_at', lookbackStartIso)
+      .lte('sent_at', lookbackEndIso)
       .not('message_body', 'is', null)
       .order('sent_at', { ascending: true })
       .order('id', { ascending: true })
