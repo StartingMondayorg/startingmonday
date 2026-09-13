@@ -51,5 +51,9 @@ test('buildOutreachLogCursorFilter creates keyset pagination clause', () => {
     buildOutreachLogCursorFilter('2026-09-13T00:00:00.000Z', 'abc-123'),
     'sent_at.gt.2026-09-13T00%3A00%3A00.000Z,and(sent_at.eq.2026-09-13T00%3A00%3A00.000Z,id.gt.abc-123)',
   )
+  assert.equal(
+    buildOutreachLogCursorFilter('2026-09-13T00:00:00.000Z', 0),
+    'sent_at.gt.2026-09-13T00%3A00%3A00.000Z,and(sent_at.eq.2026-09-13T00%3A00%3A00.000Z,id.gt.0)',
+  )
   assert.equal(buildOutreachLogCursorFilter(null, 'abc-123'), null)
 })
