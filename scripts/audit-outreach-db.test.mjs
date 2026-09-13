@@ -16,5 +16,7 @@ test('resolveLookbackDays accepts positive integers', () => {
 test('resolveLookbackDays falls back to 7 for invalid values', () => {
   assert.equal(resolveLookbackDays('0'), 7)
   assert.equal(resolveLookbackDays('-2'), 7)
+  assert.equal(resolveLookbackDays('1.5'), 7)
+  assert.equal(resolveLookbackDays('7days'), 7)
   assert.equal(resolveLookbackDays('abc'), 7)
 })

@@ -1,8 +1,10 @@
 const DEFAULT_LOOKBACK_DAYS = 7
 
 export function resolveLookbackDays(raw = process.env.OUTREACH_DB_AUDIT_LOOKBACK_DAYS) {
-  if (raw == null || raw === '') return DEFAULT_LOOKBACK_DAYS
-  const parsed = Number.parseInt(String(raw), 10)
+  const value = String(raw ?? '').trim()
+  if (!value) return DEFAULT_LOOKBACK_DAYS
+  if (!/^[1-9]\d*$/.test(value)) return DEFAULT_LOOKBACK_DAYS
+  const parsed = Number.parseInt(value, 10)
   return Number.isInteger(parsed) && parsed > 0 ? parsed : DEFAULT_LOOKBACK_DAYS
 }
 
