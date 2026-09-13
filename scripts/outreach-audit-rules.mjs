@@ -18,3 +18,15 @@ export function checkForbidden(text) {
   const norm = (text ?? '').toLowerCase()
   return /remit|i hope this finds you well|guaranteed|risk free|act now|limited time|buy now|double your|no obligation|click here|winner|urgent response needed|em dash|—/.test(norm)
 }
+
+export function computeLookbackWindow(nowMs, lookbackDays) {
+  return {
+    endIso: new Date(nowMs).toISOString(),
+    startIso: new Date(nowMs - lookbackDays * 24 * 60 * 60 * 1000).toISOString(),
+  }
+}
+
+export function buildKeysetCursorDisjunction(lastSentAt, lastId) {
+  if (lastSentAt == null || lastSentAt === '' || lastId == null || lastId === '') return null
+  return `and(sent_at.eq.${lastSentAt},id.gt.${lastId}),sent_at.gt.${lastSentAt}`
+}

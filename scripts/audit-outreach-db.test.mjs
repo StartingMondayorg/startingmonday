@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
+import {
+  buildKeysetCursorDisjunction,
+  checkForbidden,
+  checkSignature,
+  computeLookbackWindow,
+  resolveLookbackDays,
+} from './outreach-audit-rules.mjs'
 
 test('resolveLookbackDays defaults to 7 when unset', () => {
   assert.equal(resolveLookbackDays(undefined), 7)
@@ -44,4 +50,20 @@ test('checkSignature validates required signoff block', () => {
 test('checkForbidden detects banned outreach phrases', () => {
   assert.equal(checkForbidden('I hope this finds you well'), true)
   assert.equal(checkForbidden('Specific and direct outreach copy'), false)
+})
+
+test('computeLookbackWindow derives inclusive bounds from one timestamp', () => {
+  const nowMs = Date.parse('2026-09-13T12:34:56.000Z')
+  const { startIso, endIso } = computeLookbackWindow(nowMs, 7)
+  assert.equal(endIso, '2026-09-13T12:34:56.000Z')
+  assert.equal(startIso, '2026-09-06T12:34:56.000Z')
+})
+
+test('buildKeysetCursorDisjunction returns lexicographic cursor predicate', () => {
+  assert.equal(
+    buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 'abc-123'),
+    'and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.abc-123),sent_at.gt.2026-09-13T00:00:00.000Z',
+  )
+  assert.equal(buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 0), 'and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.0),sent_at.gt.2026-09-13T00:00:00.000Z')
+  assert.equal(buildKeysetCursorDisjunction(null, 'abc-123'), null)
 })

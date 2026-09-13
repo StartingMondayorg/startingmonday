@@ -1,6 +1,12 @@
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
-import { checkForbidden, checkSignature, resolveLookbackDays } from './outreach-audit-rules.mjs'
+import {
+  buildKeysetCursorDisjunction,
+  checkForbidden,
+  checkSignature,
+  computeLookbackWindow,
+  resolveLookbackDays,
+} from './outreach-audit-rules.mjs'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -15,52 +21,34 @@ const supabase = createClient(supabaseUrl, serviceRoleKey)
 async function main() {
   const lookbackDays = resolveLookbackDays()
   const nowMs = Date.now()
-  const lookbackEndIso = new Date(nowMs).toISOString()
-  const lookbackStartIso = new Date(nowMs - lookbackDays * 24 * 60 * 60 * 1000).toISOString()
+  const { startIso: lookbackStartIso, endIso: lookbackEndIso } = computeLookbackWindow(nowMs, lookbackDays)
   let pageSize = 1000, scanned = 0, failures = 0
   let lastSentAt = null
   let lastId = null
 
-  const buildBaseQuery = () => supabase
-    .from('outreach_logs')
-    .select('id, sent_at, message_body, subject, sender_email')
-    .eq('sender_email', 'richard@startingmonday.app')
-    .gte('sent_at', lookbackStartIso)
-    .lte('sent_at', lookbackEndIso)
-    .not('message_body', 'is', null)
-    .order('sent_at', { ascending: true })
-    .order('id', { ascending: true })
-
   while (true) {
-    let rows = []
-    if (lastSentAt == null || lastId == null) {
-      const { data, error } = await buildBaseQuery().limit(pageSize)
-      if (error) {
-        console.error('Failed to query outreach_logs:', error.message)
-        process.exit(1)
-      }
-      rows = data ?? []
-    } else {
-      const { data: sameTimestampRows, error: sameTimestampError } = await buildBaseQuery()
-        .eq('sent_at', lastSentAt)
-        .gt('id', lastId)
-        .limit(pageSize)
-      if (sameTimestampError) {
-        console.error('Failed to query outreach_logs:', sameTimestampError.message)
-        process.exit(1)
-      }
-      rows = sameTimestampRows ?? []
-      if (rows.length < pageSize) {
-        const { data: laterRows, error: laterRowsError } = await buildBaseQuery()
-          .gt('sent_at', lastSentAt)
-          .limit(pageSize - rows.length)
-        if (laterRowsError) {
-          console.error('Failed to query outreach_logs:', laterRowsError.message)
-          process.exit(1)
-        }
-        rows = rows.concat(laterRows ?? [])
-      }
+    let query = supabase
+      .from('outreach_logs')
+      .select('id, sent_at, message_body, subject, sender_email')
+      .eq('sender_email', 'richard@startingmonday.app')
+      .gte('sent_at', lookbackStartIso)
+      .lte('sent_at', lookbackEndIso)
+      .not('message_body', 'is', null)
+      .order('sent_at', { ascending: true })
+      .order('id', { ascending: true })
+      .limit(pageSize)
+
+    const cursorDisjunction = buildKeysetCursorDisjunction(lastSentAt, lastId)
+    if (cursorDisjunction) {
+      query = query.or(cursorDisjunction)
     }
+
+    const { data, error } = await query
+    if (error) {
+      console.error('Failed to query outreach_logs:', error.message)
+      process.exit(1)
+    }
+    const rows = data ?? []
     if (rows.length === 0) break
     scanned += rows.length
     for (const row of rows) {
