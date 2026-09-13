@@ -24,6 +24,8 @@ async function main() {
       .eq('sender_email', 'richard@startingmonday.app')
       .gte('sent_at', lookbackStartIso)
       .not('message_body', 'is', null)
+      .order('sent_at', { ascending: true })
+      .order('id', { ascending: true })
       .range(from, from + pageSize - 1)
     if (error) {
       console.error('Failed to query outreach_logs:', error.message)
