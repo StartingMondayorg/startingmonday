@@ -18,10 +18,3 @@ export function checkForbidden(text) {
   const norm = (text ?? '').toLowerCase()
   return /remit|i hope this finds you well|guaranteed|risk free|act now|limited time|buy now|double your|no obligation|click here|winner|urgent response needed|em dash|—/.test(norm)
 }
-
-export function buildOutreachLogCursorFilter(lastSentAt, lastId) {
-  if (lastSentAt == null || lastSentAt === '' || lastId == null || lastId === '') return null
-  const sentAt = encodeURIComponent(String(lastSentAt))
-  const id = encodeURIComponent(String(lastId))
-  return `sent_at.gt.${sentAt},and(sent_at.eq.${sentAt},id.gt.${id})`
-}
