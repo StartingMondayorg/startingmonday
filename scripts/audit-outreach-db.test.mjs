@@ -62,8 +62,14 @@ test('computeLookbackWindow derives inclusive bounds from one timestamp', () => 
 test('buildKeysetCursorDisjunction returns lexicographic cursor predicate', () => {
   assert.equal(
     buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 'abc-123'),
-    'and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.abc-123),sent_at.gt.2026-09-13T00:00:00.000Z',
+    'or(and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.abc-123),sent_at.gt.2026-09-13T00:00:00.000Z)',
   )
-  assert.equal(buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 0), 'and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.0),sent_at.gt.2026-09-13T00:00:00.000Z')
+  assert.equal(buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 0), 'or(and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.0),sent_at.gt.2026-09-13T00:00:00.000Z)')
   assert.equal(buildKeysetCursorDisjunction(null, 'abc-123'), null)
+})
+
+test('audit query cursor uses one grouped OR expression', () => {
+  const cursor = buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 'abc-123')
+  const fullFilter = `sender_email=eq.richard@startingmonday.app&sent_at=gte.2026-09-06T00:00:00.000Z&sent_at=lte.2026-09-13T00:00:00.000Z&or=(${cursor})`
+  assert.match(fullFilter, /or=\(or\(and\(sent_at\.eq\./)
 })
