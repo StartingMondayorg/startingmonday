@@ -62,9 +62,9 @@ test('computeLookbackWindow derives inclusive bounds from one timestamp', () => 
 test('buildKeysetCursorDisjunction returns lexicographic cursor predicate', () => {
   assert.equal(
     buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 'abc-123'),
-    'or(and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.abc-123),sent_at.gt.2026-09-13T00:00:00.000Z)',
+    'or(and(sent_at.eq.2026-09-13T00%3A00%3A00.000Z,id.gt.abc-123),sent_at.gt.2026-09-13T00%3A00%3A00.000Z)',
   )
-  assert.equal(buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 0), 'or(and(sent_at.eq.2026-09-13T00:00:00.000Z,id.gt.0),sent_at.gt.2026-09-13T00:00:00.000Z)')
+  assert.equal(buildKeysetCursorDisjunction('2026-09-13T00:00:00.000Z', 0), 'or(and(sent_at.eq.2026-09-13T00%3A00%3A00.000Z,id.gt.0),sent_at.gt.2026-09-13T00%3A00%3A00.000Z)')
   assert.equal(buildKeysetCursorDisjunction(null, 'abc-123'), null)
 })
 

@@ -28,5 +28,7 @@ export function computeLookbackWindow(nowMs, lookbackDays) {
 
 export function buildKeysetCursorDisjunction(lastSentAt, lastId) {
   if (lastSentAt == null || lastSentAt === '' || lastId == null || lastId === '') return null
-  return `or(and(sent_at.eq.${lastSentAt},id.gt.${lastId}),sent_at.gt.${lastSentAt})`
+  const sentAt = encodeURIComponent(String(lastSentAt))
+  const id = encodeURIComponent(String(lastId))
+  return `or(and(sent_at.eq.${sentAt},id.gt.${id}),sent_at.gt.${sentAt})`
 }
