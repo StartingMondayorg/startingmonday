@@ -15,8 +15,9 @@ const supabase = createClient(supabaseUrl, serviceRoleKey)
 
 async function main() {
   const lookbackDays = resolveLookbackDays()
-  const lookbackEndIso = new Date().toISOString()
-  const lookbackStartIso = new Date(Date.now() - lookbackDays * 24 * 60 * 60 * 1000).toISOString()
+  const nowMs = Date.now()
+  const lookbackEndIso = new Date(nowMs).toISOString()
+  const lookbackStartIso = new Date(nowMs - lookbackDays * 24 * 60 * 60 * 1000).toISOString()
   let from = 0, pageSize = 1000, scanned = 0, failures = 0
   while (true) {
     const { data, error } = await supabase
