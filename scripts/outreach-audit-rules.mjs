@@ -20,8 +20,11 @@ export function checkForbidden(text) {
 }
 
 export function computeLookbackWindow(nowMs, lookbackDays) {
+  const startDate = new Date(nowMs)
+  startDate.setUTCHours(0, 0, 0, 0)
+  startDate.setUTCDate(startDate.getUTCDate() - lookbackDays + 1)
   return {
     endIso: new Date(nowMs).toISOString(),
-    startIso: new Date(nowMs - lookbackDays * 24 * 60 * 60 * 1000).toISOString(),
+    startIso: startDate.toISOString(),
   }
 }

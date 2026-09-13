@@ -55,5 +55,13 @@ test('computeLookbackWindow derives inclusive bounds from one timestamp', () => 
   const nowMs = Date.parse('2026-09-13T12:34:56.000Z')
   const { startIso, endIso } = computeLookbackWindow(nowMs, 7)
   assert.equal(endIso, '2026-09-13T12:34:56.000Z')
-  assert.equal(startIso, '2026-09-06T12:34:56.000Z')
+  assert.equal(startIso, '2026-09-07T00:00:00.000Z')
+})
+
+test('computeLookbackWindow anchors start to UTC day boundary', () => {
+  const nowMs = Date.parse('2026-09-13T00:00:01.000Z')
+  const oneDay = computeLookbackWindow(nowMs, 1)
+  assert.equal(oneDay.startIso, '2026-09-13T00:00:00.000Z')
+  assert.equal(oneDay.endIso, '2026-09-13T00:00:01.000Z')
+  assert.ok(Date.parse(oneDay.startIso) <= Date.parse(oneDay.endIso))
 })
