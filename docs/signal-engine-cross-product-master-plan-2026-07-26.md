@@ -538,6 +538,35 @@ workflow kill controls remain authoritative; recovery and rollback use
 forward fixes without erasing immutable evidence. This canonical index adds
 no Starting Monday runtime, data, deployment, or release dependency.
 
+#### WS11-04 IRS 990 adapter evidence entry
+
+MandateSignal PR 391 merged the governed IRS 990 bulk-CSV adapter at
+`0e69907d5866964727f13fe9bf23abe56beef04e` from reviewed head
+`e42805e188c2a79a0d9afcf1583def44d2d43f52` on 2026-09-16. Protected PR run
+`35147894051` and exact merge-SHA push run `35148827689` each passed all seven
+jobs. Railway production deployment `6490144741` reached `success`, and the
+production health endpoint returned HTTP 200 with exact release
+`0e69907d5866964727f13fe9bf23abe56beef04e` and environment `production`.
+
+| Artifact | MandateSignal path | SHA-256 at `0e69907d` |
+| --- | --- | --- |
+| MS-29 adapter contract and fixture plan | `docs/assurance/ms-29-adapter-contracts-2026-09-12.md` | `FA86BD82BE3057BB76484B65C559AAB80E2377EB95ECA3DD5F44253B983F0501` |
+| Default-off IRS 990 adapter | `engine/lib/ms29-irs-990-adapter.js` | `EC21738343B5259112FD10CF8C6519C432A09BE04752AB248BE47251569D0ADE` |
+| MS-29 admitted-source fixture registry | `engine/fixtures/ms29-admitted-sources.json` | `BB302C6F8059A5C68DCA18FE151F197A7D68843EE2EA9FB1E7877B317C5EA67D` |
+
+This is commit-pinned product-local implementation evidence under WS11-04,
+with WS1-08 and KEX-02 boundaries preserved. The adapter requires
+`MS29_IRS_990_ENABLED=1|true`; `MS29_IRS_990_DISABLED=1|true` takes precedence.
+The hosted values of those flags are `UNVERIFIED`. Independently, the merged
+repository has no catalog promotion, source-circuit ownership, orchestrator
+wiring, customer output, shared table, cross-product data access, or
+autonomous delivery, so the current product runtime has no path that invokes
+the adapter. The production deployment proves release identity only; it does
+not establish hosted flag state, source activation, live provider behavior,
+first-observed lag, coverage contribution, or story completion. DG-03,
+DG-10, MandateSignal GA controls, and source-specific promotion evidence
+remain authoritative.
+
 ### 3.6 Relationship and outreach execution-order evidence entry
 
 Rich (AO) approved the global work order on 2026-08-10: REM-01 first; then
