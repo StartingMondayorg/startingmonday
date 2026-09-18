@@ -1,5 +1,11 @@
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
+import {
+  checkForbidden,
+  checkSignature,
+  computeLookbackWindow,
+  resolveLookbackDays,
+} from './outreach-audit-rules.mjs'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -11,50 +17,48 @@ if (!supabaseUrl || !serviceRoleKey) {
 
 const supabase = createClient(supabaseUrl, serviceRoleKey)
 
-function checkSignature(text) {
-  const norm = (text ?? '').replace(/\r\n/g, '\n').trim()
-  if (!norm) return false
-  return /\nRich\nstartingmonday\.app(\n|$)/.test(norm)
-}
-
-function checkForbidden(text) {
-  const norm = (text ?? '').toLowerCase()
-  return /remit|i hope this finds you well|guaranteed|risk free|act now|limited time|buy now|double your|no obligation|click here|winner|urgent response needed|em dash|—/.test(norm)
-}
-
 async function main() {
-  let from = 0, pageSize = 1000, scanned = 0, failures = 0
-  while (true) {
-    const { data, error } = await supabase
-      .from('outreach_logs')
-      .select('id, message_body, subject, sender_email')
-      .eq('sender_email', 'richard@startingmonday.app')
-      .not('message_body', 'is', null)
-      .range(from, from + pageSize - 1)
-    if (error) {
-      console.error('Failed to query outreach_logs:', error.message)
-      process.exit(1)
+  const lookbackDays = resolveLookbackDays()
+  const maxAuditRows = 50000
+  const nowMs = Date.now()
+  const { startIso: lookbackStartIso, endIso: lookbackEndIso } = computeLookbackWindow(nowMs, lookbackDays)
+  let scanned = 0, failures = 0
+
+  const { data, error } = await supabase
+    .from('outreach_logs')
+    .select('id, sent_at, message_body, subject, sender_email')
+    .eq('sender_email', 'richard@startingmonday.app')
+    .gte('sent_at', lookbackStartIso)
+    .lte('sent_at', lookbackEndIso)
+    .not('sent_at', 'is', null)
+    .not('message_body', 'is', null)
+    .order('sent_at', { ascending: true })
+    .order('id', { ascending: true })
+    .limit(maxAuditRows + 1)
+  if (error) {
+    console.error('Failed to query outreach_logs:', error.message)
+    process.exit(1)
+  }
+  const rows = data ?? []
+  if (rows.length > maxAuditRows) {
+    console.error(`Query reached row limit (${maxAuditRows}); narrow the audit window or increase maxAuditRows.`)
+    process.exit(1)
+  }
+  scanned = rows.length
+  for (const row of rows) {
+    const errors = []
+    if (!checkSignature(row.message_body)) errors.push('Missing signature')
+    if (checkForbidden(row.message_body) || checkForbidden(row.subject)) errors.push('Forbidden phrase')
+    if (errors.length) {
+      failures++
+      console.log(`[${row.id}] ${errors.join(', ')}`)
     }
-    const rows = data ?? []
-    if (rows.length === 0) break
-    scanned += rows.length
-    for (const row of rows) {
-      const errors = []
-      if (!checkSignature(row.message_body)) errors.push('Missing signature')
-      if (checkForbidden(row.message_body) || checkForbidden(row.subject)) errors.push('Forbidden phrase')
-      if (errors.length) {
-        failures++
-        console.log(`[${row.id}] ${errors.join(', ')}`)
-      }
-    }
-    if (rows.length < pageSize) break
-    from += pageSize
   }
   if (failures) {
-    console.error(`\nFAIL: ${failures} of ${scanned} outreach_log rows failed DB audit.`)
+    console.error(`\nFAIL: ${failures} of ${scanned} outreach_log rows failed DB audit in the last ${lookbackDays} day(s).`)
     process.exit(1)
   } else {
-    console.log(`PASS: All ${scanned} outreach_log rows passed DB audit.`)
+    console.log(`PASS: All ${scanned} outreach_log rows passed DB audit in the last ${lookbackDays} day(s).`)
   }
 }
 
