@@ -168,7 +168,15 @@ test('Synthetic-09: critical dashboard route sweep has no 404/error-boundary fai
 
   for (const route of routes) {
     const t0 = Date.now()
-    const res = await page.goto(route.path, { waitUntil: 'domcontentloaded' })
+    // Prod occasionally aborts a navigation mid-flight (net::ERR_ABORTED, e.g. a
+    // superseding redirect); retry once before treating it as a failure.
+    const res = await page.goto(route.path, { waitUntil: 'domcontentloaded' }).catch(async (err) => {
+      if (err instanceof Error && err.message.includes('net::ERR_ABORTED')) {
+        console.log(`Synthetic-09: ${route.path} navigation aborted, retrying once`)
+        return page.goto(route.path, { waitUntil: 'domcontentloaded' })
+      }
+      throw err
+    })
     const elapsed = Date.now() - t0
 
     const bodyText = await page.locator('body').innerText()

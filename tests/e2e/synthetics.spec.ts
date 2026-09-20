@@ -673,9 +673,11 @@ test('Synthetic-10: signup to first-value flow reaches prep generation path', as
     await generateButton.click()
   }
 
-  await page.locator('h2, [role="alert"]:not(#__next-route-announcer__)').first().waitFor({ state: 'visible', timeout: 90_000 })
-  const prepError = page.locator('[role="alert"]:not(#__next-route-announcer__)')
-  const hasPrepError = await prepError.isVisible().catch(() => false)
+  // Benign informational/warning banners also render role="alert" (shadcn Alert);
+  // only the destructive variant (class text-destructive) indicates a prep failure.
+  await page.locator('h2, [role="alert"].text-destructive').first().waitFor({ state: 'visible', timeout: 90_000 })
+  const prepError = page.locator('[role="alert"].text-destructive')
+  const hasPrepError = await prepError.first().isVisible().catch(() => false)
   expect(hasPrepError, 'Synthetic-10 should not hit prep error state').toBe(false)
 
   await expect(page.locator('h2').first()).toBeVisible()

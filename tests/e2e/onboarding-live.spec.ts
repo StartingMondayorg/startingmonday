@@ -6,7 +6,7 @@ const baseUrl = (process.env.PLAYWRIGHT_BASE_URL ?? 'https://startingmonday.app'
 const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').trim()
 const serviceRoleKey = (process.env.SUPABASE_SERVICE_ROLE_KEY ?? '').trim()
 
-test('onboarding live: name step, lane step, and dark shell are present', async ({ page }) => {
+test('onboarding live: name step, lane step, and themed shell are present', async ({ page }) => {
   test.skip(!supabaseUrl || !serviceRoleKey, 'Skipping onboarding-live: missing Supabase service credentials.')
 
   const admin = createClient(supabaseUrl, serviceRoleKey, {
@@ -51,7 +51,7 @@ test('onboarding live: name step, lane step, and dark shell are present', async 
     await expect(page.getByRole('heading', { name: /Let.s find roles before the crowd sees them\./i })).toBeVisible()
 
     const shellClass = await page.locator('div.min-h-screen').first().getAttribute('class')
-    expect(shellClass ?? '').toContain('bg-[radial-gradient')
+    expect(shellClass ?? '').toContain('bg-background')
 
     await page.getByPlaceholder('Your full name').fill('Live Onboarding Check')
     await page.getByRole('button', { name: /^Start setup$/i }).click()
