@@ -68,9 +68,13 @@ test('onboarding live: name step, lane step, and themed shell are present', asyn
 
     await page.getByRole('link', { name: /Skip to dashboard/i }).click()
     await expect(page).toHaveURL(/\/dashboard(?:$|[/?#])/, { timeout: 15_000 })
-    // Completed-step count for a fresh account depends on profile defaults; assert the banner, not the number.
-    await expect(page.getByText(/\d of 6 steps complete/i).first()).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByRole('link', { name: /^Setup$/i })).toBeVisible({ timeout: 15_000 })
+    // The dashboard ships in two variants: the legacy shell (setup-progress banner with a
+    // Setup link) and the flag-gated three-zone shell ("What should I do today?" heading
+    // with a Progress link). Accept either so the probe tracks the served experience.
+    const legacyShell = page.getByText(/\d of 6 steps complete/i).first()
+    const threeZoneShell = page.getByRole('heading', { name: /What should I do today\?/i })
+    await expect(legacyShell.or(threeZoneShell).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('link', { name: /^(Setup|Progress)$/i }).first()).toBeVisible({ timeout: 15_000 })
   } finally {
     if (userId) {
       await admin.auth.admin.deleteUser(userId)
