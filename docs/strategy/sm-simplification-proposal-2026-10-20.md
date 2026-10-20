@@ -1,8 +1,8 @@
 ---
 doc_id: sm-simplification-proposal
-version: 0.1
+version: 0.2
 date: 2026-10-20
-status: draft-for-rich-ruling
+status: R-1, R-2, R-5 ruled; P1 in progress
 home: docs/strategy/
 measured_at: origin/main 86974255 (2026-09-20)
 builds_on:
@@ -14,7 +14,22 @@ builds_on:
 
 Rich's prompt (2026-10-20): *"I think it tries to do too much. Consider removing the workflow that nudges users to stay on top of the job search, or at least minimize it. Where else can we make it simpler and easier to use?"*
 
-This document is Sol's answer. It is a proposal, not a decision. Section 6 lists the rulings only Rich can make; everything else is drafted so Rich can approve rather than supply.
+This document is Sol's answer. Section 6 lists the rulings only Rich can make; everything else is drafted so Rich can approve rather than supply.
+
+## Ruling record
+
+| Ruling | Decision | By | When |
+| --- | --- | --- | --- |
+| R-1 nudge system | Adopt default: strip in-app nudges; email becomes daily briefing + transactional, weekly summary opt-in | Rich | 2026-10-20 |
+| R-2 dashboard flag | Adopt default: flip three-zone for all users, delete legacy (widens the 2026-08-20 DG-09 limited-cohort approval) | Rich | 2026-10-20 |
+| R-5 hosted cron | No external scheduler exists for `stall-check`, `commitment-friday`, `commitment-sunday`, `weekly-digest`, `drip`; delete in P1 | Rich | 2026-10-20 |
+| R-3, R-4, R-6 | Open | — | — |
+
+### Corrections to v0.1 (found while executing P1)
+
+- `industry-pulse-job` and `opportunity-radar-job` send no email. They write `industry_pulse` / `opportunity_radar` tables that the briefing (`worker/briefing/assemble-context.js`) and `/api/intelligence/radar` read. They stay; §2b is corrected below.
+- `momentum-job` (the weekly score computation) is read by coach surfaces (`/dashboard/coach`, `/api/coach/*`), `/dashboard/plan`, `/api/plan/weekly`, and the briefing context. Only the **email** (`momentum-nudge-job`) is retired in P1; the score and its candidate-facing renderers retire together in P2.
+- None of the six `activation-reminder-job` touchpoints checked `drip_unsubscribed_at`, so the Settings "email nudges" switch only ever silenced the dead `drip` route. The P1 rewrite honours it.
 
 ## 1. What the product is actually asking of a user today
 
@@ -72,35 +87,35 @@ Every job below sends to end users. Schedules are UTC.
 | Job | Schedule | Subject (from source) | Recommendation |
 | --- | --- | --- | --- |
 | `briefing-job` | every 5 min, fires at user-chosen time | daily briefing | **Keep. This is the product.** |
-| `followup-job` | daily 06:00 | "N actions due — Starting Monday" | **Fold into the briefing.** Due follow-ups are already a briefing section; a second daily email is the problem |
-| `momentum-nudge-job` | daily 10:00 | "Your search momentum dropped this week" | **Remove.** Guilt email tied to a score we are removing |
-| `momentum-job` | Sun 23:00 | computes score (no email) | **Remove with the above** |
-| `weekly-report-job` | Sun 23:30 | "Your weekly search snapshot" | **Minimize:** keep as an opt-in Monday summary, off by default |
-| `market-digest-job` | Sun 22:30 | "Your weekly market intelligence" | **Merge into the Monday briefing** rather than a separate Sunday-night email |
-| `pulse-job` | daily 07:00 | industry pulse | **Remove or merge into briefing.** A third daily send |
-| `industry-pulse-job` | Sun 06:00 | weekly pulse | **Merge or remove** |
-| `opportunity-radar-job` | Sun 06:30 | radar | **Merge into Monday briefing** |
-| `activation-reminder-job` | daily 10:30 | day-2 / "account is ready" / "A note" / "Two weeks in" / "One thing to do today" (5 templates) | **Minimize to one:** day-2 "here is what we found at your companies." The rest duplicate `drip` |
+| `followup-job` | daily 06:00 | "N actions due — Starting Monday" | **Removed in P1.** The briefing already queries `follow_ups` due ≤ today (`assemble-context.js` L65–70); this was a second daily email with the same content |
+| `momentum-nudge-job` | daily 10:00 | "Your search momentum dropped this week" | **Removed in P1.** Guilt email tied to a score we are removing |
+| `momentum-job` | Sun 23:00 | computes score (no email) | **Retires in P2** with its last candidate-facing readers; coach readers need a separate call |
+| `weekly-report-job` | Sun 23:30 | "Your weekly search snapshot" | **Minimize (P1b):** keep as an opt-in Monday summary, off by default |
+| `market-digest-job` | Sun 22:30 | "Your weekly market intelligence" | **Merge (P1b)** into the Monday briefing rather than a separate Sunday-night email |
+| `pulse-job` | daily 07:00 | pipeline pulse (executive tier) | **Removed in P1.** A second daily send to the same audience as the briefing |
+| `industry-pulse-job` | Sun 06:00 | no email — writes `industry_pulse` for the briefing | **Keep** (corrected from v0.1) |
+| `opportunity-radar-job` | Sun 06:30 | no email — writes `opportunity_radar` for briefing/radar API | **Keep** (corrected from v0.1) |
+| `activation-reminder-job` | daily 10:30 | day-1 / day-2 / day-3 / day-5 / day-7 / day-14 (6 sends, 5 templates) | **Cut to one in P1:** day-2 "add your first company," only if no company yet, honours opt-out |
 | `trial-reminder-job` | daily 10:00 | trial expiring | **Keep** (billing-honesty, not engagement) |
 | `offer-email-job` | daily 11:00 | "You did it." | **Keep** (one-time, celebratory) |
 | `reactivation-job` | daily 11:30 | "One year later." | **Keep** (one-time, honours `marketing_unsubscribed_at`) |
 | `outreach-digest-job` | daily 15:00 | bounced/stuck outreach | **Keep, operational** — only sends when there is a delivery problem |
 
-**Today a new active user can receive up to four product emails on a weekday** (briefing, follow-ups, pulse, activation reminder) **and three more on Sunday night** (market digest, weekly report, momentum nudge Monday morning). The proposal collapses this to **one daily briefing + billing/transactional**.
+**Before P1, a new active user could receive up to four product emails on a weekday** (briefing, follow-ups, pulse, activation reminder) **and three more across Sunday night / Monday morning** (market digest, weekly report, momentum nudge). After P1: **one daily briefing**, plus at most two one-time trial messages and the Sunday weekly report / market digest, which P1b makes opt-in or folds into Monday's briefing.
 
 ### 2c. Email cadence — app-side cron routes (`src/app/api/(ops)/cron/*`)
 
 | Route | In-repo scheduler? | What it sends | Recommendation |
 | --- | --- | --- | --- |
-| `reengagement` | `reengagement-daily.yml` 13:00 UTC | day-10 / day-20 "You have not been back in ten days. That matters in a market where timing is everything." | **Rewrite to one calm message at day 14:** "Here is what changed at your companies while you were away." No guilt copy |
+| `reengagement` | `reengagement-daily.yml` 13:00 UTC | was: day-10 / day-20 "You have not been back in ten days. That matters in a market where timing is everything." | **Rewritten in P1** to one message at day 14: "here is what changed while you were away" / "quiet two weeks" / "one company to start with." No guilt copy; never sent twice; users already touched by the legacy 10d/20d sends are not touched again |
 | `trial-expiry-notice` | `trial-expiry-notice-daily.yml` 14:00 UTC | 10-days-left notice | **Keep** |
-| `stall-check` | **none found** (not in workflows, `railway.toml`, `worker/index.js`, or `supabase/`) | email twin of the in-app stall nudge | **Delete the route.** Dead or externally scheduled; either way it goes with the stall nudge |
-| `commitment-friday` | **none found** | "N of goal this week" | **Delete** with weekly goal |
-| `commitment-sunday` | **none found** | "This week, aim for N" | **Delete** with weekly goal |
-| `weekly-digest` | **none found** | weekly digest | **Delete**; `weekly-report-job` already covers it |
-| `drip` | **none found** | 7-step trial drip (days 0,3,5,7,10,14,28) | **Keep the content, cut to days 0, 3, 14.** Confirm the hosted scheduler before deleting anything here |
+| `stall-check` | none (R-5 confirmed) | email twin of the in-app stall nudge | **Deleted in P1** |
+| `commitment-friday` | none (R-5 confirmed) | "N of goal this week" | **Deleted in P1** |
+| `commitment-sunday` | none (R-5 confirmed) | "This week, aim for N" | **Deleted in P1** |
+| `weekly-digest` | none (R-5 confirmed) | weekly digest | **Deleted in P1** |
+| `drip` | none (R-5 confirmed) | 7-step trial drip (days 0,3,5,7,10,14,28) — never reached anyone | **Deleted in P1.** The live activation path is the worker job above |
 
-Hosted scheduling for the "none found" rows cannot be verified from the repo; Railway/Vercel cron UI state is OWNER INPUT (section 6, R-5).
+R-5 ruling (Rich, 2026-10-20): no external scheduler exists for the five routes above.
 
 ### 2d. Preference surface
 
@@ -167,7 +182,8 @@ Desktop has no persistent nav (top shell section + command palette); mobile has 
 
 | Phase | Scope | Risk | Rollback |
 | --- | --- | --- | --- |
-| **P1 — Quiet the inbox** (1 PR) | Stop `momentum-nudge-job`, `momentum-job`, `pulse-job`, `industry-pulse-job`; fold `followup-job` into briefing; cut `activation-reminder-job` to day-2 only; rewrite `reengagement` copy; delete 4 unscheduled cron routes after R-5 confirmation | Low — removing sends | Re-enable `cron.schedule` lines |
+| **P1 — Quiet the inbox** (this PR) | Removed `followup-job`, `momentum-nudge-job`, `pulse-job` (+ `pulse-email.js`); `activation-reminder-job` cut to one day-2 send honouring opt-out; `reengagement` rewritten to one day-14 message; deleted `stall-check`, `commitment-friday`, `commitment-sunday`, `weekly-digest`, `drip` routes; Settings copy now states exactly which two emails the switch governs | Low — removing sends | Revert commit; schedules are single lines in `worker/index.js` |
+| **P1b — Weekly sends** (follow-up PR) | `weekly-report-job` becomes opt-in default-off; `market-digest-job` folds into the Monday briefing | Low | Revert |
 | **P2 — One dashboard** (2 PRs) | Flip three-zone for all users; delete legacy branch, momentum/velocity/weekly-goal components, `stall_nudge` logic; drop `weekly_goal`, `momentum_score`, `stall_nudge_dismissed_at` columns in a follow-up migration after 14 days | Medium — UI change for every user | Flag flip back (first PR); second PR waits 14 days |
 | **P3 — Nav + settings** (1 PR) | Desktop rail, single email-preferences card, move `PersonalEmailNudge` | Low | Revert |
 | **P4 — Route collapse** (3–4 PRs by group in 3b) | Redirects from retired routes to their absorbing page; delete after 30 days of zero hits (`route-inventory-agent.yml` already measures this) | Medium | Redirects stay until deletion PR |
@@ -180,12 +196,12 @@ Every phase is validated by the existing gates: `guard:dashboard-simplification`
 
 Each has a drafted default; a one-word "yes" adopts it.
 
-- **R-1 Nudge system.** Default: remove 2a entirely except the Zone 1 stalled state; email cadence becomes daily briefing + weekly summary (opt-in) + billing/transactional. *Alternative:* keep `weekly-report-job` on by default.
-- **R-2 Dashboard flag.** Default: flip `NEXT_PUBLIC_SM_DASHBOARD_SIMPLIFICATION_ENABLED` for all users and delete legacy. This exceeds the 2026-08-20 `DG-09` limited-cohort approval and needs an explicit widening. The D-A observational baseline (`docs/evidence/dashboard-observational-baseline-2026-08-20.md`) exists; the post-flip repeat session (brief §7) has not been run and would be scheduled in P2.
-- **R-3 Route collapse list (3b).** Default: as tabled. Flag any row Rich wants kept as a standalone page.
-- **R-4 Onboarding 7→3.** Default: as in 3c. The resume/LinkedIn import becomes post-onboarding.
-- **R-5 Hosted cron state.** Are `stall-check`, `commitment-friday`, `commitment-sunday`, `weekly-digest`, or `drip` scheduled anywhere outside this repo (Railway cron, Vercel cron, Supabase dashboard)? Repo search found no scheduler; I cannot see the hosted console. If none, they are deleted in P1.
-- **R-6 B2B gating.** Default: coach/outplacement/partner/board-track/concierge/chat hidden for solo accounts via `resolveOrgScopeForUser`, not deleted.
+- **R-1 Nudge system.** *Ruled 2026-10-20: default adopted.* Remove 2a entirely except the Zone 1 stalled state; email cadence becomes daily briefing + weekly summary (opt-in) + billing/transactional.
+- **R-2 Dashboard flag.** *Ruled 2026-10-20: default adopted.* Flip `NEXT_PUBLIC_SM_DASHBOARD_SIMPLIFICATION_ENABLED` for all users and delete legacy. This widens the 2026-08-20 `DG-09` limited-cohort approval. The D-A observational baseline (`docs/evidence/dashboard-observational-baseline-2026-08-20.md`) exists; the post-flip repeat session (brief §7) has not been run and is scheduled in P2.
+- **R-3 Route collapse list (3b).** *Open.* Default: as tabled. Flag any row Rich wants kept as a standalone page.
+- **R-4 Onboarding 7→3.** *Open.* Default: as in 3c. The resume/LinkedIn import becomes post-onboarding.
+- **R-5 Hosted cron state.** *Ruled 2026-10-20: no external scheduler.* The five routes were deleted in P1.
+- **R-6 B2B gating.** *Open.* Default: coach/outplacement/partner/board-track/concierge/chat hidden for solo accounts via `resolveOrgScopeForUser`, not deleted.
 
 ## 7. Evidence trail
 
