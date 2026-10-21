@@ -1,6 +1,7 @@
 # Alerting
 
-How production problems reach a human. Set up 2026-09-03.
+How production problems reach a human. Set up 2026-09-03. Channels took the `sm-` prefix on
+2026-10-21 when the workspace became Signed Friday (signedfriday.slack.com, MS-252); channel IDs are unchanged.
 
 ## Routing principle
 
@@ -10,9 +11,9 @@ mixing urgencies in one channel is what makes people stop reading it.
 
 | Channel | Means | Response | Target volume |
 |---|---|---|---|
-| `#alerts-prod` | Users are affected right now | Drop what you're doing | < 2/day |
-| `#alerts-eng` | Pipeline broken, production still serving | Same day | < 5/day |
-| `#alerts-digest` | Reports, digests, weekly audits | Read when you want | Unbounded |
+| `#sm-alerts-prod` | Users are affected right now | Drop what you're doing | < 2/day |
+| `#sm-alerts-eng` | Pipeline broken, production still serving | Same day | < 5/day |
+| `#sm-alerts-digest` | Reports, digests, weekly audits | Read when you want | Unbounded |
 
 Before adding an alert, ask: *if this fires at 3am and I can't act on it, which channel does
 it belong in?* If the answer is "none", don't add it.
@@ -21,14 +22,14 @@ it belong in?* If the answer is "none", don't add it.
 
 | # | Alert | Where it lives | Fires when | Channel |
 |---|---|---|---|---|
-| 1 | Production health | Sentry uptime monitor `9718173` | `/api/health` fails 2 consecutive 60s checks | `#alerts-prod` |
-| 2 | Error rate spike | Sentry metric alert | error events exceed baseline | `#alerts-prod` |
-| 3 | New production issue | Sentry issue alert `3379165` | issue **first seen**, `level:error`, `environment:production` | `#alerts-prod` |
-| 4 | Cron job stopped | Sentry cron monitors, `worker/index.js` | check-in missed or over-runs | `#alerts-eng` |
-| 5 | Deploy / main CI failed | GitHub Actions | failure on `main` | `#alerts-eng` |
-| 6a | Pageviews flatlined | PostHog alert `01a0689f-7cf6-…` | 0 `$pageview` in a full day | `#alerts-eng` |
-| 6b | Signups flatlined | PostHog alert `01a0689f-843f-…` | 0 `signup_completed` in a full week | `#alerts-eng` |
-| 7 | Lighthouse budgets / landing standard failed | GitHub Actions (`ci.yml`, `landing-standard-monitor.yml`) | budget failure on a `main` push; strict monitor failure on schedule | `#alerts-eng` (was `#ui-alerts`, retired under SMK-503) |
+| 1 | Production health | Sentry uptime monitor `9718173` | `/api/health` fails 2 consecutive 60s checks | `#sm-alerts-prod` |
+| 2 | Error rate spike | Sentry metric alert | error events exceed baseline | `#sm-alerts-prod` |
+| 3 | New production issue | Sentry issue alert `3379165` | issue **first seen**, `level:error`, `environment:production` | `#sm-alerts-prod` |
+| 4 | Cron job stopped | Sentry cron monitors, `worker/index.js` | check-in missed or over-runs | `#sm-alerts-eng` |
+| 5 | Deploy / main CI failed | GitHub Actions | failure on `main` | `#sm-alerts-eng` |
+| 6a | Pageviews flatlined | PostHog alert `01a0689f-7cf6-…` | 0 `$pageview` in a full day | `#sm-alerts-eng` |
+| 6b | Signups flatlined | PostHog alert `01a0689f-843f-…` | 0 `signup_completed` in a full week | `#sm-alerts-eng` |
+| 7 | Lighthouse budgets / landing standard failed | GitHub Actions (`ci.yml`, `landing-standard-monitor.yml`) | budget failure on a `main` push; strict monitor failure on schedule | `#sm-alerts-eng` (was `#ui-alerts`, retired under SMK-503) |
 
 ### Why 6a exists and 6b is weekly
 
@@ -74,8 +75,8 @@ the fallback means nothing breaks if a tiered secret is missing — it just land
 channel instead.
 
 Everything *not* explicitly re-tiered still reads `secrets.SLACK_WEBHOOK_URL` directly. That
-secret points at `#alerts-digest`, so ~103 report/digest references route there by default
-and only deliberately-tiered alerts reach `#alerts-prod` / `#alerts-eng`.
+secret points at `#sm-alerts-digest`, so ~103 report/digest references route there by default
+and only deliberately-tiered alerts reach `#sm-alerts-prod` / `#sm-alerts-eng`.
 
 To promote a workflow, change only its secret reference — not the payload, not the channel.
 
@@ -110,7 +111,7 @@ Two pieces of this system cannot be configured programmatically. The Sentry MCP 
 Sentry's metric-alert REST endpoint now returns `410 This API no longer exists`. Railway has no
 webhook API at all. Both are UI-only, so they are written out here rather than scripted.
 
-### 3. Sentry issue alert -> #alerts-prod
+### 3. Sentry issue alert -> #sm-alerts-prod
 
 Rule `3379165`, "Send a notification for high priority issues"
 (<https://starting-monday.sentry.io/monitors/alerts/3379165/>). It was auto-created at
@@ -120,7 +121,7 @@ onboarding on 2026-05-05 and never edited.
 owners. Firing on existing issues is the dangerous half -- the top unresolved issue has ~9,900
 events, so an alert on existing issues is an alert that can fire thousands of times for one bug.
 
-**Target:** first-seen only, error level, production, posting to `#alerts-prod`.
+**Target:** first-seen only, error level, production, posting to `#sm-alerts-prod`.
 
 1. Install the Slack integration first, or there will be no Slack action to pick:
    Settings -> Integrations -> Slack -> Add to Slack, authorize the workspace. For a private
@@ -131,9 +132,9 @@ events, so an alert on existing issues is an alert that can fire thousands of ti
 4. **WHEN** -- remove `Existing high priority issue`. Keep a first-seen trigger only
    (`A new issue is created`, or `New high priority issue` to preserve the priority filter).
 5. **IF** -- add `The event's level is equal to error`.
-6. **THEN** -- remove the Email action, add `Send a Slack notification` to `#alerts-prod`.
+6. **THEN** -- remove the Email action, add `Send a Slack notification` to `#sm-alerts-prod`.
 7. **Action interval**: 1 hour, so one noisy issue cannot flood the channel.
-8. Save, then use **Send Test Notification** to confirm it lands in `#alerts-prod`.
+8. Save, then use **Send Test Notification** to confirm it lands in `#sm-alerts-prod`.
 
 **Then check the uptime monitor still routes.** Uptime monitor `9718173` reports downtime by
 opening a Sentry issue, which is delivered by issue alert rules -- so narrowing this rule can
@@ -142,16 +143,16 @@ match (it must be `level: error` and count as newly created). If it does not, gi
 own rule rather than loosening this one; the two have different noise profiles and should not
 share a filter.
 
-### 4. Railway deploy webhook -> #alerts-prod
+### 4. Railway deploy webhook -> #sm-alerts-prod
 
 Railway transforms webhook payloads for known destinations ("Muxers"), and Slack is supported,
 so a `hooks.slack.com` URL can be pasted in directly -- no middleware or reformatting.
 
 1. Open the **`ample-blessing`** project -- see the warning below.
-2. Settings -> Webhooks -> paste the `#alerts-prod` incoming webhook URL.
+2. Settings -> Webhooks -> paste the `#sm-alerts-prod` incoming webhook URL.
 3. Optionally narrow which events to send. The available classes are deployment status changes,
    volume usage alerts, and CPU/RAM monitor alerts. Deployment failures are the ones that belong
-   in `#alerts-prod`; successes do not -- a notification that arrives when nothing is wrong is
+   in `#sm-alerts-prod`; successes do not -- a notification that arrives when nothing is wrong is
    what taught everyone to ignore the old channel.
 4. Save.
 
