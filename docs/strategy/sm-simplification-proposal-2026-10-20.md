@@ -24,7 +24,8 @@ This document is Sol's answer. Section 6 lists the rulings only Rich can make; e
 | R-2 dashboard flag | Adopt default: flip three-zone for all users, delete legacy (widens the 2026-08-20 DG-09 limited-cohort approval) | Rich | 2026-10-20 |
 | R-5 hosted cron | No external scheduler exists for `stall-check`, `commitment-friday`, `commitment-sunday`, `weekly-digest`, `drip`; delete in P1 | Rich | 2026-10-20 |
 | R-7 shadcn classification | Move the `shadcn` CLI to `devDependencies` so its unpatchable `braces` chain leaves the production audit (PR #527); Rich supplies the approving review the dependency policy requires | Rich | 2026-10-20 |
-| R-3, R-4, R-6, R-8 | Open | — | — |
+| R-8 legacy dashboard demos | Retire `/demo/executive-dashboard` and `/demo/michael-dashboard` (redirect to `/demo`) and delete the 14 components they pinned (P2c) | Rich | 2026-10-20 |
+| R-3, R-4, R-6 | Open | — | — |
 
 ### Corrections to v0.1 (found while executing P1)
 
@@ -187,6 +188,7 @@ Desktop has no persistent nav (top shell section + command palette); mobile has 
 | **P1b — Weekly sends** (follow-up PR) | `weekly-report-job` becomes opt-in default-off; `market-digest-job` folds into the Monday briefing | Low | Revert |
 | **P2a — Flip** (PR stacked on #526) | `isStartingMondayDashboardSimplificationEnabled()` defaults on; env var becomes an explicit-off kill switch; three-zone title promoted to `h1`; mobile-ui and parity e2e specs retargeted. Evidence: `docs/evidence/dashboard-three-zone-default-on-2026-10-20.md` | Medium — UI change for every user | Set `NEXT_PUBLIC_SM_DASHBOARD_SIMPLIFICATION_ENABLED=false`, redeploy |
 | **P2b — Delete legacy** (PR stacked on P2a) | Legacy render tree and its data prep removed from `page.tsx` (2,035 → 724 lines); 21 orphaned components/utils deleted; `dismissStallNudge` / `updateDecisionOwner` actions removed; dashboard flag and kill switch removed (nothing left to switch to); Zone 2 sector bug fixed. Evidence: `docs/evidence/dashboard-legacy-deletion-2026-10-20.md`. Kept for now: components pinned by two marketing demo pages (R-8), `momentum-job` (coach/plan readers), DB columns | Medium | Revert PR |
+| **P2c — Retire legacy demos** (PR stacked on P2b, R-8) | `/demo/executive-dashboard` and `/demo/michael-dashboard` deleted and redirected to `/demo`; four inbound links removed; the 14 components they pinned deleted (+ `saveWeeklyGoal`). Evidence: `docs/evidence/dashboard-legacy-demo-retirement-2026-10-20.md` | Low | Revert PR |
 | **P3 — Nav + settings** (1 PR) | Desktop rail, single email-preferences card, move `PersonalEmailNudge` | Low | Revert |
 | **P4 — Route collapse** (3–4 PRs by group in 3b) | Redirects from retired routes to their absorbing page; delete after 30 days of zero hits (`route-inventory-agent.yml` already measures this) | Medium | Redirects stay until deletion PR |
 | **P5 — Onboarding 7→3** (1 PR) | New flow behind existing onboarding flag mechanism; synthetics updated | Medium | Flag |
@@ -205,7 +207,7 @@ Each has a drafted default; a one-word "yes" adopts it.
 - **R-5 Hosted cron state.** *Ruled 2026-10-20: no external scheduler.* The five routes were deleted in P1.
 - **R-6 B2B gating.** *Open.* Default: coach/outplacement/partner/board-track/concierge/chat hidden for solo accounts via `resolveOrgScopeForUser`, not deleted.
 - **R-7 Dependency audit unblock.** *Ruled 2026-10-20: approved.* Not a product question, but it gated every PR: `npm audit --omit=dev --audit-level=high` had failed on `main` since advisories published after 2026-09-20 (26 findings at `86974255`). PR #527 patches `next` 16.3.4→16.3.8 (critical RCE in `next/og`), `sharp` 0.35.4→0.35.5, `undici`, `dompurify`, `proxy-addr` and friends, and moves the `shadcn` CLI to `devDependencies` because its `braces` chain has no patched release.
-- **R-8 Legacy dashboard demos.** *Open.* `src/app/(marketing)/demo/executive-dashboard` and `demo/michael-dashboard` still render the retired dashboard and keep 14 legacy components alive. Default: retire both demo routes (redirect to `/demo`) and delete the components; alternative: rebuild them on the three-zone layout.
+- **R-8 Legacy dashboard demos.** *Ruled 2026-10-20: retire.* Both demo routes deleted and redirected to `/demo`; the 14 components they pinned are gone (P2c, `docs/evidence/dashboard-legacy-demo-retirement-2026-10-20.md`).
 
 ## 7. Evidence trail
 

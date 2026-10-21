@@ -184,14 +184,3 @@ export async function saveProfile(formData: FormData) {
   revalidatePath('/dashboard')
   redirect('/dashboard/profile?saved=1')
 }
-
-export async function saveWeeklyGoal(formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-  const raw = parseInt(formData.get('weekly_goal') as string ?? '', 10)
-  const goal = Number.isFinite(raw) && raw >= 1 && raw <= 10 ? raw : null
-  if (!goal) return
-  await supabase.from('user_profiles').update({ weekly_goal: goal }).eq('user_id', user.id)
-  revalidatePath('/dashboard')
-}

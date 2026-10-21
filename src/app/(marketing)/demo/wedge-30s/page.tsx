@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 
 const SHORTLIST = [
   {
@@ -82,12 +82,6 @@ export default function Wedge30SecondDemoPage() {
               className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Start 7-day shortlist sprint
-            </Link>
-            <Link
-              href="/demo/michael-dashboard"
-              className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/70 hover:bg-muted/40"
-            >
-              Open full operating dashboard
             </Link>
           </div>
         </div>

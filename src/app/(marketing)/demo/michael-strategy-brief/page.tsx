@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 
 const POSITIONING = [
   'Michael Torres is a VP-level enterprise IT operator who wins in high-complexity integration environments.',
@@ -38,8 +38,8 @@ export default function MichaelStrategyBriefPage() {
             <span className="text-foreground">Starting </span><span className="text-primary">Monday</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/demo/michael-dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
-              Michael dashboard
+            <Link href="/demo" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
+              All demos
             </Link>
           </div>
         </div>
@@ -89,12 +89,6 @@ export default function MichaelStrategyBriefPage() {
               className="inline-flex items-center justify-center rounded bg-primary text-primary-foreground text-[13px] font-semibold px-5 py-2.5 hover:bg-primary/90 transition-colors"
             >
               Open live interview brief
-            </Link>
-            <Link
-              href="/demo/michael-dashboard"
-              className="inline-flex items-center justify-center rounded border border-border text-foreground text-[13px] font-semibold px-5 py-2.5 transition-colors"
-            >
-              Open Michael dashboard
             </Link>
           </section>
         </div>
