@@ -23,8 +23,13 @@ export function isStartingMondayHeroEvidenceEnabled(): boolean {
   return isEnabledFlag(process.env[STARTING_MONDAY_HERO_EVIDENCE_ENABLED_FLAG])
 }
 
+// Default-on since 2026-10-20 (R-2, docs/strategy/sm-simplification-proposal-2026-10-20.md).
+// The variable is now a kill switch: set it to an explicit falsy value
+// ('0', 'false', 'no', 'off') to restore the legacy dashboard for every user.
 export function isStartingMondayDashboardSimplificationEnabled(): boolean {
-  return isEnabledFlag(process.env[STARTING_MONDAY_DASHBOARD_SIMPLIFICATION_ENABLED_FLAG])
+  const value = process.env[STARTING_MONDAY_DASHBOARD_SIMPLIFICATION_ENABLED_FLAG]
+  if (value == null || value.trim() === '') return true
+  return isEnabledFlag(value)
 }
 
 export function isSignalBriefPreviewEnabled(): boolean {

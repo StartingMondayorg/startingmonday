@@ -50,10 +50,10 @@ test.describe('Mobile UI rubric @rubric @mobile', () => {
     })
     expect(hasOverflow).toBeFalsy()
 
-    // R2: "To do now" section and key lane actions are rendered as tappable controls.
-    const nowHeading = page.getByRole('heading', { name: 'Today at a glance' }).first()
+    // R2: the "next move" zone and key lane actions are rendered as tappable controls.
+    const nowHeading = page.getByRole('heading', { name: 'What should I do today?', exact: true })
     await expect(nowHeading).toBeVisible()
-    const keyLinks = page.getByRole('link', { name: /Signals|Contacts|Calendar/i })
+    const keyLinks = page.getByRole('link', { name: /Signals|Contacts|Calendar|follow-ups due/i })
     const keyLinkCount = await keyLinks.count()
     expect(keyLinkCount).toBeGreaterThanOrEqual(2)
 
@@ -71,7 +71,7 @@ test.describe('Mobile UI rubric @rubric @mobile', () => {
     expect(blankGap).toBeLessThan(900)
 
     // R3/R2: primary lane CTA should be visible and reasonably tappable.
-    const cta = page.getByRole('link', { name: /Briefing|Relationships|Plan/i }).first()
+    const cta = page.locator('[data-dashboard-action="next_move"]').first()
     await expect(cta).toBeVisible()
     const ctaBox = await cta.boundingBox()
     expect(ctaBox?.height ?? 0).toBeGreaterThanOrEqual(32)
