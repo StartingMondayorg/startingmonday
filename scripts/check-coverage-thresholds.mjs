@@ -34,8 +34,9 @@ function parseArgs(argv) {
 }
 
 function getChangedFiles(baseRef, headRef, staged = false) {
+  // Deleted files have no coverage records and must not be demanded of the report.
   if (staged) {
-    const raw = execSync('git diff --cached --name-only --no-color -- "src/**/*.ts" "src/**/*.tsx"', {
+    const raw = execSync('git diff --cached --name-only --no-color --diff-filter=d -- "src/**/*.ts" "src/**/*.tsx"', {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
     })
@@ -46,7 +47,7 @@ function getChangedFiles(baseRef, headRef, staged = false) {
       .filter(isUnitCoverageSourceFile)
   }
   const range = baseRef ? `${baseRef}...${headRef}` : headRef
-  const cmd = `git diff --name-only --no-color ${range} -- "src/**/*.ts" "src/**/*.tsx"`
+  const cmd = `git diff --name-only --no-color --diff-filter=d ${range} -- "src/**/*.ts" "src/**/*.tsx"`
   const raw = execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
   return raw
     .split('\n')

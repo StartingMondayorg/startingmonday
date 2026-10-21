@@ -35,10 +35,10 @@ export function EmailPreferencesPanel({ initialEnabled }: { initialEnabled: bool
       <h2 className="text-[10px] font-bold tracking-[0.12em] uppercase text-muted-foreground mb-3">Email preferences</h2>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="max-w-[46ch]">
-          <p className="text-[14px] font-semibold text-foreground">Trial tips and nudge emails</p>
+          <p className="text-[14px] font-semibold text-foreground">Setup and check-in emails</p>
           <p className="text-[13px] text-muted-foreground mt-0.5 leading-relaxed">
-            Occasional emails with setup tips during your trial. Your search is private - turn these off anytime with one click.
-            Daily briefings are separate and unaffected.
+            At most two emails during your trial: one on day two if you have not added a company yet, and one if you have been
+            away for two weeks. Your search is private. Daily briefings are separate and unaffected.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2.5">

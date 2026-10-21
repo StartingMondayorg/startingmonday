@@ -1,4 +1,4 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -32,12 +32,6 @@ const URGENCY_REASONS = [
 ]
 
 const DEMO_LINKS = [
-  {
-    label: 'Michael Torres - live dashboard',
-    description: 'A prefilled client dashboard: pipeline, contacts, and daily actions.',
-    href: '/demo/michael-dashboard',
-    cta: 'Open dashboard',
-  },
   {
     label: 'Michael Torres - strategy brief',
     description: 'The coaching strategy brief before a VP of IT interview at Salesforce.',

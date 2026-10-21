@@ -202,18 +202,15 @@ Key files:
 | `executive-evening-scan` | Daily 20:00 | Second career page scan for Executive tier |
 | `signal-job` | Mon/Wed/Fri 08:30 | Company intelligence signals (news, SEC, PDL, etc.) |
 | `briefing-job` | Every 5 min | Checks per-user timezone/time; sends daily briefing when due |
-| `followup-job` | Daily 06:00 | Follow-up reminder emails |
 | `momentum-job` | Sunday 23:00 | Pipeline momentum score calculation |
-| `momentum-nudge-job` | Daily 10:00 | Emails users when momentum score drops 15+ points |
 | `market-digest-job` | Sunday 22:30 | Market intel digest for Monitor/intelligence tier users |
 | `weekly-report-job` | Sunday 23:30 | Weekly progress report |
 | `usage-monitor-job` | Daily 09:00 | Checks all services against plan limits |
 | `trial-reminder-job` | Daily 10:00 | T-3 and T-0 trial expiry emails |
 | `offer-email-job` | Daily 11:00 | Post-offer-acceptance email within 24h |
 | `reactivation-job` | Daily 11:30 | One-year anniversary reactivation nudge |
-| `activation-reminder-job` | Daily 10:30 | Day-3 and day-7 onboarding nudges |
+| `activation-reminder-job` | Daily 10:30 | One day-2 message for trial users with no company yet |
 | `cleanup-job` | Sunday 02:00 | Delete signals older than 90d, stale conversations older than 180d |
-| `pulse-job` | Daily 07:00 | Executive tier search health summary |
 | `industry-pulse-job` | Sunday 06:00 | Sector-level exec movement digest |
 | `opportunity-radar-job` | Sunday 06:30 | Proactive company suggestions per user |
 | `concierge-prep-job` | Daily 07:30 | Meeting agendas for calls in next 24h |

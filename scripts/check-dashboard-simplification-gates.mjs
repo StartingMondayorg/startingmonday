@@ -11,13 +11,18 @@ const source = fs.readFileSync(sourcePath, 'utf8')
 const asJson = process.argv.includes('--json')
 const violations = []
 
-const flagStart = source.indexOf('if (isStartingMondayDashboardSimplificationEnabled())')
-const legacyStart = source.indexOf('\n  return (', flagStart)
-if (flagStart < 0 || legacyStart < 0) {
-  violations.push({ type: 'flagged-layout', message: 'Could not locate the default-off simplified dashboard branch.' })
+// The three-zone layout is the only candidate dashboard (legacy deleted 2026-10-20,
+// R-2). The audited region starts where the page resolves posture and runs to EOF;
+// everything before it is data preparation and the post-placement branch.
+const layoutStart = source.indexOf('const dashboardPosture = resolveThreeZoneDashboardPosture(')
+if (layoutStart < 0) {
+  violations.push({ type: 'flagged-layout', message: 'Could not locate the three-zone dashboard layout.' })
 }
 
-const flaggedLayout = flagStart >= 0 && legacyStart > flagStart ? source.slice(flagStart, legacyStart) : ''
+const flaggedLayout = layoutStart >= 0 ? source.slice(layoutStart) : ''
+if (/isStartingMondayDashboardSimplificationEnabled|data-first-mile-section="dashboard_legacy"/.test(source)) {
+  violations.push({ type: 'legacy-layout', message: 'The legacy dashboard layout or its feature-flag gate reappeared in page.tsx.' })
+}
 const zoneMatches = [...flaggedLayout.matchAll(/data-first-mile-section="([^"]+)"/g)].map((match) => match[1])
 if (zoneMatches.length !== manifest.zones.length || manifest.zones.some((zone) => !zoneMatches.includes(zone))) {
   violations.push({

@@ -23,11 +23,18 @@ const bottomNav = read(navPath)
 const home = read(homePath)
 const landing = read(landingPath)
 
-// Quick actions layout contract: two-column mobile and six-column desktop utility grid.
+// Three-zone layout contracts (legacy quick-actions grid retired 2026-10-20, R-2):
+// Zone 3 stacks on mobile and becomes a three-column strip from the sm breakpoint;
+// the single primary action keeps a 44px minimum tap target.
 assertContains(
   dashboard,
-  'grid grid-cols-2 sm:grid-cols-6 gap-2 sm:gap-3',
-  'Mobile quick-actions layout contract missing: expected 2-column mobile and 6-column desktop grid',
+  'grid gap-3 sm:grid-cols-3',
+  'Zone 3 layout contract missing: expected stacked mobile and 3-column desktop strip',
+)
+assertContains(
+  dashboard,
+  'className="min-h-[44px] px-5 text-[13px] font-semibold" render={<Link href={threeZoneNextMove.href} data-dashboard-action="next_move" />}',
+  'Next-move tap target contract missing: expected 44px minimum height on the primary action',
 )
 
 // Outreach gating contract: only owner/admin can see outreach hub entry points.

@@ -9,8 +9,24 @@ const root = path.resolve(import.meta.dirname, '..')
 const script = path.join(root, 'scripts', 'check-dashboard-simplification-gates.mjs')
 const source = path.join(root, 'src', 'app', '(dashboard)', 'dashboard', 'page.tsx')
 
-test('dashboard simplification gate passes on the flagged layout', () => {
+test('dashboard simplification gate passes on the three-zone layout', () => {
   execFileSync(process.execPath, [script], { cwd: root, stdio: 'pipe' })
+})
+
+test('dashboard simplification gate rejects a legacy layout marker', () => {
+  const fixtureDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'sm-dashboard-gate-'))
+  const fixture = path.join(fixtureDirectory, 'page.tsx')
+  const content = fs.readFileSync(source, 'utf8') + '\n// <main data-first-mile-section="dashboard_legacy">\n'
+  fs.writeFileSync(fixture, content)
+
+  assert.throws(
+    () => execFileSync(process.execPath, [script], {
+      cwd: root,
+      env: { ...process.env, DASHBOARD_SIMPLIFICATION_SOURCE: fixture },
+      stdio: 'pipe',
+    }),
+    /Dashboard simplification gate/,
+  )
 })
 
 test('dashboard simplification gate rejects an added zone', () => {

@@ -1,10 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
-const flagEnabled = process.env.NEXT_PUBLIC_SM_DASHBOARD_SIMPLIFICATION_ENABLED === 'true'
-
 async function requireFlaggedDashboard(page: Page) {
-  test.skip(!flagEnabled, 'Flagged dashboard parity runs only when the rollout flag is explicitly enabled.')
   await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
   test.skip(/\/login(?:$|[/?#])/.test(page.url()), 'Authenticated dashboard session is required.')
   await expect(page.getByRole('heading', { name: 'What should I do today?', exact: true })).toBeVisible()

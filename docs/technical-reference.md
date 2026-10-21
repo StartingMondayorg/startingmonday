@@ -73,7 +73,6 @@ Both services share a single Supabase PostgreSQL database with Row Level Securit
 │  */5 * * * *       briefing-job      (every 5 min)          │
 │  0 8 * * 1,3,5     scan-job          (Mon/Wed/Fri 08:00)    │
 │  30 8 * * 1,3,5    signal-job        (Mon/Wed/Fri 08:30)    │
-│  0 6 * * *         followup-job      (daily 06:00)          │
 │  0 23 * * 0        momentum-job      (Sunday 23:00)         │
 │  30 23 * * 0       weekly-report-job (Sunday 23:30)         │
 │  0 9 * * *         usage-monitor-job (daily 09:00)          │

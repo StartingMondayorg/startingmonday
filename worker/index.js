@@ -6,9 +6,7 @@ import { getSupabase } from './lib/supabase.js'
 import { scanCompany } from './scanner/scan-company.js'
 import { runScanJob } from './jobs/scan-job.js'
 import { runBriefingJob } from './jobs/briefing-job.js'
-import { runFollowupJob } from './jobs/followup-job.js'
 import { runMomentumJob } from './jobs/momentum-job.js'
-import { runMomentumNudgeJob } from './jobs/momentum-nudge-job.js'
 import { runWeeklyReportJob } from './jobs/weekly-report-job.js'
 import { runUsageMonitorJob } from './jobs/usage-monitor-job.js'
 import { runTrialReminderJob } from './jobs/trial-reminder-job.js'
@@ -21,7 +19,6 @@ import { runActivationReminderJob } from './jobs/activation-reminder-job.js'
 import { runMarketDigestJob } from './jobs/market-digest-job.js'
 import { runExecutiveScanJob } from './jobs/executive-scan-job.js'
 import { runCleanupJob } from './jobs/cleanup-job.js'
-import { runPulseJob } from './jobs/pulse-job.js'
 import { runBriefingWatchdogJob } from './jobs/briefing-watchdog-job.js'
 import { runIndustryPulseJob } from './jobs/industry-pulse-job.js'
 import { runOpportunityRadarJob } from './jobs/opportunity-radar-job.js'
@@ -460,14 +457,12 @@ cron.schedule('0 13 * * *', () => runJob('enrichment-contact-retention-job', run
 // Briefing: every 5 minutes — job checks each user's timezone, time, and days
 cron.schedule('*/5 * * * *', () => runJob('briefing-job', runBriefingJob))
 
-// Follow-up reminders: daily at 06:00 (not yet implemented)
-cron.schedule('0 6 * * *', () => runJob('followup-job', runFollowupJob))
+// Retired 2026-10-20 (sm-simplification-proposal R-1): followup-job (due actions are
+// already in the briefing), momentum-nudge-job (guilt email on score drop), pulse-job
+// (second daily email for the executive tier). The briefing is the one daily send.
 
-// Momentum score: Sunday at 23:00 (not yet implemented)
+// Momentum score: Sunday at 23:00 — still read by coach/plan surfaces; retires in P2
 cron.schedule('0 23 * * 0', () => runJob('momentum-job', runMomentumJob))
-
-// Momentum drop nudge: daily at 10:00 UTC — fires email when score drops ≥15 pts
-cron.schedule('0 10 * * *', () => runJob('momentum-nudge-job', runMomentumNudgeJob))
 
 // Market intelligence digest: Sunday at 22:30 — Monitor/passive tier users only
 cron.schedule('30 22 * * 0', () => runJob('market-digest-job', runMarketDigestJob))
@@ -487,14 +482,11 @@ cron.schedule('0 11 * * *', () => runJob('offer-email-job', runOfferEmailJob))
 // Annual reactivation: daily at 11:30 UTC — fires on the one-year anniversary of offer acceptance
 cron.schedule('30 11 * * *', () => runJob('reactivation-job', runReactivationJob))
 
-// Activation reminder: daily at 10:30 UTC — day-3 and day-7 nudge for incomplete setup
+// Activation reminder: daily at 10:30 UTC — one day-2 message for users with no company yet
 cron.schedule('30 10 * * *', () => runJob('activation-reminder-job', runActivationReminderJob))
 
 // Cleanup: Sunday at 02:00 UTC — delete signals >90d and conversations stale >180d
 cron.schedule('0 2 * * 0', () => runJob('cleanup-job', runCleanupJob))
-
-// Pipeline pulse: daily at 07:00 UTC — Executive tier search health summary email
-cron.schedule('0 7 * * *', () => runJob('pulse-job', runPulseJob))
 
 // Industry pulse: Sunday at 06:00 UTC — sector-level exec movement digest per user
 cron.schedule('0 6 * * 0', () => runJob('industry-pulse-job', runIndustryPulseJob))
@@ -553,7 +545,7 @@ cron.schedule('0 5 * * 1', () => runJob('watchlist-scan-job', runConfiguredWatch
 setTimeout(() => runDemoCheck().catch(err => logger.error('check-demo: failed', { error: err.message })), 10_000)
 
 logger.info('worker: cron schedules registered', {
-  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'followup-job', 'momentum-job', 'momentum-nudge-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'pulse-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job', 'watchlist-scan-job'],
+  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'momentum-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job', 'watchlist-scan-job'],
 })
 bootPhase = 'ready'
 
