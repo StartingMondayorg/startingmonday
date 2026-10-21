@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { LogoutButton } from '../logout-button'
+import { LogoutButton } from '@/app/(dashboard)/dashboard/logout-button'
 import { FaqAccordion } from '@/app/(dashboard)/dashboard/_components/FaqAccordion'
 import { Button, Card } from '@/components/ui'
 export default async function HelpPage() {
@@ -75,7 +75,7 @@ export default async function HelpPage() {
         </Card>
 
         {/* Setup checklist */}
-        <Link href="/dashboard/start" className="group block mb-6">
+        <Link href="/dashboard" className="group block mb-6">
           <Card className="rounded px-6 py-5 flex items-center justify-between hover:border-border hover:bg-muted transition-colors">
             <div>
               <p className="text-[14px] font-semibold text-foreground group-hover:text-muted-foreground">New here? Start with the setup checklist.</p>

@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-10-21T18:33:50.634Z",
-  "guideGeneratedAt": "2026-10-21T18:14:08.375Z",
+  "generatedAt": "2026-10-21T19:59:18.498Z",
+  "guideGeneratedAt": "2026-10-21T19:59:02.656Z",
   "thresholdRecallAt3": 0.82,
   "summary": {
     "total": 50,
     "recallAt1": 0.7,
-    "recallAt3": 0.82,
+    "recallAt3": 0.84,
     "recallAt5": 0.88,
     "misses": [
       {
         "question": "Where do I edit positioning summary?",
         "topUrls": [
-          "/dashboard/positioning",
           "/for-outplacement/executive-summary",
+          "/dashboard/profile/positioning",
           "/blog/vp-to-c-suite-positioning"
         ],
         "expectedAnyOfUrls": [
@@ -94,19 +94,7 @@
           "/blog/executive-search-risk-register"
         ],
         "expectedAnyOfUrls": [
-          "/dashboard/strategy"
-        ]
-      },
-      {
-        "question": "Where to get started with feature walkthroughs?",
-        "topUrls": [
-          "/dashboard/start",
-          "/dashboard/profile",
-          "/dashboard/companies/new"
-        ],
-        "expectedAnyOfUrls": [
-          "/guide",
-          "/dashboard/help"
+          "/dashboard/profile/strategy"
         ]
       }
     ]

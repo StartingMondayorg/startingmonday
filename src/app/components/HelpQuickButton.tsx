@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 export function HelpQuickButton({
   source,
-  href = '/dashboard/help',
+  href = '/settings/help',
 }: {
   source: 'dashboard' | 'briefing' | 'onboarding'
   href?: string

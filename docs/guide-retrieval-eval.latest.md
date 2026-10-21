@@ -1,17 +1,17 @@
 # Guide Retrieval Evaluation (Latest)
 
-Generated at: 2026-10-21T18:33:50.634Z
-Guide index generated at: 2026-10-21T18:14:08.375Z
+Generated at: 2026-10-21T19:59:18.498Z
+Guide index generated at: 2026-10-21T19:59:02.656Z
 
 - Total cases: 50
 - Recall@1: 70.0%
-- Recall@3: 82.0%
+- Recall@3: 84.0%
 - Recall@5: 88.0%
 
 ## Misses (Recall@3)
 1. Q: Where do I edit positioning summary?
    Expected: /dashboard/profile
-   Top URLs: /dashboard/positioning, /for-outplacement/executive-summary, /blog/vp-to-c-suite-positioning
+   Top URLs: /for-outplacement/executive-summary, /dashboard/profile/positioning, /blog/vp-to-c-suite-positioning
 2. Q: How do I upload LinkedIn details?
    Expected: /dashboard/profile
    Top URLs: /api/(account)/profile/upload-linkedin, /blog/linkedin-executive-search-strategy, /blog/how-cios-find-jobs
@@ -31,8 +31,5 @@ Guide index generated at: 2026-10-21T18:14:08.375Z
    Expected: /dashboard/discover
    Top URLs: /blog/executive-job-search-daily-routine, /blog/retained-search-candidate-preparation, /blog/why-executive-recruiters-go-quiet
 8. Q: How do I review strategy?
-   Expected: /dashboard/strategy
+   Expected: /dashboard/profile/strategy
    Top URLs: /api/(partner)/coach-handoff/preview, /blog/how-cios-find-jobs, /blog/executive-search-risk-register
-9. Q: Where to get started with feature walkthroughs?
-   Expected: /guide, /dashboard/help
-   Top URLs: /dashboard/start, /dashboard/profile, /dashboard/companies/new

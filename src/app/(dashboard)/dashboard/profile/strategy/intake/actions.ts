@@ -41,7 +41,7 @@ export async function saveStrategyIntake(formData: FormData) {
   if (decisionCriteria.length === 0) missingRequired.push('Decision criteria')
 
   if (missingRequired.length > 0) {
-    redirect(`/dashboard/strategy/intake?error=${encodeURIComponent(`Missing required fields: ${missingRequired.join(', ')}`)}&audience=${audience}`)
+    redirect(`/dashboard/profile/strategy/intake?error=${encodeURIComponent(`Missing required fields: ${missingRequired.join(', ')}`)}&audience=${audience}`)
   }
 
   const { data: existing } = await supabase
@@ -96,11 +96,11 @@ export async function saveStrategyIntake(formData: FormData) {
     )
 
   if (error) {
-    redirect(`/dashboard/strategy/intake?error=${encodeURIComponent(error.message)}`)
+    redirect(`/dashboard/profile/strategy/intake?error=${encodeURIComponent(error.message)}`)
   }
 
   revalidatePath('/dashboard')
-  revalidatePath('/dashboard/strategy')
-  revalidatePath('/dashboard/strategy/intake')
-  redirect(`/dashboard/strategy/intake?saved=1&audience=${audience}`)
+  revalidatePath('/dashboard/profile/strategy')
+  revalidatePath('/dashboard/profile/strategy/intake')
+  redirect(`/dashboard/profile/strategy/intake?saved=1&audience=${audience}`)
 }

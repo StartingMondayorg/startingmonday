@@ -179,7 +179,7 @@ export default async function GuidePage({
         <h1>Starting Monday user guide</h1>
         <p>Search for features, ask questions in guide chat, and open step-by-step workflows in one place.</p>
         <p>Outcome: users can self-serve onboarding, feature discovery, and troubleshooting without waiting for support.</p>
-        <Link href="/dashboard/help">Get started from Help</Link>
+        <Link href="/settings/help">Get started from Help</Link>
       </section>
       <GuideClient sections={safeSections} initialQuestion={q?.slice(0, 500) ?? ''} guideGeneratedAt={guideGeneratedAt} />
     </>
