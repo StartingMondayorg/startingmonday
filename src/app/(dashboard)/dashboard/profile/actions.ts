@@ -185,17 +185,6 @@ export async function saveProfile(formData: FormData) {
   redirect('/dashboard/profile?saved=1')
 }
 
-export async function dismissStallNudge() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-  await supabase
-    .from('user_profiles')
-    .update({ stall_nudge_dismissed_at: new Date().toISOString() })
-    .eq('user_id', user.id)
-  revalidatePath('/dashboard')
-}
-
 export async function saveWeeklyGoal(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
