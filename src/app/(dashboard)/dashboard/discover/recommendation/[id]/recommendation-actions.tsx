@@ -88,8 +88,8 @@ export function RecommendationActions({ companyName, sector, suggestedPeople }: 
       )}
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button size="lg" variant="secondary" className="flex-1" render={<Link href="/dashboard/discover" />}>
-          Back to recommendations
+        <Button size="lg" variant="secondary" className="flex-1" render={<Link href="/dashboard/companies/new" />}>
+          Back to add company
         </Button>
         <Button
           size="lg"

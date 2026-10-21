@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { CultureFitRetentionSignalsCard } from '@/app/(dashboard)/prep/_components/CultureFitRetentionSignalsCard'
+import { MeetingDebriefPersistencePanel } from '@/app/(dashboard)/prep/_components/MeetingDebriefPersistencePanel'
 import { Button, Card, Input, Label, Textarea } from '@/components/ui'
 export const metadata = {
   title: 'Interview Prep - Starting Monday',
@@ -207,14 +209,24 @@ export default async function InterviewPrepPage() {
         </div>
       </form>
 
+      {/* Folded in from /prep/meetings (R-3 phase 2b): the debrief panel is the one piece of prep that saves. */}
+      <Card className="border-border bg-card/40 p-6 sm:p-8 space-y-6">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted-foreground mb-4">
+          Meeting debrief (any meeting)
+        </p>
+        <MeetingDebriefPersistencePanel />
+      </Card>
+
+      <CultureFitRetentionSignalsCard />
+
       {/* Next steps */}
       <Card className="border-border bg-card/40 p-6 sm:p-8">
         <p className="text-[13px] font-semibold text-muted-foreground mb-3">Next: Review your prep</p>
         <p className="text-[14px] leading-relaxed text-foreground mb-4">
           Come back here 24 hours before your interview. Practice your opening, your company narrative, and your objection responses. You're aiming for natural conversation, not recitation.
         </p>
-        <Button variant="link" className="px-0" render={<Link href="/prep/communications" />}>
-          Move to communications prep →
+        <Button variant="link" className="px-0" render={<Link href="/dashboard" />}>
+          Back to the dashboard →
         </Button>
       </Card>
     </div>
