@@ -127,22 +127,43 @@ function checkNextSentryCompatibility(lock) {
   return issues
 }
 
-export function checkProtectedDependencies(pkg, approvedBy = '') {
-  const shadcnRuntimeSpec = pkg.dependencies?.shadcn
-  const shadcnDevSpec = pkg.devDependencies?.shadcn
-  const explicitlyApproved = approvedBy === SHADCN_APPROVER
+export function classifyShadcn(pkg) {
+  const runtime = Boolean(pkg.dependencies?.shadcn)
+  const dev = Boolean(pkg.devDependencies?.shadcn)
+  if (runtime && !dev) return 'dependencies'
+  if (dev && !runtime) return 'devDependencies'
+  if (!runtime && !dev) return 'absent'
+  return 'both'
+}
 
-  if (shadcnRuntimeSpec && !shadcnDevSpec) return []
-  if (explicitlyApproved) return []
+export function readApprovals() {
+  const approvalsPath = path.join(root, 'config', 'dependency-policy-approvals.json')
+  if (!fs.existsSync(approvalsPath)) return {}
+  return readJson(approvalsPath)
+}
 
-  if (shadcnDevSpec) {
+// A committed approval record covers the recorded classification durably, so
+// main pushes and unrelated PRs do not re-prompt the owner. A per-head approval
+// (SHADCN_CHANGE_APPROVED_BY) covers a change that departs from the record.
+export function checkProtectedDependencies(pkg, approvedBy = '', approvals = readApprovals()) {
+  const classification = classifyShadcn(pkg)
+  if (classification === 'dependencies') return []
+
+  const record = approvals?.shadcn
+  const recordedApproval =
+    record?.approvedBy === SHADCN_APPROVER && record?.classification === classification
+  if (recordedApproval) return []
+
+  if (approvedBy === SHADCN_APPROVER) return []
+
+  if (classification === 'devDependencies' || classification === 'both') {
     return [
-      `Protected dependency shadcn must remain in dependencies, not devDependencies. Removal or reclassification requires a current-head approving review from ${SHADCN_APPROVER}.`,
+      `Protected dependency shadcn is classified as ${classification}, which is not covered by config/dependency-policy-approvals.json. Reclassification requires a current-head approving review from ${SHADCN_APPROVER} or an updated approval record.`,
     ]
   }
 
   return [
-    `Protected dependency shadcn is missing from dependencies. Removal requires a current-head approving review from ${SHADCN_APPROVER}.`,
+    `Protected dependency shadcn is missing from package.json. Removal requires a current-head approving review from ${SHADCN_APPROVER} or an updated approval record.`,
   ]
 }
 
