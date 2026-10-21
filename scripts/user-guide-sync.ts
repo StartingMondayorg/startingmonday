@@ -239,12 +239,12 @@ async function buildGuidePayload() {
     }),
     withQualityWeight({
       id: 'get-started-1',
-      title: 'Complete the setup checklist',
-      body: 'Begin with the guided setup checklist to unlock core workflows quickly.',
+      title: 'Finish setup from your dashboard',
+      body: 'Your dashboard shows the next setup step until your profile is complete; follow its one action to unlock core workflows quickly.',
       type: 'get-started',
-      url: '/dashboard/start',
-      tags: ['get-started', 'onboarding'],
-      lastModifiedAt: await lastModifiedAt(routeToFile.get('/dashboard/start') ?? ''),
+      url: '/dashboard',
+      tags: ['get-started', 'onboarding', 'setup', 'checklist'],
+      lastModifiedAt: await lastModifiedAt(routeToFile.get('/dashboard') ?? ''),
     }),
     withQualityWeight({
       id: 'get-started-2',
@@ -269,9 +269,9 @@ async function buildGuidePayload() {
       title: 'Use Help and FAQ',
       body: 'Use the help page for onboarding steps, FAQ answers, and direct guide access.',
       type: 'get-started',
-      url: '/dashboard/help',
+      url: '/settings/help',
       tags: ['get-started', 'help', 'faq'],
-      lastModifiedAt: await lastModifiedAt(routeToFile.get('/dashboard/help') ?? ''),
+      lastModifiedAt: await lastModifiedAt(routeToFile.get('/settings/help') ?? ''),
     }),
   ])
 

@@ -73,7 +73,7 @@ export default async function StrategyIntakePage({
               variant={audience === 'individual' ? 'secondary' : 'ghost'}
               size="sm"
               className="rounded-full"
-              render={<Link href="/dashboard/strategy/intake?audience=individual" />}
+              render={<Link href="/dashboard/profile/strategy/intake?audience=individual" />}
             >
               Individual
             </Button>
@@ -81,7 +81,7 @@ export default async function StrategyIntakePage({
               variant={audience === 'partner' ? 'secondary' : 'ghost'}
               size="sm"
               className="rounded-full"
-              render={<Link href="/dashboard/strategy/intake?audience=partner" />}
+              render={<Link href="/dashboard/profile/strategy/intake?audience=partner" />}
             >
               Partner
             </Button>
@@ -98,7 +98,7 @@ export default async function StrategyIntakePage({
           className="mb-4"
           items={[
             { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Search Strategy', href: '/dashboard/strategy' },
+            { label: 'Search Strategy', href: '/dashboard/profile/strategy' },
             { label: 'Intake' },
           ]}
         />
@@ -318,7 +318,7 @@ export default async function StrategyIntakePage({
                 <Button type="submit" size="lg" className="rounded-full">
                   Save intake
                 </Button>
-                <Button variant="outline" size="lg" className="rounded-full" render={<Link href="/dashboard/strategy" />}>
+                <Button variant="outline" size="lg" className="rounded-full" render={<Link href="/dashboard/profile/strategy" />}>
                   Back to strategy brief
                 </Button>
                 <Link href="/demo/search-strategy-intake" className="text-[14px] text-muted-foreground underline decoration-muted-foreground underline-offset-4 hover:text-foreground">

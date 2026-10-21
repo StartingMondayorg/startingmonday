@@ -1,8 +1,8 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getUserSubscription, canAccessFeature } from '@/lib/billing/subscription'
-import { LogoutButton } from '../logout-button'
+import { LogoutButton } from '@/app/(dashboard)/dashboard/logout-button'
 import { PositioningCoach } from './positioning-coach'
 import { Button, Card } from '@/components/ui'
 export default async function PositioningPage() {

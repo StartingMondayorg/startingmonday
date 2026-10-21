@@ -181,7 +181,7 @@ function getIntentWeight(intent: GuideIntent, entry: GuideEntry): number {
   }
 
   if (intent === 'getting_started') {
-    if (['/dashboard/start', '/dashboard/help', '/guide'].includes(entry.url)) return 2.6
+    if (['/dashboard', '/settings/help', '/guide'].includes(entry.url)) return 2.6
     if (entry.type === 'get-started') return 1.8
     if (entry.type === 'article') return 0.65
   }

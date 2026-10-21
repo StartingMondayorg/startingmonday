@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Button, Card } from '@/components/ui'
@@ -340,11 +340,8 @@ export default async function OutreachHubPage() {
             <Button variant="outline" size="sm" render={<Link href="/dashboard/admin/social#content-checker" />}>
               Content Checker
             </Button>
-            <Button variant="outline" size="sm" render={<Link href="/dashboard#start-here" />}>
-              Back to Start Here
-            </Button>
-            <Button variant="outline" size="sm" render={<Link href="/dashboard/plan" />}>
-              Open weekly plan
+            <Button variant="outline" size="sm" render={<Link href="/dashboard" />}>
+              Back to dashboard
             </Button>
           </div>
         </div>

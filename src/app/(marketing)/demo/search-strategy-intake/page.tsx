@@ -185,7 +185,7 @@ export default function SearchStrategyIntakePreviewPage() {
                 Start free
               </Link>
               <Link
-                href="/dashboard/strategy/intake"
+                href="/dashboard/profile/strategy/intake"
                 className="inline-flex items-center rounded-full border border-border bg-muted/40 px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted/60"
               >
                 Already a member? Open your intake

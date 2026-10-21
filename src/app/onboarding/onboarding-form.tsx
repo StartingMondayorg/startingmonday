@@ -987,7 +987,7 @@ export function OnboardingForm({
         aria-label="Upload LinkedIn PDF"
         className="hidden"
       />
-      <HelpQuickButton source="onboarding" href="/dashboard/help" />
+      <HelpQuickButton source="onboarding" href="/settings/help" />
     </div>
   )
 }

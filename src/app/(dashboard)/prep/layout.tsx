@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils'
 
 const PREP_TASKS = [
   { href: '/prep/interview', label: 'Interview', id: 'interview' },
-  { href: '/prep/companies', label: 'Companies', id: 'companies' },
   { href: '/prep/meetings', label: 'Meetings', id: 'meetings' },
   { href: '/prep/communications', label: 'Communications', id: 'communications' },
 ]

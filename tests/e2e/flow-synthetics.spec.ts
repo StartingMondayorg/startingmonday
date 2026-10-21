@@ -159,7 +159,7 @@ test('Synthetic-09: critical dashboard route sweep has no 404/error-boundary fai
       budgetMs: 12_000,
     },
     { path: '/dashboard/contacts', marker: /Contacts|Contact|Relationship/i, budgetMs: 5_000 },
-    { path: '/dashboard/strategy', marker: /Strategy|search playbook|operating system/i, budgetMs: 5_000 },
+    { path: '/dashboard/profile/strategy', marker: /Strategy|search playbook|operating system/i, budgetMs: 5_000 },
     { path: '/dashboard/signals', marker: /Signals|Draft|Signal/i, budgetMs: 5_000 },
     { path: '/dashboard/profile', marker: /Profile|Identity|Targets|Resume/i, budgetMs: 5_000 },
   ]
