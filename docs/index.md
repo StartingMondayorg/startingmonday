@@ -11,7 +11,7 @@ Documents indexed: **1196**
 | [governance/](governance/) | Decisions, policies, controls, standards, and document lifecycle rules. | 6 |
 | [strategy/](strategy/) | Product, market, channel, roadmap, and implementation plans. | 184 |
 | [engineering/](engineering/) | Technical plans, migration notes, architecture, and development references. | 5 |
-| [evidence/](evidence/) | Validation artifacts, readiness records, source-rights evidence, and proof cases. | 40 |
+| [evidence/](evidence/) | Validation artifacts, readiness records, source-rights evidence, and proof cases. | 41 |
 | [status/](status/) | Generated or dated operational summaries, checkpoints, and phase closeouts. | 149 |
 | [operations/](operations/) | Runbooks, monitoring, support, reliability, and recurring operating procedures. | 2 |
 | [content/](content/) | Marketing copy, editorial work, synthetic council reviews, and publishing assets. | 98 |
@@ -258,6 +258,7 @@ Documents indexed: **1196**
 - [evidence/outreach-audits/outreach_audit_2026-05-26.json](evidence/outreach-audits/outreach_audit_2026-05-26.json) — outreach audit 2026 05 26
 - [evidence/outreach-audits/outreach_audit_2026-05-27.json](evidence/outreach-audits/outreach_audit_2026-05-27.json) — outreach audit 2026 05 27
 - [evidence/prep-pages-evaluation.md](evidence/prep-pages-evaluation.md) — Prep Pages Evaluation Report
+- [evidence/production-promotion-2026-10-21.md](evidence/production-promotion-2026-10-21.md) — Production Promotion Record — 2026-10-21
 - [evidence/sm-hero-proof-case-adjudication-2026-08-18.md](evidence/sm-hero-proof-case-adjudication-2026-08-18.md) — Starting Monday Hero Proof Case Adjudication
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.json](evidence/ws1-08-source-rights-readiness-2026-08-13.json) — ws1 08 source rights readiness 2026 08 13
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.md](evidence/ws1-08-source-rights-readiness-2026-08-13.md) — WS1-08 Source Rights Readiness

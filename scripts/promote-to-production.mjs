@@ -199,7 +199,7 @@ if (backward) {
   let deployments
   try {
     const raw = execFileSync(
-      'railway',
+      process.platform === 'win32' ? 'railway.cmd' : 'railway',
       [
         'deployment', 'list',
         '--service', RAILWAY_STAGING_SERVICE,
@@ -208,7 +208,8 @@ if (backward) {
         '--limit', String(HISTORY_LIMIT),
         '--json',
       ],
-      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+      // Windows: the Railway CLI is a .cmd shim, which Node only spawns through a shell.
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32' },
     )
     deployments = JSON.parse(raw)
   } catch (e) {
