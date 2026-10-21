@@ -66,6 +66,17 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Legacy dashboard demos retired 2026-10-20 (R-8, sm-simplification-proposal).
+      {
+        source: '/demo/executive-dashboard',
+        destination: '/demo',
+        permanent: true,
+      },
+      {
+        source: '/demo/michael-dashboard',
+        destination: '/demo',
+        permanent: true,
+      },
       {
         source: '/for-vp',
         destination: '/for-executives/leadership',

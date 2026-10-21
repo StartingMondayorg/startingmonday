@@ -103,12 +103,6 @@ export default async function ForIndividualsPage() {
                 Demo Brief
               </Link>
               <Link
-                href="/demo/executive-dashboard"
-                className="inline-flex items-center justify-center rounded-full border border-border/60 bg-muted/40 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-foreground shadow-md transition-all hover:-translate-y-[1px] hover:border-border hover:bg-muted/40 hover:text-foreground"
-              >
-                Demo Dashboard
-              </Link>
-              <Link
                 href="/demo/cio/notes"
                 className="inline-flex items-center justify-center rounded-full border border-primary/70 bg-primary/10 px-6 py-2.5 text-[13px] font-semibold tracking-[0.02em] text-primary shadow-md transition-all hover:-translate-y-[1px] hover:border-primary hover:bg-muted/40 hover:text-primary"
               >
