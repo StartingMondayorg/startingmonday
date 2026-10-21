@@ -47,7 +47,6 @@
     "scripts/workstream-reporter.mjs": 1,
     "src/app/(auth)/signup/page.tsx": 1,
     "src/app/(dashboard)/_components/CommandPalette.tsx": 2,
-    "src/app/(dashboard)/_components/PersonalEmailNudge.tsx": 1,
     "src/app/(dashboard)/coach/clients/page.tsx": 2,
     "src/app/(dashboard)/dashboard/_components/CoachPreSessionSnapshot.tsx": 7,
     "src/app/(dashboard)/dashboard/_components/ResumeTailor.tsx": 4,
