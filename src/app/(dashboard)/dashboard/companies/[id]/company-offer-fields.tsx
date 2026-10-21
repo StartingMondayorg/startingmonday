@@ -24,7 +24,7 @@ export function CompanyOfferFields({ company, companyName }: { company: OfferFie
           <Button
             variant="secondary"
             className="text-success bg-success/10"
-            render={<a href={`/dashboard/salary?company=${encodeURIComponent(companyName)}&role=${encodeURIComponent(company.offer_role_title)}`} />}
+            render={<a href={`/dashboard/profile/salary?company=${encodeURIComponent(companyName)}&role=${encodeURIComponent(company.offer_role_title)}`} />}
           >
             Get negotiation script &rarr;
           </Button>

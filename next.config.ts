@@ -66,6 +66,21 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // R-3 phase 2a (2026-10-21): plan/start/offers/optionality/prep-companies absorbed by the dashboard;
+      // positioning/strategy/salary/branding are now profile tabs; help/feedback are settings tabs.
+      { source: '/dashboard/plan', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/start', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/offers', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/optionality', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/optionality/decision-cockpit', destination: '/dashboard', permanent: true },
+      { source: '/prep/companies', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/positioning', destination: '/dashboard/profile/positioning', permanent: true },
+      { source: '/dashboard/strategy', destination: '/dashboard/profile/strategy', permanent: true },
+      { source: '/dashboard/strategy/intake', destination: '/dashboard/profile/strategy/intake', permanent: true },
+      { source: '/dashboard/salary', destination: '/dashboard/profile/salary', permanent: true },
+      { source: '/dashboard/optionality/branding', destination: '/dashboard/profile/branding', permanent: true },
+      { source: '/dashboard/help', destination: '/settings/help', permanent: true },
+      { source: '/dashboard/feedback', destination: '/settings/feedback', permanent: true },
       // R-3 phase 1 / R-6 (2026-10-21): zero-inbound dashboard routes retired behind permanent redirects.
       // Delete these entries after 30 days of zero hits in route-inventory.
       { source: '/dashboard/executive-brief', destination: '/dashboard', permanent: true },

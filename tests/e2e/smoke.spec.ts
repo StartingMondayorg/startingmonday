@@ -236,7 +236,7 @@ test('strategy brief generates content', async ({ page }) => {
   await skipIfAuthUnavailable(page)
   test.setTimeout(180_000)
 
-  await page.goto('/dashboard/strategy')
+  await page.goto('/dashboard/profile/strategy')
   await expect(
     page.getByRole('heading', { name: 'Search Strategy Brief' }).first()
   ).toBeVisible()

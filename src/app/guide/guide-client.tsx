@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -55,7 +55,7 @@ function reviewerLabelFromGuideUrl(title: string, url?: string): string {
   if (normalizedUrl === '/guide' || normalizedTitle.includes('guide') || normalizedTitle.includes('help')) {
     return 'Guide, help, and self-serve support'
   }
-  if (normalizedUrl.startsWith('/dashboard/start') || normalizedUrl.startsWith('/dashboard/profile') || normalizedUrl.includes('/companies/new')) {
+  if (normalizedUrl.startsWith('/dashboard') || normalizedUrl.startsWith('/dashboard/profile') || normalizedUrl.includes('/companies/new')) {
     return 'Onboarding and setup workflows'
   }
   if (normalizedUrl.startsWith('/dashboard/')) {
@@ -277,7 +277,7 @@ export function GuideClient({ sections, initialQuestion = '', guideGeneratedAt =
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-muted-foreground"><span className="text-foreground">Starting </span><span className="text-primary">Monday</span></span>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard/help" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Help</Link>
+            <Link href="/settings/help" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Help</Link>
             <Link href="/features" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Features Docs</Link>
             <Link href="/dashboard" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
           </div>

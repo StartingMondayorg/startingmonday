@@ -44,7 +44,7 @@ export default async function StrategyPage() {
         {hasIntake ? (
           <Alert className="flex flex-wrap items-center justify-between gap-3 [&>svg]:hidden">
             <AlertDescription className="text-[13px] text-muted-foreground">Strategy intake saved. Your brief uses those decision rules.</AlertDescription>
-            <Link href="/dashboard/strategy/intake" className="text-[13px] font-semibold text-muted-foreground underline decoration-muted-foreground underline-offset-4 hover:text-foreground transition-colors">
+            <Link href="/dashboard/profile/strategy/intake" className="text-[13px] font-semibold text-muted-foreground underline decoration-muted-foreground underline-offset-4 hover:text-foreground transition-colors">
               Edit intake
             </Link>
           </Alert>
@@ -54,7 +54,7 @@ export default async function StrategyPage() {
               <AlertTitle className="text-[11px] font-bold tracking-[0.16em] uppercase">Sharpen your brief</AlertTitle>
               <AlertDescription className="text-[14px] mt-1">Complete the strategy intake so your brief reflects your decision rules, red flags, and constraints. Answers from onboarding are pre-filled.</AlertDescription>
             </div>
-            <Button size="sm" className="shrink-0 rounded-full" render={<Link href="/dashboard/strategy/intake" />}>
+            <Button size="sm" className="shrink-0 rounded-full" render={<Link href="/dashboard/profile/strategy/intake" />}>
               Complete intake
             </Button>
           </Alert>

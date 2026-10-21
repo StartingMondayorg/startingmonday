@@ -132,7 +132,7 @@ describe('onboarding persistence actions', () => {
   })
 
   it('completes a planted user with zero target companies and redirects to the dashboard', async () => {
-    await expect(completeOnboarding(validFormData())).rejects.toThrow('NEXT_REDIRECT:/dashboard/start')
+    await expect(completeOnboarding(validFormData())).rejects.toThrow('NEXT_REDIRECT:/dashboard')
 
     expect(state.profileUpdate).toHaveBeenCalledWith(expect.objectContaining({
       onboarding_completed_at: expect.any(String),
@@ -152,7 +152,7 @@ describe('onboarding persistence actions', () => {
     formData.set('employment_status', 'between_roles')
     formData.set('search_timeline', 'immediately')
 
-    await expect(completeOnboarding(formData)).rejects.toThrow('NEXT_REDIRECT:/dashboard/start')
+    await expect(completeOnboarding(formData)).rejects.toThrow('NEXT_REDIRECT:/dashboard')
 
     expect(state.profileUpsert).toHaveBeenCalledWith(
       expect.objectContaining({ search_posture: 'exploring' }),
@@ -202,7 +202,7 @@ describe('onboarding persistence actions', () => {
     })
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
-    await expect(completeOnboarding(validFormData())).rejects.toThrow('NEXT_REDIRECT:/dashboard/start')
+    await expect(completeOnboarding(validFormData())).rejects.toThrow('NEXT_REDIRECT:/dashboard')
 
     expect(state.completionEq).toHaveBeenCalledWith('user_id', 'pilot-user')
     expect(state.captureServerEvent).toHaveBeenCalledWith(

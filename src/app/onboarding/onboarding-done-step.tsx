@@ -176,7 +176,7 @@ export function OnboardingDoneStep({
         <p className="text-[13px] text-muted-foreground leading-relaxed mb-3">
           Want better prep quality? Add LinkedIn and profile detail after launch.
         </p>
-        <Link href="/dashboard/start" className="text-[13px] font-semibold text-primary underline transition-colors">
+        <Link href="/dashboard" className="text-[13px] font-semibold text-primary underline transition-colors">
           Complete profile from dashboard start page
         </Link>
         <p className="text-[12px] text-muted-foreground mt-3">

@@ -7,7 +7,7 @@ const ENTRIES: GuideEntry[] = [
     title: 'Complete the setup checklist',
     body: 'Begin with guided onboarding checklist.',
     type: 'get-started',
-    url: '/dashboard/start',
+    url: '/dashboard',
     tags: ['get-started', 'onboarding'],
   },
   {
@@ -31,7 +31,7 @@ const ENTRIES: GuideEntry[] = [
 describe('guide retrieval ranking', () => {
   it('ranks onboarding queries to setup checklist', () => {
     const ranked = rankGuideEntries(ENTRIES, 'How do I start onboarding setup?', 3)
-    expect(ranked[0]?.entry.url).toBe('/dashboard/start')
+    expect(ranked[0]?.entry.url).toBe('/dashboard')
   })
 
   it('maps article/blog synonym in ranking', () => {
@@ -42,7 +42,7 @@ describe('guide retrieval ranking', () => {
   it('computes eval metrics with recall@3', () => {
     const summary = evaluateGuideRetrieval(
       [
-        { question: 'How do I set up my account?', expectedAnyOfUrls: ['/dashboard/start'] },
+        { question: 'How do I set up my account?', expectedAnyOfUrls: ['/dashboard'] },
         { question: 'How can I update my profile?', expectedAnyOfUrls: ['/dashboard/profile'] },
       ],
       ENTRIES,
