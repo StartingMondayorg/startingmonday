@@ -15,7 +15,7 @@ export default async function SettingsPage() {
   const [{ data: profile }, { data: userRow }] = await Promise.all([
     supabase
       .from('user_profiles')
-      .select('full_name, briefing_time, briefing_frequency')
+      .select('full_name, briefing_time, briefing_frequency, weekly_summary_opt_in')
       .eq('user_id', user.id)
       .single(),
     supabase
@@ -72,7 +72,10 @@ export default async function SettingsPage() {
           isPaused={userRow?.subscription_status === 'paused'}
         />
 
-        <EmailPreferencesPanel initialEnabled={!userRow?.drip_unsubscribed_at} />
+        <EmailPreferencesPanel
+          initialEnabled={!userRow?.drip_unsubscribed_at}
+          initialWeeklySummary={profile?.weekly_summary_opt_in === true}
+        />
 
         <DashboardActivitySnooze />
       </main>

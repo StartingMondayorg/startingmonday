@@ -203,8 +203,7 @@ Key files:
 | `signal-job` | Mon/Wed/Fri 08:30 | Company intelligence signals (news, SEC, PDL, etc.) |
 | `briefing-job` | Every 5 min | Checks per-user timezone/time; sends daily briefing when due |
 | `momentum-job` | Sunday 23:00 | Pipeline momentum score calculation |
-| `market-digest-job` | Sunday 22:30 | Market intel digest for Monitor/intelligence tier users |
-| `weekly-report-job` | Sunday 23:30 | Weekly progress report |
+| `weekly-report-job` | Sunday 23:30 | Weekly search summary (opt-in, off by default) |
 | `usage-monitor-job` | Daily 09:00 | Checks all services against plan limits |
 | `trial-reminder-job` | Daily 10:00 | T-3 and T-0 trial expiry emails |
 | `offer-email-job` | Daily 11:00 | Post-offer-acceptance email within 24h |

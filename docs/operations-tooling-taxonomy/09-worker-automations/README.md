@@ -18,7 +18,6 @@
   - worker/jobs/provider-quality-audit-job.js
 - Growth and reporting:
   - worker/jobs/weekly-report-job.js
-  - worker/jobs/market-digest-job.js
   - worker/jobs/ideas-monthly-job.js
 - Outreach lifecycle:
   - worker/jobs/outreach-digest-job.js
