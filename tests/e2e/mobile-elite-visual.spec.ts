@@ -10,7 +10,7 @@ const ELITE_ROUTES: RouteSpec[] = [
   { slug: 'home', path: '/' },
   { slug: 'pricing', path: '/pricing' },
   { slug: 'dashboard-home', path: '/dashboard', authRequired: true },
-  { slug: 'dashboard-discover', path: '/dashboard/discover', authRequired: true },
+  { slug: 'dashboard-companies-new', path: '/dashboard/companies/new', authRequired: true },
   { slug: 'dashboard-admin-intelligence', path: '/dashboard/admin/intelligence', authRequired: true },
 ]
 
@@ -72,7 +72,9 @@ test.describe('Mobile elite visual gate @mobile @visual @elite', () => {
     test.slow()
     await skipIfAuthUnavailable(page)
 
-    await page.goto('/dashboard/discover', { waitUntil: 'domcontentloaded', timeout: 60_000 })
+    await page.goto('/dashboard/companies/new', { waitUntil: 'domcontentloaded', timeout: 60_000 })
+    await page.getByRole('button', { name: 'Suggest from my profile' }).click()
+    await page.locator('[data-testid="discover-suggestions"] a[href^="/dashboard/discover/recommendation/"], [data-testid="discover-suggestions"] p').first().waitFor({ timeout: 60_000 }).catch(() => {})
     const firstNarrative = page.locator('a[href^="/dashboard/discover/recommendation/"]').first()
     test.skip((await firstNarrative.count()) === 0, 'Skipping recommendation detail visual test: no recommendation links found')
 

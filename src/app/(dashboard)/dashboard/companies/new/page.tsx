@@ -1,8 +1,9 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { addCompany } from './actions'
 import { CompanySearchInput } from './company-search-input'
+import { DiscoverSuggestions } from './discover-suggestions'
 import { Alert, AlertDescription, Button, Card, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } from '@/components/ui'
 // shadcn Select can't have an item with value "" — use this sentinel for the
 // "Unknown" company-size option. addCompany() already treats any value outside
@@ -204,6 +205,8 @@ export default async function AddCompanyPage({
 
           </form>
         </Card>
+
+        <DiscoverSuggestions />
       </main>
     </div>
   )

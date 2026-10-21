@@ -83,7 +83,7 @@
           "/blog/why-executive-recruiters-go-quiet"
         ],
         "expectedAnyOfUrls": [
-          "/dashboard/discover"
+          "/dashboard/companies/new"
         ]
       },
       {

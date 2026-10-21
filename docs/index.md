@@ -263,6 +263,7 @@ Documents indexed: **1201**
 - [evidence/production-promotion-2026-10-21.md](evidence/production-promotion-2026-10-21.md) — Production Promotion Record — 2026-10-21
 - [evidence/route-collapse-phase1-2026-10-21.md](evidence/route-collapse-phase1-2026-10-21.md) — Route Collapse Phase 1 Evidence (R-3 / R-6)
 - [evidence/route-collapse-phase2a-2026-10-21.md](evidence/route-collapse-phase2a-2026-10-21.md) — Route Collapse Phase 2a Evidence (R-3)
+- [evidence/route-collapse-phase2b-2026-10-21.md](evidence/route-collapse-phase2b-2026-10-21.md) — Route Collapse Phase 2b Evidence (R-3)
 - [evidence/sm-hero-proof-case-adjudication-2026-08-18.md](evidence/sm-hero-proof-case-adjudication-2026-08-18.md) — Starting Monday Hero Proof Case Adjudication
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.json](evidence/ws1-08-source-rights-readiness-2026-08-13.json) — ws1 08 source rights readiness 2026 08 13
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.md](evidence/ws1-08-source-rights-readiness-2026-08-13.md) — WS1-08 Source Rights Readiness

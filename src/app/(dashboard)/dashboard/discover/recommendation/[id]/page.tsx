@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { SuggestedPerson } from '@/lib/enrichment'
@@ -77,8 +77,8 @@ export default async function RecommendationDetailPage({
           <span className="text-[13px] sm:text-[14px] font-bold tracking-[0.14em] uppercase text-primary-foreground">
             <span className="text-primary-foreground">Starting </span><span className="text-primary">Monday</span>
           </span>
-          <Link href="/dashboard/discover" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
-            &larr; Discover
+          <Link href="/dashboard/companies/new" className="text-[13px] text-primary-foreground hover:text-primary-foreground transition-colors">
+            &larr; Add company
           </Link>
         </div>
       </header>
