@@ -166,9 +166,21 @@ jobs:
           script: |
             const fs = require('fs')
             const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
-            const correctlyClassified = Boolean(pkg.dependencies?.shadcn) && !pkg.devDependencies?.shadcn
-            if (correctlyClassified) {
+            const runtime = Boolean(pkg.dependencies?.shadcn)
+            const dev = Boolean(pkg.devDependencies?.shadcn)
+            const classification = runtime && !dev ? 'dependencies' : dev && !runtime ? 'devDependencies' : !runtime && !dev ? 'absent' : 'both'
+            if (classification === 'dependencies') {
               core.info('shadcn remains in production dependencies')
+              return
+            }
+
+            // A committed owner approval covers the recorded classification; see
+            // config/dependency-policy-approvals.json and scripts/check-dependency-policy.mjs.
+            const approvalsPath = 'config/dependency-policy-approvals.json'
+            const approvals = fs.existsSync(approvalsPath) ? JSON.parse(fs.readFileSync(approvalsPath, 'utf8')) : {}
+            if (approvals.shadcn?.approvedBy === 'richrothschild' && approvals.shadcn?.classification === classification) {
+              core.info(`shadcn classification "${classification}" is covered by ${approvalsPath} (approved ${approvals.shadcn.approvedOn})`)
+              core.setOutput('approved_by', 'richrothschild')
               return
             }
 

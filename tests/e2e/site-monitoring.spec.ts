@@ -37,10 +37,10 @@ test.describe('authenticated monitoring journeys', () => {
     const guards = await attachJourneyGuards(page)
 
     await page.goto('/dashboard')
-    await expectJourneyShell(page, /Dashboard|Company Pipeline|Starting Monday|Good (morning|afternoon|evening)/i)
+    await expectJourneyShell(page, /What should I do today\?/i)
     await expectJourneyHealthy(page, guards)
 
-    await expect(page.locator('#pipeline')).toBeVisible()
+    await expect(page.locator('#companies')).toBeVisible()
   })
 
   test('briefing page shows fresh output or a clear empty state', async ({ page }) => {
