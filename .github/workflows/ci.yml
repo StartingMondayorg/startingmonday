@@ -166,9 +166,11 @@ jobs:
           script: |
             const fs = require('fs')
             const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
-            const correctlyClassified = Boolean(pkg.devDependencies?.shadcn) && !pkg.dependencies?.shadcn
-            if (correctlyClassified) {
-              core.info('shadcn remains in development dependencies')
+            const runtime = Boolean(pkg.dependencies?.shadcn)
+            const dev = Boolean(pkg.devDependencies?.shadcn)
+            const classification = runtime && !dev ? 'dependencies' : dev && !runtime ? 'devDependencies' : !runtime && !dev ? 'absent' : 'both'
+            if (classification === 'dependencies') {
+              core.info('shadcn remains in production dependencies')
               return
             }
 

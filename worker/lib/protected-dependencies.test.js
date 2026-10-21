@@ -7,25 +7,25 @@ const noRecord = {}
 const devRecord = { shadcn: { classification: 'devDependencies', approvedBy: 'richrothschild' } }
 
 describe('protected dependency policy', () => {
-  it('requires shadcn to remain a development dependency', () => {
-    expect(checkProtectedDependencies({
-      dependencies: {},
-      devDependencies: { shadcn: '^4.18.0' },
-    })).toEqual([])
-  })
-
-  it('rejects moving shadcn to dependencies without owner approval', () => {
+  it('accepts shadcn as a production dependency without any approval', () => {
     expect(checkProtectedDependencies({
       dependencies: { shadcn: '^4.18.0' },
       devDependencies: {},
-    })).toEqual([
-      expect.stringContaining('must remain in devDependencies'),
+    }, '', noRecord)).toEqual([])
+  })
+
+  it('rejects moving shadcn to devDependencies without owner approval or a committed record', () => {
+    expect(checkProtectedDependencies({
+      dependencies: {},
+      devDependencies: { shadcn: '^4.18.0' },
+    }, '', noRecord)).toEqual([
+      expect.stringContaining('not covered by config/dependency-policy-approvals.json'),
     ])
   })
 
-  it('rejects removing shadcn without owner approval', () => {
-    expect(checkProtectedDependencies({ dependencies: {}, devDependencies: {} })).toEqual([
-      expect.stringContaining('is missing from devDependencies'),
+  it('rejects removing shadcn without owner approval or a committed record', () => {
+    expect(checkProtectedDependencies({ dependencies: {}, devDependencies: {} }, '', noRecord)).toEqual([
+      expect.stringContaining('is missing from package.json'),
     ])
   })
 

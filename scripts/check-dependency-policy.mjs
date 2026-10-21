@@ -154,17 +154,16 @@ export function checkProtectedDependencies(pkg, approvedBy = '', approvals = rea
     record?.approvedBy === SHADCN_APPROVER && record?.classification === classification
   if (recordedApproval) return []
 
-  if (shadcnDevSpec && !shadcnRuntimeSpec) return []
-  if (explicitlyApproved) return []
+  if (approvedBy === SHADCN_APPROVER) return []
 
-  if (shadcnRuntimeSpec) {
+  if (classification === 'devDependencies' || classification === 'both') {
     return [
-      `Protected dependency shadcn must remain in devDependencies, not dependencies. Removal or reclassification requires a current-head approving review from ${SHADCN_APPROVER}.`,
+      `Protected dependency shadcn is classified as ${classification}, which is not covered by config/dependency-policy-approvals.json. Reclassification requires a current-head approving review from ${SHADCN_APPROVER} or an updated approval record.`,
     ]
   }
 
   return [
-    `Protected dependency shadcn is missing from devDependencies. Removal requires a current-head approving review from ${SHADCN_APPROVER}.`,
+    `Protected dependency shadcn is missing from package.json. Removal requires a current-head approving review from ${SHADCN_APPROVER} or an updated approval record.`,
   ]
 }
 
