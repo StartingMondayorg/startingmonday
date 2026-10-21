@@ -66,6 +66,20 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // R-3 phase 1 / R-6 (2026-10-21): zero-inbound dashboard routes retired behind permanent redirects.
+      // Delete these entries after 30 days of zero hits in route-inventory.
+      { source: '/dashboard/executive-brief', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/kanban', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/wrap-up', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/placed', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/concierge', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/board-track', destination: '/dashboard', permanent: true },
+      { source: '/dashboard/pilot-outreach', destination: '/dashboard/contacts', permanent: true },
+      { source: '/dashboard/results', destination: '/dashboard/progress', permanent: true },
+      { source: '/dashboard/post-search', destination: '/dashboard/progress', permanent: true },
+      { source: '/dashboard/post-landing', destination: '/dashboard/progress', permanent: true },
+      { source: '/dashboard/invite', destination: '/settings', permanent: true },
+      { source: '/dashboard/support', destination: '/dashboard/help', permanent: true },
       // Legacy dashboard demos retired 2026-10-20 (R-8, sm-simplification-proposal).
       {
         source: '/demo/executive-dashboard',
