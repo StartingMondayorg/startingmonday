@@ -1,7 +1,7 @@
 import type { RoleFamily, RoleTitle } from '@/lib/role-taxonomy'
-import { resolveDashboardSearchPosture } from '@/lib/dashboard-posture'
 
-export const ONBOARDING_FINAL_STEP = 8
+// R-4 (2026-10-21): three screens - role lane + posture, companies, briefing time.
+export const ONBOARDING_FINAL_STEP = 2
 
 export type OnboardingDestination = '/dashboard' | '/onboarding'
 
@@ -63,10 +63,8 @@ export function normalizeOnboardingDraft(profile: OnboardingProfileSeed | null):
   return {
     fullName: stringValue(draft.fullName, profile?.full_name ?? ''),
     searchPersona: stringValue(draft.searchPersona),
-    searchPosture: stringValue(draft.searchPosture) || resolveDashboardSearchPosture({
-      employmentStatus,
-      searchTimeline,
-    }),
+    // Posture is asked explicitly on screen one; it is never inferred for the form.
+    searchPosture: stringValue(draft.searchPosture),
     roleFamily: stringValue(draft.roleFamily) as RoleFamily | '',
     roleTitle: stringValue(draft.roleTitle) as RoleTitle | '',
     roleTitles: stringArray(draft.roleTitles) as RoleTitle[],
