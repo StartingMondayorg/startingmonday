@@ -199,16 +199,17 @@ const SPECS = [
 	},
 	{
 		id: 'dashboard-discover',
-		route: '/dashboard/discover',
-		files: ['src/app/(dashboard)/dashboard/discover/page.tsx'],
+		// R-3 phase 2b: /dashboard/discover redirects here; suggestions render below the add form.
+		route: '/dashboard/companies/new',
+		files: [
+			'src/app/(dashboard)/dashboard/companies/new/page.tsx',
+			'src/app/(dashboard)/dashboard/companies/new/discover-suggestions.tsx',
+		],
 		rules: [
 			{
-				id: 'discover-brand-shell',
-				description: 'Discover page preserves branded shell header styling.',
-				// The shell used to be pinned with a literal bg-slate-900. It is now a
-				// dark-scoped token surface, which is the same intent -- a dark header
-				// band -- expressed in the theme vocabulary.
-				matcher: /dark[^"']*\bbg-(?:card|background)\b/,
+				id: 'discover-mounted-on-add-company',
+				description: 'Discover suggestions are mounted on the add-company page.',
+				matcher: '<DiscoverSuggestions />',
 			},
 			{
 				id: 'discover-grid-density',

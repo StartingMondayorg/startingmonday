@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-21T19:59:18.498Z",
-  "guideGeneratedAt": "2026-10-21T19:59:02.656Z",
+  "generatedAt": "2026-10-21T22:37:00.063Z",
+  "guideGeneratedAt": "2026-10-21T22:36:56.975Z",
   "thresholdRecallAt3": 0.82,
   "summary": {
     "total": 50,
@@ -83,7 +83,7 @@
           "/blog/why-executive-recruiters-go-quiet"
         ],
         "expectedAnyOfUrls": [
-          "/dashboard/discover"
+          "/dashboard/companies/new"
         ]
       },
       {
