@@ -5,9 +5,13 @@ import { sendEmail } from '@/lib/email/email'
 import { APP_URL } from '@/lib/config'
 import { unsubscribeUrl } from '@/lib/email/unsubscribe-token'
 
-const DAYS_10 = 10
-const DAYS_20 = 20
+// One calm message after two weeks away. It reports what changed at the
+// user's companies and asks for nothing. Earlier 10-day and 20-day pressure
+// variants were retired on 2026-10-20 (docs/strategy/sm-simplification-proposal-2026-10-20.md, R-1).
+const INACTIVE_DAYS = 14
 const MS_PER_DAY = 86_400_000
+export const NUDGE_TYPE = 'reengagement_14d'
+const LEGACY_NUDGE_TYPES = ['reengagement_10d', 'reengagement_20d'] as const
 
 const SIGNAL_LABELS: Record<string, string> = {
   funding: 'funding round',
@@ -63,68 +67,38 @@ function signalListHtml(signals: SignalEntry[]): string {
   return `<ul style="margin:8px 0 16px 0;padding-left:20px;line-height:1.9;">${items}</ul>`
 }
 
-function build10DayEmail(
+function buildAwayEmail(
   firstName: string,
   userId: string,
   signals: SignalEntry[],
   companyCount: number,
 ): { subject: string; html: string } {
-  const dashboard = `${APP_URL}/dashboard`
   const hasSignals = signals.length > 0
   const compWord = companyCount === 1 ? 'company' : 'companies'
 
-  const body = [
-    `<p style="margin:0 0 16px 0;">You have not been back in ten days. That matters in a market where timing is everything.</p>`,
-    companyCount > 0
-      ? `<p style="margin:0 0 ${hasSignals ? '8' : '16'}px 0;">Your ${compWord} ${companyCount === 1 ? 'is' : 'are'} still being monitored.${hasSignals ? ' Here is what came in while you were away:' : ''}</p>`
-      : `<p style="margin:0 0 16px 0;">You have not added any target companies yet, so the scanners have not started. Add companies where you already have a contact. Those are the ones where timing matters.</p>`,
-    hasSignals ? signalListHtml(signals) : '',
-    `<p style="margin:0 0 16px 0;">The window between when a signal fires and when a search goes public is narrow. Acting within 48 hours is what separates the candidates who get the call from the ones who find out too late.</p>`,
-    `<p style="margin:0 0 4px 0;">Log in and see what came in. Reply to this email if you have questions.</p>`,
-    ctaButton("See what you've missed", dashboard),
-  ].join('')
-
-  return {
-    subject: hasSignals
-      ? `Signals fired at your target ${compWord}. You have not seen them yet.`
-      : `Ten days away. Your search is still running, ${firstName}.`,
-    html: emailWrapper(`${firstName}, the market kept moving.`, body, userId),
+  if (companyCount === 0) {
+    const body = [
+      `<p style="margin:0 0 16px 0;">You have not added a company yet, so nothing is being watched for you.</p>`,
+      `<p style="margin:0 0 16px 0;">Add one company you would say yes to and we start watching it today. That is the whole first step.</p>`,
+      ctaButton('Add a company', `${APP_URL}/dashboard/companies/new`),
+    ].join('')
+    return {
+      subject: 'One company to start with',
+      html: emailWrapper(`${firstName}, one thing when you are ready.`, body, userId),
+    }
   }
-}
-
-function build20DayEmail(
-  firstName: string,
-  userId: string,
-  signals: SignalEntry[],
-  companyCount: number,
-  daysLeftOnTrial: number,
-): { subject: string; html: string } {
-  const dashboard = `${APP_URL}/dashboard`
-  const billing = `${APP_URL}/settings/billing`
-  const hasSignals = signals.length > 0
-  const trialEnd =
-    daysLeftOnTrial > 1
-      ? `ends in ${daysLeftOnTrial} days`
-      : daysLeftOnTrial === 1
-        ? 'ends tomorrow'
-        : 'has ended'
 
   const body = [
-    `<p style="margin:0 0 16px 0;">${firstName}, your trial ${trialEnd}. You have not logged in for twenty days.</p>`,
     hasSignals
-      ? `<p style="margin:0 0 8px 0;">In that time, your tracked companies generated signals you have not seen:</p>${signalListHtml(signals)}`
-      : companyCount > 0
-        ? `<p style="margin:0 0 16px 0;">Your tracked ${companyCount === 1 ? 'company' : `${companyCount} companies`} ${companyCount === 1 ? 'has' : 'have'} been generating signals. You have not been back to see them.</p>`
-        : '',
-    `<p style="margin:0 0 16px 0;">If the search is serious, this is the moment. The intelligence built here on your target companies does not transfer anywhere else. There is no export. When the trial ends, it is gone.</p>`,
-    `<p style="margin:0 0 16px 0;">Starting Monday is $199 a month. If you need more time or have questions, reply here. I read everything.</p>`,
-    ctaButton('Reopen your search', dashboard),
-    `<p style="margin:20px 0 0 0;font-size:13px;color:#64748b;">Or <a href="${billing}" style="color:#64748b;">convert to a paid plan</a> to keep your search running.</p>`,
+      ? `<p style="margin:0 0 8px 0;">Your ${companyCount} ${compWord} kept being watched. Since your last visit:</p>${signalListHtml(signals)}`
+      : `<p style="margin:0 0 16px 0;">Your ${companyCount} ${compWord} ${companyCount === 1 ? 'is' : 'are'} still being watched. Nothing new fired in the last two weeks. Quiet is information too.</p>`,
+    `<p style="margin:0 0 16px 0;">Nothing here needs a reply. Your next briefing arrives as usual.</p>`,
+    ctaButton(hasSignals ? 'See what changed' : 'Open your dashboard', `${APP_URL}/dashboard`),
   ].join('')
 
   return {
-    subject: `Your trial ${trialEnd}. You have not logged in for 20 days.`,
-    html: emailWrapper('Twenty days.', body, userId),
+    subject: hasSignals ? 'What changed at your companies' : 'Quiet two weeks at your companies',
+    html: emailWrapper(`${firstName}, here is what changed while you were away.`, body, userId),
   }
 }
 
@@ -135,12 +109,11 @@ export async function GET(request: NextRequest) {
 
   const admin = createAdminClient()
   const now = Date.now()
-  const cutoff10d = new Date(now - DAYS_10 * MS_PER_DAY).toISOString()
-  const cutoff20d = new Date(now - DAYS_20 * MS_PER_DAY).toISOString()
+  const cutoff = new Date(now - INACTIVE_DAYS * MS_PER_DAY).toISOString()
 
   const { data: trialUsers, error: usersErr } = await admin
     .from('users')
-    .select('id, email, trial_ends_at')
+    .select('id, email')
     .eq('subscription_status', 'trialing')
     .is('drip_unsubscribed_at', null)
 
@@ -161,15 +134,14 @@ export async function GET(request: NextRequest) {
     admin.from('user_profiles').select('user_id, full_name').in('user_id', userIds),
     admin
       .from('user_events')
-      .select('user_id, created_at')
+      .select('user_id')
       .in('user_id', userIds)
-      .gte('created_at', cutoff20d)
-      .order('created_at', { ascending: false }),
+      .gte('created_at', cutoff),
     admin
       .from('company_signals')
       .select('user_id, signal_type')
       .in('user_id', userIds)
-      .gte('signal_date', cutoff20d.split('T')[0]),
+      .gte('signal_date', cutoff.split('T')[0]),
     admin.from('companies').select('user_id').in('user_id', userIds).is('archived_at', null),
   ])
 
@@ -178,23 +150,18 @@ export async function GET(request: NextRequest) {
     .from('inactivity_nudge_logs')
     .select('user_id, nudge_type')
     .in('user_id', userIds)
-    .in('nudge_type', ['reengagement_10d', 'reengagement_20d'])
+    .in('nudge_type', [NUDGE_TYPE, ...LEGACY_NUDGE_TYPES])
 
   const nameByUser: Record<string, string> = {}
   for (const p of profiles ?? []) {
     if (p.full_name) nameByUser[p.user_id] = p.full_name.split(' ')[0]
   }
 
-  // Most recent event per user (within the last 20 days)
-  const lastEventByUser: Record<string, Date> = {}
-  for (const e of eventRows ?? []) {
-    if (!lastEventByUser[e.user_id]) lastEventByUser[e.user_id] = new Date(e.created_at)
-  }
+  const activeUsers = new Set((eventRows ?? []).map(e => e.user_id))
 
-  const sentNudges = new Set(
-    ((nudgeLogs ?? []) as Array<{ user_id: string; nudge_type: string }>).map(
-      n => `${n.user_id}:${n.nudge_type}`,
-    ),
+  // Anyone already touched by this or a legacy re-engagement message is never touched again.
+  const alreadyContacted = new Set(
+    ((nudgeLogs ?? []) as Array<{ user_id: string }>).map(n => n.user_id),
   )
 
   const signalsByUser: Record<string, Record<string, number>> = {}
@@ -211,70 +178,32 @@ export async function GET(request: NextRequest) {
   let sent = 0
   let skipped = 0
   const errors: string[] = []
-  const cutoff10dDate = new Date(cutoff10d)
 
   for (const u of trialUsers) {
-    const lastEvent = lastEventByUser[u.id]
-    // No event in last 20 days → inactive20d (also inactive10d)
-    // Event exists but older than 10d cutoff → inactive10d only
-    const inactive20d = !lastEvent
-    const inactive10d = !lastEvent || lastEvent < cutoff10dDate
-
-    if (!inactive10d) {
+    if (activeUsers.has(u.id) || alreadyContacted.has(u.id)) {
       skipped++
       continue
     }
 
     const firstName = nameByUser[u.id] ?? u.email.split('@')[0]
     const companyCount = companyCountByUser[u.id] ?? 0
-    const daysLeftOnTrial = u.trial_ends_at
-      ? Math.max(0, Math.floor((new Date(u.trial_ends_at).getTime() - now) / MS_PER_DAY))
-      : 0
-
     const signals: SignalEntry[] = Object.entries(signalsByUser[u.id] ?? {})
       .map(([type, count]) => ({ type, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5)
 
-    if (inactive20d && !sentNudges.has(`${u.id}:reengagement_20d`)) {
-      const { subject, html } = build20DayEmail(firstName, u.id, signals, companyCount, daysLeftOnTrial)
-      const { error: sendErr } = await sendEmail({ to: u.email, subject, html })
-      if (sendErr) {
-        errors.push(`${u.email} 20d: ${(sendErr as { message?: string }).message ?? 'send failed'}`)
-        continue
-      }
-      await adminAny.from('inactivity_nudge_logs').insert({
-        user_id: u.id,
-        nudge_type: 'reengagement_20d',
-        details: {
-          inactivity_days: 20,
-          signal_count: signals.length,
-          company_count: companyCount,
-          days_left_on_trial: daysLeftOnTrial,
-        },
-      })
-      sent++
+    const { subject, html } = buildAwayEmail(firstName, u.id, signals, companyCount)
+    const { error: sendErr } = await sendEmail({ to: u.email, subject, html })
+    if (sendErr) {
+      errors.push(`${u.email}: ${(sendErr as { message?: string }).message ?? 'send failed'}`)
       continue
     }
-
-    // Send 10d nudge only if neither 10d nor 20d has been sent yet
-    if (!sentNudges.has(`${u.id}:reengagement_10d`) && !sentNudges.has(`${u.id}:reengagement_20d`)) {
-      const { subject, html } = build10DayEmail(firstName, u.id, signals, companyCount)
-      const { error: sendErr } = await sendEmail({ to: u.email, subject, html })
-      if (sendErr) {
-        errors.push(`${u.email} 10d: ${(sendErr as { message?: string }).message ?? 'send failed'}`)
-        continue
-      }
-      await adminAny.from('inactivity_nudge_logs').insert({
-        user_id: u.id,
-        nudge_type: 'reengagement_10d',
-        details: { inactivity_days: 10, signal_count: signals.length, company_count: companyCount },
-      })
-      sent++
-      continue
-    }
-
-    skipped++
+    await adminAny.from('inactivity_nudge_logs').insert({
+      user_id: u.id,
+      nudge_type: NUDGE_TYPE,
+      details: { inactivity_days: INACTIVE_DAYS, signal_count: signals.length, company_count: companyCount },
+    })
+    sent++
   }
 
   return NextResponse.json({ sent, skipped, users: trialUsers.length, errors: errors.slice(0, 10) })
