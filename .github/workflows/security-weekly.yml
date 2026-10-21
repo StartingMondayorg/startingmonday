@@ -456,8 +456,10 @@ jobs:
             #   createAdminClient / getStaffMember - staff session check (admin/intelligence routes)
             #   requireAutomationAccess - staff automation guard (admin/automation routes, wraps requireStaffAutomationAccess)
             #   auth.getUser - direct Supabase session check with 401 handling (events/onboarding routes)
+            #   validateInternalRouteRequest - internal routes: timing-safe INTERNAL_ROUTE_SECRET
+            #     compare AND INTERNAL_IP_ALLOWLIST match, both required, fails closed when unset
             if grep -qE 'export async function (POST|PUT|DELETE)' "$file"; then
-              if ! grep -qE 'requireAuth|requireFeatureAccess|requirePrepAccess|createAdminClient|getStaffMember|requireAutomationAccess|auth\.getUser' "$file"; then
+              if ! grep -qE 'requireAuth|requireFeatureAccess|requirePrepAccess|createAdminClient|getStaffMember|requireAutomationAccess|auth\.getUser|validateInternalRouteRequest' "$file"; then
                 echo "MISSING AUTH: $file"
                 failed=$((failed + 1))
               fi
@@ -479,43 +481,79 @@ jobs:
 
       - name: Verify migration files have no gaps or duplicates
         run: |
+          # Numbering convention. A migration is NNN_description.sql. A second
+          # migration landing at an already-used number is NNNM_description.sql,
+          # a point release: 1071 means "107, point 1", not "one thousand and
+          # seventy-one". Both forms are parsed into (major, minor) below.
+          #
+          # This matters because filenames must be ordered by that pair, not
+          # lexically. Sorting 1071 as text puts it between 106 and 107, which
+          # used to manufacture a phantom gap in both directions and kept this
+          # job red from 2026-08-31 onward (SMK-502).
+          #
           # Duplicate numbers that already shipped to production via parallel
           # merges. They are grandfathered as-is: renumbering applied migrations
           # would desync the files from Supabase's migration history.
-          GRANDFATHERED_DUPLICATES=" 107 109 120 129 130 131 132 158 "
+          GRANDFATHERED_DUPLICATES=" 107 109 120 129 130 131 132 158 175 176 "
           # Legacy pre-numbering migrations, applied to production before the
           # NNN_ convention existed.
           GRANDFATHERED_UNNUMBERED=" create-notifications-table.sql create-warn-notification-rpc.sql "
+          UNNUMBERED_KEY=999999
           failed=0
-          prev=-1
+          prev_major=-1
+          prev_minor=-1
           prev_name=""
-          while IFS= read -r f; do
-            name=$(basename "$f")
-            raw_num=$(echo "$name" | grep -oE '^[0-9]+' || true)
-            if [[ -z "$raw_num" ]]; then
+          # Emit "<sortkey> <filename>" per migration, then order numerically.
+          # Key is majorminor zero-padded to 4 digits: 107 -> 1070, 1071 -> 1071.
+          sorted_migrations() {
+            local f name raw major minor
+            for f in supabase/migrations/*.sql; do
+              name=$(basename "$f")
+              raw=$(echo "$name" | grep -oE '^[0-9]+' || true)
+              if [[ -z "$raw" ]]; then
+                echo "$UNNUMBERED_KEY $name"
+              elif [[ ${#raw} -ge 4 ]]; then
+                major=${raw:0:3}
+                minor=${raw:3}
+                printf '%03d%01d %s\n' "$((10#$major))" "$((10#$minor))" "$name"
+              else
+                printf '%03d0 %s\n' "$((10#$raw))" "$name"
+              fi
+            done | sort -n
+          }
+          while IFS=' ' read -r key name; do
+            if [[ "$key" == "$UNNUMBERED_KEY" ]]; then
               if [[ "$GRANDFATHERED_UNNUMBERED" != *" $name "* ]]; then
                 echo "UNNUMBERED: $name does not follow the NNN_description.sql convention"
                 failed=$((failed + 1))
               fi
               continue
             fi
-            num=$((10#$raw_num))
-            if [[ $prev -ge 0 ]]; then
-              if [[ $num -eq $prev ]]; then
-                if [[ "$GRANDFATHERED_DUPLICATES" != *" $num "* ]]; then
-                  echo "DUPLICATE: $name shares number $num with $prev_name"
+            major=$((10#${key:0:3}))
+            minor=$((10#${key:3:1}))
+            if [[ $prev_major -ge 0 ]]; then
+              if [[ $major -eq $prev_major && $minor -eq $prev_minor ]]; then
+                if [[ "$GRANDFATHERED_DUPLICATES" != *" $major "* ]]; then
+                  echo "DUPLICATE: $name shares number $major with $prev_name"
                   failed=$((failed + 1))
                 fi
-              elif [[ $num -ne $((prev + 1)) ]]; then
-                echo "GAP: $prev_name -> $name (missing $((prev + 1))..$((num - 1)))"
+              elif [[ $major -ne $prev_major && $major -ne $((prev_major + 1)) ]]; then
+                echo "GAP: $prev_name -> $name (missing $((prev_major + 1))..$((major - 1)))"
                 failed=$((failed + 1))
               fi
             fi
-            prev=$num
+            prev_major=$major
+            prev_minor=$minor
             prev_name=$name
-          done < <(ls supabase/migrations/*.sql | sort)
+          done < <(sorted_migrations)
+          # The point-release parsing above assumes a 3-digit major. Fail loudly
+          # before that assumption silently breaks rather than years later.
+          if [[ $prev_major -ge 999 ]]; then
+            echo "CONVENTION LIMIT: migration numbering reached $prev_major. The NNNM point-release parsing in this check assumes a 3-digit major and must be revisited."
+            failed=$((failed + 1))
+          fi
           if [[ $failed -gt 0 ]]; then
             exit 1
           else
-            echo "PASS: Migration sequence is clean through $(printf '%03d' $prev) (grandfathered duplicates:$GRANDFATHERED_DUPLICATES)."
+            echo "PASS: Migration sequence is clean through $(printf '%03d' $prev_major) (grandfathered duplicates:$GRANDFATHERED_DUPLICATES)."
           fi
