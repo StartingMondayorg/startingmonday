@@ -33,7 +33,7 @@
   { "question": "How do I open chat workspace?", "expectedAnyOfUrls": ["/dashboard/chat"] },
   { "question": "Where is dashboard home?", "expectedAnyOfUrls": ["/dashboard"] },
   { "question": "Where do I see signals?", "expectedAnyOfUrls": ["/dashboard/signals"] },
-  { "question": "Where can I run discovery?", "expectedAnyOfUrls": ["/dashboard/discover"] },
+  { "question": "Where can I run discovery?", "expectedAnyOfUrls": ["/dashboard/companies/new"] },
   { "question": "How do I check calendar events?", "expectedAnyOfUrls": ["/dashboard/calendar"] },
   { "question": "Where are my offers tracked?", "expectedAnyOfUrls": ["/dashboard/profile/salary", "/dashboard/companies/new"] },
   { "question": "Where do I wrap up weekly progress?", "expectedAnyOfUrls": ["/dashboard/progress"] },

@@ -1,7 +1,7 @@
 # Guide Retrieval Evaluation (Latest)
 
-Generated at: 2026-10-21T19:59:18.498Z
-Guide index generated at: 2026-10-21T19:59:02.656Z
+Generated at: 2026-10-21T22:37:00.063Z
+Guide index generated at: 2026-10-21T22:36:56.975Z
 
 - Total cases: 50
 - Recall@1: 70.0%
@@ -28,7 +28,7 @@ Guide index generated at: 2026-10-21T19:59:02.656Z
    Expected: /blog/why-starting-monday-exists, /blog/executive-hiring-patterns-2026
    Top URLs: /blog, /blog/target-company-list, /blog/executive-search-firms-cio
 7. Q: Where can I run discovery?
-   Expected: /dashboard/discover
+   Expected: /dashboard/companies/new
    Top URLs: /blog/executive-job-search-daily-routine, /blog/retained-search-candidate-preparation, /blog/why-executive-recruiters-go-quiet
 8. Q: How do I review strategy?
    Expected: /dashboard/profile/strategy
