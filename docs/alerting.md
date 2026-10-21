@@ -28,6 +28,7 @@ it belong in?* If the answer is "none", don't add it.
 | 5 | Deploy / main CI failed | GitHub Actions | failure on `main` | `#alerts-eng` |
 | 6a | Pageviews flatlined | PostHog alert `01a0689f-7cf6-…` | 0 `$pageview` in a full day | `#alerts-eng` |
 | 6b | Signups flatlined | PostHog alert `01a0689f-843f-…` | 0 `signup_completed` in a full week | `#alerts-eng` |
+| 7 | Lighthouse budgets / landing standard failed | GitHub Actions (`ci.yml`, `landing-standard-monitor.yml`) | budget failure on a `main` push; strict monitor failure on schedule | `#alerts-eng` (was `#ui-alerts`, retired under SMK-503) |
 
 ### Why 6a exists and 6b is weekly
 
