@@ -21,7 +21,6 @@ const QUICK_ACTIONS: Result[] = [
   { kind: 'action', label: 'LinkedIn optimizer',   sub: 'Improve your profile',       href: '/optimize',                icon: '⭡' },
   { kind: 'action', label: 'Profile settings',     sub: 'Titles, sectors, briefing',  href: '/dashboard/profile',       icon: '◌' },
   { kind: 'action', label: 'Feedback',             sub: 'Tell us what to improve',    href: '/dashboard/feedback',      icon: '✉' },
-  { kind: 'action', label: 'Invite',               sub: 'Bring in a peer',            href: '/dashboard/invite',        icon: '⇢' },
   { kind: 'action', label: 'Guide',                sub: 'How Starting Monday works',  href: '/guide',                   icon: '❖' },
   { kind: 'action', label: 'Help',                 sub: 'Getting started and FAQs',   href: '/dashboard/help',          icon: '?' },
   { kind: 'action', label: 'Billing',              sub: 'Manage your subscription',   href: '/settings/billing',        icon: '◈' },

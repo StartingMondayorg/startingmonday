@@ -1,4 +1,4 @@
-import { ExecutiveBriefHub, type ExecutiveBriefHubData } from '@/app/(dashboard)/dashboard/executive-brief/executive-brief-hub'
+import { ExecutiveBriefHub, type ExecutiveBriefHubData } from './executive-brief-hub'
 
 export const metadata = {
   title: 'Executive Brief - Starting Monday',

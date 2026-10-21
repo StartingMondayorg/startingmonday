@@ -230,7 +230,7 @@ export default async function DashboardPage({
     searchStatus: profile?.search_status,
   });
   if (careerMode === "post_search") {
-    redirect("/dashboard/post-search");
+    redirect("/dashboard/progress");
   }
 
   const tz = profile?.briefing_timezone ?? "UTC";
