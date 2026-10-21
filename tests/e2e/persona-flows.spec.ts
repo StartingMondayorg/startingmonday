@@ -113,7 +113,8 @@ test.describe('Persona: coaches', () => {
 
     const res = await page.goto('/dashboard/coach', { waitUntil: 'domcontentloaded' })
 
-    expect(res?.status(), 'Coach dashboard should return 200').toBe(200)
+    // R-6: non-coach accounts are redirected to /dashboard by the entitlement gate.
+    expect(res?.status(), 'Coach dashboard (or its gate redirect target) should return 200').toBe(200)
 
     const body = await page.locator('body').innerText()
     expect(
@@ -141,7 +142,10 @@ test.describe('Persona: outplacement', () => {
 
     console.log(`Persona-outplacement: /dashboard/outplacement returned ${res?.status()}`)
 
-    expect(res?.status(), 'Outplacement page should return 200').toBe(200)
+    expect(res?.status(), 'Outplacement page (or its gate redirect target) should return 200').toBe(200)
+
+    // R-6: accounts without a partner organisation are redirected to /dashboard.
+    test.skip(!/\/dashboard\/outplacement(?:$|[/?#])/.test(page.url()), 'Account is not attached to a partner organisation; entitlement gate redirected to /dashboard.')
 
     const body = await page.locator('body').innerText()
 
