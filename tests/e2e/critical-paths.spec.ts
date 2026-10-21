@@ -36,12 +36,12 @@ test.describe('Signup and onboarding', () => {
     await ctx.close()
   })
 
-  test('activation checklist loads after onboarding is complete', async ({ page }) => {
+  test('retired setup checklist route lands on the dashboard (R-3)', async ({ page }) => {
     await skipIfAuthUnavailable(page)
+    // /dashboard/start was retired on 2026-10-21; Zone 1 carries the next setup step until activation completes.
     await page.goto('/dashboard/start')
-    await expect(page.getByRole('heading', { name: /search is live|you.re set up/i })).toBeVisible()
-    // Progress indicator shows "X of 6 steps"
-    await expect(page.getByText(/of 6/)).toBeVisible()
+    await expect(page).toHaveURL(/\/dashboard(?:$|[?#])/)
+    await expect(page.getByRole('heading', { level: 1, name: 'What should I do today?', exact: true })).toBeVisible()
   })
 
   test('onboarding is required before accessing dashboard', async ({ page }) => {

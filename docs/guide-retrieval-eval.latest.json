@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-07-12T22:07:22.189Z",
-  "guideGeneratedAt": "2026-07-12T22:07:17.304Z",
+  "generatedAt": "2026-10-21T19:59:18.498Z",
+  "guideGeneratedAt": "2026-10-21T19:59:02.656Z",
   "thresholdRecallAt3": 0.82,
   "summary": {
     "total": 50,
-    "recallAt1": 0.74,
-    "recallAt3": 0.82,
-    "recallAt5": 0.86,
+    "recallAt1": 0.7,
+    "recallAt3": 0.84,
+    "recallAt5": 0.88,
     "misses": [
       {
         "question": "Where do I edit positioning summary?",
         "topUrls": [
-          "/mark-review/summary",
-          "/dashboard/positioning",
+          "/for-outplacement/executive-summary",
+          "/dashboard/profile/positioning",
           "/blog/vp-to-c-suite-positioning"
         ],
         "expectedAnyOfUrls": [
@@ -22,7 +22,7 @@
       {
         "question": "How do I upload LinkedIn details?",
         "topUrls": [
-          "/api/profile/upload-linkedin",
+          "/api/(account)/profile/upload-linkedin",
           "/blog/linkedin-executive-search-strategy",
           "/blog/how-cios-find-jobs"
         ],
@@ -44,9 +44,9 @@
       {
         "question": "Where do invoices live?",
         "topUrls": [
-          "/api/admin/automation/billing/invoices-receipts",
-          "/api/admin/automation/outreach/reconcile-live-sends",
-          "/methodology"
+          "/dashboard/admin/live-briefs",
+          "/dashboard/admin/live-briefs/new",
+          "/api/(ops)/admin/automation/billing/invoices-receipts"
         ],
         "expectedAnyOfUrls": [
           "/settings/billing"
@@ -55,9 +55,9 @@
       {
         "question": "How can I find endpoint documentation?",
         "topUrls": [
-          "/api/onboarding/scan",
-          "/api/cron/scan-alert",
-          "/pilot-findings"
+          "/api/(account)/onboarding/scan",
+          "/api/(ops)/cron/scan-alert",
+          "/api/(ops)/admin/live-briefs/[id]/scan"
         ],
         "expectedAnyOfUrls": [
           "/guide"
@@ -89,24 +89,12 @@
       {
         "question": "How do I review strategy?",
         "topUrls": [
-          "/api/coach-handoff/preview",
-          "/mark-review",
-          "/handshake-review"
+          "/api/(partner)/coach-handoff/preview",
+          "/blog/how-cios-find-jobs",
+          "/blog/executive-search-risk-register"
         ],
         "expectedAnyOfUrls": [
-          "/dashboard/strategy"
-        ]
-      },
-      {
-        "question": "Where to get started with feature walkthroughs?",
-        "topUrls": [
-          "/dashboard/start",
-          "/dashboard/profile",
-          "/dashboard/companies/new"
-        ],
-        "expectedAnyOfUrls": [
-          "/guide",
-          "/dashboard/help"
+          "/dashboard/profile/strategy"
         ]
       }
     ]

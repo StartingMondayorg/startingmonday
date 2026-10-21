@@ -15,7 +15,7 @@ const KEY_ROUTES: KeyRoute[] = [
   { path: '/dashboard/briefing', name: 'Briefing', heading: /Good\s+(morning|afternoon|evening)/i, text: /Daily Intelligence Briefing/i },
   { path: '/dashboard/outreach', name: 'Outreach', heading: /Outreach Hub/i, requiresStaff: true },
   { path: '/dashboard/chat', name: 'Chat', placeholder: /Ask anything about your search/i, expectMain: false },
-  { path: '/dashboard/help', name: 'Help', heading: /Help\s*&\s*Getting Started/i },
+  { path: '/settings/help', name: 'Help', heading: /Help\s*&\s*Getting Started/i },
   { path: '/dashboard/calendar', name: 'Calendar', heading: /Calendar/i },
   { path: '/dashboard/profile', name: 'Profile', heading: /^Profile$/i },
   { path: '/dashboard/contacts', name: 'Contacts', heading: /^Contacts$/i },

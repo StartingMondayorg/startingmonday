@@ -5,13 +5,12 @@ const PRODUCT_LINKS = [
   { href: '/dashboard/signals', label: 'Signals' },
   { href: '/dashboard/contacts', label: 'Contacts' },
   { href: '/dashboard/calendar', label: 'Calendar' },
-  { href: '/dashboard/plan', label: 'Weekly plan' },
 ]
 
 const ACCOUNT_LINKS = [
   { href: '/dashboard/profile', label: 'Profile' },
   { href: '/settings', label: 'Settings' },
-  { href: '/dashboard/help', label: 'Help' },
+  { href: '/settings/help', label: 'Help' },
 ]
 
 const COMPANY_LINKS = [

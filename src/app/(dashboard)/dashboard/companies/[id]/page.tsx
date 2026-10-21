@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumbs } from '@/app/(dashboard)/dashboard/_components/Breadcrumbs'
@@ -27,6 +27,7 @@ import { DocumentsPanel } from './documents-panel'
 import { CompanyCompetitiveField } from './company-competitive-field'
 import { CompanyFitCard } from './company-fit-card'
 import { CompanyOfferFields } from './company-offer-fields'
+import { OfferSynthesis } from './offer-synthesis'
 import { buildCompanyFitSummary } from '../../signal-orientation'
 
 type CompanyDetailRow = {
@@ -91,6 +92,17 @@ export default async function CompanyPage({
     .eq('user_id', user.id)
     .is('archived_at', null)
     .single()
+
+  // Offer synthesis compares every offer-stage company; only needed on an offer-stage record.
+  const { data: offerRows } = rawCompany?.stage === 'offer'
+    ? await supabase
+        .from('companies')
+        .select('name, sector, offer_role_title, offer_base, offer_bonus_pct, offer_signing, offer_equity, offer_notes, offer_decision_factors')
+        .eq('user_id', user.id)
+        .eq('stage', 'offer')
+        .is('archived_at', null)
+    : { data: null }
+  const offerCompanies = offerRows ?? []
 
   const [{ data: followUps }, { data: contacts }, { data: profile }, { data: rawScans }, { data: documents }, { data: rawSignals }, { count: prepBriefCount }, { data: rawInterviewLogs }] = await Promise.all([
     supabase
@@ -477,7 +489,11 @@ export default async function CompanyPage({
               </div>
 
               {company.stage === 'offer' && (
-                <CompanyOfferFields company={company} companyName={company.name} />
+                <>
+                  <CompanyOfferFields company={company} companyName={company.name} />
+                  {/* R-3: the standalone /dashboard/offers page folded into the company record. */}
+                  {offerCompanies.length > 0 && <OfferSynthesis offers={offerCompanies} />}
+                </>
               )}
 
               <div className="pt-1 border-t border-border">

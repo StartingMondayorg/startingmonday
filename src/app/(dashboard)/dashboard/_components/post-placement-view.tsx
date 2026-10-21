@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { LogoutButton } from '../logout-button'
 
 type CompanyListItem = {
@@ -43,7 +43,7 @@ export function DashboardPostPlacementView({
           <div className="hidden sm:flex items-center gap-4 flex-1">
             <Link href="/dashboard/contacts" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Contacts</Link>
             <Link href="/dashboard/chat" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Chat</Link>
-            <Link href="/dashboard/feedback" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Feedback</Link>
+            <Link href="/settings/feedback" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Feedback</Link>
             {canUseOutreachHub && (
               <Link href="/dashboard/outreach" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Outreach</Link>
             )}

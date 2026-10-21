@@ -350,7 +350,7 @@ export async function completeOnboarding(formData: FormData) {
     })
   }
 
-  redirect('/dashboard/start')
+  redirect('/dashboard')
 }
 
 export async function skipOnboarding() {
@@ -388,5 +388,5 @@ export async function skipOnboarding() {
     .eq('user_id', user.id)
     .is('search_started_at', null)
 
-  redirect('/dashboard/start')
+  redirect('/dashboard')
 }

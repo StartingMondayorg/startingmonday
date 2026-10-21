@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Badge, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui'
 type Company = { id: string; name: string; stage: string | null; sector: string | null }
@@ -13,17 +13,16 @@ type Result =
 const QUICK_ACTIONS: Result[] = [
   { kind: 'action', label: 'Add company',         sub: 'Track a new target',         href: '/dashboard/companies/new', icon: '+' },
   { kind: 'action', label: 'Daily briefing',       sub: 'Today\'s intelligence',      href: '/dashboard/briefing',      icon: '◉' },
-  { kind: 'action', label: 'Strategy brief',       sub: 'Your search playbook',       href: '/dashboard/strategy',      icon: '▶' },
+  { kind: 'action', label: 'Strategy brief',       sub: 'Your search playbook',       href: '/dashboard/profile/strategy',      icon: '▶' },
   { kind: 'action', label: 'Chat with AI',         sub: 'Ask your advisor',           href: '/dashboard/chat',          icon: '✦' },
   { kind: 'action', label: 'Add contact',          sub: 'Log a relationship',         href: '/dashboard/contacts',      icon: '＋' },
   { kind: 'action', label: 'Follow-ups',           sub: 'Open actions for today',     href: '/dashboard/calendar',      icon: '◫' },
   { kind: 'action', label: 'Calendar',             sub: 'Upcoming follow-ups',        href: '/dashboard/calendar',      icon: '◫' },
   { kind: 'action', label: 'LinkedIn optimizer',   sub: 'Improve your profile',       href: '/optimize',                icon: '⭡' },
   { kind: 'action', label: 'Profile settings',     sub: 'Titles, sectors, briefing',  href: '/dashboard/profile',       icon: '◌' },
-  { kind: 'action', label: 'Feedback',             sub: 'Tell us what to improve',    href: '/dashboard/feedback',      icon: '✉' },
-  { kind: 'action', label: 'Invite',               sub: 'Bring in a peer',            href: '/dashboard/invite',        icon: '⇢' },
+  { kind: 'action', label: 'Feedback',             sub: 'Tell us what to improve',    href: '/settings/feedback',      icon: '✉' },
   { kind: 'action', label: 'Guide',                sub: 'How Starting Monday works',  href: '/guide',                   icon: '❖' },
-  { kind: 'action', label: 'Help',                 sub: 'Getting started and FAQs',   href: '/dashboard/help',          icon: '?' },
+  { kind: 'action', label: 'Help',                 sub: 'Getting started and FAQs',   href: '/settings/help',          icon: '?' },
   { kind: 'action', label: 'Billing',              sub: 'Manage your subscription',   href: '/settings/billing',        icon: '◈' },
 ]
 
@@ -39,7 +38,12 @@ function resultHref(r: Result): string {
   return r.href
 }
 
-export function CommandPalette() {
+export function CommandPalette({ aiChatEnabled = true }: { aiChatEnabled?: boolean } = {}) {
+  // R-6: tier-gated destinations are hidden from accounts that would be redirected away.
+  const quickActions = useMemo(
+    () => (aiChatEnabled ? QUICK_ACTIONS : QUICK_ACTIONS.filter(a => !(a.kind === 'action' && a.href === '/dashboard/chat'))),
+    [aiChatEnabled],
+  )
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Result[]>([])
@@ -67,7 +71,7 @@ export function CommandPalette() {
   useEffect(() => {
     if (fetchTimer.current) clearTimeout(fetchTimer.current)
     if (!query.trim() || query.length < 2) {
-      setResults(QUICK_ACTIONS)
+      setResults(quickActions)
       return
     }
     setLoading(true)
@@ -79,7 +83,7 @@ export function CommandPalette() {
           ...(data.companies ?? []).map((c: Company) => ({ kind: 'company' as const, item: c })),
           ...(data.contacts ?? []).map((p: Contact) => ({ kind: 'contact' as const, item: p })),
         ]
-        const filtered = QUICK_ACTIONS.filter(a =>
+        const filtered = quickActions.filter(a =>
           a.kind === 'action' && a.label.toLowerCase().includes(query.toLowerCase())
         )
         setResults([...next, ...filtered])
@@ -87,18 +91,18 @@ export function CommandPalette() {
         setLoading(false)
       }
     }, 160)
-  }, [query])
+  }, [query, quickActions])
 
   useEffect(() => {
-    if (!query && open) setResults(QUICK_ACTIONS)
-  }, [open, query])
+    if (!query && open) setResults(quickActions)
+  }, [open, query, quickActions])
 
   function navigate(r: Result) {
     router.push(resultHref(r))
     close()
   }
 
-  const displayList = results.length > 0 ? results : (query.length >= 2 && !loading ? [] : QUICK_ACTIONS)
+  const displayList = results.length > 0 ? results : (query.length >= 2 && !loading ? [] : quickActions)
   const companies = displayList.filter(r => r.kind === 'company')
   const contacts = displayList.filter(r => r.kind === 'contact')
   const actions = displayList.filter(r => r.kind === 'action')

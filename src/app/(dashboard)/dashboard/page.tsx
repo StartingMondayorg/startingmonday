@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getActivationStatus } from "@/lib/onboarding/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
@@ -17,16 +16,6 @@ import { rankSignals } from "@/lib/intelligence/intelligence-quality";
 const PAGE_SIZE = 50;
 
 export const metadata = { title: "Dashboard" };
-
-export function shouldRedirectToStartDashboard(opts: {
-  isFirstRunDashboard: boolean;
-  hasSeenFirstRun: boolean;
-  focus: string | undefined;
-}) {
-  return (
-    opts.isFirstRunDashboard && !opts.hasSeenFirstRun && opts.focus !== "main"
-  );
-}
 
 type DashboardPosture = "active" | "exploring" | "not_looking";
 
@@ -195,12 +184,7 @@ type CompanyRow = {
   updated_at: string | null;
 };
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ focus?: string }>;
-}) {
-  const { focus } = await searchParams;
+export default async function DashboardPage() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -230,7 +214,7 @@ export default async function DashboardPage({
     searchStatus: profile?.search_status,
   });
   if (careerMode === "post_search") {
-    redirect("/dashboard/post-search");
+    redirect("/dashboard/progress");
   }
 
   const tz = profile?.briefing_timezone ?? "UTC";
@@ -420,19 +404,6 @@ export default async function DashboardPage({
     totalCount === 0 &&
     !!profile?.onboarding_completed_at &&
     !profile?.placed_at;
-  const cookieStore = await cookies();
-  const hasSeenFirstRun = cookieStore.get("sm_first_run_seen")?.value === "1";
-
-  if (
-    shouldRedirectToStartDashboard({
-      isFirstRunDashboard,
-      hasSeenFirstRun,
-      focus,
-    })
-  ) {
-    redirect("/dashboard/start");
-  }
-
   const trialEndsAt = userRow?.trial_ends_at
     ? new Date(userRow.trial_ends_at)
     : null;
@@ -718,7 +689,7 @@ export default async function DashboardPage({
           </Card>
         </section>
       </main>
-      <HelpQuickButton source="dashboard" href="/dashboard/help#how-this-works" />
+      <HelpQuickButton source="dashboard" href="/settings/help#how-this-works" />
     </div>
   );
 }
