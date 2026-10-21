@@ -25,7 +25,9 @@ This document is Sol's answer. Section 6 lists the rulings only Rich can make; e
 | R-5 hosted cron | No external scheduler exists for `stall-check`, `commitment-friday`, `commitment-sunday`, `weekly-digest`, `drip`; delete in P1 | Rich | 2026-10-20 |
 | R-7 shadcn classification | Move the `shadcn` CLI to `devDependencies` so its unpatchable `braces` chain leaves the production audit (PR #527); Rich supplies the approving review the dependency policy requires | Rich | 2026-10-20 |
 | R-8 legacy dashboard demos | Retire `/demo/executive-dashboard` and `/demo/michael-dashboard` (redirect to `/demo`) and delete the 14 components they pinned (P2c) | Rich | 2026-10-20 |
-| R-3, R-4, R-6 | Open | — | — |
+| R-3 route collapse | Default adopted: 62 → ~20 solo pages via redirects and folds; phase 1 (12 zero-inbound routes) in `docs/evidence/route-collapse-phase1-2026-10-21.md` | Rich | 2026-10-21 |
+| R-4 onboarding | Default adopted: 9 → 3 screens (role lane + posture, 3 companies, briefing time); import/enrichment/context move to profile | Rich | 2026-10-21 |
+| R-6 B2B gating | Default for `coach`, `outplacement/*`, `partner`, `chat` (entitlement gate, hide from nav); alternative for `concierge` and `board-track` (deleted, phase 1) | Rich | 2026-10-21 |
 
 ### Corrections to v0.1 (found while executing P1)
 

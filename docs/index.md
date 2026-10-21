@@ -260,6 +260,7 @@ Documents indexed: **1198**
 - [evidence/outreach-audits/outreach_audit_2026-05-27.json](evidence/outreach-audits/outreach_audit_2026-05-27.json) — outreach audit 2026 05 27
 - [evidence/prep-pages-evaluation.md](evidence/prep-pages-evaluation.md) — Prep Pages Evaluation Report
 - [evidence/production-promotion-2026-10-21.md](evidence/production-promotion-2026-10-21.md) — Production Promotion Record — 2026-10-21
+- [evidence/route-collapse-phase1-2026-10-21.md](evidence/route-collapse-phase1-2026-10-21.md) — Route Collapse Phase 1 Evidence (R-3 / R-6)
 - [evidence/sm-hero-proof-case-adjudication-2026-08-18.md](evidence/sm-hero-proof-case-adjudication-2026-08-18.md) — Starting Monday Hero Proof Case Adjudication
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.json](evidence/ws1-08-source-rights-readiness-2026-08-13.json) — ws1 08 source rights readiness 2026 08 13
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.md](evidence/ws1-08-source-rights-readiness-2026-08-13.md) — WS1-08 Source Rights Readiness
