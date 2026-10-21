@@ -231,6 +231,7 @@ Documents indexed: **1199**
 
 ### evidence
 
+- [evidence/b2b-entitlement-gates-2026-10-21.md](evidence/b2b-entitlement-gates-2026-10-21.md) — B2B Entitlement Gates Evidence (R-6)
 - [evidence/cross-sector-coverage-baseline-2026-08-13.json](evidence/cross-sector-coverage-baseline-2026-08-13.json) — cross sector coverage baseline 2026 08 13
 - [evidence/cross-sector-coverage-baseline-and-decision-2026-08-13.md](evidence/cross-sector-coverage-baseline-and-decision-2026-08-13.md) — Cross-Sector Coverage Baseline And Taxonomy Decision
 - [evidence/dashboard-legacy-deletion-2026-10-20.md](evidence/dashboard-legacy-deletion-2026-10-20.md) — Legacy Dashboard Deletion Evidence (P2b)

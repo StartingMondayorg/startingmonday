@@ -15,10 +15,16 @@ test.describe('Coach flows', () => {
     await ctx.close()
   })
 
-  test('coach dashboard page renders for authenticated sessions', async ({ page }) => {
+  test('coach dashboard renders for coach accounts and redirects everyone else (R-6)', async ({ page }) => {
     await skipIfAuthUnavailable(page)
     await page.goto('/dashboard/coach')
-    await expect(page.locator('h1')).toContainText(/Portfolio Command Center|Your Clients/i)
+    if (/\/dashboard\/coach(?:$|[/?#])/.test(page.url())) {
+      await expect(page.locator('h1')).toContainText(/Portfolio Command Center|Your Clients/i)
+    } else {
+      // Entitlement gate: a non-coach account lands on the main dashboard.
+      await expect(page).toHaveURL(/\/dashboard(?:$|[?#])/)
+      await expect(page.getByRole('heading', { level: 1, name: 'What should I do today?', exact: true })).toBeVisible()
+    }
   })
 
   test('coach clients API requires authentication', async ({ page }) => {

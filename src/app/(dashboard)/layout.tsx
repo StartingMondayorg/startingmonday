@@ -9,6 +9,9 @@ import { Toaster } from '@/components/ui'
 import { DashboardFooter } from '@/app/(dashboard)/_components/DashboardFooter'
 import { BackToTop } from '@/app/(dashboard)/_components/BackToTop'
 import { resolveOrgScopeForUser } from '@/lib/org-scope'
+import { getUserSubscription } from '@/lib/billing/subscription'
+import { getStaffMember } from '@/lib/staff'
+import { isEntitled } from '@/lib/entitlements'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -23,6 +26,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!orgScope.ok) {
     redirect('/login?error=workspace_access')
   }
+
+  // R-6: the palette hides tier-gated destinations the account would be redirected away from.
+  const [subscription, staff] = await Promise.all([getUserSubscription(user.id, supabase), getStaffMember(user.email ?? '')])
+  const aiChatEnabled = isEntitled('ai_chat', { subscription, partnerId: orgScope.partnerId, staff })
 
   const demoId = process.env.DEMO_USER_ID
   const isDemo = !!(user?.id && demoId && user.id === demoId)
@@ -39,7 +46,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {!isDemo && user?.email && <PersonalEmailNudge email={user.email} />}
       <BottomNav />
       <BackToTop />
-      <CommandPalette />
+      <CommandPalette aiChatEnabled={aiChatEnabled} />
       <Toaster />
     </>
   )
