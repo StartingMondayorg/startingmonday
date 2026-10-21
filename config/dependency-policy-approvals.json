@@ -1,0 +1,10 @@
+{
+  "$comment": "Durable owner approvals for protected dependencies. The CI shadcn step and scripts/check-dependency-policy.mjs accept the recorded classification without a per-PR review; any departure from it still requires a current-head approval from the named approver.",
+  "shadcn": {
+    "classification": "devDependencies",
+    "approvedBy": "richrothschild",
+    "approvedOn": "2026-10-20",
+    "evidence": "PR #527 comment '/approve-shadcn-change 94710e03dd67b70b153605e44784bf6663c92456' (R-7, docs/strategy/sm-simplification-proposal-2026-10-20.md)",
+    "reason": "shadcn is a code-generation CLI with no runtime import in src/; its unpatchable braces chain (GHSA-vfj7-8cjw-p6xm) must not sit in the production audit scope."
+  }
+}

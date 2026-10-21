@@ -127,10 +127,32 @@ function checkNextSentryCompatibility(lock) {
   return issues
 }
 
-export function checkProtectedDependencies(pkg, approvedBy = '') {
-  const shadcnRuntimeSpec = pkg.dependencies?.shadcn
-  const shadcnDevSpec = pkg.devDependencies?.shadcn
-  const explicitlyApproved = approvedBy === SHADCN_APPROVER
+export function classifyShadcn(pkg) {
+  const runtime = Boolean(pkg.dependencies?.shadcn)
+  const dev = Boolean(pkg.devDependencies?.shadcn)
+  if (runtime && !dev) return 'dependencies'
+  if (dev && !runtime) return 'devDependencies'
+  if (!runtime && !dev) return 'absent'
+  return 'both'
+}
+
+export function readApprovals() {
+  const approvalsPath = path.join(root, 'config', 'dependency-policy-approvals.json')
+  if (!fs.existsSync(approvalsPath)) return {}
+  return readJson(approvalsPath)
+}
+
+// A committed approval record covers the recorded classification durably, so
+// main pushes and unrelated PRs do not re-prompt the owner. A per-head approval
+// (SHADCN_CHANGE_APPROVED_BY) covers a change that departs from the record.
+export function checkProtectedDependencies(pkg, approvedBy = '', approvals = readApprovals()) {
+  const classification = classifyShadcn(pkg)
+  if (classification === 'dependencies') return []
+
+  const record = approvals?.shadcn
+  const recordedApproval =
+    record?.approvedBy === SHADCN_APPROVER && record?.classification === classification
+  if (recordedApproval) return []
 
   if (shadcnDevSpec && !shadcnRuntimeSpec) return []
   if (explicitlyApproved) return []

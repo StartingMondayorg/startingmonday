@@ -10,11 +10,13 @@ async function skipIfAuthUnavailable(page: Page) {
 
 // ─── Dashboard ───────────────────────────────────────────────────────────────
 
-test('dashboard loads and shows pipeline', async ({ page }) => {
+test('dashboard loads and shows the three zones', async ({ page }) => {
   await skipIfAuthUnavailable(page)
   await page.goto('/dashboard')
-  await expect(page.locator('h1')).toBeVisible()
-  await expect(page.getByRole('heading', { name: /^Pipeline$/i })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'What should I do today?', exact: true })).toBeVisible()
+  await expect(page.locator('[data-first-mile-section="dashboard_next_move"]')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Company, people, angle.', exact: true })).toBeVisible()
+  await expect(page.locator('[data-first-mile-section="dashboard_this_week"]')).toBeVisible()
 })
 
 test('outreach coach compose pane blocks legacy stale markers', async ({ page }) => {
