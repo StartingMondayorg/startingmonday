@@ -132,17 +132,17 @@ export function checkProtectedDependencies(pkg, approvedBy = '') {
   const shadcnDevSpec = pkg.devDependencies?.shadcn
   const explicitlyApproved = approvedBy === SHADCN_APPROVER
 
-  if (shadcnRuntimeSpec && !shadcnDevSpec) return []
+  if (shadcnDevSpec && !shadcnRuntimeSpec) return []
   if (explicitlyApproved) return []
 
-  if (shadcnDevSpec) {
+  if (shadcnRuntimeSpec) {
     return [
-      `Protected dependency shadcn must remain in dependencies, not devDependencies. Removal or reclassification requires a current-head approving review from ${SHADCN_APPROVER}.`,
+      `Protected dependency shadcn must remain in devDependencies, not dependencies. Removal or reclassification requires a current-head approving review from ${SHADCN_APPROVER}.`,
     ]
   }
 
   return [
-    `Protected dependency shadcn is missing from dependencies. Removal requires a current-head approving review from ${SHADCN_APPROVER}.`,
+    `Protected dependency shadcn is missing from devDependencies. Removal requires a current-head approving review from ${SHADCN_APPROVER}.`,
   ]
 }
 

@@ -5,25 +5,25 @@ import { checkProtectedDependencies } from '../../scripts/check-dependency-polic
 const workflowPath = new URL('../../.github/workflows/ci.yml', import.meta.url)
 
 describe('protected dependency policy', () => {
-  it('requires shadcn to remain a production dependency', () => {
-    expect(checkProtectedDependencies({
-      dependencies: { shadcn: '^4.18.0' },
-      devDependencies: {},
-    })).toEqual([])
-  })
-
-  it('rejects moving shadcn to devDependencies without owner approval', () => {
+  it('requires shadcn to remain a development dependency', () => {
     expect(checkProtectedDependencies({
       dependencies: {},
       devDependencies: { shadcn: '^4.18.0' },
+    })).toEqual([])
+  })
+
+  it('rejects moving shadcn to dependencies without owner approval', () => {
+    expect(checkProtectedDependencies({
+      dependencies: { shadcn: '^4.18.0' },
+      devDependencies: {},
     })).toEqual([
-      expect.stringContaining('must remain in dependencies'),
+      expect.stringContaining('must remain in devDependencies'),
     ])
   })
 
   it('rejects removing shadcn without owner approval', () => {
     expect(checkProtectedDependencies({ dependencies: {}, devDependencies: {} })).toEqual([
-      expect.stringContaining('is missing from dependencies'),
+      expect.stringContaining('is missing from devDependencies'),
     ])
   })
 
