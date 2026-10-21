@@ -35,15 +35,21 @@ describe('Starting Monday dashboard simplification feature flag', () => {
     vi.unstubAllEnvs()
   })
 
-  it('defaults to disabled when unset', () => {
+  it('defaults to enabled when unset', () => {
     vi.stubEnv(STARTING_MONDAY_DASHBOARD_SIMPLIFICATION_ENABLED_FLAG, '')
 
-    expect(isStartingMondayDashboardSimplificationEnabled()).toBe(false)
+    expect(isStartingMondayDashboardSimplificationEnabled()).toBe(true)
   })
 
-  it.each(['1', 'true', 'yes', 'on'])('enables for %s', (value) => {
+  it.each(['1', 'true', 'yes', 'on'])('stays enabled for %s', (value) => {
     vi.stubEnv(STARTING_MONDAY_DASHBOARD_SIMPLIFICATION_ENABLED_FLAG, value)
 
     expect(isStartingMondayDashboardSimplificationEnabled()).toBe(true)
+  })
+
+  it.each(['0', 'false', 'no', 'off', 'maybe'])('acts as a kill switch for %s', (value) => {
+    vi.stubEnv(STARTING_MONDAY_DASHBOARD_SIMPLIFICATION_ENABLED_FLAG, value)
+
+    expect(isStartingMondayDashboardSimplificationEnabled()).toBe(false)
   })
 })
