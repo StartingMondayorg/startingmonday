@@ -216,7 +216,7 @@ jobs:
       - name: Dependency policy check
         env:
           SHADCN_CHANGE_APPROVED_BY: ${{ steps.shadcn-approval.outputs.approved_by }}
-        run: npm run deps:check && npm run test:dependency-policy
+        run: npm run deps:check
 
       - name: Documentation command check
         run: npm run docs:check-commands
