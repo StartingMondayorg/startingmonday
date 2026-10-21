@@ -23,6 +23,7 @@ This document is Sol's answer. Section 6 lists the rulings only Rich can make; e
 | R-1 nudge system | Adopt default: strip in-app nudges; email becomes daily briefing + transactional, weekly summary opt-in | Rich | 2026-10-20 |
 | R-2 dashboard flag | Adopt default: flip three-zone for all users, delete legacy (widens the 2026-08-20 DG-09 limited-cohort approval) | Rich | 2026-10-20 |
 | R-5 hosted cron | No external scheduler exists for `stall-check`, `commitment-friday`, `commitment-sunday`, `weekly-digest`, `drip`; delete in P1 | Rich | 2026-10-20 |
+| R-7 shadcn classification | Move the `shadcn` CLI to `devDependencies` so its unpatchable `braces` chain leaves the production audit (PR #527); Rich supplies the approving review the dependency policy requires | Rich | 2026-10-20 |
 | R-3, R-4, R-6 | Open | — | — |
 
 ### Corrections to v0.1 (found while executing P1)
@@ -202,6 +203,7 @@ Each has a drafted default; a one-word "yes" adopts it.
 - **R-4 Onboarding 7→3.** *Open.* Default: as in 3c. The resume/LinkedIn import becomes post-onboarding.
 - **R-5 Hosted cron state.** *Ruled 2026-10-20: no external scheduler.* The five routes were deleted in P1.
 - **R-6 B2B gating.** *Open.* Default: coach/outplacement/partner/board-track/concierge/chat hidden for solo accounts via `resolveOrgScopeForUser`, not deleted.
+- **R-7 Dependency audit unblock.** *Ruled 2026-10-20: approved.* Not a product question, but it gated every PR: `npm audit --omit=dev --audit-level=high` had failed on `main` since advisories published after 2026-09-20 (26 findings at `86974255`). PR #527 patches `next` 16.3.4→16.3.8 (critical RCE in `next/og`), `sharp` 0.35.4→0.35.5, `undici`, `dompurify`, `proxy-addr` and friends, and moves the `shadcn` CLI to `devDependencies` because its `braces` chain has no patched release.
 
 ## 7. Evidence trail
 
