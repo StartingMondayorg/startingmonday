@@ -3,14 +3,14 @@
     "/dashboard": { "maxLoadMs": 4500 },
     "/dashboard/briefing": { "maxLoadMs": 5000, "maxSettleMs": 18000 },
     "/dashboard/signals": { "maxLoadMs": 5500, "minCompanyOptions": 2, "minTypeOptions": 2 },
-    "/dashboard/calendar": { "maxLoadMs": 5500 },
+    "/dashboard/follow-ups": { "maxLoadMs": 5500 },
     "/dashboard/contacts": { "maxLoadMs": 6000 }
   },
   "requiredRoutes": [
     "/dashboard",
     "/dashboard/briefing",
     "/dashboard/signals",
-    "/dashboard/calendar",
+    "/dashboard/follow-ups",
     "/dashboard/contacts"
   ],
   "variationTolerancePct": 35

@@ -16,7 +16,7 @@ const KEY_ROUTES: KeyRoute[] = [
   { path: '/dashboard/admin/outreach', name: 'Outreach', heading: /Outreach Hub/i, requiresStaff: true },
   { path: '/dashboard/chat', name: 'Chat', placeholder: /Ask anything about your search/i, expectMain: false },
   { path: '/settings/help', name: 'Help', heading: /Help\s*&\s*Getting Started/i },
-  { path: '/dashboard/calendar', name: 'Calendar', heading: /Calendar/i },
+  { path: '/dashboard/follow-ups', name: 'Follow-ups', heading: /Follow-ups/i },
   { path: '/dashboard/profile', name: 'Profile', heading: /^Profile$/i },
   { path: '/dashboard/contacts', name: 'Contacts', heading: /^Contacts$/i },
   { path: '/dashboard/signals', name: 'Signals', heading: /Company Signals/i },

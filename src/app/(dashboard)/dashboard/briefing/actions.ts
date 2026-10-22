@@ -8,7 +8,7 @@ import { captureServerEvent } from '@/lib/posthog-server'
 const ALLOWED_TARGETS = new Set([
   '/dashboard/signals',
   '/dashboard',
-  '/dashboard/calendar',
+  '/dashboard/follow-ups',
   '/dashboard/briefing?note_saved=1',
 ])
 

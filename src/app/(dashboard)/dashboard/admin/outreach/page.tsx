@@ -448,7 +448,7 @@ export default async function OutreachHubPage() {
         </Card>
 
         <section id="outreach-links" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link href="/dashboard/calendar">
+          <Link href="/dashboard/follow-ups">
             <Card className="p-5 hover:border-border transition-colors">
               <p className="text-[13px] font-semibold text-foreground mb-1">In-App Calendar</p>
               <p className="text-[13px] text-muted-foreground">Manage date-based follow-ups alongside the outreach routine.</p>

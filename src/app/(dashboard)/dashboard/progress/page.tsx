@@ -41,7 +41,7 @@ export default async function DashboardProgressPage() {
     { label: 'Tracked companies', value: safeCount(companies), href: '/dashboard#companies' },
     { label: 'Active contacts', value: safeCount(contacts), href: '/dashboard/contacts' },
     { label: 'Briefs generated in 70 days', value: safeCount(briefs), href: '/dashboard/briefing' },
-    { label: 'Follow-ups logged in 70 days', value: safeCount(followUps), href: '/dashboard/calendar' },
+    { label: 'Follow-ups logged in 70 days', value: safeCount(followUps), href: '/dashboard/follow-ups' },
     { label: 'Outreach briefs this week', value: safeCount(outreachThisWeek), href: '/dashboard/contacts' },
   ]
 

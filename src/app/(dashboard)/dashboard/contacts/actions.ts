@@ -171,7 +171,7 @@ export async function updateOutreachStatus(contactId: string, status: string): P
 
   revalidatePath(`/dashboard/contacts/${contactId}`)
   revalidatePath('/dashboard/contacts')
-  revalidatePath('/dashboard/calendar')
+  revalidatePath('/dashboard/follow-ups')
 }
 
 export async function remindLater(contactId: string, contactName: string): Promise<{ ok: boolean; error?: string }> {
@@ -227,7 +227,7 @@ export async function scheduleMeetingFollowUp(contactId: string, contactName: st
   }
 
   revalidatePath(`/dashboard/contacts/${contactId}`)
-  revalidatePath('/dashboard/calendar')
+  revalidatePath('/dashboard/follow-ups')
   redirect(`/dashboard/contacts/${contactId}?meeting=1`)
 }
 
