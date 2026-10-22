@@ -50,7 +50,7 @@ describe('getRecruiterToolkit', () => {
 
     expect(toolkit.lane.toLowerCase()).toContain('technical leadership')
     expect(toolkit.assets.length).toBeGreaterThanOrEqual(3)
-    expect(toolkit.assets.some((asset) => asset.href === '/dashboard/outreach')).toBe(true)
+    expect(toolkit.assets.some((asset) => asset.href === '/dashboard/contacts')).toBe(true)
   })
 
   it('adds executive pre-day cadence for vp and executive titles', () => {

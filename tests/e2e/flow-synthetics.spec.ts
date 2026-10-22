@@ -152,7 +152,7 @@ test('Synthetic-09: critical dashboard route sweep has no 404/error-boundary fai
   })
 
   const routes: Array<{ path: string; marker: RegExp; budgetMs: number }> = [
-    { path: '/dashboard/outreach', marker: /Send Queue|Outreach/i, budgetMs: 5_000 },
+    { path: '/dashboard/admin/outreach', marker: /Send Queue|Outreach/i, budgetMs: 5_000 },
     {
       path: '/dashboard/briefing',
       marker: /Good (morning|afternoon|evening)|Nothing to brief today|Accountability/i,

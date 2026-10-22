@@ -66,7 +66,7 @@ function classifyRouteTier(route, authClass) {
     '/onboarding',
     '/dashboard',
     '/dashboard/briefing',
-    '/dashboard/outreach',
+    '/dashboard/admin/outreach',
     '/dashboard/signals',
     '/settings/billing',
   ])

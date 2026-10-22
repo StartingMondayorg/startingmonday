@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Button, Card } from '@/components/ui'
 import { OutreachHubClient } from './outreach-hub-client'
-import { getStaffMember } from '@/lib/staff'
 import { getRecruiterMessagePacks, getRecruiterToolkit } from '@/lib/role-lane-learning'
 import {
   buildExecutiveCompanySizeLookup,
@@ -45,11 +44,8 @@ export default async function OutreachHubPage() {
     ?? process.env.GITHUB_SHA
     ?? process.env.NEXT_PUBLIC_BUILD_SHA
     ?? 'local').slice(0, 8)
-  const staff = await getStaffMember(user.email ?? '')
-  // Outreach Hub is a staff-only operations surface. Regular users can still
-  // reach this URL from shared links, so send them to their contacts workflow
-  // instead of rendering a dead-end 404.
-  if (!staff) redirect('/dashboard/contacts')
+  // Staff-only operations surface; the admin layout returns 404 for anyone else.
+  // The old /dashboard/outreach URL redirects solo users to /dashboard/contacts (R-3 phase 2c).
 
   const { data: roleProfile } = await supabase
     .from('user_profiles')

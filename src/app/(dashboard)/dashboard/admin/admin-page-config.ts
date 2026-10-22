@@ -67,7 +67,7 @@ export const PAGE_GROUPS: PageGroup[] = [
       { path: '/dashboard/admin/operations/wedge-economics', label: 'Wedge Economics Ledgers', owner: 'rw', admin: 'rw', viewer: 'r', priority: 'advanced' },
       { path: '/guide', label: 'Automation Guide', owner: 'rw', admin: 'rw', viewer: '-', priority: 'core' },
       { path: '/dashboard/admin/team', label: 'Team Management', owner: 'rw', admin: 'r', viewer: '-', priority: 'advanced' },
-      { path: '/dashboard/outreach', label: 'Outreach Hub', owner: 'rw', admin: 'rw', viewer: 'r', priority: 'advanced' },
+      { path: '/dashboard/admin/outreach', label: 'Outreach Hub', owner: 'rw', admin: 'rw', viewer: 'r', priority: 'advanced' },
     ],
   },
 ]

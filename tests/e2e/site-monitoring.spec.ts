@@ -66,7 +66,7 @@ test.describe('authenticated monitoring journeys', () => {
 
     const guards = await attachJourneyGuards(page)
 
-    await page.goto('/dashboard/outreach')
+    await page.goto('/dashboard/admin/outreach')
     await expectJourneyShell(page, /Send Queue|Outreach/i)
     await expectJourneyHealthy(page, guards)
 
