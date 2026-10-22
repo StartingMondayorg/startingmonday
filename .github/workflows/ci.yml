@@ -231,6 +231,9 @@ jobs:
       - name: Dashboard simplification gate
         run: npm run guard:dashboard-simplification && npm run test:dashboard-simplification-gate
 
+      - name: Route-count ratchet
+        run: npm run guard:route-count && npm run test:route-count-ratchet
+
       - name: Marketing trust/proof placement gate
         run: npm run marketing:trust-proof:gate
 
