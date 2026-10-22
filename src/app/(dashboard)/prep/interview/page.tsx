@@ -3,19 +3,47 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { CultureFitRetentionSignalsCard } from '@/app/(dashboard)/prep/_components/CultureFitRetentionSignalsCard'
 import { MeetingDebriefPersistencePanel } from '@/app/(dashboard)/prep/_components/MeetingDebriefPersistencePanel'
-import { Button, Card, Input, Label, Textarea } from '@/components/ui'
+import { Alert, AlertDescription, Button, Card, Input, Label, Textarea } from '@/components/ui'
+import { saveInterviewPrep } from './actions'
+import { toDateTimeLocalValue, type InterviewPrepAnswers, type InterviewPrepRow } from './interview-prep-form'
+import { InterviewPrepList } from './interview-prep-list'
+
 export const metadata = {
   title: 'Interview Prep - Starting Monday',
   description: 'Prepare for your next interview with research-backed frameworks and position-specific talking points.',
 }
 
-export default async function InterviewPrepPage() {
+export default async function InterviewPrepPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string; saved?: string; error?: string; new?: string }>
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) {
     redirect('/login')
   }
+
+  const { id: requestedId, saved, error, new: startNew } = await searchParams
+
+  const { data: prepRows } = await supabase
+    .from('interview_preps')
+    .select('id, company_name, role_title, interview_at, answers, status, updated_at')
+    .eq('user_id', user.id)
+    .order('updated_at', { ascending: false })
+    .limit(20)
+  const preps = (prepRows ?? []) as InterviewPrepRow[]
+  // The most recent prep opens by default so the user picks up where they left off; ?new=1 starts a blank one.
+  const current = startNew ? null : (requestedId ? preps.find(p => p.id === requestedId) ?? null : preps[0] ?? null)
+  const answers = (current?.answers ?? {}) as InterviewPrepAnswers
+
+  const banner =
+    saved === 'saved' ? { variant: 'success' as const, text: 'Interview prep saved.' } :
+    saved === 'draft' ? { variant: 'success' as const, text: 'Draft saved. Come back any time to finish it.' } :
+    error === 'empty' ? { variant: 'destructive' as const, text: 'Nothing to save yet. Fill in at least one field.' } :
+    error === 'save' ? { variant: 'destructive' as const, text: 'We could not save your prep. Please try again.' } :
+    null
 
   return (
     <div className="space-y-8">
@@ -39,8 +67,15 @@ export default async function InterviewPrepPage() {
         </p>
       </Card>
 
+      {banner && (
+        <Alert variant={banner.variant} data-testid="interview-prep-banner"><AlertDescription>{banner.text}</AlertDescription></Alert>
+      )}
+
+      <InterviewPrepList preps={preps} currentId={current?.id ?? null} />
+
       {/* Form sections */}
-      <form className="space-y-8">
+      <form id="interview-prep-form" key={current?.id ?? 'new'} action={saveInterviewPrep} className="space-y-8">
+        {current && <input type="hidden" name="id" value={current.id} />}
         {/* Role & Company */}
         <Card className="border-border bg-card/40 p-6 sm:p-8 space-y-6">
           <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted-foreground mb-4">
@@ -53,6 +88,8 @@ export default async function InterviewPrepPage() {
             </Label>
             <Input
               id="company-name"
+              name="company_name"
+              defaultValue={current?.company_name ?? ''}
               type="text"
               placeholder="e.g., Figma, Stripe, Notion"
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -65,6 +102,8 @@ export default async function InterviewPrepPage() {
             </Label>
             <Input
               id="role-title"
+              name="role_title"
+              defaultValue={current?.role_title ?? ''}
               type="text"
               placeholder="e.g., VP Engineering, Director of Product"
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -77,6 +116,8 @@ export default async function InterviewPrepPage() {
             </Label>
             <Input
               id="interview-date"
+              name="interview_at"
+              defaultValue={toDateTimeLocalValue(current?.interview_at ?? null)}
               type="datetime-local"
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
             />
@@ -98,6 +139,8 @@ export default async function InterviewPrepPage() {
             </p>
             <Textarea
               id="positioning"
+              name="positioning"
+              defaultValue={answers.positioning ?? ''}
               placeholder="Describe your background and why this role matters to you..."
               rows={4}
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -113,6 +156,8 @@ export default async function InterviewPrepPage() {
             </p>
             <Textarea
               id="why-now"
+              name="why_now"
+              defaultValue={answers.why_now ?? ''}
               placeholder="Be specific about timing, growth opportunities, or misalignment..."
               rows={3}
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -135,6 +180,8 @@ export default async function InterviewPrepPage() {
             </p>
             <Textarea
               id="company-context"
+              name="company_context"
+              defaultValue={answers.company_context ?? ''}
               placeholder="Recent news, strategy shifts, product announcements..."
               rows={4}
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -150,6 +197,8 @@ export default async function InterviewPrepPage() {
             </p>
             <Textarea
               id="role-fit"
+              name="role_fit"
+              defaultValue={answers.role_fit ?? ''}
               placeholder="How does this role support their current priorities?"
               rows={3}
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -172,6 +221,8 @@ export default async function InterviewPrepPage() {
             </p>
             <Textarea
               id="objection"
+              name="objection"
+              defaultValue={answers.objection ?? ''}
               placeholder="Gaps you anticipate they might raise..."
               rows={3}
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -187,6 +238,8 @@ export default async function InterviewPrepPage() {
             </p>
             <Textarea
               id="objection-response"
+              name="objection_response"
+              defaultValue={answers.objection_response ?? ''}
               placeholder="Your response framing and proof..."
               rows={3}
               className="bg-background/50 border-border/50 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/50"
@@ -197,13 +250,15 @@ export default async function InterviewPrepPage() {
         {/* Actions */}
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-between pt-4">
           <Button
-            type="button"
+            type="submit"
+            name="status"
+            value="draft"
             variant="outline"
             className="border-border text-muted-foreground hover:text-foreground"
           >
             Save as draft
           </Button>
-          <Button type="submit">
+          <Button type="submit" name="status" value="saved">
             Save interview prep
           </Button>
         </div>

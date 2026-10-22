@@ -614,6 +614,39 @@ export type Database = {
           },
         ]
       }
+      interview_preps: {
+        Row: {
+          id: string
+          user_id: string
+          company_name: string | null
+          role_title: string | null
+          interview_at: string | null
+          answers: Json
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          company_name?: string | null
+          role_title?: string | null
+          interview_at?: string | null
+          answers?: Json
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          company_name?: string | null
+          role_title?: string | null
+          interview_at?: string | null
+          answers?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       briefs: {
         Row: {
           id: string
