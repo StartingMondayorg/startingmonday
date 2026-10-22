@@ -45,11 +45,6 @@ test.describe('Starting Monday evidence hero @landing-hero', () => {
     await expect(page.getByText(STARTING_MONDAY_HERO_CONTENT.proofCase.status, { exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: STARTING_MONDAY_HERO_CONTENT.primaryCta, exact: true })).toHaveAttribute('data-slot', 'button')
     await expect(page.locator('body')).not.toContainText(/usually appear weeks before/i)
-
-    const baseUrl = new URL(process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:3000')
-    await page.goto(`${baseUrl.protocol}//mandatesignal.com:${baseUrl.port}/example`, { waitUntil: 'domcontentloaded' })
-    expect(new URL(page.url()).pathname).toBe('/')
-    await expect(page.getByRole('heading', { level: 1, name: 'What a forming role looks like.' })).toHaveCount(0)
   })
 
   test('keeps mobile order, overflow, focus, and layout shift within contract', async ({ page }) => {

@@ -115,7 +115,9 @@ test('add contact appears in list then can be removed', async ({ page }) => {
   await page.goto('/dashboard/contacts')
   await page.fill('input[name="name"]', name)
   await page.fill('input[name="title"]', 'VP Engineering')
-  await page.selectOption('select[name="channel"]', 'linkedin')
+  // Channel is a Base UI Select, not a native <select>.
+  await page.locator('#contact-channel').click()
+  await page.getByRole('option', { name: 'LinkedIn', exact: true }).click()
   await page.getByRole('button', { name: 'Add contact' }).click()
 
   // Server action redirects to ?saved=1
