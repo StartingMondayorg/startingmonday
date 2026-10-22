@@ -224,7 +224,7 @@ async function run() {
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/dashboard/briefing', label: 'Daily Briefing' },
     { path: '/dashboard/signals', label: 'Signals' },
-    { path: '/dashboard/calendar', label: 'Calendar' },
+    { path: '/dashboard/follow-ups', label: 'Follow-ups' },
     { path: '/dashboard/contacts', label: 'Contacts' },
   ], routeSelection)
 
