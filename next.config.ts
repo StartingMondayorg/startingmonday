@@ -66,6 +66,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // R-3c (2026-10-22): the follow-ups list was called Calendar; the route now says what it is.
+      { source: '/dashboard/calendar', destination: '/dashboard/follow-ups', permanent: true },
       // R-3 phase 2c (2026-10-21): the staff-only Outreach Hub moved under /dashboard/admin/outreach;
       // the old URL sends solo users to their contacts, which already own outreach drafting.
       { source: '/dashboard/outreach', destination: '/dashboard/contacts', permanent: true },

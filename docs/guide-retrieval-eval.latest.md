@@ -1,7 +1,7 @@
 # Guide Retrieval Evaluation (Latest)
 
-Generated at: 2026-10-22T01:37:36.174Z
-Guide index generated at: 2026-10-22T01:37:33.176Z
+Generated at: 2026-10-22T13:11:53.221Z
+Guide index generated at: 2026-10-22T13:11:36.938Z
 
 - Total cases: 50
 - Recall@1: 70.0%
