@@ -1025,7 +1025,8 @@ jobs:
   lighthouse-shard:
     name: Lighthouse mobile budgets (shard ${{ matrix.shard }})
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Includes a full app build and up to two Lighthouse passes on shared runners.
+    timeout-minutes: 30
     needs: lighthouse-profile
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
     permissions:
