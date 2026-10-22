@@ -66,6 +66,9 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // R-3 phase 2c (2026-10-21): the staff-only Outreach Hub moved under /dashboard/admin/outreach;
+      // the old URL sends solo users to their contacts, which already own outreach drafting.
+      { source: '/dashboard/outreach', destination: '/dashboard/contacts', permanent: true },
       // R-3 phase 2b (2026-10-21): discover suggestions live on the add-company page; the unsaved
       // meetings/communications worksheets fold into interview prep; the parallel relationships
       // list folds into contacts. The debrief panel moved to /prep/interview.

@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
@@ -163,7 +163,7 @@ export default async function AdminCrmPage({
               <p className="text-[13px] text-muted-foreground mt-1">Review active contacts and outreach status.</p>
             </Card>
           </Link>
-          <Link href="/dashboard/outreach">
+          <Link href="/dashboard/admin/outreach">
             <Card variant="glass" className="p-4 hover:border-border transition-colors">
               <p className="text-[13px] font-semibold text-foreground">Open outreach</p>
               <p className="text-[13px] text-muted-foreground mt-1">Run sends and clear follow-up queue.</p>
