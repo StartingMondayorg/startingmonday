@@ -165,7 +165,7 @@ function shellPaletteAlignment(shell, content, route) {
   const strictDarkPalette = DARK_PALETTE_ROUTES.has(route)
 
   if (shell === 'dashboard-shell') {
-    const inheritedDashboardSignals = /BottomNav|CommandPalette|WatermarkOverlay|Dashboard/i.test(content)
+    const inheritedDashboardSignals = /PrimaryNav|BottomNav|CommandPalette|WatermarkOverlay|Dashboard/i.test(content)
     return hasDarkBase || inheritedDashboardSignals || slateTokenCount >= 3 || orangeTokenCount >= 1
   }
 
