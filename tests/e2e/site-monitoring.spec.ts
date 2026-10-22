@@ -107,6 +107,9 @@ test.describe('authenticated monitoring journeys', () => {
     await expect(page.locator('h1').first()).toBeVisible()
     await expect(page.getByRole('link', { name: /Interview prep|Run interview prep/i }).first()).toBeVisible()
     await expect(page.locator('body')).not.toContainText(/404/i)
-    await expect(page.locator('[role="alert"]:not(#__next-route-announcer__)')).toHaveCount(0)
+    // The next-action banner uses role="alert" for guidance; only error alerts count as failures.
+    await expect(
+      page.locator('[role="alert"]:not(#__next-route-announcer__)').filter({ hasText: /error|failed|something went wrong|could not|try again/i }),
+    ).toHaveCount(0)
   })
 })
