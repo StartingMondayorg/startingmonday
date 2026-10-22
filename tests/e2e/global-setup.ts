@@ -8,7 +8,7 @@ async function ensureMonitoringAnchorCompany(page: Page) {
   await page.goto('/dashboard')
   if (/\/login(?:$|[/?#])/.test(page.url())) return
 
-  const companyLink = page.locator('a[href^="/dashboard/companies/"]').first()
+  const companyLink = page.locator('a[data-dashboard-action="company_brief"]').first()
   if ((await companyLink.count()) > 0) return
 
   await page.goto('/dashboard/companies/new')

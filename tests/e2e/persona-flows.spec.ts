@@ -144,7 +144,9 @@ test.describe('Persona: outplacement', () => {
 
     expect(res?.status(), 'Outplacement page (or its gate redirect target) should return 200').toBe(200)
 
-    // R-6: accounts without a partner organisation are redirected to /dashboard.
+    // R-6: accounts without a partner organisation are redirected to /dashboard. The redirect can
+    // complete after domcontentloaded, so wait for a page h1 before reading the URL.
+    await expect(page.locator('h1').first()).toBeVisible()
     test.skip(!/\/dashboard\/outplacement(?:$|[/?#])/.test(page.url()), 'Account is not attached to a partner organisation; entitlement gate redirected to /dashboard.')
 
     const body = await page.locator('body').innerText()

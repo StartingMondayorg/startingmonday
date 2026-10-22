@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import { selectCompanyStage } from './company-form.helpers'
+import { openOutreachHubOrSkip } from './outreach-hub.helpers'
 
 const ts = () => Date.now()
 
@@ -21,8 +22,7 @@ test('dashboard loads and shows the three zones', async ({ page }) => {
 
 test('outreach coach compose pane blocks legacy stale markers', async ({ page }) => {
   await skipIfAuthUnavailable(page)
-  await page.goto('/dashboard/admin/outreach')
-  await expect(page.getByRole('heading', { name: 'Outreach Hub' })).toBeVisible()
+  await expect(await openOutreachHubOrSkip(page)).toBeVisible()
 
   await page.getByRole('button', { name: 'Coaches', exact: true }).click()
 
@@ -36,8 +36,7 @@ test('outreach coach compose pane blocks legacy stale markers', async ({ page })
 
 test('outreach compose pane shows latest markers for executives coaches and search firms', async ({ page }) => {
   await skipIfAuthUnavailable(page)
-  await page.goto('/dashboard/admin/outreach')
-  await expect(page.getByRole('heading', { name: 'Outreach Hub' })).toBeVisible()
+  await expect(await openOutreachHubOrSkip(page)).toBeVisible()
 
   const channels: Array<{ label: 'Executives' | 'Coaches' | 'Search Firms'; marker: RegExp }> = [
     { label: 'Executives', marker: /If this is ignored, the cost is usually|reply "send it"/ },

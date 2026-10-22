@@ -7,7 +7,7 @@ async function skipIfAuthUnavailable(page: Page) {
 
 async function findFirstCompanyId(page: Page): Promise<string | null> {
   await page.goto('/dashboard')
-  const companyLink = page.locator('a[href^="/dashboard/companies/"]').first()
+  const companyLink = page.locator('a[data-dashboard-action="company_brief"]').first()
   if ((await companyLink.count()) === 0) return null
   const href = await companyLink.getAttribute('href')
   if (!href) return null
