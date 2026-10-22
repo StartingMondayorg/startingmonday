@@ -10,20 +10,16 @@ type Result =
   | { kind: 'contact'; item: Contact }
   | { kind: 'action'; label: string; sub: string; href: string; icon: string }
 
+// P3 (proposal 3d): the palette offers the same destinations as the nav rail plus Settings.
+// Companies and contacts are reached by typing their names below.
 const QUICK_ACTIONS: Result[] = [
-  { kind: 'action', label: 'Add company',         sub: 'Track a new target',         href: '/dashboard/companies/new', icon: '+' },
-  { kind: 'action', label: 'Daily briefing',       sub: 'Today\'s intelligence',      href: '/dashboard/briefing',      icon: '◉' },
-  { kind: 'action', label: 'Strategy brief',       sub: 'Your search playbook',       href: '/dashboard/profile/strategy',      icon: '▶' },
-  { kind: 'action', label: 'Chat with AI',         sub: 'Ask your advisor',           href: '/dashboard/chat',          icon: '✦' },
-  { kind: 'action', label: 'Add contact',          sub: 'Log a relationship',         href: '/dashboard/contacts',      icon: '＋' },
-  { kind: 'action', label: 'Follow-ups',           sub: 'Open actions for today',     href: '/dashboard/calendar',      icon: '◫' },
-  { kind: 'action', label: 'Calendar',             sub: 'Upcoming follow-ups',        href: '/dashboard/calendar',      icon: '◫' },
-  { kind: 'action', label: 'LinkedIn optimizer',   sub: 'Improve your profile',       href: '/optimize',                icon: '⭡' },
-  { kind: 'action', label: 'Profile settings',     sub: 'Titles, sectors, briefing',  href: '/dashboard/profile',       icon: '◌' },
-  { kind: 'action', label: 'Feedback',             sub: 'Tell us what to improve',    href: '/settings/feedback',      icon: '✉' },
-  { kind: 'action', label: 'Guide',                sub: 'How Starting Monday works',  href: '/guide',                   icon: '❖' },
-  { kind: 'action', label: 'Help',                 sub: 'Getting started and FAQs',   href: '/settings/help',          icon: '?' },
-  { kind: 'action', label: 'Billing',              sub: 'Manage your subscription',   href: '/settings/billing',        icon: '◈' },
+  { kind: 'action', label: 'Home',          sub: 'Your next move and this week', href: '/dashboard',               icon: '⌂' },
+  { kind: 'action', label: 'Add company',   sub: 'Track a new target',           href: '/dashboard/companies/new', icon: '+' },
+  { kind: 'action', label: 'Signals',       sub: 'What changed at your targets', href: '/dashboard/signals',       icon: '◉' },
+  { kind: 'action', label: 'Contacts',      sub: 'People and outreach',          href: '/dashboard/contacts',      icon: '＋' },
+  { kind: 'action', label: 'Profile',       sub: 'Titles, sectors, briefing',    href: '/dashboard/profile',       icon: '◌' },
+  { kind: 'action', label: 'Settings',      sub: 'Email, billing, security',     href: '/settings',                icon: '◈' },
+  { kind: 'action', label: 'Chat with AI',  sub: 'Ask your advisor',             href: '/dashboard/chat',          icon: '✦' },
 ]
 
 function resultKey(r: Result) {
