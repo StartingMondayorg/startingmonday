@@ -67,7 +67,11 @@ export async function completeOnboarding(formData: FormData) {
   const manualFieldsBaseline = Number(formData.get('manual_fields_baseline') as string ?? '0')
   const manualFieldsRequired = Number(formData.get('manual_fields_required') as string ?? '0')
   const manualFieldsReductionRate = Number(formData.get('manual_fields_reduction_rate') as string ?? '0')
-  const fullName            = (formData.get('full_name') as string ?? '').trim() || null
+  // R-4: the form no longer asks for a name; take it from the auth identity.
+  const metadataName        = [user.user_metadata?.full_name, user.user_metadata?.name]
+    .find((value): value is string => typeof value === 'string' && value.trim().length >= 2)
+  const emailLocalPart      = (user.email ?? '').split('@')[0]?.replace(/[._-]+/g, ' ').trim() || null
+  const fullName            = (formData.get('full_name') as string ?? '').trim() || metadataName?.trim() || emailLocalPart
   const currentTitle        = (formData.get('current_title') as string ?? '').trim() || null
   const currentCompany      = (formData.get('current_company') as string ?? '').trim() || null
   const employmentStatus    = (formData.get('employment_status') as string) || null
@@ -130,7 +134,11 @@ export async function completeOnboarding(formData: FormData) {
     searchPersona: (searchPersona as 'csuite' | 'vp' | 'director' | 'board' | null),
   })
 
+  // R-4: posture is asked directly; it decides the search path. The legacy
+  // employment/timeline inference only applies to drafts that still carry it.
   const searchPath =
+    searchPosture === 'active' ? 'campaign' :
+    searchPosture === 'exploring' || searchPosture === 'not_looking' ? 'watcher' :
     (employmentStatus === 'employed_exploring' && searchTimeline === 'opportunistic') ? 'watcher' :
     (employmentStatus === 'between_roles' && searchTimeline === 'immediately') ? 'nurture' :
     'campaign'

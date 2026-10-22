@@ -24,8 +24,15 @@ describe('explicit onboarding state', () => {
   it('resumes an incomplete user at the stored step', () => {
     expect(resolveOnboardingStartStep({
       completedAt: null,
+      currentStep: 1,
+    })).toBe(1)
+  })
+
+  it('clamps a step saved by the retired nine-screen flow to the last screen', () => {
+    expect(resolveOnboardingStartStep({
+      completedAt: null,
       currentStep: 6,
-    })).toBe(6)
+    })).toBe(ONBOARDING_FINAL_STEP)
   })
 
   it('keeps completed users out of every onboarding step', () => {
@@ -53,7 +60,7 @@ describe('explicit onboarding state', () => {
     })).toEqual({
       fullName: 'Pilot User',
       searchPersona: '',
-      searchPosture: 'not_looking',
+      searchPosture: '',
       roleFamily: '',
       roleTitle: '',
       roleTitles: [],
@@ -113,7 +120,7 @@ describe('explicit onboarding state', () => {
     })).toEqual({
       fullName: 'Restored User',
       searchPersona: 'director',
-      searchPosture: 'active',
+      searchPosture: '',
       roleFamily: 'leadership',
       roleTitle: 'senior_director',
       roleTitles: ['senior_director'],

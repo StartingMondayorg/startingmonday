@@ -11,6 +11,13 @@ describe('dashboard page module', () => {
     expect(typeof DashboardPage).toBe('function')
   })
 
+  it('prefers the stored posture over the search path when one was chosen (R-4)', () => {
+    expect(resolveThreeZoneDashboardPosture('campaign', 'not_looking')).toBe('not_looking')
+    expect(resolveThreeZoneDashboardPosture(null, 'exploring')).toBe('exploring')
+    expect(resolveThreeZoneDashboardPosture('campaign', 'garbage')).toBe('active')
+    expect(resolveThreeZoneDashboardPosture('watcher', null)).toBe('exploring')
+  })
+
   it('maps search paths to dashboard postures', () => {
     expect(resolveThreeZoneDashboardPosture('campaign')).toBe('active')
     expect(resolveThreeZoneDashboardPosture('watcher')).toBe('exploring')
