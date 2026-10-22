@@ -256,12 +256,14 @@ Documents indexed: **1200**
 - [evidence/intelligence-production-gates-2026-08-12.md](evidence/intelligence-production-gates-2026-08-12.md) — Intelligence Production Gate Evidence - 2026-08-12
 - [evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.json](evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.json) — intelligence production gates 2026 08 13 ws2 08 closeout
 - [evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.md](evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.md) — WS2-08 Production Closeout
+- [evidence/nav-and-nudge-retirement-2026-10-21.md](evidence/nav-and-nudge-retirement-2026-10-21.md) — Nav and In-App Nudge Retirement Evidence (P3)
 - [evidence/outreach-audits/outreach_audit_2026-05-26.json](evidence/outreach-audits/outreach_audit_2026-05-26.json) — outreach audit 2026 05 26
 - [evidence/outreach-audits/outreach_audit_2026-05-27.json](evidence/outreach-audits/outreach_audit_2026-05-27.json) — outreach audit 2026 05 27
 - [evidence/prep-pages-evaluation.md](evidence/prep-pages-evaluation.md) — Prep Pages Evaluation Report
 - [evidence/production-promotion-2026-10-21.md](evidence/production-promotion-2026-10-21.md) — Production Promotion Record — 2026-10-21
 - [evidence/route-collapse-phase1-2026-10-21.md](evidence/route-collapse-phase1-2026-10-21.md) — Route Collapse Phase 1 Evidence (R-3 / R-6)
 - [evidence/route-collapse-phase2a-2026-10-21.md](evidence/route-collapse-phase2a-2026-10-21.md) — Route Collapse Phase 2a Evidence (R-3)
+- [evidence/route-collapse-phase2b-2026-10-21.md](evidence/route-collapse-phase2b-2026-10-21.md) — Route Collapse Phase 2b Evidence (R-3)
 - [evidence/sm-hero-proof-case-adjudication-2026-08-18.md](evidence/sm-hero-proof-case-adjudication-2026-08-18.md) — Starting Monday Hero Proof Case Adjudication
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.json](evidence/ws1-08-source-rights-readiness-2026-08-13.json) — ws1 08 source rights readiness 2026 08 13
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.md](evidence/ws1-08-source-rights-readiness-2026-08-13.md) — WS1-08 Source Rights Readiness

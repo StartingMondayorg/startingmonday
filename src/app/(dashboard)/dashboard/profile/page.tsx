@@ -1,10 +1,11 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { saveProfile } from './actions'
 import { TagInput } from '@/app/(dashboard)/dashboard/_components/TagInput'
 import { getActivationStatus } from '@/lib/onboarding/activation'
-import { ProfileInactivityNudge } from '@/app/(dashboard)/dashboard/_components/ProfileInactivityNudge'
+import { FormDraftKeeper } from '@/app/(dashboard)/dashboard/_components/FormDraftKeeper'
+import { isCorporateEmail } from '@/lib/email-domains'
 import { PositioningGeneratorTextarea } from './positioning-generator'
 import { LinkedInGenerator } from './linkedin-generator'
 import { canUserSeeAdminHeader } from '@/lib/staff'
@@ -137,6 +138,18 @@ export default async function ProfilePage({
           <AlertDescription>Your resume and career notes are stored only in your account and are used only to generate your briefs.</AlertDescription>
         </Alert>
 
+        {isCorporateEmail(user.email) && !profile?.briefing_email && (
+          <Alert className="mb-4 max-w-xl" data-testid="personal-email-notice">
+            <AlertDescription className="text-[12px] leading-relaxed text-muted-foreground">
+              <span className="font-semibold text-foreground">Work email on file.</span>{' '}
+              If an assistant manages your inbox, your daily briefings may not reach you directly.{' '}
+              <Link href="#briefing-email" className="underline text-muted-foreground hover:text-foreground transition-colors">
+                Set a personal delivery address below.
+              </Link>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card variant="glass" id="profile-editor" className="p-8 max-w-xl shadow-lg">
           {saved && <Alert variant="success" className="mb-6"><AlertDescription>Profile saved.</AlertDescription></Alert>}
           {saveError && <Alert variant="destructive" className="mb-6"><AlertDescription>We could not save your profile. Please try again. If the problem continues, contact support.</AlertDescription></Alert>}
@@ -239,7 +252,7 @@ export default async function ProfilePage({
         </Card>
       </main>
 
-      <ProfileInactivityNudge formId="profile-form" />
+      <FormDraftKeeper formId="profile-form" storageKey="sm_profile_form_draft_v1" />
     </div>
   )
 }
