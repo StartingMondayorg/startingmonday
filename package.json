@@ -71,6 +71,8 @@
         "guard:first-week-spine:json": "node scripts/check-first-week-spine.mjs --json",
         "guard:dashboard-simplification": "node scripts/check-dashboard-simplification-gates.mjs",
         "guard:dashboard-simplification:json": "node scripts/check-dashboard-simplification-gates.mjs --json",
+    "guard:route-count": "node scripts/check-route-count-ratchet.mjs",
+    "test:route-count-ratchet": "node --test scripts/check-route-count-ratchet.test.mjs",
         "test:dashboard-simplification-gate": "node --test scripts/check-dashboard-simplification-gates.test.mjs",
         "test:dashboard-behavior-baseline": "node --test scripts/dashboard-behavior-baseline.test.mjs",
         "seo:crawl:audit": "node scripts/seo/run-crawl-index-audit.mjs",
