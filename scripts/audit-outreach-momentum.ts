@@ -7,7 +7,7 @@ import {
   buildExecutiveCompanySizeLookup,
   executivePersonaFit,
   buildStandardizedDraft,
-} from '../src/app/(dashboard)/dashboard/outreach/outreach-data'
+} from '../src/app/(dashboard)/dashboard/admin/outreach/outreach-data'
 
 async function main() {
   const [

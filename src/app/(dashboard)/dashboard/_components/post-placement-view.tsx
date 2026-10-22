@@ -45,7 +45,7 @@ export function DashboardPostPlacementView({
             <Link href="/dashboard/chat" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Chat</Link>
             <Link href="/settings/feedback" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Feedback</Link>
             {canUseOutreachHub && (
-              <Link href="/dashboard/outreach" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Outreach</Link>
+              <Link href="/dashboard/contacts" className="text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors">Outreach</Link>
             )}
             <div className="ml-auto flex items-center gap-4 shrink-0">
               <span aria-current="page" className="text-[12px] font-semibold text-primary whitespace-nowrap border border-primary/40 bg-primary/10 px-3 py-1.5 rounded-full">Dashboard</span>
@@ -148,7 +148,7 @@ export function DashboardPostPlacementView({
             <p className="text-[12px] text-muted-foreground leading-relaxed">Ask anything about your next move.</p>
           </Link>
           {canUseOutreachHub && (
-            <Link href="/dashboard/outreach" className="bg-card border border-border rounded p-5 transition-colors">
+            <Link href="/dashboard/contacts" className="bg-card border border-border rounded p-5 transition-colors">
               <p className="text-[13px] font-semibold text-foreground mb-1">Outreach Hub</p>
               <p className="text-[12px] text-muted-foreground leading-relaxed">Send queue, follow-ups, and personalized prospects.</p>
             </Link>
