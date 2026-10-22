@@ -1,6 +1,6 @@
 # Runbook: agentic incident loop
 
-An alert lands in `#alerts-prod`, a Slack event reaches this app, and — once the
+An alert lands in `#sm-alerts-prod`, a Slack event reaches this app, and — once the
 later stages are enabled — a Claude agent diagnoses the failure, files an SMK
 bug, opens a draft PR, and replies in the alert's own thread.
 
@@ -125,7 +125,7 @@ still posts.
 ### Sentry test notifications
 
 Sentry's **Send Test Notification** produces a message that is indistinguishable
-from a real exception by permalink alone. One reached `#alerts-prod` on
+from a real exception by permalink alone. One reached `#sm-alerts-prod` on
 2026-09-10 and consumed a full agent dispatch before being correctly diagnosed as
 a test.
 
@@ -162,7 +162,7 @@ data change.
 Modes: `notify-only` (record it, never wake the agent) · `diagnose-only`
 (investigate and report, never patch) · `diagnose-and-patch`.
 
-Most `#alerts-prod` traffic is deploy stalls and synthetic failures, which no
+Most `#sm-alerts-prod` traffic is deploy stalls and synthetic failures, which no
 code change fixes. Those are `notify-only` on purpose. **A high
 `not-code-fixable` rate is the system working**, not a defect.
 

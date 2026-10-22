@@ -58,7 +58,7 @@ jobs:
       - name: Send Slack alert on strict failure
         if: failure() && github.event_name == 'schedule'
         env:
-          SLACK_UI_ALERTS_WEBHOOK: ${{ secrets.SLACK_UI_ALERTS_WEBHOOK }}
+          SLACK_UI_ALERTS_WEBHOOK: ${{ secrets.SLACK_ALERTS_ENG_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_UI_ALERTS_WEBHOOK" ]; then
             echo "SLACK_UI_ALERTS_WEBHOOK not set; skipping Slack alert"
