@@ -32,7 +32,7 @@ Query (from repo root): `Get-ChildItem -Recurse src -Include *.tsx,*.ts | ? Name
 
 - `/dashboard/calendar` → `/prep/interview` (packet row): **19 inbound** references including server actions that build calendar URLs (`dashboard/actions.ts`, `briefing/actions.ts`, `contacts/actions.ts`) and Google Calendar sync. Needs its own PR with the event list moved onto interview prep.
 - `/dashboard/outreach` → `/dashboard/contacts`: 2,284 lines across five files; already redirects when ungated. Separate PR.
-- `/prep/interview` itself is also an unsaved worksheet ("Save interview prep" posts nowhere). The ruling keeps the route; whether to wire persistence or retire the worksheet in favour of the company prep page (`/dashboard/companies/[id]/prep`, which has the AI brief) is a question for Rich — see §6 of the proposal.
+- `/prep/interview` itself is also an unsaved worksheet ("Save interview prep" posts nowhere). The ruling keeps the route; whether to wire persistence or retire the worksheet in favour of the company prep page (`/dashboard/companies/[id]/prep`, which has the AI brief) — **ruled 2026-10-21: wire persistence.** Shipped in `docs/evidence/interview-prep-persistence-2026-10-21.md`.
 
 ## Gates updated
 
