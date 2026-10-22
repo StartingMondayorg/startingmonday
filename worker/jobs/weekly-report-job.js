@@ -61,17 +61,43 @@ Give exactly 3 specific, actionable suggestions for this week. Number each one (
   return lines
 }
 
-export async function runWeeklyReportJob() {
-  const supabase = getSupabase()
-  logger.info('weekly-report-job: starting')
+// Opt-in only (P1b, simplification R-1): the summary goes to users who turned it
+// on in Settings > Email preferences. Everyone else gets the daily briefing alone.
+export async function selectWeeklySummaryRecipients(supabase) {
+  const { data: optedIn, error: optInError } = await supabase
+    .from('user_profiles')
+    .select('user_id')
+    .eq('weekly_summary_opt_in', true)
+
+  if (optInError) {
+    logger.error('weekly-report-job: opt-in query failed', { error: optInError.message })
+    return []
+  }
+
+  const optedInIds = (optedIn ?? []).map(row => row.user_id).filter(Boolean)
+  if (optedInIds.length === 0) return []
 
   const { data: users, error } = await supabase
     .from('users')
     .select('id, email')
+    .in('id', optedInIds)
     .in('subscription_status', ['trialing', 'active'])
 
-  if (error || !users?.length) {
-    logger.info('weekly-report-job: no users — done')
+  if (error) {
+    logger.error('weekly-report-job: users query failed', { error: error.message })
+    return []
+  }
+  return users ?? []
+}
+
+export async function runWeeklyReportJob() {
+  const supabase = getSupabase()
+  logger.info('weekly-report-job: starting')
+
+  const users = await selectWeeklySummaryRecipients(supabase)
+
+  if (!users.length) {
+    logger.info('weekly-report-job: no opted-in users — done')
     return
   }
 

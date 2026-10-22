@@ -594,6 +594,7 @@ export type Database = {
           employment_status: string | null
           search_timeline: string | null
           is_concierge: boolean
+          weekly_summary_opt_in: boolean
           invite_code: string | null
           referred_by: string | null
         }

@@ -16,7 +16,6 @@ import { runPersonSignalJob } from './jobs/person-signal-job.js'
 import { runOfferEmailJob } from './jobs/offer-email-job.js'
 import { runReactivationJob } from './jobs/reactivation-job.js'
 import { runActivationReminderJob } from './jobs/activation-reminder-job.js'
-import { runMarketDigestJob } from './jobs/market-digest-job.js'
 import { runExecutiveScanJob } from './jobs/executive-scan-job.js'
 import { runCleanupJob } from './jobs/cleanup-job.js'
 import { runBriefingWatchdogJob } from './jobs/briefing-watchdog-job.js'
@@ -464,10 +463,11 @@ cron.schedule('*/5 * * * *', () => runJob('briefing-job', runBriefingJob))
 // Momentum score: Sunday at 23:00 — still read by coach/plan surfaces; retires in P2
 cron.schedule('0 23 * * 0', () => runJob('momentum-job', runMomentumJob))
 
-// Market intelligence digest: Sunday at 22:30 — Monitor/passive tier users only
-cron.schedule('30 22 * * 0', () => runJob('market-digest-job', runMarketDigestJob))
+// Market intelligence digest retired 2026-10-21 (P1b, R-1): weekly-frequency and
+// Monitor users already receive the Monday briefing with the week's matches, and
+// suggested companies live in the dashboard's Zone 2. One weekly send, not two.
 
-// Weekly progress report: Sunday at 23:30 (not yet implemented)
+// Weekly search summary: Sunday at 23:30 — opt-in only (user_profiles.weekly_summary_opt_in)
 cron.schedule('30 23 * * 0', () => runJob('weekly-report-job', runWeeklyReportJob))
 
 // Usage monitor: daily at 09:00 UTC — checks all services against plan limits
@@ -545,7 +545,7 @@ cron.schedule('0 5 * * 1', () => runJob('watchlist-scan-job', runConfiguredWatch
 setTimeout(() => runDemoCheck().catch(err => logger.error('check-demo: failed', { error: err.message })), 10_000)
 
 logger.info('worker: cron schedules registered', {
-  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'momentum-job', 'market-digest-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job', 'watchlist-scan-job'],
+  jobs: ['scan-job', 'executive-scan-job', 'executive-evening-scan', 'signal-job', 'person-signal-job', 'edgar-freshness-audit-job', 'edgar-watchdog-job', 'provider-quality-audit-job', 'enrichment-contact-retention-job', 'briefing-job', 'momentum-job', 'weekly-report-job', 'usage-monitor-job', 'trial-reminder-job', 'offer-email-job', 'reactivation-job', 'activation-reminder-job', 'cleanup-job', 'briefing-watchdog-job', 'industry-pulse-job', 'opportunity-radar-job', 'concierge-prep-job', 'outreach-digest-job', 'outreach-reconcile-job', 'onboarding-video-job', 'lead-scoring-job', 'social-post-job', 'google-calendar-sync-job', 'ui-ux-weekly-review-job', 'link-integrity-weekly-review-job', 'outreach-tone-presend-job', 'outreach-tone-guard-job', 'search-lag-stats-job', 'ideas-monthly-job', 'watchlist-scan-job'],
 })
 bootPhase = 'ready'
 
