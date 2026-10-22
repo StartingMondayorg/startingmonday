@@ -33,3 +33,11 @@ Repository: Starting Monday · Railway project `ample-blessing` · customer doma
 1. `deployment-watchdog.yml` should fail (or at least alert) when `production` is more than N commits/days behind `main`; today it only confirms the branch is served.
 2. `post-deploy.yml` and `release-completion-gate.yml` should trigger on `deployment_status` for `ample-blessing / production` (Railway emits those: 35 records exist) instead of on `push`, or wait for the deploy marker before asserting.
 3. `scripts/promote-to-production.mjs` Windows spawn — fixed in this PR.
+
+## Update 2026-10-22 (Chris, with Claude): schema readiness for the next promotion
+
+- 08:01 UTC: Railway queued the web and worker deployments of `0f428996` on its own as the platform incident wound down (builds re-enabled for Pro workspaces 07:11 UTC). No manual deploy call was needed.
+- Migrations `184` and `185` were verified present in the production database (`ats_boards.probed_providers`, `users.is_synthetic`, `emi_kpi_snapshots.quality_flag`, `emi_kpi_event_funnel`, `emi_kpi_day7_cohort`), so `0f428996` needs no schema work.
+- `main` had moved 13 commits past `0f428996` (#533 to #542) and two of them carry migrations that were NOT in production or staging: `186_weekly_summary_opt_in.sql` and `187_interview_preps.sql`.
+- Both applied 2026-10-22 ~08:30 UTC through the Supabase MCP, staging (`yeimmrcgnwhrczgqrofn`) first, then production (`mytnhoxcgvnzxhgcumkf`). `187` was applied without its `drop ... if exists` guards (no-ops: the table did not exist), end state identical. Verified on both projects: column present; table, index, RLS enabled, 4 policies, trigger present.
+- Result: `main` HEAD (`f4f08e59`) is schema-ready for promotion.
