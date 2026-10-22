@@ -181,7 +181,7 @@ export function getRecruiterToolkit(
     {
       title: 'Outreach hub role-lane message packs',
       type: 'message_pack',
-      href: '/dashboard/outreach',
+      href: '/dashboard/contacts',
       description: 'Generate recruiter and hiring-manager first-touch drafts with role-aware language.',
     },
     {

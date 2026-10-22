@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
@@ -562,7 +562,7 @@ export default async function OutreachAnalyticsPage() {
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Link href="/dashboard/outreach">
+          <Link href="/dashboard/admin/outreach">
             <Card variant="default" className="p-4 hover:border-border transition-colors">
               <p className="text-[13px] font-semibold text-foreground">Open Outreach Hub</p>
               <p className="text-[13px] text-muted-foreground mt-1">Manage queue, send messages, and update statuses.</p>
