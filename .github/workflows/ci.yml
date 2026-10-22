@@ -234,6 +234,9 @@ jobs:
       - name: Route-count ratchet
         run: npm run guard:route-count && npm run test:route-count-ratchet
 
+      - name: Playwright JSON summary parser (post-deploy gate)
+        run: npm run test:playwright-summary
+
       - name: Marketing trust/proof placement gate
         run: npm run marketing:trust-proof:gate
 
