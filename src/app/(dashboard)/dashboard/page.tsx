@@ -101,7 +101,7 @@ export function buildThreeZoneNextMove(opts: {
         ? "Review what is due before taking any step."
         : "Pick the one follow-up most likely to move a relationship forward.",
       cta: "View follow-ups",
-      href: "/dashboard/calendar",
+      href: "/dashboard/follow-ups",
     };
   }
 
@@ -682,7 +682,7 @@ export default async function DashboardPage() {
               <p className="mt-1 text-[12px] text-muted-foreground">Only the weekly numbers that change action.</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <Link href="/dashboard/calendar" className="rounded border border-border bg-muted/40 p-3">
+              <Link href="/dashboard/follow-ups" className="rounded border border-border bg-muted/40 p-3">
                 <span className="block text-[22px] font-bold text-foreground">{overdueCount}</span>
                 <span className="text-[12px] text-muted-foreground">follow-ups due</span>
               </Link>

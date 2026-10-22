@@ -4,7 +4,7 @@ const PRODUCT_LINKS = [
   { href: '/dashboard/briefing', label: 'Briefing' },
   { href: '/dashboard/signals', label: 'Signals' },
   { href: '/dashboard/contacts', label: 'Contacts' },
-  { href: '/dashboard/calendar', label: 'Calendar' },
+  { href: '/dashboard/follow-ups', label: 'Follow-ups' },
 ]
 
 const ACCOUNT_LINKS = [

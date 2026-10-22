@@ -97,7 +97,7 @@ test.describe('Mobile UI rubric @rubric @mobile', () => {
   test('dashboard cluster contract parity and landmark checks', async ({ page }) => {
     await skipIfAuthUnavailable(page)
 
-    const routes = ['/dashboard', '/dashboard/briefing', '/dashboard/signals', '/dashboard/calendar', '/dashboard/contacts']
+    const routes = ['/dashboard', '/dashboard/briefing', '/dashboard/signals', '/dashboard/follow-ups', '/dashboard/contacts']
 
     for (const route of routes) {
       await page.goto(route, { waitUntil: 'domcontentloaded' })

@@ -1,4 +1,4 @@
-﻿import { Suspense } from 'react'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import * as Sentry from '@sentry/nextjs'
@@ -65,7 +65,7 @@ type WeeklyPulse = {
   headline: string
   support: string
   whyNow: string
-  ctaTarget: '/dashboard' | '/dashboard/signals' | '/dashboard/calendar'
+  ctaTarget: '/dashboard' | '/dashboard/signals' | '/dashboard/follow-ups'
   ctaLabel: string
   meterWidthClass: string
   mailtoHref: string
@@ -150,7 +150,7 @@ function buildWeeklyPulse(
       headline = `${firstName}, your search is in a strong position this week.`
       support = `A timely follow-through with ${nextPerson} keeps the relationship side of the search moving without adding noise.`
       whyNow = 'You already have context and timing on your side. Acting while the signal is fresh improves recall and makes the outreach feel easier to place.'
-      ctaTarget = '/dashboard/calendar'
+      ctaTarget = '/dashboard/follow-ups'
       ctaLabel = 'Open the next move'
     } else if (hasSignals) {
       const company = context.signals[0]?.companyName ?? 'a target company'
@@ -175,7 +175,7 @@ function buildWeeklyPulse(
       headline = 'Your search is steady. Keep it easy to keep moving.'
       support = `One clean follow-through with ${nextPerson} is enough to keep the week pointed forward.`
       whyNow = 'When the search is steady, the best move is usually the simplest one already in front of you. Do the known next step and keep the week light.'
-      ctaTarget = '/dashboard/calendar'
+      ctaTarget = '/dashboard/follow-ups'
       ctaLabel = 'Keep momentum moving'
     } else if (hasSignals || hasMatches) {
       headline = 'You have enough movement to stay well-positioned.'
@@ -192,7 +192,7 @@ function buildWeeklyPulse(
     whyNow = 'Watch states should narrow the field, not create pressure. One corrective move is usually more effective than trying to catch up everywhere at once.'
 
     if (hasFollowUps) {
-      ctaTarget = '/dashboard/calendar'
+      ctaTarget = '/dashboard/follow-ups'
       ctaLabel = 'Handle the top follow-through'
     } else if (hasSignals) {
       ctaTarget = '/dashboard/signals'
@@ -838,7 +838,7 @@ async function BriefingBody({
                     <div className="mt-5">
                       <form action={logBriefingAction}>
                         <input type="hidden" name="section" value="best_next_moves" />
-                        <input type="hidden" name="target" value="/dashboard/calendar" />
+                        <input type="hidden" name="target" value="/dashboard/follow-ups" />
                         <Button type="submit">
                           Map your week &rarr;
                         </Button>

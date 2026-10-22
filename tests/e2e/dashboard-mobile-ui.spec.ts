@@ -5,14 +5,14 @@ const ROUTES = ['/dashboard', '/dashboard/briefing', '/dashboard/signals']
 const DESTINATIONS = [
   '/dashboard/signals',
   '/dashboard/briefing',
-  '/dashboard/calendar',
+  '/dashboard/follow-ups',
   '/dashboard/contacts',
 ] as const
 
 const ALLOWED_LABELS: Record<(typeof DESTINATIONS)[number], Set<string>> = {
   '/dashboard/signals': new Set(['Signals']),
   '/dashboard/briefing': new Set(['Briefing']),
-  '/dashboard/calendar': new Set(['Calendar']),
+  '/dashboard/follow-ups': new Set(['Follow-ups']),
   '/dashboard/contacts': new Set(['Contacts']),
 }
 
@@ -42,7 +42,7 @@ test('@rubric dashboard top chrome contract is consistent across primary routes'
 
     await expect(header.getByRole('link', { name: 'Contacts', exact: true })).toHaveCount(0)
     await expect(header.getByRole('link', { name: 'Briefing', exact: true })).toHaveCount(0)
-    await expect(header.getByRole('link', { name: 'Calendar', exact: true })).toHaveCount(0)
+    await expect(header.getByRole('link', { name: 'Follow-ups', exact: true })).toHaveCount(0)
     await expect(header.getByRole('link', { name: 'Signals', exact: true })).toHaveCount(0)
   }
 })

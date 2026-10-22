@@ -55,7 +55,7 @@ describe('dashboard actions', () => {
     expect(eqMock).toHaveBeenCalledWith('id', 'follow-up-1')
     expect(eqMock).toHaveBeenCalledWith('user_id', 'user-123')
     expect(revalidatePathMock).toHaveBeenCalledWith('/dashboard')
-    expect(revalidatePathMock).toHaveBeenCalledWith('/dashboard/calendar')
+    expect(revalidatePathMock).toHaveBeenCalledWith('/dashboard/follow-ups')
     expect(revalidatePathMock).toHaveBeenCalledWith('/dashboard/contacts', 'layout')
   })
 

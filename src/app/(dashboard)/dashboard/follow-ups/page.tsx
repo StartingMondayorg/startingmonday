@@ -1,10 +1,10 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { CalendarItemClient } from './calendar-item'
 import { LogoutButton } from '../logout-button'
 import { Button, Card } from '@/components/ui'
-export const metadata = { title: 'Calendar' }
+export const metadata = { title: 'Follow-ups' }
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -47,7 +47,7 @@ type FollowUp = {
   contacts: { id: string; name: string } | null
 }
 
-export default async function CalendarPage({
+export default async function FollowUpsPage({
   searchParams,
 }: {
   searchParams: Promise<{ week?: string }>
@@ -127,27 +127,27 @@ export default async function CalendarPage({
 {/* Header + week nav */}
         <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-[26px] font-bold text-foreground leading-tight">Calendar</h1>
+            <h1 className="text-[26px] font-bold text-foreground leading-tight">Follow-ups</h1>
             <p className="text-[13px] text-muted-foreground mt-1">{formatMonthYear(monday, sunday)}</p>
           </div>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               className="border-border bg-muted/40 text-[12px] font-semibold text-foreground hover:bg-muted/60"
-              render={<Link href={`/dashboard/calendar?week=${prevMonday}`} />}
+              render={<Link href={`/dashboard/follow-ups?week=${prevMonday}`} />}
             >
               &larr; Prev
             </Button>
             <Button
               className="text-[12px] font-semibold"
-              render={<Link href={`/dashboard/calendar?week=${mondayOf(todayISO)}`} />}
+              render={<Link href={`/dashboard/follow-ups?week=${mondayOf(todayISO)}`} />}
             >
               Today
             </Button>
             <Button
               variant="outline"
               className="border-border bg-muted/40 text-[12px] font-semibold text-foreground hover:bg-muted/60"
-              render={<Link href={`/dashboard/calendar?week=${nextMonday}`} />}
+              render={<Link href={`/dashboard/follow-ups?week=${nextMonday}`} />}
             >
               Next &rarr;
             </Button>

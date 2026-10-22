@@ -5,14 +5,14 @@ const ROUTES = ['/dashboard', '/dashboard/briefing', '/dashboard/signals']
 const DESTINATIONS = [
   '/dashboard/signals',
   '/dashboard/briefing',
-  '/dashboard/calendar',
+  '/dashboard/follow-ups',
   '/dashboard/contacts',
 ] as const
 
 const ALLOWED_LABELS: Record<(typeof DESTINATIONS)[number], Set<string>> = {
   '/dashboard/signals': new Set(['Signals']),
   '/dashboard/briefing': new Set(['Briefing']),
-  '/dashboard/calendar': new Set(['Calendar']),
+  '/dashboard/follow-ups': new Set(['Follow-ups']),
   '/dashboard/contacts': new Set(['Contacts']),
 }
 
@@ -50,7 +50,7 @@ test('@rubric dashboard top chrome contract is consistent across primary routes'
 
     await expect(header.getByRole('link', { name: 'Contacts', exact: true })).toHaveCount(0)
     await expect(header.getByRole('link', { name: 'Briefing', exact: true })).toHaveCount(0)
-    await expect(header.getByRole('link', { name: 'Calendar', exact: true })).toHaveCount(0)
+    await expect(header.getByRole('link', { name: 'Follow-ups', exact: true })).toHaveCount(0)
     await expect(header.getByRole('link', { name: 'Signals', exact: true })).toHaveCount(0)
   }
 })
@@ -119,7 +119,7 @@ test('@rubric dashboard CTA taxonomy uses one canonical label per destination', 
 test('@rubric dashboard cluster has one main landmark and canonical title suffix', async ({ page }) => {
   await ensureAuthenticated(page)
 
-  for (const route of ['/dashboard', '/dashboard/briefing', '/dashboard/signals', '/dashboard/calendar', '/dashboard/contacts']) {
+  for (const route of ['/dashboard', '/dashboard/briefing', '/dashboard/signals', '/dashboard/follow-ups', '/dashboard/contacts']) {
     await page.goto(route, { waitUntil: 'domcontentloaded' })
 
     await expect(page.locator('main')).toHaveCount(1)
@@ -130,7 +130,7 @@ test('@rubric dashboard cluster has one main landmark and canonical title suffix
 test('@rubric dashboard stale relative-time copy is not rendered', async ({ page }) => {
   await ensureAuthenticated(page)
 
-  for (const route of ['/dashboard', '/dashboard/calendar']) {
+  for (const route of ['/dashboard', '/dashboard/follow-ups']) {
     await page.goto(route, { waitUntil: 'domcontentloaded' })
     const pageText = await page.locator('body').innerText()
     expect(pageText).not.toMatch(/has been\s+\d+\s+days/i)
