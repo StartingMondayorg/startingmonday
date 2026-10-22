@@ -256,6 +256,7 @@ Documents indexed: **1200**
 - [evidence/intelligence-production-gates-2026-08-12.md](evidence/intelligence-production-gates-2026-08-12.md) — Intelligence Production Gate Evidence - 2026-08-12
 - [evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.json](evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.json) — intelligence production gates 2026 08 13 ws2 08 closeout
 - [evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.md](evidence/intelligence-production-gates-2026-08-13-ws2-08-closeout.md) — WS2-08 Production Closeout
+- [evidence/nav-and-nudge-retirement-2026-10-21.md](evidence/nav-and-nudge-retirement-2026-10-21.md) — Nav and In-App Nudge Retirement Evidence (P3)
 - [evidence/outreach-audits/outreach_audit_2026-05-26.json](evidence/outreach-audits/outreach_audit_2026-05-26.json) — outreach audit 2026 05 26
 - [evidence/outreach-audits/outreach_audit_2026-05-27.json](evidence/outreach-audits/outreach_audit_2026-05-27.json) — outreach audit 2026 05 27
 - [evidence/prep-pages-evaluation.md](evidence/prep-pages-evaluation.md) — Prep Pages Evaluation Report

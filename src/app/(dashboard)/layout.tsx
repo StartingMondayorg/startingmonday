@@ -1,9 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { DemoBanner } from '@/app/(dashboard)/_components/DemoBanner'
-import { PersonalEmailNudge } from '@/app/(dashboard)/_components/PersonalEmailNudge'
 import { WatermarkOverlay } from '@/app/(dashboard)/_components/WatermarkOverlay'
-import { BottomNav } from '@/app/(dashboard)/_components/BottomNav'
+import { PrimaryNav } from '@/app/(dashboard)/_components/PrimaryNav'
 import { CommandPalette } from '@/app/(dashboard)/_components/CommandPalette'
 import { Toaster } from '@/components/ui'
 import { DashboardFooter } from '@/app/(dashboard)/_components/DashboardFooter'
@@ -39,12 +38,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* PostHog is provided by the root layout. */}
       {isDemo && <DemoBanner />}
       {!isDemo && user?.email && <WatermarkOverlay email={user.email} />}
-      <div id="top" className="nav-content-spacer min-h-screen bg-background text-foreground">
+      <div id="top" className="nav-content-spacer min-h-screen bg-background text-foreground md:pl-16">
         {children}
         <DashboardFooter />
       </div>
-      {!isDemo && user?.email && <PersonalEmailNudge email={user.email} />}
-      <BottomNav />
+      <PrimaryNav />
       <BackToTop />
       <CommandPalette aiChatEnabled={aiChatEnabled} />
       <Toaster />
