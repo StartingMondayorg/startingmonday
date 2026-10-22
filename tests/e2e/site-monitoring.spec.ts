@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import { attachJourneyGuards, expectJourneyHealthy, expectJourneyShell } from './monitoring.helpers'
+import { openOutreachHubOrSkip } from './outreach-hub.helpers'
 
 const publicJourneys = [
   { path: '/', heading: /You don't compete for the posting|You are behind on timing, narrative, and prep|Be ready.*(Be early|search opens)|Starting Monday|Operating System|Run your transition/i },
@@ -66,7 +67,7 @@ test.describe('authenticated monitoring journeys', () => {
 
     const guards = await attachJourneyGuards(page)
 
-    await page.goto('/dashboard/admin/outreach')
+    await openOutreachHubOrSkip(page)
     await expectJourneyShell(page, /Send Queue|Outreach/i)
     await expectJourneyHealthy(page, guards)
 
@@ -88,13 +89,18 @@ test.describe('authenticated monitoring journeys', () => {
     const guards = await attachJourneyGuards(page)
 
     await page.goto('/dashboard')
-    const companyLink = page.locator('a[href^="/dashboard/companies/"]').first()
+    // The three-zone dashboard links each company to its brief (/dashboard/companies/{id}/prep), not its detail page.
+    const briefLink = page.locator('a[data-dashboard-action="company_brief"]').first()
 
-    if ((await companyLink.count()) === 0) {
+    if ((await briefLink.count()) === 0) {
       test.skip(true, 'Skipping company detail monitoring check: no companies in this account')
     }
 
-    await companyLink.click()
+    const briefHref = (await briefLink.getAttribute('href')) ?? ''
+    const companyId = briefHref.match(/^\/dashboard\/companies\/([^/?#]+)/)?.[1]
+    expect(companyId, `Unexpected company brief link: ${briefHref}`).toBeTruthy()
+
+    await page.goto(`/dashboard/companies/${companyId}`)
     await expect(page).toHaveURL(/\/dashboard\/companies\/.+/)
     await expectJourneyHealthy(page, guards)
 

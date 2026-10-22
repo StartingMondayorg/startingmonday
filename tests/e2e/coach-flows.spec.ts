@@ -18,12 +18,15 @@ test.describe('Coach flows', () => {
   test('coach dashboard renders for coach accounts and redirects everyone else (R-6)', async ({ page }) => {
     await skipIfAuthUnavailable(page)
     await page.goto('/dashboard/coach')
-    if (/\/dashboard\/coach(?:$|[/?#])/.test(page.url())) {
-      await expect(page.locator('h1')).toContainText(/Portfolio Command Center|Your Clients/i)
+    // The entitlement redirect can complete after goto resolves, so settle on whichever h1 renders before reading the URL.
+    const coachHeading = page.locator('h1').filter({ hasText: /Portfolio Command Center|Your Clients/i })
+    const dashboardHeading = page.getByRole('heading', { level: 1, name: 'What should I do today?', exact: true })
+    await expect(coachHeading.or(dashboardHeading).first()).toBeVisible()
+    if (await coachHeading.isVisible()) {
+      await expect(page).toHaveURL(/\/dashboard\/coach(?:$|[/?#])/)
     } else {
       // Entitlement gate: a non-coach account lands on the main dashboard.
       await expect(page).toHaveURL(/\/dashboard(?:$|[?#])/)
-      await expect(page.getByRole('heading', { level: 1, name: 'What should I do today?', exact: true })).toBeVisible()
     }
   })
 
