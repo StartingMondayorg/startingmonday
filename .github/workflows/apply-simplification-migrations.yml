@@ -59,7 +59,8 @@ jobs:
             sql="${sql}$(cat "$path")"$'\n'
           done
 
-          jq -n --arg query "$sql" '{query: $query}' > migration-request.json
+          # The management API runs queries in a read-only transaction unless told otherwise (ERROR 25006).
+          jq -n --arg query "$sql" '{query: $query, read_only: false}' > migration-request.json
 
           http_status="$(curl --silent --show-error \
             --output migration-response.json \
