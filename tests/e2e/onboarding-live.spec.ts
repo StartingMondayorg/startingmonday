@@ -47,34 +47,28 @@ test('onboarding live: name step, lane step, and themed shell are present', asyn
 
     await page.goto(callbackUrl.toString(), { waitUntil: 'networkidle' })
     await expect(page).toHaveURL(/\/onboarding(?:$|[/?#])/, { timeout: 30_000 })
-    await expect(page.getByPlaceholder('Your full name')).toBeVisible()
-    await expect(page.getByRole('heading', { name: /Let.s find roles before the crowd sees them\./i })).toBeVisible()
+    // R-4 (2026-10-21): three screens. Screen one asks for the role lane and the posture together.
+    await expect(page.getByRole('heading', { name: /Which role lanes are you targeting\?/i })).toBeVisible()
+    await expect(page.getByText(/Where are you right now\?/i)).toBeVisible()
 
     const shellClass = await page.locator('div.min-h-screen').first().getAttribute('class')
     expect(shellClass ?? '').toContain('bg-background')
 
-    await page.getByPlaceholder('Your full name').fill('Live Onboarding Check')
-    await page.getByRole('button', { name: /^Start setup$/i }).click()
-    await expect(page.getByRole('heading', { name: /Build your profile\./i })).toBeVisible({ timeout: 15_000 })
+    const continueButton = page.getByRole('button', { name: /^Continue$/i })
+    await expect(continueButton).toBeDisabled()
+    await page.getByRole('button', { name: /^Executive/i }).first().click()
+    await page.getByRole('button', { name: /Actively searching/i }).first().click()
+    await expect(continueButton).toBeEnabled()
+    await continueButton.click()
 
+    await expect(page.getByRole('heading', { name: /Which companies are you targeting\?/i })).toBeVisible({ timeout: 15_000 })
+
+    // Skipping from any screen lands on the three-zone dashboard; Zone 1 carries the remaining setup.
     await page.getByRole('button', { name: /^Skip setup$/i }).click()
-    await expect(page).toHaveURL(/\/dashboard\/start(?:$|[/?#])/, { timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /your search is live\./i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByRole('heading', { name: /Today.s one action: Upload your resume or import LinkedIn/i })).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByRole('link', { name: /Go to profile/i }).first()).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/Add your first target company/i).first()).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/Generate your first prep brief/i).first()).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByText(/Add your first contact/i).first()).toBeVisible({ timeout: 15_000 })
-
-    await page.getByRole('link', { name: /Skip to dashboard/i }).click()
-    await expect(page).toHaveURL(/\/dashboard(?:$|[/?#])/, { timeout: 15_000 })
-    // The dashboard ships in two variants: the legacy shell (setup-progress banner with a
-    // Setup link) and the flag-gated three-zone shell ("What should I do today?" heading
-    // with a Progress link). Accept either so the probe tracks the served experience.
-    const legacyShell = page.getByText(/\d of 6 steps complete/i).first()
-    const threeZoneShell = page.getByRole('heading', { name: /What should I do today\?/i })
-    await expect(legacyShell.or(threeZoneShell).first()).toBeVisible({ timeout: 15_000 })
-    await expect(page.getByRole('link', { name: /^(Setup|Progress)$/i }).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page).toHaveURL(/\/dashboard(?:$|[?#])/, { timeout: 15_000 })
+    await expect(page.getByRole('heading', { level: 1, name: /What should I do today\?/i })).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('link', { name: /^Progress$/i }).first()).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('[data-first-mile-section="dashboard_next_move"]')).toBeVisible({ timeout: 15_000 })
   } finally {
     if (userId) {
       await admin.auth.admin.deleteUser(userId)
