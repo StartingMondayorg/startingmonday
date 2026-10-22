@@ -94,9 +94,6 @@ export default defineConfig({
       testMatch: /landing-hero\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
-        launchOptions: {
-          args: ['--host-resolver-rules=MAP mandatesignal.com 127.0.0.1'],
-        },
       },
     },
     {
