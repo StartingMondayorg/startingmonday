@@ -265,6 +265,7 @@ Documents indexed: **1200**
 - [evidence/route-collapse-phase2a-2026-10-21.md](evidence/route-collapse-phase2a-2026-10-21.md) — Route Collapse Phase 2a Evidence (R-3)
 - [evidence/route-collapse-phase2b-2026-10-21.md](evidence/route-collapse-phase2b-2026-10-21.md) — Route Collapse Phase 2b Evidence (R-3)
 - [evidence/sm-hero-proof-case-adjudication-2026-08-18.md](evidence/sm-hero-proof-case-adjudication-2026-08-18.md) — Starting Monday Hero Proof Case Adjudication
+- [evidence/weekly-sends-opt-in-2026-10-21.md](evidence/weekly-sends-opt-in-2026-10-21.md) — Weekly Sends Opt-In Evidence (P1b, R-1)
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.json](evidence/ws1-08-source-rights-readiness-2026-08-13.json) — ws1 08 source rights readiness 2026 08 13
 - [evidence/ws1-08-source-rights-readiness-2026-08-13.md](evidence/ws1-08-source-rights-readiness-2026-08-13.md) — WS1-08 Source Rights Readiness
 - [evidence/ws2-08-matching-policy-v2-2026-08-12.md](evidence/ws2-08-matching-policy-v2-2026-08-12.md) — WS2-08 Matching Policy v2

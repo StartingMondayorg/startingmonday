@@ -471,7 +471,7 @@ Computes a 0–100 momentum score per user based on: active pipeline count, comp
 
 ### weekly-report-job (Sunday 23:30 UTC)
 
-Runs after momentum-job. Sends a pipeline snapshot email to all `trialing` and `active` users who have completed onboarding. Includes: pipeline breakdown, scan highlights (matches from the past 7 days), momentum score with week-over-week delta, and 3 Claude Haiku-generated suggested actions. Suppresses Claude call for users where `shouldSuppressNudge()` returns true.
+Runs after momentum-job. **Opt-in only** since 2026-10-21 (P1b): sends a pipeline snapshot email to `trialing` and `active` users who have completed onboarding **and** set `user_profiles.weekly_summary_opt_in` (Settings > Email preferences; off by default). Includes: pipeline breakdown, scan highlights (matches from the past 7 days), momentum score with week-over-week delta, and 3 Claude Haiku-generated suggested actions. Suppresses Claude call for users where `shouldSuppressNudge()` returns true.
 
 ### cleanup-job (Sunday 02:00 UTC)
 
