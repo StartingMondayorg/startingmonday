@@ -152,7 +152,8 @@ test('Synthetic-09: critical dashboard route sweep has no 404/error-boundary fai
   })
 
   const routes: Array<{ path: string; marker: RegExp; budgetMs: number }> = [
-    { path: '/dashboard/admin/outreach', marker: /Send Queue|Outreach/i, budgetMs: 5_000 },
+    // R-3 phase 2c made /dashboard/admin/outreach staff-only; this sweep covers the solo-user tree.
+    { path: '/dashboard/follow-ups', marker: /Follow-ups|follow-up/i, budgetMs: 5_000 },
     {
       path: '/dashboard/briefing',
       marker: /Good (morning|afternoon|evening)|Nothing to brief today|Accountability/i,
