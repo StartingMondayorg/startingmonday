@@ -8,8 +8,12 @@ async function requireAuthSessionOrSkip(page: Page) {
 test('Outreach Canary: server template draft + dry-run gate pass', async ({ page }) => {
   await requireAuthSessionOrSkip(page)
   await page.goto('/dashboard/admin/outreach')
-  test.skip(!/\/dashboard\/admin\/outreach(?:$|[/?#])/.test(page.url()), 'Skipping outreach canary: staff access unavailable')
-  await expect(page.getByRole('heading', { name: 'Outreach Hub' })).toBeVisible()
+  // Non-staff accounts get the admin layout's 404 at this URL (R-3 phase 2c moved the hub under
+  // /dashboard/admin), so the staff check keys off the page rather than the URL.
+  const heading = page.getByRole('heading', { name: 'Outreach Hub' })
+  const isStaff = await heading.waitFor({ state: 'visible', timeout: 10_000 }).then(() => true, () => false)
+  test.skip(!isStaff, 'Skipping outreach canary: staff access unavailable')
+  await expect(heading).toBeVisible()
 
   const rows = page.locator('button').filter({ hasText: 'Review and send on right' })
   const rowCount = await rows.count()

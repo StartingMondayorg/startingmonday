@@ -41,3 +41,14 @@ Repository: Starting Monday · Railway project `ample-blessing` · customer doma
 - `main` had moved 13 commits past `0f428996` (#533 to #542) and two of them carry migrations that were NOT in production or staging: `186_weekly_summary_opt_in.sql` and `187_interview_preps.sql`.
 - Both applied 2026-10-22 ~08:30 UTC through the Supabase MCP, staging (`yeimmrcgnwhrczgqrofn`) first, then production (`mytnhoxcgvnzxhgcumkf`). `187` was applied without its `drop ... if exists` guards (no-ops: the table did not exist), end state identical. Verified on both projects: column present; table, index, RLS enabled, 4 policies, trigger present.
 - Result: `main` HEAD (`f4f08e59`) is schema-ready for promotion.
+
+## Update 2026-10-22 13:08–13:28 UTC: promotion to `7c4c1de6`
+
+- Railway builds for this workspace resumed ~05:09 UTC (first accepted staging deploy after 18 "Deploys have been paused temporarily" refusals between 04:04 and 04:56 UTC; Railway's GitHub-App pushes made during the pause were dropped, so staging had no record for any of the 13 commits after `0f428996` until one was triggered by API).
+- Staging verified `f4f08e59` (05:09 UTC), then auto-built `84fe4714`, `bad3842e`, `7c4c1de6` as #543–#545 merged — webhooks live again.
+- Schema gate: migrations 186 and 187 applied to staging and production by the Cowork lane at ~08:30 UTC (section above). The dispatchable workflow added in #545 failed its first run (`39780792227`, `ERROR 25006` read-only transaction); #547 adds `read_only: false` and remains useful as an idempotent re-verify.
+- `node scripts/promote-to-production.mjs --to 7c4c1de6 --apply` at 13:08 UTC: `staging verified: SUCCESS deployment of 7c4c1de at 2026-10-22T12:42:46Z`; `production moved 0f42899 -> 7c4c1de`. `6344d1c5` (main HEAD) is docs-only (`git diff --stat 7c4c1de6 6344d1c5` → 1 file, 8 insertions).
+- Railway: worker `SUCCESS` 13:16:50 UTC, web `SUCCESS` 13:28:16 UTC. `GET https://startingmonday.app/api/health` → `commit 7c4c1de63bddbbfbe39cbd653c51d7af4ab18664, status ok`; `/api/deploy-marker` → same SHA.
+- Gates: Deployment Watchdog `39784229082` success. Release Completion Gate `39784229240` failed at push time (deploy did not yet exist — defect D2 above), success on re-run. Post-Deploy Gate `39784229085` fails on re-run in the outreach canary: #543 moved the hub under `/dashboard/admin`, where non-staff get a 404 at the same URL, so the canary's URL-based staff skip no longer trips. Fix in #549 (test-only); the gate runs from the `production` branch and will clear on the next promotion.
+
+What is now live for customers: three-zone dashboard, P1 email cadence, legacy demos retired, R-3 phases 1/2a/2b/2c (62 → 39 solo pages), R-6 entitlement gates, R-4 three-screen onboarding, P1b weekly summary opt-in, P3 primary nav and nudge retirement, interview prep persistence, route-count ratchet.
