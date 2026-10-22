@@ -27,7 +27,15 @@ type ThreeZoneNextMove = {
   href: string;
 };
 
-export function resolveThreeZoneDashboardPosture(searchPath: string | null): DashboardPosture {
+// The stored posture wins (R-4: every new user picks one on screen one); search_path
+// is the fallback for accounts onboarded before posture was asked explicitly.
+export function resolveThreeZoneDashboardPosture(
+  searchPath: string | null,
+  searchPosture?: string | null,
+): DashboardPosture {
+  if (searchPosture === "active" || searchPosture === "exploring" || searchPosture === "not_looking") {
+    return searchPosture;
+  }
   if (searchPath === "campaign") return "active";
   if (searchPath === "watcher" || searchPath === "nurture") return "exploring";
   return "not_looking";
@@ -154,6 +162,7 @@ type ProfileRow = {
   search_status: string | null;
   stall_nudge_dismissed_at: string | null;
   search_path: string | null;
+  search_posture: string | null;
   role_type: string | null;
   search_persona: string | null;
 };
@@ -199,7 +208,7 @@ export default async function DashboardPage() {
   const { data: profileRaw } = await supabase
     .from("user_profiles")
     .select(
-      "full_name, search_started_at, briefing_timezone, onboarding_completed_at, target_titles, positioning_summary, briefing_time, placed_at, placement_company, search_status, stall_nudge_dismissed_at, search_path, role_type, search_persona",
+      "full_name, search_started_at, briefing_timezone, onboarding_completed_at, target_titles, positioning_summary, briefing_time, placed_at, placement_company, search_status, stall_nudge_dismissed_at, search_path, search_posture, role_type, search_persona",
     )
     .eq("user_id", user.id)
     .single();
@@ -500,7 +509,7 @@ export default async function DashboardPage() {
     );
   }
 
-  const dashboardPosture = resolveThreeZoneDashboardPosture(searchPath);
+  const dashboardPosture = resolveThreeZoneDashboardPosture(searchPath, profile?.search_posture ?? null);
   const latestSignalByCompany = new Map<string, SignalRow>();
   for (const signal of [...signalsDeduped, ...patternAlerts]) {
     if (!latestSignalByCompany.has(signal.company_id)) {

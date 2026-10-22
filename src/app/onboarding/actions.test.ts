@@ -136,7 +136,7 @@ describe('onboarding persistence actions', () => {
 
     expect(state.profileUpdate).toHaveBeenCalledWith(expect.objectContaining({
       onboarding_completed_at: expect.any(String),
-      onboarding_current_step: 8,
+      onboarding_current_step: 2,
     }))
     expect(state.companyUpsert).not.toHaveBeenCalled()
     expect(state.logEvent).toHaveBeenCalledWith(
@@ -146,6 +146,43 @@ describe('onboarding persistence actions', () => {
     )
   })
 
+  it('derives the name from the auth identity when the three-step form sends none (R-4)', async () => {
+    state.getUser.mockResolvedValue({ data: { user: { id: 'pilot-user', email: 'dana.ortiz@example.com', user_metadata: { full_name: 'Dana Ortiz' } } } })
+    const formData = validFormData()
+    formData.delete('full_name')
+
+    await expect(completeOnboarding(formData)).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+
+    expect(state.profileUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ full_name: 'Dana Ortiz' }),
+      { onConflict: 'user_id' },
+    )
+  })
+
+  it('falls back to the email local part for the name when the identity carries none', async () => {
+    state.getUser.mockResolvedValue({ data: { user: { id: 'pilot-user', email: 'dana.ortiz@example.com' } } })
+    const formData = validFormData()
+    formData.delete('full_name')
+
+    await expect(completeOnboarding(formData)).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+
+    expect(state.profileUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ full_name: 'dana ortiz' }),
+      { onConflict: 'user_id' },
+    )
+  })
+
+  it('maps the chosen posture to the search path (active -> campaign, otherwise watcher)', async () => {
+    const formData = validFormData()
+    formData.set('search_posture', 'not_looking')
+
+    await expect(completeOnboarding(formData)).rejects.toThrow('NEXT_REDIRECT:/dashboard')
+
+    expect(state.profileUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ search_posture: 'not_looking', search_path: 'watcher' }),
+      { onConflict: 'user_id' },
+    )
+  })
   it('persists an explicit dashboard posture instead of replacing it with inferred search state', async () => {
     const formData = validFormData()
     formData.set('search_posture', 'exploring')

@@ -44,56 +44,26 @@
     },
     {
       "id": "step-8",
-      "label": "Onboarding: name",
-      "description": "Step 0: user provides name (or skips/quick-starts) in the onboarding wizard.",
+      "label": "Onboarding: role lane + posture",
+      "description": "Screen one of three. User picks every role lane to watch and one posture (actively searching / building relationships / not looking yet). Both are required; posture shapes Zone 1 copy from the first dashboard render.",
       "type": "step"
     },
     {
       "id": "step-9",
-      "label": "Onboarding: role lane",
-      "description": "Step 1: user selects target role lane to set workflow and signal prioritization.",
+      "label": "Onboarding: target companies",
+      "description": "Screen two. User adds at least one company (three suggested) from typed names, persona suggestions, or AI discovery. The first career-page scan starts on Continue.",
       "type": "step"
     },
     {
       "id": "step-10",
-      "label": "Onboarding: search context",
-      "description": "Step 2 (advanced path): user sets current situation, timeline, and driver; some quick/low-energy paths bypass this.",
+      "label": "Onboarding: briefing time",
+      "description": "Screen three. Briefing time defaults to 07:00 local with one-tap changes; the setup/check-in email switch sits underneath. Submit completes onboarding.",
       "type": "step"
     },
     {
       "id": "step-11",
-      "label": "Onboarding: profile import/manual",
-      "description": "Step 3 (advanced path): user imports LinkedIn/PDF or enters title/company manually; may be skipped on quick paths.",
-      "type": "step"
-    },
-    {
-      "id": "step-12",
-      "label": "Onboarding: target companies",
-      "description": "Step 4: user adds at least one target company (with optional AI suggestions).",
-      "type": "step"
-    },
-    {
-      "id": "step-13",
-      "label": "Onboarding: briefing time",
-      "description": "Step 5: user picks briefing time; quick/passive flows can route directly to completion state.",
-      "type": "step"
-    },
-    {
-      "id": "step-14",
-      "label": "Onboarding: first value preview",
-      "description": "Step 6: user sees shortlist/value preview and submits Start my search or Start monitoring.",
-      "type": "step"
-    },
-    {
-      "id": "step-15",
-      "label": "Dashboard start checklist",
-      "description": "completeOnboarding or skipOnboarding redirects to /dashboard/start for post-setup tasks.",
-      "type": "step"
-    },
-    {
-      "id": "step-16",
       "label": "Main product reached",
-      "description": "User proceeds into core product surfaces such as /dashboard and /dashboard/briefing with onboarding complete.",
+      "description": "completeOnboarding redirects to /dashboard. Zone 1 shows the next setup step (resume, contact, briefing) until activation completes; LinkedIn/PDF import and search context live on /dashboard/profile. Retired on 2026-10-21 (R-4): name screen, import screen, situation screen, relationship-enrichment panel, context screen, first-value preview, and the /dashboard/start checklist.",
       "type": "end"
     }
   ]
