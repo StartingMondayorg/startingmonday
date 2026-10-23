@@ -144,10 +144,10 @@ export async function runActivationReminderJob() {
     try {
       const { subject, html } = buildCompanyNudgeEmail({ firstName })
       await sendEmail({ to: deliverTo, subject, html })
-      logger.info('activation-reminder-job: sent day-2 company nudge', { to: deliverTo })
+      logger.info('activation-reminder-job: sent day-2 company nudge', { userId: user.id })
       sent++
     } catch (err) {
-      logger.error('activation-reminder-job: send failed', { to: deliverTo, error: err.message })
+      logger.error('activation-reminder-job: send failed', { userId: user.id, error: err.message })
       skipped++
     }
   }

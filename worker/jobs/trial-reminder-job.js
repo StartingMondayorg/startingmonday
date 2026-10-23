@@ -155,10 +155,10 @@ export async function runTrialReminderJob() {
     try {
       const { subject, html } = renderTrialEmail({ firstName, daysLeft, email: user.email })
       await sendEmail({ to: user.email, subject, html })
-      logger.info('trial-reminder-job: sent', { to: user.email, daysLeft })
+      logger.info('trial-reminder-job: sent', { userId: user.id, daysLeft })
       sent++
     } catch (err) {
-      logger.error('trial-reminder-job: send failed', { to: user.email, error: err.message })
+      logger.error('trial-reminder-job: send failed', { userId: user.id, error: err.message })
       skipped++
     }
   }
