@@ -1,12 +1,19 @@
+import { safeFetch } from '../lib/safe-fetch.js';
+
+const MAX_ROBOTS_BYTES = 512 * 1024;
+
 // Returns true if scanning the given URL is permitted by robots.txt
 export async function isAllowedByRobots(pageUrl) {
   try {
     const { protocol, host } = new URL(pageUrl);
     const robotsUrl = `${protocol}//${host}/robots.txt`;
 
-    const res = await fetch(robotsUrl, {
+    // The career page URL is user-supplied: resolve, pin and re-check every
+    // redirect (P1-5).
+    const res = await safeFetch(robotsUrl, {
       headers: { 'User-Agent': 'StartingMondayBot/1.0' },
-      signal: AbortSignal.timeout(5000),
+      timeoutMs: 5000,
+      maxBytes: MAX_ROBOTS_BYTES,
     });
 
     if (!res.ok) return true; // No robots.txt = allowed
@@ -14,7 +21,9 @@ export async function isAllowedByRobots(pageUrl) {
     const text = await res.text();
     return !isDisallowed(text, pageUrl);
   } catch {
-    return true; // Network error fetching robots.txt — don't block the scan
+    // Network error fetching robots.txt — don't block the scan. An unsafe
+    // (private/reserved) host lands here too; fetchPage refuses it itself.
+    return true;
   }
 }
 
