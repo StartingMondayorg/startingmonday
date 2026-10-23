@@ -116,10 +116,10 @@ export async function runReactivationJob() {
     try {
       const { subject, html } = buildReactivationEmail({ firstName, referralUrl, unsubscribeUrl })
       await sendEmail({ to: user.email, subject, html })
-      logger.info('reactivation-job: sent', { to: user.email })
+      logger.info('reactivation-job: sent', { userId: user.id })
       sent++
     } catch (err) {
-      logger.error('reactivation-job: send failed', { to: user.email, error: err.message })
+      logger.error('reactivation-job: send failed', { userId: user.id, error: err.message })
       skipped++
     }
   }
