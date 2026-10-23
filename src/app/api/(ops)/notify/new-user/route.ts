@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     console.error(JSON.stringify({
       ts: new Date().toISOString(),
       event: 'notify_new_user_email_failed',
-      email,
+      emailDomain: email.split('@')[1] ?? null,
       message: error instanceof Error ? error.message : String(error),
     }))
   })
