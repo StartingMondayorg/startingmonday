@@ -1442,6 +1442,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_counters: {
+        Row: {
+          key: string
+          window_start: string
+          count: number
+        }
+        Insert: {
+          key: string
+          window_start: string
+          count?: number
+        }
+        Update: {
+          key?: string
+          window_start?: string
+          count?: number
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           key: string
@@ -1693,6 +1711,10 @@ export type Database = {
       check_and_increment_rate_limit: {
         Args: { p_key: string; p_window: string; p_limit: number }
         Returns: boolean
+      }
+      check_rate_limit: {
+        Args: { p_key: string; p_window_seconds: number; p_max: number }
+        Returns: { allowed: boolean; remaining: number; reset_at: string }[]
       }
       get_rate_limit_count: {
         Args: { p_key: string; p_window: string }

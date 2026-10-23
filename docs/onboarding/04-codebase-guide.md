@@ -113,7 +113,7 @@ All Claude calls go through `@anthropic-ai/sdk`. Prompts live in `src/lib/ai/pro
 
 Streaming responses: use `createStreamableText()` from `ai` and return a `StreamingTextResponse`. See `src/app/api/briefing/route.ts` for the canonical streaming pattern.
 
-Rate limiting: `src/lib/ai/ai-limits.ts` and `src/lib/burst-limit.ts` handle per-user limits. Always apply limits to AI routes.
+Rate limiting: `src/lib/ai/ai-limits.ts` and `src/lib/burst-limit.ts` handle per-user limits. Always apply limits to AI routes. `src/lib/rate-limit.ts` and `src/lib/burst-limit.ts` keep their counters in Postgres through `public.check_rate_limit` (migration 189, service role only) and fall back to per-process counters only if that call fails.
 
 ---
 
