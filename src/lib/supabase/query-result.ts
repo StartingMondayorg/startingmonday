@@ -7,13 +7,20 @@ import * as Sentry from '@sentry/nextjs'
  * the 2026-10-22 staging dashboard <-> onboarding redirect loop happened (P1-4).
  *
  * These helpers make the distinction explicit:
- *  - "no rows" for `.single()` (PostgREST PGRST116) is a legitimate empty answer.
+ *  - zero rows for `.single()` (PGRST116 with "0 rows" details) is a legitimate empty answer.
  *  - every other error either throws (data the page cannot work without) or is
  *    reported and degraded (optional enrichment).
  */
 
-/** PostgREST code `.single()` returns when the query matched zero rows. */
+/**
+ * PostgREST code for a singular-query cardinality violation. It covers both zero
+ * rows and more than one row, so the code alone does not mean "no row".
+ */
 export const NO_ROWS_ERROR_CODE = 'PGRST116'
+
+// PostgREST 12: "The result contains 0 rows"; older servers and postgrest-js:
+// "Results contain 0 rows, application/vnd.pgrst.object+json requires 1 row".
+const ZERO_ROWS_DETAILS = /(?:^|\D)0 rows\b/
 
 export type QueryError = {
   code?: string | null
@@ -42,8 +49,9 @@ export class SupabaseQueryError extends Error {
   }
 }
 
+/** True only for a confirmed zero-row PGRST116; multiple rows or missing details are real errors. */
 export function isNoRowsError(error: QueryError | null | undefined): boolean {
-  return error?.code === NO_ROWS_ERROR_CODE
+  return error?.code === NO_ROWS_ERROR_CODE && ZERO_ROWS_DETAILS.test(error.details ?? '')
 }
 
 /**

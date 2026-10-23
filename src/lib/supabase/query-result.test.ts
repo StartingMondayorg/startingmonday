@@ -16,6 +16,7 @@ import {
 
 const noRows = { code: NO_ROWS_ERROR_CODE, message: 'JSON object requested, multiple (or no) rows returned', details: 'The result contains 0 rows' }
 const missingColumn = { code: '42703', message: 'column user_profiles.search_posture does not exist', details: 'secret@example.com' }
+const multipleRows = { code: NO_ROWS_ERROR_CODE, message: noRows.message, details: 'The result contains 2 rows' }
 
 describe('query-result helpers', () => {
   beforeEach(() => {
@@ -23,10 +24,23 @@ describe('query-result helpers', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  it('recognises only PGRST116 as the no-rows case', () => {
+  it('recognises only a zero-row PGRST116 as the no-rows case', () => {
     expect(isNoRowsError(noRows)).toBe(true)
+    expect(isNoRowsError({ ...noRows, details: 'Results contain 0 rows, application/vnd.pgrst.object+json requires 1 row' })).toBe(true)
+    expect(isNoRowsError(multipleRows)).toBe(false)
+    expect(isNoRowsError({ ...noRows, details: 'The result contains 10 rows' })).toBe(false)
+    expect(isNoRowsError({ code: NO_ROWS_ERROR_CODE, message: noRows.message })).toBe(false)
+    expect(isNoRowsError({ ...noRows, details: null })).toBe(false)
     expect(isNoRowsError(missingColumn)).toBe(false)
     expect(isNoRowsError(null)).toBe(false)
+  })
+
+  it('throws on a multiple-row PGRST116 instead of treating it as missing data', () => {
+    expect(() => maybeRow({ data: null, error: multipleRows }, 'ctx')).toThrow(/PGRST116/)
+    expect(() => requireRows({ data: null, error: multipleRows }, 'ctx')).toThrow(SupabaseQueryError)
+    expect(() => maybeRow({ data: null, error: { code: NO_ROWS_ERROR_CODE, message: 'x' } }, 'ctx')).toThrow(SupabaseQueryError)
+    expect(rowsOrNull({ data: null, error: multipleRows }, 'ctx')).toBeNull()
+    expect(sentry.captureException).toHaveBeenCalledTimes(1)
   })
 
   describe('maybeRow', () => {

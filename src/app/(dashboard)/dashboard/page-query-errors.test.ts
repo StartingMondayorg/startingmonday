@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-type Result = { data: unknown; error: { code?: string; message?: string } | null; count?: number | null }
+type Result = { data: unknown; error: { code?: string; message?: string; details?: string } | null; count?: number | null }
 
 const mocks = vi.hoisted(() => ({
   redirect: vi.fn((url: string) => {
@@ -98,8 +98,14 @@ describe('DashboardPage query error handling (P1-4)', () => {
   })
 
   it('redirects to onboarding when the profile row does not exist', async () => {
-    respondWith({ user_profiles: { data: null, error: { code: 'PGRST116', message: 'no rows' } } })
+    respondWith({ user_profiles: { data: null, error: { code: 'PGRST116', message: 'no rows', details: 'The result contains 0 rows' } } })
     await expect(DashboardPage()).rejects.toThrow('NEXT_REDIRECT:/onboarding')
+  })
+
+  it('throws instead of redirecting when the profile query matches multiple rows', async () => {
+    respondWith({ user_profiles: { data: null, error: { code: 'PGRST116', message: 'multiple rows', details: 'The result contains 2 rows' } } })
+    await expect(DashboardPage()).rejects.toThrow(/dashboard\.user_profiles.*PGRST116/)
+    expect(mocks.redirect).not.toHaveBeenCalled()
   })
 
   it('redirects to onboarding when the profile read succeeded but onboarding is unfinished', async () => {
