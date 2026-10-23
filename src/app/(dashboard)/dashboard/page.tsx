@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/database.types";
+import {
+  countOrNull,
+  maybeRow,
+  requireRows,
+  rowsOrNull,
+} from "@/lib/supabase/query-result";
 import { getActivationStatus } from "@/lib/onboarding/activation";
 import { resolveCareerMode } from "@/lib/career-mode";
 import { LogoutButton } from "./logout-button";
@@ -149,23 +156,24 @@ export function buildThreeZoneNextMove(opts: {
   };
 }
 
-type ProfileRow = {
-  full_name: string | null;
-  search_started_at: string | null;
-  briefing_timezone: string | null;
-  onboarding_completed_at: string | null;
-  target_titles: string[] | null;
-  positioning_summary: string | null;
-  briefing_time: string | null;
-  placed_at: string | null;
-  placement_company: string | null;
-  search_status: string | null;
-  stall_nudge_dismissed_at: string | null;
-  search_path: string | null;
-  search_posture: string | null;
-  role_type: string | null;
-  search_persona: string | null;
-};
+// search_posture (migration 183) is not in the generated types yet.
+type ProfileRow = Pick<
+  Database["public"]["Tables"]["user_profiles"]["Row"],
+  | "full_name"
+  | "search_started_at"
+  | "briefing_timezone"
+  | "onboarding_completed_at"
+  | "target_titles"
+  | "positioning_summary"
+  | "briefing_time"
+  | "placed_at"
+  | "placement_company"
+  | "search_status"
+  | "stall_nudge_dismissed_at"
+  | "search_path"
+  | "role_type"
+  | "search_persona"
+> & { search_posture: string | null };
 
 type UserRow = {
   subscription_status: string | null;
@@ -205,14 +213,20 @@ export default async function DashboardPage() {
     redirect("/dashboard/coach");
   }
 
-  const { data: profileRaw } = await supabase
-    .from("user_profiles")
-    .select(
-      "full_name, search_started_at, briefing_timezone, onboarding_completed_at, target_titles, positioning_summary, briefing_time, placed_at, placement_company, search_status, stall_nudge_dismissed_at, search_path, search_posture, role_type, search_persona",
-    )
-    .eq("user_id", user.id)
-    .single();
-  const profile = profileRaw as ProfileRow | null;
+  // A failed profile read must reach the error boundary. Treating it as "no
+  // profile" sent users into a /dashboard <-> /onboarding loop when staging
+  // lacked a selected column (P1-4). Only a successful read with no row or no
+  // completion timestamp means onboarding is unfinished.
+  const profile = maybeRow(
+    await supabase
+      .from("user_profiles")
+      .select(
+        "full_name, search_started_at, briefing_timezone, onboarding_completed_at, target_titles, positioning_summary, briefing_time, placed_at, placement_company, search_status, stall_nudge_dismissed_at, search_path, search_posture, role_type, search_persona",
+      )
+      .eq("user_id", user.id)
+      .single(),
+    "dashboard.user_profiles",
+  ) as ProfileRow | null;
 
   if (!profile?.onboarding_completed_at) {
     redirect("/onboarding");
@@ -244,17 +258,17 @@ export default async function DashboardPage() {
   ).toISOString();
 
   const [
-    { data: rawCompanies },
-    { data: followUps },
-    { data: rawUserRow },
-    { data: rawSignals },
-    { data: rawPatternAlerts },
+    companiesResult,
+    followUpsResult,
+    userRowResult,
+    signalsResult,
+    patternAlertsResult,
     activation,
-    { count: contactCountRaw },
-    { data: actCompanies },
-    { data: actContacts },
-    { data: actBriefs },
-    { data: actFollowUps },
+    contactCountResult,
+    actCompaniesResult,
+    actContactsResult,
+    actBriefsResult,
+    actFollowUpsResult,
   ] = await Promise.all([
     supabase
       .from("companies")
@@ -324,12 +338,31 @@ export default async function DashboardPage() {
       .gte("created_at", since70d),
   ]);
 
-  const allList = (rawCompanies ?? []) as CompanyRow[];
-  const userRow = rawUserRow as UserRow | null;
+  // Throw: the pipeline and account rows are the page; an error must not render
+  // as an empty first-run dashboard or a free-tier account.
+  const allList = requireRows(companiesResult, "dashboard.companies") as CompanyRow[];
+  const userRow = maybeRow(userRowResult, "dashboard.users") as UserRow | null;
+  // Degrade (reported): optional enrichment renders as empty when it fails.
+  const followUps = rowsOrNull(followUpsResult, "dashboard.follow_ups.overdue") ?? [];
+  const rawSignals = rowsOrNull(signalsResult, "dashboard.company_signals") ?? [];
+  const rawPatternAlerts =
+    rowsOrNull(patternAlertsResult, "dashboard.company_signals.pattern_alerts") ?? [];
+  const contactCountRaw = countOrNull(contactCountResult, "dashboard.contacts.count");
+  const actCompanies = rowsOrNull(actCompaniesResult, "dashboard.activity.companies");
+  const actContacts = rowsOrNull(actContactsResult, "dashboard.activity.contacts");
+  const actBriefs = rowsOrNull(actBriefsResult, "dashboard.activity.briefs");
+  const actFollowUps = rowsOrNull(actFollowUpsResult, "dashboard.activity.follow_ups");
+  // The stalled nudge needs every input; an unknown input must not read as "no activity".
+  const stallInputsKnown =
+    contactCountRaw !== null &&
+    actCompanies !== null &&
+    actContacts !== null &&
+    actBriefs !== null &&
+    actFollowUps !== null;
   const { companySignals: contractCompanySignals, patternAlerts: contractPatternAlerts } =
     applyDashboardSignalContract([
-      ...((rawSignals ?? []) as unknown as SignalRow[]),
-      ...((rawPatternAlerts ?? []) as unknown as SignalRow[]),
+      ...(rawSignals as unknown as SignalRow[]),
+      ...(rawPatternAlerts as unknown as SignalRow[]),
     ]);
   // Signal parity contract: the signals index applies rankSignals suppression
   // (low confidence, stale, duplicate) before display, so the dashboard must
@@ -383,6 +416,7 @@ export default async function DashboardPage() {
     ? Math.floor((Date.now() - new Date(profile.search_started_at).getTime()) / 86400000)
     : null;
   const isStalled =
+    stallInputsKnown &&
     !profile?.placed_at &&
     dismissedDaysAgo > 7 &&
     daysSinceStart !== null &&
@@ -395,18 +429,22 @@ export default async function DashboardPage() {
   let scannerCompletedCount = 0;
   if (allList.length > 0) {
     const companyIds = allList.map((c) => c.id);
-    const { data: latestScans } = await supabase
-      .from("scan_results")
-      .select("company_id, scanned_at")
-      .in("company_id", companyIds)
-      .order("scanned_at", { ascending: false })
-      .limit(companyIds.length * 3);
+    const latestScans =
+      rowsOrNull(
+        await supabase
+          .from("scan_results")
+          .select("company_id, scanned_at")
+          .in("company_id", companyIds)
+          .order("scanned_at", { ascending: false })
+          .limit(companyIds.length * 3),
+        "dashboard.scan_results",
+      ) ?? [];
     scannerCompletedCount = new Set(
-      (latestScans ?? []).map((row) => row.company_id),
+      latestScans.map((row) => row.company_id),
     ).size;
   }
 
-  const overdueCount = (followUps ?? []).length;
+  const overdueCount = followUps.length;
   const signalCount = signalsDeduped.length + patternAlerts.length;
 
   const isFirstRunDashboard =
