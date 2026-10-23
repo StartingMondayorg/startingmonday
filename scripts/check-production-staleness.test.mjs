@@ -92,3 +92,10 @@ test('threshold is exclusive and configurable', () => {
   assert.equal(computeStaleness({ commits, now: NOW }).stale, false)
   assert.equal(computeStaleness({ commits, now: NOW, thresholdDays: 3 }).stale, true)
 })
+
+test('just over the threshold is stale even though the displayed age rounds down', () => {
+  const commits = [{ sha: 'rt', committedAt: daysAgo(7 + 1 / 24), subject: 'feat', files: ['src/x.ts'] }]
+  const result = computeStaleness({ commits, now: NOW })
+  assert.equal(result.oldestRuntimeAgeDays, 7)
+  assert.equal(result.stale, true)
+})

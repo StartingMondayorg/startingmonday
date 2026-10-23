@@ -49,7 +49,8 @@ export function computeStaleness({ commits, commitsBehind = commits.length, now 
 
   const oldestRuntime = runtime[0] ?? null
   const oldestRuntimeAgeDays = ageDays(oldestRuntime)
-  const stale = oldestRuntime !== null && oldestRuntimeAgeDays > thresholdDays
+  // Compare unrounded age; ageDays() is rounded for display only.
+  const stale = oldestRuntime !== null && now - Date.parse(oldestRuntime.committedAt) > thresholdDays * DAY_MS
   const behind = commitsBehind > 0
 
   return {
