@@ -1,5 +1,13 @@
+import {
+  consumeSharedRateLimit,
+  isSharedRateLimitConfigured,
+  toStoredRateLimitKey,
+} from '@/lib/rate-limit-store'
+
 type Bucket = { count: number; resetAt: number }
 
+// Used only when the shared Postgres store (public.check_rate_limit) is not
+// configured or not reachable. Per process, so it resets on deploy.
 const buckets = new Map<string, Bucket>()
 
 type RateLimitResult = { allowed: boolean; retryAfter?: number }
@@ -34,35 +42,23 @@ export async function checkRateLimit(
   maxPerWindow = 20,
   windowMs = 60_000,
 ): Promise<RateLimitResult> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!url || !serviceKey || process.env.RATE_LIMIT_FORCE_MEMORY === '1') {
+  if (!isSharedRateLimitConfigured()) {
     return checkRateLimitInMemory(key, maxPerWindow, windowMs)
   }
 
-  try {
-    const { createAdminClient } = await import('@/lib/supabase/admin')
-    const admin = createAdminClient()
-    const windowStart = Math.floor(Date.now() / windowMs) * windowMs
-    const periodKey = `${windowMs}:${new Date(windowStart).toISOString()}`
-    const { data, error } = await admin.rpc('check_and_increment_rate_limit', {
-      p_key: key,
-      p_window: periodKey,
-      p_limit: maxPerWindow,
-    })
-
-    if (error || typeof data !== 'boolean') {
-      return checkRateLimitInMemory(key, maxPerWindow, windowMs)
-    }
-
-    if (data) {
-      return { allowed: true }
-    }
-
-    const retryAfter = Math.ceil((windowStart + windowMs - Date.now()) / 1000)
-    return { allowed: false, retryAfter: Math.max(1, retryAfter) }
-  } catch {
+  const shared = await consumeSharedRateLimit(
+    toStoredRateLimitKey('rl', key),
+    maxPerWindow,
+    windowMs,
+  )
+  if (!shared) {
     return checkRateLimitInMemory(key, maxPerWindow, windowMs)
   }
+
+  if (shared.allowed) {
+    return { allowed: true }
+  }
+
+  const retryAfter = Math.ceil((shared.resetAt - Date.now()) / 1000)
+  return { allowed: false, retryAfter: Math.max(1, retryAfter) }
 }
