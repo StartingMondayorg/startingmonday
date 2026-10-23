@@ -313,7 +313,7 @@ export default function CoachFaqPage() {
               <div className="border border-success/35 rounded-lg p-5 bg-success/10">
                 <p className="text-[13px] font-semibold text-success mb-2">Data Ownership</p>
                 <p className="text-[13px] text-success/95 leading-relaxed">
-                  Clients own their data. They can export at any time via their settings. They can delete their account and all associated data. We do not sell, trade, or use client data for third-party purposes.
+                  Clients own their data. They can export at any time via their settings. They can request deletion of their account and all associated data at any time. We do not sell, trade, or use client data for third-party purposes.
                 </p>
               </div>
               <p className="text-[12px] text-muted-foreground">
