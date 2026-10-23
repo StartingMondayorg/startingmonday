@@ -1,6 +1,13 @@
-// In-memory sliding-window burst limiter for AI routes.
-// Prevents rapid-fire requests within a single minute.
-// Single-instance only. Swap for Upstash Redis when running multiple Railway replicas.
+// Per-minute burst limiter for AI routes. Prevents rapid-fire requests.
+// Counters live in Postgres (public.check_rate_limit, migration 189) so they
+// are shared across replicas and survive deploys. If the shared store is not
+// configured or not reachable, this falls back to a per-process window.
+
+import {
+  consumeSharedRateLimit,
+  isSharedRateLimitConfigured,
+  toStoredRateLimitKey,
+} from '@/lib/rate-limit-store'
 
 const WINDOW_MS = 60_000
 const BURST_LIMIT = 10
@@ -21,31 +28,23 @@ function checkBurstLimitInMemory(key: string): boolean {
   return true
 }
 
+export function __resetBurstWindowsForTests() {
+  windows.clear()
+}
+
 export async function checkBurstLimit(key: string): Promise<boolean> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!url || !serviceKey || process.env.RATE_LIMIT_FORCE_MEMORY === '1') {
+  if (!isSharedRateLimitConfigured()) {
     return checkBurstLimitInMemory(key)
   }
 
-  try {
-    const { createAdminClient } = await import('@/lib/supabase/admin')
-    const admin = createAdminClient()
-    const windowStart = Math.floor(Date.now() / WINDOW_MS) * WINDOW_MS
-    const periodKey = `${WINDOW_MS}:${new Date(windowStart).toISOString()}`
-    const { data, error } = await admin.rpc('check_and_increment_rate_limit', {
-      p_key: `burst:${key}`,
-      p_window: periodKey,
-      p_limit: BURST_LIMIT,
-    })
-
-    if (error || typeof data !== 'boolean') {
-      return checkBurstLimitInMemory(key)
-    }
-
-    return data
-  } catch {
+  const shared = await consumeSharedRateLimit(
+    toStoredRateLimitKey('burst', key),
+    BURST_LIMIT,
+    WINDOW_MS,
+  )
+  if (!shared) {
     return checkBurstLimitInMemory(key)
   }
+
+  return shared.allowed
 }
