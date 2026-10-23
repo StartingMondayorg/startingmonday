@@ -27,7 +27,9 @@ jobs:
   canary-gate:
     name: Canary gate
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Bounded: up to 45 min waiting for the Railway build (slow builds took ~26 min,
+    # docs/evidence/production-promotion-2026-10-21.md D2) plus standards/smoke/canary checks.
+    timeout-minutes: 65
 
     steps:
       - uses: actions/checkout@v5
@@ -46,7 +48,7 @@ jobs:
           RELEASE_EXPECTED_SHA: ${{ github.sha }}
           RELEASE_EXPECTED_HERO_PRIMARY: Be on the shortlist before the role is posted.
           RELEASE_EXPECTED_HERO_SECONDARY: Starting Monday reads public signals. Leadership changes, funding, expansion, filings.
-          RELEASE_TIMEOUT_SECONDS: "900"
+          RELEASE_TIMEOUT_SECONDS: "2700"
           RELEASE_INTERVAL_SECONDS: "20"
         run: npm run monitor:release:parity
 
@@ -133,7 +135,9 @@ jobs:
 
   post-deploy-synthetics:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Bounded: the parity step may wait up to 45 min (normally instant, since the canary
+    # gate already saw this SHA live) before the P0 synthetic suite runs.
+    timeout-minutes: 70
     needs: [canary-gate]
 
     steps:
@@ -162,7 +166,7 @@ jobs:
           RELEASE_EXPECTED_SHA: ${{ github.sha }}
           RELEASE_EXPECTED_HERO_PRIMARY: Be on the shortlist before the role is posted.
           RELEASE_EXPECTED_HERO_SECONDARY: Starting Monday reads public signals. Leadership changes, funding, expansion, filings.
-          RELEASE_TIMEOUT_SECONDS: "900"
+          RELEASE_TIMEOUT_SECONDS: "2700"
           RELEASE_INTERVAL_SECONDS: "20"
           RELEASE_OUTPUT_JSON: "1"
         run: |
