@@ -18,7 +18,7 @@ export default async function AdminSalesEnablementPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   return (
