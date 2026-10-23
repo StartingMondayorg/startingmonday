@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { maybeRow } from '@/lib/supabase/query-result'
 import { OnboardingForm } from './onboarding-form'
 import {
   normalizeOnboardingDraft,
@@ -17,13 +18,15 @@ export default async function OnboardingPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile, error: profileError } = await supabase
-    .from('user_profiles')
-    .select('onboarding_completed_at, onboarding_current_step, onboarding_draft, full_name, current_title, current_company')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const profile = maybeRow(
+    await supabase
+      .from('user_profiles')
+      .select('onboarding_completed_at, onboarding_current_step, onboarding_draft, full_name, current_title, current_company')
+      .eq('user_id', user.id)
+      .maybeSingle(),
+    'onboarding.user_profiles',
+  )
 
-  if (profileError) throw profileError
   if (resolveOnboardingDestination({ completedAt: profile?.onboarding_completed_at }) === '/dashboard') {
     redirect('/dashboard')
   }
