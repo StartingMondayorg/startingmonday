@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio'
+import { safeFetch } from '../lib/safe-fetch.js'
 
 // Common press room path patterns in order of likelihood
 const PRESS_PATHS = [
@@ -32,10 +33,12 @@ export async function findPressRoomArticles(companyUrl) {
   for (const path of PRESS_PATHS) {
     try {
       const url = `${base}${path}`
-      const res = await fetch(url, {
+      // company_url is user-supplied: resolve, pin and re-check every
+      // redirect (P1-5).
+      const res = await safeFetch(url, {
         headers: BROWSER_HEADERS,
-        redirect: 'follow',
-        signal: AbortSignal.timeout(8000),
+        timeoutMs: 8000,
+        maxBytes: 5 * 1024 * 1024,
       })
 
       if (!res.ok || res.status === 404) continue

@@ -2,6 +2,7 @@ import { logger } from '../lib/logger.js'
 import { getSupabase } from '../lib/supabase.js'
 import { resolveCanonicalCompany, clearCanonicalCache } from '../lib/canonical-company.js'
 import { inferRoleFamilyFromTitle, recordRoleOpening } from '../lib/outcome-labels.js'
+import { safeFetch, UnsafeUrlError } from '../lib/safe-fetch.js'
 
 const SCANNER_MISS_LOCK_KEY = 5814309962n
 const SCANNER_MISS_BATCH = Number(process.env.SCANNER_MISS_BATCH ?? 80)
@@ -18,8 +19,11 @@ function extractHtmlTitle(html) {
 
 async function verifyRoleUrl(url) {
   try {
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(12000),
+    // role_url comes from scanner-miss reports: resolve, pin and re-check
+    // every redirect (P1-5).
+    const response = await safeFetch(url, {
+      timeoutMs: 12000,
+      maxBytes: 5 * 1024 * 1024,
       headers: { 'User-Agent': 'StartingMondayBot/1.0 (+https://startingmonday.app)' },
     })
     if (!response.ok) return { verified: false, status: 'pending_review', note: `fetch_failed_${response.status}` }
@@ -32,6 +36,7 @@ async function verifyRoleUrl(url) {
 
     return { verified: false, status: 'rejected', note: 'no_leadership_markers' }
   } catch (err) {
+    if (err instanceof UnsafeUrlError) return { verified: false, status: 'rejected', note: 'unsafe_url' }
     return { verified: false, status: 'pending_review', note: `fetch_error:${err.message}` }
   }
 }

@@ -11,6 +11,7 @@ import { encodeUserId } from '@/lib/watermark'
 import { streamErrorMessage } from '@/lib/stream-error'
 import { getRoleModePromptPack, isPrepRoleMode, type PrepRoleMode } from '@/lib/prep/prep-role-modes'
 import { extractTextFromHtml, isAllowedJobUrl, normalizeInterviewStage } from '@/lib/prep/prep-route-utils'
+import { safeFetch } from '@/lib/net/safe-fetch'
 import {
   buildScanSection, buildSignalSection, buildContactSection, buildDocSection, buildCompanyFocusBrief,
   type Signal, type ScanRow, type ContactRow, type DocRow,
@@ -542,9 +543,11 @@ export async function GET(
   }
   if (postingUrl) {
     try {
-      const html = await fetch(postingUrl, {
+      // posting_url is user-supplied: resolve, pin and re-check every redirect (P1-5).
+      const html = await safeFetch(postingUrl, {
         headers: { 'User-Agent': 'Mozilla/5.0' },
-        signal: AbortSignal.timeout(8000),
+        timeoutMs: 8000,
+        maxBytes: 2 * 1024 * 1024,
       }).then(r => r.text())
       const text = extractTextFromHtml(html).slice(0, 6000)
       if (text.length > 100) {

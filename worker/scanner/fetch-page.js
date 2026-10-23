@@ -1,5 +1,6 @@
 import { logger } from '../lib/logger.js'
 import { createLimiter } from '../lib/concurrency.js'
+import { isAllowedUrlSyntax, resolveSafeUrl, safeFetch, UnsafeUrlError } from '../lib/safe-fetch.js'
 
 const BROWSERLESS_BASE = 'https://production-sfo.browserless.io'
 const BROWSERLESS_CONTENT_URL = `${BROWSERLESS_BASE}/chromium/content`
@@ -43,23 +44,6 @@ export const MAX_RENDER_CONCURRENCY = Math.max(
 )
 const renderLimit = createLimiter(MAX_RENDER_CONCURRENCY)
 
-// Block private/internal addresses to prevent SSRF attacks.
-function isAllowedUrl(urlStr) {
-  try {
-    const url = new URL(urlStr)
-    if (!['http:', 'https:'].includes(url.protocol)) return false
-    const h = url.hostname.toLowerCase()
-    if (h === 'localhost' || h === '127.0.0.1' || h === '::1') return false
-    if (/^10\./.test(h)) return false
-    if (/^172\.(1[6-9]|2\d|3[01])\./.test(h)) return false
-    if (/^192\.168\./.test(h)) return false
-    if (h === '169.254.169.254') return false // cloud metadata endpoints
-    return true
-  } catch {
-    return false
-  }
-}
-
 const CHROME_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
 
 const BROWSER_HEADERS = {
@@ -80,6 +64,12 @@ const SPA_HOSTS = [
 
 // Minimum visible (non-markup) text for a plain-fetch page to be trusted as rendered.
 const MIN_VISIBLE_TEXT = 800
+
+// Decoded-body ceiling for the plain fetch. A larger page falls back to the renderer.
+const MAX_PLAIN_FETCH_BYTES = 5 * 1024 * 1024
+
+// Deadline for re-resolving the target before it is sent to the renderer.
+export const RENDER_TARGET_VALIDATION_TIMEOUT_MS = 10000
 
 export function hostOf(url) {
   try { return new URL(url).hostname.toLowerCase() } catch { return '' }
@@ -132,7 +122,9 @@ export class BlockedError extends Error {
 //         treating every scan as a render is what made the usage counter
 //         meaningless.
 export async function fetchPage(url) {
-  if (!isAllowedUrl(url)) {
+  // Fast syntactic filter; safeFetch and resolveSafeUrl below are the real
+  // SSRF gate (DNS resolution, every redirect hop, connection pinning). P1-5.
+  if (!isAllowedUrlSyntax(url)) {
     throw new Error(`fetchPage: blocked URL — ${url}`)
   }
 
@@ -140,10 +132,10 @@ export async function fetchPage(url) {
 
   // Step 1: plain fetch
   try {
-    const res = await fetch(url, {
+    const res = await safeFetch(url, {
       headers: BROWSER_HEADERS,
-      signal: AbortSignal.timeout(10000),
-      redirect: 'follow',
+      timeoutMs: 10000,
+      maxBytes: MAX_PLAIN_FETCH_BYTES,
     })
 
     if (BLOCKED_STATUSES.has(res.status)) {
@@ -166,6 +158,11 @@ export async function fetchPage(url) {
     // Got 2xx but a JS shell / sparse content — fall through to browserless.io.
   } catch (err) {
     if (err.blocked) throw err  // BlockedError: propagate immediately, skip browserless.io
+    // The URL or one of its redirects points at a private/reserved address:
+    // refuse outright rather than hand it to the renderer.
+    if (err instanceof UnsafeUrlError) {
+      throw new Error(`fetchPage: blocked URL — ${err.message}`, { cause: err })
+    }
     // Other error (timeout, ENOTFOUND, etc.) — try browserless.io
     logger.warn('fetch-page: plain fetch failed, trying browserless', { url, error: err.message })
   }
@@ -174,6 +171,23 @@ export async function fetchPage(url) {
   if (!apiKey) {
     logger.warn('fetch-page: browserless key missing', { url })
     throw new Error('No BROWSERLESS_API_KEY configured')
+  }
+
+  // The renderer runs remotely, but the target must pass the same checks
+  // before we send it: the plain fetch may have failed before validating.
+  // The DNS wait is bounded so a stalled resolver cannot hang the scan.
+  const validation = new AbortController()
+  const validationTimer = setTimeout(
+    () => validation.abort(new Error(`DNS validation exceeded ${RENDER_TARGET_VALIDATION_TIMEOUT_MS}ms`)),
+    RENDER_TARGET_VALIDATION_TIMEOUT_MS,
+  )
+  try {
+    await resolveSafeUrl(url, { signal: validation.signal })
+  } catch (err) {
+    const reason = err instanceof UnsafeUrlError ? 'blocked URL' : 'could not validate URL'
+    throw new Error(`fetchPage: ${reason} — ${err.message}`, { cause: err })
+  } finally {
+    clearTimeout(validationTimer)
   }
 
   // renderMs is measured inside the limiter so it records browser time, not
