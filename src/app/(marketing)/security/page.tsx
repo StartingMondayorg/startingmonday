@@ -106,7 +106,7 @@ export default function SecurityPage() {
               You can delete your sensitive career context at any time from your profile page after signing in, using the &quot;Delete sensitive notes&quot; option. This clears your positioning summary, beyond-resume notes, and verified career history. Your account, email, and pipeline remain active.
             </p>
             <p className="text-[14px] text-muted-foreground leading-relaxed">
-              To delete your account and all associated data permanently, go to Settings and use the account deletion option. All records are removed from our systems within 30 days.
+              To delete your account and all associated data permanently, email support@startingmonday.app from the address on your account. We confirm the request and remove all records from our systems within 30 days.
             </p>
           </section>
 
@@ -140,7 +140,7 @@ export default function SecurityPage() {
             <ul className="space-y-4 text-[14px] text-muted-foreground mb-4">
               <li className="flex items-start gap-3">
                 <span className="text-muted-foreground shrink-0 mt-0.5 font-bold">+</span>
-                <span><strong className="text-foreground">CCPA:</strong> California residents can request access to, correction of, or deletion of all personal data at any time. Use the account deletion option in Settings. We do not sell personal information and have never sold personal information.</span>
+                <span><strong className="text-foreground">CCPA:</strong> California residents can request access to, correction of, or deletion of all personal data at any time by emailing support@startingmonday.app. We do not sell personal information and have never sold personal information.</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-muted-foreground shrink-0 mt-0.5 font-bold">+</span>
