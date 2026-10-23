@@ -352,7 +352,7 @@ export async function completeOnboarding(formData: FormData) {
       console.error(JSON.stringify({
         ts: new Date().toISOString(),
         event: 'onboarding_notify_new_user_failed',
-        email: user.email,
+        userId: user.id,
         message: error instanceof Error ? error.message : String(error),
       }))
     })

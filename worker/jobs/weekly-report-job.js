@@ -207,7 +207,7 @@ export async function runWeeklyReportJob() {
           })
           await trackUsage(supabase, { service: 'anthropic', requests: 1, tokens: 400 })
         } catch (err) {
-          logger.warn(`weekly-report-job: Claude call failed for ${user.email}`, { error: err.message })
+          logger.warn(`weekly-report-job: Claude call failed for user ${user.id}`, { error: err.message })
         }
       }
 
@@ -303,9 +303,9 @@ export async function runWeeklyReportJob() {
       })
       await trackUsage(supabase, { service: 'resend', requests: 1 })
       sent++
-      logger.info(`weekly-report-job: sent to ${user.email}`, { momentumScore: currentScore, momentumDelta, matches: newMatches.length, actions: suggestedActions.length })
+      logger.info(`weekly-report-job: sent to user ${user.id}`, { momentumScore: currentScore, momentumDelta, matches: newMatches.length, actions: suggestedActions.length })
     } catch (err) {
-      logger.error(`weekly-report-job: error for ${user.email}`, { error: err.message })
+      logger.error(`weekly-report-job: error for user ${user.id}`, { error: err.message })
     }
   }
 
