@@ -21,7 +21,7 @@ describe('claimBriefingSend', () => {
   it('claims a fresh (user, date)', async () => {
     const supabase = claimsDb()
     const result = await claimBriefingSend(supabase, { userId: 'u1', localDate: '2026-10-19', now: NOW })
-    expect(result).toEqual({ outcome: 'claimed', reclaimed: false })
+    expect(result).toEqual({ outcome: 'claimed', reclaimed: false, claimedAt: NOW.toISOString() })
     expect(supabase.db.briefing_send_claims).toEqual([
       { user_id: 'u1', local_date: '2026-10-19', status: 'claimed', claimed_at: NOW.toISOString() },
     ])
@@ -47,7 +47,7 @@ describe('claimBriefingSend', () => {
     const heldAt = new Date(NOW.getTime() - CLAIM_LEASE_MS - 60_000).toISOString()
     const supabase = claimsDb([{ user_id: 'u1', local_date: '2026-10-19', status: 'claimed', claimed_at: heldAt }])
     const result = await claimBriefingSend(supabase, { userId: 'u1', localDate: '2026-10-19', now: NOW })
-    expect(result).toEqual({ outcome: 'claimed', reclaimed: true, previousStatus: 'claimed' })
+    expect(result).toEqual({ outcome: 'claimed', reclaimed: true, previousStatus: 'claimed', claimedAt: NOW.toISOString() })
     expect(supabase.db.briefing_send_claims[0]).toMatchObject({ status: 'claimed', claimed_at: NOW.toISOString() })
   })
 
@@ -110,8 +110,29 @@ describe('claim outcome writes', () => {
 
   it('marks only a still-claimed row as failed', async () => {
     const supabase = claimsDb([{ user_id: 'u1', local_date: '2026-10-19', status: 'sent', claimed_at: NOW.toISOString() }])
-    await markBriefingSendFailed(supabase, { userId: 'u1', localDate: '2026-10-19' })
+    await markBriefingSendFailed(supabase, { userId: 'u1', localDate: '2026-10-19', claimedAt: NOW.toISOString() })
     expect(supabase.db.briefing_send_claims[0].status).toBe('sent')
+  })
+
+  it('does not let a stalled run fail the live claim of the run that reclaimed it', async () => {
+    const staleAt = new Date(NOW.getTime() - CLAIM_LEASE_MS - 60_000)
+    const supabase = claimsDb()
+
+    const runA = await claimBriefingSend(supabase, { userId: 'u1', localDate: '2026-10-19', now: staleAt })
+    const runB = await claimBriefingSend(supabase, { userId: 'u1', localDate: '2026-10-19', now: NOW })
+    expect(runB).toMatchObject({ outcome: 'claimed', reclaimed: true })
+
+    // Run A wakes up, fails, and tries to release what it thinks is its claim.
+    await markBriefingSendFailed(supabase, { userId: 'u1', localDate: '2026-10-19', claimedAt: runA.claimedAt })
+    expect(supabase.db.briefing_send_claims[0]).toMatchObject({ status: 'claimed', claimed_at: runB.claimedAt })
+
+    // So a third run still sees B's live lease and stays out.
+    const runC = await claimBriefingSend(supabase, { userId: 'u1', localDate: '2026-10-19', now: new Date(NOW.getTime() + 60_000) })
+    expect(runC).toEqual({ outcome: 'skip', reason: 'claim_in_flight' })
+
+    // B's own release still works.
+    await markBriefingSendFailed(supabase, { userId: 'u1', localDate: '2026-10-19', claimedAt: runB.claimedAt })
+    expect(supabase.db.briefing_send_claims[0].status).toBe('failed')
   })
 
   it('derives the Resend idempotency key from the claim key', () => {

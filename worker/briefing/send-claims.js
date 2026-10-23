@@ -42,7 +42,7 @@ export async function claimBriefingSend(supabase, { userId, localDate, now = new
     .from(CLAIMS_TABLE)
     .insert({ user_id: userId, local_date: localDate, status: 'claimed', claimed_at: claimedAt })
 
-  if (!insertError) return { outcome: 'claimed', reclaimed: false }
+  if (!insertError) return { outcome: 'claimed', reclaimed: false, claimedAt }
   if (isMissingTableError(insertError)) return { outcome: 'unavailable' }
   if (insertError.code !== UNIQUE_VIOLATION) {
     throw new Error(`briefing claim insert failed: ${insertError.code ?? ''} ${insertError.message}`.trim())
@@ -75,9 +75,11 @@ export async function claimBriefingSend(supabase, { userId, localDate, now = new
     .select('user_id')
   if (reclaimError) throw new Error(`briefing claim reclaim failed: ${reclaimError.message}`)
   if (!taken?.length) return { outcome: 'skip', reason: 'claim_lost_race' }
-  return { outcome: 'claimed', reclaimed: true, previousStatus: existing.status }
+  return { outcome: 'claimed', reclaimed: true, previousStatus: existing.status, claimedAt }
 }
 
+// Not owner-checked on purpose: once Resend has accepted an email for this
+// key, the row must say 'sent' whoever holds the lease, so nobody sends again.
 export async function markBriefingSendSent(supabase, { userId, localDate, providerMessageId, now = new Date() }) {
   const { error } = await supabase
     .from(CLAIMS_TABLE)
@@ -87,12 +89,16 @@ export async function markBriefingSendSent(supabase, { userId, localDate, provid
   if (error) throw new Error(`briefing claim mark-sent failed: ${error.message}`)
 }
 
-export async function markBriefingSendFailed(supabase, { userId, localDate }) {
+// Releases a claim for retry only while this run still owns it: claimed_at is
+// the lease token. A run that stalled past the lease and was reclaimed by
+// another run must not flip that run's live claim to 'failed'.
+export async function markBriefingSendFailed(supabase, { userId, localDate, claimedAt }) {
   const { error } = await supabase
     .from(CLAIMS_TABLE)
     .update({ status: 'failed' })
     .eq('user_id', userId)
     .eq('local_date', localDate)
     .eq('status', 'claimed')
+    .eq('claimed_at', claimedAt)
   if (error) throw new Error(`briefing claim mark-failed failed: ${error.message}`)
 }

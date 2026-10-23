@@ -214,7 +214,7 @@ export async function runBriefingJob() {
             })
           }
         } else {
-          claimKey = { userId: user.id, localDate }
+          claimKey = { userId: user.id, localDate, claimedAt: claim.claimedAt }
           if (claim.reclaimed) {
             logger.warn(`briefing-job: reclaimed ${claim.previousStatus} send claim for ${user.id} (${localDate})`)
           }
@@ -243,6 +243,9 @@ export async function runBriefingJob() {
         const html = injectTrackingPixel(rawHtml, user.id, 'briefing', context.todayStr)
 
         let providerMessageId = null
+        // False when Resend reports an earlier attempt already delivered: the
+        // email the user has is that earlier one, not this regenerated payload.
+        let payloadAccepted = true
         try {
           const result = await sendBriefing({
             to: user.email,
@@ -258,6 +261,7 @@ export async function runBriefingJob() {
           // the key was already used within 24h: the earlier attempt reached
           // Resend, so the user already has today's briefing.
           if (sendErr?.code !== 'invalid_idempotent_request') throw sendErr
+          payloadAccepted = false
           logger.warn(`briefing-job: ${user.id} briefing for ${localDate} already accepted by Resend — recording as sent`)
         }
         delivered = true
@@ -270,11 +274,13 @@ export async function runBriefingJob() {
 
         // Mark signals notified first — if we crash after this but before updating the
         // timestamp, the send claim (status 'sent') still blocks a duplicate email
-        // rather than leaving signal notifications pending permanently.
-        const unnotifiedSignalIds = [
+        // rather than leaving signal notifications pending permanently. Skipped when
+        // this payload was not the one delivered: signals that arrived after the
+        // earlier send stay pending for the next briefing instead of being lost.
+        const unnotifiedSignalIds = payloadAccepted ? [
           ...(context.signals ?? []).filter(s => !s.notifiedAt).map(s => s.id),
           ...(context.patternAlerts ?? []).filter(s => !s.notifiedAt).map(s => s.id),
-        ]
+        ] : []
         if (unnotifiedSignalIds.length) {
           const { error: signalUpdateError } = await supabase
             .from('company_signals')

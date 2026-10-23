@@ -139,6 +139,12 @@ describe('runBriefingJob send claims', () => {
   it('records a reclaimed send as sent when Resend reports the key was already used', async () => {
     const heldAt = new Date(NOW.getTime() - CLAIM_LEASE_MS - 60_000).toISOString()
     const supabase = setup({ claims: [{ user_id: 'user-a', local_date: TODAY, status: 'claimed', claimed_at: heldAt }], users: [USERS[0]] })
+    // A signal that arrived after the earlier (delivered) attempt: it is in the
+    // regenerated payload Resend rejected, so the user has not seen it.
+    supabase.db.company_signals.push({ id: 'sig-late', notified_at: null })
+    mocks.assembleContext.mockImplementation(async (_s, userId) => ({
+      userId, todayStr: TODAY, signals: [{ id: 'sig-late', notifiedAt: null }], patternAlerts: [],
+    }))
     mocks.sendBriefing.mockRejectedValue(Object.assign(new Error('Resend 409 invalid_idempotent_request'), {
       status: 409, code: 'invalid_idempotent_request',
     }))
@@ -147,6 +153,19 @@ describe('runBriefingJob send claims', () => {
 
     expect(supabase.db.briefing_send_claims[0]).toMatchObject({ status: 'sent', provider_message_id: null })
     expect(supabase.db.user_profiles[0].last_briefing_sent_at).toBe(NOW.toISOString())
+    expect(supabase.db.company_signals[0].notified_at).toBeNull()
+  })
+
+  it('marks signals notified when this payload was delivered', async () => {
+    const supabase = setup({ users: [USERS[0]] })
+    supabase.db.company_signals.push({ id: 'sig-1', notified_at: null })
+    mocks.assembleContext.mockImplementation(async (_s, userId) => ({
+      userId, todayStr: TODAY, signals: [{ id: 'sig-1', notifiedAt: null }], patternAlerts: [],
+    }))
+
+    await runBriefingJob()
+
+    expect(supabase.db.company_signals[0].notified_at).toBe(NOW.toISOString())
   })
 
   it('keeps going after one user fails, releases that claim, and fails the job with counts', async () => {
