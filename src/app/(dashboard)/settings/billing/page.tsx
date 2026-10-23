@@ -19,7 +19,7 @@ export default async function BillingPage() {
 
   const accountName = profileResult.data?.full_name ?? null
   const isPlaced = !!profileResult.data?.placed_at
-  const canSeeAdminHeader = await canUserSeeAdminHeader(user.email ?? '')
+  const canSeeAdminHeader = await canUserSeeAdminHeader(user)
 
   return (
     <main>

@@ -73,37 +73,50 @@ describe('verify-and-signup route', () => {
     expect(state.signUp).toHaveBeenCalled()
   })
 
-  it('falls back to admin-created user when public signups are disabled', async () => {
+  it('returns 503 SIGNUPS_DISABLED without creating a user when public signups are disabled', async () => {
     state.signUp.mockResolvedValue({
       data: { user: null, session: null },
       error: { message: 'Signups not allowed for this instance' },
     })
 
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
     const req = new NextRequest('https://startingmonday.app/api/auth/verify-and-signup', {
       method: 'POST',
-      body: JSON.stringify({ email: 'user@example.com', password: 'StrongPass123!' }),
+      body: JSON.stringify({ email: 'victim@example.com', password: 'StrongPass123!' }),
+    })
+
+    const res = await POST(req)
+    const body = await res.json()
+
+    expect(res.status).toBe(503)
+    expect(body).toEqual({
+      ok: false,
+      error: 'Email signup is temporarily unavailable. Use Google or Apple, or try again later.',
+      code: 'SIGNUPS_DISABLED',
+    })
+    expect(state.createUser).not.toHaveBeenCalled()
+    expect(state.signInWithPassword).not.toHaveBeenCalled()
+    expect(state.logEvent).not.toHaveBeenCalled()
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('"event":"signup_disabled_rejected"'))
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('victim@example.com'))
+    consoleError.mockRestore()
+  })
+
+  it('returns 400 with the provider message for other signUp errors', async () => {
+    state.signUp.mockResolvedValue({
+      data: { user: null, session: null },
+      error: { message: 'Password should be at least 8 characters' },
+    })
+
+    const req = new NextRequest('https://startingmonday.app/api/auth/verify-and-signup', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'user@example.com', password: 'short' }),
     })
 
     const res = await POST(req)
 
-    expect(res.status).toBe(200)
-    expect(state.createUser).toHaveBeenCalledWith({
-      email: 'user@example.com',
-      password: 'StrongPass123!',
-      email_confirm: true,
-    })
-    expect(state.signInWithPassword).toHaveBeenCalledWith({
-      email: 'user@example.com',
-      password: 'StrongPass123!',
-    })
-    expect(state.logEvent).toHaveBeenCalledWith(
-      'u1',
-      'auth_path_routed',
-      expect.objectContaining({
-        route: 'verify-and-signup',
-        path_category: 'direct_admin',
-        auth_method: 'admin_created_password',
-      })
-    )
+    expect(res.status).toBe(400)
+    await expect(res.json()).resolves.toEqual({ ok: false, error: 'Password should be at least 8 characters' })
+    expect(state.createUser).not.toHaveBeenCalled()
   })
 })

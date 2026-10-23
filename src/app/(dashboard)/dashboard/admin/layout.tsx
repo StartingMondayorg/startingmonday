@@ -13,7 +13,7 @@ export default async function DashboardAdminLayout({
   if (!user) redirect('/login?next=/dashboard/admin')
 
   const [staff, orgScope] = await Promise.all([
-    getStaffMember(user.email ?? ''),
+    getStaffMember(user),
     resolveOrgScopeForUser({ userId: user.id, email: user.email ?? null }),
   ])
 

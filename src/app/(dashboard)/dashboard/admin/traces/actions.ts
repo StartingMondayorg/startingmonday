@@ -8,7 +8,7 @@ export async function rateTrace(traceId: string, evalPass: boolean | null, evalN
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { ok: false }
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) return { ok: false }
 
   const adminClient = createAdminClient()

@@ -9,7 +9,7 @@ async function requireStaff() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   return staff ? { user, staff } : null
 }
 
