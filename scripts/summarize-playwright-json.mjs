@@ -49,6 +49,10 @@ export function summarizePlaywrightReport(report, exitCode = 0) {
   return { passed, failed, flaky, skipped, total: passed + failed, failedTests, error }
 }
 
+// GITHUB_OUTPUT `key=value` records are single-line; a CR/LF in a test title or
+// error message would corrupt the file and fail the step before the alert runs.
+const oneLine = (value) => String(value).replace(/[\r\n]+/g, ' ').trim()
+
 export function toOutputLines(summary) {
   return [
     `passed=${summary.passed}`,
@@ -56,8 +60,8 @@ export function toOutputLines(summary) {
     `flaky=${summary.flaky}`,
     `skipped=${summary.skipped}`,
     `total=${summary.total}`,
-    `failed_tests=${summary.failedTests.join('|')}`,
-    `error=${summary.error}`,
+    `failed_tests=${summary.failedTests.map(oneLine).join('|')}`,
+    `error=${oneLine(summary.error)}`,
   ].join('\n')
 }
 

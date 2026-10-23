@@ -55,6 +55,16 @@ test('CLI reports an unreadable report as a failure', () => {
   assert.match(out, /^error=could not read Playwright JSON report/m)
 })
 
+test('multiline test titles and errors stay on one GITHUB_OUTPUT line each', () => {
+  const s = summarizePlaywrightReport(report(spec('dashboard\nloads\r\nfast', 'unexpected')), 1)
+  s.error = 'first line\nsecond line'
+  const lines = toOutputLines(s).split('\n')
+  assert.equal(lines.length, 7)
+  assert.ok(lines.every((line) => /^[a-z_]+=/.test(line)))
+  assert.ok(lines.includes('failed_tests=dashboard loads fast'))
+  assert.ok(lines.includes('error=first line second line'))
+})
+
 test('CLI output is GITHUB_OUTPUT lines', () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'pw-summary-'))
   const file = path.join(dir, 'report.json')
