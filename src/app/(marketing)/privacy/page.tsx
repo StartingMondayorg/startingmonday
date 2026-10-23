@@ -88,8 +88,9 @@ export default function PrivacyPage() {
           <p className="text-[14px] text-muted-foreground leading-relaxed mb-4">
             Your email address and basic profile information are stored securely in our authentication
             provider (Supabase), hosted on AWS infrastructure. Data is encrypted at rest and in transit.
-            We retain your data for as long as your account is active. You may permanently delete your
-            account and all associated data at any time from your account settings.
+            We retain your data for as long as your account is active. You may request permanent deletion
+            of your account and all associated data at any time by emailing support@startingmonday.app from
+            the address on your account; we complete deletion within 30 days.
           </p>
 
           <h3 className="text-[14px] font-semibold text-foreground mb-2">Data Sharing</h3>
