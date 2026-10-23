@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
   const supabase = await createClient()
   const { data } = await supabase.auth.getUser()
-  const staff = await getStaffMember(data.user?.email ?? '')
+  const staff = await getStaffMember(data.user)
   if (!staff) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

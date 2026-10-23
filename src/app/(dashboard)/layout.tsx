@@ -27,7 +27,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   // R-6: the palette hides tier-gated destinations the account would be redirected away from.
-  const [subscription, staff] = await Promise.all([getUserSubscription(user.id, supabase), getStaffMember(user.email ?? '')])
+  const [subscription, staff] = await Promise.all([getUserSubscription(user.id, supabase), getStaffMember(user)])
   const aiChatEnabled = isEntitled('ai_chat', { subscription, partnerId: orgScope.partnerId, staff })
 
   const demoId = process.env.DEMO_USER_ID

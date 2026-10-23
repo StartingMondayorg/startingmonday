@@ -46,6 +46,7 @@ describe('requireLiveBriefMutationAccess', () => {
       userEmail: user.email,
       staff,
     })
+    expect(mocked.getStaffMember).toHaveBeenCalledWith(user)
   })
 
   it.each<[string, { userError?: Error; claimsSub?: string; recent?: boolean; admin?: boolean }]>([

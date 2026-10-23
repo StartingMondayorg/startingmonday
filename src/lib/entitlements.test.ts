@@ -80,22 +80,26 @@ describe('R-6 entitlement loading and route gate', () => {
     mocks.resolveOrgScopeForUser.mockResolvedValue({ ok: true, partnerId: 'p1' })
     mocks.getStaffMember.mockResolvedValue(null)
 
-    const inputs = await loadEntitlementInputs('u1', 'u@example.com')
+    const user = { id: 'u1', aud: 'authenticated', email: 'u@example.com', email_confirmed_at: '2026-01-01T00:00:00.000Z' }
+    const inputs = await loadEntitlementInputs(user)
 
     expect(inputs.partnerId).toBe('p1')
     expect(inputs.subscription.tier).toBe('active')
-    expect(mocks.getStaffMember).toHaveBeenCalledWith('u@example.com')
+    expect(mocks.resolveOrgScopeForUser).toHaveBeenCalledWith({ userId: 'u1', email: 'u@example.com' })
+    expect(mocks.getStaffMember).toHaveBeenCalledWith(user)
   })
 
-  it('treats an orphaned team seat as no partner and a null email as an empty staff lookup', async () => {
+  it('treats an orphaned team seat as no partner and passes the auth user to the staff lookup', async () => {
     mocks.getUserSubscription.mockResolvedValue(sub('free'))
     mocks.resolveOrgScopeForUser.mockResolvedValue({ ok: false, reason: 'orphaned_team_seat' })
     mocks.getStaffMember.mockResolvedValue(null)
 
-    const inputs = await loadEntitlementInputs('u1', null)
+    const user = { id: 'u1', aud: 'authenticated', email: undefined }
+    const inputs = await loadEntitlementInputs(user)
 
     expect(inputs.partnerId).toBeNull()
-    expect(mocks.getStaffMember).toHaveBeenCalledWith('')
+    expect(mocks.resolveOrgScopeForUser).toHaveBeenCalledWith({ userId: 'u1', email: null })
+    expect(mocks.getStaffMember).toHaveBeenCalledWith(user)
   })
 
   it('redirects to /login without a session', async () => {

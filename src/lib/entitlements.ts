@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { canAccessFeature, getUserSubscription, type UserSubscription } from '@/lib/billing/subscription'
 import { resolveOrgScopeForUser } from '@/lib/org-scope'
-import { getStaffMember, type StaffMember } from '@/lib/staff'
+import { getStaffMember, type StaffAuthUser, type StaffMember } from '@/lib/staff'
 
 // R-6 (2026-10-21): B2B and tier-bound surfaces are entitlement-gated at the
 // route. Solo accounts that lack the entitlement land on /dashboard instead of
@@ -32,12 +32,16 @@ export function isEntitled(kind: Entitlement, inputs: EntitlementInputs): boolea
   }
 }
 
-export async function loadEntitlementInputs(userId: string, email: string | null): Promise<EntitlementInputs> {
+export async function loadEntitlementInputs(
+  user: StaffAuthUser & { id: string },
+): Promise<EntitlementInputs> {
+  const userId = user.id
+  const email = user.email ?? null
   const supabase = await createClient()
   const [subscription, scope, staff] = await Promise.all([
     getUserSubscription(userId, supabase),
     resolveOrgScopeForUser({ userId, email }),
-    getStaffMember(email ?? ''),
+    getStaffMember(user),
   ])
   return {
     subscription,
@@ -53,7 +57,7 @@ export async function requireEntitlement(kind: Entitlement): Promise<Entitlement
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
-  const inputs = await loadEntitlementInputs(user.id, user.email ?? null)
+  const inputs = await loadEntitlementInputs(user)
   if (!isEntitled(kind, inputs)) redirect('/dashboard')
   return inputs
 }

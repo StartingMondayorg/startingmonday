@@ -73,7 +73,7 @@ export async function requireStaffAutomationAccess(request: NextRequest): Promis
   const supabase = await createClient()
   const { data: authData } = await supabase.auth.getUser()
   const userEmail = authData.user?.email ?? ''
-  const staff = await getStaffMember(userEmail)
+  const staff = await getStaffMember(authData.user)
 
   if (!staff) {
     return { ok: false, response: NextResponse.json({ error: 'Forbidden' }, { status: 403 }) }
