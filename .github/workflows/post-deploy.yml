@@ -208,42 +208,13 @@ jobs:
           PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PROD_PLAYWRIGHT_TEST_PASSWORD }}
         run: |
           # Run P0 synthetics plus authenticated outreach stale-copy canary.
+          # This step only collects results; "Fail job when P0 synthetics failed" below
+          # fails the job after the summary, alert and artifact steps have run.
           EXIT_CODE=0
           npx playwright test --project=synthetics --project=outreach-canary \
             --reporter=json 2>/dev/null > post-deploy-synthetic-results.json || EXIT_CODE=$?
 
-          node -e "
-          const fs = require('fs')
-          let results
-          try {
-            results = JSON.parse(fs.readFileSync('post-deploy-synthetic-results.json', 'utf8'))
-          } catch {
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'failed=1\npassed=0\ntotal=0\n')
-            process.exit(0)
-          }
-          const suites = results.suites ?? []
-          let passed = 0, failed = 0
-          const failedTests = []
-
-          function walk(suite) {
-            for (const s of suite.suites ?? []) walk(s)
-            for (const spec of suite.specs ?? []) {
-              for (const test of spec.tests ?? []) {
-                if (test.status === 'passed') passed++
-                else if (test.status !== 'skipped') { failed++; failedTests.push(spec.title) }
-              }
-            }
-          }
-          suites.forEach(walk)
-
-          const outputs = [
-            'passed=' + passed,
-            'failed=' + failed,
-            'total=' + (passed + failed),
-            'failed_tests=' + failedTests.join('|'),
-          ]
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, outputs.join('\n') + '\n')
-          "
+          node scripts/summarize-playwright-json.mjs post-deploy-synthetic-results.json "$EXIT_CODE" | tee -a "$GITHUB_OUTPUT"
 
       - name: Check consecutive post-deploy failures (rollback trigger)
         id: rollback_check
@@ -370,6 +341,12 @@ jobs:
             post-deploy-synthetic-results.json
             emi-postdeploy-smoke.json
           retention-days: 30
+
+      - name: Fail job when P0 synthetics failed
+        if: steps.synthetics.outcome == 'success' && steps.synthetics.outputs.failed != '0'
+        run: |
+          echo "::error::P0 synthetics failed against production: ${{ steps.synthetics.outputs.failed }} of ${{ steps.synthetics.outputs.total }} (${{ steps.synthetics.outputs.failed_tests }}) ${{ steps.synthetics.outputs.error }}"
+          exit 1
 
   production-deploy-playwright:
     name: Playwright E2E (production post-deploy)
