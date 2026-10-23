@@ -13,7 +13,7 @@ export default async function WedgeEconomicsLedgerPage() {
 
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   return (

@@ -38,7 +38,7 @@ export default async function BotTrafficPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */

@@ -2,8 +2,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { logEvent } from '@/lib/events'
 
 export const runtime = 'nodejs'
 
@@ -79,62 +77,24 @@ export async function POST(request: NextRequest) {
     options: { emailRedirectTo: redirectTo },
   })
 
+  // Never fall back to admin.createUser here: a pre-confirmed account for an
+  // unverified address could claim email-keyed access such as staff roles.
   if (error && isSignupDisabledError(error)) {
-    const admin = createAdminClient()
-    const { data: adminData, error: adminError } = await admin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    })
-
-    if (adminError || !adminData.user) {
-      const errAny = adminError as unknown as Record<string, unknown>
-      console.error(JSON.stringify({ ts: new Date().toISOString(), event: 'admin_create_error', message: adminError?.message, code: errAny?.code, status: errAny?.status }))
-      const msg = adminError?.message?.toLowerCase() ?? ''
-      const code = String(errAny?.code ?? '').toLowerCase()
-      const alreadyExists = msg.includes('already registered') || msg.includes('already exists') || msg.includes('duplicate') || msg.includes('been registered') || code.includes('email_exists')
-      return NextResponse.json(
-        {
-          ok: false,
-          error: alreadyExists
-            ? 'An account with that email already exists. Try signing in instead.'
-            : 'Email signup is temporarily unavailable. Use Google or Apple, or try again later.',
-          code: alreadyExists ? 'EMAIL_EXISTS' : 'SIGNUPS_DISABLED',
-        },
-        { status: alreadyExists ? 409 : 503 }
-      )
-    }
-
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (signInError || !signInData.session) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: signInError?.message ?? 'Unable to finish account creation',
-          code: 'SIGNUPS_DISABLED',
-        },
-        { status: 500 }
-      )
-    }
-
-    await logEvent(signInData.user?.id ?? adminData.user.id, 'auth_path_routed', {
+    // Signups should be enabled in production; a rejection here means the
+    // Supabase auth config drifted. Log without the email address.
+    console.error(JSON.stringify({
+      ts: new Date().toISOString(),
+      event: 'signup_disabled_rejected',
       route: 'verify-and-signup',
-      path_category: 'direct_admin',
-      auth_method: 'admin_created_password',
-    })
-
+      message: error.message,
+    }))
     return NextResponse.json(
       {
-        ok: true,
-        user: signInData.user ?? adminData.user,
-        session: signInData.session,
-        message: 'Account created successfully.',
+        ok: false,
+        error: 'Email signup is temporarily unavailable. Use Google or Apple, or try again later.',
+        code: 'SIGNUPS_DISABLED',
       },
-      { status: 200 }
+      { status: 503 }
     )
   }
 

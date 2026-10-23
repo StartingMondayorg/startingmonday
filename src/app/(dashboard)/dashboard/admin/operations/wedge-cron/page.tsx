@@ -63,7 +63,7 @@ export default async function WedgeCronRunsPage({ searchParams }: WedgeCronRunsP
 
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   const params = await searchParams

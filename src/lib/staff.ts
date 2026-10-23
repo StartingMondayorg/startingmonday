@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export type StaffRole = 'owner' | 'admin' | 'viewer'
@@ -15,29 +16,64 @@ export function hasAdminHeaderAccess(staff: StaffMember | null): boolean {
   return staff?.role === 'owner' || staff?.role === 'admin'
 }
 
-export async function canUserSeeAdminHeader(email: string): Promise<boolean> {
-  const staff = await getStaffMember(email)
+// `aud` is required so callers must pass the Supabase auth user itself, not a
+// hand-built `{ email }` object that would silently lack `email_confirmed_at`.
+export type StaffAuthUser = Pick<User, 'aud' | 'email' | 'email_confirmed_at'>
+
+export async function canUserSeeAdminHeader(user: StaffAuthUser | null | undefined): Promise<boolean> {
+  const staff = await getStaffMember(user)
   return hasAdminHeaderAccess(staff)
 }
 
-export async function getStaffMember(email: string): Promise<StaffMember | null> {
-  try {
-    const normalizedEmail = email.trim().toLowerCase()
-    const admin = createAdminClient()
-    const { data } = await admin
-      .from('staff_members')
-      .select('*')
-      .eq('email', normalizedEmail)
-      .maybeSingle()
+// Local-only owner fallback. Requires an explicit opt-in so a stray
+// NODE_ENV=development deployment cannot grant owner access to every account.
+export function isDevStaffBypassEnabled(): boolean {
+  return process.env.NODE_ENV === 'development' && process.env.DEV_STAFF_BYPASS === '1'
+}
 
-    if (data) {
-      return data as StaffMember
+// staff_members is keyed by email, so a staff grant is only as strong as the
+// proof that the signed-in user owns that address.
+export function hasConfirmedEmail(user: StaffAuthUser | null | undefined): user is StaffAuthUser & { email: string } {
+  return Boolean(user?.email?.trim() && user.email_confirmed_at)
+}
+
+/**
+ * Resolves the staff record for a signed-in Supabase user. Pass the user
+ * object from `supabase.auth.getUser()`: users whose email is not confirmed
+ * never resolve to a staff member.
+ *
+ * Passing a bare email string is a legacy lookup that cannot verify email
+ * ownership; do not use it for authorization decisions.
+ */
+export async function getStaffMember(subject: StaffAuthUser | string | null | undefined): Promise<StaffMember | null> {
+  let lookupEmail = ''
+  let displayEmail = ''
+  if (typeof subject === 'string') {
+    lookupEmail = subject.trim().toLowerCase()
+    displayEmail = lookupEmail
+  } else {
+    displayEmail = subject?.email?.trim().toLowerCase() ?? ''
+    if (hasConfirmedEmail(subject)) lookupEmail = displayEmail
+  }
+
+  try {
+    if (lookupEmail) {
+      const admin = createAdminClient()
+      const { data } = await admin
+        .from('staff_members')
+        .select('*')
+        .eq('email', lookupEmail)
+        .maybeSingle()
+
+      if (data) {
+        return data as StaffMember
+      }
     }
 
-    if (process.env.NODE_ENV === 'development') {
+    if (isDevStaffBypassEnabled()) {
       return {
         id: '00000000-0000-0000-0000-000000000000',
-        email: normalizedEmail || process.env.DEV_AUTH_EMAIL?.trim() || 'demo@startingmonday.app',
+        email: displayEmail || process.env.DEV_AUTH_EMAIL?.trim() || 'demo@startingmonday.app',
         role: 'owner',
         permissions: {},
         created_at: new Date(0).toISOString(),

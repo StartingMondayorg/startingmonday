@@ -46,7 +46,7 @@ export default async function TeamSettingsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
-  const isRothschildAdmin = await canUserSeeAdminHeader(user.email ?? '')
+  const isRothschildAdmin = await canUserSeeAdminHeader(user)
   const admin = createAdminClient()
 
   const { data: partnerRowRaw } = await admin

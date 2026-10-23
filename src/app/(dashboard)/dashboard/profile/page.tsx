@@ -99,7 +99,7 @@ export default async function ProfilePage({
     ?? (profile?.role_type === 'vp_technology' ? 'Summarize real scope, team scale, and budget ownership.' : null)
     ?? "What motivates you, your leadership philosophy, things you're proud of that don't fit in a resume..."
 
-  const isRothschildAdmin = await canUserSeeAdminHeader(user.email ?? '')
+  const isRothschildAdmin = await canUserSeeAdminHeader(user)
   const progressSections = [
     { label: 'Identity', done: !!(profile?.role_type && profile?.full_name) },
     { label: 'Targets', done: ((profile?.target_titles as string[] | null)?.length ?? 0) > 0 },
