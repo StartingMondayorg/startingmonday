@@ -63,7 +63,7 @@ export default async function CustomersPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   const { filter: rawFilter = 'all', sent } = await searchParams

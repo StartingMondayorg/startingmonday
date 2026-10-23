@@ -16,7 +16,7 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!hasAdminHeaderAccess(staff)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

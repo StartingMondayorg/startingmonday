@@ -49,7 +49,7 @@ export default async function LiveBriefDetailPage({ params }: { params: Promise<
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   const admin = createAdminClient() as unknown as DetailClient
