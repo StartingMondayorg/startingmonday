@@ -86,7 +86,7 @@ Starting Monday gives you a private, signal-first operating layer so you can run
 - **Encrypted at rest and in transit.** All data is encrypted at rest in our database and encrypted in transit over TLS. We do not store plaintext credentials anywhere.
 - **Minimal data collection.** We collect only what is needed to run your search: your target list, your pipeline state, and your prep brief history. We do not sell leads, we do not license your data to third parties, and we do not use your data to train models.
 - **Access controls by role.** Coach and partner visibility is gated by explicit permission grants that you set. Internal team access is role-scoped and logged.
-- **Permanent deletion.** You can permanently delete your account and all associated data from Settings at any time. Deletion is irreversible and removes your data from active storage within 30 days.
+- **Permanent deletion.** To delete your account and all associated data, email support@startingmonday.app from the address on your account. We confirm the request and remove your data from active storage within 30 days. Deletion is irreversible.
 - **Security practices.** We follow OWASP secure development guidelines, enforce API authentication on every endpoint, and run dependency audits as part of our deployment pipeline.
 
 ---
