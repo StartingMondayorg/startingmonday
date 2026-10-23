@@ -34,7 +34,7 @@ export default async function OnboardingQaScorecardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!hasAdminHeaderAccess(staff)) notFound()
 
   const admin = createAdminClient()

@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   const { userId } = auth
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  const staff = await getStaffMember(user?.email ?? '')
+  const staff = await getStaffMember(user)
   if (!hasAdminHeaderAccess(staff)) return NextResponse.json({ error: 'Admin or owner access required.' }, { status: 403 })
   const staffMember = staff!
 

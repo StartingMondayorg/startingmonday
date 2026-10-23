@@ -47,8 +47,21 @@ order by count desc;
 # Railway log filter for auth 5xx:
 # In Railway UI: filter "api/auth" AND "status\":5
 
-# Check rate limit state (if using in-memory rate limit):
-# Restart service if memory is suspected corrupt
+# Rate limits are shared in Postgres (public.rate_limit_counters, migration 189).
+# A '[rate_limit] shared_store_unavailable_using_memory' log line means the app
+# fell back to per-process counters (migration missing or RPC failing).
+```
+
+```sql
+-- Keys being limited right now (login: rl:login:<ip>, rl:login_submit:<ip>)
+select key, window_start, count
+from public.rate_limit_counters
+where window_start > now() - interval '15 minutes'
+order by count desc
+limit 50;
+
+-- Clear a wrongly blocked key
+delete from public.rate_limit_counters where key = 'rl:login:<ip>';
 ```
 
 Traces to inspect:
@@ -59,7 +72,7 @@ Traces to inspect:
 
 In order of escalation:
 
-1. **Restart Railway service** — clears in-memory rate limit and any stuck state
+1. **Restart Railway service** — clears stuck in-process state (rate limits are in Postgres and survive restarts; clear them with the SQL above)
 2. **Rollback deploy** — if correlated with recent deploy:
    - Railway: Deployments > prior deploy > Redeploy
    - GitHub: `git revert HEAD && git push`

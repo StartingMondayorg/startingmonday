@@ -16,7 +16,7 @@ export async function requireLiveBriefStaffAccess(): Promise<LiveBriefMutationAu
   if (userError || !user) return null
 
   const userEmail = user.email?.trim() ?? ''
-  const staff = await getStaffMember(userEmail)
+  const staff = await getStaffMember(user)
   if (!staff || !hasAdminHeaderAccess(staff)) return null
 
   return { userId: user.id, userEmail, staff }

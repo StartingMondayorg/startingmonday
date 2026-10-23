@@ -7,7 +7,7 @@ async function requireStaff(request: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { ok: false as const, response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) return { ok: false as const, response: NextResponse.json({ error: 'Forbidden' }, { status: 403 }) }
   return { ok: true as const }
 }

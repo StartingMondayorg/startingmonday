@@ -8,7 +8,7 @@ export default async function DiagramsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!hasAdminHeaderAccess(staff)) notFound()
 
   const totalDiagrams = DIAGRAM_CATEGORIES.reduce((n, c) => n + c.diagrams.length, 0)

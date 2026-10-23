@@ -12,7 +12,7 @@ export default async function TraceRubricPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   const rubricPath = path.join(process.cwd(), 'src', 'evals', 'prep_brief_rubric.md')
