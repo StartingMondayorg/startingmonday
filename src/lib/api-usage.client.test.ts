@@ -73,4 +73,22 @@ describe('api-usage client selection', () => {
     expect(caller.rpc).toHaveBeenCalledWith('increment_api_usage', expect.objectContaining({ p_user_id: 'user-1' }))
     expect(state.adminRpc).not.toHaveBeenCalled()
   })
+
+  it('refuses to fall back to the caller client in production', async () => {
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY
+    vi.stubEnv('NODE_ENV', 'production')
+    try {
+      await expect(trackApiUsage(callerClient() as unknown as SupabaseClient, 'user-1', 1)).rejects.toThrow(/SUPABASE_SERVICE_ROLE_KEY is required/)
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('throws when a usage write fails so callers can report it', async () => {
+    process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-key'
+    state.adminRpc.mockImplementation(async (fn: string) =>
+      fn === 'increment_api_usage' ? { data: null, error: { code: '42501', message: 'permission denied' } } : { data: 1, error: null })
+
+    await expect(trackApiUsage(callerClient() as unknown as SupabaseClient, 'user-1', 1)).rejects.toThrow(/API usage tracking failed: 42501 permission denied/)
+  })
 })

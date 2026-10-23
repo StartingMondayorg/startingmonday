@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server'
 const state = vi.hoisted(() => ({
   guard: vi.fn(),
   rpc: vi.fn(),
+  serverRpc: vi.fn(),
   insert: vi.fn(),
   stream: vi.fn(),
 }))
@@ -14,6 +15,7 @@ vi.mock('@/lib/public-endpoint-guard', () => ({
 
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(async () => ({
+    rpc: state.serverRpc,
     from: () => ({
       insert: state.insert,
     }),
@@ -40,6 +42,7 @@ import { POST } from './route'
 describe('optimize route', () => {
   beforeEach(() => {
     vi.resetAllMocks()
+    process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-key'
     state.guard.mockResolvedValue(null)
     state.rpc.mockResolvedValue({ data: true })
     state.insert.mockReturnValue(Promise.resolve())
@@ -103,5 +106,20 @@ describe('optimize route', () => {
     expect(state.stream).toHaveBeenCalledWith(expect.objectContaining({
       model: 'sonnet-test',
     }))
+  })
+
+  it('uses the request client for the daily limit when no service key is configured (local dev)', async () => {
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY
+    state.serverRpc.mockResolvedValue({ data: false })
+
+    const response = await POST(new NextRequest('https://startingmonday.app/api/optimize', {
+      method: 'POST',
+      headers: { 'cf-connecting-ip': '203.0.113.11' },
+      body: JSON.stringify({ text: 'Resume text '.repeat(20), email: 'coach@example.com' }),
+    }))
+
+    expect(response.status).toBe(429)
+    expect(state.serverRpc).toHaveBeenCalledWith('check_and_increment_rate_limit', expect.objectContaining({ p_key: 'ip:203.0.113.11' }))
+    expect(state.rpc).not.toHaveBeenCalled()
   })
 })

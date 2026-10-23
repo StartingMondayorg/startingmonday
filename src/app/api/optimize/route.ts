@@ -1,7 +1,7 @@
 ﻿import { NextRequest } from 'next/server'
 import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { usageClient } from '@/lib/api-usage'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
 
 const DAILY_LIMIT = 3
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
   // check_and_increment_rate_limit is restricted to the service role (migrations 191/192),
   // so this unauthenticated endpoint calls it through the admin client.
   const supabase = await createClient()
-  const { data: allowed } = await createAdminClient().rpc('check_and_increment_rate_limit', {
+  const { data: allowed } = await usageClient(supabase).rpc('check_and_increment_rate_limit', {
     p_key:    `ip:${ip}`,
     p_window: dayWindow(),
     p_limit:  DAILY_LIMIT,
