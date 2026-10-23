@@ -21,10 +21,17 @@ function sha256Hex(value: string): string {
 }
 
 export function toStoredRateLimitKey(namespace: string, key: string): string {
-  const withoutEmails = key.replace(
-    EMAIL_PATTERN,
-    (email) => `email_sha256:${sha256Hex(email.trim().toLowerCase()).slice(0, 32)}`,
-  )
+  // Hash oversized keys before any regex runs so header-derived input cannot
+  // make key processing expensive.
+  if (key.length > MAX_STORED_KEY_LENGTH) {
+    return `${namespace}:sha256:${sha256Hex(key)}`
+  }
+  const withoutEmails = key.includes('@')
+    ? key.replace(
+      EMAIL_PATTERN,
+      (email) => `email_sha256:${sha256Hex(email.trim().toLowerCase()).slice(0, 32)}`,
+    )
+    : key
   const stored = `${namespace}:${withoutEmails}`
   if (stored.length <= MAX_STORED_KEY_LENGTH) return stored
   return `${namespace}:sha256:${sha256Hex(withoutEmails)}`

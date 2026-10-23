@@ -129,6 +129,18 @@ describe('checkRateLimit (shared Postgres store)', () => {
     expect(rpcMock.mock.calls[1][1].p_key).toBe(storedKey)
   })
 
+  it('hashes oversized keys without scanning them for email addresses', async () => {
+    rpcMock.mockResolvedValue({
+      data: [{ allowed: true, remaining: 1, reset_at: '2026-06-03T00:01:00+00:00' }],
+      error: null,
+    })
+
+    // The previous unbounded regex took tens of seconds here, past the test timeout.
+    const hostileForwardedFor = 'a'.repeat(200_000)
+    await checkRateLimit(hostileForwardedFor, 2)
+    expect(rpcMock.mock.calls[0][1].p_key).toMatch(/^rl:sha256:[0-9a-f]{64}$/)
+  })
+
   it('falls back to the in-memory limiter and warns once when the RPC errors', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     rpcMock.mockResolvedValue({
