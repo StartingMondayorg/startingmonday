@@ -14,6 +14,8 @@ describe('sendEmail logging', () => {
   afterEach(() => {
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
+    vi.resetModules()
   })
 
   it('logs the recipient domain, not the address, on delivery', async () => {
@@ -26,5 +28,23 @@ describe('sendEmail logging', () => {
     const logged = JSON.stringify(info.mock.calls)
     expect(logged).not.toContain('jane.doe@example.com')
     expect(logged).toContain('example.com')
+  })
+
+  it('logs no part of the local address when the policy suppresses a send', async () => {
+    vi.resetModules()
+    vi.stubEnv('BRIEFING_ONLY_RECIPIENTS', 'owner.only@example.com')
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const { logger: freshLogger } = await import('./logger.js')
+    const spies = ['info', 'warn', 'error'].map(level => vi.spyOn(freshLogger, level).mockImplementation(() => {}))
+    const { sendEmail: freshSend } = await import('./send-email.js')
+
+    const result = await freshSend({ to: 'Owner.Only@example.com', subject: 'Hello', html: '<p>Hi</p>' })
+
+    expect(result.suppressed).toBe(true)
+    expect(fetchMock).not.toHaveBeenCalled()
+    const logged = JSON.stringify(spies.map(spy => spy.mock.calls))
+    expect(logged).toContain('suppressed')
+    expect(logged.toLowerCase()).not.toContain('owner.only')
   })
 })
