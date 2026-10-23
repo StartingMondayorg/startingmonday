@@ -296,7 +296,7 @@ export function autoRefineEmailDraft({
 }
 
 export async function logEmailCouncilScore(entry: {
-  to: string
+  toDomain: string
   channel: EmailCouncilChannel
   subject: string
   scores: EmailCouncilScores
