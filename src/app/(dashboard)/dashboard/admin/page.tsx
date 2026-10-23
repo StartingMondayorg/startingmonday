@@ -33,7 +33,7 @@ export default async function AdminPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!hasAdminHeaderAccess(staff)) notFound()
   const staffRole = staff?.role ?? 'viewer'
   const isOwner = staffRole === 'owner'

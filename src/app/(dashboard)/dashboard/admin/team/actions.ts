@@ -8,7 +8,7 @@ async function requireOwner() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user?.email) return null
-  const staff = await getStaffMember(user.email)
+  const staff = await getStaffMember(user)
   if (staff?.role !== 'owner') return null
   return staff
 }

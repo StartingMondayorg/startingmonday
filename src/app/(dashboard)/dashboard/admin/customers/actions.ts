@@ -61,7 +61,7 @@ export async function sendWelcomeEmail(userId: string, currentFilter: string): P
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) redirect('/login')
 
   const admin = createAdminClient()

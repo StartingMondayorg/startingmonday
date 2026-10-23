@@ -66,7 +66,7 @@ export default async function AdminOnboardingVideoRunsPage({ searchParams }: Run
 
   if (!user) redirect('/login')
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) notFound()
 
   const params = await searchParams

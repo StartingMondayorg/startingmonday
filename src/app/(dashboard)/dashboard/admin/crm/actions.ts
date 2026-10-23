@@ -13,7 +13,7 @@ export async function runLeadScoringNow(): Promise<void> {
     redirect('/login')
   }
 
-  const staff = await getStaffMember(user.email ?? '')
+  const staff = await getStaffMember(user)
   if (!staff) {
     redirect('/dashboard/admin/crm?error=forbidden')
   }
