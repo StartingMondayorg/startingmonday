@@ -1,5 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { fetchPage, renderMode } from './fetch-page.js'
+import { fetchPage, renderMode, RENDER_TARGET_VALIDATION_TIMEOUT_MS } from './fetch-page.js'
+import { safeFetch, resolveSafeUrl, UnsafeUrlError } from '../lib/safe-fetch.js'
+
+// The plain-fetch step goes through the SSRF-safe fetcher (P1-5). Route it to
+// the stubbed global fetch so these tests see every outbound call and never
+// touch DNS or the network.
+vi.mock('../lib/safe-fetch.js', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    safeFetch: vi.fn((url, opts) => globalThis.fetch(url, opts)),
+    resolveSafeUrl: vi.fn(async (url) => ({ url: new URL(url), addresses: [{ address: '93.184.215.14', family: 4 }] })),
+  }
+})
 
 // A SPA host so the plain-fetch step always escalates to browserless.io.
 const SPA_URL = 'https://jobs.lever.co/acme'
@@ -89,5 +102,50 @@ describe('fetchPage render contract (SMK-489 item 1)', () => {
     expect(calls).toEqual(['plain', 'content'])
     expect(result.kind).toBe('html')
     expect(result.via).toBe('render')
+  })
+})
+
+describe('fetchPage SSRF guard (P1-5)', () => {
+  it('refuses private literals before any outbound call', async () => {
+    const calls = stubFetch({ functionRes: res(200, 'x') })
+    for (const url of ['http://127.0.0.1/', 'http://2130706433/', 'http://[::1]/', 'http://169.254.169.254/', 'file:///etc/passwd']) {
+      await expect(fetchPage(url)).rejects.toThrow(/blocked URL/)
+    }
+    expect(calls).toEqual([])
+  })
+
+  it('does not fall through to browserless when the plain fetch hits an unsafe address', async () => {
+    const calls = stubFetch({ functionRes: res(200, 'x') })
+    vi.mocked(safeFetch).mockRejectedValueOnce(new UnsafeUrlError('safe-fetch: redirect to 10.0.0.5', SPA_URL))
+
+    await expect(fetchPage(SPA_URL)).rejects.toThrow(/blocked URL/)
+    expect(calls).toEqual([])
+  })
+
+  it('validates the target before sending it to the renderer', async () => {
+    const calls = stubFetch({ functionRes: res(200, 'x') })
+    vi.mocked(safeFetch).mockRejectedValueOnce(Object.assign(new Error('getaddrinfo ENOTFOUND'), { code: 'ENOTFOUND' }))
+    vi.mocked(resolveSafeUrl).mockRejectedValueOnce(new UnsafeUrlError('safe-fetch: resolves to blocked address 10.0.0.5', SPA_URL))
+
+    await expect(fetchPage(SPA_URL)).rejects.toThrow(/blocked URL/)
+    expect(calls).toEqual([])
+  })
+
+  it('bounds the pre-render DNS validation so a stalled resolver cannot hang the scan', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    try {
+      const calls = stubFetch({ functionRes: res(200, 'x') })
+      vi.mocked(safeFetch).mockRejectedValueOnce(Object.assign(new Error('plain fetch timed out'), { name: 'TimeoutError' }))
+      vi.mocked(resolveSafeUrl).mockImplementationOnce((_url, opts) => new Promise((_resolve, reject) => {
+        opts.signal.addEventListener('abort', () => reject(opts.signal.reason))
+      }))
+
+      const assertion = expect(fetchPage(SPA_URL)).rejects.toThrow(/could not validate URL.*DNS validation exceeded/)
+      await vi.advanceTimersByTimeAsync(RENDER_TARGET_VALIDATION_TIMEOUT_MS)
+      await assertion
+      expect(calls).toEqual([])
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })
