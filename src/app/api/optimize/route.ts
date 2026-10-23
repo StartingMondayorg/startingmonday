@@ -1,6 +1,7 @@
 ﻿import { NextRequest } from 'next/server'
 import { anthropic, MODELS } from '@/lib/ai/anthropic'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { enforcePublicEndpointGuard } from '@/lib/public-endpoint-guard'
 
 const DAILY_LIMIT = 3
@@ -46,8 +47,8 @@ function dayWindow() {
 }
 
 // This endpoint is intentionally unauthenticated. It powers the landing page
-// LinkedIn optimizer for visitors who have not signed up. Rate limiting is
-// enforced server-side via a security_definer RPC so the anon key cannot bypass it.
+// LinkedIn optimizer for visitors who have not signed up. The per-IP daily limit
+// is enforced server-side through the service role, so visitors cannot reach the RPC.
 function getClientIp(request: NextRequest): string {
   return (
     request.headers.get('cf-connecting-ip') ??
@@ -82,10 +83,10 @@ export async function POST(request: NextRequest) {
   // Here we also enforce the persistent per-IP daily rate limit.
   const ip = getClientIp(request)
 
-  // Use the Supabase anon client; check_and_increment_rate_limit is
-  // security definer so anon can call it.
+  // check_and_increment_rate_limit is restricted to the service role (migrations 191/192),
+  // so this unauthenticated endpoint calls it through the admin client.
   const supabase = await createClient()
-  const { data: allowed } = await supabase.rpc('check_and_increment_rate_limit', {
+  const { data: allowed } = await createAdminClient().rpc('check_and_increment_rate_limit', {
     p_key:    `ip:${ip}`,
     p_window: dayWindow(),
     p_limit:  DAILY_LIMIT,

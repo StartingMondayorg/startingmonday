@@ -14,10 +14,15 @@ vi.mock('@/lib/public-endpoint-guard', () => ({
 
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(async () => ({
-    rpc: state.rpc,
     from: () => ({
       insert: state.insert,
     }),
+  })),
+}))
+
+vi.mock('@/lib/supabase/admin', () => ({
+  createAdminClient: vi.fn(() => ({
+    rpc: state.rpc,
   })),
 }))
 
