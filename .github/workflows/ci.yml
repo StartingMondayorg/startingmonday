@@ -237,6 +237,9 @@ jobs:
       - name: Playwright JSON summary parser (post-deploy gate)
         run: npm run test:playwright-summary
 
+      - name: Deploy-gate wait and production staleness helpers
+        run: npm run test:deploy-gates
+
       - name: Marketing trust/proof placement gate
         run: npm run marketing:trust-proof:gate
 
@@ -413,7 +416,9 @@ jobs:
   deploy-ready:
     name: Wait for deployment of this commit
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Bounded: 45-min wait (TIMEOUT_SECS below) because Railway builds have taken
+    # ~26 min (docs/evidence/production-promotion-2026-10-21.md D2), plus checkout.
+    timeout-minutes: 50
     if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v5
@@ -423,6 +428,7 @@ jobs:
         env:
           BASE_URL: ${{ github.ref == 'refs/heads/staging' && vars.STAGING_BASE_URL || secrets.PLAYWRIGHT_BASE_URL }}
           EXPECTED_SHA: ${{ github.sha }}
+          TIMEOUT_SECS: "2700"
 
   playwright:
     name: Playwright E2E
@@ -691,7 +697,8 @@ jobs:
     name: First-value synthetic gate
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.62.1-noble
-    timeout-minutes: 20
+    # On pushes this job waits up to 45 min for the deploy (scripts/wait-for-deployed-commit.sh).
+    timeout-minutes: 60
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright

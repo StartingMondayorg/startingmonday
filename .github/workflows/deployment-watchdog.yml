@@ -1,10 +1,24 @@
 name: Deployment Watchdog
 
+# Jobs:
+# - verify-pushed-sha: on a push to `production`, waits up to 45 min for that SHA
+#   to be served (Railway builds have taken ~26 min; D2 in
+#   docs/evidence/production-promotion-2026-10-21.md).
+# - watchdog: every 15 min, alerts when the `production` branch head is not live.
+# - production-staleness: once a day, compares the SHA production serves with
+#   origin/main (D1: production was once 46 days behind main). It warns whenever
+#   production is behind, and alerts Slack + fails when the oldest unpromoted
+#   runtime-affecting commit on main landed more than 7 days ago
+#   (STALENESS_THRESHOLD_DAYS). Commits that only touch docs/** or tests/** are
+#   not runtime-affecting. See scripts/check-production-staleness.mjs.
+
 on:
   push:
     branches: [production]
   schedule:
     - cron: "*/15 * * * *"
+    # Daily production staleness check (15:07 UTC); see the production-staleness job.
+    - cron: "7 15 * * *"
   workflow_dispatch:
 
 permissions:
@@ -16,7 +30,7 @@ jobs:
     name: Verify pushed SHA reaches production
     if: github.event_name == 'push' && github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 55
 
     steps:
       - name: Validate monitoring secret
@@ -33,12 +47,12 @@ jobs:
         uses: actions/github-script@v8
         env:
           TARGET_SHA: ${{ github.sha }}
-          MAX_ATTEMPTS: "20"
+          MAX_ATTEMPTS: "45"
           SLEEP_SECONDS: "60"
         with:
           script: |
             const sha = process.env.TARGET_SHA
-            const maxAttempts = Number(process.env.MAX_ATTEMPTS || '20')
+            const maxAttempts = Number(process.env.MAX_ATTEMPTS || '45')
             const sleepSeconds = Number(process.env.SLEEP_SECONDS || '60')
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
             const normalizeSha = (value) => String(value ?? '').trim().toLowerCase()
@@ -113,7 +127,7 @@ jobs:
 
   watchdog:
     name: Watch latest production deployment
-    if: github.event_name != 'push'
+    if: github.event_name != 'push' && github.event.schedule != '7 15 * * *'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -202,3 +216,67 @@ jobs:
               }
             ]
           }" "$SLACK_WEBHOOK_URL"
+
+  production-staleness:
+    name: Production staleness vs main
+    # Daily cron or manual dispatch only, so a stale production alerts once a day
+    # rather than every 15 minutes. Threshold: 7 days on the oldest unpromoted
+    # runtime-affecting main commit (docs/**- and tests/**-only commits ignored).
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '7 15 * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          # Full history so `git rev-list <production sha>..origin/main` works.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Compare production SHA with origin/main
+        id: staleness
+        env:
+          PRODUCTION_BASE_URL: https://startingmonday.app
+          MAIN_REF: origin/main
+          STALENESS_THRESHOLD_DAYS: "7"
+        run: node scripts/check-production-staleness.mjs
+
+      - name: Alert when production is stale
+        if: steps.staleness.outputs.stale == 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
+          STALE_MESSAGE: ${{ steps.staleness.outputs.message }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          COMPARE_URL: ${{ github.server_url }}/${{ github.repository }}/compare/${{ steps.staleness.outputs.production_sha }}...main
+          RUNBOOK_URL: ${{ github.server_url }}/${{ github.repository }}/blob/main/docs/sre/runbooks/deployment-stalled.md
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "::error::Missing required secret: SLACK_WEBHOOK_URL; cannot send staleness alert"
+            exit 1
+          fi
+
+          # Build the payload with node so commit subjects cannot break the JSON.
+          PAYLOAD=$(node -e '
+            const e = process.env
+            process.stdout.write(JSON.stringify({
+              text: "Production is behind main",
+              blocks: [
+                { type: "header", text: { type: "plain_text", text: "Production is behind main" } },
+                { type: "section", text: { type: "mrkdwn", text: e.STALE_MESSAGE } },
+                { type: "section", text: { type: "mrkdwn", text: `<${e.COMPARE_URL}|Unpromoted changes> | <${e.RUNBOOK_URL}|Runbook: deployment stalled> | <${e.RUN_URL}|View staleness run>` } },
+              ],
+            }))
+          ')
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+
+      - name: Fail when production is stale
+        if: steps.staleness.outputs.stale == 'true'
+        env:
+          STALE_MESSAGE: ${{ steps.staleness.outputs.message }}
+        run: |
+          echo "::error::${STALE_MESSAGE}"
+          exit 1
