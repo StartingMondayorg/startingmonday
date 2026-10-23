@@ -5,6 +5,13 @@ import { shouldSuppressAutomatedEmail } from './automated-email-policy'
 
 const FROM = process.env.RESEND_FROM_ADDRESS ?? 'briefing@startingmonday.app'
 
+// Logs carry only the recipient domain(s), never the full address.
+export function recipientDomains(to: string | string[]): string {
+  return (Array.isArray(to) ? to : [to])
+    .map((address) => /@([^\s>]+)/.exec(address)?.[1]?.toLowerCase() ?? 'unknown')
+    .join(', ')
+}
+
 export async function sendEmail({
   to,
   subject,
@@ -33,7 +40,7 @@ export async function sendEmail({
     console.warn(JSON.stringify({
       ts: new Date().toISOString(),
       event: 'email_send_suppressed_by_policy',
-      to,
+      toDomain: recipientDomains(to),
       subject,
       category: category ?? 'general',
       reason: policy.reason,
@@ -45,13 +52,13 @@ export async function sendEmail({
     }
   }
 
-  const toLog = Array.isArray(to) ? to.join(', ') : to
+  const toDomain = recipientDomains(to)
   const issues = reviewEmail(subject, html)
   if (issues.length) {
     console.warn(JSON.stringify({
       ts: new Date().toISOString(),
       event: 'email_quality_warning',
-      to,
+      toDomain,
       subject,
       issues,
     }))
@@ -71,7 +78,7 @@ export async function sendEmail({
 
     if (!refined.passesAfterRefine) {
       await logEmailCouncilScore({
-        to: toLog,
+        toDomain,
         channel: channel ?? 'general',
         subject: refined.refinedSubject,
         scores: refined.evaluation.scores,
@@ -84,7 +91,7 @@ export async function sendEmail({
       console.error(JSON.stringify({
         ts: new Date().toISOString(),
         event: 'email_send_blocked_by_council',
-        to: toLog,
+        toDomain,
         channel: channel ?? 'general',
         subject,
         message,
@@ -98,7 +105,7 @@ export async function sendEmail({
     }
 
     await logEmailCouncilScore({
-      to: toLog,
+      toDomain,
       channel: channel ?? 'general',
       subject: refined.refinedSubject,
       scores: refined.evaluation.scores,
@@ -118,7 +125,7 @@ export async function sendEmail({
       console.error(JSON.stringify({
         ts: new Date().toISOString(),
         event: 'email_send_exception',
-        to,
+        toDomain,
         subject,
         from: from ?? FROM,
         message,
@@ -136,7 +143,7 @@ export async function sendEmail({
     console.error(JSON.stringify({
       ts: new Date().toISOString(),
       event: 'email_send_exception',
-      to,
+      toDomain,
       subject,
       from: from ?? FROM,
       message,
