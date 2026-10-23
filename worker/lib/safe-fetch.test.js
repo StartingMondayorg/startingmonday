@@ -1,12 +1,15 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import dns from 'node:dns'
-import { Readable } from 'node:stream'
+import { EventEmitter } from 'node:events'
+import http from 'node:http'
+import { PassThrough, Readable } from 'node:stream'
 import zlib from 'node:zlib'
 import {
   collectBody,
   isAllowedUrlSyntax,
   isBlockedAddress,
   pinnedLookup,
+  pinnedRequest,
   resolveSafeUrl,
   ResponseTooLargeError,
   safeFetch,
@@ -313,13 +316,124 @@ describe('safeFetch', () => {
     expect(res.status).toBe(304)
   })
 
-  it('honours an aborted caller signal before connecting', async () => {
+  it('honours an aborted caller signal before resolving or connecting', async () => {
     const lookup = fakeLookup({ 'example.com': [PUBLIC_V4] })
     const { transport } = fakeTransport({ 'https://example.com/': { status: 200, body: 'x' } })
     const controller = new AbortController()
     controller.abort(new Error('caller aborted'))
     await expect(safeFetch('https://example.com/', { lookup, transport, signal: controller.signal })).rejects.toThrow('caller aborted')
+    expect(lookup).not.toHaveBeenCalled()
     expect(transport).not.toHaveBeenCalled()
+  })
+
+  it('bounds a stalled DNS lookup by timeoutMs', async () => {
+    const lookup = vi.fn(() => new Promise(() => {}))
+    const { transport } = fakeTransport({})
+    const err = await safeFetch('https://stalled.example/', { lookup, transport, timeoutMs: 20 }).catch((e) => e)
+    expect(err.name).toBe('TimeoutError')
+    expect(lookup).toHaveBeenCalledTimes(1)
+    expect(transport).not.toHaveBeenCalled()
+  })
+
+  it('stops waiting on DNS when the caller aborts mid-lookup', async () => {
+    const lookup = vi.fn(() => new Promise(() => {}))
+    const controller = new AbortController()
+    const pending = safeFetch('https://stalled.example/', { lookup, transport: fakeTransport({}).transport, signal: controller.signal })
+    setTimeout(() => controller.abort(new Error('caller gave up')), 5)
+    await expect(pending).rejects.toThrow('caller gave up')
+  })
+})
+
+describe('resolveSafeUrl cancellation', () => {
+  it('does not start DNS for an already-aborted signal', async () => {
+    const lookup = fakeLookup({ 'example.com': [PUBLIC_V4] })
+    const controller = new AbortController()
+    controller.abort(new Error('already aborted'))
+    await expect(resolveSafeUrl('https://example.com/', { lookup, signal: controller.signal })).rejects.toThrow('already aborted')
+    expect(lookup).not.toHaveBeenCalled()
+  })
+})
+
+describe('pinnedRequest transport', () => {
+  // A response whose body never ends, standing in for a server that streams
+  // an endless redirect body.
+  function streamingResponse(statusCode, rawHeaders) {
+    const res = new PassThrough()
+    res.statusCode = statusCode
+    res.statusMessage = ''
+    res.rawHeaders = rawHeaders
+    res.write('x'.repeat(4096))
+    return res
+  }
+
+  function stubHttpRequest(pick) {
+    const seen = []
+    vi.spyOn(http, 'request').mockImplementation((url, options, callback) => {
+      seen.push({ href: String(url), options })
+      const req = new EventEmitter()
+      req.end = () => setImmediate(() => callback(pick(String(url), seen.length)))
+      return req
+    })
+    return seen
+  }
+
+  it('destroys a streaming redirect body before following the redirect', async () => {
+    const first = streamingResponse(302, ['Location', '/next'])
+    const second = new PassThrough()
+    second.statusCode = 200
+    second.rawHeaders = ['Content-Type', 'text/plain']
+    second.end('ok')
+    const destroyedBeforeSecondRequest = []
+    const seen = stubHttpRequest((href) => {
+      if (href.endsWith('/next')) {
+        destroyedBeforeSecondRequest.push(first.destroyed)
+        return second
+      }
+      return first
+    })
+
+    const res = await safeFetch('http://example.com/start', { lookup: fakeLookup({ 'example.com': [PUBLIC_V4] }) })
+
+    expect(await res.text()).toBe('ok')
+    expect(first.destroyed).toBe(true)
+    expect(destroyedBeforeSecondRequest).toEqual([true])
+    expect(seen).toHaveLength(2)
+    expect(seen[0].options.agent).toBe(false)
+    const pinned = vi.fn()
+    seen[0].options.lookup('example.com', { all: true }, pinned)
+    expect(pinned).toHaveBeenCalledWith(null, [{ address: PUBLIC_V4, family: 4 }])
+  })
+
+  it('destroys the body of a HEAD or 204 response without reading it', async () => {
+    const res = streamingResponse(204, [])
+    stubHttpRequest(() => res)
+    const result = await pinnedRequest({
+      url: new URL('http://example.com/'),
+      method: 'GET',
+      headers: {},
+      body: undefined,
+      addresses: [{ address: PUBLIC_V4, family: 4 }],
+      signal: new AbortController().signal,
+      maxBytes: 1024,
+    })
+    expect(result.status).toBe(204)
+    expect(result.body).toBeNull()
+    expect(res.destroyed).toBe(true)
+  })
+
+  it('refuses a declared Content-Length over the cap', async () => {
+    const res = streamingResponse(200, ['Content-Length', String(10 * 1024 * 1024)])
+    stubHttpRequest(() => res)
+    await expect(pinnedRequest({
+      url: new URL('http://example.com/'),
+      method: 'GET',
+      headers: {},
+      body: undefined,
+      addresses: [{ address: PUBLIC_V4, family: 4 }],
+      signal: new AbortController().signal,
+      maxBytes: 1024,
+    })).rejects.toBeInstanceOf(ResponseTooLargeError)
+    expect(res.destroyed).toBe(true)
   })
 })
 

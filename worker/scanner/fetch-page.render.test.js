@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { fetchPage, renderMode } from './fetch-page.js'
+import { fetchPage, renderMode, RENDER_TARGET_VALIDATION_TIMEOUT_MS } from './fetch-page.js'
 import { safeFetch, resolveSafeUrl, UnsafeUrlError } from '../lib/safe-fetch.js'
 
 // The plain-fetch step goes through the SSRF-safe fetcher (P1-5). Route it to
@@ -129,5 +129,23 @@ describe('fetchPage SSRF guard (P1-5)', () => {
 
     await expect(fetchPage(SPA_URL)).rejects.toThrow(/blocked URL/)
     expect(calls).toEqual([])
+  })
+
+  it('bounds the pre-render DNS validation so a stalled resolver cannot hang the scan', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+    try {
+      const calls = stubFetch({ functionRes: res(200, 'x') })
+      vi.mocked(safeFetch).mockRejectedValueOnce(Object.assign(new Error('plain fetch timed out'), { name: 'TimeoutError' }))
+      vi.mocked(resolveSafeUrl).mockImplementationOnce((_url, opts) => new Promise((_resolve, reject) => {
+        opts.signal.addEventListener('abort', () => reject(opts.signal.reason))
+      }))
+
+      const assertion = expect(fetchPage(SPA_URL)).rejects.toThrow(/could not validate URL.*DNS validation exceeded/)
+      await vi.advanceTimersByTimeAsync(RENDER_TARGET_VALIDATION_TIMEOUT_MS)
+      await assertion
+      expect(calls).toEqual([])
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

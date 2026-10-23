@@ -1,12 +1,15 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import dns from 'node:dns'
-import { Readable } from 'node:stream'
+import { EventEmitter } from 'node:events'
+import http from 'node:http'
+import { PassThrough, Readable } from 'node:stream'
 import zlib from 'node:zlib'
 import {
   collectBody,
   isAllowedUrlSyntax,
   isBlockedAddress,
   pinnedLookup,
+  pinnedRequest,
   resolveSafeUrl,
   ResponseTooLargeError,
   safeFetch,
@@ -189,6 +192,93 @@ describe('safeFetch', () => {
       safeFetch('https://example.com/r0', { lookup: fakeLookup({ 'example.com': [PUBLIC_V4] }), transport }),
     ).rejects.toBeInstanceOf(TooManyRedirectsError)
     expect(calls).toHaveLength(6)
+  })
+
+  it('does not resolve or connect for an already-aborted caller', async () => {
+    const lookup = fakeLookup({ 'example.com': [PUBLIC_V4] })
+    const { transport } = fakeTransport({})
+    const controller = new AbortController()
+    controller.abort(new Error('caller aborted'))
+    await expect(safeFetch('https://example.com/', { lookup, transport, signal: controller.signal })).rejects.toThrow('caller aborted')
+    expect(lookup).not.toHaveBeenCalled()
+    expect(transport).not.toHaveBeenCalled()
+  })
+
+  it('bounds a stalled DNS lookup by timeoutMs', async () => {
+    const lookup = vi.fn<SafeLookup>(() => new Promise(() => {}))
+    const { transport } = fakeTransport({})
+    const err = await safeFetch('https://stalled.example/', { lookup, transport, timeoutMs: 20 }).catch((e: Error) => e)
+    expect((err as Error).name).toBe('TimeoutError')
+    expect(transport).not.toHaveBeenCalled()
+  })
+
+  it('stops waiting on DNS when the caller aborts mid-lookup', async () => {
+    const lookup = vi.fn<SafeLookup>(() => new Promise(() => {}))
+    const controller = new AbortController()
+    const pending = safeFetch('https://stalled.example/', { lookup, transport: fakeTransport({}).transport, signal: controller.signal })
+    setTimeout(() => controller.abort(new Error('caller gave up')), 5)
+    await expect(pending).rejects.toThrow('caller gave up')
+  })
+})
+
+describe('pinnedRequest transport', () => {
+  type FakeResponse = PassThrough & { statusCode: number; statusMessage: string; rawHeaders: string[] }
+
+  // A response whose body never ends, standing in for a server that streams
+  // an endless redirect body.
+  function streamingResponse(statusCode: number, rawHeaders: string[]): FakeResponse {
+    const res = Object.assign(new PassThrough(), { statusCode, statusMessage: '', rawHeaders })
+    res.write('x'.repeat(4096))
+    return res
+  }
+
+  function stubHttpRequest(pick: (href: string) => FakeResponse) {
+    const seen: Array<{ href: string; options: http.RequestOptions }> = []
+    const fake = (url: URL, options: http.RequestOptions, callback: (res: FakeResponse) => void) => {
+      seen.push({ href: String(url), options })
+      const req = Object.assign(new EventEmitter(), {
+        end: () => setImmediate(() => callback(pick(String(url)))),
+      })
+      return req
+    }
+    vi.spyOn(http, 'request').mockImplementation(fake as unknown as typeof http.request)
+    return seen
+  }
+
+  it('destroys a streaming redirect body before following the redirect', async () => {
+    const first = streamingResponse(302, ['Location', '/next'])
+    const second = Object.assign(new PassThrough(), { statusCode: 200, statusMessage: '', rawHeaders: ['Content-Type', 'text/plain'] })
+    second.end('ok')
+    const destroyedBeforeSecondRequest: boolean[] = []
+    const seen = stubHttpRequest((href) => {
+      if (href.endsWith('/next')) {
+        destroyedBeforeSecondRequest.push(first.destroyed)
+        return second
+      }
+      return first
+    })
+
+    const res = await safeFetch('http://example.com/start', { lookup: fakeLookup({ 'example.com': [PUBLIC_V4] }) })
+
+    expect(await res.text()).toBe('ok')
+    expect(first.destroyed).toBe(true)
+    expect(destroyedBeforeSecondRequest).toEqual([true])
+    expect(seen[0].options.agent).toBe(false)
+  })
+
+  it('refuses a declared Content-Length over the cap', async () => {
+    const res = streamingResponse(200, ['Content-Length', String(10 * 1024 * 1024)])
+    stubHttpRequest(() => res)
+    await expect(pinnedRequest({
+      url: new URL('http://example.com/'),
+      method: 'GET',
+      headers: {},
+      body: undefined,
+      addresses: [{ address: PUBLIC_V4, family: 4 }],
+      signal: new AbortController().signal,
+      maxBytes: 1024,
+    })).rejects.toBeInstanceOf(ResponseTooLargeError)
+    expect(res.destroyed).toBe(true)
   })
 })
 

@@ -209,10 +209,32 @@ function defaultLookup(hostname, options) {
   return dns.promises.lookup(hostname, options)
 }
 
+// Rejects as soon as the signal aborts. The underlying system lookup cannot
+// be cancelled, but the caller stops waiting for it.
+function untilAborted(promise, signal) {
+  if (!signal) return promise
+  if (signal.aborted) return Promise.reject(signal.reason)
+  return new Promise((resolve, reject) => {
+    const onAbort = () => reject(signal.reason)
+    signal.addEventListener('abort', onAbort, { once: true })
+    promise.then(
+      (value) => {
+        signal.removeEventListener('abort', onAbort)
+        resolve(value)
+      },
+      (err) => {
+        signal.removeEventListener('abort', onAbort)
+        reject(err)
+      },
+    )
+  })
+}
+
 // Validates a URL and returns it with the vetted addresses to connect to.
 // Throws UnsafeUrlError when the URL is not allowed; DNS failures propagate
-// as the resolver's own error (ENOTFOUND etc.).
-export async function resolveSafeUrl(input, { lookup = defaultLookup } = {}) {
+// as the resolver's own error (ENOTFOUND etc.). `signal` bounds the DNS wait.
+export async function resolveSafeUrl(input, { lookup = defaultLookup, signal } = {}) {
+  if (signal?.aborted) throw signal.reason
   const url = parseUrl(input)
   if (!ALLOWED_PROTOCOLS.has(url.protocol)) {
     throw new UnsafeUrlError(`safe-fetch: protocol ${url.protocol} not allowed: ${url.href}`, url.href)
@@ -228,7 +250,7 @@ export async function resolveSafeUrl(input, { lookup = defaultLookup } = {}) {
     return { url, addresses: [{ address: host, family: literalFamily }] }
   }
 
-  const records = await lookup(host, { all: true, verbatim: true })
+  const records = await untilAborted(Promise.resolve().then(() => lookup(host, { all: true, verbatim: true })), signal)
   const list = Array.isArray(records) ? records : records ? [records] : []
   if (list.length === 0) throw new Error(`safe-fetch: ${host} resolved to no addresses`)
   const blocked = list.find((record) => isBlockedAddress(record?.address))
@@ -328,7 +350,9 @@ export function pinnedRequest({ url, method, headers, body, addresses, signal, m
       const head = { status, statusText: res.statusMessage ?? '', headers: responseHeaders }
       const redirect = REDIRECT_STATUSES.has(status) && responseHeaders.has('location')
       if (redirect || method === 'HEAD' || NULL_BODY_STATUSES.has(status)) {
-        res.resume()
+        // The body is never read. Destroy rather than drain it: draining is
+        // unbounded, and agent: false means there is no connection to reuse.
+        res.destroy()
         resolve({ ...head, body: null })
         return
       }
@@ -414,7 +438,7 @@ export async function safeFetch(input, options = {}) {
   const currentHeaders = { 'accept-encoding': 'gzip, deflate, br', ...normalizeHeaders(headers) }
 
   for (let hop = 0; ; hop += 1) {
-    const { url, addresses } = await resolveSafeUrl(current, { lookup })
+    const { url, addresses } = await resolveSafeUrl(current, { lookup, signal: combinedSignal })
     if (combinedSignal.aborted) throw combinedSignal.reason
 
     const result = await transport({

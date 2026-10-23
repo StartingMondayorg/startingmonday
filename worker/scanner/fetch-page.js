@@ -68,6 +68,9 @@ const MIN_VISIBLE_TEXT = 800
 // Decoded-body ceiling for the plain fetch. A larger page falls back to the renderer.
 const MAX_PLAIN_FETCH_BYTES = 5 * 1024 * 1024
 
+// Deadline for re-resolving the target before it is sent to the renderer.
+export const RENDER_TARGET_VALIDATION_TIMEOUT_MS = 10000
+
 export function hostOf(url) {
   try { return new URL(url).hostname.toLowerCase() } catch { return '' }
 }
@@ -172,11 +175,19 @@ export async function fetchPage(url) {
 
   // The renderer runs remotely, but the target must pass the same checks
   // before we send it: the plain fetch may have failed before validating.
+  // The DNS wait is bounded so a stalled resolver cannot hang the scan.
+  const validation = new AbortController()
+  const validationTimer = setTimeout(
+    () => validation.abort(new Error(`DNS validation exceeded ${RENDER_TARGET_VALIDATION_TIMEOUT_MS}ms`)),
+    RENDER_TARGET_VALIDATION_TIMEOUT_MS,
+  )
   try {
-    await resolveSafeUrl(url)
+    await resolveSafeUrl(url, { signal: validation.signal })
   } catch (err) {
     const reason = err instanceof UnsafeUrlError ? 'blocked URL' : 'could not validate URL'
     throw new Error(`fetchPage: ${reason} — ${err.message}`, { cause: err })
+  } finally {
+    clearTimeout(validationTimer)
   }
 
   // renderMs is measured inside the limiter so it records browser time, not
