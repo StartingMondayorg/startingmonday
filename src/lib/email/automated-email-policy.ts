@@ -22,6 +22,6 @@ export function shouldSuppressAutomatedEmail({
   if (category === 'briefing') return { suppress: false, reason: null }
   return {
     suppress: true,
-    reason: `recipient ${hit} is configured for briefing-only delivery`,
+    reason: 'recipient is configured for briefing-only delivery',
   }
 }
