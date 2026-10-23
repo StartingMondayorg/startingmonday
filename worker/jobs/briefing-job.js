@@ -5,9 +5,20 @@ import { assembleContext } from '../briefing/assemble-context.js'
 import { generateBriefing } from '../briefing/generate-briefing.js'
 import { renderBriefingEmail } from '../briefing/email-template.js'
 import { sendBriefing } from '../briefing/send-briefing.js'
+import {
+  briefingIdempotencyKey,
+  claimBriefingSend,
+  markBriefingSendFailed,
+  markBriefingSendSent,
+  recipientHash,
+} from '../briefing/send-claims.js'
 import { watermarkEmailHtml, injectTrackingPixel } from '../lib/watermark.js'
 
 const BRIEFING_LOCK_KEY = 7329841024n
+
+// Logged once per process so a missing migration 190 is visible without
+// repeating the warning every 5 minutes for every user.
+let claimsTableMissingLogged = false
 
 const ABBR_TO_FULL = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' }
 
@@ -93,7 +104,7 @@ export async function runBriefingJob() {
 
     const profileByUserId = Object.fromEntries((profiles ?? []).map(p => [p.user_id, p]))
     const recentBriefingByUserId = new Map()
-    const recentBriefingByRecipientEmail = new Map()
+    const recentBriefingByRecipient = new Map()
     for (const row of (recentBriefingEvents ?? [])) {
       const existing = recentBriefingByUserId.get(row.user_id)
       const createdAt = row.created_at
@@ -101,22 +112,24 @@ export async function runBriefingJob() {
         recentBriefingByUserId.set(row.user_id, createdAt)
       }
 
-      const recipientEmail = String(row.properties?.to ?? '').trim().toLowerCase()
-      if (recipientEmail) {
-        const recipientExisting = recentBriefingByRecipientEmail.get(recipientEmail)
+      // Events written before P2-5 carry the raw address in `to`; newer ones carry only its hash.
+      const recipientKey = row.properties?.recipient_hash ?? recipientHash(row.properties?.to)
+      if (recipientKey) {
+        const recipientExisting = recentBriefingByRecipient.get(recipientKey)
         if (!recipientExisting || new Date(createdAt).getTime() > new Date(recipientExisting).getTime()) {
-          recentBriefingByRecipientEmail.set(recipientEmail, createdAt)
+          recentBriefingByRecipient.set(recipientKey, createdAt)
         }
       }
     }
 
     let sent = 0
     let skipped = 0
+    let failed = 0
 
     for (const user of users) {
       const profile = profileByUserId[user.id]
       if (!profile) {
-        logger.info(`briefing-job: skip ${user.email} — no profile or briefing_time not set`)
+        logger.info(`briefing-job: skip ${user.id} — no profile or briefing_time not set`)
         skipped++; continue
       }
 
@@ -127,19 +140,19 @@ export async function runBriefingJob() {
 
       const dayName = dayNameInTz(tz)
       if (!briefingDays.includes(dayName)) {
-        logger.info(`briefing-job: skip ${user.email} — today is ${dayName}, not in briefing_days ${JSON.stringify(briefingDays)}`)
+        logger.info(`briefing-job: skip ${user.id} — today is ${dayName}, not in briefing_days ${JSON.stringify(briefingDays)}`)
         skipped++; continue
       }
 
       // Placed users get a weekly Monday digest only
       if ((profile.briefing_frequency ?? 'daily') === 'weekly' && dayName !== 'Monday') {
-        logger.info(`briefing-job: skip ${user.email} — weekly frequency, today is ${dayName} (sends on Monday only)`)
+        logger.info(`briefing-job: skip ${user.id} — weekly frequency, today is ${dayName} (sends on Monday only)`)
         skipped++; continue
       }
 
       const currentHHMM = currentHHMMInTz(tz)
       if (!isWithinWindow(currentHHMM, briefingTime)) {
-        logger.info(`briefing-job: skip ${user.email} — current ${currentHHMM} not within window of ${briefingTime} (tz: ${tz})`)
+        logger.info(`briefing-job: skip ${user.id} — current ${currentHHMM} not within window of ${briefingTime} (tz: ${tz})`)
         skipped++; continue
       }
 
@@ -148,7 +161,7 @@ export async function runBriefingJob() {
         const lastSentDate = new Intl.DateTimeFormat('en-CA', { timeZone: tz })
           .format(new Date(profile.last_briefing_sent_at))
         if (lastSentDate === todayStr) {
-          logger.info(`briefing-job: skip ${user.email} — already sent today (${todayStr})`)
+          logger.info(`briefing-job: skip ${user.id} — already sent today (${todayStr})`)
           skipped++; continue
         }
       }
@@ -158,28 +171,53 @@ export async function runBriefingJob() {
         const lastEventDate = new Intl.DateTimeFormat('en-CA', { timeZone: tz })
           .format(new Date(recentBriefingEventAt))
         if (lastEventDate === todayStr) {
-          logger.info(`briefing-job: skip ${user.email} — briefing send event already recorded today (${todayStr})`)
+          logger.info(`briefing-job: skip ${user.id} — briefing send event already recorded today (${todayStr})`)
           skipped++; continue
         }
       }
 
-      const recipientEmail = String(user.email ?? '').trim().toLowerCase()
-      const recentRecipientBriefingAt = recentBriefingByRecipientEmail.get(recipientEmail)
+      const userRecipientHash = recipientHash(user.email)
+      const recentRecipientBriefingAt = userRecipientHash ? recentBriefingByRecipient.get(userRecipientHash) : null
       if (recentRecipientBriefingAt) {
         const lastRecipientEventDate = new Intl.DateTimeFormat('en-CA', { timeZone: tz })
           .format(new Date(recentRecipientBriefingAt))
         if (lastRecipientEventDate === todayStr) {
-          logger.info(`briefing-job: skip ${user.email} — recipient inbox already received briefing today (${todayStr})`)
+          logger.info(`briefing-job: skip ${user.id} — recipient inbox already received briefing today (${todayStr})`)
           skipped++; continue
         }
       }
 
+      // claimKey is non-null only while this run owns a claim row; delivered
+      // flips once Resend has accepted the email. Together they decide whether
+      // a failure below may release the claim for a retry.
+      let claimKey = null
+      let delivered = false
       try {
         const searchStatus = profile.search_status ?? (profile.placed_at ? 'complete' : 'active')
         const context = await assembleContext(supabase, user.id, user.email, tz, searchStatus)
         if (!context) {
-          logger.info(`briefing-job: skip ${user.email} — no companies in pipeline`)
+          logger.info(`briefing-job: skip ${user.id} — no companies in pipeline`)
           skipped++; continue
+        }
+
+        const localDate = context.todayStr ?? todayStr
+        const claim = await claimBriefingSend(supabase, { userId: user.id, localDate })
+        if (claim.outcome === 'skip') {
+          logger.info(`briefing-job: skip ${user.id} — send claim for ${localDate}: ${claim.reason}`)
+          skipped++; continue
+        }
+        if (claim.outcome === 'unavailable') {
+          if (!claimsTableMissingLogged) {
+            claimsTableMissingLogged = true
+            logger.warn('briefing-job: briefing_send_claims table missing (migration 190 not applied) — sending without claims', {
+              event: 'briefing_claims_unavailable',
+            })
+          }
+        } else {
+          claimKey = { userId: user.id, localDate }
+          if (claim.reclaimed) {
+            logger.warn(`briefing-job: reclaimed ${claim.previousStatus} send claim for ${user.id} (${localDate})`)
+          }
         }
 
         // Look up coach brand for white-label header (if this user has an accepted coach seat)
@@ -204,17 +242,35 @@ export async function runBriefingJob() {
         const rawHtml = watermarkEmailHtml(renderBriefingEmail(context, briefing), user.id)
         const html = injectTrackingPixel(rawHtml, user.id, 'briefing', context.todayStr)
 
-        await sendBriefing({
-          to: user.email,
-          subject: briefing.subject ?? `Your briefing — ${context.todayStr}`,
-          html,
-        })
+        let providerMessageId = null
+        try {
+          const result = await sendBriefing({
+            to: user.email,
+            subject: briefing.subject ?? `Your briefing — ${context.todayStr}`,
+            html,
+            idempotencyKey: briefingIdempotencyKey(user.id, localDate),
+            userId: user.id,
+          })
+          providerMessageId = result?.id ?? null
+        } catch (sendErr) {
+          // A reclaimed claim regenerates the briefing, so its payload differs
+          // from the earlier attempt. Resend answers that with this 409 only when
+          // the key was already used within 24h: the earlier attempt reached
+          // Resend, so the user already has today's briefing.
+          if (sendErr?.code !== 'invalid_idempotent_request') throw sendErr
+          logger.warn(`briefing-job: ${user.id} briefing for ${localDate} already accepted by Resend — recording as sent`)
+        }
+        delivered = true
+
+        if (claimKey) {
+          await markBriefingSendSent(supabase, { ...claimKey, providerMessageId })
+        }
 
         const now = new Date().toISOString()
 
         // Mark signals notified first — if we crash after this but before updating the
-        // timestamp, the user gets a duplicate email tomorrow rather than missing
-        // signal notifications permanently.
+        // timestamp, the send claim (status 'sent') still blocks a duplicate email
+        // rather than leaving signal notifications pending permanently.
         const unnotifiedSignalIds = [
           ...(context.signals ?? []).filter(s => !s.notifiedAt).map(s => s.id),
           ...(context.patternAlerts ?? []).filter(s => !s.notifiedAt).map(s => s.id),
@@ -242,7 +298,7 @@ export async function runBriefingJob() {
           .insert({
             user_id: user.id,
             event_name: 'briefing_email_sent',
-            properties: { source: 'briefing-job', sent_at: now, to: user.email },
+            properties: { source: 'briefing-job', sent_at: now, recipient_hash: userRecipientHash, local_date: localDate },
           })
         if (eventInsertError) {
           throw new Error(`Failed to insert briefing_email_sent event: ${eventInsertError.message}`)
@@ -254,13 +310,26 @@ export async function runBriefingJob() {
         ])
 
         sent++
-        logger.info(`briefing-job: sent to ${user.email}`)
+        logger.info(`briefing-job: sent to ${user.id}`, { userId: user.id, messageId: providerMessageId })
       } catch (err) {
-        logger.error(`briefing-job: error for ${user.email}`, { error: err.message, stack: err.stack })
+        failed++
+        logger.error(`briefing-job: error for ${user.id}`, { userId: user.id, delivered, error: err.message, stack: err.stack })
+        // Release the claim for a retry only when nothing reached Resend; after
+        // delivery the claim must keep blocking a second send.
+        if (claimKey && !delivered) {
+          await markBriefingSendFailed(supabase, claimKey).catch(markErr => {
+            logger.error(`briefing-job: could not release send claim for ${user.id}`, { error: markErr.message })
+          })
+        }
       }
     }
 
-    logger.info('briefing-job: complete', { sent, skipped })
+    logger.info('briefing-job: complete', { sent, skipped, failed })
+    if (failed > 0) {
+      // Thrown after the loop so one user's failure never blocks the others,
+      // and so runJob closes the Sentry check-in as an error and alerts.
+      throw new Error(`briefing-job: ${failed} of ${users.length} users failed (sent ${sent}, skipped ${skipped})`)
+    }
   } finally {
     await supabase.rpc('advisory_unlock', { p_key: BRIEFING_LOCK_KEY })
   }
