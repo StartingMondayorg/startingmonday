@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
     console.error(JSON.stringify({
       ts: new Date().toISOString(),
       event: 'partner_inquiry_notification_failed',
-      email,
+      emailDomain: email.split('@')[1] ?? null,
       message: error instanceof Error ? error.message : String(error),
     }))
   })
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       console.error(JSON.stringify({
         ts: new Date().toISOString(),
         event: 'partner_confirmation_email_failed',
-        email,
+        emailDomain: email.split('@')[1] ?? null,
         message: error instanceof Error ? error.message : String(error),
       }))
     })

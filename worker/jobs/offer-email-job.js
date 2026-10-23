@@ -137,10 +137,10 @@ export async function runOfferEmailJob() {
         .update({ offer_email_sent_at: new Date().toISOString() })
         .eq('id', user.id)
 
-      logger.info('offer-email-job: sent', { to: user.email })
+      logger.info('offer-email-job: sent', { userId: user.id })
       sent++
     } catch (err) {
-      logger.error('offer-email-job: send failed', { to: user.email, error: err.message })
+      logger.error('offer-email-job: send failed', { userId: user.id, error: err.message })
       skipped++
     }
   }
