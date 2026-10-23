@@ -12,7 +12,9 @@ jobs:
   release-completion-gate:
     name: release-completion-gate
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Bounded: 45-min release wait (Railway builds have taken ~26 min; D2 in
+    # docs/evidence/production-promotion-2026-10-21.md) plus setup and summary.
+    timeout-minutes: 55
 
     steps:
       - uses: actions/checkout@v5
@@ -31,7 +33,7 @@ jobs:
           RELEASE_EXPECTED_SHA: ${{ github.sha }}
           RELEASE_EXPECTED_HERO_PRIMARY: Be on the shortlist before the role is posted.
           RELEASE_EXPECTED_HERO_SECONDARY: Starting Monday reads public signals. Leadership changes, funding, expansion, filings.
-          RELEASE_TIMEOUT_SECONDS: "900"
+          RELEASE_TIMEOUT_SECONDS: "2700"
           RELEASE_INTERVAL_SECONDS: "20"
           RELEASE_OUTPUT_JSON: "1"
         run: |
@@ -56,6 +58,7 @@ jobs:
 
           const rows = [
             ['Status', payload.ok ? 'PASS' : 'FAIL'],
+            ['Outcome', payload.outcome || '(missing)'],
             ['Expected SHA', payload.expectedSha || '(missing)'],
             ['Observed SHA', last.marker.deploySha || '(missing)'],
             ['Attempts', String(attempts.length)],
@@ -70,6 +73,9 @@ jobs:
           }
           if (heroFailures.length) {
             summary += '\nMissing hero assertions: ' + heroFailures.join(' | ') + '\n'
+          }
+          if (!payload.ok && payload.message) {
+            summary += '\n' + payload.message + '\n'
           }
 
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary)

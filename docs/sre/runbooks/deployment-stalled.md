@@ -32,3 +32,8 @@ Use this when the latest `main` commit has not produced a successful production 
 1. Mark the incident in Slack.
 2. Add the failure mode to the reliability notes.
 3. Tune the threshold if this was a false positive.
+
+## Wait windows and staleness alerts
+
+- Release gates (`post-deploy.yml`, `release-completion-gate.yml`, the watchdog's pushed-SHA check) and CI's "Wait for deployment of this commit" wait up to 45 minutes, because Railway builds have taken about 26 minutes. A timeout message says either "deployment still pending" (an older SHA is still served: check the Railway build) or "deployed but checks failed" (the SHA is live but the homepage/hero checks fail: treat it as a broken release).
+- The daily `production-staleness` job in `deployment-watchdog.yml` warns whenever production is behind `origin/main` and alerts Slack and fails when the oldest unpromoted runtime-affecting commit is more than 7 days old. Commits touching only `docs/**` or `tests/**` do not count. Run it locally with `npm run monitor:production:staleness`. Recovery is a normal promotion: `scripts/promote-to-production.mjs` once staging has a successful deploy of the target SHA.
