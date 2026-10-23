@@ -79,6 +79,7 @@ describe('verify-and-signup route', () => {
       error: { message: 'Signups not allowed for this instance' },
     })
 
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
     const req = new NextRequest('https://startingmonday.app/api/auth/verify-and-signup', {
       method: 'POST',
       body: JSON.stringify({ email: 'victim@example.com', password: 'StrongPass123!' }),
@@ -96,6 +97,9 @@ describe('verify-and-signup route', () => {
     expect(state.createUser).not.toHaveBeenCalled()
     expect(state.signInWithPassword).not.toHaveBeenCalled()
     expect(state.logEvent).not.toHaveBeenCalled()
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('"event":"signup_disabled_rejected"'))
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('victim@example.com'))
+    consoleError.mockRestore()
   })
 
   it('returns 400 with the provider message for other signUp errors', async () => {

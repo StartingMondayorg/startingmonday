@@ -80,6 +80,14 @@ export async function POST(request: NextRequest) {
   // Never fall back to admin.createUser here: a pre-confirmed account for an
   // unverified address could claim email-keyed access such as staff roles.
   if (error && isSignupDisabledError(error)) {
+    // Signups should be enabled in production; a rejection here means the
+    // Supabase auth config drifted. Log without the email address.
+    console.error(JSON.stringify({
+      ts: new Date().toISOString(),
+      event: 'signup_disabled_rejected',
+      route: 'verify-and-signup',
+      message: error.message,
+    }))
     return NextResponse.json(
       {
         ok: false,
