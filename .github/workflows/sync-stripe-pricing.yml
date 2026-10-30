@@ -1,3 +1,11 @@
+# DISABLED since 2026-10-15 (SMK-322). To re-enable:
+#   1. In the Starting Monday Stripe account (acct_1TSju0...), create a restricted key
+#      with Prices: Read only.
+#   2. Save it as the repository secret STRIPE_PRICE_SYNC_KEY.
+#   3. Enable this workflow (Actions tab, or `gh workflow enable sync-stripe-pricing.yml`)
+#      and run it once by hand to confirm.
+# The PR it opens rewrites src/lib/billing/pricing.ts and plans.ts; see AGENTS.md,
+# "Stripe Pricing Sync", for the conflict window this creates for billing branches.
 name: Sync Stripe Pricing
 
 on:
@@ -22,6 +30,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Require the price-sync key
+        env:
+          STRIPE_PRICE_SYNC_KEY: ${{ secrets.STRIPE_PRICE_SYNC_KEY }}
+        run: |
+          if [ -z "$STRIPE_PRICE_SYNC_KEY" ]; then
+            echo "::error::STRIPE_PRICE_SYNC_KEY is not set. See the re-enable steps at the top of this workflow."
+            exit 1
+          fi
 
       - name: Run Stripe pricing sync
         env:
@@ -55,6 +72,6 @@ jobs:
           body: |
             Automated daily sync detected Stripe price changes.
 
-            Review the diff carefully — this reflects a live Stripe price update.
+            Review the diff carefully: this reflects a live Stripe price update.
             Merge to deploy the updated prices to production.
           labels: pricing

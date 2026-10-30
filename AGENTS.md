@@ -18,6 +18,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - All sitewide UX/style gates and migration work should use that file as source of truth.
 - Route compliance claims must be backed by inventory-driven audit output (no partial-scan claims).
 
+## Stripe Pricing Sync
+
+- `.github/workflows/sync-stripe-pricing.yml` is **disabled** (since 2026-10-15): the `STRIPE_PRICE_SYNC_KEY` GitHub secret does not exist, and the old price-sync key belonged to the Signed Friday Stripe account, not Starting Monday's (`acct_1TSju0...`). Re-enable steps are in the workflow header.
+- When enabled, it opens a PR (`sync/stripe-pricing-<run id>`) that rewrites `src/lib/billing/pricing.ts` and `src/lib/billing/plans.ts` whenever a live Stripe price changes. A feature branch that touches those files, the pricing page, billing settings, or Stripe price IDs will conflict once that PR merges: rebase on main after it lands, and check for an open `chore: sync pricing.ts from Stripe` PR before starting billing work.
+
 ## Signal Engine Program Governance
 
 - Canonical plan: `docs/signal-engine-cross-product-master-plan-2026-07-26.md`.
