@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { AssistWidget } from "@/app/components/AssistWidget";
 import { PHProvider } from "@/app/components/PosthogProvider";
 import { ThemeProvider } from "@/app/components/ThemeProvider";
-import { getBrandContextFromHosts } from '@/lib/brand'
+import { STARTING_MONDAY_BRAND } from '@/lib/brand'
 import { buildBrandMetadata } from './brand-metadata'
 import "./globals.css";
 
@@ -31,15 +31,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers()
-  const brand = getBrandContextFromHosts([
-    requestHeaders.get('host'),
-    requestHeaders.get('x-forwarded-host'),
-  ])
-
-  return buildBrandMetadata(brand)
-}
+export const metadata: Metadata = buildBrandMetadata(STARTING_MONDAY_BRAND)
 
 export default async function RootLayout({
   children,

@@ -1,30 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getDevAuthHeaders, isDevAuthBypassEnabled } from '@/lib/dev-auth'
-import { getBrandContextFromHosts } from '@/lib/brand'
 // Obvious non-browser clients: blocked on /api/optimize and /intelligence/* routes.
 // Shared with the bot scoring in @/lib/bot-signals so there is one definition.
 import { isObviousNonBrowser } from '@/lib/bot-detection/bot-user-agents'
 
 const NOINDEX = { 'X-Robots-Tag': 'noindex, nofollow' }
-
-const MANDATE_SIGNAL_ALLOWED_EXACT = new Set([
-  '/',
-  '/login',
-  '/signup',
-  '/auth/callback',
-  '/icon',
-  '/apple-icon',
-  '/opengraph-image',
-  '/robots.txt',
-  '/sitemap.xml',
-  '/favicon.ico',
-  '/api/health',
-])
-
-const MANDATE_SIGNAL_ALLOWED_PREFIXES = [
-  '/api/auth/',
-]
 
 const DEPLOY_SHA = process.env.RAILWAY_GIT_COMMIT_SHA
   ?? process.env.VERCEL_GIT_COMMIT_SHA
@@ -73,11 +54,6 @@ function logRequest(request: NextRequest, requestId: string) {
   }))
 }
 
-function isMandateSignalAllowedPath(pathname: string): boolean {
-  if (MANDATE_SIGNAL_ALLOWED_EXACT.has(pathname)) return true
-  return MANDATE_SIGNAL_ALLOWED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
-}
-
 function isProtectedRoute(pathname: string): boolean {
   return (
     pathname.startsWith('/dashboard/')
@@ -100,19 +76,6 @@ export async function proxy(request: NextRequest) {
   const requestId = request.headers.get('x-request-id') ?? generateRequestId()
   const nonce = crypto.randomUUID().replace(/-/g, '')
   const devAuthEnabled = isDevAuthBypassEnabled()
-  const brand = getBrandContextFromHosts([
-    request.headers.get('host'),
-    request.headers.get('x-forwarded-host'),
-  ])
-
-  // Enforce standalone host isolation for MandateSignal.
-  if (brand.isMandateSignal && !isMandateSignalAllowedPath(pathname)) {
-    const homeUrl = request.nextUrl.clone()
-    homeUrl.pathname = '/'
-    homeUrl.search = ''
-    return applyCsp(NextResponse.redirect(homeUrl), nonce)
-  }
-
   if (devAuthEnabled && (pathname === '/login' || pathname === '/auth/login')) {
     const dashboardUrl = request.nextUrl.clone()
     dashboardUrl.pathname = '/dashboard'

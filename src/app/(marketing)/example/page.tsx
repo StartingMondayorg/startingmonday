@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { SignalTimelineCard } from '@/app/components/SignalTimelineCard'
 import { TrackLink } from '@/app/components/TrackLink'
 import { Button } from '@/components/ui'
-import { getBrandContextFromHosts } from '@/lib/brand'
 import { HERO_EVENT_NAMES } from '@/lib/channel-metrics-events'
 import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
 import { STARTING_MONDAY_HERO_CONTENT } from '@/lib/starting-monday-hero-content'
@@ -22,13 +20,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ExamplePage() {
-  const requestHeaders = await headers()
-  const brand = getBrandContextFromHosts([
-    requestHeaders.get('host'),
-    requestHeaders.get('x-forwarded-host'),
-  ])
-
-  if (brand.isMandateSignal || !isStartingMondayHeroEvidenceEnabled() || !STARTING_MONDAY_HERO_CONTENT.proofCase) {
+  if (!isStartingMondayHeroEvidenceEnabled() || !STARTING_MONDAY_HERO_CONTENT.proofCase) {
     notFound()
   }
 

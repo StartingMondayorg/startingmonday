@@ -1,9 +1,8 @@
 ﻿import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { LandingPage } from '@/app/components/LandingPage'
 import type { SituationCard, FAQ } from '@/app/components/LandingPage'
 import { JsonLd } from '@/app/components/JsonLd'
-import { getBrandContextFromHosts } from '@/lib/brand'
+import { STARTING_MONDAY_BRAND } from '@/lib/brand'
 import { isStartingMondayHeroEvidenceEnabled } from '@/lib/feature-flags'
 import { STARTING_MONDAY_HERO_CONTENT } from '@/lib/starting-monday-hero-content'
 
@@ -11,40 +10,6 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers()
-  const brand = getBrandContextFromHosts([
-    requestHeaders.get('host'),
-    requestHeaders.get('x-forwarded-host'),
-  ])
-
-  if (brand.isMandateSignal) {
-    return {
-      title: 'MandateSignal - See mandates before they are posted',
-      description: 'MandateSignal helps recruiting and search teams detect likely-to-open roles early, identify decision-path stakeholders, and prioritize outreach before broad posting.',
-      keywords: [
-        'mandate signal intelligence',
-        'recruiter pipeline intelligence',
-        'retained search signals',
-        'executive role forecasting',
-        'pre-posting mandate detection',
-      ],
-      openGraph: {
-        title: 'MandateSignal - See mandates before they are posted',
-        description: 'Detect likely-to-open mandates early, map decision-path stakeholders, and act before broad posting.',
-        url: 'https://mandatesignal.com',
-        type: 'website',
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: 'MandateSignal - See mandates before they are posted',
-        description: 'Detect likely-to-open mandates early, map decision-path stakeholders, and act before broad posting.',
-      },
-      alternates: {
-        canonical: 'https://mandatesignal.com',
-      },
-    }
-  }
-
   const heroEvidenceEnabled = isStartingMondayHeroEvidenceEnabled()
 
   return {
@@ -143,44 +108,6 @@ const FAQS: FAQ[] = [
   },
 ]
 
-const MANDATE_SITUATIONS: SituationCard[] = [
-  {
-    id: 'bd-feed',
-    headline: 'My team needs cleaner business-development timing.',
-    sub: 'We want the brief while it is forming, not after the listing is saturated.',
-  },
-  {
-    id: 'account-priority',
-    headline: 'We track too many accounts without priority discipline.',
-    sub: 'Signal-ranked queues tell us which companies to touch this week.',
-  },
-  {
-    id: 'pre-posting',
-    headline: 'I need to see likely mandates before they post.',
-    sub: 'Move from reactive sourcing to proactive mandate positioning.',
-  },
-  {
-    id: 'stakeholder-map',
-    headline: 'We need the right stakeholder map before first outreach.',
-    sub: 'Identify decision-path contacts and likely influence nodes early.',
-  },
-]
-
-const MANDATE_FAQS: FAQ[] = [
-  {
-    question: 'Who is MandateSignal for?',
-    answer: 'MandateSignal is designed for retained search teams, recruiter-led business development functions, and talent operators who need early visibility into likely-to-open mandates.',
-  },
-  {
-    question: 'What makes this different from job-board monitoring?',
-    answer: 'Job boards show demand after a role is public. MandateSignal is built for pre-posting context by tracking clustered company signals that often precede formal search activity.',
-  },
-  {
-    question: 'Can this run as a standalone workflow?',
-    answer: 'Yes. MandateSignal is delivered as its own product experience on mandatesignal.com with dedicated branding, canonical URLs, and product positioning.',
-  },
-]
-
 function buildHomeJsonLd(origin: string, brandName: string, description: string) {
   return {
     '@context': 'https://schema.org',
@@ -228,11 +155,7 @@ type HomePageProps = {
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const requestHeaders = await headers()
-  const brand = getBrandContextFromHosts([
-    requestHeaders.get('host'),
-    requestHeaders.get('x-forwarded-host'),
-  ])
+  const brand = STARTING_MONDAY_BRAND
 
   const resolvedSearchParams = searchParams ? await searchParams : {}
   const variantParam = Array.isArray(resolvedSearchParams?.lp_variant)
@@ -240,59 +163,34 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     : resolvedSearchParams?.lp_variant
   const experimentVariant = variantParam === 'proof_first' ? 'proof_first' : 'control'
 
-  const isMandateSignal = brand.isMandateSignal
   const heroEvidenceEnabled = isStartingMondayHeroEvidenceEnabled()
-  const jsonLd = isMandateSignal
-    ? buildHomeJsonLd(
-        brand.origin,
-        brand.name,
-        'MandateSignal is a standalone intelligence workflow for recruiting and search teams that need early mandate visibility and prioritized outreach execution.',
-      )
-    : buildHomeJsonLd(
-        brand.origin,
-        brand.name,
-        'Pipeline tracking, company intelligence, and AI-powered interview prep for senior leaders in active search.',
-      )
+  const jsonLd = buildHomeJsonLd(
+    brand.origin,
+    brand.name,
+    'Pipeline tracking, company intelligence, and AI-powered interview prep for senior leaders in active search.',
+  )
 
-  const hero = isMandateSignal
-    ? {
-        eyebrow: 'See the mandate before the posting goes public.',
-        h1Lines: ['Pre-posting mandate intelligence', 'for search and recruiting teams.'],
-        claimMethodLabel: '',
-        claimMethodHref: '',
-        claimEvidenceLabel: 'How signal-first mandate detection works ->',
-        claimEvidenceHref: '/method-and-evidence#timing-model',
-        bodyPreamble: 'Standalone product for retained search and recruiter business development workflows.',
-        body: 'MandateSignal surfaces role-shaping company movement early, prioritizes target accounts, and helps your team take the next high-value outreach action before the market crowds in.',
-        competitiveEdge: 'Built for proactive mandate creation, not reactive job-board response.',
-        steps: [
-          'Monitor role-shaping company signals across your target account list.',
-          'Prioritize the accounts most likely to open relevant mandates soon.',
-          'Act early with stakeholder-aware outreach while the brief is still forming.',
-        ],
-        trialNote: 'MandateSignal runs as a standalone product experience on mandatesignal.com. Private workspace per account.',
-      }
-    : {
-        eyebrow: heroEvidenceEnabled ? STARTING_MONDAY_HERO_CONTENT.eyebrow : 'Find roles before they are posted. Meet the decision-makers. Start Monday.',
-        h1Lines: ['Be on the shortlist before the role is posted.'],
-        claimMethodLabel: '',
-        claimMethodHref: '',
-        claimEvidenceLabel: 'Evidence Hub for leaders and their partners ->',
-        claimEvidenceHref: '/evidence-hub#early-signals',
-        bodyPreamble: 'For senior leaders who win through timing and relationships, not job boards.',
-        body: heroEvidenceEnabled
-          ? STARTING_MONDAY_HERO_CONTENT.subhead
-          : 'Reputation opens doors. Timing decides outcomes. Starting Monday gives you an early view of likely-to-open roles and a clear map of the people who will influence the hire.',
-        competitiveEdge: '',
-        steps: [
-          'See likely-to-open roles before most candidates know they exist.',
-          'Identify the decision-path people who shape the shortlist.',
-          'Take the next relationship action while timing is still on your side.',
-        ],
-        trialNote: heroEvidenceEnabled
-          ? 'Private by default. No one knows you\'re looking until you decide they do. Free for 30 days. No credit card.'
-          : 'Private by default: visible only to you and explicitly invited collaborators. Free for 30 days. No credit card. No employer visibility.',
-      }
+  const hero = {
+    eyebrow: heroEvidenceEnabled ? STARTING_MONDAY_HERO_CONTENT.eyebrow : 'Find roles before they are posted. Meet the decision-makers. Start Monday.',
+    h1Lines: ['Be on the shortlist before the role is posted.'],
+    claimMethodLabel: '',
+    claimMethodHref: '',
+    claimEvidenceLabel: 'Evidence Hub for leaders and their partners ->',
+    claimEvidenceHref: '/evidence-hub#early-signals',
+    bodyPreamble: 'For senior leaders who win through timing and relationships, not job boards.',
+    body: heroEvidenceEnabled
+      ? STARTING_MONDAY_HERO_CONTENT.subhead
+      : 'Reputation opens doors. Timing decides outcomes. Starting Monday gives you an early view of likely-to-open roles and a clear map of the people who will influence the hire.',
+    competitiveEdge: '',
+    steps: [
+      'See likely-to-open roles before most candidates know they exist.',
+      'Identify the decision-path people who shape the shortlist.',
+      'Take the next relationship action while timing is still on your side.',
+    ],
+    trialNote: heroEvidenceEnabled
+      ? 'Private by default. No one knows you\'re looking until you decide they do. Free for 30 days. No credit card.'
+      : 'Private by default: visible only to you and explicitly invited collaborators. Free for 30 days. No credit card. No employer visibility.',
+  }
 
   return (
     <>
@@ -300,17 +198,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <JsonLd data={jsonLd} />
       <LandingPage
         hero={hero}
-        situations={isMandateSignal ? MANDATE_SITUATIONS : SITUATIONS}
-        faqs={isMandateSignal ? MANDATE_FAQS : FAQS}
+        situations={SITUATIONS}
+        faqs={FAQS}
         showPersonaSelector
-        showFirstWeekSpine={!isMandateSignal}
+        showFirstWeekSpine
         experimentVariant={experimentVariant}
         brandWordmark={{
           primary: brand.wordmarkPrimary,
           accent: brand.wordmarkAccent,
         }}
         heroEvidence={
-              heroEvidenceEnabled && !isMandateSignal && STARTING_MONDAY_HERO_CONTENT.proofCase
+              heroEvidenceEnabled && STARTING_MONDAY_HERO_CONTENT.proofCase
             ? {
                 proofCase: STARTING_MONDAY_HERO_CONTENT.proofCase,
                 timelineAlt: STARTING_MONDAY_HERO_CONTENT.timelineAlt,
