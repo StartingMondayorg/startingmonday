@@ -64,6 +64,54 @@ export async function fetchSecFilings(companyName, { supabase, companyId } = {})
   }
 }
 
+// SMK-509: a full-text hit only proves a filing MENTIONS the name. The filer is the
+// entity in _source.display_names / _source.ciks, and we accept it only when its
+// name equals the company name after normalization. Never use the _id prefix: that
+// is the accession number's submitter, often a filing agent (Donnelley, Toppan
+// Merrill), not the company. entity_name is not in the EFTS response at all; the
+// old check read it as '' and accepted the first hit for every company.
+const CORPORATE_SUFFIXES = new Set([
+  'inc', 'incorporated', 'corp', 'corporation', 'co', 'company', 'ltd', 'limited',
+  'llc', 'lp', 'plc', 'sa', 'ag', 'nv', 'se',
+])
+
+export function normalizeEntityName(name) {
+  const words = String(name ?? '')
+    .toLowerCase()
+    .replace(/\/[a-z]{2,3}\/?/g, ' ') // SEC state and agent tags: /DE/, /FA
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9 ]+/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+  if (words[0] === 'the') words.shift()
+  // "ELI LILLY & Co" -> "eli lilly and co" -> "eli lilly"
+  while (words.length > 1 && (CORPORATE_SUFFIXES.has(words[words.length - 1]) || words[words.length - 1] === 'and')) words.pop()
+  return words.join(' ')
+}
+
+// display_names entries look like "ADVANCED MICRO DEVICES INC  (AMD)  (CIK 0000002488)".
+function parseDisplayName(displayName) {
+  const cik = /\(CIK\s+(\d{1,10})\)/.exec(displayName)?.[1] ?? null
+  const name = displayName.replace(/\s*\([^)]*\)/g, '').trim()
+  return { name, cik: cik ? cik.padStart(10, '0') : null }
+}
+
+export function pickCikFromHits(companyName, hits) {
+  const target = normalizeEntityName(companyName)
+  if (!target) return null
+  for (const hit of hits ?? []) {
+    const src = hit?._source ?? {}
+    const names = Array.isArray(src.display_names) ? src.display_names : []
+    const ciks = Array.isArray(src.ciks) ? src.ciks : []
+    for (let i = 0; i < names.length; i++) {
+      const parsed = parseDisplayName(String(names[i]))
+      const cik = parsed.cik ?? (ciks[i] ? String(ciks[i]).padStart(10, '0') : null)
+      if (cik && normalizeEntityName(parsed.name) === target) return cik
+    }
+  }
+  return null
+}
+
 // Step 1: find the CIK — reads from DB cache first, falls back to EDGAR full-text search.
 // Persists the resolved (or confirmed-absent) CIK back to the companies row so subsequent
 // scans skip the network round-trip.
@@ -89,21 +137,7 @@ async function findCik(companyName, { supabase, companyId } = {}) {
   if (!res.ok) return null
 
   const json = await res.json()
-  const hits = json.hits?.hits ?? []
-
-  const searchName = companyName.toLowerCase().replace(/[,\.]/g, '').trim()
-
-  let cikPadded = null
-  for (const hit of hits) {
-    const entityName = (hit._source.entity_name ?? '').toLowerCase().replace(/[,\.]/g, '').trim()
-    // Accept if either name contains the other's first three words (handles "Corp", "Inc" suffixes).
-    const entityWords = entityName.split(/\s+/).slice(0, 3).join(' ')
-    const searchWords = searchName.split(/\s+/).slice(0, 3).join(' ')
-    if (entityName.includes(searchWords) || searchName.includes(entityWords)) {
-      cikPadded = hit._id.split('-')[0]
-      break
-    }
-  }
+  const cikPadded = pickCikFromHits(companyName, json.hits?.hits ?? [])
 
   // Persist result so future scans skip this lookup.
   if (supabase && companyId) {
